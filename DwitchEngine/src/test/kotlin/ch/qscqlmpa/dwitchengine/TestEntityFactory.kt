@@ -1,0 +1,151 @@
+package ch.qscqlmpa.dwitchengine
+
+import ch.qscqlmpa.dwitchengine.actions.startnewgame.GameBootstrap
+import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchengine.model.game.GameInfo
+import ch.qscqlmpa.dwitchengine.model.game.GameState
+import ch.qscqlmpa.dwitchengine.model.player.*
+
+object TestEntityFactory {
+
+    fun createHostPlayerInfo(): PlayerInfo {
+        return createHostPlayer().toPlayerInfo()
+    }
+
+    fun createGuestPlayer1Info(): PlayerInfo {
+        return createGuestPlayer1().toPlayerInfo()
+    }
+
+    fun createGuestPlayer2Info(): PlayerInfo {
+        return createGuestPlayer2().toPlayerInfo()
+    }
+
+    fun createGuestPlayer3Info(): PlayerInfo {
+        return createGuestPlayer3().toPlayerInfo()
+    }
+
+    fun createGuestPlayer4Info(): PlayerInfo {
+        return createGuestPlayer4().toPlayerInfo()
+    }
+
+    fun createGuestPlayer5Info(): PlayerInfo {
+        return createGuestPlayer5().toPlayerInfo()
+    }
+
+    fun createHostPlayer(
+            cardsInHand: List<Card> = emptyList(),
+            rank: Rank = Rank.Asshole,
+            state: PlayerState = PlayerState.Playing,
+            dwitched: Boolean = false,
+            hasPickedCard: Boolean = false
+    ): Player {
+        return Player(
+                inGameId = PlayerInGameId(100),
+                name = "Aragorn",
+                cardsInHand = cardsInHand,
+                rank = rank,
+                state = state,
+                dwitched = dwitched,
+                hasPickedCard = hasPickedCard
+        )
+    }
+
+    fun createGuestPlayer1(
+            cardsInHand: List<Card> = emptyList(),
+            rank: Rank = Rank.ViceAsshole,
+            state: PlayerState = PlayerState.Waiting,
+            dwitched: Boolean = false,
+            hasPickedCard: Boolean = false
+    ): Player {
+        return Player(
+                inGameId = PlayerInGameId(101),
+                name = "Boromir",
+                cardsInHand = cardsInHand,
+                rank = rank,
+                state = state,
+                dwitched = dwitched,
+                hasPickedCard = hasPickedCard
+        )
+    }
+
+    fun createGuestPlayer2(
+            cardsInHand: List<Card> = emptyList(),
+            rank: Rank = Rank.Neutral,
+            state: PlayerState = PlayerState.Waiting,
+            dwitched: Boolean = false,
+            hasPickedCard: Boolean = false
+    ): Player {
+        return Player(
+                inGameId = PlayerInGameId(102),
+                name = "Celeborn",
+                cardsInHand = cardsInHand,
+                rank = rank,
+                state = state,
+                dwitched = dwitched,
+                hasPickedCard = hasPickedCard
+        )
+    }
+
+    fun createGuestPlayer3(
+            cardsInHand: List<Card> = emptyList(),
+            rank: Rank = Rank.Neutral,
+            state: PlayerState = PlayerState.Waiting,
+            dwitched: Boolean = false,
+            hasPickedCard: Boolean = false
+    ): Player {
+        return Player(
+                inGameId = PlayerInGameId(103),
+                name = "Denethor",
+                cardsInHand = cardsInHand,
+                rank = rank,
+                state = state,
+                dwitched = dwitched,
+                hasPickedCard = hasPickedCard
+        )
+    }
+
+    fun createGuestPlayer4(
+            cardsInHand: List<Card> = emptyList(),
+            rank: Rank = Rank.VicePresident,
+            state: PlayerState = PlayerState.Waiting,
+            dwitched: Boolean = false,
+            hasPickedCard: Boolean = false
+    ): Player {
+        return Player(
+                inGameId = PlayerInGameId(104),
+                name = "Eowin",
+                cardsInHand = cardsInHand,
+                rank = rank,
+                state = state,
+                dwitched = dwitched,
+                hasPickedCard = hasPickedCard
+        )
+    }
+
+    fun createGuestPlayer5(
+            cardsInHand: List<Card> = emptyList(),
+            rank: Rank = Rank.President,
+            state: PlayerState = PlayerState.Waiting,
+            dwitched: Boolean = false,
+            hasPickedCard: Boolean = false
+    ): Player {
+        return Player(
+                inGameId = PlayerInGameId(105),
+                name = "Faramir",
+                cardsInHand = cardsInHand,
+                rank = rank,
+                state = state,
+                dwitched = dwitched,
+                hasPickedCard = hasPickedCard
+        )
+    }
+
+    fun createGameState(localPlayerId: PlayerInGameId = PlayerInGameId(100)): GameState {
+        val players = listOf(createHostPlayerInfo(), createGuestPlayer1Info(), createGuestPlayer2Info())
+        return GameBootstrap.createNewGame(players, localPlayerId, RandomInitialGameSetup(players.size))
+    }
+
+    fun createGameInfo(localPlayerId: PlayerInGameId = PlayerInGameId(100)): GameInfo {
+        return GameInfo(createGameState(), localPlayerId)
+    }
+}
