@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame.messages
 
 import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitch.ongoinggame.InGameStore
+import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionId
 import ch.qscqlmpa.dwitch.ongoinggame.communication.RecipientType
 import ch.qscqlmpa.dwitch.model.player.Player

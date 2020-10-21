@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.usecases
 
 import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGame
-import ch.qscqlmpa.dwitch.ongoinggame.ServiceManager
+import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
 import ch.qscqlmpa.dwitch.persistence.Store
 import io.reactivex.Completable
 import javax.inject.Inject

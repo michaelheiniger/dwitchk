@@ -1,9 +1,9 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
-import ch.qscqlmpa.dwitch.communication.server.websocket.IntTestWebsocketServer
 import ch.qscqlmpa.dwitch.model.player.PlayerRole
+import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.IntTestWebsocketServer
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameLaunchableEvent
-import ch.qscqlmpa.dwitchengine.TestInitialGameSetup
+import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchengine.model.player.Rank
@@ -37,7 +37,7 @@ class IntTestHost(gameName: String) : IntTestPlayer() {
         val gameLaunchableEvent = ongoingGameComponent.gameLaunchableUsecase.gameCanBeLaunched().blockingFirst()
         assertThat(gameLaunchableEvent).isEqualTo(GameLaunchableEvent.GameIsReadyToBeLaunched)
 
-        (ongoingGameComponent.initialGameSetupFactory.getInitialGameSetup(3) as TestInitialGameSetup)
+        (ongoingGameComponent.initialGameSetupFactory.getInitialGameSetup(3) as DeterministicInitialGameSetup)
                 .initialize(
                         mapOf(
                                 0 to listOf(Card.Clubs2, Card.Clubs3), // Host

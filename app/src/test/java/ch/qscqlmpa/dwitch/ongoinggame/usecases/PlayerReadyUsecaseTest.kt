@@ -4,6 +4,7 @@ import ch.qscqlmpa.dwitch.BaseUnitTest
 
 class PlayerReadyUsecaseTest : BaseUnitTest() {
 
+    //FIXME
 //    private val gameLocalId = 1L
 //
 //    private lateinit var mockCommunicator: GuestCommunicator

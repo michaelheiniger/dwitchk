@@ -1,9 +1,9 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.host.eventprocessors
 
-import ch.qscqlmpa.dwitch.communication.Address
+import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.Address
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.ClientDisconnected
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.ServerCommunicationEvent
-import ch.qscqlmpa.dwitch.ongoinggame.InGameStore
+import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionIdStore
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitch.ongoinggame.messages.HostMessageFactory

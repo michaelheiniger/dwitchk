@@ -11,7 +11,7 @@ import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameLaunchableUsecase
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.LaunchGameUsecase
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.CancelGameUsecase
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
-import ch.qscqlmpa.dwitch.ui.BaseViewModel
+import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.common.Resource
 import ch.qscqlmpa.dwitch.utils.DisposableManager
 import io.reactivex.BackpressureStrategy

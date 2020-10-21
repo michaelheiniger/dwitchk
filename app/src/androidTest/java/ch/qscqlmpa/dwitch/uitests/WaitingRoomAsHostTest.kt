@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.acceptancetests
+package ch.qscqlmpa.dwitch.uitests
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -7,10 +7,10 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import ch.qscqlmpa.dwitch.Guest1
 import ch.qscqlmpa.dwitch.Guest2
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.components.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.model.player.PlayerRole
+import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.utils.GameRobot
 import ch.qscqlmpa.dwitch.utils.PlayerRobot
 import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil

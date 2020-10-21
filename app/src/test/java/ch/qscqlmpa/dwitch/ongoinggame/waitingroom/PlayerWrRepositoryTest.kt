@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame.waitingroom
 
 import ch.qscqlmpa.dwitch.BaseUnitTest
-import ch.qscqlmpa.dwitch.TestEntityFactory
+import ch.qscqlmpa.dwitch.game.TestEntityFactory
 import ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom.PlayerWr
 import ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom.PlayerWrRepository
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-internal class PlayerWrRepositoryTest : BaseUnitTest() {
+class PlayerWrRepositoryTest : BaseUnitTest() {
 
     private lateinit var repository: PlayerWrRepository
 

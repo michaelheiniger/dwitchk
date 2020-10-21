@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame.usecases
 
 import ch.qscqlmpa.dwitch.BaseUnitTest
-import ch.qscqlmpa.dwitch.TestEntityFactory
+import ch.qscqlmpa.dwitch.game.TestEntityFactory
 import ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom.PlayerWr
 import ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom.PlayerWrRepository
 import io.mockk.*

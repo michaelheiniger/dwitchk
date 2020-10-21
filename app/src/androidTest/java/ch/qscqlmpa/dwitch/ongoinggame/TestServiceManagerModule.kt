@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.ongoinggame
 
+import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
 import dagger.Binds
 import dagger.Module
 import javax.inject.Singleton

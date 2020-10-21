@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitch.usecases.NewGameUsecase
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
-import ch.qscqlmpa.dwitch.ui.BaseViewModel
+import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.utils.DisposableManager
 import timber.log.Timber
 import java.util.concurrent.TimeUnit

@@ -1,13 +1,14 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
+import ch.qscqlmpa.dwitch.DaggerIntTestAppComponent
 import ch.qscqlmpa.dwitch.IntTestAppComponent
 import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.model.player.PlayerRole
-import ch.qscqlmpa.dwitch.ongoinggame.InGameStore
 import ch.qscqlmpa.dwitch.ongoinggame.IntTestOngoingGameComponent
 import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameModule
 import ch.qscqlmpa.dwitch.ongoinggame.game.GameInteractor
+import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.PlayerDashboardRobot
 import ch.qscqlmpa.dwitchengine.model.card.Card

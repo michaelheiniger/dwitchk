@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame
 
-import ch.qscqlmpa.dwitch.ui.BaseFragment
+import ch.qscqlmpa.dwitch.ui.base.BaseFragment
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import javax.inject.Inject
 import javax.inject.Named

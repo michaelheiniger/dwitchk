@@ -1,8 +1,8 @@
-package ch.qscqlmpa.dwitch.components.ongoinggame.messageprocessors
+package ch.qscqlmpa.dwitch.ongoinggame.messageprocessors
 
-import ch.qscqlmpa.dwitch.components.game.TestEntityFactory
-import ch.qscqlmpa.dwitch.components.ongoinggame.communication.LocalConnectionId
-import ch.qscqlmpa.dwitch.components.ongoinggame.messages.Message
+import ch.qscqlmpa.dwitch.game.TestEntityFactory
+import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionId
+import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import io.mockk.every
 import io.mockk.verify
 import io.reactivex.Completable

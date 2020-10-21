@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.acceptancetests
+package ch.qscqlmpa.dwitch.uitests
 
 
 import androidx.test.espresso.Espresso.onView
@@ -7,7 +7,6 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.gamediscovery.TestNetworkAdapter
 import ch.qscqlmpa.dwitch.gamediscovery.network.Packet
-import ch.qscqlmpa.dwitch.uitests.BaseUiTest
 import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil
 import org.hamcrest.Matchers.startsWith
 import org.junit.Before

@@ -1,18 +1,16 @@
 package ch.qscqlmpa.dwitch.game
 
-import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.model.game.Game
 import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.model.player.PlayerRole
 import ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom.PlayerWr
-import ch.qscqlmpa.dwitch.ongoinggame.game.RandomInitialGameSetup
-import ch.qscqlmpa.dwitchengine.actions.startnewgame.GameBootstrap
+import ch.qscqlmpa.dwitchengine.initialgamesetup.random.RandomInitialGameSetup
+import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.model.game.GameInfo
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
-import kotlinx.serialization.json.Json
 
 class TestEntityFactory {
 
@@ -128,34 +126,25 @@ class TestEntityFactory {
             )
         }
 
-        fun createGameInGameRoom(localPlayerId: PlayerInGameId = PlayerInGameId(100)): Game {
-            val serializerFactory = SerializerFactory(Json)
-
-            val localPlayerLocalId = 10L
-            val players = listOf(createHostPlayer(), createGuestPlayer1(), createGuestPlayer2()).map(Player::toPlayerInfo)
-            val gameState = GameBootstrap.createNewGame(players, localPlayerId, RandomInitialGameSetup(players.size)
-            )
-
-            return Game(
-                    1L,
-                    RoomType.GAME_ROOM,
-                    1L,
-                    "Dwitch",
-                    serializerFactory.serialize(gameState),
-                    localPlayerLocalId,
-                    "192.168.1.1",
-                    8889
-            )
-        }
-
-        fun createGameState(localPlayerId: PlayerInGameId = PlayerInGameId(100)): GameState {
-            val players = listOf(createHostPlayer(), createGuestPlayer1(), createGuestPlayer2()).map(Player::toPlayerInfo)
-            return GameBootstrap.createNewGame(players, localPlayerId, RandomInitialGameSetup(players.size))
-        }
-
-        fun createGameInfo(localPlayerId: PlayerInGameId = PlayerInGameId(100)): GameInfo {
-            return GameInfo(createGameState(), localPlayerId)
-        }
+//        fun createGameInGameRoom(localPlayerId: PlayerInGameId = PlayerInGameId(100)): Game {
+//            val serializerFactory = SerializerFactory(Json)
+//
+//            val localPlayerLocalId = 10L
+//            val players = listOf(createHostPlayer(), createGuestPlayer1(), createGuestPlayer2()).map(Player::toPlayerInfo)
+//            val gameState = GameBootstrap.createNewGame(players, localPlayerId, RandomInitialGameSetup(players.size)
+//            )
+//
+//            return Game(
+//                    1L,
+//                    RoomType.GAME_ROOM,
+//                    1L,
+//                    "Dwitch",
+//                    serializerFactory.serialize(gameState),
+//                    localPlayerLocalId,
+//                    "192.168.1.1",
+//                    8889
+//            )
+//        }
 
         fun createGameInWaitingRoom(localPlayerLocalId: Long): Game {
             return Game(
@@ -170,5 +159,25 @@ class TestEntityFactory {
             )
         }
 
+        fun createGameState(): GameState {
+            val hostPlayer = createHostPlayer()
+            val players = listOf(hostPlayer, createGuestPlayer1())
+            return DwitchEngine.createNewGame(
+                    players.map(Player::toPlayerInfo),
+                    hostPlayer.inGameId,
+                    RandomInitialGameSetup(players.size)
+            )
+        }
+
+        fun createGameInfo(): GameInfo {
+            val hostPlayer = createHostPlayer()
+            val players = listOf(hostPlayer, createGuestPlayer1())
+            val gameState =DwitchEngine.createNewGame(
+                    players.map(Player::toPlayerInfo),
+                    hostPlayer.inGameId,
+                    RandomInitialGameSetup(players.size)
+            )
+            return GameInfo(gameState, hostPlayer.inGameId)
+        }
     }
 }

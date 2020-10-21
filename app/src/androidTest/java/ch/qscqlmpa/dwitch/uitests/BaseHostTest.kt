@@ -1,9 +1,9 @@
-package ch.qscqlmpa.dwitch.acceptancetests
+package ch.qscqlmpa.dwitch.uitests
 
 import ch.qscqlmpa.dwitch.*
-import ch.qscqlmpa.dwitch.components.ongoinggame.messages.GuestMessageFactory
-import ch.qscqlmpa.dwitch.components.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.model.player.Player
+import ch.qscqlmpa.dwitch.ongoinggame.messages.GuestMessageFactory
+import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import org.junit.Assert
 import timber.log.Timber
 import java.util.concurrent.TimeUnit

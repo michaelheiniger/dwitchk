@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.serialization
 
-import ch.qscqlmpa.dwitch.communication.Envelope
+import ch.qscqlmpa.dwitch.ongoinggame.communication.Envelope
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardId
 import ch.qscqlmpa.dwitchengine.model.card.CardName

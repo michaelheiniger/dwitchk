@@ -1,10 +1,10 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.guest.eventprocessor
 
 import ch.qscqlmpa.dwitch.BaseUnitTest
-import ch.qscqlmpa.dwitch.TestEntityFactory
-import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.ConnectedToHost
+import ch.qscqlmpa.dwitch.game.TestEntityFactory
 import ch.qscqlmpa.dwitch.model.game.Game
 import ch.qscqlmpa.dwitch.ongoinggame.communication.RecipientType
+import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.ConnectedToHost
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.eventprocessors.GuestConnectedToHostEventProcessor
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend

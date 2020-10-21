@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame.game
 
 import ch.qscqlmpa.dwitch.BaseUnitTest
-import ch.qscqlmpa.dwitch.TestEntityFactory
+import ch.qscqlmpa.dwitch.game.TestEntityFactory
 import ch.qscqlmpa.dwitch.ongoinggame.communication.GameCommunicator
 import ch.qscqlmpa.dwitch.ongoinggame.communication.RecipientType
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend
@@ -38,7 +38,6 @@ internal class GameUpdatedUsecaseTest : BaseUnitTest() {
 
     @Test
     fun `should store up-to-date game state`() {
-
         val gameInfo = TestEntityFactory.createGameInfo()
 
         usecase.handleUpdatedGameState(gameInfo).test().assertComplete()
@@ -48,7 +47,6 @@ internal class GameUpdatedUsecaseTest : BaseUnitTest() {
 
     @Test
     fun `should send up-to-date game state to all`() {
-
         val gameInfo = TestEntityFactory.createGameInfo()
 
         usecase.handleUpdatedGameState(gameInfo).test().assertComplete()

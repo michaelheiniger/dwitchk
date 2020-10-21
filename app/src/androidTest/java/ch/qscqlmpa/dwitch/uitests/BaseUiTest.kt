@@ -10,23 +10,25 @@ import androidx.test.espresso.matcher.ViewMatchers.hasErrorText
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import ch.qscqlmpa.dwitch.communication.client.websocket.TestWebsocketClient
-import ch.qscqlmpa.dwitch.communication.client.websocket.WebsocketClientTestStub
-import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
-import ch.qscqlmpa.dwitch.communication.server.websocket.TestWebsocketServer
-import ch.qscqlmpa.dwitch.communication.server.websocket.WebsocketServerTestStub
+import ch.qscqlmpa.dwitch.TestRule
 import ch.qscqlmpa.dwitch.gamediscovery.TestNetworkAdapter
-import ch.qscqlmpa.dwitch.ongoinggame.InGameStore
 import ch.qscqlmpa.dwitch.ongoinggame.TestOngoingGameComponent
+import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
+import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.TestWebsocketClient
+import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.WebsocketClientTestStub
+import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.TestWebsocketServer
+import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.WebsocketServerTestStub
+import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.persistence.AppRoomDatabase
 import ch.qscqlmpa.dwitch.persistence.GameDao
 import ch.qscqlmpa.dwitch.persistence.PlayerDao
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
+import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup //FIXME cannot be used in app/androidTest since it is in DwitchEngine/test
 import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchengine.model.player.Rank
 import io.reactivex.Completable
 import org.hamcrest.Matchers
 import org.junit.Rule
-import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -84,7 +86,7 @@ abstract class BaseUiTest {
     }
 
     protected fun initializeInitialGameSetup(cardsForPlayer: Map<Int, List<Card>>, rankForPlayer: Map<Int, Rank>) {
-        val initialGameSetup = ongoingGameComponent.initialGameSetupFactory.getInitialGameSetup(cardsForPlayer.size) as TestInitialGameSetup
+        val initialGameSetup = ongoingGameComponent.initialGameSetupFactory.getInitialGameSetup(cardsForPlayer.size) as DeterministicInitialGameSetup
         initialGameSetup.initialize(cardsForPlayer, rankForPlayer)
     }
 

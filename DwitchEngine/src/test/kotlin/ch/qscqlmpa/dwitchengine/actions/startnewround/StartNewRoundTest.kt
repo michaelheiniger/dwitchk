@@ -1,6 +1,8 @@
 package ch.qscqlmpa.dwitchengine.actions.startnewround
 
 import ch.qscqlmpa.dwitchengine.*
+import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealer
+import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.card.CardUtil
@@ -14,7 +16,7 @@ import org.junit.jupiter.api.Test
 
 class StartNewRoundTest : EngineTestBase() {
 
-    private lateinit var cardDealerFactory: TestCardDealerFactory
+    private lateinit var cardDealerFactory: DeterministicCardDealerFactory
 
     @BeforeEach
     override fun setup() {
@@ -158,8 +160,8 @@ class StartNewRoundTest : EngineTestBase() {
     }
 
     private fun setupCardDealer(numPlayers: Int, cardsForPlayer: Map<Int, List<Card>>) {
-        val cardDealer = TestCardDealer(numPlayers, cardsForPlayer)
-        cardDealerFactory = TestCardDealerFactory()
+        val cardDealer = DeterministicCardDealer(numPlayers, cardsForPlayer)
+        cardDealerFactory = DeterministicCardDealerFactory()
         cardDealerFactory.setCardDealer(cardDealer)
 
     }

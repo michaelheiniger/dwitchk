@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitch.usecases
 import ch.qscqlmpa.dwitch.BaseUnitTest
 import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitch.model.InsertGameResult
-import ch.qscqlmpa.dwitch.ongoinggame.ServiceManager
+import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
 import io.mockk.*
 import org.joda.time.LocalTime
 import org.junit.jupiter.api.AfterEach

@@ -6,7 +6,7 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitch.ongoinggame.game.GameInteractor
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboard
-import ch.qscqlmpa.dwitch.ui.BaseViewModel
+import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.utils.DisposableManager
 import io.reactivex.BackpressureStrategy
 import timber.log.Timber

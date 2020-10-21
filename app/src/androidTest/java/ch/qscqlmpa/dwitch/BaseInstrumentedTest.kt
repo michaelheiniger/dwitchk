@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
 import ch.qscqlmpa.dwitch.model.player.Player
-import ch.qscqlmpa.dwitch.ongoinggame.InGameStore
-import ch.qscqlmpa.dwitch.ongoinggame.InGameStoreImpl
+import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
+import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
+import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStoreImpl
 import ch.qscqlmpa.dwitch.persistence.*
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import io.mockk.MockKAnnotations
@@ -16,6 +16,7 @@ import kotlinx.serialization.json.Json
 import org.junit.runner.RunWith
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
+
 
 @RunWith(AndroidJUnit4::class)
 abstract class BaseInstrumentedTest {

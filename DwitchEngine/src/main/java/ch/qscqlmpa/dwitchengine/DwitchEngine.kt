@@ -13,10 +13,13 @@ import ch.qscqlmpa.dwitchengine.actions.startnewgame.GameBootstrap
 import ch.qscqlmpa.dwitchengine.actions.startnewround.StartNewRound
 import ch.qscqlmpa.dwitchengine.actions.startnewround.StartNewRoundGameUpdater
 import ch.qscqlmpa.dwitchengine.actions.startnewround.StartNewRoundState
+import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
+import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameInfo
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboard
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboardFactory
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInfo
 
@@ -38,7 +41,7 @@ class DwitchEngine(gameInfo: GameInfo) {
     }
 
     fun playCard(cardPlayed: Card): GameInfo {
-//        Timber.i("Player $localPlayerId plays card $cardPlayed, current game state: $currentGameState")//FIXME
+        println("Player $localPlayerId plays card $cardPlayed, current game state: $currentGameState")
         return PlayCard(
                 PlayCardState(currentGameState, cardPlayed),
                 PlayCardGameUpdater(currentGameState, cardPlayed)
@@ -47,7 +50,7 @@ class DwitchEngine(gameInfo: GameInfo) {
     }
 
     fun pickCard(): GameInfo {
-//        Timber.i("Player $localPlayerId picks a card, current game state: $currentGameState")//FIXME
+        println("Player $localPlayerId picks a card, current game state: $currentGameState")
         return PickCard(
                 PickCardState(currentGameState),
                 PickCardGameUpdater(currentGameState)
@@ -56,7 +59,7 @@ class DwitchEngine(gameInfo: GameInfo) {
     }
 
     fun passTurn(): GameInfo {
-//        Timber.i("Player $localPlayerId passes its turn, current game state: $currentGameState")//FIXME
+        println("Player $localPlayerId passes its turn, current game state: $currentGameState")
         return PassTurn(
                 PassTurnState(currentGameState),
                 PassTurnGameUpdater(currentGameState)
@@ -65,7 +68,7 @@ class DwitchEngine(gameInfo: GameInfo) {
     }
 
     fun startNewRound(cardDealerFactory: CardDealerFactory): GameInfo {
-//        Timber.i("Player $localPlayerId starts a new round, current game state: $currentGameState")//FIXME
+        println("Player $localPlayerId starts a new round, current game state: $currentGameState")
         return StartNewRound(
                 StartNewRoundState(currentGameState),
                 StartNewRoundGameUpdater(currentGameState),
@@ -75,12 +78,12 @@ class DwitchEngine(gameInfo: GameInfo) {
     }
 
     private fun logUpdatedGameState(gameInfo: GameInfo) {
-//        Timber.i("Updated game state: ${gameInfo.gameState}")//FIXME
+        println("Updated game state: ${gameInfo.gameState}")
     }
 
     companion object {
         fun createNewGame(playersInfo: List<PlayerInfo>, localPlayerId: PlayerInGameId, initialGameSetup: InitialGameSetup): GameState {
-//            Timber.i("Start new game, players:  $playersInfo, initial game setup: $initialGameSetup")//FIXME
+            println("Start new game, players:  $playersInfo, initial game setup: $initialGameSetup")
             return GameBootstrap.createNewGame(playersInfo, localPlayerId, initialGameSetup)
         }
     }

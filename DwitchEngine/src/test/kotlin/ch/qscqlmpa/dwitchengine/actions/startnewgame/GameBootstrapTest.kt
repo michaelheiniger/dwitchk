@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchengine.actions.startnewgame
 
-import ch.qscqlmpa.dwitchengine.RandomInitialGameSetup
 import ch.qscqlmpa.dwitchengine.TestEntityFactory
+import ch.qscqlmpa.dwitchengine.initialgamesetup.random.RandomInitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchengine.model.player.PlayerState
 import ch.qscqlmpa.dwitchengine.model.player.Rank

@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.base
+package ch.qscqlmpa.dwitch.app
 
 import android.app.Application
 import android.content.Context

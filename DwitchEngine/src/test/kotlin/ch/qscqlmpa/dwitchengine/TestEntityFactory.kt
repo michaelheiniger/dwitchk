@@ -1,12 +1,13 @@
 package ch.qscqlmpa.dwitchengine
 
 import ch.qscqlmpa.dwitchengine.actions.startnewgame.GameBootstrap
+import ch.qscqlmpa.dwitchengine.initialgamesetup.random.RandomInitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameInfo
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.*
 
-object TestEntityFactory {
+internal object TestEntityFactory {
 
     fun createHostPlayerInfo(): PlayerInfo {
         return createHostPlayer().toPlayerInfo()

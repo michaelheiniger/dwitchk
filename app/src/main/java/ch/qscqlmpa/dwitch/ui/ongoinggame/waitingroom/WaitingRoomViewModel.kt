@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveDataReactiveStreams
 import ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom.PlayerWrRepository
 import ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom.PlayerWr
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
-import ch.qscqlmpa.dwitch.ui.BaseViewModel
+import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.utils.DisposableManager
 import io.reactivex.BackpressureStrategy
 import timber.log.Timber

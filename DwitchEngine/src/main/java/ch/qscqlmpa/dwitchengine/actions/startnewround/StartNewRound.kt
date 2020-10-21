@@ -1,11 +1,11 @@
 package ch.qscqlmpa.dwitchengine.actions.startnewround
 
-import ch.qscqlmpa.dwitchengine.CardDealerFactory
-import ch.qscqlmpa.dwitchengine.rules.PlayingOrder
+import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.GameInfo
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.player.PlayerState
+import ch.qscqlmpa.dwitchengine.rules.PlayingOrder
 
 internal class StartNewRound constructor(
     private val gameState: StartNewRoundState,

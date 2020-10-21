@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchengine.actions.startnewgame
 
-import ch.qscqlmpa.dwitchengine.InitialGameSetup
+import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase

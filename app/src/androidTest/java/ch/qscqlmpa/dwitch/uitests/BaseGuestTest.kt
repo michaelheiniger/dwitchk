@@ -1,12 +1,12 @@
-package ch.qscqlmpa.dwitch.acceptancetests
+package ch.qscqlmpa.dwitch.uitests
 
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
+import ch.qscqlmpa.dwitch.PlayerIdTestGuest
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.communication.client.LocalGuest
-import ch.qscqlmpa.dwitch.components.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.gamediscovery.network.Packet
+import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil
 import org.junit.Assert
 import timber.log.Timber
@@ -19,7 +19,7 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
                 .atPositionOnView(0, R.id.gameNameTv))
                 .perform(ViewActions.click())
 
-        setControlText(R.id.playerNameEdt, LocalGuest.name)
+        setControlText(R.id.playerNameEdt, PlayerIdTestGuest.LocalGuest.name)
         setControlText(R.id.gameNameEdt, gameName)
 
         clickOnButton(R.id.nextBtn)
@@ -55,7 +55,7 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
     protected fun setLocalPlayerReady() {
         Espresso.onView(ViewMatchers.withId(R.id.localPlayerReadyCkb)).perform(ViewActions.click())
         val playerReadyMessage = waitForNextMessageSentByLocalGuest() as Message.PlayerReadyMessage
-        Assert.assertEquals(LocalGuest.inGameId, playerReadyMessage.playerInGameId)
+        Assert.assertEquals(PlayerIdTestGuest.LocalGuest.inGameId, playerReadyMessage.playerInGameId)
         Assert.assertEquals(true, playerReadyMessage.ready)
     }
 }

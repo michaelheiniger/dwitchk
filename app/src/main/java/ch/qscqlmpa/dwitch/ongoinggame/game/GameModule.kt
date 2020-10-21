@@ -1,14 +1,13 @@
 package ch.qscqlmpa.dwitch.ongoinggame.game
 
-import ch.qscqlmpa.dwitch.ongoinggame.game.GameInteractor
-import ch.qscqlmpa.dwitch.ongoinggame.game.GameInteractorImpl
-import ch.qscqlmpa.dwitch.ongoinggame.game.RandomCardDealerFactory
-import ch.qscqlmpa.dwitch.ongoinggame.game.RandomInitialGameSetupFactory
 import ch.qscqlmpa.dwitch.service.OngoingGameScope
-import ch.qscqlmpa.dwitchengine.CardDealerFactory
-import ch.qscqlmpa.dwitchengine.InitialGameSetupFactory
+import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
+import ch.qscqlmpa.dwitchengine.carddealer.random.RandomCardDealerFactory
+import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetupFactory
+import ch.qscqlmpa.dwitchengine.initialgamesetup.random.RandomInitialGameSetupFactory
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 
 @Module
 abstract class GameModule {
@@ -17,11 +16,21 @@ abstract class GameModule {
     @Binds
     internal abstract fun provideGameInteractor(gameInteractor: GameInteractorImpl): GameInteractor
 
-    @OngoingGameScope
-    @Binds
-    internal abstract fun provideInitialGameSetupFactory(initialGameSetupFactory: RandomInitialGameSetupFactory): InitialGameSetupFactory
+    @Module
+    companion object {
 
-    @OngoingGameScope
-    @Binds
-    internal abstract fun provideCardDealerFactory(cardDealerFactory: RandomCardDealerFactory): CardDealerFactory
+        @OngoingGameScope
+        @Provides
+        @JvmStatic
+        fun provideCardDealerFactory(): CardDealerFactory {
+            return RandomCardDealerFactory()
+        }
+
+        @OngoingGameScope
+        @Provides
+        @JvmStatic
+        fun provideInitialGameSetupFactory(): InitialGameSetupFactory {
+            return RandomInitialGameSetupFactory()
+        }
+    }
 }

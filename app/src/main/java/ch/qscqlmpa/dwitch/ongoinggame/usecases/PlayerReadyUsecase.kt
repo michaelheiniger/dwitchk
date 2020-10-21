@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.ongoinggame.usecases
 
-import ch.qscqlmpa.dwitch.ongoinggame.InGameStore
+import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitch.ongoinggame.messages.GuestMessageFactory
 import io.reactivex.Completable

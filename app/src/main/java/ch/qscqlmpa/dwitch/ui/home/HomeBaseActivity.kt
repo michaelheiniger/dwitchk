@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.home
 
 import android.os.Bundle
-import ch.qscqlmpa.dwitch.ui.BaseActivity
+import ch.qscqlmpa.dwitch.ui.base.BaseActivity
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector

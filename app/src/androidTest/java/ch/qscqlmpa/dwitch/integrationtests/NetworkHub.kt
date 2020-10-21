@@ -1,13 +1,13 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
 import ch.qscqlmpa.dwitch.GuestIdTestHost
-import ch.qscqlmpa.dwitch.communication.client.websocket.IntTestWebsocketClient
-import ch.qscqlmpa.dwitch.communication.server.websocket.IntTestWebsocketServer
-import ch.qscqlmpa.dwitch.communication.server.websocket.TestWebSocket
+import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.TestWebSocket
+import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.IntTestWebsocketClient
+import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.IntTestWebsocketServer
 
 class NetworkHub(
-        private val host: IntTestWebsocketServer,
-        private val guests: Map<GuestIdTestHost, IntTestWebsocketClient>
+    private val host: IntTestWebsocketServer,
+    private val guests: Map<GuestIdTestHost, IntTestWebsocketClient>
 ) {
 
     fun sendToHost(guest: GuestIdTestHost, message: String) {

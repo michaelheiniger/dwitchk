@@ -1,10 +1,10 @@
-package ch.qscqlmpa.dwitch.components.ongoinggame.messageprocessors
+package ch.qscqlmpa.dwitch.ongoinggame.messageprocessors
 
-import ch.qscqlmpa.dwitch.components.game.TestEntityFactory
-import ch.qscqlmpa.dwitch.components.ongoinggame.communication.LocalConnectionId
-import ch.qscqlmpa.dwitch.components.ongoinggame.communication.LocalConnectionIdStore
-import ch.qscqlmpa.dwitch.components.ongoinggame.messages.Message
+import ch.qscqlmpa.dwitch.game.TestEntityFactory
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
+import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionId
+import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionIdStore
+import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.utils.TestUtil
 import io.mockk.confirmVerified
 import io.mockk.every

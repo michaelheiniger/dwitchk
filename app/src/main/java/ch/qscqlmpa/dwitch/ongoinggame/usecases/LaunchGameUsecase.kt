@@ -2,20 +2,18 @@ package ch.qscqlmpa.dwitch.ongoinggame.usecases
 
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.model.player.Player
-import ch.qscqlmpa.dwitch.ongoinggame.InGameStore
-import ch.qscqlmpa.dwitch.ongoinggame.ServiceManager
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitch.ongoinggame.messages.HostMessageFactory
+import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
+import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
 import ch.qscqlmpa.dwitchengine.DwitchEngine
-import ch.qscqlmpa.dwitchengine.InitialGameSetupFactory
+import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetupFactory
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
 
-
-//TODO: Move "communication" into ongoinggame package
 
 class LaunchGameUsecase @Inject constructor(private val store: InGameStore,
                                             private val communicator: HostCommunicator,

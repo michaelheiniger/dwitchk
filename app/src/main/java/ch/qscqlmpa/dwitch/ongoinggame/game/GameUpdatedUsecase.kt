@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.ongoinggame.game
 
-import ch.qscqlmpa.dwitch.ongoinggame.InGameStore
+import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.ongoinggame.communication.GameCommunicator
 import ch.qscqlmpa.dwitch.ongoinggame.messages.MessageFactory
 import ch.qscqlmpa.dwitchengine.model.game.GameInfo

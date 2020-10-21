@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame.game
 
-import ch.qscqlmpa.dwitchengine.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.DwitchEngine
+import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameInfo
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboard

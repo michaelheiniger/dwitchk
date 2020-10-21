@@ -5,8 +5,8 @@ import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.model.game.Game
 import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
-import ch.qscqlmpa.dwitch.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitch.model.player.PlayerRole
+import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test

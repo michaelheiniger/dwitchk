@@ -1,14 +1,14 @@
 package ch.qscqlmpa.dwitch.ongoinggame.usecases
 
 import ch.qscqlmpa.dwitch.BaseUnitTest
-import ch.qscqlmpa.dwitch.TestEntityFactory
+import ch.qscqlmpa.dwitch.game.TestEntityFactory
 import ch.qscqlmpa.dwitch.model.RoomType
-import ch.qscqlmpa.dwitch.ongoinggame.ServiceManager
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
-import ch.qscqlmpa.dwitch.ongoinggame.game.RandomInitialGameSetup
+import ch.qscqlmpa.dwitchengine.initialgamesetup.random.RandomInitialGameSetup
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
-import ch.qscqlmpa.dwitchengine.InitialGameSetupFactory
+import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
+import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetupFactory
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import io.mockk.*
 import io.reactivex.Completable

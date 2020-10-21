@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom
 
-import ch.qscqlmpa.dwitch.ongoinggame.InGameStore
+import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.service.OngoingGameScope
 import io.reactivex.Observable

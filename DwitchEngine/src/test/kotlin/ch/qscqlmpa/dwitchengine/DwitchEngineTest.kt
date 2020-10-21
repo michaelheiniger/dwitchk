@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitchengine
 
 import ch.qscqlmpa.dwitchengine.actions.startnewgame.GameBootstrap
+import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameEvent
 import ch.qscqlmpa.dwitchengine.model.game.GameInfo
@@ -47,7 +48,7 @@ internal class DwitchEngineTest {
         val guest3Cards = listOf(Card.Spades2, Card.Spades3, Card.Spades4)
         val guest4Cards = listOf(Card.DiamondsJack, Card.ClubsQueen, Card.HeartsKing, Card.SpadesAce)
 
-        val initialGameSetup = TestInitialGameSetup(numPlayers = 5)
+        val initialGameSetup = DeterministicInitialGameSetup(numPlayers = 5)
         initialGameSetup.initialize(
                 mapOf(
                         0 to hostCards,

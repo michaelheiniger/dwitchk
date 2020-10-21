@@ -1,12 +1,12 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.host
 
 import ch.qscqlmpa.dwitch.BaseUnitTest
-import ch.qscqlmpa.dwitch.communication.Address
-import ch.qscqlmpa.dwitch.communication.AddressType
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionId
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionIdStore
 import ch.qscqlmpa.dwitch.ongoinggame.communication.RecipientType
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.eventprocessors.HostCommunicationEventDispatcher
+import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.Address
+import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.AddressType
 import ch.qscqlmpa.dwitch.ongoinggame.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeReceived
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend

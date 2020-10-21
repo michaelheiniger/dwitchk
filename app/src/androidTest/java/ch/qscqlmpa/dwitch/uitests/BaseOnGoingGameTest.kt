@@ -1,10 +1,9 @@
-package ch.qscqlmpa.dwitch.acceptancetests
+package ch.qscqlmpa.dwitch.uitests
 
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.uitests.BaseUiTest
 import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil
 import org.hamcrest.Matchers
 
