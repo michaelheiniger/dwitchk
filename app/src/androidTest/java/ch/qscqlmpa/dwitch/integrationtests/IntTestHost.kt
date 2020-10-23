@@ -7,6 +7,7 @@ import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInit
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchengine.model.player.Rank
+import io.reactivex.schedulers.Schedulers
 import org.assertj.core.api.Assertions.assertThat
 
 class IntTestHost(gameName: String) : IntTestPlayer() {
@@ -51,6 +52,9 @@ class IntTestHost(gameName: String) : IntTestPlayer() {
                         )
                 )
 
-        ongoingGameComponent.launchGameUsecase.launchGame().blockingGet()
+        ongoingGameComponent.launchGameUsecase.launchGame()
+            .subscribeOn(Schedulers.trampoline())
+            .observeOn(Schedulers.trampoline())
+            .blockingGet()
     }
 }

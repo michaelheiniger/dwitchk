@@ -11,6 +11,7 @@ import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetupFactory
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import io.reactivex.Completable
 import io.reactivex.Single
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -31,6 +32,7 @@ class LaunchGameUsecase @Inject constructor(private val store: InGameStore,
                     ))
                 }
                 .doOnComplete { setCurrentRoomToGameRoomInService() }
+            .doOnError { e -> Timber.e(e, "Error while launching game") }
     }
 
     private fun initializeGameState(): Single<GameState> {

@@ -18,7 +18,7 @@ import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 
-
+@Ignore
 class GameRoomAsHostTest : BaseHostTest() {
 
     private var rankForPlayer: Map<Int, Rank> = mapOf(

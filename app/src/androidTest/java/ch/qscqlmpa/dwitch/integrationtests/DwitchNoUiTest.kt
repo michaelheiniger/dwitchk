@@ -160,7 +160,7 @@ class DwitchNoUiTest {
                 .assertPlayerState(guest1.playerId, PlayerState.Done)
                 .assertPlayerState(guest2.playerId, PlayerState.Done)
 
-        guest1.startNewRound()
+//        guest1.startNewRound()
 
 
     }

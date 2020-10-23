@@ -15,7 +15,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "ch.qscqlmpa.dwitch.base.CustomTestRunner"
+        testInstrumentationRunner "ch.qscqlmpa.dwitch.app.CustomTestRunner"
 
         // Clears the app state between instrumented tests (activities, DB, ...)
         // Documentation: https://developer.android.com/training/testing/junit-runner

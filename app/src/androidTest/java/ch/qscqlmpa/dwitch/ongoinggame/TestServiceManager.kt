@@ -6,18 +6,18 @@ import javax.inject.Inject
 class TestServiceManager @Inject constructor() : ServiceManager {
 
     override fun startHostService(gameLocalId: Long, localPlayerLocalId: Long) {
-        TODO("Not yet implemented")
+        // Nothing to do
     }
 
     override fun startGuestService(gameLocalId: Long, localPlayerLocalId: Long, hostPort: Int, hostIpAddress: String) {
-        TODO("Not yet implemented")
+        // Nothing to do
     }
 
     override fun stopHostService() {
-        TODO("Not yet implemented")
+        // Nothing to do
     }
 
     override fun goToHostGameRoom() {
-        TODO("Not yet implemented")
+        // Nothing to do
     }
 }
