@@ -38,20 +38,23 @@ internal class GameUpdatedUsecaseTest : BaseUnitTest() {
 
     @Test
     fun `should store up-to-date game state`() {
-        val gameInfo = TestEntityFactory.createGameInfo()
+        val gameState = TestEntityFactory.createGameState()
 
-        usecase.handleUpdatedGameState(gameInfo).test().assertComplete()
+        usecase.handleUpdatedGameState(gameState).test().assertComplete()
 
-        verify { mockInGameStore.updateGameState(gameInfo.gameState) }
+        verify { mockInGameStore.updateGameState(gameState) }
     }
 
     @Test
     fun `should send up-to-date game state to all`() {
-        val gameInfo = TestEntityFactory.createGameInfo()
+        val gameState = TestEntityFactory.createGameState()
 
-        usecase.handleUpdatedGameState(gameInfo).test().assertComplete()
+        usecase.handleUpdatedGameState(gameState).test().assertComplete()
 
-        val messageWrapperRef = EnvelopeToSend(RecipientType.All, Message.GameStateUpdatedMessage(gameInfo.gameState))
+        val messageWrapperRef = EnvelopeToSend(
+            RecipientType.All,
+            Message.GameStateUpdatedMessage(gameState)
+        )
         verify { mockCommunicator.sendGameState(messageWrapperRef) }
     }
 }

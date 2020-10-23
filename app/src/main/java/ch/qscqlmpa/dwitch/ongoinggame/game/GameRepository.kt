@@ -1,20 +1,19 @@
 package ch.qscqlmpa.dwitch.ongoinggame.game
 
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
-import ch.qscqlmpa.dwitchengine.model.game.GameInfo
+import ch.qscqlmpa.dwitchengine.model.game.GameState
+import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import io.reactivex.Observable
-import io.reactivex.Single
 import javax.inject.Inject
 
 internal class GameRepository @Inject constructor(private val store: InGameStore) {
 
-    fun getGameInfo(): Single<GameInfo> {
-        return Single.fromCallable {
-            GameInfo(
-                store.getGameState(),
-                store.getLocalPlayerInGameId()
-            )
-        }
+    fun getLocalPlayerId(): PlayerInGameId {
+        return store.getLocalPlayerInGameId()
+    }
+
+    fun getGameState(): GameState {
+        return store.getGameState()
     }
 
     fun observeGameInfo(): Observable<GameInfo> {

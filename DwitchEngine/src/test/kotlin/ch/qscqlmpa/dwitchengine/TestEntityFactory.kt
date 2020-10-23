@@ -3,7 +3,6 @@ package ch.qscqlmpa.dwitchengine
 import ch.qscqlmpa.dwitchengine.actions.startnewgame.GameBootstrap
 import ch.qscqlmpa.dwitchengine.initialgamesetup.random.RandomInitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.game.GameInfo
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.*
 
@@ -141,12 +140,8 @@ internal object TestEntityFactory {
         )
     }
 
-    fun createGameState(localPlayerId: PlayerInGameId = PlayerInGameId(100)): GameState {
+    fun createGameState(): GameState {
         val players = listOf(createHostPlayerInfo(), createGuestPlayer1Info(), createGuestPlayer2Info())
-        return GameBootstrap.createNewGame(players, localPlayerId, RandomInitialGameSetup(players.size))
-    }
-
-    fun createGameInfo(localPlayerId: PlayerInGameId = PlayerInGameId(100)): GameInfo {
-        return GameInfo(createGameState(), localPlayerId)
+        return GameBootstrap.createNewGame(players, RandomInitialGameSetup(players.size))
     }
 }

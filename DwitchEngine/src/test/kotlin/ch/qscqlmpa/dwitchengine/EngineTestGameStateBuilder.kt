@@ -42,7 +42,6 @@ class EngineTestGameStateBuilder {
                 gamePhase,
                 playersMap,
                 playingOrder,
-                localPlayer,
                 currentPlayer,
                 activePlayers,
                 playersDoneForRound,

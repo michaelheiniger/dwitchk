@@ -4,7 +4,6 @@ import ch.qscqlmpa.dwitchengine.actions.startnewgame.GameBootstrap
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameEvent
-import ch.qscqlmpa.dwitchengine.model.game.GameInfo
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.*
@@ -68,7 +67,6 @@ internal class DwitchEngineTest {
 
         gameState = GameBootstrap.createNewGame(
                 listOf(hostPlayer, guestPlayer1, guestPlayer2, guestPlayer3, guestPlayer4),
-                hostPlayerId,
                 initialGameSetup
         )
     }
@@ -84,8 +82,7 @@ internal class DwitchEngineTest {
      */
     @Test
     fun `Play whole round with 5 players`() {
-        PlayerDashboardRobot(getPlayerDashboard())
-                .assertLocalPlayerId(hostPlayerId)
+        PlayerDashboardRobot(getPlayerDashboard(hostPlayerId))
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
@@ -94,48 +91,42 @@ internal class DwitchEngineTest {
                 .assertCanEndGame(false)
         playCard(Card.Diamonds5)
 
-        PlayerDashboardRobot(getPlayerDashboard())
-                .assertLocalPlayerId(guestPlayer2Id)
+        PlayerDashboardRobot(getPlayerDashboard(guestPlayer2Id))
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
                 .assertCardsOnTable(listOf(Card.Clubs5, Card.Diamonds5))
         playCard(Card.Hearts2)
 
-        PlayerDashboardRobot(getPlayerDashboard())
-                .assertLocalPlayerId(guestPlayer2Id)
+        PlayerDashboardRobot(getPlayerDashboard(guestPlayer2Id))
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
                 .assertCardsOnTable(emptyList())
         playCard(Card.Hearts3)
 
-        PlayerDashboardRobot(getPlayerDashboard())
-                .assertLocalPlayerId(guestPlayer3Id)
+        PlayerDashboardRobot(getPlayerDashboard(guestPlayer3Id))
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
                 .assertCardsOnTable(listOf(Card.Hearts3))
         playCard(Card.Spades3)
 
-        PlayerDashboardRobot(getPlayerDashboard())
-                .assertLocalPlayerId(hostPlayerId)
+        PlayerDashboardRobot(getPlayerDashboard(hostPlayerId))
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
                 .assertCardsOnTable(listOf(Card.Hearts3, Card.Spades3))
         playCard(Card.Diamonds3)
 
-        PlayerDashboardRobot(getPlayerDashboard())
-                .assertLocalPlayerId(guestPlayer2Id)
+        PlayerDashboardRobot(getPlayerDashboard(guestPlayer2Id))
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
                 .assertCardsOnTable(listOf(Card.Hearts3, Card.Spades3, Card.Diamonds3))
         playCard(Card.Hearts4)
 
-        PlayerDashboardRobot(getPlayerDashboard())
-                .assertLocalPlayerId(guestPlayer3Id)
+        PlayerDashboardRobot(getPlayerDashboard(guestPlayer3Id))
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
@@ -143,16 +134,14 @@ internal class DwitchEngineTest {
                 .assertPlayerState(guestPlayer2Id, PlayerState.Done)
         playCard(Card.Spades2)
 
-        PlayerDashboardRobot(getPlayerDashboard())
-                .assertLocalPlayerId(guestPlayer3Id)
+        PlayerDashboardRobot(getPlayerDashboard(guestPlayer3Id))
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
                 .assertCardsOnTable(emptyList())
         playCard(Card.Spades4)
 
-        PlayerDashboardRobot(getPlayerDashboard())
-                .assertLocalPlayerId(guestPlayer4Id)
+        PlayerDashboardRobot(getPlayerDashboard(guestPlayer4Id))
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
@@ -160,16 +149,14 @@ internal class DwitchEngineTest {
                 .assertPlayerState(guestPlayer3Id, PlayerState.Done)
         playCard(Card.DiamondsJack)
 
-        PlayerDashboardRobot(getPlayerDashboard())
-                .assertLocalPlayerId(hostPlayerId)
+        PlayerDashboardRobot(getPlayerDashboard(hostPlayerId))
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
                 .assertCardsOnTable(listOf(Card.Spades4, Card.DiamondsJack))
         playCard(Card.Diamonds2)
 
-        PlayerDashboardRobot(getPlayerDashboard())
-                .assertLocalPlayerId(guestPlayer1Id)
+        PlayerDashboardRobot(getPlayerDashboard(guestPlayer1Id))
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
@@ -177,48 +164,42 @@ internal class DwitchEngineTest {
                 .assertPlayerState(hostPlayerId, PlayerState.Done)
         playCard(Card.Clubs3)
 
-        PlayerDashboardRobot(getPlayerDashboard())
-                .assertLocalPlayerId(guestPlayer4Id)
+        PlayerDashboardRobot(getPlayerDashboard(guestPlayer4Id))
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
                 .assertCardsOnTable(listOf(Card.Clubs3))
         playCard(Card.ClubsQueen)
 
-        PlayerDashboardRobot(getPlayerDashboard())
-                .assertLocalPlayerId(guestPlayer1Id)
+        PlayerDashboardRobot(getPlayerDashboard(guestPlayer1Id))
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
                 .assertCardsOnTable(listOf(Card.Clubs3, Card.ClubsQueen))
         playCard(Card.Clubs2)
 
-        PlayerDashboardRobot(getPlayerDashboard())
-                .assertLocalPlayerId(guestPlayer1Id)
+        PlayerDashboardRobot(getPlayerDashboard(guestPlayer1Id))
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
                 .assertCardsOnTable(emptyList())
         playCard(Card.Clubs6)
 
-        PlayerDashboardRobot(getPlayerDashboard())
-                .assertLocalPlayerId(guestPlayer4Id)
+        PlayerDashboardRobot(getPlayerDashboard(guestPlayer4Id))
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
                 .assertCardsOnTable(listOf(Card.Clubs6))
         playCard(Card.HeartsKing)
 
-        PlayerDashboardRobot(getPlayerDashboard())
-                .assertLocalPlayerId(guestPlayer1Id)
+        PlayerDashboardRobot(getPlayerDashboard(guestPlayer1Id))
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
                 .assertCardsOnTable(listOf(Card.Clubs6, Card.HeartsKing))
         pickCard()
 
-        PlayerDashboardRobot(getPlayerDashboard())
-                .assertLocalPlayerId(guestPlayer1Id)
+        PlayerDashboardRobot(getPlayerDashboard(guestPlayer1Id))
                 .assertCanPlay(true)
                 .assertCanPass(true)
                 .assertCanPickACard(false)
@@ -226,8 +207,7 @@ internal class DwitchEngineTest {
                 .assertGameEvent(null)
         passTurn()
 
-        PlayerDashboardRobot(getPlayerDashboard())
-                .assertLocalPlayerId(guestPlayer4Id)
+        PlayerDashboardRobot(getPlayerDashboard(guestPlayer4Id))
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
@@ -236,8 +216,7 @@ internal class DwitchEngineTest {
                 .assertGamePhase(GamePhase.RoundIsOnGoing)
         playCard(Card.SpadesAce)
 
-        PlayerDashboardRobot(getPlayerDashboard())
-                .assertLocalPlayerId(guestPlayer4Id)
+        PlayerDashboardRobot(getPlayerDashboard(guestPlayer4Id))
                 .assertCanPlay(false)
                 .assertCanPass(false)
                 .assertCanPickACard(false)
@@ -256,18 +235,18 @@ internal class DwitchEngineTest {
     }
 
     private fun playCard(card: Card) {
-        gameState = DwitchEngine(GameInfo(gameState, gameState.currentPlayerId)).playCard(card).gameState
+        gameState = DwitchEngine(gameState).playCard(card)
     }
 
     private fun pickCard() {
-        gameState = DwitchEngine(GameInfo(gameState, gameState.currentPlayerId)).pickCard().gameState
+        gameState = DwitchEngine(gameState).pickCard()
     }
 
     private fun passTurn() {
-        gameState = DwitchEngine(GameInfo(gameState, gameState.currentPlayerId)).passTurn().gameState
+        gameState = DwitchEngine(gameState).passTurn()
     }
 
-    private fun getPlayerDashboard(): PlayerDashboard {
-        return DwitchEngine(GameInfo(gameState, gameState.currentPlayerId)).getPlayerDashboard()
+    private fun getPlayerDashboard(playerId: PlayerInGameId): PlayerDashboard {
+        return DwitchEngine(gameState).getPlayerDashboard(playerId)
     }
 }

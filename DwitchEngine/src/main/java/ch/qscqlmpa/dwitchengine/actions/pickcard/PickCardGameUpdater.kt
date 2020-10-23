@@ -4,13 +4,11 @@ import ch.qscqlmpa.dwitchengine.actions.GameUpdaterBase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 
-internal class PickCardGameUpdater(currentGameState: GameState) : GameUpdaterBase(currentGameState) {
-
-    private val localPlayerId = currentGameState.localPlayerId
+internal class PickCardGameUpdater(private val currentGameState: GameState) : GameUpdaterBase(currentGameState) {
 
     fun pickCardFromDeckAndPutItInHands() {
         val cardPicked = gameStateMutable.removeTopCardFromDeck()
-        gameStateMutable.addCardToHand(localPlayerId, cardPicked)
+        gameStateMutable.addCardToHand(currentGameState.currentPlayerId, cardPicked)
     }
 
     fun setPlayerHasPickedCard(playerId: PlayerInGameId) {

@@ -37,16 +37,6 @@ internal class GameStateUpdatedMessageProcessorTest : BaseMessageProcessorTest()
     }
 
     @Test
-    fun `The received GameState is stored in the local store with the correct local (host) player in-game ID`() {
-        testReceivedGameStateIsStoredInTheLocalStore(PlayerRole.HOST)
-    }
-
-    @Test
-    fun `The received GameState is stored in the local store with the correct local (guest) player in-game ID`() {
-        testReceivedGameStateIsStoredInTheLocalStore(PlayerRole.GUEST)
-    }
-
-    @Test
     fun `When the local player is the host, it forwards the updated game state message`() {
         createLocalPlayer(PlayerRole.HOST)
         mockGetLocalPlayer()
@@ -69,17 +59,6 @@ internal class GameStateUpdatedMessageProcessorTest : BaseMessageProcessorTest()
 
         verify(exactly = 0) { mockGameCommunicator.sendGameState(any()) }
         confirmVerified(mockGameCommunicator)
-    }
-
-    private fun testReceivedGameStateIsStoredInTheLocalStore(localPlayerRole: PlayerRole) {
-        createLocalPlayer(localPlayerRole)
-        mockGetLocalPlayer()
-
-        assertThat(gameState.localPlayerId).isNotEqualTo(localPlayer.inGameId)
-
-        launchTest().test().assertComplete()
-
-        verify { mockInGameStore.updateGameState(gameState.copy(localPlayerId = localPlayer.inGameId)) }
     }
 
     private fun launchTest(): Completable {

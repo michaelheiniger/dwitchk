@@ -16,7 +16,6 @@ import ch.qscqlmpa.dwitchengine.actions.startnewround.StartNewRoundState
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.game.GameInfo
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboard
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboardFactory
@@ -31,17 +30,16 @@ the table stack is removed and the player can play any card.
 /**
  * The Engine is executed by the current player. Hence the assumption is that the current player is the local player.
  */
-class DwitchEngine(gameInfo: GameInfo) {
+class DwitchEngine(private val currentGameState: GameState) {
 
-    private val localPlayerId = gameInfo.localPlayerId
-    private val currentGameState = gameInfo.gameState.copy(localPlayerId = localPlayerId)
+    private val currentPlayerId = currentGameState.currentPlayerId
 
-    fun getPlayerDashboard(): PlayerDashboard {
-        return PlayerDashboardFactory.create(currentGameState)
+    fun getPlayerDashboard(playerId: PlayerInGameId): PlayerDashboard {
+        return PlayerDashboardFactory.create(currentGameState, playerId)
     }
 
-    fun playCard(cardPlayed: Card): GameInfo {
-        println("Player $localPlayerId plays card $cardPlayed, current game state: $currentGameState")
+    fun playCard(cardPlayed: Card): GameState {
+        println("Player $currentPlayerId plays card $cardPlayed, current game state: $currentGameState")
         return PlayCard(
                 PlayCardState(currentGameState, cardPlayed),
                 PlayCardGameUpdater(currentGameState, cardPlayed)
@@ -49,8 +47,8 @@ class DwitchEngine(gameInfo: GameInfo) {
                 .also(this::logUpdatedGameState)
     }
 
-    fun pickCard(): GameInfo {
-        println("Player $localPlayerId picks a card, current game state: $currentGameState")
+    fun pickCard(): GameState {
+        println("Player $currentPlayerId picks a card, current game state: $currentGameState")
         return PickCard(
                 PickCardState(currentGameState),
                 PickCardGameUpdater(currentGameState)
@@ -58,8 +56,8 @@ class DwitchEngine(gameInfo: GameInfo) {
                 .also(this::logUpdatedGameState)
     }
 
-    fun passTurn(): GameInfo {
-        println("Player $localPlayerId passes its turn, current game state: $currentGameState")
+    fun passTurn(): GameState {
+        println("Player $currentPlayerId passes its turn, current game state: $currentGameState")
         return PassTurn(
                 PassTurnState(currentGameState),
                 PassTurnGameUpdater(currentGameState)
@@ -67,8 +65,8 @@ class DwitchEngine(gameInfo: GameInfo) {
                 .also(this::logUpdatedGameState)
     }
 
-    fun startNewRound(cardDealerFactory: CardDealerFactory): GameInfo {
-        println("Player $localPlayerId starts a new round, current game state: $currentGameState")
+    fun startNewRound(cardDealerFactory: CardDealerFactory): GameState {
+        println("Player $currentPlayerId starts a new round, current game state: $currentGameState")
         return StartNewRound(
                 StartNewRoundState(currentGameState),
                 StartNewRoundGameUpdater(currentGameState),
@@ -77,14 +75,14 @@ class DwitchEngine(gameInfo: GameInfo) {
                 .also(this::logUpdatedGameState)
     }
 
-    private fun logUpdatedGameState(gameInfo: GameInfo) {
-        println("Updated game state: ${gameInfo.gameState}")
+    private fun logUpdatedGameState(gameState: GameState) {
+        println("Updated game state: $gameState")
     }
 
     companion object {
-        fun createNewGame(playersInfo: List<PlayerInfo>, localPlayerId: PlayerInGameId, initialGameSetup: InitialGameSetup): GameState {
+        fun createNewGame(playersInfo: List<PlayerInfo>, initialGameSetup: InitialGameSetup): GameState {
             println("Start new game, players:  $playersInfo, initial game setup: $initialGameSetup")
-            return GameBootstrap.createNewGame(playersInfo, localPlayerId, initialGameSetup)
+            return GameBootstrap.createNewGame(playersInfo, initialGameSetup)
         }
     }
 }

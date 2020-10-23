@@ -1,13 +1,15 @@
 package ch.qscqlmpa.dwitchengine.actions.startnewround
 
-import ch.qscqlmpa.dwitchengine.*
+import ch.qscqlmpa.dwitchengine.DwitchEngine
+import ch.qscqlmpa.dwitchengine.EngineTestBase
+import ch.qscqlmpa.dwitchengine.GameStateRobot
+import ch.qscqlmpa.dwitchengine.PlayerRobot
 import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealer
 import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.card.CardUtil
 import ch.qscqlmpa.dwitchengine.model.game.GameEvent
-import ch.qscqlmpa.dwitchengine.model.game.GameInfo
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.player.PlayerState
 import ch.qscqlmpa.dwitchengine.model.player.Rank
@@ -49,7 +51,6 @@ class StartNewRoundTest : EngineTestBase() {
                 .assertNumCardsInDeck(CardUtil.deckSize - 7)
                 .assertPlayingOrder(listOf(player1Id, player2Id))
                 .assertActivePlayers(player1Id, player2Id)
-                .assertLocalPlayer(player2Id)
                 .assertCurrentPlayerId(player1Id)
 
         PlayerRobot(gameStateUpdated, player1Id)
@@ -93,7 +94,6 @@ class StartNewRoundTest : EngineTestBase() {
                 .assertNumCardsInDeck(CardUtil.deckSize - 16)
                 .assertPlayingOrder(listOf(player5Id, player4Id, player1Id, player3Id, player2Id))
                 .assertActivePlayers(player1Id, player2Id, player3Id, player4Id, player5Id)
-                .assertLocalPlayer(player2Id)
                 .assertCurrentPlayerId(player5Id)
 
         PlayerRobot(gameStateUpdated, player1Id)
@@ -168,6 +168,6 @@ class StartNewRoundTest : EngineTestBase() {
 
     private fun launchStartNewRoundTest() {
         val gameState = gameStateBuilder.build()
-        gameStateUpdated = DwitchEngine(GameInfo(gameState, gameState.currentPlayerId)).startNewRound(cardDealerFactory).gameState
+        gameStateUpdated = DwitchEngine(gameState).startNewRound(cardDealerFactory)
     }
 }

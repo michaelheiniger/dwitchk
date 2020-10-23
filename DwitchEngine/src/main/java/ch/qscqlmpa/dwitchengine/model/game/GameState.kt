@@ -14,7 +14,6 @@ import kotlinx.serialization.Serializable
 data class GameState(val phase: GamePhase,
                      val players: Map<PlayerInGameId, Player>,
                      val playingOrder: List<PlayerInGameId>,
-                     val localPlayerId: PlayerInGameId,
                      val currentPlayerId: PlayerInGameId,
                      val activePlayers: Set<PlayerInGameId>,
                      val playersDoneForRound: List<PlayerDone>,
@@ -37,10 +36,6 @@ data class GameState(val phase: GamePhase,
         return players.getValue(inGameId)
     }
 
-    fun localPlayer(): Player {
-        return players.getValue(localPlayerId)
-    }
-
     fun currentPlayer(): Player {
         return player(currentPlayerId)
     }
@@ -59,7 +54,7 @@ data class GameState(val phase: GamePhase,
     }
 
     fun activePlayersInPlayingOrderAfterLocalPlayer(): List<Player> {
-        val localPlayerIndex = playingOrder.indexOf(localPlayerId)
+        val localPlayerIndex = playingOrder.indexOf(currentPlayerId)
         return playingOrder.shiftRightByN(-localPlayerIndex)
                 .filter { id -> activePlayers.contains(id) }
                 .map { id -> player(id) }

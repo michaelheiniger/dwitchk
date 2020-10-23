@@ -10,7 +10,6 @@ import ch.qscqlmpa.dwitch.ongoinggame.messages.MessageFactory
 import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil
 import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.game.GameInfo
 import ch.qscqlmpa.dwitchengine.model.player.PlayerState
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import org.assertj.core.api.Assertions.assertThat
@@ -60,7 +59,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         pickACard()
 
         val gameStateUpdatedMessage1 = waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
-        assertThat(gameStateUpdatedMessage1.gameState.localPlayer().hasPickedCard).isTrue()
+        assertThat(gameStateUpdatedMessage1.gameState.currentPlayer().hasPickedCard).isTrue()
 
         assertCardInHand(0, Card.Hearts4)
         assertCardInHand(1, Card.Clubs2)
@@ -73,7 +72,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         passTurn()
 
         val gameStateUpdatedMessage2 = waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
-        assertThat(gameStateUpdatedMessage2.gameState.localPlayer().state).isEqualTo(PlayerState.TurnPassed)
+        assertThat(gameStateUpdatedMessage2.gameState.currentPlayer().state).isEqualTo(PlayerState.TurnPassed)
 
         assertCanPickACard(false)
         assertCanPassTurn(false)
@@ -154,9 +153,8 @@ class GameRoomAsHostTest : BaseHostTest() {
     }
 
     private fun otherPlayerPlaysCard(guest: GuestIdTestHost, card: Card) {
-        val player = getPlayer(guest)
         val currentGameState = inGameStore.getGameState()
-        val newGameState = DwitchEngine(GameInfo(currentGameState, player.inGameId)).playCard(card).gameState
+        val newGameState = DwitchEngine(currentGameState).playCard(card)
         serverTestStub.guestSendsMessageToServer(guest, MessageFactory.createGameStateUpdatedMessage(newGameState), true)
     }
 

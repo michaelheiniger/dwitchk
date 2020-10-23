@@ -5,7 +5,6 @@ import ch.qscqlmpa.dwitchengine.EngineTestBase
 import ch.qscqlmpa.dwitchengine.GameStateRobot
 import ch.qscqlmpa.dwitchengine.PlayerRobot
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.game.GameInfo
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.player.PlayerState
 import ch.qscqlmpa.dwitchengine.model.player.Rank
@@ -26,7 +25,6 @@ class PickCardTest : EngineTestBase() {
 
         GameStateRobot(initialGameState)
                 .assertCurrentPlayerId(player1Id)
-                .assertLocalPlayer(player1Id)
 
         PlayerRobot(initialGameState, player1Id)
                 .assertNumCardsInHand(1)
@@ -36,7 +34,6 @@ class PickCardTest : EngineTestBase() {
         GameStateRobot(gameStateUpdated)
                 .assertNumCardsOnTable(1) // Still one since no card played
                 .assertCurrentPlayerId(player1Id)
-                .assertLocalPlayer(player1Id)
 
         PlayerRobot(gameStateUpdated, player1Id)
                 .assertNumCardsInHand(2) // One more card: the card picked
@@ -51,6 +48,6 @@ class PickCardTest : EngineTestBase() {
 
     private fun launchPickCardTest() {
         val gameState = gameStateBuilder.build()
-        gameStateUpdated = DwitchEngine(GameInfo(gameState, gameState.currentPlayerId)).pickCard().gameState
+        gameStateUpdated = DwitchEngine(gameState).pickCard()
     }
 }

@@ -12,7 +12,6 @@ import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.utils.PlayerDashboardRobot
 import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.game.GameInfo
 
 abstract class IntTestPlayer {
 
@@ -63,8 +62,8 @@ abstract class IntTestPlayer {
     fun assertDashboard(): PlayerDashboardRobot {
         val gameState = inGameStore.getGameState()
         println("gameState: $gameState")
+        val engine = DwitchEngine(gameState)
         val localPlayerInGameId = inGameStore.getLocalPlayerInGameId()
-        val engine = DwitchEngine(GameInfo(gameState, localPlayerInGameId))
-        return PlayerDashboardRobot(engine.getPlayerDashboard())
+        return PlayerDashboardRobot(engine.getPlayerDashboard(localPlayerInGameId))
     }
 }

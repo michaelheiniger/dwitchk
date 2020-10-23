@@ -5,7 +5,6 @@ import ch.qscqlmpa.dwitchengine.EngineTestBase
 import ch.qscqlmpa.dwitchengine.GameStateRobot
 import ch.qscqlmpa.dwitchengine.PlayerRobot
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.game.GameInfo
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.player.PlayerState
 import ch.qscqlmpa.dwitchengine.model.player.Rank
@@ -75,6 +74,6 @@ class PassTurnTest : EngineTestBase() {
     }
 
     private fun launchPassTurnTest() {
-        gameStateUpdated = DwitchEngine(GameInfo(initialGameState, initialGameState.currentPlayerId)).passTurn().gameState
+        gameStateUpdated = DwitchEngine(initialGameState).passTurn()
     }
 }

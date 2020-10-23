@@ -45,11 +45,6 @@ class GameStateRobot(private val gameState: GameState) {
         return this
     }
 
-    fun assertLocalPlayer(expectedPlayerId: PlayerInGameId): GameStateRobot {
-        assertThat(gameState.localPlayerId).isEqualTo(expectedPlayerId)
-        return this
-    }
-
     fun assertPlayersDoneForRoundIsEmpty(): GameStateRobot {
         assertThat(gameState.playersDoneForRound.isEmpty()).isTrue()
         return this

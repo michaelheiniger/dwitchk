@@ -6,7 +6,6 @@ import ch.qscqlmpa.dwitchengine.GameStateRobot
 import ch.qscqlmpa.dwitchengine.PlayerRobot
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameEvent
-import ch.qscqlmpa.dwitchengine.model.game.GameInfo
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.player.PlayerState
 import ch.qscqlmpa.dwitchengine.model.player.Rank
@@ -423,6 +422,6 @@ class PlayCardTest : EngineTestBase() {
 
     private fun launchPlayCardTest(cardPlayed: Card) {
         val gameState = gameStateBuilder.build()
-        gameStateUpdated = DwitchEngine(GameInfo(gameState, gameState.currentPlayerId)).playCard(cardPlayed).gameState
+        gameStateUpdated = DwitchEngine(gameState).playCard(cardPlayed)
     }
 }

@@ -22,28 +22,24 @@ internal class PlayCardState(
     }
 
     fun roundIsOver(): Boolean {
-        return localPlayerHasNoMoreCards() && currentGameState.numberOfActivePlayers() == 2
+        return currentPlayerHasNoMoreCards() && currentGameState.numberOfActivePlayers() == 2
     }
 
     fun nextWaitingPlayer(): Player? {
         return currentGameState.nextWaitingPlayer()
     }
 
-    fun localPlayerHasNoMoreCards(): Boolean {
-        return currentGameState.localPlayer().cardsInHand.size == 1
-    }
-
-    fun localPlayer(): Player {
-        return currentGameState.localPlayer()
+    fun currentPlayerHasNoMoreCards(): Boolean {
+        return currentGameState.currentPlayer().cardsInHand.size == 1
     }
 
     fun findNewCurrentPlayer(): Player {
         val nextNonDwitchedWaitingPlayer = nextNonDwitchedWaitingPlayer()
-        return if (localPlayerHasNoMoreCards()) {
+        return if (currentPlayerHasNoMoreCards()) {
             nextNonDwitchedWaitingPlayer ?: turnPassedPlayerInOrderAfterLocalPlayer().first()
         } else {
             if (cardPlayedIsJoker() || nextNonDwitchedWaitingPlayer == null) {
-                currentGameState.localPlayer()
+                currentGameState.currentPlayer()
             } else {
                 nextNonDwitchedWaitingPlayer
             }
@@ -66,7 +62,7 @@ internal class PlayCardState(
             throw IllegalStateException("There must be exactly two remaining active players at this step: local player and another one.")
         }
 
-        return currentGameState.activePlayers.find { id -> id != currentGameState.localPlayerId }
+        return currentGameState.activePlayers.find { id -> id != currentGameState.currentPlayerId }
                 ?: throw IllegalStateException()
     }
 

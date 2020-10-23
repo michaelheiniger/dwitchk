@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchengine.actions.playcard
 
-import ch.qscqlmpa.dwitchengine.model.game.GameInfo
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
+import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.Player
 import ch.qscqlmpa.dwitchengine.model.player.PlayerState
 
@@ -10,10 +10,10 @@ internal class PlayCard(
     private val gameUpdater: PlayCardGameUpdater
 ) {
 
-    private val localPlayerId = playCardState.localPlayerId()
+    private val localPlayerId = playCardState.currentPlayerId()
     private val cardPlayed = playCardState.cardPlayed()
 
-    fun getUpdatedGameState(): GameInfo {
+    fun getUpdatedGameState(): GameState {
         playCardState.checkState()
 
         gameUpdater.undwitchAllPlayers()
@@ -44,7 +44,7 @@ internal class PlayCard(
                 dwitchNextWaitingPlayerIfAny()
             }
 
-            if (playCardState.localPlayerHasNoMoreCards()) {
+            if (playCardState.currentPlayerHasNoMoreCards()) {
                 gameUpdater.playerIsDone(localPlayerId, playCardState.cardPlayedIsJoker())
             }
 

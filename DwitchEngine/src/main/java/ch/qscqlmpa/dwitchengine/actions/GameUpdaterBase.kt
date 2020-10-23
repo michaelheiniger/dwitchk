@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitchengine.actions
 
-import ch.qscqlmpa.dwitchengine.model.game.GameInfo
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.game.GameStateMutable
@@ -50,8 +49,8 @@ internal abstract class GameUpdaterBase(currentGameState: GameState) {
         gameStateMutable.setPlayerState(playerId, PlayerState.Playing)
     }
 
-    fun buildUpdatedGameState(): GameInfo {
-        return GameInfo(gameStateMutable.toGameState(), gameStateMutable.localPlayerId)
+    fun buildUpdatedGameState(): GameState {
+        return gameStateMutable.toGameState()
     }
 
     fun resetPlayerHasPickedCard(playerId: PlayerInGameId) {

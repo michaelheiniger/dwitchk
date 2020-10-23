@@ -40,7 +40,7 @@ class LaunchGameUsecase @Inject constructor(private val store: InGameStore,
             val players = store.getPlayersInWaitingRoom().map(Player::toPlayerInfo)
             val localPlayerId = store.getLocalPlayerInGameId()
             val initialGameSetup = initialGameSetupFactory.getInitialGameSetup(players.size)
-            return@fromCallable DwitchEngine.createNewGame(players, localPlayerId, initialGameSetup)
+            return@fromCallable DwitchEngine.createNewGame(players, initialGameSetup)
         }
     }
 

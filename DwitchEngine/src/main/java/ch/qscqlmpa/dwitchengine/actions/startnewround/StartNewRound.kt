@@ -2,8 +2,8 @@ package ch.qscqlmpa.dwitchengine.actions.startnewround
 
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.model.card.CardName
-import ch.qscqlmpa.dwitchengine.model.game.GameInfo
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
+import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerState
 import ch.qscqlmpa.dwitchengine.rules.PlayingOrder
 
@@ -13,7 +13,7 @@ internal class StartNewRound constructor(
     private val cardDealerFactory: CardDealerFactory
 ) {
 
-    fun getUpdateGameState(): GameInfo {
+    fun getUpdateGameState(): GameState {
         gameUpdater.setGamePhase(GamePhase.RoundIsBeginning)
         gameUpdater.clearDonePlayersInFinishingOrder()
         gameUpdater.joker(CardName.Two)
@@ -47,5 +47,4 @@ internal class StartNewRound constructor(
         gameUpdater.setFirstCardOnTable(remainingCards.removeAt(0))
         gameUpdater.cardsInDeck(remainingCards)
     }
-
 }

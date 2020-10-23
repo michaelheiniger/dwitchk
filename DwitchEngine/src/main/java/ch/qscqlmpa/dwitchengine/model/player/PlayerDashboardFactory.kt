@@ -7,23 +7,22 @@ import ch.qscqlmpa.dwitchengine.model.game.GameState
 
 object PlayerDashboardFactory {
 
-    fun create(gameState: GameState): PlayerDashboard {
-
-        val localPlayer = gameState.localPlayer()
+    fun create(gameState: GameState, playerId: PlayerInGameId): PlayerDashboard {
+        val player = gameState.player(playerId)
 
         val lastCardPlayed = gameState.lastCardOnTable() ?: Card.Blank
 
         return PlayerDashboard(
-                localPlayer,
+                player,
                 lastCardPlayed,
                 gameState.joker,
                 gameState.phase,
                 players(gameState),
                 gameState.playingOrder,
-                localPlayer.cardsInHand,
-                canPass(gameState),
-                canPickACard(gameState),
-                canPlay(gameState),
+                player.cardsInHand,
+                canPass(gameState, player),
+                canPickACard(gameState, player),
+                canPlay(gameState, player),
                 canStartNewRound(gameState),
                 canEndGame(gameState),
                 gameState.cardsOnTable,
@@ -38,13 +37,11 @@ object PlayerDashboardFactory {
                 .toMap()
     }
 
-    private fun canPlay(gameState: GameState): Boolean {
-        val localPlayer = gameState.localPlayer()
+    private fun canPlay(gameState: GameState, localPlayer: Player): Boolean {
         return localPlayer == gameState.currentPlayer() && roundIsNotOver(gameState)
     }
 
-    private fun canPickACard(gameState: GameState): Boolean {
-        val localPlayer = gameState.localPlayer()
+    private fun canPickACard(gameState: GameState, localPlayer: Player): Boolean {
         return if (localPlayer == gameState.currentPlayer()) {
             localPlayer.state == PlayerState.Playing
                     && !localPlayer.hasPickedCard
@@ -54,8 +51,7 @@ object PlayerDashboardFactory {
         }
     }
 
-    private fun canPass(gameState: GameState): Boolean {
-        val localPlayer = gameState.localPlayer()
+    private fun canPass(gameState: GameState, localPlayer: Player): Boolean {
         return if (localPlayer == gameState.currentPlayer()) {
             localPlayer.hasPickedCard && roundIsNotOver(gameState)
         } else {

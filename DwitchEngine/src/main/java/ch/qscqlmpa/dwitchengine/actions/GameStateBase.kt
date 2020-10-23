@@ -8,8 +8,7 @@ import ch.qscqlmpa.dwitchengine.model.player.PlayerState
 internal abstract class GameStateBase(private val currentGameState: GameState) {
 
     open fun checkState() {
-        checkLocalPlayerIsCurrentPlayer(currentGameState)
-        checkLocalPlayerState(currentGameState)
+        checkCurrentPlayerState()
     }
 
     fun numPlayersTotal(): Int {
@@ -20,18 +19,12 @@ internal abstract class GameStateBase(private val currentGameState: GameState) {
         return currentGameState.phase == GamePhase.RoundIsBeginning
     }
 
-    fun localPlayerId(): PlayerInGameId {
-        return currentGameState.localPlayerId
+    fun currentPlayerId(): PlayerInGameId {
+        return currentGameState.currentPlayerId
     }
 
-    private fun checkLocalPlayerIsCurrentPlayer(gameState: GameState) {
-        if (gameState.localPlayer() != gameState.currentPlayer()) {
-            throw java.lang.IllegalStateException("Local player (id: ${gameState.localPlayer().inGameId}) cannot play because it is NOT the current player (id: ${gameState.currentPlayer().inGameId}).")
-        }
-    }
-
-    private fun checkLocalPlayerState(currentGameState: GameState) {
-        val playerState = currentGameState.localPlayer().state
+    private fun checkCurrentPlayerState() {
+        val playerState = currentGameState.currentPlayer().state
         if (PlayerState.Playing != playerState) {
             throw IllegalStateException("Player is not in state $playerState")
         }

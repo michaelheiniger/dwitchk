@@ -1,13 +1,13 @@
 package ch.qscqlmpa.dwitchengine.actions.passturn
 
-import ch.qscqlmpa.dwitchengine.model.game.GameInfo
+import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerState
 
 internal class PassTurn(private val passTurnState: PassTurnState, private val gameUpdater: PassTurnGameUpdater) {
 
-    private val localPlayerId = passTurnState.localPlayerId()
+    private val localPlayerId = passTurnState.currentPlayerId()
 
-    fun getUpdatedGameState(): GameInfo {
+    fun getUpdatedGameState(): GameState {
         passTurnState.checkState()
 
         gameUpdater.undwitchAllPlayers()

@@ -24,7 +24,7 @@ internal class GameBootstrapTest {
                 TestEntityFactory.createGuestPlayer4Info()
         )
 
-        val gameState = GameBootstrap.createNewGame(playersInfo, localPlayerId, initialGameSetup)
+        val gameState = GameBootstrap.createNewGame(playersInfo, initialGameSetup)
 
         val asshole = gameState.players.values.find { p -> p.rank == Rank.Asshole }
         assertThat(gameState.playingOrder[0]).isEqualTo(asshole!!.inGameId)
@@ -55,7 +55,7 @@ internal class GameBootstrapTest {
                 TestEntityFactory.createGuestPlayer4Info()
         )
 
-        val gameState = GameBootstrap.createNewGame(playersInfo, localPlayerId, initialGameSetup)
+        val gameState = GameBootstrap.createNewGame(playersInfo, initialGameSetup)
 
         val asshole = gameState.players.values.find { p -> p.rank == Rank.Asshole }
         assertThat(asshole!!.state).isEqualTo(PlayerState.Playing)
@@ -86,7 +86,7 @@ internal class GameBootstrapTest {
                 TestEntityFactory.createGuestPlayer4Info()
         )
 
-        val gameState = GameBootstrap.createNewGame(playersInfo, localPlayerId, initialGameSetup)
+        val gameState = GameBootstrap.createNewGame(playersInfo, initialGameSetup)
 
         val asshole = gameState.players.values.find { p -> p.rank == Rank.Asshole }
         assertThat(asshole!!.inGameId).isEqualTo(gameState.currentPlayerId)
@@ -112,7 +112,7 @@ internal class GameBootstrapTest {
                 TestEntityFactory.createGuestPlayer4Info()
         )
 
-        val gameState = GameBootstrap.createNewGame(playersInfo, localPlayerId, initialGameSetup)
+        val gameState = GameBootstrap.createNewGame(playersInfo, initialGameSetup)
 
         assertThat(gameState.activePlayers).contains(host.id)
         assertThat(gameState.activePlayers).contains(guest1.id)
