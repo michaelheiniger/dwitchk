@@ -59,4 +59,8 @@ class IntTestHost(gameName: String) : IntTestPlayer() {
             .observeOn(Schedulers.trampoline())
             .blockingGet()
     }
+
+    fun endGame() {
+        ongoingGameComponent.endGameUsecase.endGame().blockingGet()
+    }
 }

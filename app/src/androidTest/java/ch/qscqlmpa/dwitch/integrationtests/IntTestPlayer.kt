@@ -73,10 +73,6 @@ abstract class IntTestPlayer {
         gameInteractor.startNewRound().blockingGet()
     }
 
-    fun endGame() {
-        gameInteractor.endGame().blockingGet()
-    }
-
     fun assertGameOverReceived() {
         val lastGameEvent = ongoingGameComponent.gameEventRepository.getLastEvent()
         assertThat(lastGameEvent).isEqualTo(GameEvent.GameOver)

@@ -36,7 +36,6 @@ class DwitchNoUiTest {
      */
     @Test
     fun playGameFromStartToEnd() {
-
         val host = IntTestHost(gameName)
         host.createGame()
 
@@ -209,7 +208,7 @@ class DwitchNoUiTest {
             .assertCanPlay(false)
             .assertGamePhase(GamePhase.RoundIsOver)
 
-        guest2.endGame()
+        host.endGame()
 
         host.assertGameOverReceived()
         guest1.assertGameOverReceived()

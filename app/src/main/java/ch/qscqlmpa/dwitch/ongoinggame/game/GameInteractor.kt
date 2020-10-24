@@ -10,6 +10,5 @@ interface GameInteractor {
     fun pickCard(): Completable
     fun passTurn(): Completable
     fun startNewRound(): Completable
-    fun endGame(): Completable
     fun observeDashboard(): Observable<PlayerDashboard>
 }

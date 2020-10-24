@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.ongoinggame.game
 
-import ch.qscqlmpa.dwitch.ongoinggame.usecases.EndGameUsecase
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameUpdatedUsecase
 import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
@@ -17,7 +16,6 @@ import javax.inject.Inject
 internal class GameInteractorImpl @Inject constructor(
     private val gameRepository: GameRepository,
     private val gameUpdatedUsecase: GameUpdatedUsecase,
-    private val endGameUsecase: EndGameUsecase,
     private val cardDealerFactory: CardDealerFactory
 ) : GameInteractor {
 
@@ -37,10 +35,6 @@ internal class GameInteractorImpl @Inject constructor(
 
     override fun startNewRound(): Completable {
         return handleGameStateUpdated { engine -> engine.startNewRound(cardDealerFactory) }
-    }
-
-    override fun endGame(): Completable {
-        return endGameUsecase.endGame()
     }
 
     override fun observeDashboard(): Observable<PlayerDashboard> {

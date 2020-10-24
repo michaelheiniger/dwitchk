@@ -18,6 +18,7 @@ import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEventRepository
 import ch.qscqlmpa.dwitch.ongoinggame.messageprocessors.MessageProcessorModule
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStoreModule
+import ch.qscqlmpa.dwitch.ongoinggame.usecases.EndGameUsecase
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameLaunchableUsecase
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.LaunchGameUsecase
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.PlayerReadyUsecase
@@ -55,6 +56,7 @@ interface IntTestOngoingGameComponent {
     val playerReadyUsecase: PlayerReadyUsecase
     val gameLaunchableUsecase: GameLaunchableUsecase
     val launchGameUsecase: LaunchGameUsecase
+    val endGameUsecase: EndGameUsecase
 
     val hostCommunication: HostCommunicator
     val guestCommunication: GuestCommunicator
