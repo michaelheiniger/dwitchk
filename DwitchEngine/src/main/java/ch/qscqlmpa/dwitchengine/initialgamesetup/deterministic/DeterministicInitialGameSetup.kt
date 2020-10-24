@@ -5,15 +5,12 @@ import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 
-class DeterministicInitialGameSetup(private val numPlayers: Int) : InitialGameSetup(numPlayers) {
+class DeterministicInitialGameSetup(
+    cardsForPlayer: Map<Int, List<Card>>,
+    private val rankForPlayer: Map<Int, Rank>
+) : InitialGameSetup(cardsForPlayer.size) {
 
-    private lateinit var cardDealer: DeterministicCardDealer
-    private lateinit var rankForPlayer: Map<Int, Rank>
-
-    fun initialize(cardsForPlayer: Map<Int, List<Card>>, rankForPlayer: Map<Int, Rank>) {
-        cardDealer = DeterministicCardDealer(numPlayers, cardsForPlayer)
-        this.rankForPlayer = rankForPlayer
-    }
+    private val cardDealer = DeterministicCardDealer(cardsForPlayer)
 
     override fun getCardsForPlayer(index: Int): List<Card> {
         return cardDealer.getCardsForPlayer(index)

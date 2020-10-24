@@ -1,14 +1,14 @@
 package ch.qscqlmpa.dwitch.ongoinggame.persistence
 
-import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
-import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitch.components.ongoinggame.OnGoingGameQualifiers.GAME_LOCAL_ID
 import ch.qscqlmpa.dwitch.components.ongoinggame.OnGoingGameQualifiers.LOCAL_PLAYER_LOCAL_ID
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.model.game.Game
 import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
+import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
 import ch.qscqlmpa.dwitch.persistence.AppRoomDatabase
+import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import io.reactivex.Flowable
 import io.reactivex.Observable
@@ -40,20 +40,20 @@ class InGameStoreImpl @Inject constructor(@Named(GAME_LOCAL_ID) private val game
     }
 
     override fun updateGameWithCommonId(gameCommonId: Long) {
-        return gameDao.updateGameWithCommonId(gameLocalId, gameCommonId)
+        gameDao.updateGameWithCommonId(gameLocalId, gameCommonId)
     }
 
     override fun deleteGame() {
-        return gameDao.deleteGame(gameLocalId)
+        gameDao.deleteGame(gameLocalId)
     }
 
     override fun updateGameRoom(gameRoom: RoomType) {
-        return gameDao.updateGameRoom(gameLocalId, gameRoom)
+        gameDao.updateGameRoom(gameLocalId, gameRoom)
     }
 
     override fun updateGameState(gameState: GameState) {
         val serializedGameState = serializerFactory.serialize(gameState)
-        return gameDao.updateGameState(gameLocalId, serializedGameState)
+        gameDao.updateGameState(gameLocalId, serializedGameState)
     }
 
     // Player

@@ -14,6 +14,7 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.IntTestWebs
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.WebsocketServer
 import ch.qscqlmpa.dwitch.ongoinggame.game.GameInteractor
 import ch.qscqlmpa.dwitch.ongoinggame.game.TestGameModule
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEventRepository
 import ch.qscqlmpa.dwitch.ongoinggame.messageprocessors.MessageProcessorModule
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStoreModule
@@ -21,6 +22,7 @@ import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameLaunchableUsecase
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.LaunchGameUsecase
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.PlayerReadyUsecase
 import ch.qscqlmpa.dwitch.service.OngoingGameScope
+import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetupFactory
 import dagger.Subcomponent
 
@@ -46,6 +48,7 @@ interface IntTestOngoingGameComponent {
     val websocketServer: WebsocketServer
 
     val initialGameSetupFactory: InitialGameSetupFactory
+    val cardDealerFactory: CardDealerFactory
 
     val inGameStore: InGameStore
 
@@ -57,4 +60,6 @@ interface IntTestOngoingGameComponent {
     val guestCommunication: GuestCommunicator
 
     val gameInteractor: GameInteractor
+
+    val gameEventRepository: GameEventRepository
 }

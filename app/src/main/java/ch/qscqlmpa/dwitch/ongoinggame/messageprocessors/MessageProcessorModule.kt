@@ -62,4 +62,10 @@ abstract class MessageProcessorModule {
     @IntoMap
     @MessageProcessorKey(Message.GameStateUpdatedMessage::class)
     internal abstract fun bindGameStateUpdatedMessageProcessor(messageProcessor: GameStateUpdatedMessageProcessor): MessageProcessor
+
+    @OngoingGameScope
+    @Binds
+    @IntoMap
+    @MessageProcessorKey(Message.GameOverMessage::class)
+    internal abstract fun bindGameOverMessageProcessor(messageProcessor: GameOverMessageProcessor): MessageProcessor
 }

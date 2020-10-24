@@ -7,6 +7,7 @@ import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.player.PlayerState
+import ch.qscqlmpa.dwitchengine.model.player.Rank
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -24,8 +25,17 @@ class DwitchNoUiTest {
     fun setup() {
     }
 
+    //TODO: Simplify the steps to finish the first round: we are NOT testing DwitchEngine but the integration
+    // of the different parts of the app (except UI).
+    //TODO: Extend (if possible) testing to ViewModels (no Activity or Fragment): the test is an instrumented test anyway because of Room DB.
+    /**
+     * - Create game
+     * - 2 guests join
+     * - play 2 rounds
+     * - end game
+     */
     @Test
-    fun playGameAsAsHost() {
+    fun playGameFromStartToEnd() {
 
         val host = IntTestHost(gameName)
         host.createGame()
@@ -143,6 +153,9 @@ class DwitchNoUiTest {
                 .assertPlayerState(host.playerId, PlayerState.Done)
                 .assertPlayerState(guest1.playerId, PlayerState.Done)
                 .assertPlayerState(guest2.playerId, PlayerState.Done)
+                .assertPlayerRank(host.playerId, Rank.President)
+                .assertPlayerRank(guest1.playerId, Rank.Asshole)
+                .assertPlayerRank(guest2.playerId, Rank.Neutral)
 
         guest1.assertDashboard()
                 .assertCanPlay(false)
@@ -151,6 +164,9 @@ class DwitchNoUiTest {
                 .assertPlayerState(host.playerId, PlayerState.Done)
                 .assertPlayerState(guest1.playerId, PlayerState.Done)
                 .assertPlayerState(guest2.playerId, PlayerState.Done)
+                .assertPlayerRank(host.playerId, Rank.President)
+                .assertPlayerRank(guest1.playerId, Rank.Asshole)
+                .assertPlayerRank(guest2.playerId, Rank.Neutral)
 
         guest2.assertDashboard()
                 .assertCanPlay(false)
@@ -159,10 +175,45 @@ class DwitchNoUiTest {
                 .assertPlayerState(host.playerId, PlayerState.Done)
                 .assertPlayerState(guest1.playerId, PlayerState.Done)
                 .assertPlayerState(guest2.playerId, PlayerState.Done)
+                .assertPlayerRank(host.playerId, Rank.President)
+                .assertPlayerRank(guest1.playerId, Rank.Asshole)
+                .assertPlayerRank(guest2.playerId, Rank.Neutral)
 
-//        guest1.startNewRound()
+        guest1.startNewRound()
 
+        host.assertDashboard()
+            .assertCanPlay(false)
+            .assertGamePhase(GamePhase.RoundIsBeginning)
 
+        guest1.assertDashboard()
+            .assertCanPlay(true)
+            .assertCardsInHandInAnyOrder(Card.Clubs3)
+            .assertGamePhase(GamePhase.RoundIsBeginning)
+
+        guest2.assertDashboard()
+            .assertCanPlay(false)
+            .assertGamePhase(GamePhase.RoundIsBeginning)
+
+        guest1.playCard(Card.Clubs3)
+        guest2.playCard(Card.Clubs4)
+
+        host.assertDashboard()
+            .assertCanPlay(false)
+            .assertGamePhase(GamePhase.RoundIsOver)
+
+        guest1.assertDashboard()
+            .assertCanPlay(false)
+            .assertGamePhase(GamePhase.RoundIsOver)
+
+        guest2.assertDashboard()
+            .assertCanPlay(false)
+            .assertGamePhase(GamePhase.RoundIsOver)
+
+        guest2.endGame()
+
+        host.assertGameOverReceived()
+        guest1.assertGameOverReceived()
+        guest2.assertGameOverReceived()
     }
 
     private fun hookUpHostAndGuests(host: IntTestHost, guest1: IntTestGuest, guest2: IntTestGuest) {

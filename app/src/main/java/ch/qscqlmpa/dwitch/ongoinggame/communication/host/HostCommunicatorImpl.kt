@@ -1,10 +1,10 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.host
 
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.AddressType
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionId
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionIdStore
 import ch.qscqlmpa.dwitch.ongoinggame.communication.RecipientType
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.eventprocessors.HostCommunicationEventDispatcher
+import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.AddressType
 import ch.qscqlmpa.dwitch.ongoinggame.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
@@ -64,11 +64,6 @@ constructor(private val commServer: CommServer,
     override fun sendMessages(envelopeToSendList: List<EnvelopeToSend>): Completable {
         Timber.d("Sending messages %s", envelopeToSendList)
         return Observable.fromIterable(envelopeToSendList).concatMapCompletable { message -> sendMessage(message) }
-    }
-
-    override fun sendGameState(envelopeToSend: EnvelopeToSend): Completable {
-        Timber.d("Sending GameState, message: $envelopeToSend")
-        return sendMessage(envelopeToSend)
     }
 
     override fun kickPlayer(localConnectionId: LocalConnectionId) {

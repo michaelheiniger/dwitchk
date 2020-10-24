@@ -3,15 +3,20 @@ package ch.qscqlmpa.dwitchengine.carddealer.deterministic
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealer
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 
-class DeterministicCardDealerFactory : CardDealerFactory {
+class DeterministicCardDealerFactory(cardDealer: CardDealer?) : CardDealerFactory {
 
-    private lateinit var cardDealer: DeterministicCardDealer
+    constructor(): this(null)
 
-    override fun getCardDealer(numPlayers: Int): CardDealer {
-        return cardDealer
+    private var instance: CardDealer? = cardDealer
+
+    fun setInstance(cardDealer: CardDealer) {
+        instance = cardDealer
     }
 
-    fun setCardDealer(cardDealer: DeterministicCardDealer) {
-        this.cardDealer = cardDealer
+    override fun getCardDealer(numPlayers: Int): CardDealer {
+        val instanceToReturn = instance
+        instance = null
+        return instanceToReturn
+            ?: throw IllegalStateException("No instance initialized in the factory.")
     }
 }

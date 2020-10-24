@@ -84,6 +84,8 @@ constructor(private val guestCommunicator: GuestCommunicator,
     private fun getCommandForGameEvent(event: GameEvent): WaitingRoomGuestCommand {
         return when (event) {
             GameEvent.GameCanceled -> WaitingRoomGuestCommand.NotifyUserGameCanceled
+            GameEvent.GameLaunched -> WaitingRoomGuestCommand.NavigateToGameRoomScreen
+            GameEvent.GameOver -> WaitingRoomGuestCommand.NotifyUserGameOver
         }
     }
 }

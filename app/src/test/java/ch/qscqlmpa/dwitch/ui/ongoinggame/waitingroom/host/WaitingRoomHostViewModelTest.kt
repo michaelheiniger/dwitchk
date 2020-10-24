@@ -4,10 +4,12 @@ import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicationState
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEvent
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEventRepository
+import ch.qscqlmpa.dwitch.ongoinggame.usecases.CancelGameUsecase
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameLaunchableEvent
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameLaunchableUsecase
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.LaunchGameUsecase
-import ch.qscqlmpa.dwitch.ongoinggame.usecases.CancelGameUsecase
 import ch.qscqlmpa.dwitch.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitch.utils.DisposableManager
 import io.mockk.*
@@ -29,6 +31,8 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
 
     private val mockLaunchGameUsecase = mockk<LaunchGameUsecase>()
 
+    private val mockGameEventRepository = mockk<GameEventRepository>(relaxed = true)
+
     private lateinit var viewModel: WaitingRoomHostViewModel
 
     @Before
@@ -40,19 +44,26 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
         val schedulerFactory = TestSchedulerFactory()
         schedulerFactory.setTimeScheduler(TestScheduler())
         viewModel = WaitingRoomHostViewModel(
-                mockCommunicator,
-                mockGameLaunchableUsecase,
-                mockLaunchGameUsecase,
-                mockCancelGameUsecase,
-                DisposableManager(),
-                schedulerFactory
+            mockCommunicator,
+            mockGameLaunchableUsecase,
+            mockLaunchGameUsecase,
+            mockCancelGameUsecase,
+            mockGameEventRepository,
+            DisposableManager(),
+            schedulerFactory
         )
     }
 
     @After
     override fun tearDown() {
         super.tearDown()
-        clearMocks(mockCommunicator, mockGameLaunchableUsecase, mockCancelGameUsecase, mockLaunchGameUsecase)
+        clearMocks(
+            mockCommunicator,
+            mockGameLaunchableUsecase,
+            mockCancelGameUsecase,
+            mockLaunchGameUsecase,
+            mockGameEventRepository
+        )
     }
 
     @Test
@@ -65,7 +76,8 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
     fun `Publish communication state`() {
 
         every { mockCommunicator.observeCommunicationState() } returns Observable.just(
-            HostCommunicationState.LISTENING_FOR_GUESTS)
+            HostCommunicationState.LISTENING_FOR_GUESTS
+        )
 
         val currentCommunicationState = viewModel.currentCommunicationState()
         subscribeToPublishers(currentCommunicationState)
@@ -125,11 +137,8 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
     }
 
     @Test
-    fun `Publish command to navigate to GameRoom when game is launched`() {
-
-        every { mockLaunchGameUsecase.launchGame() } returns Completable.complete()
-
-        viewModel.launchGame()
+    fun `Publish NavigateToGameRoomScreen when GameLaunched event occurs`() {
+        every { mockGameEventRepository.observeEvents() } returns Observable.just(GameEvent.GameLaunched)
 
         val commands = viewModel.commands()
         subscribeToPublishers(commands)

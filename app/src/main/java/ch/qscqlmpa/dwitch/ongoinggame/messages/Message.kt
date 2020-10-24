@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame.messages
 
-import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitch.model.player.Player
+import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import kotlinx.serialization.Serializable
 
@@ -42,5 +42,8 @@ sealed class Message {
      *****************************************************************************************************************/
     @Serializable
     data class GameStateUpdatedMessage(val gameState: GameState) : Message()
+
+    @Serializable
+    object GameOverMessage : Message()
 }
 

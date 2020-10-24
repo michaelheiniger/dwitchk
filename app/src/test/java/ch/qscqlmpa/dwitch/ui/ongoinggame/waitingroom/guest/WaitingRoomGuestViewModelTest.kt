@@ -37,11 +37,11 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         schedulerFactory.setTimeScheduler(TestScheduler())
 
         viewModel = WaitingRoomGuestViewModel(
-                mockCommunicator,
-                mockPlayerReadyUsecase,
-                mockGameEventRepository,
-                DisposableManager(),
-                schedulerFactory
+            mockCommunicator,
+            mockPlayerReadyUsecase,
+            mockGameEventRepository,
+            DisposableManager(),
+            schedulerFactory
         )
     }
 
@@ -61,7 +61,8 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
     fun `Publish communication state`() {
 
         every { mockCommunicator.observeCommunicationState() } returns Observable.just(
-            GuestCommunicationState.CONNECTED)
+            GuestCommunicationState.CONNECTED
+        )
 
         val currentCommunicationState = viewModel.currentCommunicationState()
         subscribeToPublishers(currentCommunicationState)

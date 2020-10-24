@@ -4,7 +4,9 @@ import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
+import ch.qscqlmpa.dwitchengine.model.player.Player
 import ch.qscqlmpa.dwitchengine.model.player.PlayerState
+import ch.qscqlmpa.dwitchengine.model.player.PlayingOrderRankComparator
 import ch.qscqlmpa.dwitchengine.rules.PlayingOrder
 
 internal class StartNewRound constructor(
@@ -32,7 +34,8 @@ internal class StartNewRound constructor(
     }
 
     private fun setPlayerStates() {
-        gameState.getAllPlayersId().forEach { id -> gameUpdater.setPlayerState(id, PlayerState.Waiting) }
+        gameState.getAllPlayersId()
+            .forEach { id -> gameUpdater.setPlayerState(id, PlayerState.Waiting) }
         gameUpdater.setPlayerState(gameState.asshole(), PlayerState.Playing)
     }
 
@@ -40,8 +43,12 @@ internal class StartNewRound constructor(
         gameUpdater.clearTable()
         gameUpdater.clearGraveyard()
         val cardDealer = cardDealerFactory.getCardDealer(gameState.numPlayersTotal())
-        gameState.getAllPlayersId()
-                .forEachIndexed { index, id -> gameUpdater.cardsInHandOfPlayer(id, cardDealer.getCardsForPlayer(index)) }
+        gameState.getAllPlayers()
+            .sortedWith(PlayingOrderRankComparator())
+            .map(Player::inGameId)
+            .forEachIndexed { index, id ->
+                gameUpdater.cardsInHandOfPlayer(id, cardDealer.getCardsForPlayer(index))
+            }
 
         val remainingCards = cardDealer.getRemainingCards().toMutableList()
         gameUpdater.setFirstCardOnTable(remainingCards.removeAt(0))

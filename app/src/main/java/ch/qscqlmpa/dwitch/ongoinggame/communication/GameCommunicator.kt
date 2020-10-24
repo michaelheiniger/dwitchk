@@ -5,5 +5,5 @@ import io.reactivex.Completable
 
 interface GameCommunicator {
 
-    fun sendGameState(envelopeToSend: EnvelopeToSend): Completable
+    fun sendMessage(envelopeToSend: EnvelopeToSend): Completable
 }

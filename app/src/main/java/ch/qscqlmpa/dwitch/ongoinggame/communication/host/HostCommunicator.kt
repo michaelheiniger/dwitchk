@@ -13,8 +13,6 @@ import io.reactivex.Observable
  */
 interface HostCommunicator : GameCommunicator {
 
-    fun sendMessage(envelopeToSend: EnvelopeToSend): Completable
-
     fun sendMessages(envelopeToSendList: List<EnvelopeToSend>): Completable
 
     fun listenForConnections()

@@ -3,6 +3,8 @@ package ch.qscqlmpa.dwitch.ongoinggame.usecases
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEvent
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEventRepository
 import ch.qscqlmpa.dwitch.ongoinggame.messages.HostMessageFactory
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
@@ -15,30 +17,33 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-
-class LaunchGameUsecase @Inject constructor(private val store: InGameStore,
-                                            private val communicator: HostCommunicator,
-                                            private val serviceManager: ServiceManager,
-                                            private val initialGameSetupFactory: InitialGameSetupFactory
+class LaunchGameUsecase @Inject constructor(
+    private val store: InGameStore,
+    private val communicator: HostCommunicator,
+    private val serviceManager: ServiceManager,
+    private val initialGameSetupFactory: InitialGameSetupFactory,
+    private val gameEventRepository: GameEventRepository
 ) {
 
     fun launchGame(): Completable {
         return initializeGameState()
-                .flatMapCompletable { gameState ->
-                    Completable.merge(listOf(
-                            saveGameStateInStore(gameState),
-                            setCurrentRoomToGameRoomInStore(),
-                            sendLaunchGameMessage(gameState)
-                    ))
-                }
-                .doOnComplete { setCurrentRoomToGameRoomInService() }
+            .flatMapCompletable { gameState ->
+                Completable.merge(
+                    listOf(
+                        saveGameStateInStore(gameState),
+                        setCurrentRoomToGameRoomInStore(),
+                        sendLaunchGameMessage(gameState)
+                    )
+                )
+            }
+            .doOnComplete { setCurrentRoomToGameRoomInService() }
+            .doOnComplete { emitGameLaunchedEvent() }
             .doOnError { e -> Timber.e(e, "Error while launching game") }
     }
 
     private fun initializeGameState(): Single<GameState> {
         return Single.fromCallable {
             val players = store.getPlayersInWaitingRoom().map(Player::toPlayerInfo)
-            val localPlayerId = store.getLocalPlayerInGameId()
             val initialGameSetup = initialGameSetupFactory.getInitialGameSetup(players.size)
             return@fromCallable DwitchEngine.createNewGame(players, initialGameSetup)
         }
@@ -60,5 +65,9 @@ class LaunchGameUsecase @Inject constructor(private val store: InGameStore,
 
     private fun setCurrentRoomToGameRoomInService() {
         serviceManager.goToHostGameRoom()
+    }
+
+    private fun emitGameLaunchedEvent() {
+        gameEventRepository.notifyOfEvent(GameEvent.GameLaunched)
     }
 }

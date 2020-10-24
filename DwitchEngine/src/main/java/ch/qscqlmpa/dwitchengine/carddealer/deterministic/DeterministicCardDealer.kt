@@ -4,7 +4,9 @@ import ch.qscqlmpa.dwitchengine.carddealer.CardDealer
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardUtil
 
-class DeterministicCardDealer(numPlayers: Int, private val cardsForPlayer: Map<Int, List<Card>>) : CardDealer(numPlayers) {
+class DeterministicCardDealer(
+    private val cardsForPlayer: Map<Int, List<Card>>
+) : CardDealer(cardsForPlayer.size) {
 
     private val remainingCards: List<Card>
 

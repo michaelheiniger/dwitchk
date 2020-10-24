@@ -1,8 +1,6 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server
 
 
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.Address
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.AddressType
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionId
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionIdStore
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.ClientConnected
@@ -10,6 +8,8 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.host.ClientDisconnected
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.CommServer
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.ServerCommunicationEvent
 import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
+import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.Address
+import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.AddressType
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeReceived
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import io.reactivex.Completable
@@ -33,7 +33,6 @@ class WebsocketCommServer @Inject constructor(
     }
 
     override fun sendMessage(message: Message, recipientAddress: AddressType): Completable {
-
         val serializedMessage = serializerFactory.serialize(message)
 
         return when (recipientAddress) {
@@ -43,9 +42,7 @@ class WebsocketCommServer @Inject constructor(
     }
 
     private fun sendUnitcastMessage(serializedMessage: String, recipientAdress: AddressType.Unicast): Completable {
-
         return Completable.fromAction {
-
             val recipientSocket = websocketServer.getConnections().find { webSocket ->
                 webSocket.remoteSocketAddress.address.hostAddress == recipientAdress.destination.ipAddress
                         && webSocket.remoteSocketAddress.port == recipientAdress.destination.port
@@ -126,7 +123,6 @@ class WebsocketCommServer @Inject constructor(
     }
 
     override fun closeConnectionWithClient(localConnectionId: LocalConnectionId) {
-
         val address = connectionIdStore.getAddress(localConnectionId)
 
         Timber.i("Connection with remote connection ID %s closed by host.", address)

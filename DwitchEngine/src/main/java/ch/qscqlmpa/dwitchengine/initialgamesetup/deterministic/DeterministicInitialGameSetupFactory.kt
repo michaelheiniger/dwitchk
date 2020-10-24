@@ -1,18 +1,20 @@
-package ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic
+ package ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic
 
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetup
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetupFactory
 
 class DeterministicInitialGameSetupFactory : InitialGameSetupFactory {
 
-    override fun getInitialGameSetup(numPlayers: Int): InitialGameSetup {
-        if (instance == null) {
-            instance = DeterministicInitialGameSetup(numPlayers)
-        }
-        return instance as InitialGameSetup
+    private var instance: InitialGameSetup? = null
+
+    fun setInstance(initialGameSetup: InitialGameSetup) {
+        instance = initialGameSetup
     }
 
-    companion object {
-        private var instance: InitialGameSetup? = null
+    override fun getInitialGameSetup(numPlayers: Int): InitialGameSetup {
+        val instanceToReturn = instance
+        instance = null
+        return instanceToReturn
+            ?: throw IllegalStateException("No instance initialized in the factory.")
     }
 }

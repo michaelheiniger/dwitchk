@@ -54,11 +54,6 @@ constructor(private val commClient: CommClient,
         return commClient.sendMessage(envelopeToSend.message)
     }
 
-    override fun sendGameState(envelopeToSend: EnvelopeToSend): Completable {
-        Timber.d("Sending GameState, message: $envelopeToSend")
-        return sendMessage(envelopeToSend)
-    }
-
     private fun observeReceivedMessages() {
         disposableManager.add(commClient.observeReceivedMessages()
                 .subscribeOn(schedulerFactory.io())
@@ -90,6 +85,7 @@ constructor(private val commClient: CommClient,
         when (event) {
             ConnectedToHost -> communicationStateRelay.accept(GuestCommunicationState.CONNECTED)
             DisconnectedFromHost -> communicationStateRelay.accept(GuestCommunicationState.DISCONNECTED)
+            is ConnectionError -> TODO()
         }
     }
 }

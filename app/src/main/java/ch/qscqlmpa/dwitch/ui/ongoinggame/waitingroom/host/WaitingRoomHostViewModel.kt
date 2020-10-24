@@ -2,14 +2,17 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicationState
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEvent
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEventRepository
+import ch.qscqlmpa.dwitch.ongoinggame.usecases.CancelGameUsecase
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameLaunchableEvent
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameLaunchableUsecase
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.LaunchGameUsecase
-import ch.qscqlmpa.dwitch.ongoinggame.usecases.CancelGameUsecase
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.common.Resource
@@ -21,8 +24,9 @@ import javax.inject.Inject
 class WaitingRoomHostViewModel @Inject
 constructor(private val hostCommunicator: HostCommunicator,
             private val gameLaunchableUsecase: GameLaunchableUsecase,
-            private val launchGame: LaunchGameUsecase,
+            private val launchGameUsecase: LaunchGameUsecase,
             private val cancelGameUsecase: CancelGameUsecase,
+            private val gameEventRepository: GameEventRepository,
             disposableManager: DisposableManager,
             schedulerFactory: SchedulerFactory
 ) : BaseViewModel(disposableManager, schedulerFactory) {
@@ -54,18 +58,18 @@ constructor(private val hostCommunicator: HostCommunicator,
     }
 
     fun commands(): LiveData<WaitingRoomHostCommand> {
-        return commands
+        val liveDataMerger = MediatorLiveData<WaitingRoomHostCommand>()
+        liveDataMerger.addSource(gameEventLiveData()) { value -> liveDataMerger.value = value }
+        liveDataMerger.addSource(commands) { value -> liveDataMerger.value = value }
+        return liveDataMerger
     }
 
     fun launchGame() {
-        disposableManager.add(launchGame.launchGame()
+        disposableManager.add(launchGameUsecase.launchGame()
                 .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
                 .subscribe(
-                        {
-                            Timber.d("Game launched")
-                            commands.value = WaitingRoomHostCommand.NavigateToGameRoomScreen
-                        },
+                        { Timber.d("Game launched") },
                         { error -> Timber.e(error, "Error while launching game") }
                 )
         )
@@ -75,7 +79,7 @@ constructor(private val hostCommunicator: HostCommunicator,
         disposableManager.add(cancelGameUsecase.cancelGame()
                 .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
-                .subscribe { commands.value = WaitingRoomHostCommand.NavigateToHomeScreen }
+                .subscribe()
         )
     }
 
@@ -99,5 +103,23 @@ constructor(private val hostCommunicator: HostCommunicator,
             HostCommunicationState.ERROR -> R.string.error_listening_for_guests
         }
         return Resource(resourceId)
+    }
+
+    private fun gameEventLiveData(): LiveData<WaitingRoomHostCommand> {
+        return LiveDataReactiveStreams.fromPublisher(
+            gameEventRepository.observeEvents()
+                .observeOn(schedulerFactory.ui())
+                .map(::getCommandForGameEvent)
+                .doOnError { error -> Timber.e(error, "Error while observing game events.") }
+                .toFlowable(BackpressureStrategy.LATEST)
+        )
+    }
+
+    private fun getCommandForGameEvent(event: GameEvent): WaitingRoomHostCommand {
+        return when (event) {
+            GameEvent.GameCanceled -> WaitingRoomHostCommand.NavigateToHomeScreen
+            GameEvent.GameOver -> WaitingRoomHostCommand.NotifyUserGameOver
+            GameEvent.GameLaunched -> WaitingRoomHostCommand.NavigateToGameRoomScreen
+        }
     }
 }

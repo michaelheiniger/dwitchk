@@ -23,7 +23,8 @@ import ch.qscqlmpa.dwitch.persistence.AppRoomDatabase
 import ch.qscqlmpa.dwitch.persistence.GameDao
 import ch.qscqlmpa.dwitch.persistence.PlayerDao
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
-import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup //FIXME cannot be used in app/androidTest since it is in DwitchEngine/test
+import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
+import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetupFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import io.reactivex.Completable
@@ -86,8 +87,8 @@ abstract class BaseUiTest {
     }
 
     protected fun initializeInitialGameSetup(cardsForPlayer: Map<Int, List<Card>>, rankForPlayer: Map<Int, Rank>) {
-        val initialGameSetup = ongoingGameComponent.initialGameSetupFactory.getInitialGameSetup(cardsForPlayer.size) as DeterministicInitialGameSetup
-        initialGameSetup.initialize(cardsForPlayer, rankForPlayer)
+        (ongoingGameComponent.initialGameSetupFactory as DeterministicInitialGameSetupFactory)
+            .setInstance(DeterministicInitialGameSetup(cardsForPlayer, rankForPlayer))
     }
 
     protected fun dudeWaitAMinute(seconds: Long = 3L) {

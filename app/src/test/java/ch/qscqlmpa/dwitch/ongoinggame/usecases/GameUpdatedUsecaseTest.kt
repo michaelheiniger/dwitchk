@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.ongoinggame.game
+package ch.qscqlmpa.dwitch.ongoinggame.usecases
 
 import ch.qscqlmpa.dwitch.BaseUnitTest
 import ch.qscqlmpa.dwitch.game.TestEntityFactory
@@ -27,7 +27,7 @@ internal class GameUpdatedUsecaseTest : BaseUnitTest() {
 
         usecase = GameUpdatedUsecase(mockInGameStore, mockCommunicator)
 
-        every { mockCommunicator.sendGameState(any()) } returns Completable.complete()
+        every { mockCommunicator.sendMessage(any()) } returns Completable.complete()
     }
 
     @AfterEach
@@ -55,6 +55,6 @@ internal class GameUpdatedUsecaseTest : BaseUnitTest() {
             RecipientType.All,
             Message.GameStateUpdatedMessage(gameState)
         )
-        verify { mockCommunicator.sendGameState(messageWrapperRef) }
+        verify { mockCommunicator.sendMessage(messageWrapperRef) }
     }
 }

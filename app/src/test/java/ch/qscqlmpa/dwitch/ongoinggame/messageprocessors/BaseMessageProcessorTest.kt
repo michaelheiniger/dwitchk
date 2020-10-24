@@ -26,13 +26,13 @@ abstract class BaseMessageProcessorTest : BaseUnitTest() {
     }
 
     protected fun setupCommunicatorSendGameState() {
-        every { mockGameCommunicator.sendGameState(any()) } returns Completable.complete()
+        every { mockGameCommunicator.sendMessage(any()) } returns Completable.complete()
     }
 
     @AfterEach
     override fun tearDown() {
         super.tearDown()
-        clearMocks(mockHostMessageFactory, mockHostCommunicator, mockGuestCommunicator)
+        clearMocks(mockHostMessageFactory, mockHostCommunicator, mockGuestCommunicator, mockGameCommunicator)
     }
 
     protected fun setupWaitingRoomStateUpdateMessageMock(): EnvelopeToSend {

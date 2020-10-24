@@ -13,7 +13,4 @@ sealed class GamePhase {
 
     @Serializable
     object RoundIsOver : GamePhase()
-
-    @Serializable
-    object GameOver : GamePhase()
 }

@@ -161,8 +161,7 @@ class StartNewRoundTest : EngineTestBase() {
 
     private fun setupCardDealer(numPlayers: Int, cardsForPlayer: Map<Int, List<Card>>) {
         val cardDealer = DeterministicCardDealer(numPlayers, cardsForPlayer)
-        cardDealerFactory = DeterministicCardDealerFactory()
-        cardDealerFactory.setCardDealer(cardDealer)
+        cardDealerFactory = DeterministicCardDealerFactory(cardDealer)
 
     }
 

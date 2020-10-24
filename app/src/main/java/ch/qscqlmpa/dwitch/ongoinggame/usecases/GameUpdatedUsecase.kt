@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.ongoinggame.game
+package ch.qscqlmpa.dwitch.ongoinggame.usecases
 
 import ch.qscqlmpa.dwitch.ongoinggame.communication.GameCommunicator
 import ch.qscqlmpa.dwitch.ongoinggame.messages.MessageFactory
@@ -17,6 +17,6 @@ class GameUpdatedUsecase @Inject constructor(
         return Single.fromCallable {
             store.updateGameState(gameState)
             MessageFactory.createGameStateUpdatedMessage(gameState)
-        }.flatMapCompletable(communicator::sendGameState)
+        }.flatMapCompletable(communicator::sendMessage)
     }
 }

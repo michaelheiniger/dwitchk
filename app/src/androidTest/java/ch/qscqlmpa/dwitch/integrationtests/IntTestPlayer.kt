@@ -8,10 +8,14 @@ import ch.qscqlmpa.dwitch.ongoinggame.IntTestOngoingGameComponent
 import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
 import ch.qscqlmpa.dwitch.ongoinggame.game.GameInteractor
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEvent
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.utils.PlayerDashboardRobot
 import ch.qscqlmpa.dwitchengine.DwitchEngine
+import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealer
+import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
+import org.assertj.core.api.Assertions.assertThat
 
 abstract class IntTestPlayer {
 
@@ -56,7 +60,26 @@ abstract class IntTestPlayer {
     }
 
     fun startNewRound() {
+        // Order is according to players' rank
+        (ongoingGameComponent.cardDealerFactory as DeterministicCardDealerFactory).setInstance(
+            DeterministicCardDealer(
+                mapOf(
+                    0 to listOf(Card.Clubs3), // Guest1
+                    1 to listOf(Card.Clubs4), // Guest2
+                    2 to listOf(Card.Clubs5) // Host
+                )
+            )
+        )
         gameInteractor.startNewRound().blockingGet()
+    }
+
+    fun endGame() {
+        gameInteractor.endGame().blockingGet()
+    }
+
+    fun assertGameOverReceived() {
+        val lastGameEvent = ongoingGameComponent.gameEventRepository.getLastEvent()
+        assertThat(lastGameEvent).isEqualTo(GameEvent.GameOver)
     }
 
     fun assertDashboard(): PlayerDashboardRobot {

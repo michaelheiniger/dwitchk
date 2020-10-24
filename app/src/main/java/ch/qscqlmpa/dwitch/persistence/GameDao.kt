@@ -7,6 +7,7 @@ import ch.qscqlmpa.dwitch.model.game.Game
 import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.model.player.PlayerRole
+import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import io.reactivex.Observable
 
