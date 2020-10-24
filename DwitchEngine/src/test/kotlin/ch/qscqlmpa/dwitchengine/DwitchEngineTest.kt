@@ -47,8 +47,7 @@ internal class DwitchEngineTest {
         val guest3Cards = listOf(Card.Spades2, Card.Spades3, Card.Spades4)
         val guest4Cards = listOf(Card.DiamondsJack, Card.ClubsQueen, Card.HeartsKing, Card.SpadesAce)
 
-        val initialGameSetup = DeterministicInitialGameSetup(numPlayers = 5)
-        initialGameSetup.initialize(
+        val initialGameSetup = DeterministicInitialGameSetup(
                 mapOf(
                         0 to hostCards,
                         1 to guest1Cards,

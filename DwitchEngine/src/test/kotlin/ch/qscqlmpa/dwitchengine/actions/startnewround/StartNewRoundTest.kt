@@ -24,144 +24,137 @@ class StartNewRoundTest : EngineTestBase() {
     override fun setup() {
         super.setup()
         gameStateBuilder
-                .setGamePhase(GamePhase.RoundIsOver)
-                .setLocalPlayer(player2Id)
-                .setCurrentPlayer(player2Id)
+            .setGamePhase(GamePhase.RoundIsOver)
+            .setLocalPlayer(player2Id)
+            .setCurrentPlayer(player2Id)
     }
 
     @Test
     fun `Start a new round for 2 players`() {
         initialGameState = gameStateBuilder
-                .addPlayerToGame(player1, PlayerState.Done, Rank.Asshole, emptyList())
-                .addPlayerToGame(player2, PlayerState.Done, Rank.President, emptyList())
-                .build()
+            .addPlayerToGame(player1, PlayerState.Done, Rank.Asshole, emptyList())
+            .addPlayerToGame(player2, PlayerState.Done, Rank.President, emptyList())
+            .build()
 
-        val numPlayers = 2
         setupCardDealer(
-                numPlayers,
-                mapOf(
-                        0 to listOf(Card.Clubs2, Card.Clubs3, Card.Clubs4),
-                        1 to listOf(Card.Clubs5, Card.Clubs6, Card.Clubs7)
-                )
+            mapOf(
+                0 to listOf(Card.Clubs2, Card.Clubs3, Card.Clubs4),
+                1 to listOf(Card.Clubs5, Card.Clubs6, Card.Clubs7)
+            )
         )
 
         launchStartNewRoundTest()
         GameStateRobot(gameStateUpdated)
-                .assertCardsOnTableContainsExactly(Card.Clubs8)
-                .assertNumCardsInDeck(CardUtil.deckSize - 7)
-                .assertPlayingOrder(listOf(player1Id, player2Id))
-                .assertActivePlayers(player1Id, player2Id)
-                .assertCurrentPlayerId(player1Id)
+            .assertCardsOnTableContainsExactly(Card.Clubs8)
+            .assertNumCardsInDeck(CardUtil.deckSize - 7)
+            .assertPlayingOrder(listOf(player1Id, player2Id))
+            .assertActivePlayers(player1Id, player2Id)
+            .assertCurrentPlayerId(player1Id)
 
         PlayerRobot(gameStateUpdated, player1Id)
-                .assertCardsInHandContainsExactly(Card.Clubs2, Card.Clubs3, Card.Clubs4)
-                .assertPlayerState(PlayerState.Playing) // Since Asshole
-                .assertPlayerIsNotDwitched()
-                .assertPlayerHasNotPickedCard()
+            .assertCardsInHandContainsExactly(Card.Clubs2, Card.Clubs3, Card.Clubs4)
+            .assertPlayerState(PlayerState.Playing) // Since Asshole
+            .assertPlayerIsNotDwitched()
+            .assertPlayerHasNotPickedCard()
 
         PlayerRobot(gameStateUpdated, player2Id)
-                .assertCardsInHandContainsExactly(Card.Clubs5, Card.Clubs6, Card.Clubs7)
-                .assertPlayerState(PlayerState.Waiting)
-                .assertPlayerIsNotDwitched()
-                .assertPlayerHasNotPickedCard()
+            .assertCardsInHandContainsExactly(Card.Clubs5, Card.Clubs6, Card.Clubs7)
+            .assertPlayerState(PlayerState.Waiting)
+            .assertPlayerIsNotDwitched()
+            .assertPlayerHasNotPickedCard()
     }
 
     @Test
     fun `Start a new round for 5 players`() {
         initialGameState = gameStateBuilder
-                .addPlayerToGame(player1, PlayerState.Done, Rank.Neutral, emptyList())
-                .addPlayerToGame(player2, PlayerState.Done, Rank.President, emptyList())
-                .addPlayerToGame(player3, PlayerState.Done, Rank.VicePresident, emptyList())
-                .addPlayerToGame(player4, PlayerState.Done, Rank.ViceAsshole, emptyList())
-                .addPlayerToGame(player5, PlayerState.Done, Rank.Asshole, emptyList())
-                .build()
+            .addPlayerToGame(player1, PlayerState.Done, Rank.Neutral, emptyList())
+            .addPlayerToGame(player2, PlayerState.Done, Rank.President, emptyList())
+            .addPlayerToGame(player3, PlayerState.Done, Rank.VicePresident, emptyList())
+            .addPlayerToGame(player4, PlayerState.Done, Rank.ViceAsshole, emptyList())
+            .addPlayerToGame(player5, PlayerState.Done, Rank.Asshole, emptyList())
+            .build()
 
-        val numPlayers = 5
         setupCardDealer(
-                numPlayers,
-                mapOf(
-                        0 to listOf(Card.Clubs2, Card.Clubs3, Card.Clubs4),
-                        1 to listOf(Card.Hearts2, Card.Hearts3, Card.Hearts4),
-                        2 to listOf(Card.Spades2, Card.Spades3, Card.Spades4),
-                        3 to listOf(Card.Diamonds2, Card.Diamonds3, Card.Diamonds4),
-                        4 to listOf(Card.Clubs5, Card.Hearts5, Card.Spades5)
-                )
+            mapOf(
+                0 to listOf(Card.Clubs5, Card.Hearts5, Card.Spades5),
+                1 to listOf(Card.Diamonds2, Card.Diamonds3, Card.Diamonds4),
+                2 to listOf(Card.Clubs2, Card.Clubs3, Card.Clubs4),
+                3 to listOf(Card.Spades2, Card.Spades3, Card.Spades4),
+                4 to listOf(Card.Hearts2, Card.Hearts3, Card.Hearts4),
+            )
         )
 
         launchStartNewRoundTest()
         GameStateRobot(gameStateUpdated)
-                .assertCardsOnTableContainsExactly(Card.Clubs6)
-                .assertNumCardsInDeck(CardUtil.deckSize - 16)
-                .assertPlayingOrder(listOf(player5Id, player4Id, player1Id, player3Id, player2Id))
-                .assertActivePlayers(player1Id, player2Id, player3Id, player4Id, player5Id)
-                .assertCurrentPlayerId(player5Id)
+            .assertCardsOnTableContainsExactly(Card.Clubs6)
+            .assertNumCardsInDeck(CardUtil.deckSize - 16)
+            .assertPlayingOrder(listOf(player5Id, player4Id, player1Id, player3Id, player2Id))
+            .assertActivePlayers(player1Id, player2Id, player3Id, player4Id, player5Id)
+            .assertCurrentPlayerId(player5Id)
 
         PlayerRobot(gameStateUpdated, player1Id)
-                .assertCardsInHandContainsExactly(Card.Clubs2, Card.Clubs3, Card.Clubs4)
-                .assertPlayerState(PlayerState.Waiting)
-                .assertPlayerIsNotDwitched()
-                .assertPlayerHasNotPickedCard()
+            .assertCardsInHandContainsExactly(Card.Clubs2, Card.Clubs3, Card.Clubs4)
+            .assertPlayerState(PlayerState.Waiting)
+            .assertPlayerIsNotDwitched()
+            .assertPlayerHasNotPickedCard()
 
         PlayerRobot(gameStateUpdated, player2Id)
-                .assertCardsInHandContainsExactly(Card.Hearts2, Card.Hearts3, Card.Hearts4)
-                .assertPlayerState(PlayerState.Waiting)
-                .assertPlayerIsNotDwitched()
-                .assertPlayerHasNotPickedCard()
+            .assertCardsInHandContainsExactly(Card.Hearts2, Card.Hearts3, Card.Hearts4)
+            .assertPlayerState(PlayerState.Waiting)
+            .assertPlayerIsNotDwitched()
+            .assertPlayerHasNotPickedCard()
 
         PlayerRobot(gameStateUpdated, player3Id)
-                .assertCardsInHandContainsExactly(Card.Spades2, Card.Spades3, Card.Spades4)
-                .assertPlayerState(PlayerState.Waiting)
-                .assertPlayerIsNotDwitched()
-                .assertPlayerHasNotPickedCard()
+            .assertCardsInHandContainsExactly(Card.Spades2, Card.Spades3, Card.Spades4)
+            .assertPlayerState(PlayerState.Waiting)
+            .assertPlayerIsNotDwitched()
+            .assertPlayerHasNotPickedCard()
 
         PlayerRobot(gameStateUpdated, player4Id)
-                .assertCardsInHandContainsExactly(Card.Diamonds2, Card.Diamonds3, Card.Diamonds4)
-                .assertPlayerState(PlayerState.Waiting)
-                .assertPlayerIsNotDwitched()
-                .assertPlayerHasNotPickedCard()
+            .assertCardsInHandContainsExactly(Card.Diamonds2, Card.Diamonds3, Card.Diamonds4)
+            .assertPlayerState(PlayerState.Waiting)
+            .assertPlayerIsNotDwitched()
+            .assertPlayerHasNotPickedCard()
 
         PlayerRobot(gameStateUpdated, player5Id)
-                .assertCardsInHandContainsExactly(Card.Clubs5, Card.Hearts5, Card.Spades5)
-                .assertPlayerState(PlayerState.Playing) // Since Asshole
-                .assertPlayerIsNotDwitched()
-                .assertPlayerHasNotPickedCard()
+            .assertCardsInHandContainsExactly(Card.Clubs5, Card.Hearts5, Card.Spades5)
+            .assertPlayerState(PlayerState.Playing) // Since Asshole
+            .assertPlayerIsNotDwitched()
+            .assertPlayerHasNotPickedCard()
     }
 
     @Test
     fun `Game is properly reset for new round`() {
         initialGameState = gameStateBuilder
-                .addPlayerToGame(player1, PlayerState.Done, Rank.Asshole, emptyList())
-                .addPlayerToGame(player2, PlayerState.Done, Rank.President, emptyList())
+            .addPlayerToGame(player1, PlayerState.Done, Rank.Asshole, emptyList())
+            .addPlayerToGame(player2, PlayerState.Done, Rank.President, emptyList())
 
-                // These two statements are mutually exclusive but the goal is to check the reset of their values.
-                .setGameEvent(GameEvent.TableHasBeenCleared(Card.Hearts2))
-                .setCardsdOnTable(Card.Hearts5, Card.Diamonds7, Card.Hearts2)
+            // These two statements are mutually exclusive but the goal is to check the reset of their values.
+            .setGameEvent(GameEvent.TableHasBeenCleared(Card.Hearts2))
+            .setCardsdOnTable(Card.Hearts5, Card.Diamonds7, Card.Hearts2)
 
-                .setJoker(CardName.Ace)
-                .build()
+            .setJoker(CardName.Ace)
+            .build()
 
-        val numPlayers = 2
         setupCardDealer(
-                numPlayers,
-                mapOf(
-                        0 to listOf(Card.Clubs2, Card.Clubs3, Card.Clubs4),
-                        1 to listOf(Card.Clubs5, Card.Clubs6, Card.Clubs7)
-                )
+            mapOf(
+                0 to listOf(Card.Clubs2, Card.Clubs3, Card.Clubs4),
+                1 to listOf(Card.Clubs5, Card.Clubs6, Card.Clubs7)
+            )
         )
 
         launchStartNewRoundTest()
         GameStateRobot(gameStateUpdated)
-                .assertCardsOnTableContainsExactly(Card.Clubs8)
-                .assertNumCardsInGraveyard(0)
-                .assertPlayersDoneForRoundIsEmpty()
-                .assertJoker(CardName.Two)
-                .assertGameEvent(null)
-                .assertGamePhase(GamePhase.RoundIsBeginning)
+            .assertCardsOnTableContainsExactly(Card.Clubs8)
+            .assertNumCardsInGraveyard(0)
+            .assertPlayersDoneForRoundIsEmpty()
+            .assertJoker(CardName.Two)
+            .assertGameEvent(null)
+            .assertGamePhase(GamePhase.RoundIsBeginning)
     }
 
-    private fun setupCardDealer(numPlayers: Int, cardsForPlayer: Map<Int, List<Card>>) {
-        val cardDealer = DeterministicCardDealer(numPlayers, cardsForPlayer)
-        cardDealerFactory = DeterministicCardDealerFactory(cardDealer)
+    private fun setupCardDealer(cardsForPlayer: Map<Int, List<Card>>) {
+        cardDealerFactory = DeterministicCardDealerFactory(DeterministicCardDealer(cardsForPlayer))
 
     }
 
