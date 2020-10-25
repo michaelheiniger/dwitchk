@@ -47,7 +47,7 @@ class GameRoomAsHostTest : BaseHostTest() {
 
         goToGameRoom()
 
-        assertCardInHand(0, Card.Hearts4)
+        assertCardInHand(0, Card.Hearts5)
         assertCardInHand(1, Card.Clubs3)
         assertCardOnTable(Card.Clubs2)
 
@@ -59,9 +59,9 @@ class GameRoomAsHostTest : BaseHostTest() {
         val gameStateUpdatedMessage1 = waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
         assertThat(gameStateUpdatedMessage1.gameState.player(host.inGameId).hasPickedCard).isTrue()
 
-        assertCardInHand(0, Card.Hearts4)
+        assertCardInHand(0, Card.Hearts5)
         assertCardInHand(1, Card.Clubs3)
-        assertCardInHand(2, Card.Clubs5)
+        assertCardInHand(2, Card.Clubs4)
         assertCardOnTable(Card.Clubs2)
 
         assertCanPickACard(false)
@@ -82,7 +82,7 @@ class GameRoomAsHostTest : BaseHostTest() {
 
         goToGameRoom()
 
-        assertCardInHand(0, Card.Hearts4)
+        assertCardInHand(0, Card.Hearts5)
         assertCardInHand(1, Card.Clubs3)
         assertCardOnTable(Card.Clubs2)
 
@@ -92,8 +92,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         assertThat(gameStateUpdatedMessage.gameState.cardsOnTable.size).isEqualTo(2)
 
         assertCardInHand(0, Card.Clubs3)
-        assertCardOnTable(Card.Clubs2)
-        assertCardOnTable(Card.Hearts4)
+        assertCardOnTable(Card.Hearts5)
 
         assertCanPickACard(false)
         assertCanPassTurn(false)
