@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
@@ -24,11 +23,14 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), GameCanceledDialog.D
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(WaitingRoomGuestViewModel::class.java)
-        viewModel.currentCommunicationState().observe(this, Observer { resource -> communicationStateTv.text = getText(resource.id) })
-        viewModel.commands().observe(this, Observer { command ->
+        viewModel.currentCommunicationState().observe(this,
+            { resource -> communicationStateTv.text = getText(resource.id) })
+        viewModel.commands().observe(this, { command ->
             when (command) {
                 WaitingRoomGuestCommand.NotifyUserGameCanceled -> showGameCanceledDialog()
                 WaitingRoomGuestCommand.NavigateToHomeScreen -> MainActivity.start(activity!!)
+                WaitingRoomGuestCommand.NotifyUserGameOver -> TODO()
+                WaitingRoomGuestCommand.NavigateToGameRoomScreen -> TODO()
             }
         })
     }

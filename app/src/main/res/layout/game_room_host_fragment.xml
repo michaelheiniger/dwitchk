@@ -5,5 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".ui.ongoinggame.gameroom.host.GameRoomHostFragment">
 
+    <Button
+        android:id="@+id/endGameBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/grhf_end_game_btn" />
 
 </FrameLayout>

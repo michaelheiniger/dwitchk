@@ -7,16 +7,18 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
-import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboard
-import ch.qscqlmpa.dwitchengine.model.game.GameEvent
+import ch.qscqlmpa.dwitch.ui.CardResourceMapper
+import ch.qscqlmpa.dwitch.ui.EntityTextMapper
+import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
+import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchengine.model.game.GamePhase
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboard
 import timber.log.Timber
 
 
@@ -31,7 +33,7 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
 
     private lateinit var lastCardPlayedIv: ImageView
 
-    private lateinit var lastGameEventTv: TextView
+    private lateinit var gameInfoTv: TextView
 
     private lateinit var playersTv: TextView
 
@@ -43,39 +45,42 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(PlayerDashboardViewModel::class.java)
-        viewModel.playerDashboard().observe(this, Observer { dashboard ->
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(PlayerDashboardViewModel::class.java)
+        viewModel.playerDashboard().observe(this, { dashboard ->
             Timber.d("Dashboard update event: $dashboard")
 
-            //FIXME
-//            val playerInfo = dashboard.playersInPlayingOrder
-//                    .map { id -> dashboard.players.getValue(id) }
-//                    .map { player -> "${player.name} (${getString(player.rank.)})" }
-//                    .joinToString(" ")
+            //TODO: Move to viewmodel ?
+            val playerInfo = dashboard.playersInPlayingOrder
+                .map { id -> dashboard.players.getValue(id) }
+                .joinToString(" ") { player ->
+                    "${player.name} (${getString(EntityTextMapper.rankText(player.rank))})"
+                }
 
-//            playersTv.text = playerInfo
-
-//            val string = SpannableString("Text with strikethrough span")
-//            string.setSpan(StrikethroughSpan(), 10, 23, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            playersTv.text = playerInfo
 
             pickBtn.isEnabled = dashboard.canPickACard
             passBtn.isEnabled = dashboard.canPass
             canPlay = dashboard.canPlay
 
             val cardInHandItems = dashboard.cardsInHand
-                    .map { card -> CardItem(card, isCardPlayable(card, dashboard)) }
+                .map { card -> CardItem(card, isCardPlayable(card, dashboard)) }
             cardsInHandAdapter.setData(cardInHandItems)
 
-            //FIXME
-//            lastCardPlayedIv.setImageResource(dashboard.lastCardPlayed.resourceId.id)
-//            lastCardPlayedIv.contentDescription = dashboard.lastCardPlayed.resourceId.id.toString()
+            lastCardPlayedIv.setImageResource(CardResourceMapper.resourceForCard(dashboard.lastCardPlayed))
+            lastCardPlayedIv.contentDescription = dashboard.lastCardPlayed.toString()
 
-            //FIXME
-//            lastGameEventTv.text = when (dashboard.gameEvent) {
-//                is GameEvent.TableHasBeenCleared -> "Table cleared with card ${dashboard.gameEvent.lastCardPlayed.name.description.id}" //TODO translation
-//                is GameEvent.TableHasBeenClearedTurnPassed -> "Table cleared because no one else could play" //TODO translation
-//                null -> ""
-//            }
+            gameInfoTv.text = when (dashboard.gamePhase) {
+                GamePhase.RoundIsBeginning -> getString(R.string.round_is_beginning)
+                GamePhase.RoundIsOnGoing -> ""
+                GamePhase.RoundIsOver -> getString(R.string.round_is_over)
+            }
+        })
+
+        viewModel.commands().observe(this, { command ->
+            when (command) {
+                PlayerDashboardCommand.NavigateToHomeScreen -> MainActivity.start(activity!!)
+            }
         })
     }
 
@@ -84,7 +89,11 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
                 || card.name == dashboard.joker
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         val view = super.onCreateView(inflater, container, savedInstanceState)
 
         playersTv = view.findViewById(R.id.playersTv) as TextView
@@ -102,7 +111,7 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
 
         lastCardPlayedIv = view.findViewById(R.id.lastCardIv)
 
-        lastGameEventTv = view.findViewById(R.id.gameEventTv)
+        gameInfoTv = view.findViewById(R.id.gameInfoTv)
 
         return view
     }

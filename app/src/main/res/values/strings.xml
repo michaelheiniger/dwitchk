@@ -59,4 +59,7 @@
     <string name="vice_asshole">VA</string>
     <string name="asshole">A</string>
     <string name="pdf_last_card_played">Last card played</string>
+    <string name="grhf_end_game_btn">End Game</string>
+    <string name="round_is_beginning">Round is beginning !</string>
+    <string name="round_is_over">Round is over !</string>
 </resources>

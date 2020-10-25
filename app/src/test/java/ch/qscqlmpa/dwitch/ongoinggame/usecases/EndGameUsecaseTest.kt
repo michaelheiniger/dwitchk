@@ -7,9 +7,12 @@ import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEvent
 import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEventRepository
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
+import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
 import io.mockk.clearMocks
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import io.reactivex.Completable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -19,6 +22,8 @@ internal class EndGameUsecaseTest : BaseUnitTest() {
 
     private lateinit var gameEventRepository: GameEventRepository
 
+    private val mockServiceManager = mockk<ServiceManager>(relaxed = true)
+
     private val mockCommunicator = mockk<GameCommunicator>(relaxed = true)
 
     private lateinit var endGameUsecase: EndGameUsecase
@@ -27,13 +32,32 @@ internal class EndGameUsecaseTest : BaseUnitTest() {
     override fun setup() {
         super.setup()
         gameEventRepository = GameEventRepository()
-        endGameUsecase = EndGameUsecase(gameEventRepository, mockCommunicator)
+        endGameUsecase = EndGameUsecase(
+            gameEventRepository,
+            mockServiceManager,
+            mockCommunicator
+        )
+        every { mockCommunicator.sendMessage((any())) } returns Completable.complete()
     }
 
     @AfterEach
     override fun tearDown() {
         super.tearDown()
-        clearMocks(mockCommunicator)
+        clearMocks(mockCommunicator, mockServiceManager)
+    }
+
+    @Test
+    fun `Broadcast GameOver message`() {
+        endGameUsecase.endGame().test().assertComplete()
+
+        verify { mockCommunicator.sendMessage(EnvelopeToSend(RecipientType.All, Message.GameOverMessage)) }
+    }
+
+    @Test
+    fun `Stop service`() {
+        endGameUsecase.endGame().test().assertComplete()
+
+        verify { mockServiceManager.stopHostService() }
     }
 
     @Test
@@ -43,12 +67,5 @@ internal class EndGameUsecaseTest : BaseUnitTest() {
         endGameUsecase.endGame().test().assertComplete()
 
         assertThat(gameEventRepository.getLastEvent()).isEqualTo(GameEvent.GameOver)
-    }
-
-    @Test
-    fun `Broadcast GameOver message`() {
-        endGameUsecase.endGame().test().assertComplete()
-
-        verify { mockCommunicator.sendMessage(EnvelopeToSend(RecipientType.All, Message.GameOverMessage)) }
     }
 }

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.ui.CardResourceMapper
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import java.util.*
 
@@ -56,9 +57,8 @@ internal class CardAdapter(private val listener: CardClickedListener) : Recycler
 
         fun bind(cardItem: CardItem) {
             this.cardItem = cardItem
-//            val resourceId = this.cardItem.card.resourceId.id //FIXME
-//            imageIv.setImageResource(resourceId)
-//            imageIv.contentDescription = resourceId.toString()
+            imageIv.setImageResource(CardResourceMapper.resourceForCard(this.cardItem.card))
+            imageIv.contentDescription = this.cardItem.card.toString()
             imageIv.isEnabled = cardItem.playable
 
             if (!cardItem.playable) {

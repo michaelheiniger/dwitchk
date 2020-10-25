@@ -28,8 +28,7 @@ class HomeScreenTest : BaseUiTest() {
     fun screenIsDisplayed() {
         launch()
 
-        assertControlIsDisplayed(R.id.gameListTv)
-        assertControlTextContent(R.id.gameListTv, R.string.ma_game_list_tv)
+        assertCurrentScreenIsHomeSreen()
     }
 
     @Test

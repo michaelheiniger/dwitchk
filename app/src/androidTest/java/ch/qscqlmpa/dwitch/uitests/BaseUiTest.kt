@@ -10,6 +10,7 @@ import androidx.test.espresso.matcher.ViewMatchers.hasErrorText
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.TestRule
 import ch.qscqlmpa.dwitch.gamediscovery.TestNetworkAdapter
 import ch.qscqlmpa.dwitch.ongoinggame.TestOngoingGameComponent
@@ -129,4 +130,8 @@ abstract class BaseUiTest {
         Espresso.onView(ViewMatchers.withId(resourceId)).check(matches(ViewMatchers.isDisplayed()))
     }
 
+    protected fun assertCurrentScreenIsHomeSreen() {
+        assertControlIsDisplayed(R.id.gameListTv)
+        assertControlTextContent(R.id.gameListTv, R.string.ma_game_list_tv)
+    }
 }
