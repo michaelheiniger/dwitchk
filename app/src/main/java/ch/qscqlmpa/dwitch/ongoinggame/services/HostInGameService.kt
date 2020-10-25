@@ -27,7 +27,7 @@ class HostInGameService : BaseInGameService() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         when (intent.action) {
             ACTION_START_SERVICE -> actionStartService(intent)
-            ACTION_GO_TO_GAME_ROOM -> actionGoToGameRoom()
+            ACTION_CHANGE_ROOM_TO_GAME_ROOM -> actionGoToGameRoom()
             ACTION_STOP_SERVICE -> actionStopService()
         }
 
@@ -130,10 +130,10 @@ class HostInGameService : BaseInGameService() {
             context.startService(intent)
         }
 
-        fun goToGameRoom(context: Context) {
+        fun changeRoomToGameRoom(context: Context) {
             Timber.i("Changing room to Game Room...")
             val intent = Intent(context, HostInGameService::class.java)
-            intent.action = ACTION_GO_TO_GAME_ROOM
+            intent.action = ACTION_CHANGE_ROOM_TO_GAME_ROOM
             context.startService(intent)
         }
 
@@ -147,6 +147,6 @@ class HostInGameService : BaseInGameService() {
         private const val NOTIFICATION_ID = 1
         private const val ACTION_START_SERVICE = "ACTION_START_SERVICE"
         private const val ACTION_STOP_SERVICE = "ACTION_STOP_SERVICE"
-        private const val ACTION_GO_TO_GAME_ROOM = "ACTION_GO_TO_GAME_ROOM"
+        private const val ACTION_CHANGE_ROOM_TO_GAME_ROOM = "ACTION_CHANGE_ROOM_TO_GAME_ROOM"
     }
 }
