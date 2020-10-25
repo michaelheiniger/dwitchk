@@ -2,10 +2,8 @@ package ch.qscqlmpa.dwitch.integrationtests
 
 import ch.qscqlmpa.dwitch.DaggerIntTestAppComponent
 import ch.qscqlmpa.dwitch.IntTestAppComponent
-import ch.qscqlmpa.dwitch.model.RoomType
-import ch.qscqlmpa.dwitch.model.player.PlayerRole
 import ch.qscqlmpa.dwitch.ongoinggame.IntTestOngoingGameComponent
-import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameModule
+import ch.qscqlmpa.dwitch.ongoinggame.IntTestServiceManager
 import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
 import ch.qscqlmpa.dwitch.ongoinggame.game.GameInteractor
 import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEvent
@@ -17,7 +15,7 @@ import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealer
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import org.assertj.core.api.Assertions.assertThat
 
-abstract class IntTestPlayer {
+abstract class IntTestPlayer(private val networkHub: NetworkHub) {
 
     protected val appComponent: IntTestAppComponent = DaggerIntTestAppComponent.builder().build()
     protected var gameLocalId: Long? = null
@@ -26,22 +24,14 @@ abstract class IntTestPlayer {
     private lateinit var gameInteractor: GameInteractor
     protected lateinit var serializerFactory: SerializerFactory
 
-    protected fun createOnGoingGameComponent(
-        playerRole: PlayerRole,
-        localPlayerLocalId: Long,
-        hostAddress: String,
-        hostPort: Int = 8889
-    ) {
-        ongoingGameComponent = appComponent.addInGameComponent(
-            OngoingGameModule(
-                playerRole,
-                RoomType.WAITING_ROOM,
-                gameLocalId!!,
-                localPlayerLocalId,
-                hostPort,
-                hostAddress
-            )
-        )
+    private val serviceManager = appComponent.serviceManager as IntTestServiceManager
+
+    init {
+        serviceManager.setAppComponent(appComponent)
+    }
+
+    protected fun hookOnGoingGameComponent() {
+        ongoingGameComponent = serviceManager.getOnGoingGameComponent()
         inGameStore = ongoingGameComponent.inGameStore
         gameInteractor = ongoingGameComponent.gameInteractor
         serializerFactory = ongoingGameComponent.serializerFactory

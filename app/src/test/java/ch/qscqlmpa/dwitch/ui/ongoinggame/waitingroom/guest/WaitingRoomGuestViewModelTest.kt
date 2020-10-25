@@ -31,8 +31,6 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
     override fun setup() {
         super.setup()
 
-        every { mockCommunicator.connect() } just Runs
-
         val schedulerFactory = TestSchedulerFactory()
         schedulerFactory.setTimeScheduler(TestScheduler())
 
@@ -49,12 +47,6 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
     override fun tearDown() {
         super.tearDown()
         clearMocks(mockCommunicator, mockPlayerReadyUsecase, mockGameEventRepository)
-    }
-
-    @Test
-    fun `Connect to host`() {
-        verify { mockCommunicator.connect() }
-        confirmVerified(mockCommunicator)
     }
 
     @Test

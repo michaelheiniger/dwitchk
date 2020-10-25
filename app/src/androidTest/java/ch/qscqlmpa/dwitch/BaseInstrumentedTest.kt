@@ -10,7 +10,6 @@ import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStoreImpl
 import ch.qscqlmpa.dwitch.persistence.*
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
-import io.mockk.MockKAnnotations
 import io.reactivex.Completable
 import kotlinx.serialization.json.Json
 import org.junit.runner.RunWith
@@ -39,8 +38,6 @@ abstract class BaseInstrumentedTest {
     protected val serializerFactory = SerializerFactory(Json)
 
     open fun setup() {
-        MockKAnnotations.init(this)
-
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, AppRoomDatabase::class.java)
                 .fallbackToDestructiveMigration()

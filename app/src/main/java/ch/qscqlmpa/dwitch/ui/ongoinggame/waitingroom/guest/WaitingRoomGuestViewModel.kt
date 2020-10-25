@@ -28,10 +28,6 @@ constructor(private val guestCommunicator: GuestCommunicator,
 
     private val commands = MutableLiveData<WaitingRoomGuestCommand>()
 
-    init {
-        guestCommunicator.connect()
-    }
-
     fun currentCommunicationState(): LiveData<Resource> {
         return LiveDataReactiveStreams.fromPublisher(
                 guestCommunicator.observeCommunicationState()

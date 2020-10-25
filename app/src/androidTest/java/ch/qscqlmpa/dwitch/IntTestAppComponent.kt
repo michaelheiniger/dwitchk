@@ -1,15 +1,16 @@
 package ch.qscqlmpa.dwitch
 
-import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializationModule
 import ch.qscqlmpa.dwitch.gamediscovery.TestGameDiscoveryModule
 import ch.qscqlmpa.dwitch.gamediscovery.TestNetworkAdapter
-import ch.qscqlmpa.dwitch.usecases.NewGameUsecase
 import ch.qscqlmpa.dwitch.ongoinggame.IntTestOngoingGameComponent
 import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameModule
 import ch.qscqlmpa.dwitch.ongoinggame.TestServiceManagerModule
+import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializationModule
+import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
 import ch.qscqlmpa.dwitch.persistence.AppRoomDatabase
 import ch.qscqlmpa.dwitch.persistence.IntTestDatabaseModule
 import ch.qscqlmpa.dwitch.scheduler.TestSchedulerModule
+import ch.qscqlmpa.dwitch.usecases.NewGameUsecase
 import dagger.Component
 import javax.inject.Singleton
 
@@ -33,6 +34,8 @@ interface IntTestAppComponent {
     val newGameUsecase: NewGameUsecase
 
     val testNetworkListener: TestNetworkAdapter
+
+    val serviceManager: ServiceManager
 
     fun addInGameComponent(module: OngoingGameModule): IntTestOngoingGameComponent
 }

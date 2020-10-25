@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
-import ch.qscqlmpa.dwitch.model.player.PlayerRole
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.IntTestWebsocketServer
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameLaunchableEvent
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
@@ -11,28 +10,24 @@ import ch.qscqlmpa.dwitchengine.model.player.Rank
 import io.reactivex.schedulers.Schedulers
 import org.assertj.core.api.Assertions.assertThat
 
-class IntTestHost(gameName: String) : IntTestPlayer() {
+class IntTestHost(
+    private val gameName: String,
+    private val networkHub: NetworkHub
+) : IntTestPlayer(networkHub) {
 
-    private val hostLocalId: Long
-    val playerId: PlayerInGameId
-
-    init {
-        appComponent.newGameUsecase.hostNewgame(gameName, "Aragorn").blockingGet()
-        val game = appComponent.database.gameDao().getGameByName(gameName)
-                ?: throw IllegalStateException("New game can't be fetched from store")
-        gameLocalId = game.id
-        hostLocalId = game.localPlayerLocalId
-        playerId = appComponent.database.playerDao().getLocalPlayer(hostLocalId).inGameId
-
-        createOnGoingGameComponent(PlayerRole.HOST, hostLocalId, "127.0.0.1")
-    }
-
-    fun getWebsocketServer(): IntTestWebsocketServer {
-        return ongoingGameComponent.websocketServer as IntTestWebsocketServer
-    }
+    private var hostLocalId: Long? = null
+    lateinit var playerId: PlayerInGameId
 
     fun createGame() {
-        ongoingGameComponent.hostCommunication.listenForConnections()
+        appComponent.newGameUsecase.hostNewgame(gameName, "Aragorn").blockingGet()
+        val game = appComponent.database.gameDao().getGameByName(gameName)
+            ?: throw IllegalStateException("New game can't be fetched from store")
+        gameLocalId = game.id
+        hostLocalId = game.localPlayerLocalId
+        playerId = appComponent.database.playerDao().getLocalPlayer(hostLocalId!!).inGameId
+
+        hookOnGoingGameComponent()
+        hookupHostToNetworkHub()
     }
 
     fun launchGame() {
@@ -62,5 +57,11 @@ class IntTestHost(gameName: String) : IntTestPlayer() {
 
     fun endGame() {
         ongoingGameComponent.endGameUsecase.endGame().blockingGet()
+    }
+
+    private fun hookupHostToNetworkHub() {
+        val websocket = ongoingGameComponent.websocketServer as IntTestWebsocketServer
+        networkHub.setHost(websocket)
+        websocket.setNetworkHub(networkHub)
     }
 }

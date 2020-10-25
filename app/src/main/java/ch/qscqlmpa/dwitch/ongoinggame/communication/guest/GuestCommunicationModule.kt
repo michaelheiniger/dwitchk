@@ -14,8 +14,8 @@ class GuestCommunicationModule {
     companion object {
 
         @OngoingGameScope
-        @JvmStatic
         @Provides
+        @JvmStatic
         fun provideGuestCommunicator(
                 commClient: CommClient,
                 messageDispatcher: MessageDispatcher,

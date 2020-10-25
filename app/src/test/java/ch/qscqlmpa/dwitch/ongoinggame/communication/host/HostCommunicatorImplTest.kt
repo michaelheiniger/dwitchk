@@ -175,7 +175,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
         val localConnectionId = LocalConnectionId(0)
         every { mockCommServer.closeConnectionWithClient(localConnectionId) } just Runs
 
-        hostCommunicator.kickPlayer(localConnectionId)
+        hostCommunicator.closeConnectionWithClient(localConnectionId)
 
         verify(exactly = 1) { mockCommServer.closeConnectionWithClient(localConnectionId) }
 

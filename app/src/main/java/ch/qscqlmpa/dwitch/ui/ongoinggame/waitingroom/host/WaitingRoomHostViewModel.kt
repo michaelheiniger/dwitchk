@@ -33,10 +33,6 @@ constructor(private val hostCommunicator: HostCommunicator,
 
     private val commands = MutableLiveData<WaitingRoomHostCommand>()
 
-    init {
-        openRoomToGuests()
-    }
-
     fun currentCommunicationState(): LiveData<Resource> {
         return LiveDataReactiveStreams.fromPublisher(
                 hostCommunicator.observeCommunicationState()
@@ -89,11 +85,6 @@ constructor(private val hostCommunicator: HostCommunicator,
             GameLaunchableEvent.NotEnoughPlayers -> false
             GameLaunchableEvent.NotAllPlayersAreReady -> false
         }
-    }
-
-    private fun openRoomToGuests() {
-        Timber.d("openRoomToGuests() !")
-        hostCommunicator.listenForConnections()
     }
 
     private fun getResourceForCommunicationState(state: HostCommunicationState): Resource {

@@ -49,6 +49,6 @@ interface OngoingGameComponent {
     fun inject(fragment: GameRoomGuestFragment)
     fun inject(fragment: PlayerDashboardFragment)
 
-    fun hostCommunication(): HostCommunicator
-    fun guestCommunication(): GuestCommunicator
+    val hostCommunicator: HostCommunicator
+    val guestCommunicator: GuestCommunicator
 }

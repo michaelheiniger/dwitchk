@@ -58,8 +58,8 @@ interface IntTestOngoingGameComponent {
     val launchGameUsecase: LaunchGameUsecase
     val endGameUsecase: EndGameUsecase
 
-    val hostCommunication: HostCommunicator
-    val guestCommunication: GuestCommunicator
+    val hostCommunicator: HostCommunicator
+    val guestCommunicator: GuestCommunicator
 
     val gameInteractor: GameInteractor
 

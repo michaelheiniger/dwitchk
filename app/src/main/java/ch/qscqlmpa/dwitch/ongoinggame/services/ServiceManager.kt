@@ -4,9 +4,11 @@ interface ServiceManager {
 
     fun startHostService(gameLocalId: Long, localPlayerLocalId: Long)
 
+    fun stopHostService()
+
     fun startGuestService(gameLocalId: Long, localPlayerLocalId: Long, hostPort: Int, hostIpAddress: String)
 
-    fun stopHostService()
+    fun stopGuestService()
 
     fun goToHostGameRoom()
 }

@@ -15,8 +15,8 @@ class HostCommunicationModule {
     companion object {
 
         @OngoingGameScope
-        @JvmStatic
         @Provides
+        @JvmStatic
         fun provideHostCommunicator(
                 commServer: CommServer,
                 messageDispatcher: MessageDispatcher,

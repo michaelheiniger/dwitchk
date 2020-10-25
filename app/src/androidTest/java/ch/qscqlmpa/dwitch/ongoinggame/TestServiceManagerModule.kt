@@ -10,5 +10,5 @@ abstract class TestServiceManagerModule {
 
     @Singleton
     @Binds
-    abstract fun bindServiceManager(serviceManager: TestServiceManager): ServiceManager
+    abstract fun bindServiceManager(serviceManager: IntTestServiceManager): ServiceManager
 }

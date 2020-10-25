@@ -33,7 +33,7 @@ internal class RejoinGameMessageProcessor @Inject constructor(
             if (playerRejoining != null) {
                 return@fromCallable playerRejoining
             } else {
-                communicator.kickPlayer(senderLocalConnectionID)
+                communicator.closeConnectionWithClient(senderLocalConnectionID)
                 return@fromCallable null
             }
         }.flatMapCompletable { playerRejoining ->

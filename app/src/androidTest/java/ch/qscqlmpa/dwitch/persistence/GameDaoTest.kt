@@ -27,7 +27,6 @@ class GameDaoTest : BaseInstrumentedTest() {
 
     @Test
     fun updateGameRoom() {
-
         val insertGameResult = gameDao.insertGameForHost(gameName, hostPlayerName, hostIpAddress, hostPort)
         val gameInserted = gameDao.getGame(insertGameResult.gameLocalId)
 
@@ -42,7 +41,6 @@ class GameDaoTest : BaseInstrumentedTest() {
 
     @Test
     fun testInsertGameForHost_CreateGame() {
-
         val insertGameResult = gameDao.insertGameForHost(gameName, hostPlayerName, hostIpAddress, hostPort)
 
         val gameRef = Game(insertGameResult.gameLocalId, RoomType.WAITING_ROOM, insertGameResult.gameLocalId, gameName, "", insertGameResult.localPlayerLocalId, hostIpAddress, hostPort)
@@ -54,7 +52,6 @@ class GameDaoTest : BaseInstrumentedTest() {
 
     @Test
     fun testInsertGameForHost_CreateLocalPlayer() {
-
         val insertGameResult = gameDao.insertGameForHost(gameName, hostPlayerName, hostIpAddress, hostPort)
 
         val playerRef = Player(
@@ -71,7 +68,6 @@ class GameDaoTest : BaseInstrumentedTest() {
 
     @Test
     fun testInsertGameForGuest_CreateGame() {
-
         val insertGameResult = gameDao.insertGameForGuest(gameName, guestPlayerName, hostIpAddress, hostPort)
 
         val gameRef = Game(insertGameResult.gameLocalId, RoomType.WAITING_ROOM, 0, gameName, "", insertGameResult.localPlayerLocalId, hostIpAddress, hostPort)
@@ -83,7 +79,6 @@ class GameDaoTest : BaseInstrumentedTest() {
 
     @Test
     fun testInsertGameForGuest_CreateLocalPlayer() {
-
         val insertGameResult = gameDao.insertGameForGuest(gameName, guestPlayerName, hostIpAddress, hostPort)
 
         val playerRef = Player(0, PlayerInGameId(0), insertGameResult.gameLocalId, guestPlayerName, PlayerRole.GUEST,
@@ -95,7 +90,6 @@ class GameDaoTest : BaseInstrumentedTest() {
     }
 
     private fun bootstrapDb() {
-
         // Goal is to have different values for game ID and player ID in the tests
         db.runInTransaction {
             val gameId = gameDao.insertGame(Game(0, RoomType.WAITING_ROOM, 1, "", "", 1, "192.168.1.1", 8889))

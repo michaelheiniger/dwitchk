@@ -39,8 +39,6 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
     override fun setup() {
         super.setup()
 
-        every { mockCommunicator.listenForConnections() } just Runs
-
         val schedulerFactory = TestSchedulerFactory()
         schedulerFactory.setTimeScheduler(TestScheduler())
         viewModel = WaitingRoomHostViewModel(
@@ -64,12 +62,6 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
             mockLaunchGameUsecase,
             mockGameEventRepository
         )
-    }
-
-    @Test
-    fun `Start listening for guest connections`() {
-        verify { mockCommunicator.listenForConnections() }
-        confirmVerified(mockCommunicator)
     }
 
     @Test

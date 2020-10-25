@@ -23,6 +23,7 @@ class DwitchNoUiTest {
 
     @Before
     fun setup() {
+        networkHub = NetworkHub()
     }
 
     //TODO: Simplify the steps to finish the first round: we are NOT testing DwitchEngine but the integration
@@ -36,13 +37,11 @@ class DwitchNoUiTest {
      */
     @Test
     fun playGameFromStartToEnd() {
-        val host = IntTestHost(gameName)
+        val host = IntTestHost(gameName, networkHub)
+        val guest1 = IntTestGuest(Guest1, advertisedGame, networkHub)
+        val guest2 = IntTestGuest(Guest2, advertisedGame, networkHub)
+
         host.createGame()
-
-        val guest1 = IntTestGuest(Guest1, advertisedGame)
-        val guest2 = IntTestGuest(Guest2, advertisedGame)
-
-        hookUpHostAndGuests(host, guest1, guest2)
 
         guest1.joinGame()
         guest2.joinGame()
@@ -213,18 +212,5 @@ class DwitchNoUiTest {
         host.assertGameOverReceived()
         guest1.assertGameOverReceived()
         guest2.assertGameOverReceived()
-    }
-
-    private fun hookUpHostAndGuests(host: IntTestHost, guest1: IntTestGuest, guest2: IntTestGuest) {
-        networkHub = NetworkHub(
-                host.getWebsocketServer(),
-                mapOf(
-                        Guest1 to guest1.getWebsocketClient(),
-                        Guest2 to guest2.getWebsocketClient()
-                )
-        )
-        host.getWebsocketServer().setNetworkHub(networkHub)
-        guest1.getWebsocketClient().setNetworkHub(networkHub, Guest1)
-        guest2.getWebsocketClient().setNetworkHub(networkHub, Guest2)
     }
 }

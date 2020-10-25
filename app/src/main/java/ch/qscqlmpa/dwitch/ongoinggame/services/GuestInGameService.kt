@@ -38,13 +38,7 @@ class GuestInGameService : BaseInGameService() {
             ACTION_GO_TO_GAME_ROOM -> actionGoToGameRoom()
             ACTION_STOP_SERVICE -> actionStopService()
         }
-
         return Service.START_REDELIVER_INTENT
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        getOngoingGameComponent().guestCommunication().closeConnection()
     }
 
     private fun getOngoingGameComponent(): OngoingGameComponent {
@@ -67,6 +61,7 @@ class GuestInGameService : BaseInGameService() {
                 hostPort,
                 hostIpAddress
         )
+        getOngoingGameComponent().guestCommunicator.connect()
     }
 
     private fun actionGoToGameRoom() {
@@ -77,6 +72,7 @@ class GuestInGameService : BaseInGameService() {
     private fun actionStopService() {
         Timber.i("Stop service")
         stopSelf()
+        getOngoingGameComponent().guestCommunicator.closeConnection()
         (application as App).stopOngoingGame()
     }
 

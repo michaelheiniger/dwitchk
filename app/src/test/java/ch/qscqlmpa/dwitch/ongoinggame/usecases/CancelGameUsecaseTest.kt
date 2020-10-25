@@ -77,7 +77,6 @@ class CancelGameUsecaseTest : BaseUnitTest() {
     fun `Connections are closed and service is stopped`() {
         usecase.cancelGame().test().assertComplete()
 
-        verify { mockCommunicator.closeAllConnections() }
         verify { mockServiceManager.stopHostService() }
     }
 }

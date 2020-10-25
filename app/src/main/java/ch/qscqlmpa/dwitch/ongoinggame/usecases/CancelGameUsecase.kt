@@ -11,25 +11,30 @@ import io.reactivex.Single
 import javax.inject.Inject
 
 class CancelGameUsecase @Inject
-constructor(private val store: InGameStore,
-            private val communicator: HostCommunicator,
-            private val serviceManager: ServiceManager,
-            private val gameEventRepository: GameEventRepository
+constructor(
+    private val store: InGameStore,
+    private val communicator: HostCommunicator,
+    private val serviceManager: ServiceManager,
+    private val gameEventRepository: GameEventRepository
 ) {
 
     fun cancelGame(): Completable {
-        return Single.fromCallable {
-            store.deleteGame()
-            return@fromCallable HostMessageFactory.createCancelGameMessage()
-        }.flatMapCompletable(communicator::sendMessage)
-                .andThen(releaseResources())
+        return deleteGameFromStore()
+            .andThen(sendCancelGameMessage())
+            .andThen(releaseResources())
             .doOnComplete { gameEventRepository.notifyOfEvent(GameEvent.GameCanceled) }
     }
 
+    private fun deleteGameFromStore(): Completable {
+        return Completable.fromAction { store.deleteGame() }
+    }
+
+    private fun sendCancelGameMessage(): Completable {
+        return Single.fromCallable { HostMessageFactory.createCancelGameMessage() }
+            .flatMapCompletable(communicator::sendMessage)
+    }
+
     private fun releaseResources(): Completable {
-        return Completable.fromAction {
-            communicator.closeAllConnections()
-            serviceManager.stopHostService()
-        }
+        return Completable.fromAction { serviceManager.stopHostService() }
     }
 }

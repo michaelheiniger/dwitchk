@@ -34,11 +34,6 @@ class HostInGameService : BaseInGameService() {
         return Service.START_REDELIVER_INTENT
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        getOngoingGameComponent().hostCommunication().closeAllConnections()
-    }
-
     private fun getOngoingGameComponent(): OngoingGameComponent {
         return (application as App).getGameComponent()!!
     }
@@ -56,8 +51,8 @@ class HostInGameService : BaseInGameService() {
                 localPlayerLocalId,
                 8889,
                 "127.0.0.1"
-        ) //TODO
-        // extract host port from settings
+        ) //TODO extract host port from settings
+        getOngoingGameComponent().hostCommunicator.listenForConnections()
     }
 
     private fun actionGoToGameRoom() {
@@ -68,6 +63,7 @@ class HostInGameService : BaseInGameService() {
     private fun actionStopService() {
         Timber.i("Stop service")
         stopSelf()
+        getOngoingGameComponent().hostCommunicator.closeAllConnections()
         (application as App).stopOngoingGame()
     }
 

@@ -2,9 +2,9 @@ package ch.qscqlmpa.dwitch.ongoinggame.communication.guest.eventprocessors
 
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.ClientCommunicationEvent
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.ConnectedToHost
-import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitch.ongoinggame.messages.GuestMessageFactory
+import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import io.reactivex.Completable
 import io.reactivex.Single
 import timber.log.Timber
@@ -21,7 +21,6 @@ internal class GuestConnectedToHostEventProcessor @Inject constructor(private va
         event as ConnectedToHost
 
         return Single.fromCallable {
-
             val game = store.getGame()
             val localPlayer = store.getLocalPlayer()
 

@@ -80,7 +80,7 @@ class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
         launchTest().test().assertComplete()
 
         verify { mockInGameStore.getPlayer(guestPlayer.inGameId) }
-        verify { mockHostCommunicator.kickPlayer(senderLocalConnectionId) }
+        verify { mockHostCommunicator.closeConnectionWithClient(senderLocalConnectionId) }
         confirmVerified(mockInGameStore)
         confirmVerified(mockHostCommunicator)
         assertThat(localConnectionIdStore.getInGameId(senderLocalConnectionId)).isNull()

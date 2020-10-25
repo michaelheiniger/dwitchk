@@ -5,10 +5,18 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.TestWebSocket
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.IntTestWebsocketClient
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.IntTestWebsocketServer
 
-class NetworkHub(
-    private val host: IntTestWebsocketServer,
-    private val guests: Map<GuestIdTestHost, IntTestWebsocketClient>
-) {
+class NetworkHub {
+
+    private lateinit var host: IntTestWebsocketServer
+    private val guests: MutableMap<GuestIdTestHost, IntTestWebsocketClient> = mutableMapOf()
+
+    fun setHost(websocket: IntTestWebsocketServer) {
+        host = websocket
+    }
+
+    fun addGuest(guest: GuestIdTestHost, websocket: IntTestWebsocketClient) {
+        guests[guest] = websocket
+    }
 
     fun sendToHost(guest: GuestIdTestHost, message: String) {
         host.onMessage(TestWebSocket(guest.ipAddress, guest.port), message)

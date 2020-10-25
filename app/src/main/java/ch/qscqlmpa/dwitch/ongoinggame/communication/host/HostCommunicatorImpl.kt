@@ -8,17 +8,14 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.AddressType
 import ch.qscqlmpa.dwitch.ongoinggame.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
-import ch.qscqlmpa.dwitch.service.OngoingGameScope
 import ch.qscqlmpa.dwitch.utils.DisposableManager
 import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import timber.log.Timber
-import javax.inject.Inject
 
-@OngoingGameScope
-internal class HostCommunicatorImpl @Inject
+internal class HostCommunicatorImpl
 constructor(private val commServer: CommServer,
             private val messageDispatcher: MessageDispatcher,
             private val communicationEventDispatcher: HostCommunicationEventDispatcher,
@@ -34,7 +31,6 @@ constructor(private val commServer: CommServer,
     private var isConnected: Boolean = false
 
     override fun listenForConnections() {
-
         if (isConnected) {
             return
         }
@@ -46,14 +42,14 @@ constructor(private val commServer: CommServer,
         observeCommunicationEvents()
     }
 
-    override fun observeCommunicationState(): Observable<HostCommunicationState> {
-        return communicationStateRelay
-    }
-
     override fun closeAllConnections() {
         Timber.d("Close all connections")
         commServer.stop()
         disposableManager.disposeAndReset()
+    }
+
+    override fun observeCommunicationState(): Observable<HostCommunicationState> {
+        return communicationStateRelay
     }
 
     override fun sendMessage(envelopeToSend: EnvelopeToSend): Completable {
@@ -61,12 +57,7 @@ constructor(private val commServer: CommServer,
         return commServer.sendMessage(envelopeToSend.message, address)
     }
 
-    override fun sendMessages(envelopeToSendList: List<EnvelopeToSend>): Completable {
-        Timber.d("Sending messages %s", envelopeToSendList)
-        return Observable.fromIterable(envelopeToSendList).concatMapCompletable { message -> sendMessage(message) }
-    }
-
-    override fun kickPlayer(localConnectionId: LocalConnectionId) {
+    override fun closeConnectionWithClient(localConnectionId: LocalConnectionId) {
         commServer.closeConnectionWithClient(localConnectionId)
     }
 

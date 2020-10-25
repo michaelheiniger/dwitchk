@@ -4,17 +4,14 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.eventprocessors.GuestC
 import ch.qscqlmpa.dwitch.ongoinggame.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
-import ch.qscqlmpa.dwitch.service.OngoingGameScope
 import ch.qscqlmpa.dwitch.utils.DisposableManager
 import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import timber.log.Timber
-import javax.inject.Inject
 
-@OngoingGameScope
-internal class GuestCommunicatorImpl @Inject
+internal class GuestCommunicatorImpl
 constructor(private val commClient: CommClient,
             private val messageDispatcher: MessageDispatcher,
             private val communicationEventDispatcher: GuestCommunicationEventDispatcher,
@@ -29,7 +26,6 @@ constructor(private val commClient: CommClient,
     private var isListening: Boolean = false
 
     override fun connect() {
-
         if (isListening) {
             return
         }
@@ -41,13 +37,13 @@ constructor(private val commClient: CommClient,
         commClient.start()
     }
 
-    override fun observeCommunicationState(): Observable<GuestCommunicationState> {
-        return communicationStateRelay
-    }
-
     override fun closeConnection() {
         commClient.stop()
         disposableManager.disposeAndReset()
+    }
+
+    override fun observeCommunicationState(): Observable<GuestCommunicationState> {
+        return communicationStateRelay
     }
 
     override fun sendMessage(envelopeToSend: EnvelopeToSend): Completable {
