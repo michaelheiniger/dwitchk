@@ -15,7 +15,7 @@ import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealer
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import org.assertj.core.api.Assertions.assertThat
 
-abstract class IntTestPlayer(private val networkHub: NetworkHub) {
+abstract class IntTestPlayer() {
 
     protected val appComponent: IntTestAppComponent = DaggerIntTestAppComponent.builder().build()
     protected var gameLocalId: Long? = null

@@ -13,7 +13,7 @@ import org.assertj.core.api.Assertions.assertThat
 class IntTestHost(
     private val gameName: String,
     private val networkHub: NetworkHub
-) : IntTestPlayer(networkHub) {
+) : IntTestPlayer() {
 
     private var hostLocalId: Long? = null
     lateinit var playerId: PlayerInGameId

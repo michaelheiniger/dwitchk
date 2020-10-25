@@ -9,7 +9,7 @@ class IntTestGuest(
     private val guest: GuestIdTestHost,
     advertisedGame: AdvertisedGame,
     private val networkHub: NetworkHub
-) : IntTestPlayer(networkHub) {
+) : IntTestPlayer() {
 
     private val guestLocalId: Long
     lateinit var playerId: PlayerInGameId
