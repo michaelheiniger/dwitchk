@@ -37,6 +37,10 @@ class IntTestServiceManager @Inject constructor() : ServiceManager {
         onGoingGameComponent.hostCommunicator.closeAllConnections()
     }
 
+    override fun goToHostGameRoom() {
+        // Nothing to do
+    }
+
     override fun startGuestService(
         gameLocalId: Long,
         localPlayerLocalId: Long,
@@ -61,7 +65,7 @@ class IntTestServiceManager @Inject constructor() : ServiceManager {
         onGoingGameComponent.guestCommunicator.closeConnection()
     }
 
-    override fun goToHostGameRoom() {
+    override fun goToGuestGameRoom() {
         // Nothing to do
     }
 }
