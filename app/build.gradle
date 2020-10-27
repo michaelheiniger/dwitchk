@@ -147,11 +147,12 @@ def test = dependencyGroup {
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.2.0'
 
     // AndroidJUnitRunner and JUnit Rules
-    androidTestImplementation 'androidx.test:core:1.0.0'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test:rules:1.2.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestUtil 'androidx.test:orchestrator:1.1.0'
+    androidTestImplementation 'androidx.test:core:1.3.0'
+    androidTestImplementation 'androidx.test:core-ktx:1.3.0'
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation 'androidx.test:rules:1.3.0'
+    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.2'
+    androidTestUtil 'androidx.test:orchestrator:1.3.0'
 
     // Dagger
     kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
