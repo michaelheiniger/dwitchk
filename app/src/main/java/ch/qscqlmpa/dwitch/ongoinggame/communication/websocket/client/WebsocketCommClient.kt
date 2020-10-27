@@ -37,13 +37,13 @@ class WebsocketCommClient @Inject constructor(
     private fun observeOnOpenEvents(): Observable<ClientCommunicationEvent> {
         Timber.i("observeOnOpenEvents()")
         return websocketClient.observeOnOpenEvents()
-                .doOnNext { Timber.i("Connected to Server") }
+                .doOnNext { onOpen -> Timber.i("Connected to Server ($onOpen") }
                 .map { ConnectedToHost }
     }
 
     private fun observeOnCloseEvents(): Observable<ClientCommunicationEvent> {
         return websocketClient.observeOnCloseEvents()
-                .doOnNext { Timber.i("Disconnected from Serer") }
+                .doOnNext { onClose -> Timber.i("Disconnected from Server ($onClose)") }
                 .map { DisconnectedFromHost }
     }
 
@@ -55,7 +55,7 @@ class WebsocketCommClient @Inject constructor(
                     }
                     return@filter onMessage.message != null
                 }
-                .doOnNext { onMessage -> Timber.i("Message received %s", onMessage.message) }
+                .doOnNext { onMessage -> Timber.i("Message received ${onMessage.message}") }
                 .map { onMessage ->
                     val message = serializerFactory.unserializeMessage(onMessage.message!!)
                     EnvelopeReceived(LocalConnectionId(0), message)
