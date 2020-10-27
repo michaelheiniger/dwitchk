@@ -50,7 +50,10 @@ class NewGameActivity : HomeBaseActivity() {
         setGameNameIfNeeded()
 
         if (BuildConfig.DEBUG) {
-            playerNameEdt.setText("Mirlick")
+            when (playerRole) {
+                PlayerRole.GUEST -> playerNameEdt.setText("Mébène")
+                PlayerRole.HOST -> playerNameEdt.setText("Mirlick")
+            }
         }
 
         observeErrors()
