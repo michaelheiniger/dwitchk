@@ -30,7 +30,7 @@ constructor(private val networkAdapter: NetworkAdapter) : GameDiscovery {
         return networkAdapter.receive()
                 .doOnError { e -> Timber.e(e, "Error listening for advertised game") }
                 .map { packet ->
-                    Timber.d("Packet received: %s", packet)
+                    Timber.v("Packet received: %s", packet)
                     AdvertisedGame(
                             packet.message,
                             packet.senderIpAddress,
