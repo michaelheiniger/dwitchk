@@ -11,6 +11,7 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.GameCanceledDialog
 import kotlinx.android.synthetic.main.waiting_room_host_fragment.*
 
@@ -29,10 +30,14 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), GameCanceledDialog.D
             when (command) {
                 WaitingRoomGuestCommand.NotifyUserGameCanceled -> showGameCanceledDialog()
                 WaitingRoomGuestCommand.NavigateToHomeScreen -> MainActivity.start(activity!!)
-                WaitingRoomGuestCommand.NotifyUserGameOver -> TODO()
-                WaitingRoomGuestCommand.NavigateToGameRoomScreen -> TODO()
+                WaitingRoomGuestCommand.NotifyUserGameOver -> showGameOverPopup()
+                WaitingRoomGuestCommand.NavigateToGameRoomScreen -> GameRoomActivity.startForGuest(activity!!)
             }
         })
+    }
+
+    private fun showGameOverPopup() {
+        //TODO
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -49,6 +54,7 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), GameCanceledDialog.D
         viewModel.userAcknowledgesGameCanceledEvent()
     }
 
+    //FIXME: State is not updated if activity is closed and re-opened.
     private fun setupReadyCheckbox(parentView: View) {
         val localPlayerReadyCkb = parentView.findViewById(R.id.localPlayerReadyCkb) as CheckBox
         localPlayerReadyCkb.setOnClickListener { v -> viewModel.updateReadyState((v as CheckBox).isChecked) }
