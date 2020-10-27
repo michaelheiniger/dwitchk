@@ -11,7 +11,6 @@ class TestRule<T : Activity>(activityClass: Class<T>) : ActivityTestRule<T>(acti
     lateinit var app: TestApp
 
     fun init() {
-
         app = getApplicationContext()
         testAppComponent = app.testAppComponent
     }
