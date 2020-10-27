@@ -1,15 +1,16 @@
 package ch.qscqlmpa.dwitch.ongoinggame.messageprocessors
 
-import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
-import ch.qscqlmpa.dwitch.ongoinggame.messages.HostMessageFactory
-import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionId
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionIdStore
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
+import ch.qscqlmpa.dwitch.ongoinggame.messages.HostMessageFactory
+import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
+import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Maybe
+import timber.log.Timber
 import javax.inject.Inject
 
 internal class RejoinGameMessageProcessor @Inject constructor(
@@ -33,6 +34,7 @@ internal class RejoinGameMessageProcessor @Inject constructor(
             if (playerRejoining != null) {
                 return@fromCallable playerRejoining
             } else {
+                Timber.e("Re-joining player not found: closing connection with client.")
                 communicator.closeConnectionWithClient(senderLocalConnectionID)
                 return@fromCallable null
             }
