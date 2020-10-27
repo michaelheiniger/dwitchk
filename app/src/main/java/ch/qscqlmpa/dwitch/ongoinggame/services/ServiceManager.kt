@@ -11,4 +11,6 @@ interface ServiceManager {
     fun stopGuestService()
 
     fun goToHostGameRoom()
+
+    fun goToGuestGameRoom()
 }

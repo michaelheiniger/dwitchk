@@ -24,4 +24,8 @@ open class ServiceManagerImpl @Inject constructor(private val context: Context) 
     override fun goToHostGameRoom() {
         HostInGameService.changeRoomToGameRoom(context)
     }
+
+    override fun goToGuestGameRoom() {
+        GuestInGameService.goChangeRoomToGameRoom(context)
+    }
 }

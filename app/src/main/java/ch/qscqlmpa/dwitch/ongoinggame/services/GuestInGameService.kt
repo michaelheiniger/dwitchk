@@ -19,6 +19,7 @@ import ch.qscqlmpa.dwitch.model.player.PlayerRole
 import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameComponent
 import ch.qscqlmpa.dwitch.persistence.Store
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
 import timber.log.Timber
 import javax.inject.Inject
@@ -54,12 +55,12 @@ class GuestInGameService : BaseInGameService() {
         Timber.i("Start service")
         showNotification(RoomType.WAITING_ROOM)
         (application as App).startOngoingGame(
-                PlayerRole.GUEST,
-                RoomType.WAITING_ROOM,
-                gameLocalId,
-                localPlayerLocalId,
-                hostPort,
-                hostIpAddress
+            PlayerRole.GUEST,
+            RoomType.WAITING_ROOM,
+            gameLocalId,
+            localPlayerLocalId,
+            hostPort,
+            hostIpAddress
         )
         getOngoingGameComponent().guestCommunicator.connect()
     }
@@ -78,7 +79,8 @@ class GuestInGameService : BaseInGameService() {
 
     private fun getHostIpAddress(intent: Intent): String {
         return intent.getStringExtra(EXTRA_HOST_IP_ADDRESS)
-                ?: throw IllegalArgumentException("The intent to start the service does not specify a host ip address")
+            ?: throw IllegalArgumentException(
+                "The intent to start the service does not specify a host ip address")
     }
 
     private fun getHostPort(intent: Intent): Int {
@@ -91,45 +93,54 @@ class GuestInGameService : BaseInGameService() {
     }
 
     private fun showNotification(roomType: RoomType) {
+        createNotificationChannel()
 
-        createNotificationChannel(DEFAULT_CHANNEL_ID, DEFAULT_CHANNEL_NAME)
+        val notificationIntent = buildNotificationIntent(roomType)
 
-        val notificationIntent: Intent
-        when (roomType) {
-            RoomType.WAITING_ROOM -> notificationIntent = Intent(this, WaitingRoomActivity::class.java)
-            RoomType.GAME_ROOM -> throw NotImplementedError() //TODO
-        }
-        notificationIntent.putExtra(EXTRA_PLAYER_ROLE, PlayerRole.HOST.name)
-
-        notificationIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-
-        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, FLAG_UPDATE_CURRENT)
+        val pendingIntent =
+            PendingIntent.getActivity(this, 0, notificationIntent, FLAG_UPDATE_CURRENT)
 
         val notificationBuilder = NotificationCompat.Builder(this, DEFAULT_CHANNEL_ID)
-                .setContentIntent(pendingIntent)
-                .setOngoing(true)
-                .setSmallIcon(R.drawable.spades_ace)
-                .setContentTitle(getText(R.string.notification_title))
-                .setContentText(getText(R.string.notification_message))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setColor(getColor(R.color.black))
+            .setContentIntent(pendingIntent)
+            .setOngoing(true)
+            .setSmallIcon(R.drawable.spades_ace)
+            .setContentTitle(getText(R.string.notification_title))
+            .setContentText(getText(R.string.notification_message))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setColor(getColor(R.color.black))
 
 
         // Add "Stop" button to kill service. Only in DEBUG build.
 //        if (BuildConfig.DEBUG) {//FIXME
-            val stopIntent = Intent(this, GuestInGameService::class.java)
-            stopIntent.action = ACTION_STOP_SERVICE
-            val stopPendingIntent = PendingIntent.getService(this, 1, stopIntent, FLAG_UPDATE_CURRENT)
+        val stopIntent = Intent(this, GuestInGameService::class.java)
+        stopIntent.action = ACTION_STOP_SERVICE
+        val stopPendingIntent = PendingIntent.getService(this, 1, stopIntent, FLAG_UPDATE_CURRENT)
 
-            notificationBuilder.addAction(R.drawable.ic_stop_black_24dp, getString(R.string.stop_game_service),
-                    stopPendingIntent)
+        notificationBuilder.addAction(
+            R.drawable.ic_stop_black_24dp, getString(R.string.stop_game_service),
+            stopPendingIntent
+        )
 //        }
 
         startForeground(NOTIFICATION_ID, notificationBuilder.build())
     }
 
-    private fun createNotificationChannel(channelId: String, channelName: String) {
-        val channel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_NONE)
+    private fun buildNotificationIntent(roomType: RoomType): Intent {
+        val notificationIntent = when (roomType) {
+            RoomType.WAITING_ROOM -> Intent(this, WaitingRoomActivity::class.java)
+            RoomType.GAME_ROOM -> Intent(this, GameRoomActivity::class.java)
+        }
+        notificationIntent.putExtra(EXTRA_PLAYER_ROLE, PlayerRole.GUEST.name)
+        notificationIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+        return notificationIntent
+    }
+
+    private fun createNotificationChannel() {
+        val channel = NotificationChannel(
+            DEFAULT_CHANNEL_ID,
+            DEFAULT_CHANNEL_NAME,
+            NotificationManager.IMPORTANCE_NONE
+        )
         channel.lightColor = Color.BLUE
         channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
 
@@ -146,7 +157,13 @@ class GuestInGameService : BaseInGameService() {
         private const val EXTRA_HOST_PORT = "host_port"
         private const val EXTRA_HOST_IP_ADDRESS = "host_ip_address"
 
-        fun startService(context: Context, gameLocalId: Long, localPlayerLocalId: Long, hostPort: Int, hostIpAddress: String) {
+        fun startService(
+            context: Context,
+            gameLocalId: Long,
+            localPlayerLocalId: Long,
+            hostPort: Int,
+            hostIpAddress: String
+        ) {
             Timber.i("Starting GuestService...()")
             val intent = Intent(context, GuestInGameService::class.java)
             intent.action = ACTION_START_SERVICE
@@ -157,7 +174,7 @@ class GuestInGameService : BaseInGameService() {
             context.startService(intent)
         }
 
-        fun goToGameRoom(context: Context) {
+        fun goChangeRoomToGameRoom(context: Context) {
             Timber.i("Changing room to Game Room...")
             val intent = Intent(context, GuestInGameService::class.java)
             intent.action = ACTION_GO_TO_GAME_ROOM
