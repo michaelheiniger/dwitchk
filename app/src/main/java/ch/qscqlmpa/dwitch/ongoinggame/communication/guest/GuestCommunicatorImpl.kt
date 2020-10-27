@@ -11,11 +11,11 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import timber.log.Timber
 
-internal class GuestCommunicatorImpl
-constructor(private val commClient: CommClient,
-            private val messageDispatcher: MessageDispatcher,
-            private val communicationEventDispatcher: GuestCommunicationEventDispatcher,
-            private val schedulerFactory: SchedulerFactory
+internal class GuestCommunicatorImpl constructor(
+    private val commClient: CommClient,
+    private val messageDispatcher: MessageDispatcher,
+    private val communicationEventDispatcher: GuestCommunicationEventDispatcher,
+    private val schedulerFactory: SchedulerFactory
 ) : GuestCommunicator {
 
     private val disposableManager = DisposableManager()
@@ -52,29 +52,29 @@ constructor(private val commClient: CommClient,
 
     private fun observeReceivedMessages() {
         disposableManager.add(commClient.observeReceivedMessages()
-                .subscribeOn(schedulerFactory.io())
-                .flatMapCompletable(messageDispatcher::dispatch)
-                .subscribe(
-                        { Timber.d("Dispatch Completed !") },
-                        { error -> Timber.e(error, "Error while observing received messages") }
-                )
+            .subscribeOn(schedulerFactory.io())
+            .flatMapCompletable(messageDispatcher::dispatch)
+            .subscribe(
+                { Timber.d("Dispatch Completed !") },
+                { error -> Timber.e(error, "Error while observing received messages") }
+            )
         )
     }
 
     private fun observeCommunicationEvents() {
         disposableManager.add(commClient.observeCommunicationEvents()
-                .subscribeOn(schedulerFactory.io())
-                .flatMapSingle(this::dispatchCommunicationEvent)
-                .subscribe(
-                        { event -> emitGuestCommunicationStateIfAny(event) },
-                        { error -> Timber.e(error, "Error while observing communication events") }
-                )
+            .subscribeOn(schedulerFactory.io())
+            .flatMapSingle(this::dispatchCommunicationEvent)
+            .subscribe(
+                { event -> emitGuestCommunicationStateIfAny(event) },
+                { error -> Timber.e(error, "Error while observing communication events") }
+            )
         )
     }
 
     private fun dispatchCommunicationEvent(event: ClientCommunicationEvent): Single<ClientCommunicationEvent> {
         return communicationEventDispatcher.dispatch(event)
-                .andThen(Single.just(event))
+            .andThen(Single.just(event))
     }
 
     private fun emitGuestCommunicationStateIfAny(event: ClientCommunicationEvent) {
