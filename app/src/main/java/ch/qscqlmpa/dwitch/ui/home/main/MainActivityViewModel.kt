@@ -9,9 +9,10 @@ import ch.qscqlmpa.dwitch.utils.DisposableManager
 import javax.inject.Inject
 
 class MainActivityViewModel @Inject
-constructor(private val gameRepository: AdvertisedGameRepository,
-            disposableManager: DisposableManager,
-            schedulerFactory: SchedulerFactory
+constructor(
+    private val gameRepository: AdvertisedGameRepository,
+    disposableManager: DisposableManager,
+    schedulerFactory: SchedulerFactory
 ) : BaseViewModel(disposableManager, schedulerFactory) {
 
     private val advertisedGames = MutableLiveData<AdvertisedGameResponse>()
@@ -28,12 +29,11 @@ constructor(private val gameRepository: AdvertisedGameRepository,
 
     private fun startObservingAdvertisedGames() {
         disposableManager.add(gameRepository.listenForAdvertisedGames()
-                .subscribeOn(schedulerFactory.io())
-                .observeOn(schedulerFactory.ui())
-                .subscribe(
-                        { games -> advertisedGames.setValue(AdvertisedGameResponse.success(games)) },
-                        { error -> advertisedGames.setValue(AdvertisedGameResponse.error(error)) }
-                )
+            .observeOn(schedulerFactory.ui())
+            .subscribe(
+                { games -> advertisedGames.setValue(AdvertisedGameResponse.success(games)) },
+                { error -> advertisedGames.setValue(AdvertisedGameResponse.error(error)) }
+            )
         )
     }
 

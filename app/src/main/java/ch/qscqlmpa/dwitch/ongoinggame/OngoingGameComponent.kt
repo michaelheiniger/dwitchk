@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.ongoinggame
 
+import ch.qscqlmpa.dwitch.gameadvertising.GameAdvertising
 import ch.qscqlmpa.dwitch.ongoinggame.communication.CommunicationModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.GuestCommunicationModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.GuestCommunicator
@@ -48,6 +49,8 @@ interface OngoingGameComponent {
     fun inject(fragment: GameRoomHostFragment)
     fun inject(fragment: GameRoomGuestFragment)
     fun inject(fragment: PlayerDashboardFragment)
+
+    val gameAdvertising: GameAdvertising
 
     val hostCommunicator: HostCommunicator
     val guestCommunicator: GuestCommunicator

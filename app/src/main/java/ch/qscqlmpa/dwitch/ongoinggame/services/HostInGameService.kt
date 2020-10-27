@@ -19,15 +19,18 @@ import ch.qscqlmpa.dwitch.model.player.PlayerRole
 import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameComponent
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
+import ch.qscqlmpa.dwitch.utils.DisposableManager
 import timber.log.Timber
 
 
 class HostInGameService : BaseInGameService() {
 
+    private val gameAdvertisingDisposable = DisposableManager()
+
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         when (intent.action) {
             ACTION_START_SERVICE -> actionStartService(intent)
-            ACTION_CHANGE_ROOM_TO_GAME_ROOM -> actionGoToGameRoom()
+            ACTION_CHANGE_ROOM_TO_GAME_ROOM -> actionChangeRoomToGameRoom()
             ACTION_STOP_SERVICE -> actionStopService()
         }
 
@@ -45,65 +48,90 @@ class HostInGameService : BaseInGameService() {
         Timber.i("Start service")
         showNotification(RoomType.WAITING_ROOM)
         (application as App).startOngoingGame(
-                PlayerRole.HOST,
-                RoomType.WAITING_ROOM,
-                gameLocalId,
-                localPlayerLocalId,
-                8889,
-                "127.0.0.1"
+            PlayerRole.HOST,
+            RoomType.WAITING_ROOM,
+            gameLocalId,
+            localPlayerLocalId,
+            8889,
+            "0.0.0.0"
         ) //TODO extract host port from settings
         getOngoingGameComponent().hostCommunicator.listenForConnections()
+        gameAdvertisingDisposable.add(
+            getOngoingGameComponent().gameAdvertising.startAdvertising("My Game !") //TODO: Fix game name
+                .subscribe()
+        )
     }
 
-    private fun actionGoToGameRoom() {
+    private fun actionChangeRoomToGameRoom() {
         Timber.i("Go to game room")
         showNotification(RoomType.GAME_ROOM)
+        gameAdvertisingDisposable.dispose()
     }
 
     private fun actionStopService() {
         Timber.i("Stop service")
         stopSelf()
+        cleanUp()
+    }
+
+    private fun cleanUp() {
         getOngoingGameComponent().hostCommunicator.closeAllConnections()
         (application as App).stopOngoingGame()
+        gameAdvertisingDisposable.dispose()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        cleanUp()
     }
 
     private fun showNotification(roomType: RoomType) {
         createNotificationChannel(DEFAULT_CHANNEL_ID, DEFAULT_CHANNEL_NAME)
 
-        val notificationIntent: Intent = when (roomType) {
-            RoomType.WAITING_ROOM -> Intent(this, WaitingRoomActivity::class.java)
-            RoomType.GAME_ROOM -> Intent(this, GameRoomActivity::class.java)
-        }
-        notificationIntent.putExtra(EXTRA_PLAYER_ROLE, PlayerRole.HOST.name)
+        val notificationIntent = buildNotificationIntent(roomType)
 
-        notificationIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-
-        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, FLAG_UPDATE_CURRENT)
+        val pendingIntent =
+            PendingIntent.getActivity(this, 0, notificationIntent, FLAG_UPDATE_CURRENT)
 
         val notificationBuilder = NotificationCompat.Builder(this, DEFAULT_CHANNEL_ID)
-                .setContentIntent(pendingIntent)
-                .setOngoing(true)
-                .setSmallIcon(R.drawable.spades_ace)
-                .setContentTitle(getText(R.string.notification_title))
-                .setContentText(getText(R.string.notification_message))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setColor(getColor(R.color.black))
+            .setContentIntent(pendingIntent)
+            .setOngoing(true)
+            .setSmallIcon(R.drawable.spades_ace)
+            .setContentTitle(getText(R.string.notification_title))
+            .setContentText(getText(R.string.notification_message))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setColor(getColor(R.color.black))
 
 
         // Add "Stop" button to kill service. Only in DEBUG build.
 //        if (BuildConfig.DEBUG) { //FIXME
-            val stopIntent = Intent(this, HostInGameService::class.java)
-            stopIntent.action = ACTION_STOP_SERVICE
-            val stopPendingIntent = PendingIntent.getService(this, 1, stopIntent, FLAG_UPDATE_CURRENT)
+        val stopIntent = Intent(this, HostInGameService::class.java)
+        stopIntent.action = ACTION_STOP_SERVICE
+        val stopPendingIntent = PendingIntent.getService(this, 1, stopIntent, FLAG_UPDATE_CURRENT)
 
-            notificationBuilder.addAction(R.drawable.ic_stop_black_24dp, getString(R.string.stop_game_service), stopPendingIntent)
+        notificationBuilder.addAction(
+            R.drawable.ic_stop_black_24dp,
+            getString(R.string.stop_game_service),
+            stopPendingIntent
+        )
 //        }
 
         startForeground(NOTIFICATION_ID, notificationBuilder.build())
     }
 
+    private fun buildNotificationIntent(roomType: RoomType): Intent {
+        val notificationIntent = when (roomType) {
+            RoomType.WAITING_ROOM -> Intent(this, WaitingRoomActivity::class.java)
+            RoomType.GAME_ROOM -> Intent(this, GameRoomActivity::class.java)
+        }
+        notificationIntent.putExtra(EXTRA_PLAYER_ROLE, PlayerRole.HOST.name)
+        notificationIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+        return notificationIntent
+    }
+
     private fun createNotificationChannel(channelId: String, channelName: String) {
-        val channel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_NONE)
+        val channel =
+            NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_NONE)
         channel.lightColor = Color.BLUE
         channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
 
@@ -135,9 +163,7 @@ class HostInGameService : BaseInGameService() {
 
         fun stopService(context: Context) {
             Timber.i("Stopping HostService...")
-            val intent = Intent(context, HostInGameService::class.java)
-            intent.action = ACTION_STOP_SERVICE
-            context.stopService(intent)
+            context.stopService(Intent(context, HostInGameService::class.java))
         }
 
         private const val NOTIFICATION_ID = 1

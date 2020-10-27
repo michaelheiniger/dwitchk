@@ -1,42 +1,61 @@
 package ch.qscqlmpa.dwitch.gamediscovery
 
+import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
 import io.reactivex.Observable
-import io.reactivex.functions.BiFunction
 import org.joda.time.LocalTime
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class AdvertisedGameRepository @Inject
-constructor(private val gameDiscovery: GameDiscovery) {
+class AdvertisedGameRepository @Inject constructor(
+    private val gameDiscovery: GameDiscovery,
+    private val schedulerFactory: SchedulerFactory
+) {
 
     companion object {
-        const val GAME_AD_TIMEOUT_SEC = 15
+        const val GAME_AD_TIMEOUT_SEC = 5
     }
 
     fun listenForAdvertisedGames(): Observable<List<AdvertisedGame>> {
-        return Observable.combineLatest<AdvertisedGame, Long, AdvertisedGame>(
-                gameDiscovery.listenForAdvertisedGame(),
-                Observable.interval(GAME_AD_TIMEOUT_SEC.toLong(), TimeUnit.SECONDS)
-                        .startWith(0),
-                BiFunction { game, _ -> game }
+        return Observable.combineLatest(
+            advertisedGames(),
+            cleanUpScheduler(),
+            { game, _ -> game }
         )
-                .doOnNext { game -> Timber.i("New game discovered: %s ", game.toString()) }
-                .scan(HashMap<String, AdvertisedGame>(), { mapOfGames, game -> buildUpdatedMap(mapOfGames, game) })
-                .map { mapOfGames -> ArrayList(mapOfGames.values) }
+            .doOnNext { game -> Timber.v("New game discovered: %s ", game.toString()) }
+            .scan(
+                mapOf<String, AdvertisedGame>(),
+                { mapOfGames, game -> buildUpdatedMap(mapOfGames, game) }
+            )
+            .map { mapOfGames -> ArrayList(mapOfGames.values) }
+    }
+
+    private fun advertisedGames(): Observable<AdvertisedGame> {
+        return gameDiscovery.listenForAdvertisedGame()
+            .subscribeOn(schedulerFactory.io())
     }
 
     fun stopListening() {
         gameDiscovery.stopListening()
     }
 
-    private fun buildUpdatedMap(map: HashMap<String, AdvertisedGame>, advertisedGame: AdvertisedGame): HashMap<String, AdvertisedGame> {
+    private fun cleanUpScheduler(): Observable<Long> {
+        return Observable.interval(0L, GAME_AD_TIMEOUT_SEC.toLong(), TimeUnit.SECONDS)
+            .subscribeOn(schedulerFactory.io())
+    }
+
+    private fun buildUpdatedMap(
+        map: Map<String, AdvertisedGame>,
+        advertisedGame: AdvertisedGame
+    ): Map<String, AdvertisedGame> {
         val timeNow = LocalTime.now()
-        map[advertisedGame.ipAddress] = advertisedGame
-        return HashMap(map.filterValues { game ->
-            timeNow.minusSeconds(GAME_AD_TIMEOUT_SEC).compareTo(game.discoveryTime) <=
-                    1
-        })
+        val mutableMap = map.toMutableMap()
+        mutableMap[advertisedGame.ipAddress] = advertisedGame
+        return mutableMap.filterValues { game -> gameAdIsRecentEnough(timeNow, game) }
+    }
+
+    private fun gameAdIsRecentEnough(timeNow: LocalTime, game: AdvertisedGame): Boolean {
+        return timeNow.minusSeconds(GAME_AD_TIMEOUT_SEC) <= game.discoveryTime
     }
 }

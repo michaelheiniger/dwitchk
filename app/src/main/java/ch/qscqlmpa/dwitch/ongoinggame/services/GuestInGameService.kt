@@ -73,8 +73,17 @@ class GuestInGameService : BaseInGameService() {
     private fun actionStopService() {
         Timber.i("Stop service")
         stopSelf()
+        cleanUp()
+    }
+
+    private fun cleanUp() {
         getOngoingGameComponent().guestCommunicator.closeConnection()
         (application as App).stopOngoingGame()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        cleanUp()
     }
 
     private fun getHostIpAddress(intent: Intent): String {
@@ -184,7 +193,6 @@ class GuestInGameService : BaseInGameService() {
         fun stopService(context: Context) {
             Timber.i("Stopping GuestService...()")
             val intent = Intent(context, GuestInGameService::class.java)
-            intent.action = ACTION_STOP_SERVICE
             context.stopService(intent)
         }
 

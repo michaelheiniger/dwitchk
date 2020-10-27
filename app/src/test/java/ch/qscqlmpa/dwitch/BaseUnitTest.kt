@@ -3,6 +3,7 @@ package ch.qscqlmpa.dwitch
 import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.persistence.Store
+import io.mockk.clearAllMocks
 import io.mockk.clearMocks
 import io.mockk.mockk
 import kotlinx.serialization.json.Json
@@ -22,6 +23,6 @@ abstract class BaseUnitTest {
     }
 
     open fun tearDown() {
-        clearMocks(mockStore, mockInGameStore)
+        clearAllMocks()
     }
 }

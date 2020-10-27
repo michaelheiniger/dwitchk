@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.scheduler
 
-import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -20,6 +19,6 @@ class DefaultSchedulerFactory @Inject constructor() : SchedulerFactory {
     }
 
     override fun timeScheduler(): Scheduler {
-        return Schedulers.computation()
+        return Schedulers.io()
     }
 }
