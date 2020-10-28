@@ -24,12 +24,6 @@ abstract class MessageProcessorModule {
     @OngoingGameScope
     @Binds
     @IntoMap
-    @MessageProcessorKey(Message.RejoinGameMessage::class)
-    internal abstract fun bindRejoinGameMessageProcessor(messageProcessor: RejoinGameMessageProcessor): MessageProcessor
-
-    @OngoingGameScope
-    @Binds
-    @IntoMap
     @MessageProcessorKey(Message.LeaveGameMessage::class)
     internal abstract fun bindLeaveGameMessageProcessor(messageProcessor: LeaveGameMessageProcessor): MessageProcessor
 

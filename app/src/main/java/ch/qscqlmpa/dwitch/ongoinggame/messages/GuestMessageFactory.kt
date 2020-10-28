@@ -15,11 +15,6 @@ class GuestMessageFactory @Inject constructor() {
             return EnvelopeToSend(RecipientType.All, message)
         }
 
-        fun createRejoinGameMessage(playerInGameId: PlayerInGameId): EnvelopeToSend {
-            val message = Message.RejoinGameMessage(playerInGameId)
-            return EnvelopeToSend(RecipientType.All, message)
-        }
-
         fun createLeaveGameMessage(playerInGameId: PlayerInGameId): EnvelopeToSend {
             val message = Message.LeaveGameMessage(playerInGameId)
             return EnvelopeToSend(RecipientType.All, message)
