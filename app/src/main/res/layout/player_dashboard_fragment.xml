@@ -19,17 +19,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Player1 (P) Player2 (A)" />
 
-    <TextView
-        android:id="@+id/lastCardTv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="@string/pdf_last_card_played"
-        android:textSize="@dimen/regular_text_size"
-        app:layout_constraintBottom_toTopOf="@+id/lastCardIv"
-        app:layout_constraintEnd_toEndOf="@+id/lastCardIv"
-        app:layout_constraintStart_toStartOf="@+id/lastCardIv" />
-
     <ImageView
         android:id="@+id/lastCardIv"
         android:layout_width="90dp"
