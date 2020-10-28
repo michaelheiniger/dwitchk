@@ -43,7 +43,7 @@ class GameDaoTest : BaseInstrumentedTest() {
     fun testInsertGameForHost_CreateGame() {
         val insertGameResult = gameDao.insertGameForHost(gameName, hostPlayerName, hostIpAddress, hostPort)
 
-        val gameRef = Game(insertGameResult.gameLocalId, RoomType.WAITING_ROOM, insertGameResult.gameLocalId, gameName, "", insertGameResult.localPlayerLocalId, hostIpAddress, hostPort)
+        val gameRef = Game(insertGameResult.gameLocalId, RoomType.WAITING_ROOM, gameName, "", insertGameResult.localPlayerLocalId, hostIpAddress, hostPort)
         val gameTest = gameDao.getGame(insertGameResult.gameLocalId)
 
         assertThat(gameRef).isEqualTo(gameTest)
@@ -70,7 +70,7 @@ class GameDaoTest : BaseInstrumentedTest() {
     fun testInsertGameForGuest_CreateGame() {
         val insertGameResult = gameDao.insertGameForGuest(gameName, guestPlayerName, hostIpAddress, hostPort)
 
-        val gameRef = Game(insertGameResult.gameLocalId, RoomType.WAITING_ROOM, 0, gameName, "", insertGameResult.localPlayerLocalId, hostIpAddress, hostPort)
+        val gameRef = Game(insertGameResult.gameLocalId, RoomType.WAITING_ROOM, gameName, "", insertGameResult.localPlayerLocalId, hostIpAddress, hostPort)
         val gameTest = gameDao.getGame(insertGameResult.gameLocalId)
 
         assertThat(gameRef).isEqualTo(gameTest)
@@ -92,7 +92,7 @@ class GameDaoTest : BaseInstrumentedTest() {
     private fun bootstrapDb() {
         // Goal is to have different values for game ID and player ID in the tests
         db.runInTransaction {
-            val gameId = gameDao.insertGame(Game(0, RoomType.WAITING_ROOM, 1, "", "", 1, "192.168.1.1", 8889))
+            val gameId = gameDao.insertGame(Game(0, RoomType.WAITING_ROOM, "", "", 1, "192.168.1.1", 8889))
             val player1 = Player(0, PlayerInGameId(0), gameId, "", PlayerRole.HOST, PlayerConnectionState.CONNECTED, true)
             val player2 = Player(0, PlayerInGameId(0), gameId, "", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true)
             val player1Id = playerDao.insertPlayer(player1)

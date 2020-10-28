@@ -11,7 +11,7 @@ sealed class Message {
      * Messages sent by Host
      *****************************************************************************************************************/
     @Serializable
-    data class JoinGameAckMessage(val gameCommonId: Long, val playerInGameId: PlayerInGameId) : Message()
+    data class JoinGameAckMessage(val playerInGameId: PlayerInGameId) : Message()
 
     @Serializable
     data class WaitingRoomStateUpdateMessage(val playerList: List<Player>) : Message()

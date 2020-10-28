@@ -21,8 +21,6 @@ import org.junit.Test
 
 class WaitingRoomAsGuestTest : BaseGuestTest() {
 
-    private val gameCommonId = 34L
-
     @Before
     override fun setup() {
         super.setup()
@@ -147,7 +145,7 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
     }
 
     private fun hostSendsJoinGameAck() {
-        val message = Message.JoinGameAckMessage(gameCommonId, PlayerIdTestGuest.LocalGuest.inGameId)
+        val message = Message.JoinGameAckMessage(PlayerIdTestGuest.LocalGuest.inGameId)
         clientTestStub.serverSendsMessageToClient(message, false)
     }
 

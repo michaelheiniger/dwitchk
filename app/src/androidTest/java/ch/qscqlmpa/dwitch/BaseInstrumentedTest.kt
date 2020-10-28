@@ -73,7 +73,6 @@ abstract class BaseInstrumentedTest {
         localPlayerLocalId = insertGameResult.localPlayerLocalId
 
         // Simulate  registration with host
-        gameDao.updateGameCommonId(insertGameResult.gameLocalId, 1)
         playerDao.updatePlayerWithInGameId(insertGameResult.localPlayerLocalId, PlayerInGameId(1))
 
         inGameStore = InGameStoreImpl(gameLocalId!!, localPlayerLocalId!!, db, serializerFactory)

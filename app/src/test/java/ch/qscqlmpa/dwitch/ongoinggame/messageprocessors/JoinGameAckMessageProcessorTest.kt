@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test
 
 class JoinGameAckMessageProcessorTest : BaseMessageProcessorTest() {
 
-    private val gameCommonId = 1L
     private val guestPlayerInGameId = TestEntityFactory.createGuestPlayer1().inGameId
 
     private lateinit var processor: JoinGameAckMessageProcessor
@@ -20,15 +19,6 @@ class JoinGameAckMessageProcessorTest : BaseMessageProcessorTest() {
     override fun setup() {
         super.setup()
         processor = JoinGameAckMessageProcessor(mockInGameStore)
-    }
-
-    @Test
-    fun `Update game with common ID when "join ack" message is received`() {
-        every { mockInGameStore.updateLocalPlayerWithInGameId(any()) } returns 1
-
-        launchTest().test().assertComplete()
-
-        verify { mockInGameStore.updateGameWithCommonId(gameCommonId) }
     }
 
     @Test
@@ -41,6 +31,6 @@ class JoinGameAckMessageProcessorTest : BaseMessageProcessorTest() {
     }
 
     private fun launchTest(): Completable {
-        return processor.process(Message.JoinGameAckMessage(gameCommonId, guestPlayerInGameId), LocalConnectionId(0))
+        return processor.process(Message.JoinGameAckMessage(guestPlayerInGameId), LocalConnectionId(0))
     }
 }

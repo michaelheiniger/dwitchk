@@ -39,10 +39,6 @@ class InGameStoreImpl @Inject constructor(@Named(GAME_LOCAL_ID) private val game
                 .map { game -> serializerFactory.unserializeGameState(game.gameState) }
     }
 
-    override fun updateGameWithCommonId(gameCommonId: Long) {
-        gameDao.updateGameWithCommonId(gameLocalId, gameCommonId)
-    }
-
     override fun deleteGame() {
         gameDao.deleteGame(gameLocalId)
     }

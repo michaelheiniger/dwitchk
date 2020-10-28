@@ -14,16 +14,11 @@ import ch.qscqlmpa.dwitch.model.player.Player
                     deferred = true
             )
         ],
-        indices = [Index(value = ["local_player_id"], unique = true), Index(value = ["game_common_id"], unique = true)])
+        indices = [Index(value = ["local_player_id"], unique = true)])
 data class Game(
         @PrimaryKey(autoGenerate = true) val id: Long = 0,
 
         @ColumnInfo(name = "current_room") val currentRoom: RoomType,
-
-        /**
-         * ID of the game (unrelated to DB) common to all players
-         */
-        @ColumnInfo(name = "game_common_id") val gameCommonId: Long,
 
         /**
          * Name of the game in the game list

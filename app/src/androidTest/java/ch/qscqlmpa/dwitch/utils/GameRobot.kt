@@ -16,11 +16,6 @@ class GameRobot(private val gameTest: Game) {
         return this
     }
 
-    fun assertGameCommonId(gameCommonId: Long): GameRobot {
-        assertEquals(gameTest.gameCommonId, gameCommonId)
-        return this
-    }
-
     fun assertName(name: String): GameRobot {
         assertEquals(gameTest.name, name)
         return this

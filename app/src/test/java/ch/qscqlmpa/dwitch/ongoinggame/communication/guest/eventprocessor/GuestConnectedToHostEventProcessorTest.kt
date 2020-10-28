@@ -3,12 +3,14 @@ package ch.qscqlmpa.dwitch.ongoinggame.communication.guest.eventprocessor
 import ch.qscqlmpa.dwitch.BaseUnitTest
 import ch.qscqlmpa.dwitch.game.TestEntityFactory
 import ch.qscqlmpa.dwitch.model.game.Game
+import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.ongoinggame.communication.RecipientType
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.ConnectedToHost
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.eventprocessors.GuestConnectedToHostEventProcessor
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
+import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
@@ -32,23 +34,20 @@ class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
     }
 
     @Nested
-    @DisplayName("process()")
     inner class Process {
 
         private lateinit var game: Game
-        private val localPlayer = TestEntityFactory.createGuestPlayer1()
+        private lateinit var localPlayer: Player
 
         @BeforeEach
         fun setup() {
             setupCommunicatorMock()
-            setupGetPlayerMock()
         }
 
         @Test
-        @DisplayName("send JoinGameMessage because registration with host has not been done yet (gameCommonId is 0)")
-        fun `send JoinGameMessage`() {
-            setupGame(0)
-
+        @DisplayName("Send JoinGameMessage because registration with host has not been done yet (in-game ID is 0)")
+        fun `Send JoinGameMessage`() {
+            setupTest(PlayerInGameId(0))
             val joinGameMessageMessage = Message.JoinGameMessage(localPlayer.name)
 
             processorGuest.process(ConnectedToHost).test().assertComplete()
@@ -58,10 +57,9 @@ class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
         }
 
         @Test
-        @DisplayName("send RejoinGameMessage because registration with host has already been done (gameCommonId is not 0)")
-        fun `send RejoinGameMessage`() {
-            setupGame(5)
-
+        @DisplayName("Send RejoinGameMessage because registration with host has already been done (in-game ID is not 0)")
+        fun `Send RejoinGameMessage`() {
+            setupTest(PlayerInGameId(23))
             val rejoinGameMessage = Message.RejoinGameMessage(localPlayer.inGameId)
 
             processorGuest.process(ConnectedToHost).test().assertComplete()
@@ -70,8 +68,19 @@ class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
             confirmVerified(mockCommunicator)
         }
 
-        private fun setupGame(gameCommonId: Long) {
-            game = TestEntityFactory.createGameInWaitingRoom(localPlayer.id).copy(gameCommonId = gameCommonId)
+        private fun setupTest(localPlayerInGameId: PlayerInGameId) {
+            setupPlayer(localPlayerInGameId)
+            setupGetPlayerMock()
+            setupGame()
+        }
+
+        private fun setupPlayer(localPlayerInGameId: PlayerInGameId) {
+            localPlayer = TestEntityFactory.createGuestPlayer1()
+                .copy(inGameId = localPlayerInGameId)
+        }
+
+        private fun setupGame() {
+            game = TestEntityFactory.createGameInWaitingRoom(localPlayer.id).copy()
             every { mockInGameStore.getGame() } returns game
         }
 
