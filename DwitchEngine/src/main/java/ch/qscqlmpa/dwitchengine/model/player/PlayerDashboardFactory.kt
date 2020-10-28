@@ -69,7 +69,7 @@ object PlayerDashboardFactory {
 
     private fun minimumCardValueAllowed(gameState: GameState): CardName {
         val lastCardOnTable = gameState.lastCardOnTable()
-        return lastCardOnTable?.name ?: CardName.Two
+        return lastCardOnTable?.name ?: CardName.Blank
     }
 
     private fun roundIsNotOver(gameState: GameState): Boolean {

@@ -87,6 +87,7 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
     }
 
     private fun isCardPlayable(card: Card, dashboard: PlayerDashboard): Boolean {
+        Timber.v("Is card $card playable ? ${card.value()} >= ${dashboard.minimumCardValueAllowed.value} : ${card.value() >= dashboard.minimumCardValueAllowed.value}")
         return card.value() >= dashboard.minimumCardValueAllowed.value
                 || card.name == dashboard.joker
     }

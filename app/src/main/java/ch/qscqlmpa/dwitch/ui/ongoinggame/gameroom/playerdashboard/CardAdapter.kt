@@ -49,9 +49,7 @@ internal class CardAdapter(private val listener: CardClickedListener) : Recycler
 
         init {
             itemView.setOnClickListener {
-                if (cardItem.playable) {
-                    listener.onCardClicked(cardItem.card)
-                }
+                if (cardItem.playable) listener.onCardClicked(cardItem.card)
             }
         }
 
@@ -61,7 +59,9 @@ internal class CardAdapter(private val listener: CardClickedListener) : Recycler
             imageIv.contentDescription = this.cardItem.card.toString()
             imageIv.isEnabled = cardItem.playable
 
-            if (!cardItem.playable) {
+            if (cardItem.playable) {
+                imageIv.setColorFilter(Color.argb(0, 255, 255, 255), PorterDuff.Mode.SRC_ATOP)
+            } else {
                 imageIv.setColorFilter(Color.argb(100, 255, 0, 0), PorterDuff.Mode.LIGHTEN)
             }
         }
