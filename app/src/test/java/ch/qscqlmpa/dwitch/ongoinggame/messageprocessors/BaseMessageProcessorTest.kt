@@ -6,12 +6,10 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend
 import ch.qscqlmpa.dwitch.ongoinggame.messages.HostMessageFactory
-import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.junit.jupiter.api.AfterEach
 
 abstract class BaseMessageProcessorTest : BaseUnitTest() {
 
@@ -27,12 +25,6 @@ abstract class BaseMessageProcessorTest : BaseUnitTest() {
 
     protected fun setupCommunicatorSendGameState() {
         every { mockGameCommunicator.sendMessage(any()) } returns Completable.complete()
-    }
-
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-        clearMocks(mockHostMessageFactory, mockHostCommunicator, mockGuestCommunicator, mockGameCommunicator)
     }
 
     protected fun setupWaitingRoomStateUpdateMessageMock(): EnvelopeToSend {
