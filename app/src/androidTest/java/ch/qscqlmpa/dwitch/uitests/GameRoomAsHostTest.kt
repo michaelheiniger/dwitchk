@@ -162,7 +162,7 @@ class GameRoomAsHostTest : BaseHostTest() {
 
         dudeWaitAMinute(2)
 
-        onView(withId(R.id.cardsInHandTv)).check(matchesWithText(R.string.cards_in_hand))
+        onView(withId(R.id.startNewRound)).check(matchesWithText(R.string.cards_in_hand))
     }
 
     private fun pickACard() {

@@ -61,13 +61,12 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.4" />
 
-    <TextView
-        android:id="@+id/cardsInHandTv"
+    <Button
+        android:id="@+id/startNewRound"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/pdf_start_new_round"
         android:layout_margin="8dp"
-        android:text="@string/cards_in_hand"
-        android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guideline2" />
 
@@ -76,11 +75,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/pdf_pick_a_card"
-        app:layout_constraintBottom_toBottomOf="@+id/cardsInHandTv"
+        app:layout_constraintBottom_toBottomOf="@+id/startNewRound"
         app:layout_constraintEnd_toStartOf="@+id/passBtn"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/cardsInHandTv"
-        app:layout_constraintTop_toTopOf="@+id/cardsInHandTv" />
+        app:layout_constraintStart_toEndOf="@+id/startNewRound"
+        app:layout_constraintTop_toTopOf="@+id/startNewRound" />
 
     <Button
         android:id="@+id/passBtn"

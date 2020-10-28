@@ -37,6 +37,7 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
 
     private lateinit var playersTv: TextView
 
+    private lateinit var startNewRound: Button
     private lateinit var pickBtn: Button
     private lateinit var passBtn: Button
 
@@ -59,6 +60,7 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
 
             playersTv.text = playerInfo
 
+            startNewRound.isEnabled = dashboard.canStartNewRound
             pickBtn.isEnabled = dashboard.canPickACard
             passBtn.isEnabled = dashboard.canPass
             canPlay = dashboard.canPlay
@@ -97,6 +99,9 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
         val view = super.onCreateView(inflater, container, savedInstanceState)
 
         playersTv = view.findViewById(R.id.playersTv) as TextView
+
+        startNewRound = view.findViewById(R.id.startNewRound) as Button
+        startNewRound.setOnClickListener { viewModel.startNewRound() }
 
         pickBtn = view.findViewById(R.id.pickBtn) as Button
         pickBtn.setOnClickListener { viewModel.pickCard() }

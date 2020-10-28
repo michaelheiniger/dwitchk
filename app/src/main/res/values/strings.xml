@@ -52,6 +52,7 @@
     <string name="card_name_blank">Blank</string>
     <string name="pdf_play">Play</string>
     <string name="pdf_pick_a_card">Pick</string>
+    <string name="pdf_start_new_round">New Round</string>
     <string name="pdf_pass">Pass</string>
     <string name="president">P</string>
     <string name="vice_president">VP</string>
@@ -60,6 +61,6 @@
     <string name="asshole">A</string>
     <string name="pdf_last_card_played">Last card played</string>
     <string name="grhf_end_game_btn">End Game</string>
-    <string name="round_is_beginning">Round is beginning !</string>
+    <string name="round_is_beginning">Round has begun !</string>
     <string name="round_is_over">Round is over !</string>
 </resources>
