@@ -7,6 +7,7 @@ import ch.qscqlmpa.dwitch.model.game.Game
 import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.model.player.PlayerRole
+import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import io.reactivex.Observable
 
@@ -20,6 +21,15 @@ abstract class GameDao(database: AppRoomDatabase) {
 
     @Update
     abstract fun updateGame(game: Game)
+
+    @Query(
+        """
+        UPDATE Game
+        SET game_common_id=:gameCommonId
+        WHERE id=:gameLocalId
+            """
+    )
+    abstract fun updateGameCommonId(gameLocalId: Long, gameCommonId: Long)
 
     @Query(
         """
@@ -45,6 +55,15 @@ abstract class GameDao(database: AppRoomDatabase) {
     @Query("SELECT * FROM Game WHERE id=:localId")
     abstract fun observeGame(localId: Long): Observable<Game>
 
+    @Query(
+        """
+        UPDATE Game
+        SET game_common_id=:gameCommonId
+        WHERE id=:gameLocalId
+            """
+    )
+    abstract fun updateGameWithCommonId(gameLocalId: Long, gameCommonId: Long)
+
     /**
      * Insert game and local player for host in Store.
      * Room requires the method to be "open".
@@ -57,8 +76,7 @@ abstract class GameDao(database: AppRoomDatabase) {
         hostPort: Int
     ): InsertGameResult {
 
-        val game =
-            Game(0, RoomType.WAITING_ROOM, gameName, "", 0, hostIpAddress, hostPort)
+        val game = Game(0, RoomType.WAITING_ROOM, 0, gameName, "", 0, hostIpAddress, hostPort)
         val gameLocalId = insertGame(game)
 
         val player = Player(
@@ -72,12 +90,17 @@ abstract class GameDao(database: AppRoomDatabase) {
         )
         val playerLocalId = playerDao.insertPlayer(player)
         playerDao.updatePlayer(
-            player.copy(id = playerLocalId, inGameId = PlayerInGameId(playerLocalId))
+            player.copy(
+                id = playerLocalId, inGameId = PlayerInGameId(
+                    playerLocalId
+                )
+            )
         )
 
         updateGame(
             game.copy(
                 id = gameLocalId,
+                gameCommonId = gameLocalId,
                 localPlayerLocalId = playerLocalId
             )
         )
@@ -97,8 +120,7 @@ abstract class GameDao(database: AppRoomDatabase) {
         hostPort: Int
     ): InsertGameResult {
 
-        val game =
-            Game(0, RoomType.WAITING_ROOM, gameName, "", 0, hostIpAddress, hostPort)
+        val game = Game(0, RoomType.WAITING_ROOM, 0, gameName, "", 0, hostIpAddress, hostPort)
         val gameLocalId = insertGame(game)
 
         val player = Player(

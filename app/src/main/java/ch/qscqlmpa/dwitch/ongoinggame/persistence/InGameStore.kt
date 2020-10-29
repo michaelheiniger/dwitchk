@@ -16,6 +16,7 @@ interface InGameStore {
     fun getGameState(): GameState
 
     fun observeGameState(): Observable<GameState>
+    fun updateGameWithCommonId(gameCommonId: Long)
     fun deleteGame()
     fun updateGameRoom(gameRoom: RoomType)
     fun updateGameState(gameState: GameState)

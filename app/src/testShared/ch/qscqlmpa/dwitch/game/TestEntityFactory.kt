@@ -147,6 +147,7 @@ object TestEntityFactory {
         return Game(
                 1L,
                 RoomType.WAITING_ROOM,
+                1L,
                 "Dwitch",
                 "",
                 localPlayerLocalId,
