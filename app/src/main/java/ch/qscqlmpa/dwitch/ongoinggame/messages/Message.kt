@@ -29,6 +29,9 @@ sealed class Message {
     data class JoinGameMessage(val playerName: String) : Message()
 
     @Serializable
+    data class RejoinGameMessage(val playerInGameId: PlayerInGameId) : Message()
+
+    @Serializable
     data class LeaveGameMessage(val playerInGameId: PlayerInGameId) : Message()
 
     @Serializable
