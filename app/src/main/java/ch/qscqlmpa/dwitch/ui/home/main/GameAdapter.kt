@@ -54,7 +54,7 @@ internal class GameAdapter(private val listener: GameClickedListener) : Recycler
 
         fun bind(advertisedGame: AdvertisedGame) {
             this.advertisedGame = advertisedGame
-            gameNameTv.text = String.format("%s (%s) at %s", advertisedGame.name, advertisedGame.ipAddress, advertisedGame.discoveryTimeAsString())
+            gameNameTv.text = String.format("%s (%s) at %s", advertisedGame.gameName, advertisedGame.gameIpAddress, advertisedGame.discoveryTimeAsString())
         }
     }
 }

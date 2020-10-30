@@ -35,14 +35,4 @@ class GameRobot(private val gameTest: Game) {
         assertEquals(gameTest.localPlayerLocalId, localPlayerLocalId)
         return this
     }
-
-    fun assertHostIpAddress(hostIpAddress: String): GameRobot {
-        assertEquals(gameTest.hostIpAddress, hostIpAddress)
-        return this
-    }
-
-    fun assertHostPort(hostPort: Int): GameRobot {
-        assertEquals(gameTest.hostPort, hostPort)
-        return this
-    }
 }

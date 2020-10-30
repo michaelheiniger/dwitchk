@@ -51,7 +51,7 @@ class AdvertisedGameRepository @Inject constructor(
     ): Map<String, AdvertisedGame> {
         val timeNow = LocalTime.now()
         val mutableMap = map.toMutableMap()
-        mutableMap[advertisedGame.ipAddress] = advertisedGame
+        mutableMap[advertisedGame.gameIpAddress] = advertisedGame
         return mutableMap.filterValues { game -> gameAdIsRecentEnough(timeNow, game) }
     }
 

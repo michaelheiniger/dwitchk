@@ -7,7 +7,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.gamediscovery.TestNetworkAdapter
 import ch.qscqlmpa.dwitch.gamediscovery.network.Packet
-import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil
+import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil.withRecyclerView
 import org.hamcrest.Matchers.startsWith
 import org.junit.Before
 import org.junit.Test
@@ -35,15 +35,18 @@ class HomeScreenTest : BaseUiTest() {
     fun advertisedGameListIsSet() {
         launch()
 
-        networkListener.setPacket(Packet("Game 1", "192.168.1.1", 8890))
-        networkListener.setPacket(Packet("Game 2", "192.168.1.2", 8891))
+        val message1 = "{\"gameCommonId\":{\"value\":23},\"gameName\":\"Game 1\",\"gamePort\":8890}"
+        val message2 = "{\"gameCommonId\":{\"value\":65},\"gameName\":\"Game 2\",\"gamePort\":8891}"
+
+        networkListener.setPacket(Packet(message1, "192.168.1.1", 2454))
+        networkListener.setPacket(Packet(message2, "192.168.1.2", 6543))
 
         assertGameInGameList(0, "Game 1 (192.168.1.1)")
         assertGameInGameList(1, "Game 2 (192.168.1.2)")
     }
 
     private fun assertGameInGameList(position: Int, beginningOfName: String) {
-        onView(ViewAssertionUtil.withRecyclerView(R.id.gameListRw)
+        onView(withRecyclerView(R.id.gameListRw)
                 .atPositionOnView(position, R.id.gameNameTv))
                 .check(matches(withText(startsWith(beginningOfName))))
     }

@@ -6,17 +6,18 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import ch.qscqlmpa.dwitch.Guest1
 import ch.qscqlmpa.dwitch.Guest2
+import ch.qscqlmpa.dwitch.GuestIdTestHost
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.model.player.PlayerRole
+import ch.qscqlmpa.dwitch.ongoinggame.messages.GuestMessageFactory
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.utils.GameRobot
 import ch.qscqlmpa.dwitch.utils.PlayerRobot
-import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil
+import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil.withRecyclerView
+import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.not
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -41,7 +42,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
                 .check(matches(not(isEnabled())))
 
         val games = gameDao.getAllGames()
-        assertEquals(games.size, 1)
+        assertThat(games.size).isEqualTo(1)
 
         val gameTest = games[0]
         GameRobot(gameTest)
@@ -50,7 +51,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
                 .assertGameState("")
 
         val allPlayers = playerDao.getAllPlayersSortedOnNameAsc()
-        assertEquals(allPlayers.size, 1)
+        assertThat(allPlayers.size).isEqualTo(1)
 
         PlayerRobot(allPlayers[0])
                 .assertGameLocalId(gameTest.id)
@@ -76,7 +77,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
         assertPlayerNameInWR(2, Guest2.name)
 
         val allPlayers = playerDao.getAllPlayersSortedOnNameAsc()
-        assertEquals(allPlayers.size, 3)
+        assertThat(allPlayers.size).isEqualTo(3)
 
         PlayerRobot(allPlayers[1])
                 .assertName(Guest1.name)
@@ -111,8 +112,8 @@ class WaitingRoomAsHostTest : BaseHostTest() {
                 .assertName(Guest1.name)
                 .assertReady(false)
 
-        val wrStateUpdateMessage = guestBecomesReady(Guest1)
-        assertTrue(wrStateUpdateMessage.playerList.find { p -> p.name == Guest1.name }!!.ready)
+        val wrStateUpdateMsg = guestBecomesReady(Guest1)
+        assertThat(wrStateUpdateMsg.playerList.find { p -> p.name == Guest1.name }!!.ready).isTrue()
 
         assertPlayerReady(1, true)
         allPlayers = playerDao.getAllPlayersSortedOnNameAsc()
@@ -138,7 +139,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
 
         val wrStateUpdateMessage = guestLeavesGame(Guest1)
 
-        assertEquals(2, wrStateUpdateMessage.playerList.size)
+        assertThat(wrStateUpdateMessage.playerList.size).isEqualTo(2)
         PlayerRobot(wrStateUpdateMessage.playerList[0])
                 .assertName(hostName)
         PlayerRobot(wrStateUpdateMessage.playerList[1])
@@ -149,7 +150,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
         assertPlayerNameInWR(1, Guest2.name)
 
         val allPlayers = playerDao.getAllPlayersSortedOnNameAsc()
-        assertEquals(allPlayers.size, 2)
+        assertThat(allPlayers.size).isEqualTo(2)
     }
 
     @Test
@@ -174,7 +175,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
         assertPlayerNameInWR(1, Guest2.name)
 
         var allPlayers = playerDao.getAllPlayersSortedOnNameAsc()
-        assertEquals(allPlayers.size, 3)
+        assertThat(allPlayers.size).isEqualTo(3)
 
         PlayerRobot(allPlayers[1])
                 .assertName(Guest1.name)
@@ -190,7 +191,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
         assertPlayerNameInWR(2, Guest2.name)
 
         allPlayers = playerDao.getAllPlayersSortedOnNameAsc()
-        assertEquals(3, allPlayers.size)
+        assertThat(allPlayers.size).isEqualTo(3)
 
         PlayerRobot(allPlayers[1])
                 .assertName(Guest1.name)
@@ -211,20 +212,30 @@ class WaitingRoomAsHostTest : BaseHostTest() {
 
         waitForNextMessageSentByHost() as Message.CancelGameMessage
 
-        dudeWaitAMinute(1)
+        dudeWaitASec(1)
 
         onView(withId(R.id.gameListTv)).check(matches(isDisplayed()))
     }
 
     private fun assertPlayerReady(position: Int, ready: Boolean) {
         if (ready) {
-            onView(ViewAssertionUtil.withRecyclerView(R.id.playerListRw)
+            onView(withRecyclerView(R.id.playerListRw)
                     .atPositionOnView(position, R.id.playerReadyCkb))
                     .check(matches(isChecked()))
         } else {
-            onView(ViewAssertionUtil.withRecyclerView(R.id.playerListRw)
-                    .atPositionOnView(position, R.id.playerReadyCkb))
+            onView(withRecyclerView(R.id.playerListRw)
+                .atPositionOnView(position, R.id.playerReadyCkb))
                     .check(matches(not(isChecked())))
         }
+    }
+
+    private fun guestRejoinsGame(guest: GuestIdTestHost) {
+        val player = getGuest(guest)
+        serverTestStub.connectClientToServer(guest, false)
+        val gameCommonId = inGameStore.getGame().gameCommonId
+        val rejoinMessage = GuestMessageFactory.createRejoinGameMessage(gameCommonId, player.inGameId)
+        serverTestStub.guestSendsMessageToServer(guest, rejoinMessage, true)
+        waitForNextMessageSentByHost() as Message.RejoinGameAckMessage
+        waitForNextMessageSentByHost() as Message.WaitingRoomStateUpdateMessage
     }
 }

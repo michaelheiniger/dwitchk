@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitch.game
 
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.model.game.Game
+import ch.qscqlmpa.dwitch.model.game.GameCommonId
 import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.model.player.PlayerRole
@@ -143,16 +144,14 @@ object TestEntityFactory {
 //            )
 //        }
 
-    fun createGameInWaitingRoom(localPlayerLocalId: Long): Game {
+    fun createGameInWaitingRoom(localPlayerLocalId: Long = 10): Game {
         return Game(
                 1L,
                 RoomType.WAITING_ROOM,
-                1L,
+                GameCommonId(65),
                 "Dwitch",
                 "",
-                localPlayerLocalId,
-                "192.168.1.1",
-                8889
+                localPlayerLocalId
         )
     }
 

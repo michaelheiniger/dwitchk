@@ -3,6 +3,7 @@ package ch.qscqlmpa.dwitch.persistence
 import ch.qscqlmpa.dwitch.BaseInstrumentedTest
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.model.game.Game
+import ch.qscqlmpa.dwitch.model.game.GameCommonId
 import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.model.player.PlayerRole
@@ -13,21 +14,17 @@ import org.junit.Test
 
 class GameDaoTest : BaseInstrumentedTest() {
 
-    private val hostPlayerName = "Arthur"
-    private val hostIpAddress = "127.0.0.1"
-    private val hostPort = 8889
-
-    private val guestPlayerName = "Lancelot"
+    private val playerName = "Arthur"
 
     @Before
     override fun setup() {
         super.setup()
-        bootstrapDb()
+        bootstrapDb(this)
     }
 
     @Test
     fun updateGameRoom() {
-        val insertGameResult = gameDao.insertGameForHost(gameName, hostPlayerName, hostIpAddress, hostPort)
+        val insertGameResult = gameDao.insertGameForHost(gameName, playerName)
         val gameInserted = gameDao.getGame(insertGameResult.gameLocalId)
 
         assertThat(gameInserted.currentRoom).isEqualTo(RoomType.WAITING_ROOM)
@@ -40,65 +37,131 @@ class GameDaoTest : BaseInstrumentedTest() {
     }
 
     @Test
-    fun testInsertGameForHost_CreateGame() {
-        val insertGameResult = gameDao.insertGameForHost(gameName, hostPlayerName, hostIpAddress, hostPort)
+    fun testInsertGameForHost_createGame() {
+        val insertGameResult = gameDao.insertGameForHost(gameName, playerName)
 
-        val gameRef = Game(insertGameResult.gameLocalId, RoomType.WAITING_ROOM, insertGameResult.gameLocalId, gameName, "", insertGameResult.localPlayerLocalId, hostIpAddress, hostPort)
+        val gameRef = Game(
+            insertGameResult.gameLocalId,
+            RoomType.WAITING_ROOM,
+            GameCommonId(0),
+            gameName,
+            "",
+            insertGameResult.localPlayerLocalId
+        )
         val gameTest = gameDao.getGame(insertGameResult.gameLocalId)
 
-        assertThat(gameRef).isEqualTo(gameTest)
-        assertThat(gameRef.localPlayerLocalId).isNotNull()
+        assertThat(gameTest).isEqualToIgnoringGivenFields(gameRef, "gameCommonId")
+        assertThat(gameTest.gameCommonId).isNotEqualTo(GameCommonId(0))
     }
 
     @Test
-    fun testInsertGameForHost_CreateLocalPlayer() {
-        val insertGameResult = gameDao.insertGameForHost(gameName, hostPlayerName, hostIpAddress, hostPort)
+    fun testInsertGameForHost_createLocalPlayer() {
+        val insertGameResult = gameDao.insertGameForHost(gameName, playerName)
 
         val playerRef = Player(
-                insertGameResult.localPlayerLocalId,
-                PlayerInGameId(insertGameResult.localPlayerLocalId), insertGameResult.gameLocalId, hostPlayerName,
-                PlayerRole.HOST,
-                PlayerConnectionState.CONNECTED, true
+            insertGameResult.localPlayerLocalId,
+            PlayerInGameId(insertGameResult.localPlayerLocalId),
+            insertGameResult.gameLocalId,
+            playerName,
+            PlayerRole.HOST,
+            PlayerConnectionState.CONNECTED,
+            true
         )
         val playerTest = playerDao.getPlayer(insertGameResult.localPlayerLocalId)
 
         assertThat(playerTest).isEqualToIgnoringGivenFields(playerRef, "inGameId")
-        assertThat(playerTest.inGameId.value).isNotNull()
     }
 
     @Test
-    fun testInsertGameForGuest_CreateGame() {
-        val insertGameResult = gameDao.insertGameForGuest(gameName, guestPlayerName, hostIpAddress, hostPort)
+    fun testInsertGameForGuest_createGame() {
+        val gameCommonId = GameCommonId(12354)
+        val insertGameResult = gameDao.insertGameForGuest(gameName, gameCommonId, playerName)
 
-        val gameRef = Game(insertGameResult.gameLocalId, RoomType.WAITING_ROOM, 0, gameName, "", insertGameResult.localPlayerLocalId, hostIpAddress, hostPort)
+        val gameRef = Game(
+            insertGameResult.gameLocalId,
+            RoomType.WAITING_ROOM,
+            GameCommonId(0),
+            gameName,
+            "",
+            insertGameResult.localPlayerLocalId
+        )
         val gameTest = gameDao.getGame(insertGameResult.gameLocalId)
 
-        assertThat(gameRef).isEqualTo(gameTest)
-        assertThat(gameRef.localPlayerLocalId).isNotNull()
+        assertThat(gameTest).isEqualToIgnoringGivenFields(gameRef, "gameCommonId")
+        assertThat(gameTest.gameCommonId).isNotEqualTo(GameCommonId(0))
     }
 
     @Test
-    fun testInsertGameForGuest_CreateLocalPlayer() {
-        val insertGameResult = gameDao.insertGameForGuest(gameName, guestPlayerName, hostIpAddress, hostPort)
+    fun testInsertGameForGuest_findExistingGame() {
 
-        val playerRef = Player(0, PlayerInGameId(0), insertGameResult.gameLocalId, guestPlayerName, PlayerRole.GUEST,
-                PlayerConnectionState.CONNECTED, false)
+        // Create game
+        val gameCommonId = GameCommonId(12354)
+        val gameLocalId = gameDao.insertGameForGuest(gameName, gameCommonId, playerName).gameLocalId
+        val originalGame = gameDao.getGame(gameLocalId)
+
+        val insertGameResult = gameDao.insertGameForGuest(gameName, gameCommonId, playerName)
+
+        val gameTest = gameDao.getGame(insertGameResult.gameLocalId)
+
+        assertThat(originalGame).isEqualToIgnoringGivenFields(gameTest)
+    }
+
+    @Test
+    fun testInsertGameForGuest_createLocalPlayer() {
+        val gameCommonId = GameCommonId(12354)
+
+        val insertGameResult = gameDao.insertGameForGuest(gameName, gameCommonId, playerName)
+
+        val playerRef = Player(
+            0,
+            PlayerInGameId(0),
+            insertGameResult.gameLocalId,
+            playerName,
+            PlayerRole.GUEST,
+            PlayerConnectionState.CONNECTED,
+            false
+        )
         val playerTest = playerDao.getPlayerByName(playerRef.name)
 
         assertThat(playerTest).isEqualToIgnoringGivenFields(playerRef, "id", "inGameId")
-        assertThat(playerTest!!.id).isNotNull()
     }
 
-    private fun bootstrapDb() {
-        // Goal is to have different values for game ID and player ID in the tests
-        db.runInTransaction {
-            val gameId = gameDao.insertGame(Game(0, RoomType.WAITING_ROOM, 1, "", "", 1, "192.168.1.1", 8889))
-            val player1 = Player(0, PlayerInGameId(0), gameId, "", PlayerRole.HOST, PlayerConnectionState.CONNECTED, true)
-            val player2 = Player(0, PlayerInGameId(0), gameId, "", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true)
-            val player1Id = playerDao.insertPlayer(player1)
-            playerDao.insertPlayer(player2)
+    companion object {
 
-            playerDao.updatePlayer(player1.copy(id = player1Id, gameLocalId = gameId))
+        private fun bootstrapDb(gameDaoTest: GameDaoTest) {
+            // Goal is to have different values for game ID and player ID in the tests
+            gameDaoTest.db.runInTransaction {
+                val gameId = gameDaoTest.gameDao.insertGame(
+                    Game(0, RoomType.WAITING_ROOM, GameCommonId(1), "", "", 1)
+                )
+                val player1 = Player(
+                    0,
+                    PlayerInGameId(0),
+                    gameId,
+                    "",
+                    PlayerRole.HOST,
+                    PlayerConnectionState.CONNECTED,
+                    true
+                )
+                val player2 = Player(
+                    0,
+                    PlayerInGameId(0),
+                    gameId,
+                    "",
+                    PlayerRole.GUEST,
+                    PlayerConnectionState.CONNECTED,
+                    true
+                )
+                val player1Id = gameDaoTest.playerDao.insertPlayer(player1)
+                gameDaoTest.playerDao.insertPlayer(player2)
+
+                gameDaoTest.playerDao.updatePlayer(
+                    player1.copy(
+                        id = player1Id,
+                        gameLocalId = gameId
+                    )
+                )
+            }
         }
     }
 }

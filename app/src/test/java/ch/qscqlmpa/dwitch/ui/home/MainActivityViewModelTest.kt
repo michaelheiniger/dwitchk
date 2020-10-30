@@ -3,6 +3,7 @@ package ch.qscqlmpa.dwitch.ui.home
 import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGameRepository
+import ch.qscqlmpa.dwitch.model.game.GameCommonId
 import ch.qscqlmpa.dwitch.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitch.ui.common.Status
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivityViewModel
@@ -40,7 +41,7 @@ class MainActivityViewModelTest : BaseViewModelUnitTest() {
     @Test
     fun shouldEmitAdvertisedGameResponse_success() {
 
-        val list = listOf(AdvertisedGame("Kaamelott", "192.168.1.1", 8890, LocalTime.now()))
+        val list = listOf(AdvertisedGame("Kaamelott", GameCommonId(1), "192.168.1.1", 8890, LocalTime.now()))
         every { mockGameRepository.listenForAdvertisedGames() } returns Observable.just(list)
 
         val response = viewModel.observeAdvertisedGames().value

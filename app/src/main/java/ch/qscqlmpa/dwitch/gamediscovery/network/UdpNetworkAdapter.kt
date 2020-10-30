@@ -19,7 +19,7 @@ class UdpNetworkAdapter @Inject constructor() : NetworkAdapter {
     override fun receive(): Maybe<Packet> {
 
         return Maybe.fromCallable {
-            val receiveData = ByteArray(32)
+            val receiveData = ByteArray(1024)
             val receivePacket = DatagramPacket(receiveData, receiveData.size)
 
             try {

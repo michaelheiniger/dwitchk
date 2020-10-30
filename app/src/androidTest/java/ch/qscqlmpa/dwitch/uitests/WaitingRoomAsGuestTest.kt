@@ -14,14 +14,13 @@ import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.model.player.PlayerRole
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.utils.PlayerRobot
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
 
 class WaitingRoomAsGuestTest : BaseGuestTest() {
-
-    private val gameCommonId = 34L
 
     @Before
     override fun setup() {
@@ -43,7 +42,7 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
         hostSendsJoinGameAck()
         hostSendsInitialWaitingRoomUpdate()
 
-        dudeWaitAMinute(2)
+        dudeWaitASec(2)
 
         // Players sorted according to their name ASC
         assertPlayerNameInWR(0, PlayerIdTestGuest.Host.name)
@@ -52,7 +51,7 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
         assertPlayerNameInWR(3, PlayerIdTestGuest.Guest3.name)
 
         val allPlayers = playerDao.getAllPlayersSortedOnNameAsc()
-        assertEquals(allPlayers.size, 4)
+        assertThat(allPlayers.size).isEqualTo(4)
 
         PlayerRobot(allPlayers[0])
                 .assertName(PlayerIdTestGuest.Host.name)
@@ -83,10 +82,10 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
         hostSendsJoinGameAck()
         hostSendsInitialWaitingRoomUpdate()
 
-        dudeWaitAMinute(2)
+        dudeWaitASec(2)
 
         var allPlayers = playerDao.getAllPlayersSortedOnNameAsc()
-        assertEquals(allPlayers.size, 4)
+        assertThat(allPlayers.size).isEqualTo(4)
         PlayerRobot(allPlayers[1])
                 .assertName(PlayerIdTestGuest.LocalGuest.name)
                 .assertInGameId(PlayerIdTestGuest.LocalGuest.inGameId)
@@ -132,34 +131,25 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
 
         clientTestStub.serverSendsMessageToClient(Message.CancelGameMessage, false)
 
-        dudeWaitAMinute(2)
+        dudeWaitASec(2)
 
         onView(withId(R.id.btnDone)).perform(click())
 
-        dudeWaitAMinute(1)
+        dudeWaitASec(1)
 
         onView(withId(R.id.gameListTv)).check(matches(isDisplayed()))
-    }
-
-    private fun assertLocalGuestHasSentJoinGameMessage() {
-        val joinGameMessage = waitForNextMessageSentByLocalGuest() as Message.JoinGameMessage
-        assertEquals(PlayerIdTestGuest.LocalGuest.name, joinGameMessage.playerName)
-    }
-
-    private fun hostSendsJoinGameAck() {
-        val message = Message.JoinGameAckMessage(gameCommonId, PlayerIdTestGuest.LocalGuest.inGameId)
-        clientTestStub.serverSendsMessageToClient(message, false)
     }
 
     private fun hostSendsInitialWaitingRoomUpdate() {
         val gameLocalIdAtHost = 1233L
         val message = Message.WaitingRoomStateUpdateMessage(listOf(
-                Player(334, PlayerIdTestGuest.Host.inGameId, gameLocalIdAtHost, PlayerIdTestGuest.Host.name, PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
-                Player(335, PlayerIdTestGuest.LocalGuest.inGameId, gameLocalIdAtHost, PlayerIdTestGuest.LocalGuest.name, PlayerRole.GUEST, PlayerConnectionState.CONNECTED,
-                        false),
-                Player(336, PlayerIdTestGuest.Guest2.inGameId, gameLocalIdAtHost, Guest2.name, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true),
-                Player(337, PlayerIdTestGuest.Guest3.inGameId, gameLocalIdAtHost, Guest3.name, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true)
+            Player(334, PlayerIdTestGuest.Host.inGameId, gameLocalIdAtHost, PlayerIdTestGuest.Host.name, PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
+            Player(335, PlayerIdTestGuest.LocalGuest.inGameId, gameLocalIdAtHost, PlayerIdTestGuest.LocalGuest.name, PlayerRole.GUEST, PlayerConnectionState.CONNECTED,
+                false),
+            Player(336, PlayerIdTestGuest.Guest2.inGameId, gameLocalIdAtHost, Guest2.name, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true),
+            Player(337, PlayerIdTestGuest.Guest3.inGameId, gameLocalIdAtHost, Guest3.name, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true)
         ))
         clientTestStub.serverSendsMessageToClient(message, false)
     }
+
 }

@@ -3,9 +3,9 @@ package ch.qscqlmpa.dwitch.ui.home.newgame
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGame
-import ch.qscqlmpa.dwitch.usecases.NewGameUsecase
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitch.usecases.NewGameUsecase
 import ch.qscqlmpa.dwitch.utils.DisposableManager
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -29,8 +29,7 @@ constructor(private val newGameUsecase: NewGameUsecase,
     }
 
     fun nextForGuest(advertisedGame: AdvertisedGame, playerName: String) {
-
-        val validationErrors = NewGameValidator.validate(advertisedGame.name, playerName)
+        val validationErrors = NewGameValidator.validate(advertisedGame.gameName, playerName)
         if (validationErrors.isNotEmpty()) {
             errors.setValue(validationErrors)
         } else {
@@ -39,7 +38,6 @@ constructor(private val newGameUsecase: NewGameUsecase,
     }
 
     fun nextForHost(gameName: String, playerName: String) {
-
         val validationErrors = NewGameValidator.validate(gameName, playerName)
         if (validationErrors.isNotEmpty()) {
             errors.setValue(validationErrors)

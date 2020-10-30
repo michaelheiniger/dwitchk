@@ -4,6 +4,7 @@ import ch.qscqlmpa.dwitch.*
 import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.ongoinggame.messages.GuestMessageFactory
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
+import ch.qscqlmpa.dwitch.uitests.UiUtil.clickOnButton
 import org.junit.Assert
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -24,7 +25,7 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
 
         clickOnButton(R.id.nextBtn)
 
-        dudeWaitAMinute(1)
+        dudeWaitASec(1)
 
         host = playerDao.getPlayerByName(hostName)!!
 
@@ -47,13 +48,6 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
             Guest2 -> guest2 = playerDao.getPlayerByName(Guest2.name)!!
             Guest3 -> guest3 = playerDao.getPlayerByName(Guest3.name)!!
         }
-    }
-
-    protected fun guestRejoinsGame(guest: GuestIdTestHost) {
-        val player = getGuest(guest)
-        serverTestStub.connectClientToServer(guest, false)
-        serverTestStub.guestSendsMessageToServer(guest, GuestMessageFactory.createRejoinGameMessage(player.inGameId), true)
-        waitForNextMessageSentByHost() as Message.WaitingRoomStateUpdateMessage
     }
 
     protected fun guestBecomesReady(identifier: GuestIdTestHost): Message.WaitingRoomStateUpdateMessage {
@@ -101,23 +95,7 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
         return message
     }
 
-    protected fun waitForNextNMessagesSentByHost(N: Int): List<Message> {
-        assert(N > 0)
-        Timber.d("Waiting for the next %d messages sent by host...", N)
-        val messages = mutableListOf<Message>()
-        for (i in 1..N) {
-            val messageSerialized = serverTestStub.observeMessagesSent()
-                    .take(1)
-                    .timeout(5, TimeUnit.SECONDS)
-                    .blockingFirst()
-            val message = serializerFactory.unserializeMessage(messageSerialized)
-            messages.add(message)
-            Timber.d("Message sent to client: %s", message)
-        }
-        return messages
-    }
-
-    private fun getGuest(identifier: GuestIdTestHost): Player {
+    protected fun getGuest(identifier: GuestIdTestHost): Player {
         return when (identifier) {
             Guest1 -> guest1
             Guest2 -> guest2

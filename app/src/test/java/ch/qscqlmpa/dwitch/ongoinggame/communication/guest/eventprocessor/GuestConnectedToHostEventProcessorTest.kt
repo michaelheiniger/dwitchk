@@ -48,11 +48,17 @@ class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
         @DisplayName("Send JoinGameMessage because registration with host has not been done yet (in-game ID is 0)")
         fun `Send JoinGameMessage`() {
             setupTest(PlayerInGameId(0))
-            val joinGameMessageMessage = Message.JoinGameMessage(localPlayer.name)
 
             processorGuest.process(ConnectedToHost).test().assertComplete()
 
-            verify { mockCommunicator.sendMessage(EnvelopeToSend(RecipientType.All, joinGameMessageMessage)) }
+            verify {
+                mockCommunicator.sendMessage(
+                    EnvelopeToSend(
+                        RecipientType.All,
+                        Message.JoinGameMessage(localPlayer.name)
+                    )
+                )
+            }
             confirmVerified(mockCommunicator)
         }
 
@@ -60,11 +66,17 @@ class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
         @DisplayName("Send RejoinGameMessage because registration with host has already been done (in-game ID is not 0)")
         fun `Send RejoinGameMessage`() {
             setupTest(PlayerInGameId(23))
-            val rejoinGameMessage = Message.RejoinGameMessage(localPlayer.inGameId)
 
             processorGuest.process(ConnectedToHost).test().assertComplete()
 
-            verify { mockCommunicator.sendMessage(EnvelopeToSend(RecipientType.All, rejoinGameMessage)) }
+            verify {
+                mockCommunicator.sendMessage(
+                    EnvelopeToSend(
+                        RecipientType.All,
+                        Message.RejoinGameMessage(game.gameCommonId, localPlayer.inGameId)
+                    )
+                )
+            }
             confirmVerified(mockCommunicator)
         }
 

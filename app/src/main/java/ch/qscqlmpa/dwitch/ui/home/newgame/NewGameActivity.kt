@@ -99,7 +99,7 @@ class NewGameActivity : HomeBaseActivity() {
         when (playerRole) {
             PlayerRole.GUEST -> {
                 gameNameEdt.isEnabled = false
-                gameNameEdt.setText(game!!.name)
+                gameNameEdt.setText(game!!.gameName)
             }
             PlayerRole.HOST -> {
                 gameNameEdt.isEnabled = true
@@ -116,7 +116,6 @@ class NewGameActivity : HomeBaseActivity() {
 
         fun joinGame(context: Context, game: AdvertisedGame) {
             Objects.requireNonNull(game)
-
             val intent = Intent(context, NewGameActivity::class.java)
             intent.putExtra(EXTRA_GAME, game)
             intent.putExtra(EXTRA_PLAYER_ROLE, PlayerRole.GUEST.name)

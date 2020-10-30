@@ -1,6 +1,8 @@
 package ch.qscqlmpa.dwitch.ongoinggame.messages
 
+import ch.qscqlmpa.dwitch.model.game.GameCommonId
 import ch.qscqlmpa.dwitch.model.player.Player
+import ch.qscqlmpa.dwitch.ongoinggame.messageprocessors.RejoinInfo
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import kotlinx.serialization.Serializable
@@ -11,7 +13,12 @@ sealed class Message {
      * Messages sent by Host
      *****************************************************************************************************************/
     @Serializable
-    data class JoinGameAckMessage(val gameCommonId: Long, val playerInGameId: PlayerInGameId) : Message()
+    data class JoinGameAckMessage(val gameCommonId: GameCommonId, val playerInGameId: PlayerInGameId) : Message()
+
+    @Serializable
+    data class RejoinGameAckMessage(val gameCommonId: GameCommonId, val playerInGameId: PlayerInGameId) : Message() {
+        constructor(rejoinInfo: RejoinInfo) : this(rejoinInfo.gameCommonId, rejoinInfo.inGameId())
+    }
 
     @Serializable
     data class WaitingRoomStateUpdateMessage(val playerList: List<Player>) : Message()
@@ -29,7 +36,7 @@ sealed class Message {
     data class JoinGameMessage(val playerName: String) : Message()
 
     @Serializable
-    data class RejoinGameMessage(val playerInGameId: PlayerInGameId) : Message()
+    data class RejoinGameMessage(val gameCommonId: GameCommonId, val playerInGameId: PlayerInGameId) : Message()
 
     @Serializable
     data class LeaveGameMessage(val playerInGameId: PlayerInGameId) : Message()

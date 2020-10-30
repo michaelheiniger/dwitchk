@@ -3,14 +3,17 @@ package ch.qscqlmpa.dwitch.gamediscovery.network
 
 import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitch.gamediscovery.GameDiscovery
+import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
 import io.reactivex.Observable
 import org.joda.time.LocalTime
 import timber.log.Timber
 import java.net.SocketException
 import javax.inject.Inject
 
-class LanGameDiscovery @Inject
-constructor(private val networkAdapter: NetworkAdapter) : GameDiscovery {
+class LanGameDiscovery @Inject constructor(
+    private val serializerFactory: SerializerFactory,
+    private val networkAdapter: NetworkAdapter
+) : GameDiscovery {
 
     private var isListening = false
 
@@ -28,21 +31,27 @@ constructor(private val networkAdapter: NetworkAdapter) : GameDiscovery {
         }
 
         return networkAdapter.receive()
-                .doOnError { e -> Timber.e(e, "Error listening for advertised game") }
-                .map { packet ->
-                    Timber.v("Packet received: %s", packet)
-                    AdvertisedGame(
-                            packet.message,
-                            packet.senderIpAddress,
-                            packet.senderPort,
-                            LocalTime.now())
-                }.repeatUntil { !isListening }
-                .toObservable()
+            .doOnError { e -> Timber.e(e, "Error listening for advertised game") }
+            .map(this::buildAdvertisedGame)
+            .repeatUntil { !isListening }
+            .toObservable()
     }
 
     override fun stopListening() {
         Timber.i("Stop listening")
         isListening = false
         networkAdapter.close()
+    }
+
+    private fun buildAdvertisedGame(packet: Packet): AdvertisedGame {
+        Timber.v("Packet received: %s", packet)
+        val gameInfo = serializerFactory.unserializeGameInfo(packet.message)
+        return AdvertisedGame(
+            gameInfo.gameName,
+            gameInfo.gameCommonId,
+            packet.senderIpAddress,
+            gameInfo.gamePort,
+            LocalTime.now()
+        )
     }
 }

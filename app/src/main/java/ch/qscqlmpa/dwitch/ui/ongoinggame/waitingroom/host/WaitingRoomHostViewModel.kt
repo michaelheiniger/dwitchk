@@ -22,34 +22,45 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class WaitingRoomHostViewModel @Inject
-constructor(private val hostCommunicator: HostCommunicator,
-            private val gameLaunchableUsecase: GameLaunchableUsecase,
-            private val launchGameUsecase: LaunchGameUsecase,
-            private val cancelGameUsecase: CancelGameUsecase,
-            private val gameEventRepository: GameEventRepository,
-            disposableManager: DisposableManager,
-            schedulerFactory: SchedulerFactory
+constructor(
+    private val hostCommunicator: HostCommunicator,
+    private val gameLaunchableUsecase: GameLaunchableUsecase,
+    private val launchGameUsecase: LaunchGameUsecase,
+    private val cancelGameUsecase: CancelGameUsecase,
+    private val gameEventRepository: GameEventRepository,
+    disposableManager: DisposableManager,
+    schedulerFactory: SchedulerFactory
 ) : BaseViewModel(disposableManager, schedulerFactory) {
 
     private val commands = MutableLiveData<WaitingRoomHostCommand>()
 
     fun currentCommunicationState(): LiveData<Resource> {
         return LiveDataReactiveStreams.fromPublisher(
-                hostCommunicator.observeCommunicationState()
-                        .map(::getResourceForCommunicationState)
-                        .doOnError { error -> Timber.e(error, "Error while observing communication state.") }
-                        .toFlowable(BackpressureStrategy.LATEST)
+            hostCommunicator.observeCommunicationState()
+                .map(::getResourceForCommunicationState)
+                .doOnError { error ->
+                    Timber.e(
+                        error,
+                        "Error while observing communication state."
+                    )
+                }
+                .toFlowable(BackpressureStrategy.LATEST)
         )
     }
 
     fun canGameBeLaunched(): LiveData<Boolean> {
         return LiveDataReactiveStreams.fromPublisher(
-                gameLaunchableUsecase.gameCanBeLaunched()
-                        .subscribeOn(schedulerFactory.io())
-                        .observeOn(schedulerFactory.ui())
-                        .map(::processGameLaunchableEvent)
-                        .doOnError { error -> Timber.e(error, "Error while observing if game can be launched.") }
-                        .toFlowable(BackpressureStrategy.LATEST)
+            gameLaunchableUsecase.gameCanBeLaunched()
+                .subscribeOn(schedulerFactory.io())
+                .observeOn(schedulerFactory.ui())
+                .map(::processGameLaunchableEvent)
+                .doOnError { error ->
+                    Timber.e(
+                        error,
+                        "Error while observing if game can be launched."
+                    )
+                }
+                .toFlowable(BackpressureStrategy.LATEST)
         )
     }
 
@@ -62,17 +73,18 @@ constructor(private val hostCommunicator: HostCommunicator,
 
     fun launchGame() {
         disposableManager.add(launchGameUsecase.launchGame()
-                .subscribeOn(schedulerFactory.io())
-                .observeOn(schedulerFactory.ui())
-                .subscribe(
-                        { Timber.d("Game launched") },
-                        { error -> Timber.e(error, "Error while launching game") }
-                )
+            .subscribeOn(schedulerFactory.io())
+            .observeOn(schedulerFactory.ui())
+            .subscribe(
+                { Timber.d("Game launched") },
+                { error -> Timber.e(error, "Error while launching game") }
+            )
         )
     }
 
     fun cancelGame() {
-        disposableManager.add(cancelGameUsecase.cancelGame()
+        disposableManager.add(
+            cancelGameUsecase.cancelGame()
                 .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
                 .subscribe()
@@ -109,7 +121,7 @@ constructor(private val hostCommunicator: HostCommunicator,
     private fun getCommandForGameEvent(event: GameEvent): WaitingRoomHostCommand {
         return when (event) {
             GameEvent.GameCanceled -> WaitingRoomHostCommand.NavigateToHomeScreen
-            GameEvent.GameOver -> WaitingRoomHostCommand.NotifyUserGameOver
+            GameEvent.GameOver -> WaitingRoomHostCommand.NothingToDo
             GameEvent.GameLaunched -> WaitingRoomHostCommand.NavigateToGameRoomScreen
         }
     }

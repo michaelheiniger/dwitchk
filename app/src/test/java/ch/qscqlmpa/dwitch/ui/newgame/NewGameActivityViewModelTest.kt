@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitch.ui.newgame
 
 import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGame
+import ch.qscqlmpa.dwitch.model.game.GameCommonId
 import ch.qscqlmpa.dwitch.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitch.ui.home.newgame.NewGameActivityViewModel
 import ch.qscqlmpa.dwitch.ui.home.newgame.NewGameEvent
@@ -47,7 +48,7 @@ class NewGameActivityViewModelTest : BaseViewModelUnitTest() {
 
         every { mockNewGameUsecase.joinGame(any(), any()) } returns Completable.complete()
 
-        val advertisedGame = AdvertisedGame("Dwiiitch !", "192.168.1.1", 8890)
+        val advertisedGame = AdvertisedGame("Dwiiitch !", GameCommonId(1), "192.168.1.1", 8890)
 
         viewModel.nextForGuest(advertisedGame, playerName)
 
@@ -61,7 +62,7 @@ class NewGameActivityViewModelTest : BaseViewModelUnitTest() {
     @Test
     fun nextForGuest_error() {
 
-        val advertisedGame = AdvertisedGame("", "192.168.1.1", 8890)
+        val advertisedGame = AdvertisedGame("", GameCommonId(1), "192.168.1.1", 8890)
 
         viewModel.nextForGuest(advertisedGame, playerName)
 

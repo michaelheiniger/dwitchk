@@ -7,9 +7,9 @@ import javax.inject.Inject
 
 class Network @Inject constructor() {
 
-    fun sendAdvertisement(destinationPort: Int, gameName: String) {
+    fun sendAdvertisement(destinationPort: Int, message: String) {
         DatagramSocket().use { datagramSocket ->
-            val buffer = gameName.toByteArray()
+            val buffer = message.toByteArray()
             val destinationAddress = InetAddress.getByName("255.255.255.255")
             val packet = DatagramPacket(
                 buffer,

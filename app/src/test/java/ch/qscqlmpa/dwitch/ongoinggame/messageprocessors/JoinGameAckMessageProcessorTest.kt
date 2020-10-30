@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame.messageprocessors
 
 import ch.qscqlmpa.dwitch.game.TestEntityFactory
+import ch.qscqlmpa.dwitch.model.game.GameCommonId
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionId
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import io.mockk.every
@@ -11,7 +12,7 @@ import org.junit.jupiter.api.Test
 
 class JoinGameAckMessageProcessorTest : BaseMessageProcessorTest() {
 
-    private val gameCommonId = 1L
+    private val gameCommonId = GameCommonId(1L)
     private val guestPlayerInGameId = TestEntityFactory.createGuestPlayer1().inGameId
 
     private lateinit var processor: JoinGameAckMessageProcessor

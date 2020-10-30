@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.host
 
 import ch.qscqlmpa.dwitch.BaseUnitTest
+import ch.qscqlmpa.dwitch.model.game.GameCommonId
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionId
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionIdStore
 import ch.qscqlmpa.dwitch.ongoinggame.communication.RecipientType
@@ -146,7 +147,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
         every { mockCommServer.sendMessage(any(), any()) } returns Completable.complete()
 
-        val joinGameAckMessage = Message.JoinGameAckMessage(1, PlayerInGameId(2))
+        val joinGameAckMessage = Message.JoinGameAckMessage(GameCommonId(1), PlayerInGameId(2))
         val messageWrapper = EnvelopeToSend(RecipientType.Single(LocalConnectionId(0)), joinGameAckMessage)
 
         val address = Address("192.168.1.1", 8889)
@@ -159,7 +160,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
         val joinGameAckMessageCap = messageCap.captured as Message.JoinGameAckMessage
 
-        Assert.assertEquals(1, joinGameAckMessageCap.gameCommonId)
+        Assert.assertEquals(GameCommonId(1), joinGameAckMessageCap.gameCommonId)
         Assert.assertEquals(PlayerInGameId(2), joinGameAckMessageCap.playerInGameId)
 
         confirmVerified(mockCommServer)

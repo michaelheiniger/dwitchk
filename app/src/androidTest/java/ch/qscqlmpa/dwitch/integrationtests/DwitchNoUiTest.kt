@@ -16,8 +16,8 @@ import org.junit.runner.RunWith
 class DwitchNoUiTest {
 
     private val gameName = "Dwiiiitch"
-
-    private val advertisedGame = AdvertisedGame(gameName, "192.168.1.10", 8889)
+    private val gameIpAddress = "192.168.1.10"
+    private val gamePort = 8889
 
     private lateinit var networkHub: NetworkHub
 
@@ -38,10 +38,11 @@ class DwitchNoUiTest {
     @Test
     fun playGameFromStartToEnd() {
         val host = IntTestHost(gameName, networkHub)
+        host.createGame()
+
+        val advertisedGame = AdvertisedGame(gameName, host.gameCommonId(),  gameIpAddress, gamePort)
         val guest1 = IntTestGuest(Guest1, advertisedGame, networkHub)
         val guest2 = IntTestGuest(Guest2, advertisedGame, networkHub)
-
-        host.createGame()
 
         guest1.joinGame()
         guest2.joinGame()

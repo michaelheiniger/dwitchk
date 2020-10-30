@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitch.ongoinggame.services
 
 import android.content.Intent
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants
+import ch.qscqlmpa.dwitch.gameadvertising.GameInfo
 import ch.qscqlmpa.dwitch.service.BaseService
 
 abstract class BaseInGameService : BaseService() {
@@ -22,5 +23,9 @@ abstract class BaseInGameService : BaseService() {
             throw IllegalArgumentException("The intent to start the service does not specify a local player local-ID")
         }
         return localPlayerLocalId
+    }
+
+    protected fun getGameInfo(intent: Intent): GameInfo {
+        return intent.getParcelableExtra(CommonExtraConstants.EXTRA_GAME_INFO)
     }
 }

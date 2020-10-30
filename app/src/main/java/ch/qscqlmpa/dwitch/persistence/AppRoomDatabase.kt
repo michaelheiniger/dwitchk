@@ -5,20 +5,20 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import ch.qscqlmpa.dwitch.model.game.Game
 import ch.qscqlmpa.dwitch.model.player.Player
-import ch.qscqlmpa.dwitch.persistence.typeconverter.PlayerInGameIdTypeConverter
-import ch.qscqlmpa.dwitch.persistence.typeconverter.PlayerRoleTypeConverter
-import ch.qscqlmpa.dwitch.persistence.typeconverter.PlayerStateTypeConverter
-import ch.qscqlmpa.dwitch.persistence.typeconverter.RoomTypeTypeConverter
+import ch.qscqlmpa.dwitch.persistence.typeconverter.*
 
-@Database(entities = [
-    Game::class,
-    Player::class
-], version = 1, exportSchema = false)
+@Database(
+    entities = [
+        Game::class,
+        Player::class
+    ], version = 1, exportSchema = false
+)
 @TypeConverters(
-        RoomTypeTypeConverter::class,
-        PlayerStateTypeConverter::class,
-        PlayerRoleTypeConverter::class,
-        PlayerInGameIdTypeConverter::class
+    RoomTypeTypeConverter::class,
+    PlayerStateTypeConverter::class,
+    PlayerRoleTypeConverter::class,
+    PlayerInGameIdTypeConverter::class,
+    GameCommonIdTypeConverter::class
 )
 abstract class AppRoomDatabase : RoomDatabase() {
 

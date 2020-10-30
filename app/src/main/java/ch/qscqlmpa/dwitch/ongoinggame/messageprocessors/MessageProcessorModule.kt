@@ -13,7 +13,7 @@ abstract class MessageProcessorModule {
     @Binds
     @IntoMap
     @MessageProcessorKey(Message.JoinGameMessage::class)
-    internal abstract fun bindPlayerJoinsMessageProcessor(messageProcessor: JoinGameMessageProcessor): MessageProcessor
+    internal abstract fun bindPlayerJoinMessageProcessor(messageProcessor: JoinGameMessageProcessor): MessageProcessor
 
     @OngoingGameScope
     @Binds
@@ -26,6 +26,12 @@ abstract class MessageProcessorModule {
     @IntoMap
     @MessageProcessorKey(Message.RejoinGameMessage::class)
     internal abstract fun bindRejoinGameMessageProcessor(messageProcessor: RejoinGameMessageProcessor): MessageProcessor
+
+    @OngoingGameScope
+    @Binds
+    @IntoMap
+    @MessageProcessorKey(Message.RejoinGameAckMessage::class)
+    internal abstract fun bindRejoinGameAckMessageProcessor(messageProcessor: RejoinGameAckMessageProcessor): MessageProcessor
 
     @OngoingGameScope
     @Binds

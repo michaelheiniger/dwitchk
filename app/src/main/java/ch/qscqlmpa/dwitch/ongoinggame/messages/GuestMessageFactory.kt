@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.ongoinggame.messages
 
+import ch.qscqlmpa.dwitch.model.game.GameCommonId
 import ch.qscqlmpa.dwitch.ongoinggame.communication.RecipientType
 import ch.qscqlmpa.dwitch.service.OngoingGameScope
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
@@ -15,8 +16,8 @@ class GuestMessageFactory @Inject constructor() {
             return EnvelopeToSend(RecipientType.All, message)
         }
 
-        fun createRejoinGameMessage(playerInGameId: PlayerInGameId): EnvelopeToSend {
-            val message = Message.RejoinGameMessage(playerInGameId)
+        fun createRejoinGameMessage(gameCommonId: GameCommonId, playerInGameId: PlayerInGameId): EnvelopeToSend {
+            val message = Message.RejoinGameMessage(gameCommonId, playerInGameId)
             return EnvelopeToSend(RecipientType.All, message)
         }
 

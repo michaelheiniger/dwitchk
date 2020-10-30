@@ -9,6 +9,13 @@ import ch.qscqlmpa.dwitch.GuestIdTestHost
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.ongoinggame.messages.MessageFactory
+import ch.qscqlmpa.dwitch.uitests.GameRoomUtil.assertCanPassTurn
+import ch.qscqlmpa.dwitch.uitests.GameRoomUtil.assertCanPickACard
+import ch.qscqlmpa.dwitch.uitests.GameRoomUtil.assertCardInHand
+import ch.qscqlmpa.dwitch.uitests.GameRoomUtil.assertCardOnTable
+import ch.qscqlmpa.dwitch.uitests.GameRoomUtil.passTurn
+import ch.qscqlmpa.dwitch.uitests.GameRoomUtil.pickACard
+import ch.qscqlmpa.dwitch.uitests.UiUtil.clickOnButton
 import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil
 import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.model.card.Card
@@ -117,7 +124,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         assertCardOnTable(Card.Clubs3)
 
         otherPlayerPlaysCard(Guest1, Card.Spades4)
-        dudeWaitAMinute(2)
+        dudeWaitASec(2)
         assertCardOnTable(Card.Spades4)
 
         playACard(0) // Local player plays Hearts5 and is done
@@ -128,7 +135,7 @@ class GameRoomAsHostTest : BaseHostTest() {
 
         clickOnButton(R.id.endGameBtn)
 
-        dudeWaitAMinute(2)
+        dudeWaitASec(2)
 
         assertCurrentScreenIsHomeSreen()
     }
@@ -157,37 +164,10 @@ class GameRoomAsHostTest : BaseHostTest() {
 
         initializeInitialGameSetup(cardsForPlayer, rankForPlayer)
 
-        onView(withId(R.id.launchGameBtn))
-                .perform(click())
+        clickOnButton(R.id.launchGameBtn)
 
-        dudeWaitAMinute(2)
+        dudeWaitASec(2)
 
-        onView(withId(R.id.startNewRound)).check(matchesWithText(R.string.cards_in_hand))
-    }
-
-    private fun pickACard() {
-        clickOnButton(R.id.pickBtn)
-    }
-
-    private fun passTurn() {
-        clickOnButton(R.id.passBtn)
-    }
-
-    private fun assertCanPickACard(canPickACard: Boolean) {
-        assertControlEnabled(R.id.pickBtn, canPickACard)
-    }
-
-    private fun assertCanPassTurn(canPassTurn: Boolean) {
-        assertControlEnabled(R.id.passBtn, canPassTurn)
-    }
-
-    private fun assertCardInHand(position: Int, card: Card) {
-        onView(ViewAssertionUtil.withRecyclerView(R.id.cardsInHandRw)
-                .atPositionOnView(position, R.id.cardIv))
-                .check(matches(withContentDescription(card.toString())))
-    }
-
-    private fun assertCardOnTable(card: Card) {
-        onView(withId(R.id.lastCardIv)).check(matches(withContentDescription(card.toString())))
+        assertControlTextContent(R.id.startNewRound, R.string.pdf_start_new_round)
     }
 }

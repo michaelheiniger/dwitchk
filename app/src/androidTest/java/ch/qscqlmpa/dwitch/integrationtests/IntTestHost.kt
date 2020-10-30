@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
+import ch.qscqlmpa.dwitch.model.game.GameCommonId
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.IntTestWebsocketServer
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameLaunchableEvent
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
@@ -28,6 +29,10 @@ class IntTestHost(
 
         hookOnGoingGameComponent()
         hookupHostToNetworkHub()
+    }
+
+    fun gameCommonId(): GameCommonId {
+        return ongoingGameComponent.inGameStore.getGame().gameCommonId
     }
 
     fun launchGame() {

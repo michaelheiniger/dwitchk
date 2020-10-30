@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.ongoinggame.messageprocessors
 
+import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionId
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionIdStore
@@ -15,44 +16,72 @@ import javax.inject.Inject
 
 internal class RejoinGameMessageProcessor @Inject constructor(
     private val store: InGameStore,
-    private val communicatorImplLazy: Lazy<HostCommunicator>,
+    communicatorImplLazy: Lazy<HostCommunicator>,
     private val hostMessageFactory: HostMessageFactory,
     private val localConnectionIdStore: LocalConnectionIdStore
-) : MessageProcessor {
+) : BaseHostProcessor(communicatorImplLazy) {
 
     override fun process(
         message: Message,
         senderLocalConnectionID: LocalConnectionId
     ): Completable {
 
-        val communicator = communicatorImplLazy.get()
+        val msg = message as Message.RejoinGameMessage
 
+        return getRejoiningInfoIfPossible(msg, senderLocalConnectionID)
+            .doOnSuccess { rejoinInfo ->
+                updatePlayer(rejoinInfo.player)
+                updateConnectionIdStore(rejoinInfo.player, senderLocalConnectionID)
+            }
+            .flatMapCompletable { rejoinInfo ->
+                sendRejoinAck(rejoinInfo)
+                    .andThen(sendWaitingRoomStateUpdateMessage())
+            }
+    }
+
+    private fun getRejoiningInfoIfPossible(
+        msg: Message.RejoinGameMessage,
+        senderLocalConnectionID: LocalConnectionId
+    ): Maybe<RejoinInfo> {
         return Maybe.fromCallable {
-            val msg = message as Message.RejoinGameMessage
+
+            val gameCommonId = store.getGame().gameCommonId
             val playerRejoining = store.getPlayer(msg.playerInGameId)
 
-            if (playerRejoining != null) {
-                return@fromCallable playerRejoining
-            } else {
-                Timber.e("Re-joining player not found: closing connection with client.")
-                communicator.closeConnectionWithClient(senderLocalConnectionID)
+            if (gameCommonId != msg.gameCommonId) {
+                Timber.e("Game common ID provided doesn't match: closing connection with client.")
+                closeConnectionWithGuest(senderLocalConnectionID)
                 return@fromCallable null
             }
-        }.flatMapCompletable { playerRejoining ->
-            Completable.fromAction {
-                store.updatePlayerWithConnectionStateAndReady(
-                    playerRejoining.id,
-                    PlayerConnectionState.CONNECTED,
-                    false
-                )
-                localConnectionIdStore.addPlayerInGameId(
-                    senderLocalConnectionID,
-                    playerRejoining.inGameId
-                )
-            }.andThen(
-                hostMessageFactory.createWaitingRoomStateUpdateMessage()
-                    .flatMapCompletable(communicator::sendMessage)
-            )
+
+            if (playerRejoining == null) {
+                Timber.e("Re-joining player not found: closing connection with client.")
+                closeConnectionWithGuest(senderLocalConnectionID)
+                return@fromCallable null
+            }
+
+            return@fromCallable RejoinInfo(gameCommonId, playerRejoining, senderLocalConnectionID)
         }
+    }
+
+    private fun updatePlayer(player: Player) {
+        store.updatePlayerWithConnectionStateAndReady(
+            player.id,
+            PlayerConnectionState.CONNECTED,
+            false
+        )
+    }
+
+    private fun updateConnectionIdStore(player: Player, connectionID: LocalConnectionId) {
+        localConnectionIdStore.addPlayerInGameId(connectionID, player.inGameId)
+    }
+
+    private fun sendRejoinAck(rejoinInfo: RejoinInfo): Completable {
+        return sendMessage(HostMessageFactory.createRejoinAckMessage(rejoinInfo))
+    }
+
+    private fun sendWaitingRoomStateUpdateMessage(): Completable {
+        return hostMessageFactory.createWaitingRoomStateUpdateMessage()
+            .flatMapCompletable(::sendMessage)
     }
 }

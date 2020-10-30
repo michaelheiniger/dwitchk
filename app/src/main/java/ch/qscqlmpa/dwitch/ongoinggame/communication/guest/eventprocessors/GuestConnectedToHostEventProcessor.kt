@@ -29,7 +29,7 @@ internal class GuestConnectedToHostEventProcessor @Inject constructor(
 
             if (guestIsAlreadyRegisteredAtHost(localPlayer)) {
                 Timber.d("Send RejoinGameMessage with in-game ID ${localPlayer.inGameId}")
-                GuestMessageFactory.createRejoinGameMessage(localPlayer.inGameId)
+                GuestMessageFactory.createRejoinGameMessage(game.gameCommonId, localPlayer.inGameId)
             } else {
                 Timber.d("Send JoinGameMessage")
                 GuestMessageFactory.createJoinGameMessage(localPlayer.name)

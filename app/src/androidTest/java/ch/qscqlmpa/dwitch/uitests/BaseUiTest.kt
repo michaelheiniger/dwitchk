@@ -1,13 +1,12 @@
 package ch.qscqlmpa.dwitch.uitests
 
 import android.content.res.Resources
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.ViewAssertion
-import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.hasErrorText
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import ch.qscqlmpa.dwitch.R
@@ -24,12 +23,12 @@ import ch.qscqlmpa.dwitch.persistence.AppRoomDatabase
 import ch.qscqlmpa.dwitch.persistence.GameDao
 import ch.qscqlmpa.dwitch.persistence.PlayerDao
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
+import ch.qscqlmpa.dwitch.uitests.UiUtil.matchesWithText
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetupFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import io.reactivex.Completable
-import org.hamcrest.Matchers
 import org.junit.Rule
 import org.junit.runner.RunWith
 import timber.log.Timber
@@ -92,42 +91,23 @@ abstract class BaseUiTest {
             .setInstance(DeterministicInitialGameSetup(cardsForPlayer, rankForPlayer))
     }
 
-    protected fun dudeWaitAMinute(seconds: Long = 3L) {
+    protected fun dudeWaitASec(seconds: Long = 3L) {
         Completable.fromAction { Timber.i("Waiting for %d seconds...", seconds) }
                 .delay(seconds, TimeUnit.SECONDS)
                 .blockingGet()
     }
 
-    protected fun matchesWithText(resource: Int): ViewAssertion {
-        return matches(withText(res.getString(resource)))
-    }
-
-    protected fun matchesWithErrorText(resource: Int): ViewAssertion {
-        return matches(hasErrorText(res.getString(resource)))
-    }
-
-    protected fun clickOnButton(resourceId: Int) {
-        Espresso.onView(ViewMatchers.withId(resourceId)).perform(ViewActions.click())
-    }
-
-    protected fun assertControlEnabled(resourceId: Int, enabled: Boolean) {
-        if (enabled) {
-            Espresso.onView(ViewMatchers.withId(resourceId)).check(matches(ViewMatchers.isEnabled()))
-        } else {
-            Espresso.onView(ViewMatchers.withId(resourceId)).check(matches(Matchers.not(ViewMatchers.isEnabled())))
-        }
-    }
 
     protected fun setControlText(resourceId: Int, text: String) {
-        Espresso.onView(ViewMatchers.withId(resourceId)).perform(ViewActions.replaceText(text))
+        onView(ViewMatchers.withId(resourceId)).perform(replaceText(text))
     }
 
     protected fun assertControlTextContent(resourceId: Int, textResourceId: Int) {
-        Espresso.onView(ViewMatchers.withId(resourceId)).check(matchesWithText(textResourceId))
+        onView(withId(resourceId)).check(matchesWithText(textResourceId))
     }
 
     protected fun assertControlIsDisplayed(resourceId: Int) {
-        Espresso.onView(ViewMatchers.withId(resourceId)).check(matches(ViewMatchers.isDisplayed()))
+        onView(withId(resourceId)).check(matches(isDisplayed()))
     }
 
     protected fun assertCurrentScreenIsHomeSreen() {

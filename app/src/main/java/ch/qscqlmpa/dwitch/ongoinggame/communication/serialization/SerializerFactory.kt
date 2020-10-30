@@ -1,12 +1,12 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.serialization
 
+import ch.qscqlmpa.dwitch.gameadvertising.GameInfo
 import ch.qscqlmpa.dwitch.ongoinggame.communication.Envelope
+import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardId
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.card.CardSuit
-import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
-import ch.qscqlmpa.dwitch.service.OngoingGameScope
 import ch.qscqlmpa.dwitchengine.model.game.GameEvent
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
@@ -15,12 +15,17 @@ import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
+import javax.inject.Singleton
 
 
-@OngoingGameScope
+@Singleton
 class SerializerFactory @Inject constructor(private val json: Json) {
 
     // Serialize
+
+    fun serialize(gameInfo: GameInfo): String {
+        return json.encodeToString(GameInfo.serializer(), gameInfo)
+    }
 
     fun serialize(message: Message): String {
         return json.encodeToString(Message.serializer(), message)
@@ -67,6 +72,10 @@ class SerializerFactory @Inject constructor(private val json: Json) {
     }
 
     // Unserialize
+
+    fun unserializeGameInfo(gameInfoAsStr: String): GameInfo {
+        return json.decodeFromString(GameInfo.serializer(), gameInfoAsStr)
+    }
 
     fun unserializeEnvelope(envelope: String): Envelope {
         return json.decodeFromString(Envelope.serializer(), envelope)

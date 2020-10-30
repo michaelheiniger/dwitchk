@@ -12,8 +12,8 @@ import io.mockk.CapturingSlot
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.verify
-import io.reactivex.Completable
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -32,12 +32,17 @@ internal class GameStateUpdatedMessageProcessorTest : BaseMessageProcessorTest()
         setupCommunicatorSendGameState()
     }
 
+    @AfterEach
+    override fun tearDown() {
+        super.tearDown()
+    }
+
     @Test
     fun `When the local player is the host, it forwards the updated game state message`() {
         createLocalPlayer(PlayerRole.HOST)
         mockGetLocalPlayer()
 
-        launchTest().test().assertComplete()
+        launchTest()
 
         val envelopeToSendCap = CapturingSlot<EnvelopeToSend>()
         verify { mockGameCommunicator.sendMessage(capture(envelopeToSendCap)) }
@@ -51,14 +56,15 @@ internal class GameStateUpdatedMessageProcessorTest : BaseMessageProcessorTest()
         createLocalPlayer(PlayerRole.GUEST)
         mockGetLocalPlayer()
 
-        launchTest().test().assertComplete()
+        launchTest()
 
         verify(exactly = 0) { mockGameCommunicator.sendMessage(any()) }
         confirmVerified(mockGameCommunicator)
     }
 
-    private fun launchTest(): Completable {
-        return processor.process(Message.GameStateUpdatedMessage(gameState), LocalConnectionId(0))
+    private fun launchTest() {
+        processor.process(Message.GameStateUpdatedMessage(gameState), LocalConnectionId(0))
+            .test().assertComplete()
     }
 
     private fun createLocalPlayer(localPlayerRole: PlayerRole) {

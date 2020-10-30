@@ -8,18 +8,21 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.gamediscovery.TestNetworkAdapter
 import ch.qscqlmpa.dwitch.gamediscovery.network.Packet
-import ch.qscqlmpa.dwitch.uitests.BaseUiTest
-import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil
+import ch.qscqlmpa.dwitch.uitests.UiUtil.matchesWithErrorText
+import ch.qscqlmpa.dwitch.uitests.UiUtil.matchesWithText
+import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil.withRecyclerView
 import org.hamcrest.core.IsNot.not
 import org.junit.Before
 import org.junit.Test
 
 
-class NewGameAsGuest : BaseUiTest() {
+class NewGameAsGuestTest : BaseUiTest() {
 
     private lateinit var networkListener: TestNetworkAdapter
-    private val packet1 = Packet("Le Père Noël est une ordure", "192.168.1.1", 8890)
-    private val packet2 = Packet("Les Bronzés", "192.168.1.2", 8891)
+    private val message1 = "{\"gameCommonId\":{\"value\":23},\"gameName\":\"Kaamelott\",\"gamePort\":8889}"
+    private val message2 = "{\"gameCommonId\":{\"value\":65},\"gameName\":\"Les Bronzés\",\"gamePort\":8890}"
+    private val packet1 = Packet(message1, "192.168.1.1", 3456)
+    private val packet2 = Packet(message2, "192.168.1.2", 7657)
 
     @Before
     override fun setup() {
@@ -35,8 +38,7 @@ class NewGameAsGuest : BaseUiTest() {
         networkListener.setPacket(packet1)
         networkListener.setPacket(packet2)
 
-        onView(ViewAssertionUtil.withRecyclerView(R.id.gameListRw)
-                .atPositionOnView(1, R.id.gameNameTv))
+        onView(withRecyclerView(R.id.gameListRw).atPositionOnView(1, R.id.gameNameTv))
                 .perform(click())
 
         onView(withId(R.id.playerNameEdt)).perform(replaceText("Bernard Morin"))
@@ -53,8 +55,7 @@ class NewGameAsGuest : BaseUiTest() {
         networkListener.setPacket(packet1)
         networkListener.setPacket(packet2)
 
-        onView(ViewAssertionUtil.withRecyclerView(R.id.gameListRw)
-                .atPositionOnView(1, R.id.gameNameTv))
+        onView(withRecyclerView(R.id.gameListRw).atPositionOnView(1, R.id.gameNameTv))
                 .perform(click())
 
         onView(withId(R.id.playerNameEdt)).perform(replaceText(""));
@@ -71,7 +72,7 @@ class NewGameAsGuest : BaseUiTest() {
         networkListener.setPacket(packet1)
         networkListener.setPacket(packet2)
 
-        onView(ViewAssertionUtil.withRecyclerView(R.id.gameListRw)
+        onView(withRecyclerView(R.id.gameListRw)
                 .atPositionOnView(1, R.id.gameNameTv))
                 .perform(click())
 

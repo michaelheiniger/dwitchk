@@ -4,6 +4,7 @@ import ch.qscqlmpa.dwitch.components.ongoinggame.OnGoingGameQualifiers.GAME_LOCA
 import ch.qscqlmpa.dwitch.components.ongoinggame.OnGoingGameQualifiers.LOCAL_PLAYER_LOCAL_ID
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.model.game.Game
+import ch.qscqlmpa.dwitch.model.game.GameCommonId
 import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
@@ -15,10 +16,11 @@ import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Named
 
-class InGameStoreImpl @Inject constructor(@Named(GAME_LOCAL_ID) private val gameLocalId: Long,
-                                          @Named(LOCAL_PLAYER_LOCAL_ID) private val localPlayerLocalId: Long,
-                                          database: AppRoomDatabase,
-                                          private val serializerFactory: SerializerFactory
+class InGameStoreImpl @Inject constructor(
+    @Named(GAME_LOCAL_ID) private val gameLocalId: Long,
+    @Named(LOCAL_PLAYER_LOCAL_ID) private val localPlayerLocalId: Long,
+    database: AppRoomDatabase,
+    private val serializerFactory: SerializerFactory
 ) : InGameStore {
 
     private val gameDao = database.gameDao()
@@ -36,10 +38,10 @@ class InGameStoreImpl @Inject constructor(@Named(GAME_LOCAL_ID) private val game
 
     override fun observeGameState(): Observable<GameState> {
         return gameDao.observeGame(gameLocalId)
-                .map { game -> serializerFactory.unserializeGameState(game.gameState) }
+            .map { game -> serializerFactory.unserializeGameState(game.gameState) }
     }
 
-    override fun updateGameWithCommonId(gameCommonId: Long) {
+    override fun updateGameWithCommonId(gameCommonId: GameCommonId) {
         gameDao.updateGameWithCommonId(gameLocalId, gameCommonId)
     }
 
@@ -77,11 +79,18 @@ class InGameStoreImpl @Inject constructor(@Named(GAME_LOCAL_ID) private val game
         return playerDao.updatePlayerWithReady(playerInGameId, ready)
     }
 
-    override fun updatePlayerWithConnectionState(playerInGameId: PlayerInGameId, state: PlayerConnectionState): Int {
+    override fun updatePlayerWithConnectionState(
+        playerInGameId: PlayerInGameId,
+        state: PlayerConnectionState
+    ): Int {
         return playerDao.updatePlayerWithConnectionState(playerInGameId, state)
     }
 
-    override fun updatePlayerWithConnectionStateAndReady(playerLocalId: Long, state: PlayerConnectionState, ready: Boolean): Int {
+    override fun updatePlayerWithConnectionStateAndReady(
+        playerLocalId: Long,
+        state: PlayerConnectionState,
+        ready: Boolean
+    ): Int {
         return playerDao.updatePlayerWithConnectionStateAndReady(playerLocalId, state, ready)
     }
 

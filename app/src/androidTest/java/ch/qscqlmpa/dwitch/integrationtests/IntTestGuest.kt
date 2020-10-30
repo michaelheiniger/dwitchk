@@ -16,7 +16,7 @@ class IntTestGuest(
 
     init {
         appComponent.newGameUsecase.joinGame(advertisedGame, guest.name).blockingGet()
-        val game = appComponent.database.gameDao().getGameByName(advertisedGame.name)
+        val game = appComponent.database.gameDao().getGameByName(advertisedGame.gameName)
                 ?: throw IllegalStateException("New game can't be fetched from store")
         gameLocalId = game.id
         guestLocalId = game.localPlayerLocalId

@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame
 
 import ch.qscqlmpa.dwitch.IntTestAppComponent
+import ch.qscqlmpa.dwitch.gameadvertising.GameInfo
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.model.player.PlayerRole
 import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
@@ -19,15 +20,15 @@ class IntTestServiceManager @Inject constructor() : ServiceManager {
         return onGoingGameComponent
     }
 
-    override fun startHostService(gameLocalId: Long, localPlayerLocalId: Long) {
+    override fun startHostService(gameLocalId: Long, gameInfo: GameInfo, localPlayerLocalId: Long) {
         onGoingGameComponent = appComponent.addInGameComponent(
             OngoingGameModule(
                 PlayerRole.HOST,
                 RoomType.WAITING_ROOM,
                 gameLocalId,
                 localPlayerLocalId,
-                8889,
-                "127.0.0.1"
+                gameInfo.gamePort,
+                "0.0.0.0"
             )
         )
         onGoingGameComponent.hostCommunicator.listenForConnections()
@@ -44,8 +45,8 @@ class IntTestServiceManager @Inject constructor() : ServiceManager {
     override fun startGuestService(
         gameLocalId: Long,
         localPlayerLocalId: Long,
-        hostPort: Int,
-        hostIpAddress: String
+        gamePort: Int,
+        gameIpAddress: String
     ) {
         onGoingGameComponent = appComponent.addInGameComponent(
             OngoingGameModule(
@@ -53,8 +54,8 @@ class IntTestServiceManager @Inject constructor() : ServiceManager {
                 RoomType.WAITING_ROOM,
                 gameLocalId,
                 localPlayerLocalId,
-                hostPort,
-                hostIpAddress
+                gamePort,
+                gameIpAddress
             )
         )
         // Cannot be called before hooking up the Guest with the Host

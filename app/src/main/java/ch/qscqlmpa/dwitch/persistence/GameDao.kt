@@ -4,12 +4,13 @@ import androidx.room.*
 import ch.qscqlmpa.dwitch.model.InsertGameResult
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.model.game.Game
+import ch.qscqlmpa.dwitch.model.game.GameCommonId
 import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.model.player.PlayerRole
-import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import io.reactivex.Observable
+import java.util.*
 
 @Dao
 abstract class GameDao(database: AppRoomDatabase) {
@@ -52,6 +53,9 @@ abstract class GameDao(database: AppRoomDatabase) {
     @Query("SELECT * FROM Game WHERE id=:localId")
     abstract fun getGame(localId: Long): Game
 
+    @Query("SELECT * FROM Game WHERE game_common_id=:gameCommonId")
+    abstract fun getGame(gameCommonId: GameCommonId): Game?
+
     @Query("SELECT * FROM Game WHERE id=:localId")
     abstract fun observeGame(localId: Long): Observable<Game>
 
@@ -62,7 +66,7 @@ abstract class GameDao(database: AppRoomDatabase) {
         WHERE id=:gameLocalId
             """
     )
-    abstract fun updateGameWithCommonId(gameLocalId: Long, gameCommonId: Long)
+    abstract fun updateGameWithCommonId(gameLocalId: Long, gameCommonId: GameCommonId)
 
     /**
      * Insert game and local player for host in Store.
@@ -72,11 +76,16 @@ abstract class GameDao(database: AppRoomDatabase) {
     open fun insertGameForHost(
         gameName: String,
         hostPlayerName: String,
-        hostIpAddress: String,
-        hostPort: Int
     ): InsertGameResult {
-
-        val game = Game(0, RoomType.WAITING_ROOM, 0, gameName, "", 0, hostIpAddress, hostPort)
+        val gameCommonId = GameCommonId(Date().time)
+        val game = Game(
+            0,
+            RoomType.WAITING_ROOM,
+            gameCommonId,
+            gameName,
+            "",
+            0
+        )
         val gameLocalId = insertGame(game)
 
         val player = Player(
@@ -90,22 +99,12 @@ abstract class GameDao(database: AppRoomDatabase) {
         )
         val playerLocalId = playerDao.insertPlayer(player)
         playerDao.updatePlayer(
-            player.copy(
-                id = playerLocalId, inGameId = PlayerInGameId(
-                    playerLocalId
-                )
-            )
+            player.copy(id = playerLocalId, inGameId = PlayerInGameId(playerLocalId))
         )
 
-        updateGame(
-            game.copy(
-                id = gameLocalId,
-                gameCommonId = gameLocalId,
-                localPlayerLocalId = playerLocalId
-            )
-        )
+        updateGame(game.copy(id = gameLocalId, localPlayerLocalId = playerLocalId))
 
-        return InsertGameResult(gameLocalId, playerLocalId)
+        return InsertGameResult(gameLocalId, gameCommonId, gameName, playerLocalId)
     }
 
     /**
@@ -115,12 +114,30 @@ abstract class GameDao(database: AppRoomDatabase) {
     @Transaction
     open fun insertGameForGuest(
         gameName: String,
-        guestPlayerName: String,
-        hostIpAddress: String,
-        hostPort: Int
+        gameCommonId: GameCommonId,
+        guestPlayerName: String
     ): InsertGameResult {
+        val existingGame = getGame(gameCommonId)
+        return if (existingGame != null) {
+            InsertGameResult(existingGame)
+        } else {
+            insertNewGuestGame(gameCommonId, gameName, guestPlayerName)
+        }
+    }
 
-        val game = Game(0, RoomType.WAITING_ROOM, 0, gameName, "", 0, hostIpAddress, hostPort)
+    private fun insertNewGuestGame(
+        gameCommonId: GameCommonId,
+        gameName: String,
+        guestPlayerName: String
+    ): InsertGameResult {
+        val game = Game(
+            0,
+            RoomType.WAITING_ROOM,
+            gameCommonId,
+            gameName,
+            "",
+            0
+        )
         val gameLocalId = insertGame(game)
 
         val player = Player(
@@ -136,7 +153,7 @@ abstract class GameDao(database: AppRoomDatabase) {
 
         updateGame(game.copy(id = gameLocalId, localPlayerLocalId = playerLocalId))
 
-        return InsertGameResult(gameLocalId, playerLocalId)
+        return InsertGameResult(gameLocalId, gameCommonId, gameName, playerLocalId)
     }
 
     @Query("DELETE FROM Game WHERE id=:gameLocalId")

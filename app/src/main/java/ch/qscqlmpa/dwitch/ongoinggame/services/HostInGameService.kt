@@ -9,11 +9,13 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
+import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_GAME_INFO
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_GAME_LOCAL_ID
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_LOCAL_PLAYER_LOCAL_ID
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
 import ch.qscqlmpa.dwitch.common.NotificationChannelConstants.DEFAULT_CHANNEL_ID
 import ch.qscqlmpa.dwitch.common.NotificationChannelConstants.DEFAULT_CHANNEL_NAME
+import ch.qscqlmpa.dwitch.gameadvertising.GameInfo
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.model.player.PlayerRole
 import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameComponent
@@ -33,7 +35,6 @@ class HostInGameService : BaseInGameService() {
             ACTION_CHANGE_ROOM_TO_GAME_ROOM -> actionChangeRoomToGameRoom()
             ACTION_STOP_SERVICE -> actionStopService()
         }
-
         return Service.START_REDELIVER_INTENT
     }
 
@@ -43,6 +44,7 @@ class HostInGameService : BaseInGameService() {
 
     private fun actionStartService(intent: Intent) {
         val gameLocalId = getGameLocalId(intent)
+        val gameInfo = getGameInfo(intent)
         val localPlayerLocalId = getLocalPlayerLocalId(intent)
 
         Timber.i("Start service")
@@ -52,13 +54,12 @@ class HostInGameService : BaseInGameService() {
             RoomType.WAITING_ROOM,
             gameLocalId,
             localPlayerLocalId,
-            8889,
+            gameInfo.gamePort,
             "0.0.0.0"
-        ) //TODO extract host port from settings
+        )
         getOngoingGameComponent().hostCommunicator.listenForConnections()
         gameAdvertisingDisposable.add(
-            getOngoingGameComponent().gameAdvertising.startAdvertising("My Game !") //TODO: Fix game name
-                .subscribe()
+            getOngoingGameComponent().gameAdvertising.startAdvertising(gameInfo).subscribe()
         )
     }
 
@@ -145,11 +146,22 @@ class HostInGameService : BaseInGameService() {
 
     companion object {
 
-        fun startService(context: Context, gameLocalId: Long, localPlayerLocalId: Long) {
+        private const val NOTIFICATION_ID = 1
+        private const val ACTION_START_SERVICE = "ACTION_START_SERVICE"
+        private const val ACTION_STOP_SERVICE = "ACTION_STOP_SERVICE"
+        private const val ACTION_CHANGE_ROOM_TO_GAME_ROOM = "ACTION_CHANGE_ROOM_TO_GAME_ROOM"
+
+        fun     startService(
+            context: Context,
+            gameLocalId: Long,
+            gameInfo: GameInfo,
+            localPlayerLocalId: Long
+        ) {
             Timber.i("Starting HostService...()")
             val intent = Intent(context, HostInGameService::class.java)
             intent.action = ACTION_START_SERVICE
             intent.putExtra(EXTRA_GAME_LOCAL_ID, gameLocalId)
+            intent.putExtra(EXTRA_GAME_INFO, gameInfo)
             intent.putExtra(EXTRA_LOCAL_PLAYER_LOCAL_ID, localPlayerLocalId)
             context.startService(intent)
         }
@@ -165,10 +177,5 @@ class HostInGameService : BaseInGameService() {
             Timber.i("Stopping HostService...")
             context.stopService(Intent(context, HostInGameService::class.java))
         }
-
-        private const val NOTIFICATION_ID = 1
-        private const val ACTION_START_SERVICE = "ACTION_START_SERVICE"
-        private const val ACTION_STOP_SERVICE = "ACTION_STOP_SERVICE"
-        private const val ACTION_CHANGE_ROOM_TO_GAME_ROOM = "ACTION_CHANGE_ROOM_TO_GAME_ROOM"
     }
 }

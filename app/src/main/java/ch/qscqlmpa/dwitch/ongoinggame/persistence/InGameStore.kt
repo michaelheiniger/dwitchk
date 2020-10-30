@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitch.ongoinggame.persistence
 
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.model.game.Game
+import ch.qscqlmpa.dwitch.model.game.GameCommonId
 import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchengine.model.game.GameState
@@ -16,7 +17,7 @@ interface InGameStore {
     fun getGameState(): GameState
 
     fun observeGameState(): Observable<GameState>
-    fun updateGameWithCommonId(gameCommonId: Long)
+    fun updateGameWithCommonId(gameCommonId: GameCommonId)
     fun deleteGame()
     fun updateGameRoom(gameRoom: RoomType)
     fun updateGameState(gameState: GameState)

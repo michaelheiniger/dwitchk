@@ -1,21 +1,24 @@
 package ch.qscqlmpa.dwitch.uitests
 
-import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.matcher.ViewMatchers
 import ch.qscqlmpa.dwitch.PlayerIdTestGuest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.gamediscovery.network.Packet
+import ch.qscqlmpa.dwitch.model.game.GameCommonId
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
-import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil
-import org.junit.Assert
+import ch.qscqlmpa.dwitch.uitests.UiUtil.clickOnButton
+import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil.withRecyclerView
+import org.assertj.core.api.Assertions.assertThat
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 abstract class BaseGuestTest : BaseOnGoingGameTest() {
 
+    protected val gameCommonId = GameCommonId(12345)
+
     protected open fun goToWaitingRoom() {
-        Espresso.onView(ViewAssertionUtil.withRecyclerView(R.id.gameListRw)
+        onView(withRecyclerView(R.id.gameListRw)
                 .atPositionOnView(0, R.id.gameNameTv))
                 .perform(ViewActions.click())
 
@@ -24,7 +27,7 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
 
         clickOnButton(R.id.nextBtn)
 
-        dudeWaitAMinute(1)
+        dudeWaitASec(1)
 
         /*
         * Note: It also allows to wait for the waiting room to be displayed: otherwise, the messages sent by clients could be
@@ -48,14 +51,24 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
 
     protected fun advertiseGame() {
         val hostIpAddress = "192.168.1.1"
-        val hostPort = 8889
-        networkAdapter.setPacket(Packet(gameName, hostIpAddress, hostPort))
+        val gameAd = "{\"gameCommonId\":{\"value\":${gameCommonId.value}},\"gameName\":\"$gameName\",\"gamePort\":8889}"
+        networkAdapter.setPacket(Packet(gameAd, hostIpAddress, 4355))
+    }
+
+    protected fun assertLocalGuestHasSentJoinGameMessage() {
+        val joinGameMessage = waitForNextMessageSentByLocalGuest() as Message.JoinGameMessage
+        assertThat(PlayerIdTestGuest.LocalGuest.name).isEqualTo(joinGameMessage.playerName)
+    }
+
+    protected fun hostSendsJoinGameAck() {
+        val message = Message.JoinGameAckMessage(gameCommonId, PlayerIdTestGuest.LocalGuest.inGameId)
+        clientTestStub.serverSendsMessageToClient(message, false)
     }
 
     protected fun setLocalPlayerReady() {
-        Espresso.onView(ViewMatchers.withId(R.id.localPlayerReadyCkb)).perform(ViewActions.click())
+        clickOnButton(R.id.localPlayerReadyCkb)
         val playerReadyMessage = waitForNextMessageSentByLocalGuest() as Message.PlayerReadyMessage
-        Assert.assertEquals(PlayerIdTestGuest.LocalGuest.inGameId, playerReadyMessage.playerInGameId)
-        Assert.assertEquals(true, playerReadyMessage.ready)
+        assertThat(PlayerIdTestGuest.LocalGuest.inGameId).isEqualTo(playerReadyMessage.playerInGameId)
+        assertThat(true).isEqualTo(playerReadyMessage.ready)
     }
 }

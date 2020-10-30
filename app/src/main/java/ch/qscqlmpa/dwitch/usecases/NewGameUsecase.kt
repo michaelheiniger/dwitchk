@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.usecases
 
+import ch.qscqlmpa.dwitch.gameadvertising.GameInfo
 import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
 import ch.qscqlmpa.dwitch.persistence.Store
@@ -14,41 +15,27 @@ constructor(
 ) {
 
     fun hostNewgame(gameName: String, playerName: String): Completable {
-        return Single.fromCallable {
-            store.insertGameForHost(
-                gameName,
-                playerName,
-                "127.0.0.1",
-                8889 //TODO Set correct port
-            )
-        }
+        val hostPort = 8889 //TODO: get port from sharedpref
+        return Single.fromCallable { store.insertGameForHost(gameName, playerName) }
             .doAfterSuccess { insertGameResult ->
                 serviceManager.startHostService(
                     insertGameResult.gameLocalId,
+                    GameInfo(insertGameResult.gameCommonId, insertGameResult.gameName, hostPort),
                     insertGameResult.localPlayerLocalId
                 )
-            }
-            .ignoreElement()
+            }.ignoreElement()
     }
 
     fun joinGame(advertisedGame: AdvertisedGame, playerName: String): Completable {
         return Single.fromCallable {
-            store.insertGameForGuest(
-                advertisedGame.name,
-                playerName,
-                advertisedGame.ipAddress,
-                advertisedGame.port
+            store.insertGameForGuest(advertisedGame.gameName, advertisedGame.gameCommonId, playerName)
+        }.doAfterSuccess { insertGameResult ->
+            serviceManager.startGuestService(
+                insertGameResult.gameLocalId,
+                insertGameResult.localPlayerLocalId,
+                advertisedGame.gamePort,
+                advertisedGame.gameIpAddress
             )
-        }
-            .doAfterSuccess { insertGameResult ->
-                serviceManager.startGuestService(
-                    insertGameResult.gameLocalId,
-                    insertGameResult.localPlayerLocalId,
-//                    advertisedGame.port, //FIXME: it isn't the same port as the one advertised...
-                    8889,
-                    advertisedGame.ipAddress
-                )
-            }
-            .ignoreElement()
+        }.ignoreElement()
     }
 }
