@@ -9,9 +9,9 @@ import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEvent
 import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEventRepository
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitch.ui.utils.TextProvider
 import ch.qscqlmpa.dwitch.utils.DisposableManager
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboard
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
 import timber.log.Timber
@@ -21,7 +21,8 @@ class PlayerDashboardViewModel @Inject constructor(
     private val gameInteractor: GameInteractor,
     private val gameEventRepository: GameEventRepository,
     disposableManager: DisposableManager,
-    schedulerFactory: SchedulerFactory
+    schedulerFactory: SchedulerFactory,
+    private val textProvider: TextProvider
 ) : BaseViewModel(disposableManager, schedulerFactory) {
 
     private val commands = MutableLiveData<PlayerDashboardCommand>()
@@ -33,9 +34,10 @@ class PlayerDashboardViewModel @Inject constructor(
         return liveDataMerger
     }
 
-    fun playerDashboard(): LiveData<PlayerDashboard> {
+    fun playerDashboard(): LiveData<PlayerDashboardUi> {
         return LiveDataReactiveStreams.fromPublisher(
             gameInteractor.observeDashboard()
+                .map { dashboard -> PlayerDashboardUi(dashboard, textProvider) }
                 .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
                 .doOnError { error -> Timber.e(error, "Error while observing player dashboard.") }
