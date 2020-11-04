@@ -1,12 +1,12 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
-import ch.qscqlmpa.dwitch.GuestIdTestHost
+import ch.qscqlmpa.dwitch.PlayerHostTest
 import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.IntTestWebsocketClient
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 
 class IntTestGuest(
-    private val guest: GuestIdTestHost,
+    private val guest: PlayerHostTest,
     advertisedGame: AdvertisedGame,
     private val networkHub: NetworkHub
 ) : IntTestPlayer() {

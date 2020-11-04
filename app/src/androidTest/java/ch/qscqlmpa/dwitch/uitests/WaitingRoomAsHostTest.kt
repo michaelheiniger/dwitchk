@@ -6,7 +6,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import ch.qscqlmpa.dwitch.Guest1
 import ch.qscqlmpa.dwitch.Guest2
-import ch.qscqlmpa.dwitch.GuestIdTestHost
+import ch.qscqlmpa.dwitch.PlayerHostTest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
@@ -229,7 +229,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
         }
     }
 
-    private fun guestRejoinsGame(guest: GuestIdTestHost) {
+    private fun guestRejoinsGame(guest: PlayerHostTest) {
         val player = getGuest(guest)
         serverTestStub.connectClientToServer(guest, false)
         val gameCommonId = inGameStore.getGame().gameCommonId

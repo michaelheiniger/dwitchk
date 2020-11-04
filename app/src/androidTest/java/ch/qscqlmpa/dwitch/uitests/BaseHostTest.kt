@@ -38,7 +38,7 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
         hookOngoingGameDependenciesForHost()
     }
 
-    protected fun guestJoinsGame(guest: GuestIdTestHost) {
+    protected fun guestJoinsGame(guest: PlayerHostTest) {
         serverTestStub.connectClientToServer(guest, false)
         serverTestStub.guestSendsMessageToServer(guest, GuestMessageFactory.createJoinGameMessage(guest.name), true)
         assertGuestHasJoinedGame()
@@ -50,24 +50,24 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
         }
     }
 
-    protected fun guestBecomesReady(identifier: GuestIdTestHost): Message.WaitingRoomStateUpdateMessage {
+    protected fun guestBecomesReady(identifier: PlayerHostTest): Message.WaitingRoomStateUpdateMessage {
         val guest = getGuest(identifier)
         serverTestStub.guestSendsMessageToServer(identifier, GuestMessageFactory.createPlayerReadyMessage(guest.inGameId, true), true)
         return waitForNextMessageSentByHost() as Message.WaitingRoomStateUpdateMessage
     }
 
-    protected fun guestDisconnects(identifier: GuestIdTestHost) {
+    protected fun guestDisconnects(identifier: PlayerHostTest) {
         serverTestStub.disconnectFromServer(identifier, true)
         waitForNextMessageSentByHost() as Message.WaitingRoomStateUpdateMessage
     }
 
-    protected fun guestLeavesGame(identifier: GuestIdTestHost): Message.WaitingRoomStateUpdateMessage {
+    protected fun guestLeavesGame(identifier: PlayerHostTest): Message.WaitingRoomStateUpdateMessage {
         val guest = getGuest(identifier)
         serverTestStub.guestSendsMessageToServer(identifier, GuestMessageFactory.createLeaveGameMessage(guest.inGameId), true)
         return waitForNextMessageSentByHost() as Message.WaitingRoomStateUpdateMessage
     }
 
-    protected fun getPlayer(guest: GuestIdTestHost): Player {
+    protected fun getPlayer(guest: PlayerHostTest): Player {
         return when (guest) {
             Guest1 -> guest1
             Guest2 -> guest2
@@ -95,7 +95,7 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
         return message
     }
 
-    protected fun getGuest(identifier: GuestIdTestHost): Player {
+    protected fun getGuest(identifier: PlayerHostTest): Player {
         return when (identifier) {
             Guest1 -> guest1
             Guest2 -> guest2

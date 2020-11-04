@@ -7,7 +7,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import ch.qscqlmpa.dwitch.Guest2
 import ch.qscqlmpa.dwitch.Guest3
-import ch.qscqlmpa.dwitch.PlayerIdTestGuest
+import ch.qscqlmpa.dwitch.PlayerGuestTest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
@@ -45,26 +45,26 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
         dudeWaitASec(2)
 
         // Players sorted according to their name ASC
-        assertPlayerNameInWR(0, PlayerIdTestGuest.Host.name)
-        assertPlayerNameInWR(1, PlayerIdTestGuest.LocalGuest.name)
-        assertPlayerNameInWR(2, PlayerIdTestGuest.Guest2.name)
-        assertPlayerNameInWR(3, PlayerIdTestGuest.Guest3.name)
+        assertPlayerNameInWR(0, PlayerGuestTest.Host.name)
+        assertPlayerNameInWR(1, PlayerGuestTest.LocalGuest.name)
+        assertPlayerNameInWR(2, PlayerGuestTest.Guest2.name)
+        assertPlayerNameInWR(3, PlayerGuestTest.Guest3.name)
 
         val allPlayers = playerDao.getAllPlayersSortedOnNameAsc()
         assertThat(allPlayers.size).isEqualTo(4)
 
         PlayerRobot(allPlayers[0])
-                .assertName(PlayerIdTestGuest.Host.name)
-                .assertInGameId(PlayerIdTestGuest.Host.inGameId)
+                .assertName(PlayerGuestTest.Host.name)
+                .assertInGameId(PlayerGuestTest.Host.inGameId)
         PlayerRobot(allPlayers[1])
-                .assertName(PlayerIdTestGuest.LocalGuest.name)
-                .assertInGameId(PlayerIdTestGuest.LocalGuest.inGameId)
+                .assertName(PlayerGuestTest.LocalGuest.name)
+                .assertInGameId(PlayerGuestTest.LocalGuest.inGameId)
         PlayerRobot(allPlayers[2])
-                .assertName(PlayerIdTestGuest.Guest2.name)
-                .assertInGameId(PlayerIdTestGuest.Guest2.inGameId)
+                .assertName(PlayerGuestTest.Guest2.name)
+                .assertInGameId(PlayerGuestTest.Guest2.inGameId)
         PlayerRobot(allPlayers[3])
-                .assertName(PlayerIdTestGuest.Guest3.name)
-                .assertInGameId(PlayerIdTestGuest.Guest3.inGameId)
+                .assertName(PlayerGuestTest.Guest3.name)
+                .assertInGameId(PlayerGuestTest.Guest3.inGameId)
     }
 
     @Test
@@ -87,36 +87,36 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
         var allPlayers = playerDao.getAllPlayersSortedOnNameAsc()
         assertThat(allPlayers.size).isEqualTo(4)
         PlayerRobot(allPlayers[1])
-                .assertName(PlayerIdTestGuest.LocalGuest.name)
-                .assertInGameId(PlayerIdTestGuest.LocalGuest.inGameId)
+                .assertName(PlayerGuestTest.LocalGuest.name)
+                .assertInGameId(PlayerGuestTest.LocalGuest.inGameId)
                 .assertReady(false)
 
         setLocalPlayerReady()
 
-        clientTestStub.serverSendsMessageToClient(Message.PlayerReadyMessage(PlayerIdTestGuest.LocalGuest.inGameId, true), false)
+        clientTestStub.serverSendsMessageToClient(Message.PlayerReadyMessage(PlayerGuestTest.LocalGuest.inGameId, true), false)
 
         // Players sorted according to their name ASC
-        assertPlayerNameInWR(0, PlayerIdTestGuest.Host.name)
-        assertPlayerNameInWR(1, PlayerIdTestGuest.LocalGuest.name)
-        assertPlayerNameInWR(2, PlayerIdTestGuest.Guest2.name)
-        assertPlayerNameInWR(3, PlayerIdTestGuest.Guest3.name)
+        assertPlayerNameInWR(0, PlayerGuestTest.Host.name)
+        assertPlayerNameInWR(1, PlayerGuestTest.LocalGuest.name)
+        assertPlayerNameInWR(2, PlayerGuestTest.Guest2.name)
+        assertPlayerNameInWR(3, PlayerGuestTest.Guest3.name)
 
         allPlayers = playerDao.getAllPlayersSortedOnNameAsc()
         assertEquals(allPlayers.size, 4)
 
         PlayerRobot(allPlayers[0])
-                .assertName(PlayerIdTestGuest.Host.name)
-                .assertInGameId(PlayerIdTestGuest.Host.inGameId)
+                .assertName(PlayerGuestTest.Host.name)
+                .assertInGameId(PlayerGuestTest.Host.inGameId)
         PlayerRobot(allPlayers[1])
-                .assertName(PlayerIdTestGuest.LocalGuest.name)
-                .assertInGameId(PlayerIdTestGuest.LocalGuest.inGameId)
+                .assertName(PlayerGuestTest.LocalGuest.name)
+                .assertInGameId(PlayerGuestTest.LocalGuest.inGameId)
                 .assertReady(true)
         PlayerRobot(allPlayers[2])
-                .assertName(PlayerIdTestGuest.Guest2.name)
-                .assertInGameId(PlayerIdTestGuest.Guest2.inGameId)
+                .assertName(PlayerGuestTest.Guest2.name)
+                .assertInGameId(PlayerGuestTest.Guest2.inGameId)
         PlayerRobot(allPlayers[3])
-                .assertName(PlayerIdTestGuest.Guest3.name)
-                .assertInGameId(PlayerIdTestGuest.Guest3.inGameId)
+                .assertName(PlayerGuestTest.Guest3.name)
+                .assertInGameId(PlayerGuestTest.Guest3.inGameId)
     }
 
     @Test
@@ -143,11 +143,11 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
     private fun hostSendsInitialWaitingRoomUpdate() {
         val gameLocalIdAtHost = 1233L
         val message = Message.WaitingRoomStateUpdateMessage(listOf(
-            Player(334, PlayerIdTestGuest.Host.inGameId, gameLocalIdAtHost, PlayerIdTestGuest.Host.name, PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
-            Player(335, PlayerIdTestGuest.LocalGuest.inGameId, gameLocalIdAtHost, PlayerIdTestGuest.LocalGuest.name, PlayerRole.GUEST, PlayerConnectionState.CONNECTED,
+            Player(334, PlayerGuestTest.Host.inGameId, gameLocalIdAtHost, PlayerGuestTest.Host.name, PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
+            Player(335, PlayerGuestTest.LocalGuest.inGameId, gameLocalIdAtHost, PlayerGuestTest.LocalGuest.name, PlayerRole.GUEST, PlayerConnectionState.CONNECTED,
                 false),
-            Player(336, PlayerIdTestGuest.Guest2.inGameId, gameLocalIdAtHost, Guest2.name, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true),
-            Player(337, PlayerIdTestGuest.Guest3.inGameId, gameLocalIdAtHost, Guest3.name, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true)
+            Player(336, PlayerGuestTest.Guest2.inGameId, gameLocalIdAtHost, Guest2.name, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true),
+            Player(337, PlayerGuestTest.Guest3.inGameId, gameLocalIdAtHost, Guest3.name, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true)
         ))
         clientTestStub.serverSendsMessageToClient(message, false)
     }

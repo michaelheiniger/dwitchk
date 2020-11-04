@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client
 
-import ch.qscqlmpa.dwitch.GuestIdTestHost
+import ch.qscqlmpa.dwitch.PlayerHostTest
 import ch.qscqlmpa.dwitch.integrationtests.NetworkHub
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
@@ -20,9 +20,9 @@ class IntTestWebsocketClient constructor(
     private val messagesSentRelay = PublishRelay.create<String>()
 
     private lateinit var networkHub: NetworkHub
-    private lateinit var guestIdTestHost: GuestIdTestHost
+    private lateinit var guestIdTestHost: PlayerHostTest
 
-    fun setNetworkHub(networkHub: NetworkHub, guestIdTestHost: GuestIdTestHost) {
+    fun setNetworkHub(networkHub: NetworkHub, guestIdTestHost: PlayerHostTest) {
         this.networkHub = networkHub
         this.guestIdTestHost = guestIdTestHost
     }

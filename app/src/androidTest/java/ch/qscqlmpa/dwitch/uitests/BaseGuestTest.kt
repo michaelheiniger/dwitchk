@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitch.uitests
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
-import ch.qscqlmpa.dwitch.PlayerIdTestGuest
+import ch.qscqlmpa.dwitch.PlayerGuestTest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.gamediscovery.network.Packet
 import ch.qscqlmpa.dwitch.model.game.GameCommonId
@@ -22,7 +22,7 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
                 .atPositionOnView(0, R.id.gameNameTv))
                 .perform(ViewActions.click())
 
-        setControlText(R.id.playerNameEdt, PlayerIdTestGuest.LocalGuest.name)
+        setControlText(R.id.playerNameEdt, PlayerGuestTest.LocalGuest.name)
         setControlText(R.id.gameNameEdt, gameName)
 
         clickOnButton(R.id.nextBtn)
@@ -57,18 +57,18 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
 
     protected fun assertLocalGuestHasSentJoinGameMessage() {
         val joinGameMessage = waitForNextMessageSentByLocalGuest() as Message.JoinGameMessage
-        assertThat(PlayerIdTestGuest.LocalGuest.name).isEqualTo(joinGameMessage.playerName)
+        assertThat(PlayerGuestTest.LocalGuest.name).isEqualTo(joinGameMessage.playerName)
     }
 
     protected fun hostSendsJoinGameAck() {
-        val message = Message.JoinGameAckMessage(gameCommonId, PlayerIdTestGuest.LocalGuest.inGameId)
+        val message = Message.JoinGameAckMessage(gameCommonId, PlayerGuestTest.LocalGuest.inGameId)
         clientTestStub.serverSendsMessageToClient(message, false)
     }
 
     protected fun setLocalPlayerReady() {
         clickOnButton(R.id.localPlayerReadyCkb)
         val playerReadyMessage = waitForNextMessageSentByLocalGuest() as Message.PlayerReadyMessage
-        assertThat(PlayerIdTestGuest.LocalGuest.inGameId).isEqualTo(playerReadyMessage.playerInGameId)
+        assertThat(PlayerGuestTest.LocalGuest.inGameId).isEqualTo(playerReadyMessage.playerInGameId)
         assertThat(true).isEqualTo(playerReadyMessage.ready)
     }
 }

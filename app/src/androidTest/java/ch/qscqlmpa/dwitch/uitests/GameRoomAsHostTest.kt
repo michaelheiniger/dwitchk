@@ -5,7 +5,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import ch.qscqlmpa.dwitch.Guest1
-import ch.qscqlmpa.dwitch.GuestIdTestHost
+import ch.qscqlmpa.dwitch.PlayerHostTest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.ongoinggame.messages.MessageFactory
@@ -140,7 +140,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         assertCurrentScreenIsHomeSreen()
     }
 
-    private fun otherPlayerPlaysCard(guest: GuestIdTestHost, card: Card) {
+    private fun otherPlayerPlaysCard(guest: PlayerHostTest, card: Card) {
         val currentGameState = inGameStore.getGameState()
         val newGameState = DwitchEngine(currentGameState).playCard(card)
         serverTestStub.guestSendsMessageToServer(guest, MessageFactory.createGameStateUpdatedMessage(newGameState), true)

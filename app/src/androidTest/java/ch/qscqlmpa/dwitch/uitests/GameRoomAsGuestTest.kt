@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitch.uitests
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import ch.qscqlmpa.dwitch.PlayerIdTestGuest
+import ch.qscqlmpa.dwitch.PlayerGuestTest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.game.TestEntityFactory
 import ch.qscqlmpa.dwitch.model.player.Player
@@ -103,7 +103,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
 
         clientTestStub.serverSendsMessageToClient(
             Message.PlayerReadyMessage(
-                PlayerIdTestGuest.LocalGuest.inGameId,
+                PlayerGuestTest.LocalGuest.inGameId,
                 true
             ), false
         )
@@ -121,8 +121,8 @@ class GameRoomAsGuestTest : BaseGuestTest() {
 
     private fun createGameState(): GameState {
         val players = listOf(
-            TestEntityFactory.createHostPlayer(inGameId = PlayerIdTestGuest.Host.inGameId),
-            TestEntityFactory.createGuestPlayer1(inGameId = PlayerIdTestGuest.LocalGuest.inGameId)
+            TestEntityFactory.createHostPlayer(inGameId = PlayerGuestTest.Host.inGameId),
+            TestEntityFactory.createGuestPlayer1(inGameId = PlayerGuestTest.LocalGuest.inGameId)
         )
         val initialGameSetup = DeterministicInitialGameSetup(cardsForPlayer, rankForPlayer)
         return DwitchEngine.createNewGame(players.map(Player::toPlayerInfo), initialGameSetup)
@@ -134,18 +134,18 @@ class GameRoomAsGuestTest : BaseGuestTest() {
             listOf(
                 Player(
                     334,
-                    PlayerIdTestGuest.Host.inGameId,
+                    PlayerGuestTest.Host.inGameId,
                     gameLocalIdAtHost,
-                    PlayerIdTestGuest.Host.name,
+                    PlayerGuestTest.Host.name,
                     PlayerRole.HOST,
                     PlayerConnectionState.CONNECTED,
                     true
                 ),
                 Player(
                     335,
-                    PlayerIdTestGuest.LocalGuest.inGameId,
+                    PlayerGuestTest.LocalGuest.inGameId,
                     gameLocalIdAtHost,
-                    PlayerIdTestGuest.LocalGuest.name,
+                    PlayerGuestTest.LocalGuest.name,
                     PlayerRole.GUEST,
                     PlayerConnectionState.CONNECTED,
                     false
