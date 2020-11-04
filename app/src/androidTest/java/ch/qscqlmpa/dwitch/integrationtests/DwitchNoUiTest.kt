@@ -4,6 +4,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import ch.qscqlmpa.dwitch.Guest1
 import ch.qscqlmpa.dwitch.Guest2
 import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGame
+import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.player.PlayerState
@@ -47,7 +48,7 @@ class DwitchNoUiTest {
         guest1.joinGame()
         guest2.joinGame()
 
-        host.launchGame()
+        host.launchGame(buildInitialGameSetup())
 
         host.assertDashboard()
                 .assertCanPlay(true)
@@ -213,5 +214,20 @@ class DwitchNoUiTest {
         host.assertGameOverReceived()
         guest1.assertGameOverReceived()
         guest2.assertGameOverReceived()
+    }
+
+    private fun buildInitialGameSetup(): DeterministicInitialGameSetup {
+        return DeterministicInitialGameSetup(
+            mapOf(
+                0 to listOf(Card.Clubs2, Card.Clubs3), // Host
+                1 to listOf(Card.Diamonds6, Card.Hearts4), // Guest1
+                2 to listOf(Card.Diamonds7, Card.Spades3) // Guest2
+            ),
+            mapOf(
+                0 to Rank.Asshole,
+                1 to Rank.Neutral,
+                2 to Rank.President
+            )
+        )
     }
 }
