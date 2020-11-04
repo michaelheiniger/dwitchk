@@ -22,7 +22,6 @@ class HostInGameService : BaseInGameService() {
         val localPlayerLocalId = getLocalPlayerLocalId(intent)
 
         Timber.i("Start service")
-        createNotificationChannel()
         showNotification(RoomType.WAITING_ROOM)
         (application as App).startOngoingGame(
             playerRole,

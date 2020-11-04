@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitch.app
 
 import ch.qscqlmpa.dwitch.BuildConfig
+import ch.qscqlmpa.dwitch.app.notifications.NotificationChannelFactory
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.model.player.PlayerRole
 import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameComponent
@@ -28,6 +29,8 @@ open class App : DaggerApplication() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+
+        createNotificationChannels()
     }
 
     open fun startOngoingGame(playerRole: PlayerRole,
@@ -56,5 +59,9 @@ open class App : DaggerApplication() {
 
     fun stopOngoingGame() {
         ongoingGameComponent = null
+    }
+
+    private fun createNotificationChannels() {
+        NotificationChannelFactory.createDefaultNotificationChannel(this)
     }
 }

@@ -1,16 +1,16 @@
 package ch.qscqlmpa.dwitch.ongoinggame.services
 
-import android.app.*
+import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
+import ch.qscqlmpa.dwitch.app.notifications.NotificationChannelFactory.DEFAULT_CHANNEL_ID
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants
-import ch.qscqlmpa.dwitch.common.NotificationChannelConstants
 import ch.qscqlmpa.dwitch.gameadvertising.GameInfo
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.model.player.PlayerRole
@@ -75,19 +75,6 @@ abstract class BaseInGameService : BaseService() {
         return intent.getParcelableExtra(EXTRA_GAME_INFO)
     }
 
-    protected fun createNotificationChannel() {
-        val channel = NotificationChannel(
-            NotificationChannelConstants.DEFAULT_CHANNEL_ID,
-            NotificationChannelConstants.DEFAULT_CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_NONE
-        )
-        channel.lightColor = Color.BLUE
-        channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-
-        val service = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        service.createNotificationChannel(channel)
-    }
-
     protected fun showNotification(roomType: RoomType) {
         val notificationIntent = buildNotificationIntent(roomType)
 
@@ -98,10 +85,7 @@ abstract class BaseInGameService : BaseService() {
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        val notificationBuilder = NotificationCompat.Builder(
-            this,
-            NotificationChannelConstants.DEFAULT_CHANNEL_ID
-        )
+        val notificationBuilder = NotificationCompat.Builder(this, DEFAULT_CHANNEL_ID)
             .setContentIntent(pendingIntent)
             .setOngoing(true)
             .setSmallIcon(R.drawable.spades_ace)
