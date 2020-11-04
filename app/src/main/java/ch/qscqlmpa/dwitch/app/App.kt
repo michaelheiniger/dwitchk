@@ -1,9 +1,10 @@
 package ch.qscqlmpa.dwitch.app
 
-import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameModule
+import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.model.player.PlayerRole
 import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameComponent
+import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameModule
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import timber.log.Timber
@@ -24,9 +25,9 @@ open class App : DaggerApplication() {
     override fun onCreate() {
         super.onCreate()
 
-//        if (BuildConfig.DEBUG) {//FIXME
+        if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
-//        }
+        }
     }
 
     open fun startOngoingGame(playerRole: PlayerRole,

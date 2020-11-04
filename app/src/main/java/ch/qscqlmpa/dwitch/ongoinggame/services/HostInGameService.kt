@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_GAME_INFO
@@ -103,21 +104,23 @@ class HostInGameService : BaseInGameService() {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setColor(getColor(R.color.black))
 
+        if (BuildConfig.DEBUG) {
+            notificationBuilder.addAction(addKillServiceButtonToNotif())
+        }
 
-        // Add "Stop" button to kill service. Only in DEBUG build.
-//        if (BuildConfig.DEBUG) { //FIXME
+        startForeground(NOTIFICATION_ID, notificationBuilder.build())
+    }
+
+    private fun addKillServiceButtonToNotif(): NotificationCompat.Action {
         val stopIntent = Intent(this, HostInGameService::class.java)
-        stopIntent.action = ACTION_STOP_SERVICE
-        val stopPendingIntent = PendingIntent.getService(this, 1, stopIntent, FLAG_UPDATE_CURRENT)
-
-        notificationBuilder.addAction(
+        stopIntent.action = HostInGameService.ACTION_STOP_SERVICE
+        val stopPendingIntent =
+            PendingIntent.getService(this, 1, stopIntent, FLAG_UPDATE_CURRENT)
+        return NotificationCompat.Action(
             R.drawable.ic_stop_black_24dp,
             getString(R.string.stop_game_service),
             stopPendingIntent
         )
-//        }
-
-        startForeground(NOTIFICATION_ID, notificationBuilder.build())
     }
 
     private fun buildNotificationIntent(roomType: RoomType): Intent {

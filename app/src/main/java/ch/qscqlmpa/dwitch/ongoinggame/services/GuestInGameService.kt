@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_GAME_LOCAL_ID
@@ -89,7 +90,8 @@ class GuestInGameService : BaseInGameService() {
     private fun getHostIpAddress(intent: Intent): String {
         return intent.getStringExtra(EXTRA_HOST_IP_ADDRESS)
             ?: throw IllegalArgumentException(
-                "The intent to start the service does not specify a host ip address")
+                "The intent to start the service does not specify a host ip address"
+            )
     }
 
     private fun getHostPort(intent: Intent): Int {
@@ -118,20 +120,23 @@ class GuestInGameService : BaseInGameService() {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setColor(getColor(R.color.black))
 
-
-        // Add "Stop" button to kill service. Only in DEBUG build.
-//        if (BuildConfig.DEBUG) {//FIXME
-        val stopIntent = Intent(this, GuestInGameService::class.java)
-        stopIntent.action = ACTION_STOP_SERVICE
-        val stopPendingIntent = PendingIntent.getService(this, 1, stopIntent, FLAG_UPDATE_CURRENT)
-
-        notificationBuilder.addAction(
-            R.drawable.ic_stop_black_24dp, getString(R.string.stop_game_service),
-            stopPendingIntent
-        )
-//        }
+        if (BuildConfig.DEBUG) {
+            notificationBuilder.addAction(addKillServiceButtonToNotif())
+        }
 
         startForeground(NOTIFICATION_ID, notificationBuilder.build())
+    }
+
+    private fun addKillServiceButtonToNotif(): NotificationCompat.Action {
+        val stopIntent = Intent(this, GuestInGameService::class.java)
+        stopIntent.action = ACTION_STOP_SERVICE
+        val stopPendingIntent =
+            PendingIntent.getService(this, 1, stopIntent, FLAG_UPDATE_CURRENT)
+        return NotificationCompat.Action(
+            R.drawable.ic_stop_black_24dp,
+            getString(R.string.stop_game_service),
+            stopPendingIntent
+        )
     }
 
     private fun buildNotificationIntent(roomType: RoomType): Intent {
