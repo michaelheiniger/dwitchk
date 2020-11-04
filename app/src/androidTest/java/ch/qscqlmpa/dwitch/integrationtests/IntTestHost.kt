@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
-import ch.qscqlmpa.dwitch.Host
 import ch.qscqlmpa.dwitch.model.game.GameCommonId
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.IntTestWebsocketServer
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameLaunchableEvent
@@ -21,7 +20,7 @@ class IntTestHost(
     lateinit var playerId: PlayerInGameId
 
     fun createGame() {
-        appComponent.newGameUsecase.hostNewgame(gameName, Host.name).blockingGet()
+        appComponent.newGameUsecase.hostNewgame(gameName, "Aragorn").blockingGet()
         val game = appComponent.database.gameDao().getGameByName(gameName)
             ?: throw IllegalStateException("New game can't be fetched from store")
         gameLocalId = game.id
