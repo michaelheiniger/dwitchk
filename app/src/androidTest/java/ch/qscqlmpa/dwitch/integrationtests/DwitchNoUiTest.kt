@@ -27,9 +27,6 @@ class DwitchNoUiTest {
         networkHub = NetworkHub()
     }
 
-    //TODO: Simplify the steps to finish the first round: we are NOT testing DwitchEngine but the integration
-    // of the different parts of the app (except UI).
-    //TODO: Extend (if possible) testing to ViewModels (no Activity or Fragment): the test is an instrumented test anyway because of Room DB.
     /**
      * - Create game
      * - 2 guests join
