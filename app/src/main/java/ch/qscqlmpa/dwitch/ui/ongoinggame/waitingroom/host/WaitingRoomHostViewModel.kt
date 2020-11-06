@@ -34,6 +34,7 @@ constructor(
 
     private val commands = MutableLiveData<WaitingRoomHostCommand>()
 
+    //TODO: handle connection setup errors
     fun currentCommunicationState(): LiveData<Resource> {
         return LiveDataReactiveStreams.fromPublisher(
             hostCommunicator.observeCommunicationState()

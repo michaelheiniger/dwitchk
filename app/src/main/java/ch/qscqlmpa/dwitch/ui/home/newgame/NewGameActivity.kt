@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
@@ -61,7 +60,7 @@ class NewGameActivity : HomeBaseActivity() {
     }
 
     private fun observeEvents() {
-        viewModel.observeEvents().observe(this, Observer { event ->
+        viewModel.observeEvents().observe(this, { event ->
             when (event) {
                 NewGameEvent.SETUP_SUCCESSFUL -> startWaitingRoomActivity()
                 else -> {
@@ -78,16 +77,9 @@ class NewGameActivity : HomeBaseActivity() {
     }
 
     private fun observeErrors() {
-        viewModel.observeErrors().observe(this, Observer { newGameErrors ->
-
+        viewModel.observeErrors().observe(this, { newGameErrors ->
             for (error in newGameErrors) {
-
                 when (error) {
-
-                    NewGameError.SETUP_HOST_ERROR -> {//TODO
-                    }
-                    NewGameError.CONNECTION_TO_HOST_ERROR -> {//TODO
-                    }
                     NewGameError.PLAYER_NAME_IS_EMPTY -> playerNameEdt.error = getString(error.ressourceId)
                     NewGameError.GAME_NAME_IS_EMPTY -> gameNameEdt.error = getString(error.ressourceId)
                 }

@@ -28,6 +28,7 @@ constructor(private val guestCommunicator: GuestCommunicator,
 
     private val commands = MutableLiveData<WaitingRoomGuestCommand>()
 
+    //TODO: Handle connection error / disconnection events / ...
     fun currentCommunicationState(): LiveData<Resource> {
         return LiveDataReactiveStreams.fromPublisher(
                 guestCommunicator.observeCommunicationState()
