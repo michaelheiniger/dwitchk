@@ -18,7 +18,7 @@ class IntTestHost(
     lateinit var playerId: PlayerInGameId
 
     fun createGame() {
-        appComponent.newGameUsecase.hostNewgame(gameName, "Aragorn").blockingGet()
+        appComponent.newGameUsecase.hostNewGame(gameName, "Aragorn").blockingGet()
         val game = appComponent.database.gameDao().getGameByName(gameName)
             ?: throw IllegalStateException("New game can't be fetched from store")
         gameLocalId = game.id
