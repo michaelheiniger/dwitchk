@@ -10,13 +10,11 @@ import ch.qscqlmpa.dwitch.usecases.NewGameUsecase
 import ch.qscqlmpa.dwitch.utils.DisposableManager
 import io.mockk.*
 import io.reactivex.Completable
-import io.reactivex.schedulers.TestScheduler
 import org.junit.After
 import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
-import java.util.concurrent.TimeUnit
 
 class NewGameActivityViewModelTest : BaseViewModelUnitTest() {
 
@@ -24,17 +22,12 @@ class NewGameActivityViewModelTest : BaseViewModelUnitTest() {
 
     private lateinit var viewModel: NewGameActivityViewModel
 
-    private lateinit var timeScheduler: TestScheduler
-
     private val playerName = "Bernard"
 
     @Before
     override fun setup() {
         super.setup()
-        timeScheduler = TestScheduler()
-        val schedulerFactory = TestSchedulerFactory()
-        schedulerFactory.setTimeScheduler(timeScheduler)
-        viewModel = NewGameActivityViewModel(mockNewGameUsecase, DisposableManager(), schedulerFactory)
+        viewModel = NewGameActivityViewModel(mockNewGameUsecase, DisposableManager(), TestSchedulerFactory())
     }
 
     @After
@@ -52,7 +45,6 @@ class NewGameActivityViewModelTest : BaseViewModelUnitTest() {
 
         viewModel.nextForGuest(advertisedGame, playerName)
 
-        timeScheduler.advanceTimeTo(1, TimeUnit.SECONDS)
         assertEquals(NewGameEvent.SETUP_SUCCESSFUL, viewModel.observeEvents().value)
         verify { mockNewGameUsecase.joinGame(advertisedGame, playerName) }
 
@@ -74,15 +66,14 @@ class NewGameActivityViewModelTest : BaseViewModelUnitTest() {
     @Test
     fun nextForHost_success() {
 
-        every { mockNewGameUsecase.hostNewgame(any(), any()) } returns Completable.complete()
+        every { mockNewGameUsecase.hostNewGame(any(), any()) } returns Completable.complete()
 
         val gameName = "It is ON !"
 
         viewModel.nextForHost(gameName, playerName)
 
-        timeScheduler.advanceTimeTo(1, TimeUnit.SECONDS)
         assertEquals(NewGameEvent.SETUP_SUCCESSFUL, viewModel.observeEvents().value)
-        verify { mockNewGameUsecase.hostNewgame(gameName, playerName) }
+        verify { mockNewGameUsecase.hostNewGame(gameName, playerName) }
 
         confirmVerified(mockNewGameUsecase)
     }

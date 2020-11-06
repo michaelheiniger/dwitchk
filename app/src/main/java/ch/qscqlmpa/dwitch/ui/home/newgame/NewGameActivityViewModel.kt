@@ -8,7 +8,6 @@ import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.usecases.NewGameUsecase
 import ch.qscqlmpa.dwitch.utils.DisposableManager
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class NewGameActivityViewModel @Inject
@@ -50,7 +49,6 @@ constructor(private val newGameUsecase: NewGameUsecase,
         disposableManager.add(
                 newGameUsecase.joinGame(advertisedGame, playerName)
                         .subscribeOn(schedulerFactory.io())
-                        .delay(1, TimeUnit.SECONDS, schedulerFactory.timeScheduler()) // Wait for service to be started
                         .observeOn(schedulerFactory.ui())
                         .subscribe(
                                 { event.setValue(NewGameEvent.SETUP_SUCCESSFUL) },
@@ -61,9 +59,8 @@ constructor(private val newGameUsecase: NewGameUsecase,
 
     private fun hostGame(gameName: String, playerName: String) {
         disposableManager.add(
-                newGameUsecase.hostNewgame(gameName, playerName)
+                newGameUsecase.hostNewGame(gameName, playerName)
                         .subscribeOn(schedulerFactory.io())
-                        .delay(1L, TimeUnit.SECONDS, schedulerFactory.timeScheduler()) // Wait for service to be started
                         .observeOn(schedulerFactory.ui())
                         .subscribe(
                                 { event.setValue(NewGameEvent.SETUP_SUCCESSFUL) },
