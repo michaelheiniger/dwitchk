@@ -36,14 +36,6 @@ class ProdWebsocketClient constructor(
         }
     }
 
-    override fun isOpen(): Boolean {
-        return isOpen
-    }
-
-    override fun isClosed(): Boolean {
-        return isClosed
-    }
-
     override fun onOpen(handshake: ServerHandshake?) {
         onOpenRelay.accept(OnOpen(handshake))
     }
