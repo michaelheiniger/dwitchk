@@ -11,9 +11,10 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class NewGameActivityViewModel @Inject
-constructor(private val newGameUsecase: NewGameUsecase,
-            disposableManager: DisposableManager,
-            schedulerFactory: SchedulerFactory
+constructor(
+    private val newGameUsecase: NewGameUsecase,
+    disposableManager: DisposableManager,
+    schedulerFactory: SchedulerFactory
 ) : BaseViewModel(disposableManager, schedulerFactory) {
 
     private val errors = MutableLiveData<List<NewGameError>>()
@@ -47,25 +48,25 @@ constructor(private val newGameUsecase: NewGameUsecase,
 
     private fun joinGame(advertisedGame: AdvertisedGame, playerName: String) {
         disposableManager.add(
-                newGameUsecase.joinGame(advertisedGame, playerName)
-                        .subscribeOn(schedulerFactory.io())
-                        .observeOn(schedulerFactory.ui())
-                        .subscribe(
-                                { event.setValue(NewGameEvent.SETUP_SUCCESSFUL) },
-                                { error -> Timber.e(error, "Error while joining the game") }
-                        )
+            newGameUsecase.joinGame(advertisedGame, playerName)
+                .subscribeOn(schedulerFactory.io())
+                .observeOn(schedulerFactory.ui())
+                .subscribe(
+                    { event.setValue(NewGameEvent.SETUP_SUCCESSFUL) },
+                    { error -> Timber.e(error, "Error while joining the game") }
+                )
         )
     }
 
     private fun hostGame(gameName: String, playerName: String) {
         disposableManager.add(
-                newGameUsecase.hostNewGame(gameName, playerName)
-                        .subscribeOn(schedulerFactory.io())
-                        .observeOn(schedulerFactory.ui())
-                        .subscribe(
-                                { event.setValue(NewGameEvent.SETUP_SUCCESSFUL) },
-                                { error -> Timber.e(error, "Error while start hosting the game") }
-                        )
+            newGameUsecase.hostNewGame(gameName, playerName)
+                .subscribeOn(schedulerFactory.io())
+                .observeOn(schedulerFactory.ui())
+                .subscribe(
+                    { event.setValue(NewGameEvent.SETUP_SUCCESSFUL) },
+                    { error -> Timber.e(error, "Error while start hosting the game") }
+                )
         )
     }
 }

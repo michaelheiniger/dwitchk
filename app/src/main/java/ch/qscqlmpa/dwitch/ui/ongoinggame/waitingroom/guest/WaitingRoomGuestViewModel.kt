@@ -12,8 +12,13 @@ import ch.qscqlmpa.dwitch.ongoinggame.usecases.LeaveGameUsecase
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.PlayerReadyUsecase
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitch.ui.common.Resource
+import ch.qscqlmpa.dwitch.ui.model.CheckboxModel
+import ch.qscqlmpa.dwitch.ui.model.UiControlModel
+import ch.qscqlmpa.dwitch.ui.model.Visibility
 import ch.qscqlmpa.dwitch.utils.DisposableManager
 import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -29,17 +34,65 @@ constructor(
 
     private val commands = MutableLiveData<WaitingRoomGuestCommand>()
 
-    fun currentCommunicationState(): LiveData<GuestCommunicationState> {
+    private val reconnectActionCtrl = MutableLiveData<UiControlModel>()
+    private val reconnectLoadingCtrl = MutableLiveData<UiControlModel>()
+    private val leaveGameActionCtrl = MutableLiveData<UiControlModel>()
+
+    fun localPlayerReadyStateInfo(): LiveData<CheckboxModel> {
         return LiveDataReactiveStreams.fromPublisher(
-            guestCommunicator.observeCommunicationState()
-                .subscribeOn(schedulerFactory.io())
-                .observeOn(schedulerFactory.ui())
-                .doOnError { error -> Timber.e(error, "Error while observing communication state.") }
-                .toFlowable(BackpressureStrategy.LATEST)
+            currentCommunicationState()
+                .map { state ->
+                    when (state) {
+                        GuestCommunicationState.Connected -> CheckboxModel(enabled = true, checked = true) //FIXME: the "checked" must indeed be set but it's currently hard-coded
+                        GuestCommunicationState.Disconnected,
+                        GuestCommunicationState.Error -> CheckboxModel(enabled = false, checked = false)
+                    }
+                }
         )
     }
 
+    fun reconnectAction(): LiveData<UiControlModel> {
+        val liveDataMerger = MediatorLiveData<UiControlModel>()
+        liveDataMerger.addSource(
+            LiveDataReactiveStreams.fromPublisher(
+                currentCommunicationState()
+                    .map { state ->
+                        when (state) {
+                            GuestCommunicationState.Connected -> UiControlModel(visibility = Visibility.Gone)
+                            GuestCommunicationState.Disconnected,
+                            GuestCommunicationState.Error -> UiControlModel(visibility = Visibility.Visible)
+                        }
+                    }
+            )
+        ) { value -> liveDataMerger.value = value }
+        liveDataMerger.addSource(reconnectActionCtrl) { value -> liveDataMerger.value = value }
+        return liveDataMerger
+    }
+
+    fun reconnectLoading(): LiveData<UiControlModel> {
+        val liveDataMerger = MediatorLiveData<UiControlModel>()
+        liveDataMerger.addSource(
+            LiveDataReactiveStreams.fromPublisher(currentCommunicationState().map { UiControlModel(visibility = Visibility.Gone) })
+        ) { value -> liveDataMerger.value = value }
+        liveDataMerger.addSource(reconnectLoadingCtrl) { value -> liveDataMerger.value = value }
+        return liveDataMerger
+    }
+
+    fun connectionState(): LiveData<Resource> {
+        return LiveDataReactiveStreams.fromPublisher(currentCommunicationState().map(GuestCommunicationState::resourceId))
+    }
+
+    private fun currentCommunicationState(): Flowable<GuestCommunicationState> {
+        return guestCommunicator.observeCommunicationState()
+            .subscribeOn(schedulerFactory.io())
+            .observeOn(schedulerFactory.ui())
+            .doOnError { error -> Timber.e(error, "Error while observing communication state.") }
+            .toFlowable(BackpressureStrategy.LATEST)
+    }
+
     fun reconnect() {
+        reconnectActionCtrl.value = UiControlModel(enabled = false)
+        reconnectLoadingCtrl.value = UiControlModel(visibility = Visibility.Visible)
         guestCommunicator.connect()
     }
 
