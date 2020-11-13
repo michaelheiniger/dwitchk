@@ -17,10 +17,10 @@ import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationState
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
-import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.GameCanceledDialog
+import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.SimpleDialogFragment
 import kotlinx.android.synthetic.main.waiting_room_host_fragment.*
 
-class WaitingRoomGuestFragment : OngoingGameBaseFragment(), GameCanceledDialog.DialogListener {
+class WaitingRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment.DialogListener {
 
     override val layoutResource: Int = R.layout.waiting_room_guest_fragment
 
@@ -66,16 +66,9 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), GameCanceledDialog.D
             when (command) {
                 WaitingRoomGuestCommand.NotifyUserGameCanceled -> showGameCanceledDialog()
                 WaitingRoomGuestCommand.NavigateToHomeScreen -> MainActivity.start(activity!!)
-                WaitingRoomGuestCommand.NotifyUserGameOver -> showGameOverPopup()
-                WaitingRoomGuestCommand.NavigateToGameRoomScreen -> GameRoomActivity.startForGuest(
-                    activity!!
-                )
+                WaitingRoomGuestCommand.NavigateToGameRoomScreen -> GameRoomActivity.startForGuest(activity!!)
             }
         })
-    }
-
-    private fun showGameOverPopup() {
-        //TODO
     }
 
     override fun onCreateView(
@@ -94,7 +87,7 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), GameCanceledDialog.D
         (activity!!.application as App).getGameComponent()!!.inject(this)
     }
 
-    override fun onDoneClicked() {
+    override fun onOkClicked() {
         viewModel.userAcknowledgesGameCanceledEvent()
     }
 
@@ -120,15 +113,7 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), GameCanceledDialog.D
     }
 
     private fun showGameCanceledDialog() {
-        val supportFragmentManager = activity!!.supportFragmentManager
-        val dialogFragment = GameCanceledDialog.newInstance(this)
-        val ft = supportFragmentManager.beginTransaction()
-        val prev = supportFragmentManager.findFragmentByTag("dialog")
-        if (prev != null) {
-            ft.remove(prev)
-        }
-        ft.addToBackStack(null)
-        dialogFragment.show(ft, "dialog")
+        showDialogFragment(SimpleDialogFragment.newInstance(this, R.string.game_canceled_by_host))
     }
 
     companion object {

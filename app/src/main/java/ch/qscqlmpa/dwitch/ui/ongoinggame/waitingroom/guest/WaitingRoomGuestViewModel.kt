@@ -92,7 +92,7 @@ constructor(
         return when (event) {
             GuestGameEvent.GameCanceled -> WaitingRoomGuestCommand.NotifyUserGameCanceled
             GuestGameEvent.GameLaunched -> WaitingRoomGuestCommand.NavigateToGameRoomScreen
-            GuestGameEvent.GameOver -> WaitingRoomGuestCommand.NotifyUserGameOver
+            GuestGameEvent.GameOver -> throw IllegalStateException("Event '$event' is not supposed to occur in WaitingRoom.")
         }
     }
 }

@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitch.uitests.utils
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import ch.qscqlmpa.dwitch.R
@@ -35,5 +36,10 @@ object GameRoomUtil {
 
     fun assertCardOnTable(card: Card) {
         onView(withId(R.id.lastCardIv)).check(matches(withContentDescription(card.toString())))
+    }
+
+    fun assertGameRoomIsDisplayed() {
+        onView(withId(R.id.pickBtn)).check(matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.passBtn)).check(matches(ViewMatchers.isDisplayed()))
     }
 }

@@ -28,6 +28,10 @@ class GameRoomGuestViewModel @Inject constructor(
         return liveDataMerger
     }
 
+    fun acknowledgeGameOver() {
+        commands.value = GameRoomGuestCommand.NavigateToHomeScreen
+    }
+
     private fun gameEventLiveData(): LiveData<GameRoomGuestCommand> {
         return LiveDataReactiveStreams.fromPublisher(
             gameEventRepository.observeEvents()
@@ -40,9 +44,7 @@ class GameRoomGuestViewModel @Inject constructor(
 
     private fun getCommandForGameEvent(event: GuestGameEvent): GameRoomGuestCommand {
         return when (event) {
-            //TODO: Show pop-up notifying the user that the game is over. The user has to click "ok" to acknowledge
-            // the event and then navigate to Home screen.
-            GuestGameEvent.GameOver -> GameRoomGuestCommand.NavigateToHomeScreen
+            GuestGameEvent.GameOver -> GameRoomGuestCommand.ShowGameOverInfo
             else -> throw IllegalStateException("Event '$event' is not supposed to occur in GameRoom.")
         }
     }

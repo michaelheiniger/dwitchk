@@ -168,7 +168,7 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
 
         dudeWaitASec(2)
 
-        onView(withId(R.id.btnDone)).perform(click())
+        onView(withId(R.id.btnOk)).perform(click())
 
         dudeWaitASec(1)
 

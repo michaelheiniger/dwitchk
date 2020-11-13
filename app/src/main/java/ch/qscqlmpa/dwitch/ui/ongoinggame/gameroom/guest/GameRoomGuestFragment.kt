@@ -6,8 +6,9 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
+import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.SimpleDialogFragment
 
-class GameRoomGuestFragment : OngoingGameBaseFragment() {
+class GameRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment.DialogListener {
 
     private lateinit var viewModel: GameRoomGuestViewModel
 
@@ -23,16 +24,24 @@ class GameRoomGuestFragment : OngoingGameBaseFragment() {
         observeCommands()
     }
 
+    override fun onOkClicked() {
+        viewModel.acknowledgeGameOver()
+    }
+
     private fun observeCommands() {
         viewModel.commands().observe(this, { command ->
             when (command) {
                 GameRoomGuestCommand.NavigateToHomeScreen -> MainActivity.start(activity!!)
+                GameRoomGuestCommand.ShowGameOverInfo -> showGameOverDialog()
             }
         })
     }
 
-    companion object {
+    private fun showGameOverDialog() {
+        showDialogFragment(SimpleDialogFragment.newInstance(this, R.string.game_over))
+    }
 
+    companion object {
         fun create(): GameRoomGuestFragment {
             return GameRoomGuestFragment()
         }

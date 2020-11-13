@@ -26,6 +26,7 @@
     <string name="wrhf_launch_game_tv">Launch !</string>
     <string name="wrhf_cancel_game_tv">Cancel game</string>
     <string name="game_canceled_by_host">Game canceled by host</string>
+    <string name="game_over">Game over</string>
     <string name="ok">OK</string>
     <string name="card">Card</string>
     <string name="cards_in_hand">Cards in hand</string>
