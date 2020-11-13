@@ -1,26 +1,28 @@
 package ch.qscqlmpa.dwitch.ongoinggame.usecases
 
+import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom.PlayerWr
-import ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom.PlayerWrRepository
+import ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom.WaitingRoomPlayerRepository
 import io.reactivex.Observable
 import javax.inject.Inject
 
 class GameLaunchableUsecase @Inject constructor(
-        private val playerWrRepository: PlayerWrRepository
+    private val waitingRoomPlayerRepository: WaitingRoomPlayerRepository
 ) {
 
     fun gameCanBeLaunched(): Observable<GameLaunchableEvent> {
-        return playerWrRepository.observeConnectedPlayers()
-                .map { playerList ->
-                    return@map if (playerList.size < 2) {
-                        GameLaunchableEvent.NotEnoughPlayers
-                    } else {
-                        when (playersAreAllReady(playerList)) {
-                            true -> GameLaunchableEvent.GameIsReadyToBeLaunched
-                            false -> GameLaunchableEvent.NotAllPlayersAreReady
-                        }
+        return waitingRoomPlayerRepository.observePlayers()
+            .map { players -> players.filter { p -> p.connectionState == PlayerConnectionState.CONNECTED } }
+            .map { players ->
+                if (players.size < 2) {
+                    GameLaunchableEvent.NotEnoughPlayers
+                } else {
+                    when (playersAreAllReady(players)) {
+                        true -> GameLaunchableEvent.GameIsReadyToBeLaunched
+                        false -> GameLaunchableEvent.NotAllPlayersAreReady
                     }
                 }
+            }
     }
 
     private fun playersAreAllReady(playerList: List<PlayerWr>): Boolean {

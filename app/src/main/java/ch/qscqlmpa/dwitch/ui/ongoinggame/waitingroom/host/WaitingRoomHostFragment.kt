@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
@@ -21,13 +20,14 @@ class WaitingRoomHostFragment : OngoingGameBaseFragment() {
 
     private lateinit var viewModel: WaitingRoomHostViewModel
 
+    //TODO: Move all the view logic in the VM: it doesn't need to know about HostCommunicationState
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(WaitingRoomHostViewModel::class.java)
-        viewModel.currentCommunicationState().observe(this, Observer { resource -> communicationStateTv.text = getText(resource.id) })
-        viewModel.canGameBeLaunched().observe(this, Observer { canGameBeLaunched -> launchGameBtn.isEnabled = canGameBeLaunched })
-        viewModel.commands().observe(this, Observer { command -> executeNavigationCommand(command) })
+        viewModel.currentCommunicationState().observe(this, { state -> communicationStateTv.text = getText(state.resource.id) })
+        viewModel.canGameBeLaunched().observe(this, { canGameBeLaunched -> launchGameBtn.isEnabled = canGameBeLaunched })
+        viewModel.commands().observe(this, { command -> executeNavigationCommand(command) })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

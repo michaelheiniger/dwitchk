@@ -5,8 +5,8 @@ import ch.qscqlmpa.dwitch.game.TestEntityFactory
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionId
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionIdStore
-import ch.qscqlmpa.dwitch.ongoinggame.communication.host.ClientDisconnected
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
+import ch.qscqlmpa.dwitch.ongoinggame.communication.host.ServerCommunicationEvent
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.eventprocessors.GuestDisconnectedEventProcessor
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.Address
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend
@@ -51,13 +51,12 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
     @After
     override fun tearDown() {
         super.tearDown()
-        clearMocks(mockHostMessageFactory, mockCommunicator)
     }
 
     @Test
     fun `Client disconnects`() {
 
-        every { mockInGameStore.updatePlayerWithConnectionState(any(), any()) } returns 1 // Record is found and updated
+        every { mockInGameStore.updatePlayer(any(), any(), any()) } returns 1 // Record is found and updated
 
         val guestLocalConnectionId = setupLocalConnectionIdStore()
 
@@ -67,7 +66,7 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
         launchTest(guestLocalConnectionId).test().assertComplete()
 
         verify { mockCommunicator.sendMessage(waitingRoomStateUpdateMessageWrapperMock) }
-        verify { mockInGameStore.updatePlayerWithConnectionState(guestPlayer.inGameId, PlayerConnectionState.DISCONNECTED) }
+        verify { mockInGameStore.updatePlayer(guestPlayer.inGameId, PlayerConnectionState.DISCONNECTED, false) }
         assertNull(localConnectionIdStore.getInGameId(guestLocalConnectionId))
     }
 
@@ -91,7 +90,7 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
     fun `Nothing to do when player does not exist in store`() {
 
         // No corresponding guest exists in store. This should never happen.
-        every { mockInGameStore.updatePlayerWithConnectionState(any(), any()) } returns 0
+        every { mockInGameStore.updatePlayer(any(), any(), any()) } returns 0
 
         val guestLocalConnectionId = setupLocalConnectionIdStore()
 
@@ -101,12 +100,12 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
     }
 
     private fun launchTest(guestLocalConnectionId: LocalConnectionId): Completable {
-        return processor.process(ClientDisconnected(guestLocalConnectionId))
+        return processor.process(ServerCommunicationEvent.ClientDisconnected(guestLocalConnectionId))
     }
 
     private fun setupLocalConnectionIdStore(): LocalConnectionId {
-        val guestLocalConnectionId = localConnectionIdStore.addAddress(senderAddress)
-        localConnectionIdStore.addPlayerInGameId(guestLocalConnectionId, guestPlayer.inGameId)
+        val guestLocalConnectionId = localConnectionIdStore.addConnectionId(senderAddress)
+        localConnectionIdStore.mapPlayerIdToConnectionId(guestLocalConnectionId, guestPlayer.inGameId)
         return guestLocalConnectionId
     }
 }

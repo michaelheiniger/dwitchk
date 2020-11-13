@@ -1,8 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.host.eventprocessors
 
-import ch.qscqlmpa.dwitch.ongoinggame.communication.host.ClientConnected
-import ch.qscqlmpa.dwitch.ongoinggame.communication.host.ServerCommunicationEvent
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionIdStore
+import ch.qscqlmpa.dwitch.ongoinggame.communication.host.ServerCommunicationEvent
 import io.reactivex.Completable
 import timber.log.Timber
 import javax.inject.Inject
@@ -13,7 +12,7 @@ internal class GuestConnectedEventProcessor @Inject constructor(
 
     override fun process(event: ServerCommunicationEvent): Completable {
 
-        event as ClientConnected
+        event as ServerCommunicationEvent.ClientConnected
 
         val address = localConnectionIdStore.getAddress(event.localConnectionId)
         Timber.i("Client connected with address: %s", address)

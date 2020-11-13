@@ -28,7 +28,6 @@ class NewGameUsecaseTest : BaseUnitTest() {
     @AfterEach
     override fun tearDown() {
         super.tearDown()
-        clearMocks(mockServiceManager)
     }
 
     @Nested

@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.uitests
+package ch.qscqlmpa.dwitch.uitests.base
 
 import android.content.res.Resources
 import androidx.test.espresso.Espresso.onView
@@ -23,7 +23,7 @@ import ch.qscqlmpa.dwitch.persistence.AppRoomDatabase
 import ch.qscqlmpa.dwitch.persistence.GameDao
 import ch.qscqlmpa.dwitch.persistence.PlayerDao
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
-import ch.qscqlmpa.dwitch.uitests.UiUtil.matchesWithText
+import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.matchesWithText
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetupFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
@@ -77,7 +77,7 @@ abstract class BaseUiTest {
 
     protected fun hookOngoingGameDependenciesForGuest() {
         hookOngoingGameDependenciesCommon()
-        val client = ongoingGameComponent.websocketClient as TestWebsocketClient
+        val client = ongoingGameComponent.websocketClientFactory.create() as TestWebsocketClient
         clientTestStub = WebsocketClientTestStub(client, serializerFactory)
     }
 

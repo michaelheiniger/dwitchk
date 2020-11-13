@@ -8,6 +8,7 @@ import android.widget.Button
 import androidx.lifecycle.ViewModelProviders
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
+import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
 
 class GameRoomHostFragment : OngoingGameBaseFragment() {
@@ -24,9 +25,8 @@ class GameRoomHostFragment : OngoingGameBaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-            .get(GameRoomHostViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(GameRoomHostViewModel::class.java)
+        observeCommands()
     }
 
     override fun onCreateView(
@@ -38,6 +38,14 @@ class GameRoomHostFragment : OngoingGameBaseFragment() {
         endGameBtn = view.findViewById(R.id.endGameBtn) as Button
         endGameBtn.setOnClickListener { viewModel.endGame() }
         return view
+    }
+
+    private fun observeCommands() {
+        viewModel.commands().observe(this, { command ->
+            when (command) {
+                GameRoomHostCommand.NavigateToHomeScreen -> MainActivity.start(activity!!)
+            }
+        })
     }
 
     companion object {

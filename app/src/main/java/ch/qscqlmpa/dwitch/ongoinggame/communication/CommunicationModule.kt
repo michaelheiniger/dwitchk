@@ -1,9 +1,9 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication
 
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.CommClient
-import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.CommServer
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.WebsocketClient
+import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
+import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.WebsocketClientFactory
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.WebsocketCommClient
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.WebsocketCommServer
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.WebsocketServer
@@ -21,10 +21,10 @@ abstract class CommunicationModule {
         @JvmStatic
         @Provides
         fun bindCommClient(
-                websocketClient: WebsocketClient,
-                serializerFactory: SerializerFactory
+            websocketClientFactory: WebsocketClientFactory,
+            serializerFactory: SerializerFactory
         ): CommClient {
-            return WebsocketCommClient(websocketClient, serializerFactory)
+            return WebsocketCommClient(websocketClientFactory, serializerFactory)
         }
 
         @OngoingGameScope

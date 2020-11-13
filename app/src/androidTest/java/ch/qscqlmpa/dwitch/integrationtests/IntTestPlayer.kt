@@ -6,7 +6,7 @@ import ch.qscqlmpa.dwitch.ongoinggame.IntTestOngoingGameComponent
 import ch.qscqlmpa.dwitch.ongoinggame.IntTestServiceManager
 import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
 import ch.qscqlmpa.dwitch.ongoinggame.game.GameInteractor
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEvent
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEvent
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.utils.PlayerDashboardRobot
 import ch.qscqlmpa.dwitchengine.DwitchEngine
@@ -15,7 +15,7 @@ import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealer
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import org.assertj.core.api.Assertions.assertThat
 
-abstract class IntTestPlayer() {
+abstract class IntTestPlayer {
 
     protected val appComponent: IntTestAppComponent = DaggerIntTestAppComponent.builder().build()
     protected var gameLocalId: Long? = null
@@ -64,8 +64,7 @@ abstract class IntTestPlayer() {
     }
 
     fun assertGameOverReceived() {
-        val lastGameEvent = ongoingGameComponent.gameEventRepository.getLastEvent()
-        assertThat(lastGameEvent).isEqualTo(GameEvent.GameOver)
+        assertThat(ongoingGameComponent.gameEventRepository.consumeLastEvent()).isEqualTo(GuestGameEvent.GameOver)
     }
 
     fun assertDashboard(): PlayerDashboardRobot {

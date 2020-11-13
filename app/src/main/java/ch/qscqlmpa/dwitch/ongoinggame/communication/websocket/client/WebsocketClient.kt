@@ -5,6 +5,16 @@ import org.java_websocket.handshake.ServerHandshake
 
 interface WebsocketClient {
 
+    fun start()
+
+    fun stop()
+
+    fun send(message: String)
+
+    fun isOpen(): Boolean
+
+    fun isClosed(): Boolean
+
     fun observeOnOpenEvents(): Observable<OnOpen>
 
     fun observeOnCloseEvents(): Observable<OnClose>
@@ -12,12 +22,6 @@ interface WebsocketClient {
     fun observeOnMessageEvents(): Observable<OnMessage>
 
     fun observeOnErrorEvents(): Observable<OnError>
-
-    fun start()
-
-    fun stop()
-
-    fun send(message: String)
 }
 
 data class OnOpen(val handshake: ServerHandshake?)

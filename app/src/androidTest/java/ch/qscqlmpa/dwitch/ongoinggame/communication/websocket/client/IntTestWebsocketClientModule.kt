@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client
 
-import ch.qscqlmpa.dwitch.components.ongoinggame.OnGoingGameQualifiers
+import ch.qscqlmpa.dwitch.components.ongoinggame.OnGoingGameQualifiers.HOST_IP_ADDRESS
+import ch.qscqlmpa.dwitch.components.ongoinggame.OnGoingGameQualifiers.HOST_PORT
 import ch.qscqlmpa.dwitch.service.OngoingGameScope
 import dagger.Module
 import dagger.Provides
@@ -16,10 +17,10 @@ class IntTestWebsocketClientModule {
         @JvmStatic
         @Provides
         fun bindWebsocketClient(
-                @Named(OnGoingGameQualifiers.HOST_IP_ADDRESS) hostIpAddress: String,
-                @Named(OnGoingGameQualifiers.HOST_PORT) hostPort: Int
-        ): WebsocketClient {
-            return IntTestWebsocketClient(hostIpAddress, hostPort)
+                @Named(HOST_IP_ADDRESS) hostIpAddress: String,
+                @Named(HOST_PORT) hostPort: Int
+        ): WebsocketClientFactory {
+            return IntTestWebsocketClientFactory(hostIpAddress, hostPort)
         }
     }
 }

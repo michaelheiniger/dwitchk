@@ -29,8 +29,9 @@ interface InGameStore {
     fun updateLocalPlayerWithInGameId(playerInGameId: PlayerInGameId): Int
     fun updateLocalPlayerWithReady(ready: Boolean): Int
     fun updatePlayerWithReady(playerInGameId: PlayerInGameId, ready: Boolean): Int
-    fun updatePlayerWithConnectionState(playerInGameId: PlayerInGameId, state: PlayerConnectionState): Int
+    fun updatePlayer(playerInGameId: PlayerInGameId, state: PlayerConnectionState, ready: Boolean): Int
     fun updatePlayerWithConnectionStateAndReady(playerLocalId: Long, state: PlayerConnectionState, ready: Boolean): Int
+    fun setAllPlayersToDisconnected(): Int
 
     fun deletePlayers(playersLocalId: List<Long>): Int
     fun deletePlayer(playerInGameId: PlayerInGameId): Int
@@ -44,6 +45,6 @@ interface InGameStore {
     /**
      * Return the list of connected players sorted on the name ASC
      */
-    fun observeConnectedPlayers(): Flowable<List<Player>>
+    fun observePlayersInWaitingRoom(): Flowable<List<Player>>
     fun getPlayersInWaitingRoom(): List<Player>
 }

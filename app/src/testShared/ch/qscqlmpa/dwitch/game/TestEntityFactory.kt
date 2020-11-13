@@ -15,11 +15,11 @@ import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 object TestEntityFactory {
 
     fun createPlayerWr1(): PlayerWr {
-        return PlayerWr(PlayerInGameId(1), "Sheev", true)
+        return PlayerWr(PlayerInGameId(1), "Sheev", true, PlayerConnectionState.CONNECTED)
     }
 
     fun createPlayerWr2(): PlayerWr {
-        return PlayerWr(PlayerInGameId(2), "Obi-Wan", true)
+        return PlayerWr(PlayerInGameId(2), "Obi-Wan", true, PlayerConnectionState.CONNECTED)
     }
 
     fun createHostPlayer(
@@ -89,60 +89,6 @@ object TestEntityFactory {
                 ready
         )
     }
-
-    fun createGuestPlayer4(
-            localId: Long = 14L,
-            inGameId: PlayerInGameId = PlayerInGameId(104),
-            connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
-            ready: Boolean = true
-    ): Player {
-        return Player(
-                localId,
-                inGameId,
-                1L,
-                "Eowin",
-                PlayerRole.GUEST,
-                connectionState,
-                ready
-        )
-    }
-
-    fun createGuestPlayer5(
-            localId: Long = 15L,
-            inGameId: PlayerInGameId = PlayerInGameId(105),
-            connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
-            ready: Boolean = true
-    ): Player {
-        return Player(
-                localId,
-                inGameId,
-                1L,
-                "Faramir",
-                PlayerRole.GUEST,
-                connectionState,
-                ready
-        )
-    }
-
-//        fun createGameInGameRoom(localPlayerId: PlayerInGameId = PlayerInGameId(100)): Game {
-//            val serializerFactory = SerializerFactory(Json)
-//
-//            val localPlayerLocalId = 10L
-//            val players = listOf(createHostPlayer(), createGuestPlayer1(), createGuestPlayer2()).map(Player::toPlayerInfo)
-//            val gameState = GameBootstrap.createNewGame(players, localPlayerId, RandomInitialGameSetup(players.size)
-//            )
-//
-//            return Game(
-//                    1L,
-//                    RoomType.GAME_ROOM,
-//                    1L,
-//                    "Dwitch",
-//                    serializerFactory.serialize(gameState),
-//                    localPlayerLocalId,
-//                    "192.168.1.1",
-//                    8889
-//            )
-//        }
 
     fun createGameInWaitingRoom(localPlayerLocalId: Long = 10): Game {
         return Game(

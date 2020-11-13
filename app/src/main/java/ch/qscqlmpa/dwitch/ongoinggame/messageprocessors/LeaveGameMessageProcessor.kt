@@ -22,7 +22,7 @@ internal class LeaveGameMessageProcessor @Inject constructor(private val store: 
 
         val msg = message as Message.LeaveGameMessage
 
-        localConnectionIdStore.removeLocalConnectionId(senderLocalConnectionID)
+        localConnectionIdStore.removeConnectionId(senderLocalConnectionID)
 
         val communicator = communicatorLazy.get()
 

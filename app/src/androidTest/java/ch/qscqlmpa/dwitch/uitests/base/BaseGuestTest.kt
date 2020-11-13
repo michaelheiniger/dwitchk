@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.uitests
+package ch.qscqlmpa.dwitch.uitests.base
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
@@ -7,7 +7,7 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.gamediscovery.network.Packet
 import ch.qscqlmpa.dwitch.model.game.GameCommonId
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
-import ch.qscqlmpa.dwitch.uitests.UiUtil.clickOnButton
+import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.clickOnButton
 import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil.withRecyclerView
 import org.assertj.core.api.Assertions.assertThat
 import timber.log.Timber

@@ -1,12 +1,12 @@
-package ch.qscqlmpa.dwitch.uitests
+package ch.qscqlmpa.dwitch.uitests.utils
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.uitests.UiUtil.assertControlEnabled
-import ch.qscqlmpa.dwitch.uitests.UiUtil.clickOnButton
+import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.assertControlEnabled
+import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.clickOnButton
 import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil.withRecyclerView
 import ch.qscqlmpa.dwitchengine.model.card.Card
 

@@ -1,20 +1,23 @@
 package ch.qscqlmpa.dwitch.model.player
 
 import androidx.room.*
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInfo
 import ch.qscqlmpa.dwitch.model.game.Game
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerInfo
 import kotlinx.serialization.Serializable
 
-@Entity(tableName = "player",
-        foreignKeys = [
-            ForeignKey(
-                    entity = Game::class,
-                    parentColumns = ["id"],
-                    childColumns = ["game_local_id"],
-                    onDelete = ForeignKey.CASCADE
-            )
-        ], indices = [Index("game_local_id")])
+@Entity(
+    tableName = "player",
+    foreignKeys = [
+        ForeignKey(
+            entity = Game::class,
+            parentColumns = ["id"],
+            childColumns = ["game_local_id"],
+            onDelete = ForeignKey.CASCADE,
+            deferred = true
+        )
+    ], indices = [Index("game_local_id")]
+)
 @Serializable
 data class Player(
     @PrimaryKey(autoGenerate = true) val id: Long,

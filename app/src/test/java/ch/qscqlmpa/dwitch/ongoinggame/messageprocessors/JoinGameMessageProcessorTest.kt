@@ -38,8 +38,8 @@ class JoinGameMessageProcessorTest : BaseMessageProcessorTest() {
         )
 
         setupCommunicatorSendMessageCompleteMock()
-        senderLocalConnectionId = localConnectionIdStore.addAddress(senderAddress)
-        localConnectionIdStore.addPlayerInGameId(senderLocalConnectionId, guestPlayer.inGameId)
+        senderLocalConnectionId = localConnectionIdStore.addConnectionId(senderAddress)
+        localConnectionIdStore.mapPlayerIdToConnectionId(senderLocalConnectionId, guestPlayer.inGameId)
 
     }
 

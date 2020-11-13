@@ -27,6 +27,10 @@ class WebsocketClientTestStub(
                 .subscribe()
     }
 
+    override fun breakConnectionWithHost() {
+        client.onClose(1, "Connection lost: unknown reason", remote = false, enableThreadBreak = true)
+    }
+
     override fun observeMessagesSent(): Observable<String> {
         return client.observeMessagesSent()
     }

@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.ui.ImageInfo
-import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import timber.log.Timber
@@ -21,9 +20,9 @@ import timber.log.Timber
 
 class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClickedListener {
 
-    override val layoutResource: Int = R.layout.player_dashboard_fragment
-
     private lateinit var viewModel: PlayerDashboardViewModel
+
+    override val layoutResource: Int = R.layout.player_dashboard_fragment
 
     private lateinit var cardsInHandRw: RecyclerView
     private lateinit var cardsInHandAdapter: CardAdapter
@@ -44,10 +43,7 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-            .get(PlayerDashboardViewModel::class.java)
-
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(PlayerDashboardViewModel::class.java)
         observeAndUpdateDashboard()
         observeCommands()
     }
@@ -89,9 +85,7 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
 
     private fun observeCommands() {
         viewModel.commands().observe(this, { command ->
-            when (command) {
-                PlayerDashboardCommand.NavigateToHomeScreen -> MainActivity.start(activity!!)
-            }
+            //TODO
         })
     }
 

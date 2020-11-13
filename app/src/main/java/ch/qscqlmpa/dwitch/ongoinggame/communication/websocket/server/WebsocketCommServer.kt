@@ -3,8 +3,6 @@ package ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server
 
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionId
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionIdStore
-import ch.qscqlmpa.dwitch.ongoinggame.communication.host.ClientConnected
-import ch.qscqlmpa.dwitch.ongoinggame.communication.host.ClientDisconnected
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.CommServer
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.ServerCommunicationEvent
 import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
@@ -41,7 +39,10 @@ class WebsocketCommServer @Inject constructor(
         }
     }
 
-    private fun sendUnitcastMessage(serializedMessage: String, recipientAdress: AddressType.Unicast): Completable {
+    private fun sendUnitcastMessage(
+        serializedMessage: String,
+        recipientAdress: AddressType.Unicast
+    ): Completable {
         return Completable.fromAction {
             val recipientSocket = websocketServer.getConnections().find { webSocket ->
                 webSocket.remoteSocketAddress.address.hostAddress == recipientAdress.destination.ipAddress
@@ -60,66 +61,83 @@ class WebsocketCommServer @Inject constructor(
     }
 
     override fun observeCommunicationEvents(): Observable<ServerCommunicationEvent> {
-        return Observable.merge(listOf(
+        return Observable.merge(
+            listOf(
                 observeOnOpenEvents(),
                 observeOnCloseEvents()
-        ))
+            )
+        )
     }
 
     private fun observeOnOpenEvents(): Observable<ServerCommunicationEvent> {
         return websocketServer.observeOnOpenEvents()
-                .filter { onOpen ->
-                    if (onOpen.conn == null) {
-                        Timber.d("OnOpen event filtered because websocket is null")
-                    }
-                    return@filter onOpen.conn != null
+            .filter { onOpen ->
+                if (onOpen.conn == null) {
+                    Timber.d("OnOpen event filtered because websocket is null")
                 }
-                .map { onOpen ->
-                    val senderAddress = buildAddress(onOpen.conn!!)
-                    val localConnectionId = connectionIdStore.addAddress(senderAddress)
-                    Timber.d("Client connected %s (assign local connection ID %s)", senderAddress, localConnectionId)
-                    ClientConnected(localConnectionId)
-                }
+                onOpen.conn != null
+            }
+            .map { onOpen ->
+                val senderAddress = buildAddressFromConnection(onOpen.conn!!)!!
+                val localConnectionId = connectionIdStore.addConnectionId(senderAddress)
+                Timber.d(
+                    "Client connected %s (assign local connection ID %s)",
+                    senderAddress,
+                    localConnectionId
+                )
+                ServerCommunicationEvent.ClientConnected(localConnectionId)
+            }
     }
 
     private fun observeOnCloseEvents(): Observable<ServerCommunicationEvent> {
         return websocketServer.observeOnCloseEvents()
-                .filter { onClose ->
-                    if (onClose.conn == null) {
-                        Timber.d("OnClose event filtered because websocket is null")
-                    }
-                    return@filter onClose.conn != null
+            .filter { onClose ->
+                if (onClose.conn == null) {
+                    Timber.d("OnClose event filtered because websocket is null")
                 }
-                .map { onClose ->
-
-                    val senderAddress = buildAddress(onClose.conn!!)
+                onClose.conn != null
+            }
+            .flatMap { onClose ->
+                val senderAddress = buildAddressFromConnection(onClose.conn!!)
+                if (senderAddress != null) {
                     Timber.d("Client disconnected %s", senderAddress)
-
-                    val localConnectionId = connectionIdStore.getLocalConnectionIdForAddress(senderAddress)!!
-                    ClientDisconnected(localConnectionId)
+                    val localConnectionId =
+                        connectionIdStore.getLocalConnectionIdForAddress(senderAddress)
+                    return@flatMap Observable.just(ServerCommunicationEvent.ClientDisconnected(localConnectionId))
+                } else {
+                    val missingConnections = findMissingConnections()
+                    Timber.d("Client disconnected but no connection info provided. Inferred missing connections: $missingConnections")
+                    return@flatMap Observable.fromIterable(missingConnections.map(ServerCommunicationEvent::ClientDisconnected))
                 }
+            }
     }
 
     override fun observeReceivedMessages(): Observable<EnvelopeReceived> {
         return websocketServer.observeOnMessageEvents()
-                .filter { onMessage ->
-                    if (onMessage.conn == null) {
-                        Timber.d("onMessage event filtered because websocket is null")
-                    }
-                    if (onMessage.message == null) {
-                        Timber.d("onMessage event filtered because message is null")
-                    }
-                    return@filter onMessage.conn != null && onMessage.message != null
+            .filter { onMessage ->
+                if (onMessage.conn == null) {
+                    Timber.d("onMessage event filtered because websocket is null")
                 }
-                .map { onMessage ->
-                    val senderAddress = buildAddress(onMessage.conn!!)
-                    val message = serializerFactory.unserializeMessage(onMessage.message!!)
-                    val localConnectionId = connectionIdStore.getLocalConnectionIdForAddress(senderAddress)
-                            ?: throw IllegalStateException("Message received ${onMessage.message} from $senderAddress has no local connection ID")
+                if (onMessage.message == null) {
+                    Timber.d("onMessage event filtered because message is null")
+                }
+                onMessage.conn != null && onMessage.message != null
+            }
+            .map { onMessage ->
+                val senderAddress = buildAddressFromConnection(onMessage.conn!!)!!
+                val message = serializerFactory.unserializeMessage(onMessage.message!!)
+                val localConnectionId =
+                    connectionIdStore.getLocalConnectionIdForAddress(senderAddress)
+                        ?: throw IllegalStateException("Message received ${onMessage.message} from $senderAddress has no local connection ID")
 
-                    Timber.i("Message received %s from %s (local connection ID %s)", onMessage.message, senderAddress, localConnectionId)
-                    EnvelopeReceived(localConnectionId, message)
-                }
+                Timber.i(
+                    "Message received %s from %s (local connection ID %s)",
+                    onMessage.message,
+                    senderAddress,
+                    localConnectionId
+                )
+                EnvelopeReceived(localConnectionId, message)
+            }
     }
 
     override fun closeConnectionWithClient(localConnectionId: LocalConnectionId) {
@@ -137,7 +155,24 @@ class WebsocketCommServer @Inject constructor(
         }
     }
 
-    private fun buildAddress(conn: WebSocket): Address {
-        return Address(conn.remoteSocketAddress.address.hostAddress, conn.remoteSocketAddress.port)
+    private fun findMissingConnections(): List<LocalConnectionId> {
+        val remainingConnections = websocketServer.getConnections()
+            .filter { ws ->
+                ws.remoteSocketAddress != null
+                        && ws.remoteSocketAddress.address != null
+                        && ws.remoteSocketAddress.address.hostAddress != null
+            }
+            .map(::Address)
+        return connectionIdStore.findMissingConnections(remainingConnections)
+    }
+
+    private fun buildAddressFromConnection(conn: WebSocket): Address? {
+        if (conn.remoteSocketAddress != null) {
+            return Address(
+                conn.remoteSocketAddress.address.hostAddress,
+                conn.remoteSocketAddress.port
+            )
+        }
+        return null
     }
 }

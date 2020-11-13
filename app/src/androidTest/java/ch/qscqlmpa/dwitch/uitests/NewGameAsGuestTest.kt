@@ -8,8 +8,9 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.gamediscovery.TestNetworkAdapter
 import ch.qscqlmpa.dwitch.gamediscovery.network.Packet
-import ch.qscqlmpa.dwitch.uitests.UiUtil.matchesWithErrorText
-import ch.qscqlmpa.dwitch.uitests.UiUtil.matchesWithText
+import ch.qscqlmpa.dwitch.uitests.base.BaseUiTest
+import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.matchesWithErrorText
+import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.matchesWithText
 import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil.withRecyclerView
 import org.hamcrest.core.IsNot.not
 import org.junit.Before

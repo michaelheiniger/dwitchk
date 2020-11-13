@@ -13,6 +13,9 @@ import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.model.player.PlayerRole
 import ch.qscqlmpa.dwitch.ongoinggame.messages.GuestMessageFactory
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
+import ch.qscqlmpa.dwitch.uitests.base.BaseHostTest
+import ch.qscqlmpa.dwitch.uitests.utils.WaitingRoomUtil.PLAYER_CONNECTED
+import ch.qscqlmpa.dwitch.uitests.utils.WaitingRoomUtil.PLAYER_DISCONNECTED
 import ch.qscqlmpa.dwitch.utils.GameRobot
 import ch.qscqlmpa.dwitch.utils.PlayerRobot
 import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil.withRecyclerView
@@ -35,7 +38,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
 
         goToWaitingRoom()
 
-        assertPlayerNameInWR(0, hostName)
+        assertPlayerInWR(0, hostName)
 
         onView(withId(R.id.launchGameBtn))
                 .check(matches(withText(R.string.wrhf_launch_game_tv)))
@@ -72,9 +75,9 @@ class WaitingRoomAsHostTest : BaseHostTest() {
         guestJoinsGame(Guest2)
 
         // Players sorted according to their name ASC
-        assertPlayerNameInWR(0, hostName)
-        assertPlayerNameInWR(1, Guest1.name)
-        assertPlayerNameInWR(2, Guest2.name)
+        assertPlayerInWR(0, hostName)
+        assertPlayerInWR(1, Guest1.name)
+        assertPlayerInWR(2, Guest2.name)
 
         val allPlayers = playerDao.getAllPlayersSortedOnNameAsc()
         assertThat(allPlayers.size).isEqualTo(3)
@@ -103,8 +106,8 @@ class WaitingRoomAsHostTest : BaseHostTest() {
         guestJoinsGame(Guest1)
 
         // Players sorted according to their name ASC
-        assertPlayerNameInWR(0, hostName)
-        assertPlayerNameInWR(1, Guest1.name)
+        assertPlayerInWR(0, hostName)
+        assertPlayerInWR(1, Guest1.name)
         assertPlayerReady(1, false)
 
         var allPlayers = playerDao.getAllPlayersSortedOnNameAsc()
@@ -113,7 +116,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
                 .assertReady(false)
 
         val wrStateUpdateMsg = guestBecomesReady(Guest1)
-        assertThat(wrStateUpdateMsg.playerList.find { p -> p.name == Guest1.name }!!.ready).isTrue()
+        assertThat(wrStateUpdateMsg.playerList.find { p -> p.name == Guest1.name }!!.ready).isTrue
 
         assertPlayerReady(1, true)
         allPlayers = playerDao.getAllPlayersSortedOnNameAsc()
@@ -133,9 +136,9 @@ class WaitingRoomAsHostTest : BaseHostTest() {
         guestJoinsGame(Guest2)
 
         // Players sorted according to their name ASC
-        assertPlayerNameInWR(0, hostName)
-        assertPlayerNameInWR(1, Guest1.name)
-        assertPlayerNameInWR(2, Guest2.name)
+        assertPlayerInWR(0, hostName)
+        assertPlayerInWR(1, Guest1.name)
+        assertPlayerInWR(2, Guest2.name)
 
         val wrStateUpdateMessage = guestLeavesGame(Guest1)
 
@@ -146,8 +149,8 @@ class WaitingRoomAsHostTest : BaseHostTest() {
                 .assertName(Guest2.name)
 
         // Players sorted according to their name ASC
-        assertPlayerNameInWR(0, hostName)
-        assertPlayerNameInWR(1, Guest2.name)
+        assertPlayerInWR(0, hostName)
+        assertPlayerInWR(1, Guest2.name)
 
         val allPlayers = playerDao.getAllPlayersSortedOnNameAsc()
         assertThat(allPlayers.size).isEqualTo(2)
@@ -164,15 +167,16 @@ class WaitingRoomAsHostTest : BaseHostTest() {
         guestJoinsGame(Guest2)
 
         // Players sorted according to their name ASC
-        assertPlayerNameInWR(0, hostName)
-        assertPlayerNameInWR(1, Guest1.name)
-        assertPlayerNameInWR(2, Guest2.name)
+        assertPlayerInWR(0, hostName, PLAYER_CONNECTED)
+        assertPlayerInWR(1, Guest1.name, PLAYER_CONNECTED)
+        assertPlayerInWR(2, Guest2.name, PLAYER_CONNECTED)
 
         guestDisconnects(Guest1)
 
         // Players sorted according to their name ASC
-        assertPlayerNameInWR(0, hostName)
-        assertPlayerNameInWR(1, Guest2.name)
+        assertPlayerInWR(0, hostName, PLAYER_CONNECTED)
+        assertPlayerInWR(1, Guest1.name, PLAYER_DISCONNECTED)
+        assertPlayerInWR(2, Guest2.name, PLAYER_CONNECTED)
 
         var allPlayers = playerDao.getAllPlayersSortedOnNameAsc()
         assertThat(allPlayers.size).isEqualTo(3)
@@ -186,9 +190,9 @@ class WaitingRoomAsHostTest : BaseHostTest() {
         guestRejoinsGame(Guest1)
 
         // Players sorted according to their name ASC
-        assertPlayerNameInWR(0, hostName)
-        assertPlayerNameInWR(1, Guest1.name)
-        assertPlayerNameInWR(2, Guest2.name)
+        assertPlayerInWR(0, hostName, PLAYER_CONNECTED)
+        assertPlayerInWR(1, Guest1.name, PLAYER_CONNECTED)
+        assertPlayerInWR(2, Guest2.name, PLAYER_CONNECTED)
 
         allPlayers = playerDao.getAllPlayersSortedOnNameAsc()
         assertThat(allPlayers.size).isEqualTo(3)

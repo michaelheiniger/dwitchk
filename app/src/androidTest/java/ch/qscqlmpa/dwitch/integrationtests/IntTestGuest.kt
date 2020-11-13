@@ -32,7 +32,7 @@ class IntTestGuest(
     }
 
     private fun getWebsocketClient(): IntTestWebsocketClient {
-        return ongoingGameComponent.websocketClient as IntTestWebsocketClient
+        return ongoingGameComponent.websocketClientFactory.create() as IntTestWebsocketClient
     }
 
     private fun hookUpGuestToNetworkHub() {

@@ -5,6 +5,7 @@ import io.reactivex.Observable
 import org.java_websocket.WebSocket
 import org.java_websocket.handshake.ClientHandshake
 import org.java_websocket.server.WebSocketServer
+import timber.log.Timber
 import java.net.InetSocketAddress
 
 
@@ -19,6 +20,7 @@ class ProdWebsocketServer constructor(address: InetSocketAddress) : WebSocketSer
 
     override fun start() {
         super.start()
+        connectionLostTimeout = HEART_BEAT_INTERVAL_SEC
     }
 
     override fun stop() {
@@ -26,7 +28,12 @@ class ProdWebsocketServer constructor(address: InetSocketAddress) : WebSocketSer
     }
 
     override fun send(websocket: WebSocket, message: String) {
-        websocket.send(message)
+        val connectionState = websocket.readyState
+        if (connectionState == WebSocket.READYSTATE.OPEN) {
+            websocket.send(message)
+        } else {
+            Timber.e("Cannot send message when connection state is: $connectionState")
+        }
     }
 
     override fun sendBroadcast(message: String) {
@@ -75,5 +82,9 @@ class ProdWebsocketServer constructor(address: InetSocketAddress) : WebSocketSer
 
     override fun getConnections(): MutableCollection<WebSocket> {
         return super.getConnections()
+    }
+
+    companion object {
+        private const val HEART_BEAT_INTERVAL_SEC = 5
     }
 }

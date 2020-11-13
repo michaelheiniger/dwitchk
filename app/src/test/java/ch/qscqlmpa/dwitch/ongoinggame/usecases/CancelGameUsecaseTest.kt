@@ -3,17 +3,15 @@ package ch.qscqlmpa.dwitch.ongoinggame.usecases
 import ch.qscqlmpa.dwitch.BaseUnitTest
 import ch.qscqlmpa.dwitch.ongoinggame.communication.RecipientType
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEvent
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEventRepository
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEvent
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEventRepository
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
-import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.Completable
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -24,14 +22,14 @@ class CancelGameUsecaseTest : BaseUnitTest() {
 
     private val mockServiceManager = mockk<ServiceManager>(relaxed = true)
 
-    private lateinit var gameEventRepository: GameEventRepository
+    private lateinit var gameEventRepository: GuestGameEventRepository
 
     private lateinit var usecase: CancelGameUsecase
 
     @BeforeEach
     override fun setup() {
         super.setup()
-        gameEventRepository = GameEventRepository()
+        gameEventRepository = GuestGameEventRepository()
         usecase = CancelGameUsecase(
             mockInGameStore,
             mockCommunicator,
@@ -45,19 +43,18 @@ class CancelGameUsecaseTest : BaseUnitTest() {
     @AfterEach
     override fun tearDown() {
         super.tearDown()
-        clearMocks(mockCommunicator, mockServiceManager)
     }
 
     @Test
     fun `Game is deleted from Store`() {
-        usecase.cancelGame().test().assertComplete()
+        launchTest()
 
         verify { mockInGameStore.deleteGame() }
     }
 
     @Test
     fun `"Cancel game" message is sent`() {
-        usecase.cancelGame().test().assertComplete()
+        launchTest()
 
         val cancelGameMessageWrapper = EnvelopeToSend(RecipientType.All, Message.CancelGameMessage)
 
@@ -66,17 +63,23 @@ class CancelGameUsecaseTest : BaseUnitTest() {
 
     @Test
     fun `GameCanceled event is emitted`() {
-        assertThat(gameEventRepository.getLastEvent()).isNull()
+        val testObserver = gameEventRepository.observeEvents().test()
+        testObserver.assertNoValues()
 
-        usecase.cancelGame().test().assertComplete()
+        launchTest()
 
-        assertThat(gameEventRepository.getLastEvent()).isEqualTo(GameEvent.GameCanceled)
+        testObserver.assertValue(GuestGameEvent.GameCanceled)
     }
 
     @Test
     fun `Connections are closed and service is stopped`() {
-        usecase.cancelGame().test().assertComplete()
+        launchTest()
 
         verify { mockServiceManager.stopHostService() }
     }
+
+    private fun launchTest() {
+        usecase.cancelGame().test().assertComplete()
+    }
+
 }

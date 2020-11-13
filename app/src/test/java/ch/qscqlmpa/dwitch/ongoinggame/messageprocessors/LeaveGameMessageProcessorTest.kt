@@ -6,7 +6,6 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionIdStore
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.Address
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.utils.TestUtil
-import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.verify
 import io.reactivex.observers.TestObserver
@@ -41,14 +40,13 @@ class LeaveGameMessageProcessorTest : BaseMessageProcessorTest() {
 
         setupCommunicatorSendMessageCompleteMock()
 
-        senderLocalConnectionId = localConnectionIdStore.addAddress(senderAddress)
-        localConnectionIdStore.addPlayerInGameId(senderLocalConnectionId, guestPlayer.inGameId)
+        senderLocalConnectionId = localConnectionIdStore.addConnectionId(senderAddress)
+        localConnectionIdStore.mapPlayerIdToConnectionId(senderLocalConnectionId, guestPlayer.inGameId)
     }
 
     @AfterEach
     override fun tearDown() {
         super.tearDown()
-        clearMocks(mockHostMessageFactory, mockHostCommunicator, mockGuestCommunicator)
     }
 
     @Test

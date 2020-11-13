@@ -1,8 +1,8 @@
 package ch.qscqlmpa.dwitch.ongoinggame.usecases
 
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEvent
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEventRepository
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEvent
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEventRepository
 import ch.qscqlmpa.dwitch.ongoinggame.messages.HostMessageFactory
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
@@ -15,14 +15,14 @@ constructor(
     private val store: InGameStore,
     private val communicator: HostCommunicator,
     private val serviceManager: ServiceManager,
-    private val gameEventRepository: GameEventRepository
+    private val gameEventRepository: GuestGameEventRepository
 ) {
 
     fun cancelGame(): Completable {
         return deleteGameFromStore()
             .andThen(sendCancelGameMessage())
             .andThen(releaseResources())
-            .doOnComplete { gameEventRepository.notifyOfEvent(GameEvent.GameCanceled) }
+            .doOnComplete { gameEventRepository.notify(GuestGameEvent.GameCanceled) }
     }
 
     private fun deleteGameFromStore(): Completable {

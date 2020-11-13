@@ -1,14 +1,14 @@
 package ch.qscqlmpa.dwitch.ongoinggame
 
-import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.WebsocketClient
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.WebsocketServer
 import ch.qscqlmpa.dwitch.ongoinggame.communication.CommunicationModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.GuestCommunicationModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.eventprocessors.GuestCommunicationEventProcessorModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicationModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.eventprocessors.HostCommunicationEventProcessorModule
+import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.TestWebsocketModule
+import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.WebsocketClientFactory
+import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.WebsocketServer
 import ch.qscqlmpa.dwitch.ongoinggame.game.TestGameModule
 import ch.qscqlmpa.dwitch.ongoinggame.messageprocessors.MessageProcessorModule
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
@@ -38,7 +38,7 @@ interface TestOngoingGameComponent : OngoingGameComponent {
 
     val serializerFactory: SerializerFactory
 
-    val websocketClient: WebsocketClient
+    val websocketClientFactory: WebsocketClientFactory
     val websocketServer: WebsocketServer
 
     val initialGameSetupFactory: InitialGameSetupFactory

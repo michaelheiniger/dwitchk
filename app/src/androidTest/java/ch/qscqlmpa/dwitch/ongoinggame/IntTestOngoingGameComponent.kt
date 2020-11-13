@@ -9,12 +9,12 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.eventprocessors.HostCommunicationEventProcessorModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.IntTestWebsocketClientModule
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.WebsocketClient
+import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.WebsocketClientFactory
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.IntTestWebsocketServerModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.WebsocketServer
 import ch.qscqlmpa.dwitch.ongoinggame.game.GameInteractor
 import ch.qscqlmpa.dwitch.ongoinggame.game.TestGameModule
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEventRepository
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEventRepository
 import ch.qscqlmpa.dwitch.ongoinggame.messageprocessors.MessageProcessorModule
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStoreModule
@@ -45,7 +45,7 @@ interface IntTestOngoingGameComponent {
 
     val serializerFactory: SerializerFactory
 
-    val websocketClient: WebsocketClient
+    val websocketClientFactory: WebsocketClientFactory
     val websocketServer: WebsocketServer
 
     val initialGameSetupFactory: InitialGameSetupFactory
@@ -63,5 +63,5 @@ interface IntTestOngoingGameComponent {
 
     val gameInteractor: GameInteractor
 
-    val gameEventRepository: GameEventRepository
+    val gameEventRepository: GuestGameEventRepository
 }

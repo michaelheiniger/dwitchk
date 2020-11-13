@@ -35,7 +35,6 @@ class MainActivityViewModelTest : BaseViewModelUnitTest() {
     @After
     override fun tearDown() {
         super.tearDown()
-        clearMocks(mockGameRepository)
     }
 
     @Test

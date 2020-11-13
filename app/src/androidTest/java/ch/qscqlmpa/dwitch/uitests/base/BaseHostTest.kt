@@ -1,10 +1,10 @@
-package ch.qscqlmpa.dwitch.uitests
+package ch.qscqlmpa.dwitch.uitests.base
 
 import ch.qscqlmpa.dwitch.*
 import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.ongoinggame.messages.GuestMessageFactory
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
-import ch.qscqlmpa.dwitch.uitests.UiUtil.clickOnButton
+import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.clickOnButton
 import org.junit.Assert
 import timber.log.Timber
 import java.util.concurrent.TimeUnit

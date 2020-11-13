@@ -2,21 +2,20 @@ package ch.qscqlmpa.dwitch.ongoinggame.messageprocessors
 
 import ch.qscqlmpa.dwitch.game.TestEntityFactory
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionId
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEvent
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEventRepository
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEvent
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEventRepository
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
 import io.mockk.clearAllMocks
 import io.mockk.mockk
 import io.mockk.verify
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class LaunchGameMessageProcessorTest : BaseMessageProcessorTest() {
 
-    private lateinit var gameEventRepository: GameEventRepository
+    private lateinit var gameEventRepository: GuestGameEventRepository
 
     private val mockServiceManager = mockk<ServiceManager>(relaxed = true)
 
@@ -28,7 +27,7 @@ internal class LaunchGameMessageProcessorTest : BaseMessageProcessorTest() {
     override fun setup() {
         super.setup()
 
-        gameEventRepository = GameEventRepository()
+        gameEventRepository = GuestGameEventRepository()
         processor = LaunchGameMessageProcessor(
             mockInGameStore,
             mockServiceManager,
@@ -53,11 +52,12 @@ internal class LaunchGameMessageProcessorTest : BaseMessageProcessorTest() {
 
     @Test
     fun `Emit GameLaunched event`() {
-        assertThat(gameEventRepository.getLastEvent()).isNull()
+        val testObserver = gameEventRepository.observeEvents().test()
+        testObserver.assertNoValues()
 
         launchTest()
 
-        assertThat(gameEventRepository.getLastEvent()).isEqualTo(GameEvent.GameLaunched)
+        testObserver.assertValue(GuestGameEvent.GameLaunched)
     }
 
     @Test

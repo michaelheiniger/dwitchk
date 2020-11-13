@@ -6,7 +6,6 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.GameCommunicator
 import ch.qscqlmpa.dwitch.ongoinggame.communication.RecipientType
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
-import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -33,7 +32,6 @@ internal class GameUpdatedUsecaseTest : BaseUnitTest() {
     @AfterEach
     override fun tearDown() {
         super.tearDown()
-        clearMocks(mockCommunicator)
     }
 
     @Test

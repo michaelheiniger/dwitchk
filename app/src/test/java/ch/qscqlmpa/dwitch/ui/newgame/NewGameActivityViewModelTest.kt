@@ -33,7 +33,6 @@ class NewGameActivityViewModelTest : BaseViewModelUnitTest() {
     @After
     override fun tearDown() {
         super.tearDown()
-        clearMocks(mockNewGameUsecase)
     }
 
     @Test

@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import ch.qscqlmpa.dwitch.R
@@ -28,7 +27,8 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
         (application as App).getGameComponent()!!.inject(this)
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(WaitingRoomViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(WaitingRoomViewModel::class.java)
 
         when (PlayerRole.valueOf(intent.getStringExtra(EXTRA_PLAYER_ROLE))) {
             PlayerRole.GUEST -> setControlFragment(WaitingRoomGuestFragment.create())
@@ -38,7 +38,8 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
         playerListRw.layoutManager = LinearLayoutManager(this)
         playerListRw.adapter = PlayerWrAdapter()
 
-        viewModel.connectedPlayers().observe(this, Observer { list -> (playerListRw.adapter as PlayerWrAdapter).setData(list) })
+        viewModel.playersInWaitingRoom().observe(this,
+            { list -> (playerListRw.adapter as PlayerWrAdapter).setData(list) })
 
     }
 

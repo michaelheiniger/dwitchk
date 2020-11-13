@@ -17,12 +17,23 @@ class TestWebsocketClient constructor(
 
     private val messagesSentRelay = PublishRelay.create<String>()
 
+    private var isOpen: Boolean = false
+    private var isClosed: Boolean = false
+
     override fun start() {
         // Nothing to do
     }
 
     override fun stop() {
         onClose(1, "Connection closed manually", remote = true, enableThreadBreak = true) //TODO: What is "code" supposed to be used for ?
+    }
+
+    override fun isOpen(): Boolean {
+        return isOpen
+    }
+
+    override fun isClosed(): Boolean {
+        return isClosed
     }
 
     override fun send(message: String) {
@@ -34,11 +45,15 @@ class TestWebsocketClient constructor(
     fun onOpen(handshake: ServerHandshake?, enableThreadBreak: Boolean) {
         threadBreakIfNeeded(enableThreadBreak)
         onOpenRelay.accept(OnOpen(handshake))
+        isOpen = true
+        isClosed = false
     }
 
     fun onClose(code: Int, reason: String?, remote: Boolean, enableThreadBreak: Boolean) {
         threadBreakIfNeeded(enableThreadBreak)
         onCloseRelay.accept(OnClose(code, reason, remote))
+        isOpen = false
+        isClosed = true
     }
 
     fun onMessage(message: String, enableThreadBreak: Boolean) {

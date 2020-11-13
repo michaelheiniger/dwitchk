@@ -7,11 +7,11 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.gamediscovery.TestNetworkAdapter
 import ch.qscqlmpa.dwitch.gamediscovery.network.Packet
+import ch.qscqlmpa.dwitch.uitests.base.BaseUiTest
 import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil.withRecyclerView
 import org.hamcrest.Matchers.startsWith
 import org.junit.Before
 import org.junit.Test
-
 
 class HomeScreenTest : BaseUiTest() {
 

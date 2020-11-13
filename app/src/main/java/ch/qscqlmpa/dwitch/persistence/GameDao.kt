@@ -68,6 +68,14 @@ abstract class GameDao(database: AppRoomDatabase) {
     )
     abstract fun updateGameWithCommonId(gameLocalId: Long, gameCommonId: GameCommonId)
 
+    @Query(
+        """
+        DELETE FROM Game
+        WHERE id = :gameLocalId
+        """
+    )
+    abstract fun deleteGameAndPlayers(gameLocalId: Long)
+
     /**
      * Insert game and local player for host in Store.
      * Room requires the method to be "open".
@@ -125,6 +133,12 @@ abstract class GameDao(database: AppRoomDatabase) {
         }
     }
 
+    @Transaction
+    open fun deleteGame(gameLocalId: Long) {
+        playerDao.deletePlayers(gameLocalId)
+        deleteGameAndPlayers(gameLocalId)
+    }
+
     private fun insertNewGuestGame(
         gameCommonId: GameCommonId,
         gameName: String,
@@ -155,9 +169,6 @@ abstract class GameDao(database: AppRoomDatabase) {
 
         return InsertGameResult(gameLocalId, gameCommonId, gameName, playerLocalId)
     }
-
-    @Query("DELETE FROM Game WHERE id=:gameLocalId")
-    abstract fun deleteGame(gameLocalId: Long)
 
     // ------------------------------- For testing purpose only ------------------------------- //
     @Query("SELECT * FROM Game ORDER BY id ASC")

@@ -18,8 +18,8 @@
     <string name="listening_for_guests">Listening for guests</string>
     <string name="connected_to_host">Connected to host</string>
     <string name="disconnected_from_host">Disconnected from host</string>
-    <string name="connection_error_with_host">Communication error with host</string>
-    <string name="error_listening_for_guests">Communication error: cannot accept Guests</string>
+    <string name="guest_connection_error">Communication error with host</string>
+    <string name="host_connection_error">Communication error: cannot accept Guests</string>
     <string name="wra_player_list">Players</string>
     <string name="ready">Ready</string>
     <string name="not_ready">Not ready</string>
@@ -63,4 +63,8 @@
     <string name="grhf_end_game_btn">End Game</string>
     <string name="round_is_beginning">Round has begun !</string>
     <string name="round_is_over">Round is over !</string>
+    <string name="reconnect_btn">Reconnect</string>
+    <string name="player_connected">Connected</string>
+    <string name="player_disconnected">Disconnected</string>
+    <string name="leave_game_btn">Leave</string>
 </resources>

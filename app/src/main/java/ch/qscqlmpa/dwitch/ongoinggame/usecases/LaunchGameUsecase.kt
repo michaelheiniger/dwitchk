@@ -3,8 +3,8 @@ package ch.qscqlmpa.dwitch.ongoinggame.usecases
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEvent
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEventRepository
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEvent
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEventRepository
 import ch.qscqlmpa.dwitch.ongoinggame.messages.HostMessageFactory
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
@@ -22,7 +22,7 @@ class LaunchGameUsecase @Inject constructor(
     private val communicator: HostCommunicator,
     private val serviceManager: ServiceManager,
     private val initialGameSetupFactory: InitialGameSetupFactory,
-    private val gameEventRepository: GameEventRepository
+    private val gameEventRepository: GuestGameEventRepository
 ) {
 
     fun launchGame(): Completable {
@@ -37,7 +37,7 @@ class LaunchGameUsecase @Inject constructor(
                 )
             }
             .doOnComplete { setCurrentRoomToGameRoomInService() }
-            .doOnComplete { emitGameLaunchedEvent() }
+            .doOnComplete { emitGameLaunchedEvent() } //TODO: Needed ?
             .doOnError { e -> Timber.e(e, "Error while launching game") }
     }
 
@@ -68,6 +68,6 @@ class LaunchGameUsecase @Inject constructor(
     }
 
     private fun emitGameLaunchedEvent() {
-        gameEventRepository.notifyOfEvent(GameEvent.GameLaunched)
+        gameEventRepository.notify(GuestGameEvent.GameLaunched)
     }
 }

@@ -5,8 +5,6 @@ import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ongoinggame.game.GameInteractor
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEvent
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEventRepository
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.utils.TextProvider
@@ -19,7 +17,6 @@ import javax.inject.Inject
 
 class PlayerDashboardViewModel @Inject constructor(
     private val gameInteractor: GameInteractor,
-    private val gameEventRepository: GameEventRepository,
     disposableManager: DisposableManager,
     schedulerFactory: SchedulerFactory,
     private val textProvider: TextProvider
@@ -29,7 +26,6 @@ class PlayerDashboardViewModel @Inject constructor(
 
     fun commands(): LiveData<PlayerDashboardCommand> {
         val liveDataMerger = MediatorLiveData<PlayerDashboardCommand>()
-        liveDataMerger.addSource(gameEventLiveData()) { value -> liveDataMerger.value = value }
         liveDataMerger.addSource(commands) { value -> liveDataMerger.value = value }
         return liveDataMerger
     }
@@ -76,23 +72,5 @@ class PlayerDashboardViewModel @Inject constructor(
                 { Timber.d(successText) },
                 { error -> Timber.e(error, failureText) }
             ))
-    }
-
-    private fun gameEventLiveData(): LiveData<PlayerDashboardCommand> {
-        return LiveDataReactiveStreams.fromPublisher(
-            gameEventRepository.observeEvents()
-                .observeOn(schedulerFactory.ui())
-                .map(::getCommandForGameEvent)
-                .doOnError { error -> Timber.e(error, "Error while observing game events.") }
-                .toFlowable(BackpressureStrategy.LATEST)
-        )
-    }
-
-    private fun getCommandForGameEvent(event: GameEvent): PlayerDashboardCommand {
-        return when (event) {
-            GameEvent.GameCanceled -> TODO()
-            GameEvent.GameLaunched -> TODO()
-            GameEvent.GameOver -> PlayerDashboardCommand.NavigateToHomeScreen
-        }
     }
 }

@@ -1,15 +1,18 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.guest
 
 import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.GuestCommunicator
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEvent
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEventRepository
+import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationState
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEvent
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEventRepository
+import ch.qscqlmpa.dwitch.ongoinggame.usecases.LeaveGameUsecase
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.PlayerReadyUsecase
 import ch.qscqlmpa.dwitch.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitch.utils.DisposableManager
-import io.mockk.*
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import io.reactivex.Observable
 import io.reactivex.schedulers.TestScheduler
 import org.assertj.core.api.Assertions.assertThat
@@ -23,7 +26,9 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
 
     private val mockPlayerReadyUsecase = mockk<PlayerReadyUsecase>(relaxed = true)
 
-    private val mockGameEventRepository = mockk<GameEventRepository>(relaxed = true)
+    private val mockLeaveGameUsecase = mockk<LeaveGameUsecase>(relaxed = true)
+
+    private val mockGameEventRepository = mockk<GuestGameEventRepository>(relaxed = true)
 
     private lateinit var viewModel: WaitingRoomGuestViewModel
 
@@ -37,6 +42,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         viewModel = WaitingRoomGuestViewModel(
             mockCommunicator,
             mockPlayerReadyUsecase,
+            mockLeaveGameUsecase,
             mockGameEventRepository,
             DisposableManager(),
             schedulerFactory
@@ -46,26 +52,22 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
     @After
     override fun tearDown() {
         super.tearDown()
-        clearMocks(mockCommunicator, mockPlayerReadyUsecase, mockGameEventRepository)
     }
 
     @Test
     fun `Publish communication state`() {
-
-        every { mockCommunicator.observeCommunicationState() } returns Observable.just(
-            GuestCommunicationState.CONNECTED
-        )
+        every { mockCommunicator.observeCommunicationState() } returns Observable.just(GuestCommunicationState.Connected)
 
         val currentCommunicationState = viewModel.currentCommunicationState()
         subscribeToPublishers(currentCommunicationState)
 
-        assertThat(currentCommunicationState.value!!.id).isEqualTo(R.string.connected_to_host)
+        assertThat(currentCommunicationState.value!!).isEqualTo(GuestCommunicationState.Connected)
         verify { mockCommunicator.observeCommunicationState() }
     }
 
     @Test
-    fun `Publish NotifyUserGameCanceled command when GameCanceled event occurs`() {
-        every { mockGameEventRepository.observeEvents() } returns Observable.just(GameEvent.GameCanceled)
+    fun `Publish GameCanceled command when GameCanceled event occurs`() {
+        every { mockGameEventRepository.observeEvents() } returns Observable.just(GuestGameEvent.GameCanceled)
 
         val currentCommunicationState = viewModel.commands()
         subscribeToPublishers(currentCommunicationState)

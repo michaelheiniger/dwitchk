@@ -10,11 +10,12 @@ import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.model.player.PlayerRole
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
-import ch.qscqlmpa.dwitch.uitests.GameRoomUtil.assertCanPassTurn
-import ch.qscqlmpa.dwitch.uitests.GameRoomUtil.assertCanPickACard
-import ch.qscqlmpa.dwitch.uitests.GameRoomUtil.assertCardInHand
-import ch.qscqlmpa.dwitch.uitests.GameRoomUtil.assertCardOnTable
-import ch.qscqlmpa.dwitch.uitests.UiUtil.matchesWithText
+import ch.qscqlmpa.dwitch.uitests.base.BaseGuestTest
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCanPassTurn
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCanPickACard
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCardInHand
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCardOnTable
+import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.matchesWithText
 import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil
 import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
@@ -41,6 +42,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
         super.setup()
     }
 
+    //FIXME
     @Test
     fun goToGameRoomScreen() {
         launch()
@@ -52,6 +54,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
         assertCardOnTable(Card.Clubs2)
     }
 
+    //FIXME
     @Test
     fun playACard() {
         launch()

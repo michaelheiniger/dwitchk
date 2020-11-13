@@ -4,8 +4,8 @@ import ch.qscqlmpa.dwitch.BaseUnitTest
 import ch.qscqlmpa.dwitch.game.TestEntityFactory
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEvent
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEventRepository
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEvent
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEventRepository
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
@@ -27,14 +27,14 @@ internal class LaunchGameUsecaseTest : BaseUnitTest() {
 
     private val mockInitialGameSetupFactory = mockk<InitialGameSetupFactory>(relaxed = true)
 
-    private lateinit var gameEventRepository: GameEventRepository
+    private lateinit var gameEventRepository: GuestGameEventRepository
 
     private lateinit var launchGameUsecase: LaunchGameUsecase
 
     @BeforeEach
     override fun setup() {
         super.setup()
-        gameEventRepository = GameEventRepository()
+        gameEventRepository = GuestGameEventRepository()
         launchGameUsecase = LaunchGameUsecase(
                 mockInGameStore,
                 mockCommunicator,
@@ -57,12 +57,11 @@ internal class LaunchGameUsecaseTest : BaseUnitTest() {
     @AfterEach
     override fun tearDown() {
         super.tearDown()
-        clearMocks(mockCommunicator, mockServiceManager, mockInitialGameSetupFactory)
     }
 
     @Test
     fun `Send GameLaunched message`() {
-        launchGameUsecase.launchGame().test().assertComplete()
+        launchTest()
 
         val messageWrapperCap = CapturingSlot<EnvelopeToSend>()
         verify { mockCommunicator.sendMessage(capture(messageWrapperCap)) }
@@ -73,7 +72,7 @@ internal class LaunchGameUsecaseTest : BaseUnitTest() {
 
     @Test
     fun `Save initialized GameState in store`() {
-        launchGameUsecase.launchGame().test().assertComplete()
+        launchTest()
 
         val gameStateCap = CapturingSlot<GameState>()
         verify { mockInGameStore.updateGameState(capture(gameStateCap)) }
@@ -83,25 +82,30 @@ internal class LaunchGameUsecaseTest : BaseUnitTest() {
 
     @Test
     fun `Change room to GameRoom in service`() {
-        launchGameUsecase.launchGame().test().assertComplete()
+        launchTest()
 
         verify { mockServiceManager.goToHostGameRoom() }
     }
 
     @Test
     fun `Update current room to GameRoom in store`() {
-        launchGameUsecase.launchGame().test().assertComplete()
+        launchTest()
 
         verify { mockInGameStore.updateGameRoom(RoomType.GAME_ROOM) }
     }
 
+    private fun launchTest() {
+        launchGameUsecase.launchGame().test().assertComplete()
+    }
+
     @Test
     fun `GameLaunched event is emitted`() {
-        assertThat(gameEventRepository.getLastEvent()).isNull()
+        val testObserver = gameEventRepository.observeEvents().test()
+        testObserver.assertNoValues()
 
-        launchGameUsecase.launchGame().test().assertComplete()
+        launchTest()
 
-        assertThat(gameEventRepository.getLastEvent()).isEqualTo(GameEvent.GameLaunched)
+        testObserver.assertValue(GuestGameEvent.GameLaunched)
     }
 
 }
