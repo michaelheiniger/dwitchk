@@ -23,7 +23,7 @@ class IntTestHost(
             ?: throw IllegalStateException("New game can't be fetched from store")
         gameLocalId = game.id
         hostLocalId = game.localPlayerLocalId
-        playerId = appComponent.database.playerDao().getLocalPlayer(hostLocalId!!).inGameId
+        playerId = appComponent.database.playerDao().gePlayer(hostLocalId!!).inGameId
 
         hookOnGoingGameComponent()
         hookupHostToNetworkHub()

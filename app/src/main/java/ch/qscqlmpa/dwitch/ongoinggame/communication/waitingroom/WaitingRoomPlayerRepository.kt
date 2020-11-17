@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom
 
-import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.service.OngoingGameScope
 import io.reactivex.Observable
@@ -11,16 +10,12 @@ class WaitingRoomPlayerRepository @Inject constructor(private val store: InGameS
 
     fun observePlayers(): Observable<List<PlayerWr>> {
         return store.observePlayersInWaitingRoom()
-                .map(Companion::createPlayerWrList)
+                .map { players -> players.map(::PlayerWr)}
                 .onBackpressureLatest()
                 .toObservable()
     }
 
-    companion object {
-        private fun createPlayerWrList(players: List<Player>): List<PlayerWr> {
-            return players.map { player ->
-                PlayerWr(player.inGameId, player.name, player.ready, player.connectionState)
-            }
-        }
+    fun observeLocalPlayer(): Observable<PlayerWr> {
+        return store.observeLocalPlayer().map(::PlayerWr)
     }
 }

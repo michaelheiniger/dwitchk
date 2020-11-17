@@ -37,6 +37,7 @@ interface InGameStore {
     fun deletePlayer(playerInGameId: PlayerInGameId): Int
 
     fun getLocalPlayer(): Player
+    fun observeLocalPlayer(): Observable<Player>
     fun getLocalPlayerInGameId(): PlayerInGameId
     fun getPlayerInGameId(playerLocalId: Long): PlayerInGameId
     fun getPlayer(playerInGameId: PlayerInGameId): Player?

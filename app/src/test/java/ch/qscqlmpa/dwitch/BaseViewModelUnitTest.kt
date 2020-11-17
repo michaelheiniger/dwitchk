@@ -21,8 +21,11 @@ abstract class BaseViewModelUnitTest {
     @JvmField
     var rule = InstantTaskExecutorRule()
 
+    open fun setup() {
+    }
+
     @Before
-    fun setup() {
+    fun setupLifecycle() {
         every { lifecycleOwner.lifecycle } returns lifecycle
     }
 

@@ -15,6 +15,7 @@ import ch.qscqlmpa.dwitch.utils.LazyImpl
 import io.mockk.*
 import io.reactivex.Completable
 import io.reactivex.Single
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -60,7 +61,7 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
 
         verify { mockCommunicator.sendMessage(waitingRoomStateUpdateMessageWrapperMock) }
         verify { mockInGameStore.updatePlayer(guestPlayer.inGameId, PlayerConnectionState.DISCONNECTED, false) }
-        assertNull(localConnectionIdStore.getInGameId(guestLocalConnectionId))
+        assertThat(localConnectionIdStore.getInGameId(guestLocalConnectionId)).isNull()
     }
 
     @Test
@@ -73,7 +74,7 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
         verify { mockCommunicator wasNot Called }
         verify { mockHostMessageFactory wasNot Called }
         verify { mockInGameStore wasNot Called }
-        assertNull(localConnectionIdStore.getInGameId(LocalConnectionId(0)))
+        assertThat(localConnectionIdStore.getInGameId(LocalConnectionId(0))).isNull()
         confirmVerified(mockCommunicator)
         confirmVerified(mockHostMessageFactory)
         confirmVerified(mockInGameStore)
@@ -89,7 +90,7 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
 
         launchTest(guestLocalConnectionId).test().assertError(IllegalStateException::class.java)
 
-        assertNull(localConnectionIdStore.getInGameId(guestLocalConnectionId))
+        assertThat(localConnectionIdStore.getInGameId(guestLocalConnectionId)).isNull()
     }
 
     private fun launchTest(guestLocalConnectionId: LocalConnectionId): Completable {

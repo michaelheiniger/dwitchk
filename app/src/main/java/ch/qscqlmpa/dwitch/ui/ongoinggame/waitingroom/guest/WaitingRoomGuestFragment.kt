@@ -40,7 +40,7 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment
     }
 
     private fun setupConnectionStateControls() {
-        viewModel.connectionState().observe(this, { resource -> communicationStateTv.text = getText(resource.id) })
+        viewModel.connectionStateInfo().observe(this, { uiInfo -> communicationStateTv.text = getText(uiInfo.textResource.id) })
     }
 
     private fun setupReconnectionControls() {
@@ -55,10 +55,8 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment
         })
     }
 
-    //FIXME: State is not updated if activity is closed and re-opened.
     private fun setupLocalPlayerReadyStateControls() {
         viewModel.localPlayerReadyStateInfo().observe(this, { checkbox ->
-            localPlayerReadyCkb.visibility = mapToAndroidVisibility(checkbox.visibility)
             localPlayerReadyCkb.isEnabled = checkbox.enabled
             localPlayerReadyCkb.isChecked = checkbox.checked
         })
@@ -76,7 +74,7 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment
     }
 
     override fun onOkClicked() {
-        viewModel.userAcknowledgesGameCanceledEvent()
+        viewModel.acknowledgeGameCanceledEvent()
     }
 
     private fun showGameCanceledDialog() {

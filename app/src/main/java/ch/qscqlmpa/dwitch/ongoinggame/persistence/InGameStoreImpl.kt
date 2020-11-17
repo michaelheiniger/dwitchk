@@ -108,11 +108,15 @@ class InGameStoreImpl @Inject constructor(
     }
 
     override fun getLocalPlayer(): Player {
-        return playerDao.getLocalPlayer(localPlayerLocalId)
+        return playerDao.gePlayer(localPlayerLocalId)
+    }
+
+    override fun observeLocalPlayer(): Observable<Player> {
+        return playerDao.observePlayer(localPlayerLocalId)
     }
 
     override fun getLocalPlayerInGameId(): PlayerInGameId {
-        return playerDao.getLocalPlayer(localPlayerLocalId).inGameId
+        return playerDao.gePlayer(localPlayerLocalId).inGameId
     }
 
     override fun getPlayerInGameId(playerLocalId: Long): PlayerInGameId {

@@ -6,6 +6,7 @@ import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.model.player.PlayerRole
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import io.reactivex.Flowable
+import io.reactivex.Observable
 
 @Dao
 interface PlayerDao {
@@ -113,8 +114,11 @@ interface PlayerDao {
     )
     fun deletePlayers(gameLocalId: Long): Int
 
-    @Query("SELECT * FROM Player WHERE id=:localPlayerLocalId")
-    fun getLocalPlayer(localPlayerLocalId: Long): Player
+    @Query("SELECT * FROM Player WHERE id=:playerLocalId")
+    fun gePlayer(playerLocalId: Long): Player
+
+    @Query("SELECT * FROM Player WHERE id=:playerLocalId")
+    fun observePlayer(playerLocalId: Long): Observable<Player>
 
     @Query(
         """

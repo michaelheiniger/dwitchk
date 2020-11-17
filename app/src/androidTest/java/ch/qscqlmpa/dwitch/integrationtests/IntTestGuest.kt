@@ -27,7 +27,7 @@ class IntTestGuest(
     fun joinGame() {
         hookUpGuestToNetworkHub()
         ongoingGameComponent.guestCommunicator.connect()
-        playerId = appComponent.database.playerDao().getLocalPlayer(guestLocalId).inGameId
+        playerId = appComponent.database.playerDao().gePlayer(guestLocalId).inGameId
         ongoingGameComponent.playerReadyUsecase.updateReadyState(true).blockingGet()
     }
 
