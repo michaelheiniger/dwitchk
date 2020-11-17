@@ -38,11 +38,6 @@ internal class EndGameUsecaseTest : BaseUnitTest() {
         every { mockCommunicator.sendMessage((any())) } returns Completable.complete()
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-    }
-
     @Test
     fun `Broadcast GameOver message`() {
         launchTest()

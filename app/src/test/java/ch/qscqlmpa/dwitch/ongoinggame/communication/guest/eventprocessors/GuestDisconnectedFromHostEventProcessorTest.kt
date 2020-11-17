@@ -9,7 +9,6 @@ import io.mockk.confirmVerified
 import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -30,11 +29,6 @@ internal class GuestDisconnectedFromHostEventProcessorTest : BaseUnitTest() {
             commEventRepository,
             mockCommunicator
         )
-    }
-
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
     }
 
     @Test

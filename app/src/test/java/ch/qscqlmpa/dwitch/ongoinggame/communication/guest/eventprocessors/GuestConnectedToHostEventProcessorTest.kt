@@ -46,11 +46,6 @@ class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
         setupCommunicatorMock()
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-    }
-
     @Test
     @DisplayName("Send JoinGameMessage because registration with host has not been done yet (in-game ID is 0)")
     fun `Send JoinGameMessage`() {

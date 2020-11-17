@@ -15,10 +15,8 @@ import ch.qscqlmpa.dwitch.utils.LazyImpl
 import io.mockk.*
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.junit.After
-import org.junit.Assert.assertNull
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
 
@@ -34,7 +32,7 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
 
     private val guestPlayer = TestEntityFactory.createGuestPlayer1().copy(connectionState = PlayerConnectionState.CONNECTED)
 
-    @Before
+    @BeforeEach
     override fun setup() {
         super.setup()
         localConnectionIdStore = LocalConnectionIdStore()
@@ -46,11 +44,6 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
         )
 
         every { mockCommunicator.sendMessage(any()) } returns Completable.complete()
-    }
-
-    @After
-    override fun tearDown() {
-        super.tearDown()
     }
 
     @Test

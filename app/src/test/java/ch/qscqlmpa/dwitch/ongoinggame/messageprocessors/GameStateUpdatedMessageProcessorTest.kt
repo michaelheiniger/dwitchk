@@ -32,11 +32,6 @@ internal class GameStateUpdatedMessageProcessorTest : BaseMessageProcessorTest()
         setupCommunicatorSendGameState()
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-    }
-
     @Test
     fun `When the local player is the host, it forwards the updated game state message`() {
         createLocalPlayer(PlayerRole.HOST)

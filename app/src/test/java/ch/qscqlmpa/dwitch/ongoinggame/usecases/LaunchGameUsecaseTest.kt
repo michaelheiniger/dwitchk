@@ -54,11 +54,6 @@ internal class LaunchGameUsecaseTest : BaseUnitTest() {
         every { mockInGameStore.getLocalPlayerInGameId() } returns hostPlayer.inGameId
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-    }
-
     @Test
     fun `Send GameLaunched message`() {
         launchTest()

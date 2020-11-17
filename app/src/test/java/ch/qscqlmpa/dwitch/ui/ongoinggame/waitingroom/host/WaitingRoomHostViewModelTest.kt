@@ -50,11 +50,6 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
         )
     }
 
-    @After
-    override fun tearDown() {
-        super.tearDown()
-    }
-
     @Test
     fun `Publish communication state`() {
         every { mockCommunicator.observeCommunicationState() } returns Observable.just(HostCommunicationState.ListeningForGuests)

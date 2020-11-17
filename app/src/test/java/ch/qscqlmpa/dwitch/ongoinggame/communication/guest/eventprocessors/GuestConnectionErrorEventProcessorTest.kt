@@ -22,11 +22,6 @@ internal class GuestConnectionErrorEventProcessorTest : BaseUnitTest() {
         processorGuest = GuestConnectionErrorEventProcessor(commEventRepository)
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-    }
-
     @Test
     fun `Notify that Guest communication state is now Error`() {
         processorGuest.process(ClientCommunicationEvent.ConnectionError("Error"))

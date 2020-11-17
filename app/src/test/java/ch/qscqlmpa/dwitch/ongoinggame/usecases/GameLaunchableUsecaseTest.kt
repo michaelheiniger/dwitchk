@@ -26,11 +26,6 @@ internal class GameLaunchableUsecaseTest : BaseUnitTest() {
         gameLaunchableUsecase = GameLaunchableUsecase(mockPlayerWrRepository)
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-    }
-
     @Nested
     inner class ObserveGameEvent {
 

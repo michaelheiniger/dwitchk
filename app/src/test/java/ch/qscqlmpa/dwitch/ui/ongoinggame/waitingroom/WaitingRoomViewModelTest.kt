@@ -22,16 +22,6 @@ class WaitingRoomViewModelTest : BaseViewModelUnitTest() {
 
     private lateinit var viewModel: WaitingRoomViewModel
 
-    @Before
-    override fun setup() {
-        super.setup()
-    }
-
-    @After
-    override fun tearDown() {
-        super.tearDown()
-    }
-
     private fun createViewModel() {
         val schedulerFactory = TestSchedulerFactory()
         schedulerFactory.setTimeScheduler(TestScheduler())

@@ -57,11 +57,6 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
         every { mockCommClient.observeReceivedMessages() } returns receivedMessagesStream
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-    }
-
     @Nested
     inner class Connect {
 

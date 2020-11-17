@@ -37,12 +37,6 @@ internal class LaunchGameMessageProcessorTest : BaseMessageProcessorTest() {
         message = buildMessage()
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-        clearAllMocks()
-    }
-
     @Test
     fun `Store gamestate from message`() {
         launchTest()

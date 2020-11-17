@@ -29,11 +29,6 @@ internal class GameUpdatedUsecaseTest : BaseUnitTest() {
         every { mockCommunicator.sendMessage(any()) } returns Completable.complete()
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-    }
-
     @Test
     fun `should store up-to-date game state`() {
         val gameState = TestEntityFactory.createGameState()

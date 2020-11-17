@@ -22,11 +22,6 @@ internal class CancelGameMessageProcessorTest : BaseMessageProcessorTest() {
         processor = CancelGameMessageProcessor(mockInGameStore, mockGameEventRepository)
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-    }
-
     @Test
     fun `Delete game from store`() {
         processor.process(Message.CancelGameMessage, LocalConnectionId(0)).test().assertComplete()

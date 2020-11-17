@@ -30,11 +30,6 @@ class NewGameActivityViewModelTest : BaseViewModelUnitTest() {
         viewModel = NewGameActivityViewModel(mockNewGameUsecase, DisposableManager(), TestSchedulerFactory())
     }
 
-    @After
-    override fun tearDown() {
-        super.tearDown()
-    }
-
     @Test
     fun nextForGuest_success() {
 

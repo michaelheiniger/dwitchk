@@ -65,11 +65,6 @@ class HostCommunicatorImplTest : BaseUnitTest() {
         every { mockCommServer.observeReceivedMessages() } returns receivedMessagesStream
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-    }
-
     @Nested
     inner class ListenForConnections {
 

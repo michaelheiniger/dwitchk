@@ -32,11 +32,6 @@ internal class LeaveGameUsecaseTest : BaseUnitTest() {
         every { mockInGameStore.getLocalPlayerInGameId() } returns playerInGameId
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-    }
-
     @Test
     fun `Send leave-game message to host`() {
         leaveGameUsecase.leaveGame().test().assertComplete()

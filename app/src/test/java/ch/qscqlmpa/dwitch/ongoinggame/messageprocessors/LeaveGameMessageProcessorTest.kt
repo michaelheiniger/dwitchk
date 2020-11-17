@@ -44,11 +44,6 @@ class LeaveGameMessageProcessorTest : BaseMessageProcessorTest() {
         localConnectionIdStore.mapPlayerIdToConnectionId(senderLocalConnectionId, guestPlayer.inGameId)
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-    }
-
     @Test
     fun `Local connection ID of leaving player is removed from the connection store`() {
 

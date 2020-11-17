@@ -40,11 +40,6 @@ class CancelGameUsecaseTest : BaseUnitTest() {
         every { mockCommunicator.sendMessage(any()) } returns Completable.complete()
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-    }
-
     @Test
     fun `Game is deleted from Store`() {
         launchTest()
