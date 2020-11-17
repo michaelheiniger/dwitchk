@@ -11,7 +11,8 @@ import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.SimpleDialogFragment
-import ch.qscqlmpa.dwitch.ui.utils.UiUtil.mapToAndroidVisibility
+import ch.qscqlmpa.dwitch.ui.utils.UiUtil.updateCheckbox
+import ch.qscqlmpa.dwitch.ui.utils.UiUtil.updateView
 import kotlinx.android.synthetic.main.waiting_room_guest_fragment.*
 
 class WaitingRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment.DialogListener {
@@ -44,22 +45,12 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment
     }
 
     private fun setupReconnectionControls() {
-        viewModel.reconnectAction().observe(this, { control ->
-            reconnectBtn.visibility = mapToAndroidVisibility(control.visibility)
-            reconnectBtn.isEnabled = control.enabled
-        })
-
-        viewModel.reconnectLoading().observe(this, { control ->
-            reconnectPb.visibility = mapToAndroidVisibility(control.visibility)
-            reconnectPb.isEnabled = control.enabled
-        })
+        viewModel.reconnectAction().updateView(reconnectBtn, this)
+        viewModel.reconnectLoading().updateView(reconnectPb, this)
     }
 
     private fun setupLocalPlayerReadyStateControls() {
-        viewModel.localPlayerReadyStateInfo().observe(this, { checkbox ->
-            localPlayerReadyCkb.isEnabled = checkbox.enabled
-            localPlayerReadyCkb.isChecked = checkbox.checked
-        })
+        viewModel.localPlayerReadyStateInfo().updateCheckbox(localPlayerReadyCkb, this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

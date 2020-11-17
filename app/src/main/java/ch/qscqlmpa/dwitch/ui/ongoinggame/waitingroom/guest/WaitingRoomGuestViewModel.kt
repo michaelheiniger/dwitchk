@@ -13,7 +13,7 @@ import ch.qscqlmpa.dwitch.ongoinggame.usecases.LeaveGameUsecase
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.PlayerReadyUsecase
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitch.ui.model.CheckboxModel
+import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitch.ui.model.UiInfoModel
 import ch.qscqlmpa.dwitch.ui.model.Visibility
@@ -39,16 +39,16 @@ constructor(
     private val reconnectActionCtrl = MutableLiveData<UiControlModel>()
     private val reconnectLoadingCtrl = MutableLiveData<UiControlModel>()
 
-    fun localPlayerReadyStateInfo(): LiveData<CheckboxModel> {
+    fun localPlayerReadyStateInfo(): LiveData<UiCheckboxModel> {
         return LiveDataReactiveStreams.fromPublisher(
             Flowable.combineLatest(
                 wrPlayerRepository.observeLocalPlayer().toFlowable(BackpressureStrategy.LATEST),
                 currentCommunicationState(),
                 { player, connectionState ->
                     when (connectionState) {
-                        GuestCommunicationState.Connected -> CheckboxModel(enabled = true, checked = player.ready)
+                        GuestCommunicationState.Connected -> UiCheckboxModel(enabled = true, checked = player.ready)
                         GuestCommunicationState.Disconnected,
-                        GuestCommunicationState.Error -> CheckboxModel(enabled = false, checked = false)
+                        GuestCommunicationState.Error -> UiCheckboxModel(enabled = false, checked = false)
                     }
                 })
         )

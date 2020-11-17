@@ -11,7 +11,7 @@ import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEventRepository
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.LeaveGameUsecase
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.PlayerReadyUsecase
 import ch.qscqlmpa.dwitch.scheduler.TestSchedulerFactory
-import ch.qscqlmpa.dwitch.ui.model.CheckboxModel
+import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitch.ui.model.UiInfoModel
 import ch.qscqlmpa.dwitch.ui.model.Visibility
@@ -79,7 +79,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         communicatorSubject.onNext(GuestCommunicationState.Connected)
         wrPlayerRepositorySubject.onNext(PlayerWr(TestEntityFactory.createGuestPlayer1(ready = true)))
 
-        assertThat(localPlayerReadyStateInfo.value!!).isEqualTo(CheckboxModel(enabled = true, checked = true))
+        assertThat(localPlayerReadyStateInfo.value!!).isEqualTo(UiCheckboxModel(enabled = true, checked = true))
     }
 
     @Test
@@ -90,7 +90,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         communicatorSubject.onNext(GuestCommunicationState.Connected)
         wrPlayerRepositorySubject.onNext(PlayerWr(TestEntityFactory.createGuestPlayer1(ready = false)))
 
-        assertThat(localPlayerReadyStateInfo.value!!).isEqualTo(CheckboxModel(enabled = true, checked = false))
+        assertThat(localPlayerReadyStateInfo.value!!).isEqualTo(UiCheckboxModel(enabled = true, checked = false))
     }
 
     @Test
@@ -101,7 +101,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         communicatorSubject.onNext(GuestCommunicationState.Disconnected)
         wrPlayerRepositorySubject.onNext(PlayerWr(TestEntityFactory.createGuestPlayer1(ready = true)))
 
-        assertThat(localPlayerReadyStateInfo.value!!).isEqualTo(CheckboxModel(enabled = false, checked = false))
+        assertThat(localPlayerReadyStateInfo.value!!).isEqualTo(UiCheckboxModel(enabled = false, checked = false))
     }
 
     @Test
@@ -112,7 +112,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         communicatorSubject.onNext(GuestCommunicationState.Error)
         wrPlayerRepositorySubject.onNext(PlayerWr(TestEntityFactory.createGuestPlayer1(ready = true)))
 
-        assertThat(localPlayerReadyStateInfo.value!!).isEqualTo(CheckboxModel(enabled = false, checked = false))
+        assertThat(localPlayerReadyStateInfo.value!!).isEqualTo(UiCheckboxModel(enabled = false, checked = false))
     }
 
     @Test
