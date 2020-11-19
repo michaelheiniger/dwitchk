@@ -6,6 +6,7 @@ import ch.qscqlmpa.dwitch.home.HomeModule
 import ch.qscqlmpa.dwitch.ongoinggame.IntTestOngoingGameComponent
 import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameModule
 import ch.qscqlmpa.dwitch.ongoinggame.TestServiceManagerModule
+import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializationModule
 import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
 import ch.qscqlmpa.dwitch.persistence.AppRoomDatabase
 import ch.qscqlmpa.dwitch.persistence.IntTestDatabaseModule
@@ -18,6 +19,7 @@ import javax.inject.Singleton
 @Component(modules = [
     TestSchedulerModule::class,
     TestGameDiscoveryModule::class,
+    SerializationModule::class,
     HomeModule::class,
     IntTestDatabaseModule::class,
     TestServiceManagerModule::class

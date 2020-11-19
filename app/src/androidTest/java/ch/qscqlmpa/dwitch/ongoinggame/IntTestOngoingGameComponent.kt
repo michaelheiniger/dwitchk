@@ -7,10 +7,9 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.eventprocessors.GuestC
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicationModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.eventprocessors.HostCommunicationEventProcessorModule
-import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializationModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.WebsocketClientFactory
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.IntTestWebsocketModule
+import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.WebsocketClientFactory
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.WebsocketServer
 import ch.qscqlmpa.dwitch.ongoinggame.game.PlayerDashboardFacade
 import ch.qscqlmpa.dwitch.ongoinggame.game.TestGameModule
@@ -31,7 +30,6 @@ import dagger.Subcomponent
 @Subcomponent(modules = [
     OngoingGameModule::class,
     InGameStoreModule::class,
-    SerializationModule::class,
     WaitingRoomModule::class,
     GameRoomModule::class,
     TestGameModule::class,
