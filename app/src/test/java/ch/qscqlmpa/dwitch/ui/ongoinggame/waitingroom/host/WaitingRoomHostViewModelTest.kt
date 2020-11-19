@@ -8,6 +8,9 @@ import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameLaunchableEvent
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameLaunchableUsecase
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.LaunchGameUsecase
 import ch.qscqlmpa.dwitch.scheduler.TestSchedulerFactory
+import ch.qscqlmpa.dwitch.ui.model.UiControlModel
+import ch.qscqlmpa.dwitch.ui.model.UiInfoModel
+import ch.qscqlmpa.dwitch.ui.model.Visibility
 import ch.qscqlmpa.dwitch.utils.DisposableManager
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -16,8 +19,8 @@ import io.mockk.verify
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.TestScheduler
+import io.reactivex.subjects.PublishSubject
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
@@ -32,6 +35,8 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
     private val mockLaunchGameUsecase = mockk<LaunchGameUsecase>(relaxed = true)
 
     private lateinit var viewModel: WaitingRoomHostViewModel
+
+    private lateinit var communicatorSubject: PublishSubject<HostCommunicationState>
 
     @Before
     override fun setup() {
@@ -48,51 +53,61 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
             DisposableManager(),
             schedulerFactory
         )
+
+        communicatorSubject = PublishSubject.create()
+        every { mockCommunicator.observeCommunicationState() } returns communicatorSubject
     }
 
     @Test
-    fun `Publish communication state`() {
-        every { mockCommunicator.observeCommunicationState() } returns Observable.just(HostCommunicationState.ListeningForGuests)
+    fun `Connection state info is updated whenever the connection state changes`() {
+        val connectionStateInfo = viewModel.connectionStateInfo()
+        subscribeToPublishers(connectionStateInfo)
 
-        val currentCommunicationState = viewModel.currentCommunicationState()
-        subscribeToPublishers(currentCommunicationState)
+        communicatorSubject.onNext(HostCommunicationState.ListeningForGuests)
 
-        assertThat(currentCommunicationState.value!!).isEqualTo(HostCommunicationState.ListeningForGuests)
-        verify { mockCommunicator.observeCommunicationState() }
+        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(HostCommunicationState.ListeningForGuests.resource))
+
+        communicatorSubject.onNext(HostCommunicationState.NotListeningForGuests)
+
+        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(HostCommunicationState.NotListeningForGuests.resource))
+
+        communicatorSubject.onNext(HostCommunicationState.Error)
+
+        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(HostCommunicationState.Error.resource))
     }
 
     @Test
-    fun `Publish that game can now be launched`() {
+    fun `Launch game control is enabled because game is ready to be launched`() {
         setupGameCanBeLaunchedMock(GameLaunchableEvent.GameIsReadyToBeLaunched)
 
         val canGameBeLaunched = viewModel.canGameBeLaunched()
         subscribeToPublishers(canGameBeLaunched)
 
-        assertThat(canGameBeLaunched.value).isEqualTo(true)
+        assertThat(canGameBeLaunched.value).isEqualTo(UiControlModel(enabled = true, visibility = Visibility.Visible))
         verify { mockGameLaunchableUsecase.gameCanBeLaunched() }
         confirmVerified(mockGameLaunchableUsecase)
     }
 
     @Test
-    fun `Publish that game cannot be launched because not all players are ready`() {
+    fun `Launch game control is disabled because not all players are ready`() {
         setupGameCanBeLaunchedMock(GameLaunchableEvent.NotAllPlayersAreReady)
 
         val canGameBeLaunched = viewModel.canGameBeLaunched()
         subscribeToPublishers(canGameBeLaunched)
 
-        assertThat(canGameBeLaunched.value).isEqualTo(false)
+        assertThat(canGameBeLaunched.value).isEqualTo(UiControlModel(enabled = false, visibility = Visibility.Visible))
         verify { mockGameLaunchableUsecase.gameCanBeLaunched() }
         confirmVerified(mockGameLaunchableUsecase)
     }
 
     @Test
-    fun `Publish that game cannot be launched because there is only one player in the room`() {
+    fun `Launch game control is disabled because there is only one player in the room`() {
         setupGameCanBeLaunchedMock(GameLaunchableEvent.NotEnoughPlayers)
 
         val canGameBeLaunched = viewModel.canGameBeLaunched()
         subscribeToPublishers(canGameBeLaunched)
 
-        assertThat(canGameBeLaunched.value).isEqualTo(false)
+        assertThat(canGameBeLaunched.value).isEqualTo(UiControlModel(enabled = false, visibility = Visibility.Visible))
         verify { mockGameLaunchableUsecase.gameCanBeLaunched() }
         confirmVerified(mockGameLaunchableUsecase)
     }
@@ -108,7 +123,7 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
     }
 
     @Test
-    fun `Publish NavigateToGameRoomScreen when game is launched`() {
+    fun `Publish command to navigate to game room when game is launched`() {
         every { mockLaunchGameUsecase.launchGame() } returns Completable.complete()
 
         val commands = viewModel.commands()
@@ -130,7 +145,7 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
     }
 
     @Test
-    fun `Publish NavigateToGameHomeScreen when game is canceled`() {
+    fun `Publish command to navigate to home screen when game is canceled`() {
         every { mockCancelGameUsecase.cancelGame() } returns Completable.complete()
 
         val commands = viewModel.commands()

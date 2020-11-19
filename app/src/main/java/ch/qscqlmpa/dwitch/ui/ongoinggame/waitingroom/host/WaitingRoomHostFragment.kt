@@ -12,6 +12,7 @@ import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
+import ch.qscqlmpa.dwitch.ui.utils.UiUtil.updateView
 import kotlinx.android.synthetic.main.waiting_room_host_fragment.*
 
 class WaitingRoomHostFragment : OngoingGameBaseFragment() {
@@ -21,13 +22,21 @@ class WaitingRoomHostFragment : OngoingGameBaseFragment() {
     private lateinit var viewModel: WaitingRoomHostViewModel
 
     //TODO: Move all the view logic in the VM: it doesn't need to know about HostCommunicationState
+    //TODO: Move all the view logic in the VM: it doesn't need to know about HostCommunicationState
+    //TODO: Move all the view logic in the VM: it doesn't need to know about HostCommunicationState
+    //TODO: Move all the view logic in the VM: it doesn't need to know about HostCommunicationState
+    //TODO: Move all the view logic in the VM: it doesn't need to know about HostCommunicationState
+    //TODO: Move all the view logic in the VM: it doesn't need to know about HostCommunicationState
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(WaitingRoomHostViewModel::class.java)
-        viewModel.currentCommunicationState().observe(this, { state -> communicationStateTv.text = getText(state.resource.id) })
-        viewModel.canGameBeLaunched().observe(this, { canGameBeLaunched -> launchGameBtn.isEnabled = canGameBeLaunched })
+        setupConnectionStateControls()
+        setupCanGameBeLaunchedControls()
         viewModel.commands().observe(this, { command -> executeNavigationCommand(command) })
+    }
+
+    private fun setupCanGameBeLaunchedControls() {
+        viewModel.canGameBeLaunched().updateView(launchGameBtn, this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -49,6 +58,10 @@ class WaitingRoomHostFragment : OngoingGameBaseFragment() {
     private fun setupCancelGameButton(parentView: View) {
         val cancelGame = parentView.findViewById(R.id.cancelGameBtn) as Button
         cancelGame.setOnClickListener { viewModel.cancelGame() }
+    }
+
+    private fun setupConnectionStateControls() {
+        viewModel.connectionStateInfo().observe(this, { uiInfo -> communicationStateTv.text = getText(uiInfo.textResource.id) })
     }
 
     private fun executeNavigationCommand(command: WaitingRoomHostCommand) {

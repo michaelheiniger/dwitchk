@@ -2,7 +2,6 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicationState
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
@@ -12,8 +11,11 @@ import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameLaunchableUsecase
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.LaunchGameUsecase
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitch.ui.model.UiControlModel
+import ch.qscqlmpa.dwitch.ui.model.UiInfoModel
 import ch.qscqlmpa.dwitch.utils.DisposableManager
 import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -29,33 +31,19 @@ constructor(
 
     private val commands = MutableLiveData<WaitingRoomHostCommand>()
 
-    fun currentCommunicationState(): LiveData<HostCommunicationState> {
-        return LiveDataReactiveStreams.fromPublisher(
-            hostCommunicator.observeCommunicationState()
-                .subscribeOn(schedulerFactory.io())
-                .observeOn(schedulerFactory.ui())
-                .doOnError { error -> Timber.e(error, "Error while observing communication state.") }
-                .toFlowable(BackpressureStrategy.LATEST)
-        )
-    }
-
-    fun canGameBeLaunched(): LiveData<Boolean> {
+    fun canGameBeLaunched(): LiveData<UiControlModel> {
         return LiveDataReactiveStreams.fromPublisher(
             gameLaunchableUsecase.gameCanBeLaunched()
                 .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
                 .map(::processGameLaunchableEvent)
-                .doOnError { error ->
-                    Timber.e(error, "Error while observing if game can be launched.")
-                }
+                .doOnError { error -> Timber.e(error, "Error while observing if game can be launched.") }
                 .toFlowable(BackpressureStrategy.LATEST)
         )
     }
 
     fun commands(): LiveData<WaitingRoomHostCommand> {
-        val liveDataMerger = MediatorLiveData<WaitingRoomHostCommand>()
-        liveDataMerger.addSource(commands) { value -> liveDataMerger.value = value }
-        return liveDataMerger
+        return commands
     }
 
     fun launchGame() {
@@ -87,11 +75,23 @@ constructor(
         )
     }
 
-    private fun processGameLaunchableEvent(event: GameLaunchableEvent): Boolean {
+    fun connectionStateInfo(): LiveData<UiInfoModel> {
+        return LiveDataReactiveStreams.fromPublisher(currentCommunicationState().map { state -> UiInfoModel(state.resource) })
+    }
+
+    private fun currentCommunicationState(): Flowable<HostCommunicationState> {
+        return hostCommunicator.observeCommunicationState()
+            .subscribeOn(schedulerFactory.io())
+            .observeOn(schedulerFactory.ui())
+            .doOnError { error -> Timber.e(error, "Error while observing communication state.") }
+            .toFlowable(BackpressureStrategy.LATEST)
+    }
+
+    private fun processGameLaunchableEvent(event: GameLaunchableEvent): UiControlModel {
         return when (event) {
-            GameLaunchableEvent.GameIsReadyToBeLaunched -> true
-            GameLaunchableEvent.NotEnoughPlayers -> false
-            GameLaunchableEvent.NotAllPlayersAreReady -> false
+            GameLaunchableEvent.GameIsReadyToBeLaunched -> UiControlModel(enabled = true)
+            GameLaunchableEvent.NotEnoughPlayers -> UiControlModel(enabled = false)
+            GameLaunchableEvent.NotAllPlayersAreReady -> UiControlModel(enabled = false)
         }
     }
 }
