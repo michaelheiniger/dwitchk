@@ -8,19 +8,19 @@ import java.nio.ByteBuffer
 
 internal class TestWebSocket(private val remoteAddress: String, private val remotePort: Int) : WebSocket {
     override fun sendFragmentedFrame(op: Framedata.Opcode?, buffer: ByteBuffer?, fin: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun closeConnection(code: Int, message: String?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun isConnecting(): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun isClosing(): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun getRemoteSocketAddress(): InetSocketAddress {
@@ -28,51 +28,51 @@ internal class TestWebSocket(private val remoteAddress: String, private val remo
     }
 
     override fun <T : Any?> getAttachment(): T {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun sendFrame(framedata: Framedata?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun sendFrame(frames: MutableCollection<Framedata>?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun hasBufferedData(): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun getReadyState(): WebSocket.READYSTATE {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun <T : Any?> setAttachment(attachment: T) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun isOpen(): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun getLocalSocketAddress(): InetSocketAddress {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun sendPing() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun getDraft(): Draft {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun getResourceDescriptor(): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun isFlushAndClose(): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun send(text: String?) {
@@ -80,27 +80,27 @@ internal class TestWebSocket(private val remoteAddress: String, private val remo
     }
 
     override fun send(bytes: ByteBuffer?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun send(bytes: ByteArray?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun close(code: Int, message: String?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun close(code: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun close() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
     override fun isClosed(): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        throw NotImplementedError()
     }
 
 
