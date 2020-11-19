@@ -2,8 +2,6 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ongoinggame.game.PlayerDashboardFacade
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
@@ -22,14 +20,6 @@ class PlayerDashboardViewModel @Inject constructor(
     private val textProvider: TextProvider
 ) : BaseViewModel(disposableManager, schedulerFactory) {
 
-    private val commands = MutableLiveData<PlayerDashboardCommand>()
-
-    fun commands(): LiveData<PlayerDashboardCommand> {
-        val liveDataMerger = MediatorLiveData<PlayerDashboardCommand>()
-        liveDataMerger.addSource(commands) { value -> liveDataMerger.value = value }
-        return liveDataMerger
-    }
-
     fun playerDashboard(): LiveData<PlayerDashboardUi> {
         return LiveDataReactiveStreams.fromPublisher(
             facade.observeDashboard()
@@ -42,10 +32,7 @@ class PlayerDashboardViewModel @Inject constructor(
     }
 
     fun playCard(cardPlayed: Card) {
-        performOperation(
-            "Card $cardPlayed played successfully.",
-            "Error while playing card $cardPlayed."
-        )
+        performOperation("Card $cardPlayed played successfully.", "Error while playing card $cardPlayed.")
         { facade.playCard(cardPlayed) }
     }
 

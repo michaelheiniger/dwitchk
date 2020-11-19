@@ -41,19 +41,12 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
         cardsInHandRw.adapter = cardsInHandAdapter
 
         observeAndUpdateDashboard()
-        observeCommands()
     }
 
     override fun onCardClicked(card: Card) {
         if (canPlay) {
             viewModel.playCard(card)
         }
-    }
-
-    private fun observeCommands() {
-        viewModel.commands().observe(this, { command ->
-            //TODO
-        })
     }
 
     private fun observeAndUpdateDashboard() {
