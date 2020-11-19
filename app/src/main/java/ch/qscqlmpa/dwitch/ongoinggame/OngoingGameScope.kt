@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.service
+package ch.qscqlmpa.dwitch.ongoinggame
 
 import javax.inject.Scope
 

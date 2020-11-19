@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client
 
 import ch.qscqlmpa.dwitch.components.ongoinggame.OnGoingGameQualifiers.HOST_IP_ADDRESS
 import ch.qscqlmpa.dwitch.components.ongoinggame.OnGoingGameQualifiers.HOST_PORT
-import ch.qscqlmpa.dwitch.service.OngoingGameScope
+import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameScope
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named

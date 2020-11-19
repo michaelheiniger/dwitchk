@@ -125,7 +125,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         assertCardOnTable(Card.Clubs3)
 
         otherPlayerPlaysCard(Guest1, Card.Spades4)
-        dudeWaitASec(2)
+        dudeWaitASec()
         assertCardOnTable(Card.Spades4)
 
         playACard(0) // Local player plays Hearts5 and is done
@@ -136,7 +136,7 @@ class GameRoomAsHostTest : BaseHostTest() {
 
         clickOnButton(R.id.endGameBtn)
 
-        dudeWaitASec(2)
+        dudeWaitASec()
 
         assertCurrentScreenIsHomeSreen()
     }
@@ -167,7 +167,7 @@ class GameRoomAsHostTest : BaseHostTest() {
 
         clickOnButton(R.id.launchGameBtn)
 
-        dudeWaitASec(2)
+        dudeWaitASec()
 
         assertControlTextContent(R.id.startNewRoundBtn, R.string.pdf_start_new_round)
     }

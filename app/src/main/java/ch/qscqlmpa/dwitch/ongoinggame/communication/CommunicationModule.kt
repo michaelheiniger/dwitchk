@@ -7,7 +7,7 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.WebsocketCl
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.WebsocketCommClient
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.WebsocketCommServer
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.WebsocketServer
-import ch.qscqlmpa.dwitch.service.OngoingGameScope
+import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameScope
 import dagger.Module
 import dagger.Provides
 

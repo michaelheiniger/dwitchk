@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.host.eventprocessors.HostCom
 import ch.qscqlmpa.dwitch.ongoinggame.events.HostCommunicationEventRepository
 import ch.qscqlmpa.dwitch.ongoinggame.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
-import ch.qscqlmpa.dwitch.service.OngoingGameScope
+import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameScope
 import dagger.Module
 import dagger.Provides
 

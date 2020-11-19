@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication
 
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.Address
-import ch.qscqlmpa.dwitch.service.OngoingGameScope
+import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameScope
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import java.util.concurrent.atomic.AtomicLong
 import javax.inject.Inject

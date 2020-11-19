@@ -15,7 +15,6 @@ import ch.qscqlmpa.dwitch.ongoinggame.messageprocessors.MessageProcessorModule
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStoreModule
 import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.WaitingRoomModule
-import ch.qscqlmpa.dwitch.service.OngoingGameScope
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameScreenBindingModule
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameViewModelBindingModule
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetupFactory

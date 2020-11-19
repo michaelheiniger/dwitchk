@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitch.ongoinggame.messageprocessors
 
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeReceived
-import ch.qscqlmpa.dwitch.service.OngoingGameScope
+import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameScope
 import io.reactivex.Completable
 import timber.log.Timber
 import javax.inject.Inject

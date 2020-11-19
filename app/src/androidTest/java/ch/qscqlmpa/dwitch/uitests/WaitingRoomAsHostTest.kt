@@ -216,7 +216,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
 
         waitForNextMessageSentByHost() as Message.CancelGameMessage
 
-        dudeWaitASec(1)
+        dudeWaitASec()
 
         onView(withId(R.id.gameListTv)).check(matches(isDisplayed()))
     }

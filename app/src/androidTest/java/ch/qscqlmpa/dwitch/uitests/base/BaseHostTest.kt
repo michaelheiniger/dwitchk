@@ -25,7 +25,7 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
 
         clickOnButton(R.id.nextBtn)
 
-        dudeWaitASec(1)
+        dudeWaitASec()
 
         host = playerDao.getPlayerByName(hostName)!!
 

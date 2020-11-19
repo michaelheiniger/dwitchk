@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.ongoinggame.events
 
-import ch.qscqlmpa.dwitch.service.OngoingGameScope
+import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameScope
 import javax.inject.Inject
 
 @OngoingGameScope

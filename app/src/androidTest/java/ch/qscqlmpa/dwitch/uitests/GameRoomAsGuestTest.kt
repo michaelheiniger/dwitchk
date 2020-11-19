@@ -85,7 +85,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
 
         clientTestStub.serverSendsMessageToClient(Message.GameOverMessage, false)
 
-        dudeWaitASec(2)
+        dudeWaitASec()
 
         onView(withId(R.id.btnOk)).perform(click())
 
@@ -112,7 +112,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
         hostSendsJoinGameAck()
         hostSendsInitialWaitingRoomUpdate()
 
-        dudeWaitASec(2)
+        dudeWaitASec()
 
         setLocalPlayerReady()
 
@@ -128,7 +128,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
             false
         )
 
-        dudeWaitASec(2)
+        dudeWaitASec()
 
         assertGameRoomIsDisplayed()
     }

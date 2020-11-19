@@ -45,7 +45,7 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
         hostSendsJoinGameAck()
         hostSendsInitialWaitingRoomUpdate()
 
-        dudeWaitASec(2)
+        dudeWaitASec()
 
         // Players sorted according to their name ASC
         assertPlayerInWR(0, PlayerGuestTest.Host.name, PLAYER_CONNECTED)
@@ -85,7 +85,7 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
         hostSendsJoinGameAck()
         hostSendsInitialWaitingRoomUpdate()
 
-        dudeWaitASec(2)
+        dudeWaitASec()
 
         var allPlayers = playerDao.getAllPlayersSortedOnNameAsc()
         assertThat(allPlayers.size).isEqualTo(4)
@@ -137,7 +137,7 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
         hostSendsJoinGameAck()
         hostSendsInitialWaitingRoomUpdate()
 
-        dudeWaitASec(2)
+        dudeWaitASec()
 
         // Players sorted according to their name ASC
         assertPlayerInWR(0, PlayerGuestTest.Host.name, PLAYER_CONNECTED)
@@ -147,7 +147,7 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
 
         clientTestStub.breakConnectionWithHost()
 
-        dudeWaitASec(2)
+        dudeWaitASec()
 
         // Players sorted according to their name ASC
         assertPlayerInWR(0, PlayerGuestTest.Host.name, PLAYER_DISCONNECTED)
@@ -168,11 +168,11 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
 
         clientTestStub.serverSendsMessageToClient(Message.CancelGameMessage, false)
 
-        dudeWaitASec(2)
+        dudeWaitASec()
 
         onView(withId(R.id.btnOk)).perform(click())
 
-        dudeWaitASec(1)
+        dudeWaitASec()
 
         onView(withId(R.id.gameListTv)).check(matches(isDisplayed()))
     }

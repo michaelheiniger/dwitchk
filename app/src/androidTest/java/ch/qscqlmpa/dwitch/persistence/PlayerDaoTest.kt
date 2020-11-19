@@ -89,7 +89,7 @@ class PlayerDaoTest : BaseInstrumentedTest() {
                 Player(0, PlayerInGameId(5), 0, "Legolas", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true)
         ))
 
-        dudeWaitAMinute(3)
+        dudeWaitAMinute(1)
 
         val players = playerDao.observePlayersInWaitingRoom(gameLocalId!!).blockingFirst()
 

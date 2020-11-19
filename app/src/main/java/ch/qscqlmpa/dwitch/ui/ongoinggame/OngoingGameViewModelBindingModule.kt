@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame
 
 import androidx.lifecycle.ViewModel
-import ch.qscqlmpa.dwitch.service.OngoingGameScope
+import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameScope
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host.GameRoomHostViewModel

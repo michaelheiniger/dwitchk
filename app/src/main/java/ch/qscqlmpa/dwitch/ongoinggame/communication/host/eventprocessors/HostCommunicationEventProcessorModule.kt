@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.host.eventprocessors
 
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.ServerCommunicationEvent
-import ch.qscqlmpa.dwitch.service.OngoingGameScope
+import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameScope
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

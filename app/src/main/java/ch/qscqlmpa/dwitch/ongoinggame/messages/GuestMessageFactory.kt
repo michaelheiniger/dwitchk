@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitch.ongoinggame.messages
 
 import ch.qscqlmpa.dwitch.model.game.GameCommonId
 import ch.qscqlmpa.dwitch.ongoinggame.communication.RecipientType
-import ch.qscqlmpa.dwitch.service.OngoingGameScope
+import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameScope
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import javax.inject.Inject
 

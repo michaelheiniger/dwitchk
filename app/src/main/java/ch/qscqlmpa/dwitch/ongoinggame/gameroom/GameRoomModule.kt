@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.ongoinggame.gameroom
 
-import ch.qscqlmpa.dwitch.service.OngoingGameScope
+import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameScope
 import dagger.Binds
 import dagger.Module
 

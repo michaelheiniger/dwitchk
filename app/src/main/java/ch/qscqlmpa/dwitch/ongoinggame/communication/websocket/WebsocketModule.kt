@@ -2,11 +2,11 @@ package ch.qscqlmpa.dwitch.ongoinggame.communication.websocket
 
 import ch.qscqlmpa.dwitch.components.ongoinggame.OnGoingGameQualifiers.HOST_IP_ADDRESS
 import ch.qscqlmpa.dwitch.components.ongoinggame.OnGoingGameQualifiers.HOST_PORT
+import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameScope
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.ProdWebsocketClientFactory
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.WebsocketClientFactory
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.ProdWebsocketServer
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.WebsocketServer
-import ch.qscqlmpa.dwitch.service.OngoingGameScope
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named

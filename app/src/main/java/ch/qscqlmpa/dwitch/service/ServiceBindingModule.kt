@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.service
 
+import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameScope
 import ch.qscqlmpa.dwitch.ongoinggame.services.GuestInGameService
 import ch.qscqlmpa.dwitch.ongoinggame.services.HostInGameService
 import dagger.Module

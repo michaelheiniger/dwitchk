@@ -27,7 +27,7 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
 
         clickOnButton(R.id.nextBtn)
 
-        dudeWaitASec(1)
+        dudeWaitASec()
 
         /*
         * Note: It also allows to wait for the waiting room to be displayed: otherwise, the messages sent by clients could be

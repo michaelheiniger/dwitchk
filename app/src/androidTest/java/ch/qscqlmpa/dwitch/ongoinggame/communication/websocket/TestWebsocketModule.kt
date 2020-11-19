@@ -6,7 +6,7 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.TestWebsock
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.WebsocketClientFactory
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.TestWebsocketServer
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.WebsocketServer
-import ch.qscqlmpa.dwitch.service.OngoingGameScope
+import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameScope
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named

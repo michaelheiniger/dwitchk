@@ -23,7 +23,6 @@ import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStoreModule
 import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.WaitingRoomGuestFacade
 import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.WaitingRoomHostFacade
 import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.WaitingRoomModule
-import ch.qscqlmpa.dwitch.service.OngoingGameScope
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetupFactory
 import dagger.Subcomponent
