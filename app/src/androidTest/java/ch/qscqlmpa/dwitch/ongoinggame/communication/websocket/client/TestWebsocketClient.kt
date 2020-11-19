@@ -25,7 +25,7 @@ class TestWebsocketClient constructor(
     }
 
     override fun stop() {
-        onClose(1, "Connection closed manually", remote = true, enableThreadBreak = true) //TODO: What is "code" supposed to be used for ?
+        onClose(1, "Connection closed manually", remote = true, enableThreadBreak = true)
     }
 
     override fun isOpen(): Boolean {

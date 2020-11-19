@@ -1,10 +1,10 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server
 
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.*
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
 import org.java_websocket.WebSocket
 import org.java_websocket.handshake.ClientHandshake
+import timber.log.Timber
 import java.net.InetSocketAddress
 
 
@@ -23,11 +23,11 @@ class TestWebsocketServer constructor(address: InetSocketAddress) : WebsocketSer
     private var connections = mutableListOf<WebSocket>()
 
     override fun start() {
-
+        Timber.d("start()")
     }
 
     override fun stop() {
-        //TODO ?
+        Timber.d("stop()")
     }
 
     override fun send(websocket: WebSocket, message: String) {

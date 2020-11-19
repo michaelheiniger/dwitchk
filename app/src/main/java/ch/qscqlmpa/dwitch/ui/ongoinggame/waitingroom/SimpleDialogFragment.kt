@@ -60,7 +60,7 @@ class SimpleDialogFragment : DialogFragment() {
             val arguments = Bundle()
             arguments.putInt(EXTRA_MAIN_TEXT_CONTENT, mainTextResourceId)
             dialogFragment.arguments = arguments
-            dialogFragment.setTargetFragment(targetFragment, 1) //TODO: RequestCode ?
+            dialogFragment.setTargetFragment(targetFragment, 1)
             return dialogFragment
         }
     }
