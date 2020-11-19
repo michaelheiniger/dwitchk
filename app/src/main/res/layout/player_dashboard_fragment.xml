@@ -20,7 +20,7 @@
         tools:text="Player1 (P) Player2 (A)" />
 
     <ImageView
-        android:id="@+id/lastCardIv"
+        android:id="@+id/lastCardPlayedIv"
         android:layout_width="90dp"
         android:layout_height="90dp"
         android:contentDescription="@string/card"
@@ -38,9 +38,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textSize="@dimen/regular_text_size"
-        app:layout_constraintEnd_toEndOf="@+id/lastCardIv"
-        app:layout_constraintStart_toStartOf="@+id/lastCardIv"
-        app:layout_constraintTop_toBottomOf="@+id/lastCardIv"
+        app:layout_constraintEnd_toEndOf="@+id/lastCardPlayedIv"
+        app:layout_constraintStart_toStartOf="@+id/lastCardPlayedIv"
+        app:layout_constraintTop_toBottomOf="@+id/lastCardPlayedIv"
         tools:text="Game event" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -51,7 +51,7 @@
         app:layout_constraintGuide_percent="0.4" />
 
     <Button
-        android:id="@+id/startNewRound"
+        android:id="@+id/startNewRoundBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/pdf_start_new_round"
@@ -64,11 +64,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/pdf_pick_a_card"
-        app:layout_constraintBottom_toBottomOf="@+id/startNewRound"
+        app:layout_constraintBottom_toBottomOf="@+id/startNewRoundBtn"
         app:layout_constraintEnd_toStartOf="@+id/passBtn"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/startNewRound"
-        app:layout_constraintTop_toTopOf="@+id/startNewRound" />
+        app:layout_constraintStart_toEndOf="@+id/startNewRoundBtn"
+        app:layout_constraintTop_toTopOf="@+id/startNewRoundBtn" />
 
     <Button
         android:id="@+id/passBtn"

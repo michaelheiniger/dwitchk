@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import ch.qscqlmpa.dwitch.ongoinggame.game.GameInteractor
+import ch.qscqlmpa.dwitch.ongoinggame.game.PlayerDashboardFacade
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.utils.TextProvider
@@ -16,7 +16,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class PlayerDashboardViewModel @Inject constructor(
-    private val gameInteractor: GameInteractor,
+    private val facade: PlayerDashboardFacade,
     disposableManager: DisposableManager,
     schedulerFactory: SchedulerFactory,
     private val textProvider: TextProvider
@@ -32,7 +32,7 @@ class PlayerDashboardViewModel @Inject constructor(
 
     fun playerDashboard(): LiveData<PlayerDashboardUi> {
         return LiveDataReactiveStreams.fromPublisher(
-            gameInteractor.observeDashboard()
+            facade.observeDashboard()
                 .map { dashboard -> PlayerDashboardUi(dashboard, textProvider) }
                 .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
@@ -46,22 +46,22 @@ class PlayerDashboardViewModel @Inject constructor(
             "Card $cardPlayed played successfully.",
             "Error while playing card $cardPlayed."
         )
-        { gameInteractor.playCard(cardPlayed) }
+        { facade.playCard(cardPlayed) }
     }
 
     fun pickCard() {
         performOperation("Card picked successfully.", "Error while picking card.")
-        { gameInteractor.pickCard() }
+        { facade.pickCard() }
     }
 
     fun passTurn() {
         performOperation("Turn passed successfully.", "Error while passing turn.")
-        { gameInteractor.passTurn() }
+        { facade.passTurn() }
     }
 
     fun startNewRound() {
         performOperation("Start new round successfully.", "Error while starting new round.")
-        { gameInteractor.startNewRound() }
+        { facade.startNewRound() }
     }
 
     private fun performOperation(successText: String, failureText: String, op: () -> Completable) {

@@ -14,7 +14,7 @@ abstract class GameModule {
 
     @OngoingGameScope
     @Binds
-    internal abstract fun provideGameInteractor(gameInteractor: GameInteractorImpl): GameInteractor
+    internal abstract fun provideGameInteractor(gameInteractor: PlayerDashboardFacadeImpl): PlayerDashboardFacade
 
     @Module
     companion object {

@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboard
 import io.reactivex.Completable
 import io.reactivex.Observable
 
-interface GameInteractor {
+interface PlayerDashboardFacade {
     fun playCard(cardPlayed: Card): Completable
     fun pickCard(): Completable
     fun passTurn(): Completable

@@ -17,7 +17,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-class LaunchGameUsecase @Inject constructor(
+internal class LaunchGameUsecase @Inject constructor(
     private val store: InGameStore,
     private val communicator: HostCommunicator,
     private val serviceManager: ServiceManager,

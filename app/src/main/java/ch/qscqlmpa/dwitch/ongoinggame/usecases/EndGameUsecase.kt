@@ -8,7 +8,7 @@ import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
 import io.reactivex.Completable
 import javax.inject.Inject
 
-class EndGameUsecase @Inject constructor(
+internal class EndGameUsecase @Inject constructor(
     private val gameEventRepository: GuestGameEventRepository,
     private val serviceManager: ServiceManager,
     private val communicator: GameCommunicator

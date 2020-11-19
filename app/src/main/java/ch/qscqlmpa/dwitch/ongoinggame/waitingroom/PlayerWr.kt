@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom
+package ch.qscqlmpa.dwitch.ongoinggame.waitingroom
 
 import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState

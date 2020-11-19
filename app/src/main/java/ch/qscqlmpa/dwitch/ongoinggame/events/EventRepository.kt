@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicReference
  * consumes it and a subscriber cannot consume it twice. The rational is that the consumer has a lifecycle tied to the UI
  * so we don't want to lose an event. At the same time, we don't want to perform an operation resulting of an event more than once.
  */
-abstract class EventRepository<T> {
+internal abstract class EventRepository<T> {
 
     private var lastEvent = AtomicReference<T?>()
 

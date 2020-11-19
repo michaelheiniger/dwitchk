@@ -2,14 +2,13 @@ package ch.qscqlmpa.dwitch.ongoinggame.usecases
 
 import ch.qscqlmpa.dwitch.BaseUnitTest
 import ch.qscqlmpa.dwitch.game.TestEntityFactory
-import ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom.PlayerWr
-import ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom.WaitingRoomPlayerRepository
+import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.PlayerWr
+import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.WaitingRoomPlayerRepository
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.Observable
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

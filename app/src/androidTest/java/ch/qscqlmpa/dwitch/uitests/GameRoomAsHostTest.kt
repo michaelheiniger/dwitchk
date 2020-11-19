@@ -169,6 +169,6 @@ class GameRoomAsHostTest : BaseHostTest() {
 
         dudeWaitASec(2)
 
-        assertControlTextContent(R.id.startNewRound, R.string.pdf_start_new_round)
+        assertControlTextContent(R.id.startNewRoundBtn, R.string.pdf_start_new_round)
     }
 }

@@ -10,7 +10,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class HostCommunicationModule {
+internal class HostCommunicationModule {
 
     @Module
     companion object {

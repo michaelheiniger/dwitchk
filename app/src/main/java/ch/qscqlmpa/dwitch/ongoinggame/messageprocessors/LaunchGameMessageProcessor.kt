@@ -9,7 +9,7 @@ import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
 import io.reactivex.Completable
 import javax.inject.Inject
 
-class LaunchGameMessageProcessor @Inject constructor(
+internal class LaunchGameMessageProcessor @Inject constructor(
     private val store: InGameStore,
     private val serviceManager: ServiceManager,
     private val gameEventRepository: GuestGameEventRepository

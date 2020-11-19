@@ -13,11 +13,11 @@ import io.reactivex.Single
 import timber.log.Timber
 import javax.inject.Inject
 
-internal class GameInteractorImpl @Inject constructor(
+internal class PlayerDashboardFacadeImpl @Inject constructor(
     private val gameRepository: GameRepository,
     private val gameUpdatedUsecase: GameUpdatedUsecase,
     private val cardDealerFactory: CardDealerFactory
-) : GameInteractor {
+) : PlayerDashboardFacade {
 
     private val playerDashboardRelay = BehaviorRelay.create<PlayerDashboard>()
 

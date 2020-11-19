@@ -3,8 +3,6 @@ package ch.qscqlmpa.dwitch.ongoinggame.waitingroom
 import ch.qscqlmpa.dwitch.BaseUnitTest
 import ch.qscqlmpa.dwitch.game.TestEntityFactory
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
-import ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom.PlayerWr
-import ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom.WaitingRoomPlayerRepository
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import io.mockk.every
 import io.reactivex.Flowable

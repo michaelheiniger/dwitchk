@@ -147,6 +147,8 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
 
         clientTestStub.breakConnectionWithHost()
 
+        dudeWaitASec(2)
+
         // Players sorted according to their name ASC
         assertPlayerInWR(0, PlayerGuestTest.Host.name, PLAYER_DISCONNECTED)
         assertPlayerInWR(1, PlayerGuestTest.LocalGuest.name, PLAYER_DISCONNECTED)

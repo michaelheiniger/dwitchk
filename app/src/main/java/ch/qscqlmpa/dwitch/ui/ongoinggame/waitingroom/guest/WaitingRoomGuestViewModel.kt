@@ -4,13 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.GuestCommunicator
-import ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom.WaitingRoomPlayerRepository
+import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.WaitingRoomGuestFacade
 import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationState
 import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEvent
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEventRepository
-import ch.qscqlmpa.dwitch.ongoinggame.usecases.LeaveGameUsecase
-import ch.qscqlmpa.dwitch.ongoinggame.usecases.PlayerReadyUsecase
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
@@ -25,11 +21,7 @@ import javax.inject.Inject
 
 class WaitingRoomGuestViewModel @Inject
 constructor(
-    private val guestCommunicator: GuestCommunicator,
-    private val playerReadyUsecase: PlayerReadyUsecase,
-    private val leaveGameUsecase: LeaveGameUsecase,
-    private val wrPlayerRepository: WaitingRoomPlayerRepository,
-    private val gameEventRepository: GuestGameEventRepository,
+    private val facade: WaitingRoomGuestFacade,
     disposableManager: DisposableManager,
     schedulerFactory: SchedulerFactory
 ) : BaseViewModel(disposableManager, schedulerFactory) {
@@ -42,11 +34,11 @@ constructor(
     fun localPlayerReadyStateInfo(): LiveData<UiCheckboxModel> {
         return LiveDataReactiveStreams.fromPublisher(
             Flowable.combineLatest(
-                wrPlayerRepository.observeLocalPlayer().toFlowable(BackpressureStrategy.LATEST),
+                facade.observeLocalPlayerReadyState().toFlowable(BackpressureStrategy.LATEST),
                 currentCommunicationState(),
-                { player, connectionState ->
+                { playerReady, connectionState ->
                     when (connectionState) {
-                        GuestCommunicationState.Connected -> UiCheckboxModel(enabled = true, checked = player.ready)
+                        GuestCommunicationState.Connected -> UiCheckboxModel(enabled = true, checked = playerReady)
                         GuestCommunicationState.Disconnected,
                         GuestCommunicationState.Error -> UiCheckboxModel(enabled = false, checked = false)
                     }
@@ -88,12 +80,12 @@ constructor(
     fun reconnect() {
         reconnectActionCtrl.value = UiControlModel(enabled = false)
         reconnectLoadingCtrl.value = UiControlModel(visibility = Visibility.Visible)
-        guestCommunicator.connect()
+        facade.connect()
     }
 
     fun updateReadyState(ready: Boolean) {
         disposableManager.add(
-            playerReadyUsecase.updateReadyState(ready)
+            facade.updateReadyState(ready)
                 .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
                 .subscribe()
@@ -113,7 +105,7 @@ constructor(
 
     fun leaveGame() {
         disposableManager.add(
-            leaveGameUsecase.leaveGame()
+            facade.leaveGame()
                 .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
                 .subscribe(
@@ -127,7 +119,7 @@ constructor(
     }
 
     private fun currentCommunicationState(): Flowable<GuestCommunicationState> {
-        return guestCommunicator.observeCommunicationState()
+        return facade.observeCommunicationState()
             .subscribeOn(schedulerFactory.io())
             .observeOn(schedulerFactory.ui())
             .doOnError { error -> Timber.e(error, "Error while observing communication state.") }
@@ -136,7 +128,7 @@ constructor(
 
     private fun gameEventLiveData(): LiveData<WaitingRoomGuestCommand> {
         return LiveDataReactiveStreams.fromPublisher(
-            gameEventRepository.observeEvents()
+            facade.observeEvents()
                 .observeOn(schedulerFactory.ui())
                 .map(::getCommandForGameEvent)
                 .doOnError { error -> Timber.e(error, "Error while observing game events.") }

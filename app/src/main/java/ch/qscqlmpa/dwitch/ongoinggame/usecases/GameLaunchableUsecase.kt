@@ -1,12 +1,12 @@
 package ch.qscqlmpa.dwitch.ongoinggame.usecases
 
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
-import ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom.PlayerWr
-import ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom.WaitingRoomPlayerRepository
+import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.PlayerWr
+import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.WaitingRoomPlayerRepository
 import io.reactivex.Observable
 import javax.inject.Inject
 
-class GameLaunchableUsecase @Inject constructor(
+internal class GameLaunchableUsecase @Inject constructor(
     private val waitingRoomPlayerRepository: WaitingRoomPlayerRepository
 ) {
 

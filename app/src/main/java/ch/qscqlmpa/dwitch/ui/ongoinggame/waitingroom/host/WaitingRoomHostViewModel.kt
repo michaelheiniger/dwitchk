@@ -4,11 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicationState
-import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
-import ch.qscqlmpa.dwitch.ongoinggame.usecases.CancelGameUsecase
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameLaunchableEvent
-import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameLaunchableUsecase
-import ch.qscqlmpa.dwitch.ongoinggame.usecases.LaunchGameUsecase
+import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.WaitingRoomHostFacade
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
@@ -19,12 +16,9 @@ import io.reactivex.Flowable
 import timber.log.Timber
 import javax.inject.Inject
 
-class WaitingRoomHostViewModel @Inject
+internal class WaitingRoomHostViewModel @Inject
 constructor(
-    private val hostCommunicator: HostCommunicator,
-    private val gameLaunchableUsecase: GameLaunchableUsecase,
-    private val launchGameUsecase: LaunchGameUsecase,
-    private val cancelGameUsecase: CancelGameUsecase,
+    private val facade: WaitingRoomHostFacade,
     disposableManager: DisposableManager,
     schedulerFactory: SchedulerFactory
 ) : BaseViewModel(disposableManager, schedulerFactory) {
@@ -33,7 +27,7 @@ constructor(
 
     fun canGameBeLaunched(): LiveData<UiControlModel> {
         return LiveDataReactiveStreams.fromPublisher(
-            gameLaunchableUsecase.gameCanBeLaunched()
+            facade.gameCanBeLaunched()
                 .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
                 .map(::processGameLaunchableEvent)
@@ -47,7 +41,7 @@ constructor(
     }
 
     fun launchGame() {
-        disposableManager.add(launchGameUsecase.launchGame()
+        disposableManager.add(facade.launchGame()
             .subscribeOn(schedulerFactory.io())
             .observeOn(schedulerFactory.ui())
             .subscribe(
@@ -62,7 +56,7 @@ constructor(
 
     fun cancelGame() {
         disposableManager.add(
-            cancelGameUsecase.cancelGame()
+            facade.cancelGame()
                 .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
                 .subscribe(
@@ -80,7 +74,7 @@ constructor(
     }
 
     private fun currentCommunicationState(): Flowable<HostCommunicationState> {
-        return hostCommunicator.observeCommunicationState()
+        return facade.observeCommunicationState()
             .subscribeOn(schedulerFactory.io())
             .observeOn(schedulerFactory.ui())
             .doOnError { error -> Timber.e(error, "Error while observing communication state.") }

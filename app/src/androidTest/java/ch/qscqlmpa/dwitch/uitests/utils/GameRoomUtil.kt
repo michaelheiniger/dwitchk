@@ -35,7 +35,7 @@ object GameRoomUtil {
     }
 
     fun assertCardOnTable(card: Card) {
-        onView(withId(R.id.lastCardIv)).check(matches(withContentDescription(card.toString())))
+        onView(withId(R.id.lastCardPlayedIv)).check(matches(withContentDescription(card.toString())))
     }
 
     fun assertGameRoomIsDisplayed() {

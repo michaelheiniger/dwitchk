@@ -5,5 +5,5 @@ import ch.qscqlmpa.dwitch.service.OngoingGameScope
 import javax.inject.Inject
 
 @OngoingGameScope
-class GuestGameEventRepository @Inject
+internal class GuestGameEventRepository @Inject
 constructor() : EventRepository<GuestGameEvent>()

@@ -43,14 +43,14 @@ class NewGameUsecaseTest : BaseUnitTest() {
 
         @Test
         fun `should create game in store`() {
-            newGameUsecase.hostNewGame(gameName, playerName).test().assertComplete()
+            newGameUsecase.hostGame(gameName, playerName).test().assertComplete()
 
             verify { mockStore.insertGameForHost(gameName, playerName) }
         }
 
         @Test
         fun `should start service`() {
-            newGameUsecase.hostNewGame(gameName, playerName).test().assertComplete()
+            newGameUsecase.hostGame(gameName, playerName).test().assertComplete()
 
             verify {
                 mockServiceManager.startHostService(

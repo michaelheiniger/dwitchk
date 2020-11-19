@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom.PlayerWr
+import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.PlayerWr
 import ch.qscqlmpa.dwitch.ui.PlayerConnectionStateTextMapper
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.playerlist.PlayerWrAdapter.PlayerViewHolder
 import java.util.*

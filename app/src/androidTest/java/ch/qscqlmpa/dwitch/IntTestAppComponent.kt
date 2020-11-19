@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitch
 
 import ch.qscqlmpa.dwitch.gamediscovery.TestGameDiscoveryModule
 import ch.qscqlmpa.dwitch.gamediscovery.TestNetworkAdapter
+import ch.qscqlmpa.dwitch.home.HomeModule
 import ch.qscqlmpa.dwitch.ongoinggame.IntTestOngoingGameComponent
 import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameModule
 import ch.qscqlmpa.dwitch.ongoinggame.TestServiceManagerModule
@@ -19,6 +20,7 @@ import javax.inject.Singleton
     TestSchedulerModule::class,
     SerializationModule::class,
     TestGameDiscoveryModule::class,
+    HomeModule::class,
     IntTestDatabaseModule::class,
     TestServiceManagerModule::class
 ])

@@ -28,7 +28,7 @@ class IntTestGuest(
         hookUpGuestToNetworkHub()
         ongoingGameComponent.guestCommunicator.connect()
         playerId = appComponent.database.playerDao().gePlayer(guestLocalId).inGameId
-        ongoingGameComponent.playerReadyUsecase.updateReadyState(true).blockingGet()
+        ongoingGameComponent.waitingRoomGuestFacade.updateReadyState(true).blockingGet()
     }
 
     private fun getWebsocketClient(): IntTestWebsocketClient {

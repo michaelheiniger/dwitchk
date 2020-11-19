@@ -2,15 +2,18 @@ package ch.qscqlmpa.dwitch.ui.newgame
 
 import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGame
+import ch.qscqlmpa.dwitch.home.HomeGuestFacade
+import ch.qscqlmpa.dwitch.home.HomeHostFacade
 import ch.qscqlmpa.dwitch.model.game.GameCommonId
 import ch.qscqlmpa.dwitch.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitch.ui.home.newgame.NewGameActivityViewModel
 import ch.qscqlmpa.dwitch.ui.home.newgame.NewGameEvent
-import ch.qscqlmpa.dwitch.usecases.NewGameUsecase
 import ch.qscqlmpa.dwitch.utils.DisposableManager
-import io.mockk.*
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import io.reactivex.Completable
-import org.junit.After
 import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
@@ -18,7 +21,8 @@ import org.junit.jupiter.api.Assertions.assertEquals
 
 class NewGameActivityViewModelTest : BaseViewModelUnitTest() {
 
-    private val mockNewGameUsecase = mockk<NewGameUsecase>(relaxed = true)
+    private val mockHostFacade = mockk<HomeHostFacade>(relaxed = true)
+    private val mockGuestFacade = mockk<HomeGuestFacade>(relaxed = true)
 
     private lateinit var viewModel: NewGameActivityViewModel
 
@@ -27,60 +31,55 @@ class NewGameActivityViewModelTest : BaseViewModelUnitTest() {
     @Before
     override fun setup() {
         super.setup()
-        viewModel = NewGameActivityViewModel(mockNewGameUsecase, DisposableManager(), TestSchedulerFactory())
+        viewModel = NewGameActivityViewModel(mockHostFacade, mockGuestFacade, DisposableManager(), TestSchedulerFactory())
     }
 
     @Test
     fun nextForGuest_success() {
-
-        every { mockNewGameUsecase.joinGame(any(), any()) } returns Completable.complete()
+        every { mockGuestFacade.joinGame(any(), any()) } returns Completable.complete()
 
         val advertisedGame = AdvertisedGame("Dwiiitch !", GameCommonId(1), "192.168.1.1", 8890)
 
         viewModel.nextForGuest(advertisedGame, playerName)
 
         assertEquals(NewGameEvent.SETUP_SUCCESSFUL, viewModel.observeEvents().value)
-        verify { mockNewGameUsecase.joinGame(advertisedGame, playerName) }
+        verify { mockGuestFacade.joinGame(advertisedGame, playerName) }
 
-        confirmVerified(mockNewGameUsecase)
+        confirmVerified(mockGuestFacade)
     }
 
     @Test
     fun nextForGuest_error() {
-
         val advertisedGame = AdvertisedGame("", GameCommonId(1), "192.168.1.1", 8890)
 
         viewModel.nextForGuest(advertisedGame, playerName)
 
         assertNull(viewModel.observeEvents().value)
 
-        confirmVerified(mockNewGameUsecase)
+        confirmVerified(mockGuestFacade)
     }
 
     @Test
     fun nextForHost_success() {
-
-        every { mockNewGameUsecase.hostNewGame(any(), any()) } returns Completable.complete()
-
+        every { mockHostFacade.hostGame(any(), any()) } returns Completable.complete()
         val gameName = "It is ON !"
 
         viewModel.nextForHost(gameName, playerName)
 
         assertEquals(NewGameEvent.SETUP_SUCCESSFUL, viewModel.observeEvents().value)
-        verify { mockNewGameUsecase.hostNewGame(gameName, playerName) }
+        verify { mockHostFacade.hostGame(gameName, playerName) }
 
-        confirmVerified(mockNewGameUsecase)
+        confirmVerified(mockHostFacade)
     }
 
     @Test
     fun nextForHost_error() {
-
         val gameName = "It is ON !"
 
         viewModel.nextForHost(gameName, "")
 
         assertNull(viewModel.observeEvents().value)
 
-        confirmVerified(mockNewGameUsecase)
+        confirmVerified(mockHostFacade)
     }
 }

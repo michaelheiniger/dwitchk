@@ -2,11 +2,8 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host
 
 import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicationState
-import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
-import ch.qscqlmpa.dwitch.ongoinggame.usecases.CancelGameUsecase
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameLaunchableEvent
-import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameLaunchableUsecase
-import ch.qscqlmpa.dwitch.ongoinggame.usecases.LaunchGameUsecase
+import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.WaitingRoomHostFacade
 import ch.qscqlmpa.dwitch.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitch.ui.model.UiInfoModel
@@ -26,13 +23,7 @@ import org.junit.Test
 
 class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
 
-    private val mockCommunicator = mockk<HostCommunicator>(relaxed = true)
-
-    private val mockGameLaunchableUsecase = mockk<GameLaunchableUsecase>(relaxed = true)
-
-    private val mockCancelGameUsecase = mockk<CancelGameUsecase>(relaxed = true)
-
-    private val mockLaunchGameUsecase = mockk<LaunchGameUsecase>(relaxed = true)
+    private val mockFacade = mockk<WaitingRoomHostFacade>(relaxed = true)
 
     private lateinit var viewModel: WaitingRoomHostViewModel
 
@@ -45,17 +36,10 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
         val schedulerFactory = TestSchedulerFactory()
         schedulerFactory.setTimeScheduler(TestScheduler())
 
-        viewModel = WaitingRoomHostViewModel(
-            mockCommunicator,
-            mockGameLaunchableUsecase,
-            mockLaunchGameUsecase,
-            mockCancelGameUsecase,
-            DisposableManager(),
-            schedulerFactory
-        )
+        viewModel = WaitingRoomHostViewModel(mockFacade, DisposableManager(), schedulerFactory)
 
         communicatorSubject = PublishSubject.create()
-        every { mockCommunicator.observeCommunicationState() } returns communicatorSubject
+        every { mockFacade.observeCommunicationState() } returns communicatorSubject
     }
 
     @Test
@@ -84,8 +68,8 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
         subscribeToPublishers(canGameBeLaunched)
 
         assertThat(canGameBeLaunched.value).isEqualTo(UiControlModel(enabled = true, visibility = Visibility.Visible))
-        verify { mockGameLaunchableUsecase.gameCanBeLaunched() }
-        confirmVerified(mockGameLaunchableUsecase)
+        verify { mockFacade.gameCanBeLaunched() }
+        confirmVerified(mockFacade)
     }
 
     @Test
@@ -96,8 +80,8 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
         subscribeToPublishers(canGameBeLaunched)
 
         assertThat(canGameBeLaunched.value).isEqualTo(UiControlModel(enabled = false, visibility = Visibility.Visible))
-        verify { mockGameLaunchableUsecase.gameCanBeLaunched() }
-        confirmVerified(mockGameLaunchableUsecase)
+        verify { mockFacade.gameCanBeLaunched() }
+        confirmVerified(mockFacade)
     }
 
     @Test
@@ -108,23 +92,23 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
         subscribeToPublishers(canGameBeLaunched)
 
         assertThat(canGameBeLaunched.value).isEqualTo(UiControlModel(enabled = false, visibility = Visibility.Visible))
-        verify { mockGameLaunchableUsecase.gameCanBeLaunched() }
-        confirmVerified(mockGameLaunchableUsecase)
+        verify { mockFacade.gameCanBeLaunched() }
+        confirmVerified(mockFacade)
     }
 
     @Test
     fun `Launch game`() {
-        every { mockLaunchGameUsecase.launchGame() } returns Completable.complete()
+        every { mockFacade.launchGame() } returns Completable.complete()
 
         viewModel.launchGame()
 
-        verify { mockLaunchGameUsecase.launchGame() }
-        confirmVerified(mockLaunchGameUsecase)
+        verify { mockFacade.launchGame() }
+        confirmVerified(mockFacade)
     }
 
     @Test
     fun `Publish command to navigate to game room when game is launched`() {
-        every { mockLaunchGameUsecase.launchGame() } returns Completable.complete()
+        every { mockFacade.launchGame() } returns Completable.complete()
 
         val commands = viewModel.commands()
         subscribeToPublishers(commands)
@@ -136,17 +120,17 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
 
     @Test
     fun `Cancel game`() {
-        every { mockCancelGameUsecase.cancelGame() } returns Completable.complete()
+        every { mockFacade.cancelGame() } returns Completable.complete()
 
         viewModel.cancelGame()
 
-        verify { mockCancelGameUsecase.cancelGame() }
-        confirmVerified(mockCancelGameUsecase)
+        verify { mockFacade.cancelGame() }
+        confirmVerified(mockFacade)
     }
 
     @Test
     fun `Publish command to navigate to home screen when game is canceled`() {
-        every { mockCancelGameUsecase.cancelGame() } returns Completable.complete()
+        every { mockFacade.cancelGame() } returns Completable.complete()
 
         val commands = viewModel.commands()
         subscribeToPublishers(commands)
@@ -157,6 +141,6 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
     }
 
     private fun setupGameCanBeLaunchedMock(event: GameLaunchableEvent) {
-        every { mockGameLaunchableUsecase.gameCanBeLaunched() } returns Observable.just(event)
+        every { mockFacade.gameCanBeLaunched() } returns Observable.just(event)
     }
 }

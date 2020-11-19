@@ -1,15 +1,9 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.guest
 
 import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.game.TestEntityFactory
-import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.GuestCommunicator
-import ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom.PlayerWr
-import ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom.WaitingRoomPlayerRepository
+import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.WaitingRoomGuestFacade
 import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationState
 import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEvent
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEventRepository
-import ch.qscqlmpa.dwitch.ongoinggame.usecases.LeaveGameUsecase
-import ch.qscqlmpa.dwitch.ongoinggame.usecases.PlayerReadyUsecase
 import ch.qscqlmpa.dwitch.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
@@ -30,21 +24,13 @@ import org.junit.Test
 
 class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
 
-    private val mockCommunicator = mockk<GuestCommunicator>(relaxed = true)
-
-    private val mockPlayerReadyUsecase = mockk<PlayerReadyUsecase>(relaxed = true)
-
-    private val mockLeaveGameUsecase = mockk<LeaveGameUsecase>(relaxed = true)
-
-    private val mockWrPlayerRepository = mockk<WaitingRoomPlayerRepository>(relaxed = true)
-
-    private val mockGameEventRepository = mockk<GuestGameEventRepository>(relaxed = true)
+    private val mockFacade = mockk<WaitingRoomGuestFacade>(relaxed = true)
 
     private lateinit var viewModel: WaitingRoomGuestViewModel
 
-    private lateinit var communicatorSubject: PublishSubject<GuestCommunicationState>;
+    private lateinit var communicationStateSubject: PublishSubject<GuestCommunicationState>;
 
-    private lateinit var wrPlayerRepositorySubject: PublishSubject<PlayerWr>
+    private lateinit var localPlayerReadyStateSubject: PublishSubject<Boolean>
 
     @Before
     override fun setup() {
@@ -53,22 +39,14 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         val schedulerFactory = TestSchedulerFactory()
         schedulerFactory.setTimeScheduler(TestScheduler())
 
-        viewModel = WaitingRoomGuestViewModel(
-            mockCommunicator,
-            mockPlayerReadyUsecase,
-            mockLeaveGameUsecase,
-            mockWrPlayerRepository,
-            mockGameEventRepository,
-            DisposableManager(),
-            schedulerFactory
-        )
+        viewModel = WaitingRoomGuestViewModel(mockFacade, DisposableManager(), schedulerFactory)
 
-        communicatorSubject = PublishSubject.create()
-        wrPlayerRepositorySubject = PublishSubject.create()
+        communicationStateSubject = PublishSubject.create()
+        localPlayerReadyStateSubject = PublishSubject.create()
 
-        every { mockCommunicator.observeCommunicationState() } returns communicatorSubject
-        every { mockWrPlayerRepository.observeLocalPlayer() } returns wrPlayerRepositorySubject
-        every { mockLeaveGameUsecase.leaveGame() } returns Completable.complete()
+        every { mockFacade.observeCommunicationState() } returns communicationStateSubject
+        every { mockFacade.observeLocalPlayerReadyState() } returns localPlayerReadyStateSubject
+        every { mockFacade.leaveGame() } returns Completable.complete()
     }
 
     @Test
@@ -76,8 +54,8 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         val localPlayerReadyStateInfo = viewModel.localPlayerReadyStateInfo()
         subscribeToPublishers(localPlayerReadyStateInfo)
 
-        communicatorSubject.onNext(GuestCommunicationState.Connected)
-        wrPlayerRepositorySubject.onNext(PlayerWr(TestEntityFactory.createGuestPlayer1(ready = true)))
+        communicationStateSubject.onNext(GuestCommunicationState.Connected)
+        localPlayerReadyStateSubject.onNext(true)
 
         assertThat(localPlayerReadyStateInfo.value!!).isEqualTo(UiCheckboxModel(enabled = true, checked = true))
     }
@@ -87,8 +65,8 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         val localPlayerReadyStateInfo = viewModel.localPlayerReadyStateInfo()
         subscribeToPublishers(localPlayerReadyStateInfo)
 
-        communicatorSubject.onNext(GuestCommunicationState.Connected)
-        wrPlayerRepositorySubject.onNext(PlayerWr(TestEntityFactory.createGuestPlayer1(ready = false)))
+        communicationStateSubject.onNext(GuestCommunicationState.Connected)
+        localPlayerReadyStateSubject.onNext(false)
 
         assertThat(localPlayerReadyStateInfo.value!!).isEqualTo(UiCheckboxModel(enabled = true, checked = false))
     }
@@ -98,8 +76,8 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         val localPlayerReadyStateInfo = viewModel.localPlayerReadyStateInfo()
         subscribeToPublishers(localPlayerReadyStateInfo)
 
-        communicatorSubject.onNext(GuestCommunicationState.Disconnected)
-        wrPlayerRepositorySubject.onNext(PlayerWr(TestEntityFactory.createGuestPlayer1(ready = true)))
+        communicationStateSubject.onNext(GuestCommunicationState.Disconnected)
+        localPlayerReadyStateSubject.onNext(true)
 
         assertThat(localPlayerReadyStateInfo.value!!).isEqualTo(UiCheckboxModel(enabled = false, checked = false))
     }
@@ -109,8 +87,8 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         val localPlayerReadyStateInfo = viewModel.localPlayerReadyStateInfo()
         subscribeToPublishers(localPlayerReadyStateInfo)
 
-        communicatorSubject.onNext(GuestCommunicationState.Error)
-        wrPlayerRepositorySubject.onNext(PlayerWr(TestEntityFactory.createGuestPlayer1(ready = true)))
+        communicationStateSubject.onNext(GuestCommunicationState.Error)
+        localPlayerReadyStateSubject.onNext(true)
 
         assertThat(localPlayerReadyStateInfo.value!!).isEqualTo(UiCheckboxModel(enabled = false, checked = false))
     }
@@ -120,7 +98,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         val reconnectAction = viewModel.reconnectAction()
         subscribeToPublishers(reconnectAction)
 
-        communicatorSubject.onNext(GuestCommunicationState.Connected)
+        communicationStateSubject.onNext(GuestCommunicationState.Connected)
 
         assertThat(reconnectAction.value!!).isEqualToIgnoringGivenFields(UiControlModel(visibility = Visibility.Gone), "enabled")
     }
@@ -130,7 +108,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         val reconnectAction = viewModel.reconnectAction()
         subscribeToPublishers(reconnectAction)
 
-        communicatorSubject.onNext(GuestCommunicationState.Disconnected)
+        communicationStateSubject.onNext(GuestCommunicationState.Disconnected)
 
         assertThat(reconnectAction.value!!).isEqualToIgnoringGivenFields(UiControlModel(visibility = Visibility.Visible), "enabled")
     }
@@ -140,7 +118,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         val reconnectAction = viewModel.reconnectAction()
         subscribeToPublishers(reconnectAction)
 
-        communicatorSubject.onNext(GuestCommunicationState.Error)
+        communicationStateSubject.onNext(GuestCommunicationState.Error)
 
         assertThat(reconnectAction.value!!).isEqualToIgnoringGivenFields(UiControlModel(visibility = Visibility.Visible), "enabled")
     }
@@ -185,15 +163,15 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         val connectionStateInfo = viewModel.connectionStateInfo()
         subscribeToPublishers(connectionStateInfo)
 
-        communicatorSubject.onNext(GuestCommunicationState.Connected)
+        communicationStateSubject.onNext(GuestCommunicationState.Connected)
 
         assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(GuestCommunicationState.Connected.resourceId))
 
-        communicatorSubject.onNext(GuestCommunicationState.Disconnected)
+        communicationStateSubject.onNext(GuestCommunicationState.Disconnected)
 
         assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(GuestCommunicationState.Disconnected.resourceId))
 
-        communicatorSubject.onNext(GuestCommunicationState.Error)
+        communicationStateSubject.onNext(GuestCommunicationState.Error)
 
         assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(GuestCommunicationState.Error.resourceId))
     }
@@ -201,19 +179,19 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
     @Test
     fun `Reconnect action should forward call`() {
         viewModel.reconnect()
-        verify { mockCommunicator.connect() }
+        verify { mockFacade.connect() }
     }
 
     @Test
     fun `Update ready state action should forward call with true`() {
         viewModel.updateReadyState(true)
-        verify { mockPlayerReadyUsecase.updateReadyState(true) }
+        verify { mockFacade.updateReadyState(true) }
     }
 
     @Test
     fun `Update ready state action should forward call with false`() {
         viewModel.updateReadyState(false)
-        verify { mockPlayerReadyUsecase.updateReadyState(false) }
+        verify { mockFacade.updateReadyState(false) }
     }
 
     @Test
@@ -234,7 +212,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         viewModel.leaveGame()
 
         assertThat(commands.value!!).isEqualTo(WaitingRoomGuestCommand.NavigateToHomeScreen)
-        verify { mockLeaveGameUsecase.leaveGame() }
+        verify { mockFacade.leaveGame() }
     }
 
 
@@ -246,7 +224,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
 
         assertThat(reconnectLoading.value!!).isEqualToIgnoringGivenFields(UiControlModel(visibility = Visibility.Visible), "enabled")
 
-        communicatorSubject.onNext(state) // Change in communication state
+        communicationStateSubject.onNext(state) // Change in communication state
 
         assertThat(reconnectLoading.value!!).isEqualToIgnoringGivenFields(UiControlModel(visibility = Visibility.Gone), "enabled")
     }
@@ -256,19 +234,19 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
 
     @Test
     fun `Publish GameCanceled command when GameCanceled event occurs`() {
-        every { mockGameEventRepository.observeEvents() } returns Observable.just(GuestGameEvent.GameCanceled)
+        every { mockFacade.observeEvents() } returns Observable.just(GuestGameEvent.GameCanceled)
 
         val currentCommunicationState = viewModel.commands()
         subscribeToPublishers(currentCommunicationState)
 
         assertThat(currentCommunicationState.value).isEqualTo(WaitingRoomGuestCommand.NotifyUserGameCanceled)
-        verify { mockGameEventRepository.observeEvents() }
-        confirmVerified(mockGameEventRepository)
+        verify { mockFacade.observeEvents() }
+        confirmVerified(mockFacade)
     }
 
     @Test
     fun `Publish NavigateToHomeScreen command when user acknowledges GameCanceled event`() {
-        every { mockGameEventRepository.observeEvents() } returns Observable.empty()
+        every { mockFacade.observeEvents() } returns Observable.empty()
 
         val commands = viewModel.commands()
         subscribeToPublishers(commands)

@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame
 
 import ch.qscqlmpa.dwitch.gameadvertising.GameAdvertising
+import ch.qscqlmpa.dwitch.home.HomeModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.CommunicationModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.GuestCommunicationModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.GuestCommunicator
@@ -10,8 +11,10 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.eventprocessors.HostCommunicationEventProcessorModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.WebsocketModule
 import ch.qscqlmpa.dwitch.ongoinggame.game.GameModule
+import ch.qscqlmpa.dwitch.ongoinggame.gameroom.GameRoomModule
 import ch.qscqlmpa.dwitch.ongoinggame.messageprocessors.MessageProcessorModule
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStoreModule
+import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.WaitingRoomModule
 import ch.qscqlmpa.dwitch.service.OngoingGameScope
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameScreenBindingModule
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameViewModelBindingModule
@@ -30,6 +33,8 @@ import dagger.Subcomponent
     InGameStoreModule::class,
     OngoingGameScreenBindingModule::class,
     OngoingGameViewModelBindingModule::class,
+    WaitingRoomModule::class,
+    GameRoomModule::class,
     GameModule::class,
     MessageProcessorModule::class,
     GuestCommunicationEventProcessorModule::class,

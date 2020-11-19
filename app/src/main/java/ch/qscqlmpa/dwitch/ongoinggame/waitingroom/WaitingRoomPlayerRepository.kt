@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom
+package ch.qscqlmpa.dwitch.ongoinggame.waitingroom
 
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.service.OngoingGameScope
@@ -6,7 +6,7 @@ import io.reactivex.Observable
 import javax.inject.Inject
 
 @OngoingGameScope
-class WaitingRoomPlayerRepository @Inject constructor(private val store: InGameStore) {
+internal class WaitingRoomPlayerRepository @Inject constructor(private val store: InGameStore) {
 
     fun observePlayers(): Observable<List<PlayerWr>> {
         return store.observePlayersInWaitingRoom()

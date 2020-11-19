@@ -10,9 +10,11 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.TestWebsocketModul
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.WebsocketClientFactory
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.WebsocketServer
 import ch.qscqlmpa.dwitch.ongoinggame.game.TestGameModule
+import ch.qscqlmpa.dwitch.ongoinggame.gameroom.GameRoomModule
 import ch.qscqlmpa.dwitch.ongoinggame.messageprocessors.MessageProcessorModule
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStoreModule
+import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.WaitingRoomModule
 import ch.qscqlmpa.dwitch.service.OngoingGameScope
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameScreenBindingModule
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameViewModelBindingModule
@@ -29,6 +31,8 @@ import dagger.Subcomponent
     MessageProcessorModule::class,
     GuestCommunicationEventProcessorModule::class,
     HostCommunicationEventProcessorModule::class,
+    WaitingRoomModule::class,
+    GameRoomModule::class,
     GuestCommunicationModule::class,
     HostCommunicationModule::class,
     CommunicationModule::class,

@@ -21,13 +21,40 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment
 
     private lateinit var viewModel: WaitingRoomGuestViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(WaitingRoomGuestViewModel::class.java)
+        setupConnectionStateControls()
         setupLocalPlayerReadyStateControls()
         setupReconnectionControls()
-        setupConnectionStateControls()
+        setupLeaveGameControls()
         setupCommands()
+    }
+
+    override fun inject() {
+        (activity!!.application as App).getGameComponent()!!.inject(this)
+    }
+
+    override fun onOkClicked() {
+        viewModel.acknowledgeGameCanceledEvent()
+    }
+
+    private fun setupConnectionStateControls() {
+        viewModel.connectionStateInfo().observe(this, { uiInfo -> communicationStateTv.text = getText(uiInfo.textResource.id) })
+    }
+
+    private fun setupLocalPlayerReadyStateControls() {
+        localPlayerReadyCkb.setOnClickListener { v -> viewModel.updateReadyState((v as CheckBox).isChecked) }
+        viewModel.localPlayerReadyStateInfo().updateCheckbox(localPlayerReadyCkb, this)
+    }
+
+    private fun setupReconnectionControls() {
+        reconnectBtn.setOnClickListener { viewModel.reconnect() }
+        viewModel.reconnectAction().updateView(reconnectBtn, this)
+        viewModel.reconnectLoading().updateView(reconnectPb, this)
+    }
+
+    private fun setupLeaveGameControls() {
+        leaveGameBtn.setOnClickListener { viewModel.leaveGame() }
     }
 
     private fun setupCommands() {
@@ -38,34 +65,6 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment
                 WaitingRoomGuestCommand.NavigateToGameRoomScreen -> GameRoomActivity.startForGuest(activity!!)
             }
         })
-    }
-
-    private fun setupConnectionStateControls() {
-        viewModel.connectionStateInfo().observe(this, { uiInfo -> communicationStateTv.text = getText(uiInfo.textResource.id) })
-    }
-
-    private fun setupReconnectionControls() {
-        viewModel.reconnectAction().updateView(reconnectBtn, this)
-        viewModel.reconnectLoading().updateView(reconnectPb, this)
-    }
-
-    private fun setupLocalPlayerReadyStateControls() {
-        viewModel.localPlayerReadyStateInfo().updateCheckbox(localPlayerReadyCkb, this)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        localPlayerReadyCkb.setOnClickListener { v -> viewModel.updateReadyState((v as CheckBox).isChecked) }
-        reconnectBtn.setOnClickListener { viewModel.reconnect() }
-        leaveGameBtn.setOnClickListener { viewModel.leaveGame() }
-    }
-
-    override fun inject() {
-        (activity!!.application as App).getGameComponent()!!.inject(this)
-    }
-
-    override fun onOkClicked() {
-        viewModel.acknowledgeGameCanceledEvent()
     }
 
     private fun showGameCanceledDialog() {

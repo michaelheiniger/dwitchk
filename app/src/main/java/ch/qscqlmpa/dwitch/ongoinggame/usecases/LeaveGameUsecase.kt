@@ -9,7 +9,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
-class LeaveGameUsecase @Inject constructor(
+internal class LeaveGameUsecase @Inject constructor(
     private val store: InGameStore,
     private val serviceManager: ServiceManager,
     private val communicator: GuestCommunicator

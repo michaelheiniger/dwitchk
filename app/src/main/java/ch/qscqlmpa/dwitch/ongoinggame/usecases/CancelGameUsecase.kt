@@ -10,7 +10,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
-class CancelGameUsecase @Inject
+internal class CancelGameUsecase @Inject
 constructor(
     private val store: InGameStore,
     private val communicator: HostCommunicator,

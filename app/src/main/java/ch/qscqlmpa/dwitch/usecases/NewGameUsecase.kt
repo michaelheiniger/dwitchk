@@ -14,7 +14,7 @@ class NewGameUsecase @Inject constructor(
     private val store: Store
 ) {
 
-    fun hostNewGame(gameName: String, playerName: String): Completable {
+    fun hostGame(gameName: String, playerName: String): Completable {
         return Single.fromCallable { store.insertGameForHost(gameName, playerName) }
             .doAfterSuccess(this::startHostService)
             .ignoreElement()
