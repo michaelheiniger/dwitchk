@@ -4,8 +4,6 @@ import ch.qscqlmpa.dwitch.BaseUnitTest
 import ch.qscqlmpa.dwitch.game.TestEntityFactory
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEvent
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEventRepository
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
@@ -15,7 +13,6 @@ import ch.qscqlmpa.dwitchengine.model.game.GameState
 import io.mockk.*
 import io.reactivex.Completable
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -27,20 +24,16 @@ internal class LaunchGameUsecaseTest : BaseUnitTest() {
 
     private val mockInitialGameSetupFactory = mockk<InitialGameSetupFactory>(relaxed = true)
 
-    private lateinit var gameEventRepository: GuestGameEventRepository
-
     private lateinit var launchGameUsecase: LaunchGameUsecase
 
     @BeforeEach
     override fun setup() {
         super.setup()
-        gameEventRepository = GuestGameEventRepository()
         launchGameUsecase = LaunchGameUsecase(
                 mockInGameStore,
                 mockCommunicator,
                 mockServiceManager,
-                mockInitialGameSetupFactory,
-                gameEventRepository
+                mockInitialGameSetupFactory
         )
 
         every { mockInGameStore.updateGameRoom(RoomType.GAME_ROOM) } just Runs
@@ -62,7 +55,7 @@ internal class LaunchGameUsecaseTest : BaseUnitTest() {
         verify { mockCommunicator.sendMessage(capture(messageWrapperCap)) }
 
         val messageSent = messageWrapperCap.captured.message as Message.LaunchGameMessage
-        assertThat(messageSent.gameState).isNotNull()
+        assertThat(messageSent.gameState).isNotNull
     }
 
     @Test
@@ -72,7 +65,7 @@ internal class LaunchGameUsecaseTest : BaseUnitTest() {
         val gameStateCap = CapturingSlot<GameState>()
         verify { mockInGameStore.updateGameState(capture(gameStateCap)) }
 
-        assertThat(gameStateCap.captured).isNotNull()
+        assertThat(gameStateCap.captured).isNotNull
     }
 
     @Test
@@ -91,16 +84,6 @@ internal class LaunchGameUsecaseTest : BaseUnitTest() {
 
     private fun launchTest() {
         launchGameUsecase.launchGame().test().assertComplete()
-    }
-
-    @Test
-    fun `GameLaunched event is emitted`() {
-        val testObserver = gameEventRepository.observeEvents().test()
-        testObserver.assertNoValues()
-
-        launchTest()
-
-        testObserver.assertValue(GuestGameEvent.GameLaunched)
     }
 
 }
