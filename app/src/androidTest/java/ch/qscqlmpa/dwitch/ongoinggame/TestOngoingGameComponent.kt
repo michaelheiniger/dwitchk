@@ -5,6 +5,7 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.GuestCommunicationModu
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.eventprocessors.GuestCommunicationEventProcessorModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicationModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.eventprocessors.HostCommunicationEventProcessorModule
+import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializationModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.TestWebsocketModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.WebsocketClientFactory
@@ -24,27 +25,25 @@ import dagger.Subcomponent
 @Subcomponent(modules = [
     OngoingGameModule::class,
     InGameStoreModule::class,
-    OngoingGameScreenBindingModule::class,
-    OngoingGameViewModelBindingModule::class,
-    TestGameModule::class,
-    MessageProcessorModule::class,
-    GuestCommunicationEventProcessorModule::class,
-    HostCommunicationEventProcessorModule::class,
+    SerializationModule::class,
     WaitingRoomModule::class,
     GameRoomModule::class,
+    TestGameModule::class,
+    OngoingGameScreenBindingModule::class,
+    OngoingGameViewModelBindingModule::class,
+    MessageProcessorModule::class,
+    CommunicationModule::class,
+    GuestCommunicationEventProcessorModule::class,
+    HostCommunicationEventProcessorModule::class,
     GuestCommunicationModule::class,
     HostCommunicationModule::class,
-    CommunicationModule::class,
     TestWebsocketModule::class
 ])
 interface TestOngoingGameComponent : OngoingGameComponent {
 
+    val inGameStore: InGameStore
     val serializerFactory: SerializerFactory
-
     val websocketClientFactory: WebsocketClientFactory
     val websocketServer: WebsocketServer
-
     val initialGameSetupFactory: InitialGameSetupFactory
-
-    val inGameStore: InGameStore
 }

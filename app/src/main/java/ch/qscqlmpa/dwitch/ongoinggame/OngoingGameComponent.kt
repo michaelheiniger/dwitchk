@@ -8,6 +8,7 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.eventprocessors.GuestC
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicationModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.eventprocessors.HostCommunicationEventProcessorModule
+import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializationModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.WebsocketModule
 import ch.qscqlmpa.dwitch.ongoinggame.game.GameModule
 import ch.qscqlmpa.dwitch.ongoinggame.gameroom.GameRoomModule
@@ -29,17 +30,18 @@ import dagger.Subcomponent
 @Subcomponent(modules = [
     OngoingGameModule::class,
     InGameStoreModule::class,
-    OngoingGameScreenBindingModule::class,
-    OngoingGameViewModelBindingModule::class,
+    SerializationModule::class,
     WaitingRoomModule::class,
     GameRoomModule::class,
     GameModule::class,
+    OngoingGameScreenBindingModule::class,
+    OngoingGameViewModelBindingModule::class,
     MessageProcessorModule::class,
+    CommunicationModule::class,
     GuestCommunicationEventProcessorModule::class,
     HostCommunicationEventProcessorModule::class,
     GuestCommunicationModule::class,
     HostCommunicationModule::class,
-    CommunicationModule::class,
     WebsocketModule::class
 ])
 interface OngoingGameComponent {
@@ -54,7 +56,6 @@ interface OngoingGameComponent {
     fun inject(fragment: PlayerDashboardFragment)
 
     val gameAdvertising: GameAdvertising
-
     val hostCommunicator: HostCommunicator
     val guestCommunicator: GuestCommunicator
 }
