@@ -7,8 +7,9 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
-internal class PlayerReadyUsecase @Inject constructor(private val store: InGameStore,
-                                             private val communicator: GuestCommunicator
+internal class PlayerReadyUsecase @Inject constructor(
+    private val store: InGameStore,
+    private val communicator: GuestCommunicator
 ) {
 
     fun updateReadyState(ready: Boolean): Completable {
