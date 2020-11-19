@@ -81,7 +81,7 @@ class PlayerDaoTest : BaseInstrumentedTest() {
     }
 
     @Test
-    fun observeConnectedPlayers() {
+    fun observePlayersInWaitingRoom() {
         bootstrapDb(listOf(
                 Player(0, PlayerInGameId(2), 0, "Saruman", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true),
                 Player(0, PlayerInGameId(3), 0, "Gimli", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
@@ -89,16 +89,16 @@ class PlayerDaoTest : BaseInstrumentedTest() {
                 Player(0, PlayerInGameId(5), 0, "Legolas", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true)
         ))
 
-        dudeWaitAMinute(3)
+        dudeWaitAMinute(1)
 
-        // Only players that are connected are emitted
-        val players = playerDao.observeConnectedPlayers(gameLocalId!!).blockingFirst()
+        val players = playerDao.observePlayersInWaitingRoom(gameLocalId!!).blockingFirst()
 
-        assertThat(players.size).isEqualTo(4)
+        assertThat(players.size).isEqualTo(5)
         assertThat(players[0].name).isEqualTo(hostName)
-        assertThat(players[1].name).isEqualTo("Gimli")
-        assertThat(players[2].name).isEqualTo("Legolas")
-        assertThat(players[3].name).isEqualTo("Saruman")
+        assertThat(players[1].name).isEqualTo("Boromir")
+        assertThat(players[2].name).isEqualTo("Gimli")
+        assertThat(players[3].name).isEqualTo("Legolas")
+        assertThat(players[4].name).isEqualTo("Saruman")
     }
 
     private fun bootstrapDb(players: List<Player> = emptyList()) {

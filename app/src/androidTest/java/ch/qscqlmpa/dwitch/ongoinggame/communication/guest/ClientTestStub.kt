@@ -9,6 +9,8 @@ interface ClientTestStub {
 
     fun serverSendsMessageToClient(message: Message, enableThreadBreak: Boolean)
 
+    fun breakConnectionWithHost()
+
     /**
      * @return last message sent, if any.
      */

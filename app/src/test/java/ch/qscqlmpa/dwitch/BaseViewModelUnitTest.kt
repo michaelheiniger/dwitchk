@@ -1,12 +1,18 @@
 package ch.qscqlmpa.dwitch
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.LiveData
+import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 
-abstract class BaseViewModelUnitTest : BaseUnitTest() {
+abstract class BaseViewModelUnitTest {
 
     private val lifecycleOwner = mockk<LifecycleOwner>()
     private val lifecycle = LifecycleRegistry(lifecycleOwner)
@@ -15,9 +21,17 @@ abstract class BaseViewModelUnitTest : BaseUnitTest() {
     @JvmField
     var rule = InstantTaskExecutorRule()
 
-    override fun setup() {
-        super.setup()
+    open fun setup() {
+    }
+
+    @Before
+    fun setupLifecycle() {
         every { lifecycleOwner.lifecycle } returns lifecycle
+    }
+
+    @After
+    fun clearMocks() {
+        clearAllMocks()
     }
 
     protected fun subscribeToPublishers(vararg liveDatas: LiveData<out Any>) {

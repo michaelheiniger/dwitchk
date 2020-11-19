@@ -5,8 +5,8 @@ import ch.qscqlmpa.dwitch.IntTestAppComponent
 import ch.qscqlmpa.dwitch.ongoinggame.IntTestOngoingGameComponent
 import ch.qscqlmpa.dwitch.ongoinggame.IntTestServiceManager
 import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
-import ch.qscqlmpa.dwitch.ongoinggame.game.GameInteractor
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEvent
+import ch.qscqlmpa.dwitch.ongoinggame.game.PlayerDashboardFacade
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEvent
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.utils.PlayerDashboardRobot
 import ch.qscqlmpa.dwitchengine.DwitchEngine
@@ -15,13 +15,13 @@ import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealer
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import org.assertj.core.api.Assertions.assertThat
 
-abstract class IntTestPlayer() {
+abstract class IntTestPlayer {
 
     protected val appComponent: IntTestAppComponent = DaggerIntTestAppComponent.builder().build()
     protected var gameLocalId: Long? = null
     protected lateinit var ongoingGameComponent: IntTestOngoingGameComponent
     private lateinit var inGameStore: InGameStore
-    private lateinit var gameInteractor: GameInteractor
+    private lateinit var playerDashboardFacade: PlayerDashboardFacade
     protected lateinit var serializerFactory: SerializerFactory
 
     private val serviceManager = appComponent.serviceManager as IntTestServiceManager
@@ -33,20 +33,20 @@ abstract class IntTestPlayer() {
     protected fun hookOnGoingGameComponent() {
         ongoingGameComponent = serviceManager.getOnGoingGameComponent()
         inGameStore = ongoingGameComponent.inGameStore
-        gameInteractor = ongoingGameComponent.gameInteractor
+        playerDashboardFacade = ongoingGameComponent.playerDashboardFacade
         serializerFactory = ongoingGameComponent.serializerFactory
     }
 
     fun playCard(card: Card) {
-        gameInteractor.playCard(card).blockingGet()
+        playerDashboardFacade.playCard(card).blockingGet()
     }
 
     fun pickCard() {
-        gameInteractor.pickCard().blockingGet()
+        playerDashboardFacade.pickCard().blockingGet()
     }
 
     fun passTurn() {
-        gameInteractor.passTurn().blockingGet()
+        playerDashboardFacade.passTurn().blockingGet()
     }
 
     fun startNewRound() {
@@ -60,12 +60,11 @@ abstract class IntTestPlayer() {
                 )
             )
         )
-        gameInteractor.startNewRound().blockingGet()
+        playerDashboardFacade.startNewRound().blockingGet()
     }
 
     fun assertGameOverReceived() {
-        val lastGameEvent = ongoingGameComponent.gameEventRepository.getLastEvent()
-        assertThat(lastGameEvent).isEqualTo(GameEvent.GameOver)
+        assertThat(ongoingGameComponent.gameRoomGuestFacade.consumeLastEvent()).isEqualTo(GuestGameEvent.GameOver)
     }
 
     fun assertDashboard(): PlayerDashboardRobot {

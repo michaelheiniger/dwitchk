@@ -49,11 +49,6 @@ class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
         mockWwaitingRoomStateUpdateMessageWrapper = setupWaitingRoomStateUpdateMessageMock()
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-    }
-
     @Test
     fun `Send rejoin game ACK and waiting room state updatewhen rejoining player is found in store`() {
         launchTest()

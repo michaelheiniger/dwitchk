@@ -79,11 +79,12 @@ class InGameStoreImpl @Inject constructor(
         return playerDao.updatePlayerWithReady(playerInGameId, ready)
     }
 
-    override fun updatePlayerWithConnectionState(
+    override fun updatePlayer(
         playerInGameId: PlayerInGameId,
-        state: PlayerConnectionState
+        state: PlayerConnectionState,
+        ready: Boolean
     ): Int {
-        return playerDao.updatePlayerWithConnectionState(playerInGameId, state)
+        return playerDao.updatePlayer(playerInGameId, state, ready)
     }
 
     override fun updatePlayerWithConnectionStateAndReady(
@@ -92,6 +93,10 @@ class InGameStoreImpl @Inject constructor(
         ready: Boolean
     ): Int {
         return playerDao.updatePlayerWithConnectionStateAndReady(playerLocalId, state, ready)
+    }
+
+    override fun setAllPlayersToDisconnected(): Int {
+        return playerDao.setAllPlayersToDisconnected(gameLocalId)
     }
 
     override fun deletePlayers(playersLocalId: List<Long>): Int {
@@ -103,11 +108,15 @@ class InGameStoreImpl @Inject constructor(
     }
 
     override fun getLocalPlayer(): Player {
-        return playerDao.getLocalPlayer(gameLocalId)
+        return playerDao.gePlayer(localPlayerLocalId)
+    }
+
+    override fun observeLocalPlayer(): Observable<Player> {
+        return playerDao.observePlayer(localPlayerLocalId)
     }
 
     override fun getLocalPlayerInGameId(): PlayerInGameId {
-        return playerDao.getLocalPlayer(gameLocalId).inGameId
+        return playerDao.gePlayer(localPlayerLocalId).inGameId
     }
 
     override fun getPlayerInGameId(playerLocalId: Long): PlayerInGameId {
@@ -125,8 +134,8 @@ class InGameStoreImpl @Inject constructor(
     /**
      * Return the list of connected players sorted on the name ASC
      */
-    override fun observeConnectedPlayers(): Flowable<List<Player>> {
-        return playerDao.observeConnectedPlayers(gameLocalId)
+    override fun observePlayersInWaitingRoom(): Flowable<List<Player>> {
+        return playerDao.observePlayersInWaitingRoom(gameLocalId)
     }
 
     override fun getPlayersInWaitingRoom(): List<Player> {

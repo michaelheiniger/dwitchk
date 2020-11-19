@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Dwitch</string>
+    <string name="app_name" translatable="false">Dwitch</string>
     <string name="ma_game_list_tv">Games</string>
     <string name="ma_advertised_games_error_tv">Error while discovering games</string>
     <string name="nga_player_name_tv">Player name</string>
@@ -10,22 +10,22 @@
     <string name="nge_player_name_empty">Just give me your name, bro !</string>
     <string name="nge_game_name_empty">You got no game, dude !</string>
     <string name="connection_to_host_error">Error while connecting to host</string>
-    <string name="setup_host_error">Error while setting up the host</string>
     <string name="notification_title">Dwitch</string>
     <string name="notification_message">In-game</string>
     <string name="stop_game_service">Stop service</string>
     <string name="not_listening_for_guests">Not listening for guests</string>
-    <string name="listening_for_guests">Listening for guests</string>
+    <string name="listening_for_guests">Ready for guests to join</string>
     <string name="connected_to_host">Connected to host</string>
     <string name="disconnected_from_host">Disconnected from host</string>
-    <string name="connection_error_with_host">Communication error with host</string>
-    <string name="error_listening_for_guests">Communication error: cannot accept Guests</string>
+    <string name="guest_connection_error">Communication error with host</string>
+    <string name="host_connection_error">Communication error: cannot accept Guests</string>
     <string name="wra_player_list">Players</string>
     <string name="ready">Ready</string>
     <string name="not_ready">Not ready</string>
-    <string name="wrhf_launch_game_tv">Launch !</string>
+    <string name="wrhf_launch_game_tv">Go go !</string>
     <string name="wrhf_cancel_game_tv">Cancel game</string>
     <string name="game_canceled_by_host">Game canceled by host</string>
+    <string name="game_over">Game over, see ya bro !</string>
     <string name="ok">OK</string>
     <string name="card">Card</string>
     <string name="cards_in_hand">Cards in hand</string>
@@ -35,21 +35,21 @@
     <string name="card_suit_diamonds">Diamonds</string>
     <string name="card_suit_spades">Spades</string>
     <string name="card_suit_heart">Heart</string>
-    <string name="card_suit_blank">Blank</string>
-    <string name="card_name_two">2</string>
-    <string name="card_name_three">3</string>
-    <string name="card_name_four">4</string>
-    <string name="card_name_five">5</string>
-    <string name="card_name_six">6</string>
-    <string name="card_name_seven">7</string>
-    <string name="card_name_eight">8</string>
-    <string name="card_name_nine">9</string>
-    <string name="card_name_ten">10</string>
+    <string name="card_suit_blank" translatable="false">Blank</string>
+    <string name="card_name_two" translatable="false">2</string>
+    <string name="card_name_three" translatable="false">3</string>
+    <string name="card_name_four" translatable="false">4</string>
+    <string name="card_name_five" translatable="false">5</string>
+    <string name="card_name_six" translatable="false">6</string>
+    <string name="card_name_seven" translatable="false">7</string>
+    <string name="card_name_eight" translatable="false">8</string>
+    <string name="card_name_nine" translatable="false">9</string>
+    <string name="card_name_ten" translatable="false">10</string>
     <string name="card_name_jack">Jack</string>
     <string name="card_name_queen">Queen</string>
     <string name="card_name_king">King</string>
     <string name="card_name_ace">Ace</string>
-    <string name="card_name_blank">Blank</string>
+    <string name="card_name_blank" translatable="false">Blank</string>
     <string name="pdf_play">Play</string>
     <string name="pdf_pick_a_card">Pick</string>
     <string name="pdf_start_new_round">New Round</string>
@@ -63,4 +63,8 @@
     <string name="grhf_end_game_btn">End Game</string>
     <string name="round_is_beginning">Round has begun !</string>
     <string name="round_is_over">Round is over !</string>
+    <string name="reconnect_btn">Reconnect</string>
+    <string name="player_connected">Connected</string>
+    <string name="player_disconnected">Disconnected</string>
+    <string name="leave_game_btn">Leave</string>
 </resources>

@@ -8,20 +8,21 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.RecipientType
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.eventprocessors.HostCommunicationEventDispatcher
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.Address
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.AddressType
+import ch.qscqlmpa.dwitch.ongoinggame.events.HostCommunicationEventRepository
 import ch.qscqlmpa.dwitch.ongoinggame.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeReceived
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
-import com.jakewharton.rxrelay2.PublishRelay
 import io.mockk.*
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
-import org.junit.Assert
+import io.reactivex.subjects.PublishSubject
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class HostCommunicatorImplTest : BaseUnitTest() {
@@ -32,9 +33,15 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
     private val mockCommunicationEventDispatcher = mockk<HostCommunicationEventDispatcher>(relaxed = true)
 
+    private val mockCommEventRepository = mockk<HostCommunicationEventRepository>(relaxed = true)
+
     private lateinit var localConnectionIdStore: LocalConnectionIdStore
 
-    private lateinit var hostCommunicator: HostCommunicatorImpl
+    private lateinit var hostCommunicator: HostCommunicator
+
+    private lateinit var communicationEventsStream: PublishSubject<ServerCommunicationEvent>
+
+    private lateinit var receivedMessagesStream: PublishSubject<EnvelopeReceived>
 
     @BeforeEach
     override fun setup() {
@@ -42,166 +49,145 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
         localConnectionIdStore = LocalConnectionIdStore()
 
-        val scheduler = TestSchedulerFactory()
-        scheduler.setTimeScheduler(Schedulers.computation())
-
         hostCommunicator = HostCommunicatorImpl(
-                mockCommServer,
-                mockMessageDispatcher,
-                mockCommunicationEventDispatcher,
-                scheduler,
-                localConnectionIdStore
+            mockCommServer,
+            mockMessageDispatcher,
+            mockCommunicationEventDispatcher,
+            mockCommEventRepository,
+            localConnectionIdStore,
+            TestSchedulerFactory()
         )
 
-        every { mockCommServer.start() } just Runs
-        every { mockCommServer.stop() } just Runs
+        communicationEventsStream = PublishSubject.create()
+        every { mockCommServer.observeCommunicationEvents() } returns communicationEventsStream
+
+        receivedMessagesStream = PublishSubject.create()
+        every { mockCommServer.observeReceivedMessages() } returns receivedMessagesStream
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-        clearMocks(mockCommServer, mockMessageDispatcher, mockCommunicationEventDispatcher)
+    @Nested
+    inner class ListenForConnections {
+
+        @Test
+        fun `Start listening for connections`() {
+            assertThat(communicationEventsStream.hasObservers()).isFalse
+
+            hostCommunicator.listenForConnections()
+            assertThat(communicationEventsStream.hasObservers()).isTrue
+
+            verifyOrder {
+                mockCommServer.observeCommunicationEvents()
+                mockCommServer.observeReceivedMessages()
+                mockCommServer.start()
+            }
+        }
+
+        @Test
+        fun `Communication events emitted by websocket server are dispatched`() {
+            hostCommunicator.listenForConnections()
+
+            communicationEventsStream.onNext(ServerCommunicationEvent.ListeningForConnections)
+            communicationEventsStream.onNext(ServerCommunicationEvent.NotListeningForConnections)
+
+            val dispatchedEventCap = mutableListOf<ServerCommunicationEvent>()
+            verify(exactly = 2) { mockCommunicationEventDispatcher.dispatch(capture(dispatchedEventCap)) }
+
+            assertThat(dispatchedEventCap[0]).isEqualTo(ServerCommunicationEvent.ListeningForConnections)
+            assertThat(dispatchedEventCap[1]).isEqualTo(ServerCommunicationEvent.NotListeningForConnections)
+
+            confirmVerified(mockCommunicationEventDispatcher)
+        }
+
+        @Test
+        fun `Received messages emitted by websocket server are dispatched`() {
+            hostCommunicator.listenForConnections()
+
+            val messageReceived1 = mockk<EnvelopeReceived>()
+            val messageReceived2 = mockk<EnvelopeReceived>()
+            receivedMessagesStream.onNext(messageReceived1)
+            receivedMessagesStream.onNext(messageReceived2)
+
+            val dispatchedMessageCap = mutableListOf<EnvelopeReceived>()
+            verify(exactly = 2) { mockMessageDispatcher.dispatch(capture(dispatchedMessageCap)) }
+
+            assertThat(dispatchedMessageCap[0]).isEqualTo(messageReceived1)
+            assertThat(dispatchedMessageCap[1]).isEqualTo(messageReceived2)
+
+            confirmVerified(mockMessageDispatcher)
+        }
     }
 
-    @Test
-    fun startObservingReceivedMessages() {
-        setupEmptyCommunicationEventMock()
-        setupEmptyReceivedMessageMock()
+    @Nested
+    inner class CloseAllConnections {
 
-        hostCommunicator.listenForConnections()
-        hostCommunicator.listenForConnections() // should be idempotent
+        @Test
+        fun `Close all connections`() {
+            hostCommunicator.listenForConnections()
 
-        verify(exactly = 1) { mockCommServer.start() }
-        verify(exactly = 1) { mockCommServer.observeReceivedMessages() }
-        verify(exactly = 1) { mockCommServer.observeCommunicationEvents() }
+            hostCommunicator.closeAllConnections()
+            assertThat(communicationEventsStream.hasObservers()).isFalse // Observed streams have been disposed.
 
-        confirmVerified(mockCommServer)
-        confirmVerified(mockMessageDispatcher)
-        confirmVerified(mockCommunicationEventDispatcher)
+            verifyOrder {
+                mockCommServer.observeCommunicationEvents()
+                mockCommServer.observeReceivedMessages()
+                mockCommServer.start()
+                mockCommServer.stop()
+            }
+            confirmVerified(mockCommServer)
+        }
     }
 
-    @Test
-    fun dispatchReceivedMessage() {
-        setupMessageDispatchCompleteMock()
-        setupEmptyCommunicationEventMock()
+    @Nested
+    inner class SendMessage {
 
-        val messageReceived1 = mockk<EnvelopeReceived>()
-        val messageReceived2 = mockk<EnvelopeReceived>()
-        setupReceivedMessageMock(listOf(messageReceived1, messageReceived2))
+        @BeforeEach
+        fun setup() {
+            every { mockCommServer.sendMessage(any(), any()) } returns Completable.complete()
+        }
 
-        hostCommunicator.listenForConnections()
+        @Test
+        fun `Broadcast message when RecipientType is All`() {
+            val messageToSend = Message.CancelGameMessage
 
-        val dispatchedMessageReceivedWrapperCap = mutableListOf<EnvelopeReceived>()
-        verify(exactly = 2) { mockMessageDispatcher.dispatch(capture(dispatchedMessageReceivedWrapperCap)) }
+            hostCommunicator.sendMessage(EnvelopeToSend(RecipientType.All, messageToSend)).test().assertComplete()
 
-        Assert.assertEquals(messageReceived1, dispatchedMessageReceivedWrapperCap[0])
-        Assert.assertEquals(messageReceived2, dispatchedMessageReceivedWrapperCap[1])
+            verify { mockCommServer.sendMessage(Message.CancelGameMessage, AddressType.Broadcast) }
+        }
 
-        verify(exactly = 1) { mockCommServer.start() }
-        verify(exactly = 1) { mockCommServer.observeReceivedMessages() }
-        verify(exactly = 1) { mockCommServer.observeCommunicationEvents() }
+        @Test
+        fun `Send message to recipient specified by RecipientType Single`() {
+            val messageToSend = Message.JoinGameAckMessage(GameCommonId(124), PlayerInGameId(45))
+            val recipientAddress = Address("192.168.1.1", 54245)
+            val recipientLocalConnectionId = localConnectionIdStore.addConnectionId(recipientAddress)
 
-        confirmVerified(mockCommServer)
-        confirmVerified(mockMessageDispatcher)
-        confirmVerified(mockCommunicationEventDispatcher)
+            hostCommunicator.sendMessage(EnvelopeToSend(RecipientType.Single(recipientLocalConnectionId), messageToSend))
+                .test().assertComplete()
+
+            verify { mockCommServer.sendMessage(messageToSend, AddressType.Unicast(recipientAddress)) }
+        }
     }
 
-    @Test
-    fun observeCommunicationState() {
-        setupEmptyReceivedMessageMock()
-        setupMessageDispatchCompleteMock()
-        setupCommunicationEventDispatcherMock()
+    @Nested
+    inner class CloseConnectionWithClient {
 
-        val communicationEventsSource = PublishRelay.create<ServerCommunicationEvent>()
-        every { mockCommServer.observeCommunicationEvents() } returns communicationEventsSource
-        hostCommunicator.listenForConnections()
+        @Test
+        fun `Close connection with the specified client `() {
+            val clientLocalConnectionId = LocalConnectionId(234)
 
-        val testObserver1 = hostCommunicator.observeCommunicationState().test()
+            hostCommunicator.closeConnectionWithClient(clientLocalConnectionId)
 
-        communicationEventsSource.accept(ListeningForConnections)
-        testObserver1.assertValue(HostCommunicationState.LISTENING_FOR_GUESTS)
-        testObserver1.dispose()
-
-        val testObserver2 = hostCommunicator.observeCommunicationState().test()
-        testObserver2.assertValue(HostCommunicationState.LISTENING_FOR_GUESTS)
-
-        communicationEventsSource.accept(NotListeningForConnections)
-        testObserver2.assertValues(HostCommunicationState.LISTENING_FOR_GUESTS, HostCommunicationState.NOT_LISTENING_FOR_GUESTS)
-
-        verify(exactly = 1) { mockCommunicationEventDispatcher.dispatch(ListeningForConnections) }
-        verify(exactly = 1) { mockCommunicationEventDispatcher.dispatch(NotListeningForConnections) }
-
-        verify(exactly = 1) { mockCommServer.start() }
-        verify(exactly = 1) { mockCommServer.observeReceivedMessages() }
-        verify(exactly = 1) { mockCommServer.observeCommunicationEvents() }
-
-        confirmVerified(mockCommServer)
-        confirmVerified(mockMessageDispatcher)
-        confirmVerified(mockCommunicationEventDispatcher)
+            verify { mockCommServer.closeConnectionWithClient(clientLocalConnectionId) }
+        }
     }
 
-    @Test
-    fun sendMessage() {
-        setupEmptyCommunicationEventMock()
-        setupEmptyReceivedMessageMock()
+    @Nested
+    inner class ObserveCommunicationState {
 
-        every { mockCommServer.sendMessage(any(), any()) } returns Completable.complete()
+        @Test
+        fun `Communication events emitted by the repository are simply forwarded`() {
+            every { mockCommEventRepository.observeEvents() } returns Observable.just(HostCommunicationState.ListeningForGuests)
 
-        val joinGameAckMessage = Message.JoinGameAckMessage(GameCommonId(1), PlayerInGameId(2))
-        val messageWrapper = EnvelopeToSend(RecipientType.Single(LocalConnectionId(0)), joinGameAckMessage)
-
-        val address = Address("192.168.1.1", 8889)
-        localConnectionIdStore.addAddress(address)
-
-        hostCommunicator.sendMessage(messageWrapper)
-
-        val messageCap = CapturingSlot<Message>()
-        verify(exactly = 1) { mockCommServer.sendMessage(capture(messageCap), AddressType.Unicast(address)) }
-
-        val joinGameAckMessageCap = messageCap.captured as Message.JoinGameAckMessage
-
-        Assert.assertEquals(GameCommonId(1), joinGameAckMessageCap.gameCommonId)
-        Assert.assertEquals(PlayerInGameId(2), joinGameAckMessageCap.playerInGameId)
-
-        confirmVerified(mockCommServer)
-        confirmVerified(mockMessageDispatcher)
-        confirmVerified(mockCommunicationEventDispatcher)
-    }
-
-    @Test
-    fun kickPlayer() {
-        setupEmptyCommunicationEventMock()
-        setupEmptyReceivedMessageMock()
-
-        val localConnectionId = LocalConnectionId(0)
-        every { mockCommServer.closeConnectionWithClient(localConnectionId) } just Runs
-
-        hostCommunicator.closeConnectionWithClient(localConnectionId)
-
-        verify(exactly = 1) { mockCommServer.closeConnectionWithClient(localConnectionId) }
-
-        confirmVerified(mockCommServer)
-        confirmVerified(mockMessageDispatcher)
-        confirmVerified(mockCommunicationEventDispatcher)
-    }
-
-    private fun setupReceivedMessageMock(envelopes: List<EnvelopeReceived>) {
-        every { mockCommServer.observeReceivedMessages() } returns Observable.fromIterable(envelopes)
-    }
-
-    private fun setupEmptyCommunicationEventMock() {
-        every { mockCommServer.observeCommunicationEvents() } returns Observable.empty<ServerCommunicationEvent>()
-    }
-
-    private fun setupEmptyReceivedMessageMock() {
-        every { mockCommServer.observeReceivedMessages() } returns Observable.empty<EnvelopeReceived>()
-    }
-
-    private fun setupMessageDispatchCompleteMock() {
-        every { mockMessageDispatcher.dispatch(any()) } returns Completable.complete()
-    }
-
-    private fun setupCommunicationEventDispatcherMock() {
-        every { mockCommunicationEventDispatcher.dispatch(any()) } returns Completable.complete()
+            hostCommunicator.observeCommunicationState().test().assertValue(HostCommunicationState.ListeningForGuests)
+        }
     }
 }

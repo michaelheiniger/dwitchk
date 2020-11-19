@@ -44,7 +44,7 @@ internal class JoinGameMessageProcessor @Inject constructor(private val store: I
     private fun storeConnectionIdentifier(senderLocalConnectionID: LocalConnectionId, newPlayerLocalId: Long): Completable {
         return Completable.fromAction {
             val newGuestPlayerInGameId = store.getPlayerInGameId(newPlayerLocalId)
-            localConnectionIdStore.addPlayerInGameId(senderLocalConnectionID, newGuestPlayerInGameId)
+            localConnectionIdStore.mapPlayerIdToConnectionId(senderLocalConnectionID, newGuestPlayerInGameId)
         }
     }
 }

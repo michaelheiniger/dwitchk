@@ -9,13 +9,14 @@ import ch.qscqlmpa.dwitch.PlayerHostTest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.ongoinggame.messages.MessageFactory
-import ch.qscqlmpa.dwitch.uitests.GameRoomUtil.assertCanPassTurn
-import ch.qscqlmpa.dwitch.uitests.GameRoomUtil.assertCanPickACard
-import ch.qscqlmpa.dwitch.uitests.GameRoomUtil.assertCardInHand
-import ch.qscqlmpa.dwitch.uitests.GameRoomUtil.assertCardOnTable
-import ch.qscqlmpa.dwitch.uitests.GameRoomUtil.passTurn
-import ch.qscqlmpa.dwitch.uitests.GameRoomUtil.pickACard
-import ch.qscqlmpa.dwitch.uitests.UiUtil.clickOnButton
+import ch.qscqlmpa.dwitch.uitests.base.BaseHostTest
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCanPassTurn
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCanPickACard
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCardInHand
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCardOnTable
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.passTurn
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.pickACard
+import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.clickOnButton
 import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil
 import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.model.card.Card
@@ -124,7 +125,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         assertCardOnTable(Card.Clubs3)
 
         otherPlayerPlaysCard(Guest1, Card.Spades4)
-        dudeWaitASec(2)
+        dudeWaitASec()
         assertCardOnTable(Card.Spades4)
 
         playACard(0) // Local player plays Hearts5 and is done
@@ -135,7 +136,7 @@ class GameRoomAsHostTest : BaseHostTest() {
 
         clickOnButton(R.id.endGameBtn)
 
-        dudeWaitASec(2)
+        dudeWaitASec()
 
         assertCurrentScreenIsHomeSreen()
     }
@@ -166,8 +167,8 @@ class GameRoomAsHostTest : BaseHostTest() {
 
         clickOnButton(R.id.launchGameBtn)
 
-        dudeWaitASec(2)
+        dudeWaitASec()
 
-        assertControlTextContent(R.id.startNewRound, R.string.pdf_start_new_round)
+        assertControlTextContent(R.id.startNewRoundBtn, R.string.pdf_start_new_round)
     }
 }

@@ -5,8 +5,8 @@ import ch.qscqlmpa.dwitch.game.TestEntityFactory
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionId
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionIdStore
-import ch.qscqlmpa.dwitch.ongoinggame.communication.host.ClientDisconnected
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
+import ch.qscqlmpa.dwitch.ongoinggame.communication.host.ServerCommunicationEvent
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.eventprocessors.GuestDisconnectedEventProcessor
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.Address
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend
@@ -15,10 +15,9 @@ import ch.qscqlmpa.dwitch.utils.LazyImpl
 import io.mockk.*
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.junit.After
-import org.junit.Assert.assertNull
-import org.junit.Before
-import org.junit.Test
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
 
@@ -34,7 +33,7 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
 
     private val guestPlayer = TestEntityFactory.createGuestPlayer1().copy(connectionState = PlayerConnectionState.CONNECTED)
 
-    @Before
+    @BeforeEach
     override fun setup() {
         super.setup()
         localConnectionIdStore = LocalConnectionIdStore()
@@ -48,16 +47,10 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
         every { mockCommunicator.sendMessage(any()) } returns Completable.complete()
     }
 
-    @After
-    override fun tearDown() {
-        super.tearDown()
-        clearMocks(mockHostMessageFactory, mockCommunicator)
-    }
-
     @Test
     fun `Client disconnects`() {
 
-        every { mockInGameStore.updatePlayerWithConnectionState(any(), any()) } returns 1 // Record is found and updated
+        every { mockInGameStore.updatePlayer(any(), any(), any()) } returns 1 // Record is found and updated
 
         val guestLocalConnectionId = setupLocalConnectionIdStore()
 
@@ -67,8 +60,8 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
         launchTest(guestLocalConnectionId).test().assertComplete()
 
         verify { mockCommunicator.sendMessage(waitingRoomStateUpdateMessageWrapperMock) }
-        verify { mockInGameStore.updatePlayerWithConnectionState(guestPlayer.inGameId, PlayerConnectionState.DISCONNECTED) }
-        assertNull(localConnectionIdStore.getInGameId(guestLocalConnectionId))
+        verify { mockInGameStore.updatePlayer(guestPlayer.inGameId, PlayerConnectionState.DISCONNECTED, false) }
+        assertThat(localConnectionIdStore.getInGameId(guestLocalConnectionId)).isNull()
     }
 
     @Test
@@ -81,7 +74,7 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
         verify { mockCommunicator wasNot Called }
         verify { mockHostMessageFactory wasNot Called }
         verify { mockInGameStore wasNot Called }
-        assertNull(localConnectionIdStore.getInGameId(LocalConnectionId(0)))
+        assertThat(localConnectionIdStore.getInGameId(LocalConnectionId(0))).isNull()
         confirmVerified(mockCommunicator)
         confirmVerified(mockHostMessageFactory)
         confirmVerified(mockInGameStore)
@@ -91,22 +84,22 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
     fun `Nothing to do when player does not exist in store`() {
 
         // No corresponding guest exists in store. This should never happen.
-        every { mockInGameStore.updatePlayerWithConnectionState(any(), any()) } returns 0
+        every { mockInGameStore.updatePlayer(any(), any(), any()) } returns 0
 
         val guestLocalConnectionId = setupLocalConnectionIdStore()
 
         launchTest(guestLocalConnectionId).test().assertError(IllegalStateException::class.java)
 
-        assertNull(localConnectionIdStore.getInGameId(guestLocalConnectionId))
+        assertThat(localConnectionIdStore.getInGameId(guestLocalConnectionId)).isNull()
     }
 
     private fun launchTest(guestLocalConnectionId: LocalConnectionId): Completable {
-        return processor.process(ClientDisconnected(guestLocalConnectionId))
+        return processor.process(ServerCommunicationEvent.ClientDisconnected(guestLocalConnectionId))
     }
 
     private fun setupLocalConnectionIdStore(): LocalConnectionId {
-        val guestLocalConnectionId = localConnectionIdStore.addAddress(senderAddress)
-        localConnectionIdStore.addPlayerInGameId(guestLocalConnectionId, guestPlayer.inGameId)
+        val guestLocalConnectionId = localConnectionIdStore.addConnectionId(senderAddress)
+        localConnectionIdStore.mapPlayerIdToConnectionId(guestLocalConnectionId, guestPlayer.inGameId)
         return guestLocalConnectionId
     }
 }

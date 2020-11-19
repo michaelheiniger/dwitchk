@@ -8,7 +8,6 @@ import ch.qscqlmpa.dwitch.model.game.GameCommonId
 import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
 import io.mockk.*
 import org.joda.time.LocalTime
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -23,12 +22,6 @@ class NewGameUsecaseTest : BaseUnitTest() {
     override fun setup() {
         super.setup()
         newGameUsecase = NewGameUsecase(mockServiceManager, mockStore)
-    }
-
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-        clearMocks(mockServiceManager)
     }
 
     @Nested
@@ -50,14 +43,14 @@ class NewGameUsecaseTest : BaseUnitTest() {
 
         @Test
         fun `should create game in store`() {
-            newGameUsecase.hostNewGame(gameName, playerName).test().assertComplete()
+            newGameUsecase.hostGame(gameName, playerName).test().assertComplete()
 
             verify { mockStore.insertGameForHost(gameName, playerName) }
         }
 
         @Test
         fun `should start service`() {
-            newGameUsecase.hostNewGame(gameName, playerName).test().assertComplete()
+            newGameUsecase.hostGame(gameName, playerName).test().assertComplete()
 
             verify {
                 mockServiceManager.startHostService(

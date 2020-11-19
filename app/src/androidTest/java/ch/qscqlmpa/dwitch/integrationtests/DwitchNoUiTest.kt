@@ -38,7 +38,7 @@ class DwitchNoUiTest {
         val host = IntTestHost(gameName, networkHub)
         host.createGame()
 
-        val advertisedGame = AdvertisedGame(gameName, host.gameCommonId(),  gameIpAddress, gamePort)
+        val advertisedGame = AdvertisedGame(gameName, host.gameCommonId(), gameIpAddress, gamePort)
         val guest1 = IntTestGuest(Guest1, advertisedGame, networkHub)
         val guest2 = IntTestGuest(Guest2, advertisedGame, networkHub)
 

@@ -28,11 +28,6 @@ class PlayerReadyMessageProcessorTest : BaseMessageProcessorTest() {
         setupCommunicatorSendMessageCompleteMock()
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-    }
-
     @Test
     fun `Send waiting room state update message when player ready state is updated`() {
 

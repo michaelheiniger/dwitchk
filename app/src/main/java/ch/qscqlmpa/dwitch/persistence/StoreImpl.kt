@@ -2,7 +2,6 @@ package ch.qscqlmpa.dwitch.persistence
 
 import ch.qscqlmpa.dwitch.model.InsertGameResult
 import ch.qscqlmpa.dwitch.model.game.GameCommonId
-import ch.qscqlmpa.dwitch.model.player.Player
 import javax.inject.Inject
 
 class StoreImpl @Inject constructor(private val appRoomDatabase: AppRoomDatabase) : Store {
@@ -24,9 +23,5 @@ class StoreImpl @Inject constructor(private val appRoomDatabase: AppRoomDatabase
             gameCommonId,
             guestPlayerName
         )
-    }
-
-    override fun getLocalPlayer(gameLocalId: Long): Player {
-        return appRoomDatabase.playerDao().getLocalPlayer(gameLocalId)
     }
 }

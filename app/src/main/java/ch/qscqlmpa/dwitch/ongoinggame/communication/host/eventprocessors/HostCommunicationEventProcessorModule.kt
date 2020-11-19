@@ -1,8 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.host.eventprocessors
 
-import ch.qscqlmpa.dwitch.ongoinggame.communication.host.ClientConnected
-import ch.qscqlmpa.dwitch.ongoinggame.communication.host.ClientDisconnected
-import ch.qscqlmpa.dwitch.service.OngoingGameScope
+import ch.qscqlmpa.dwitch.ongoinggame.communication.host.ServerCommunicationEvent
+import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameScope
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -13,16 +12,16 @@ abstract class HostCommunicationEventProcessorModule {
     @OngoingGameScope
     @Binds
     @IntoMap
-    @HostCommunicationEventProcessorKey(ClientConnected::class)
+    @HostCommunicationEventProcessorKey(ServerCommunicationEvent.ClientConnected::class)
     internal abstract fun bindClientConnectedEventProcessor(
-            eventProcessor: GuestConnectedEventProcessor
+        eventProcessor: GuestConnectedEventProcessor
     ): HostCommunicationEventProcessor
 
     @OngoingGameScope
     @Binds
     @IntoMap
-    @HostCommunicationEventProcessorKey(ClientDisconnected::class)
+    @HostCommunicationEventProcessorKey(ServerCommunicationEvent.ClientDisconnected::class)
     internal abstract fun bindClientDisconnectedEventProcessor(
-            eventProcessor: GuestDisconnectedEventProcessor
+        eventProcessor: GuestDisconnectedEventProcessor
     ): HostCommunicationEventProcessor
 }

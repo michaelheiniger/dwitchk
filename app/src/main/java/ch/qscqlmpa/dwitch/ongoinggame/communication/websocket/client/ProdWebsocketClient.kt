@@ -2,8 +2,10 @@ package ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client
 
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
+import org.java_websocket.WebSocket
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
+import timber.log.Timber
 import java.net.URI
 import java.util.*
 
@@ -19,6 +21,7 @@ class ProdWebsocketClient constructor(
 
     override fun start() {
         connect()
+        connectionLostTimeout = HEART_BEAT_INTERVAL_SEC
     }
 
     override fun stop() {
@@ -26,7 +29,11 @@ class ProdWebsocketClient constructor(
     }
 
     override fun send(message: String) {
-        super.send(message)
+        if (readyState == WebSocket.READYSTATE.OPEN) {
+            super.send(message)
+        } else {
+            Timber.e("Cannot send message when connection state is: $readyState")
+        }
     }
 
     override fun onOpen(handshake: ServerHandshake?) {
@@ -62,6 +69,9 @@ class ProdWebsocketClient constructor(
     }
 
     companion object {
+
+        private const val HEART_BEAT_INTERVAL_SEC = 5
+
         private fun buildServerUri(destinationAddress: String, destinationPort: Int): URI {
             return URI.create(String.format(Locale.getDefault(), "ws://%s:%d", destinationAddress, destinationPort))
         }

@@ -21,6 +21,36 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Connected to host" />
 
+        <Button
+            android:id="@+id/reconnectBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reconnect_btn"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/communicationStateTv"
+            app:layout_constraintTop_toBottomOf="@+id/communicationStateTv"
+            tools:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/reconnectPb"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/reconnectBtn"
+            app:layout_constraintStart_toEndOf="@+id/reconnectBtn"
+            app:layout_constraintTop_toTopOf="@+id/reconnectBtn" />
+
+        <Button
+            android:id="@+id/leaveGameBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/leave_game_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/localPlayerReadyCkb" />
+
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/localPlayerReadyCkb"
             android:layout_width="wrap_content"

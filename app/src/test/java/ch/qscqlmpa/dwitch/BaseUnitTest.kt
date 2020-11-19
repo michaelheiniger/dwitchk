@@ -4,9 +4,9 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFact
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.persistence.Store
 import io.mockk.clearAllMocks
-import io.mockk.clearMocks
 import io.mockk.mockk
 import kotlinx.serialization.json.Json
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -23,6 +23,10 @@ abstract class BaseUnitTest {
     }
 
     open fun tearDown() {
+    }
+
+    @AfterEach
+    fun clearMocks() {
         clearAllMocks()
     }
 }

@@ -27,11 +27,6 @@ class LanGameDiscoveryTest : BaseUnitTest() {
         super.setup()
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-    }
-
     @Test
     fun `should emit one advertised game and complete`() {
         val gameDiscovery = LanGameDiscovery(serializerFactory, TestNetworkAdapter())

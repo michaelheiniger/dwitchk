@@ -27,12 +27,23 @@ class IntTestWebsocketClient constructor(
         this.guestIdTestHost = guestIdTestHost
     }
 
+    private var isOpen: Boolean = false
+    private var isClosed: Boolean = false
+
     override fun start() {
         networkHub.connectToHost(guestIdTestHost)
     }
 
     override fun stop() {
-        onClose(1, "Connection closed manually", remote = true) //TODO: What is "code" supposed to be used for ?
+        onClose(1, "Connection closed manually", remote = true)
+    }
+
+    override fun isOpen(): Boolean {
+        return isOpen
+    }
+
+    override fun isClosed(): Boolean {
+        return isClosed
     }
 
     override fun send(message: String) {
@@ -42,10 +53,14 @@ class IntTestWebsocketClient constructor(
 
     fun onOpen(handshake: ServerHandshake?) {
         onOpenRelay.accept(OnOpen(handshake))
+        isOpen = true
+        isClosed = false
     }
 
     fun onClose(code: Int, reason: String?, remote: Boolean) {
         onCloseRelay.accept(OnClose(code, reason, remote))
+        isOpen = false
+        isClosed = true
     }
 
     fun onMessage(message: String) {

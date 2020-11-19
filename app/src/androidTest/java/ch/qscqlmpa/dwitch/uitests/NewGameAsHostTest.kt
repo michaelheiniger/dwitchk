@@ -6,8 +6,9 @@ import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.uitests.UiUtil.matchesWithErrorText
-import ch.qscqlmpa.dwitch.uitests.UiUtil.matchesWithText
+import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.matchesWithErrorText
+import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.matchesWithText
+import ch.qscqlmpa.dwitch.uitests.base.BaseUiTest
 import org.junit.Before
 import org.junit.Test
 

@@ -3,8 +3,6 @@ package ch.qscqlmpa.dwitch.ongoinggame.usecases
 import ch.qscqlmpa.dwitch.model.RoomType
 import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEvent
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEventRepository
 import ch.qscqlmpa.dwitch.ongoinggame.messages.HostMessageFactory
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
@@ -17,12 +15,11 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-class LaunchGameUsecase @Inject constructor(
+internal class LaunchGameUsecase @Inject constructor(
     private val store: InGameStore,
     private val communicator: HostCommunicator,
     private val serviceManager: ServiceManager,
     private val initialGameSetupFactory: InitialGameSetupFactory,
-    private val gameEventRepository: GameEventRepository
 ) {
 
     fun launchGame(): Completable {
@@ -37,7 +34,6 @@ class LaunchGameUsecase @Inject constructor(
                 )
             }
             .doOnComplete { setCurrentRoomToGameRoomInService() }
-            .doOnComplete { emitGameLaunchedEvent() }
             .doOnError { e -> Timber.e(e, "Error while launching game") }
     }
 
@@ -65,9 +61,5 @@ class LaunchGameUsecase @Inject constructor(
 
     private fun setCurrentRoomToGameRoomInService() {
         serviceManager.goToHostGameRoom()
-    }
-
-    private fun emitGameLaunchedEvent() {
-        gameEventRepository.notifyOfEvent(GameEvent.GameLaunched)
     }
 }

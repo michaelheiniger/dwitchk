@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import ch.qscqlmpa.dwitch.R
@@ -26,11 +25,7 @@ class MainActivity : HomeBaseActivity(), GameAdapter.GameClickedListener {
         gameListRw.adapter = GameAdapter(this)
 
         val viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel::class.java)
-        viewModel.observeAdvertisedGames().observe(this, Observer { response ->
-
-            Timber.d("Advertised games status %s", response.status)
-            Timber.d("Advertised games %s", response.advertisedGames)
-
+        viewModel.observeAdvertisedGames().observe(this, { response ->
             when (response.status) {
                 Status.LOADING -> { // Nothing to do
                 }

@@ -32,12 +32,6 @@ class MainActivityViewModelTest : BaseViewModelUnitTest() {
         viewModel = MainActivityViewModel(mockGameRepository, DisposableManager(), schedulerFactory)
     }
 
-    @After
-    override fun tearDown() {
-        super.tearDown()
-        clearMocks(mockGameRepository)
-    }
-
     @Test
     fun shouldEmitAdvertisedGameResponse_success() {
 

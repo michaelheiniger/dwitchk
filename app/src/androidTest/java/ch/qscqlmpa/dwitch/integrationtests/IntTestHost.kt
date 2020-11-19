@@ -18,12 +18,12 @@ class IntTestHost(
     lateinit var playerId: PlayerInGameId
 
     fun createGame() {
-        appComponent.newGameUsecase.hostNewGame(gameName, "Aragorn").blockingGet()
+        appComponent.newGameUsecase.hostGame(gameName, "Aragorn").blockingGet()
         val game = appComponent.database.gameDao().getGameByName(gameName)
             ?: throw IllegalStateException("New game can't be fetched from store")
         gameLocalId = game.id
         hostLocalId = game.localPlayerLocalId
-        playerId = appComponent.database.playerDao().getLocalPlayer(hostLocalId!!).inGameId
+        playerId = appComponent.database.playerDao().gePlayer(hostLocalId!!).inGameId
 
         hookOnGoingGameComponent()
         hookupHostToNetworkHub()
@@ -34,7 +34,7 @@ class IntTestHost(
     }
 
     fun launchGame(initialGameSetup: InitialGameSetup) {
-        val gameLaunchableEvent = ongoingGameComponent.gameLaunchableUsecase.gameCanBeLaunched()
+        val gameLaunchableEvent = ongoingGameComponent.waitingRoomHostFacade.gameCanBeLaunched()
             .blockingFirst()
         assertThat(gameLaunchableEvent).isEqualTo(GameLaunchableEvent.GameIsReadyToBeLaunched)
 
@@ -42,14 +42,14 @@ class IntTestHost(
         (ongoingGameComponent.initialGameSetupFactory as DeterministicInitialGameSetupFactory)
             .setInstance(initialGameSetup)
 
-        ongoingGameComponent.launchGameUsecase.launchGame()
+        ongoingGameComponent.waitingRoomHostFacade.launchGame()
             .subscribeOn(Schedulers.trampoline())
             .observeOn(Schedulers.trampoline())
             .blockingGet()
     }
 
     fun endGame() {
-        ongoingGameComponent.endGameUsecase.endGame().blockingGet()
+        ongoingGameComponent.gameRoomHostFacade.endGame().blockingGet()
     }
 
     private fun hookupHostToNetworkHub() {

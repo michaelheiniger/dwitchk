@@ -13,6 +13,4 @@ interface Store {
         gameCommonId: GameCommonId,
         guestPlayerName: String
     ): InsertGameResult
-
-    fun getLocalPlayer(gameLocalId: Long): Player
 }

@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame
 
 import androidx.lifecycle.ViewModel
-import ch.qscqlmpa.dwitch.service.OngoingGameScope
+import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameScope
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host.GameRoomHostViewModel
@@ -27,7 +27,7 @@ abstract class OngoingGameViewModelBindingModule {
     @Binds
     @IntoMap
     @ViewModelKey(WaitingRoomViewModel::class)
-    abstract fun bindWaitingRoomActivityViewModel(viewModel: WaitingRoomViewModel): ViewModel
+    internal abstract fun bindWaitingRoomActivityViewModel(viewModel: WaitingRoomViewModel): ViewModel
 
     @Binds
     @IntoMap
@@ -37,7 +37,7 @@ abstract class OngoingGameViewModelBindingModule {
     @Binds
     @IntoMap
     @ViewModelKey(WaitingRoomHostViewModel::class)
-    abstract fun bindWaitingRoomHostViewModel(viewModel: WaitingRoomHostViewModel): ViewModel
+    internal abstract fun bindWaitingRoomHostViewModel(viewModel: WaitingRoomHostViewModel): ViewModel
 
     @Binds
     @IntoMap
@@ -47,12 +47,12 @@ abstract class OngoingGameViewModelBindingModule {
     @Binds
     @IntoMap
     @ViewModelKey(GameRoomGuestViewModel::class)
-    abstract fun bindGameRoomGuestViewModel(viewModel: GameRoomGuestViewModel): ViewModel
+    internal abstract fun bindGameRoomGuestViewModel(viewModel: GameRoomGuestViewModel): ViewModel
 
     @Binds
     @IntoMap
     @ViewModelKey(GameRoomHostViewModel::class)
-    abstract fun bindGameRoomHostViewModel(viewModel: GameRoomHostViewModel): ViewModel
+    internal abstract fun bindGameRoomHostViewModel(viewModel: GameRoomHostViewModel): ViewModel
 
     @Binds
     @IntoMap

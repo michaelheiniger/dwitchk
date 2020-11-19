@@ -2,6 +2,8 @@ package ch.qscqlmpa.dwitch.uitests
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import ch.qscqlmpa.dwitch.PlayerGuestTest
 import ch.qscqlmpa.dwitch.R
@@ -10,11 +12,12 @@ import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.model.player.PlayerRole
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
-import ch.qscqlmpa.dwitch.uitests.GameRoomUtil.assertCanPassTurn
-import ch.qscqlmpa.dwitch.uitests.GameRoomUtil.assertCanPickACard
-import ch.qscqlmpa.dwitch.uitests.GameRoomUtil.assertCardInHand
-import ch.qscqlmpa.dwitch.uitests.GameRoomUtil.assertCardOnTable
-import ch.qscqlmpa.dwitch.uitests.UiUtil.matchesWithText
+import ch.qscqlmpa.dwitch.uitests.base.BaseGuestTest
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCanPassTurn
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCanPickACard
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCardInHand
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCardOnTable
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertGameRoomIsDisplayed
 import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil
 import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
@@ -64,17 +67,29 @@ class GameRoomAsGuestTest : BaseGuestTest() {
 
         playACard(0)
 
-        val gameStateUpdatedMessage =
-            waitForNextMessageSentByLocalGuest() as Message.GameStateUpdatedMessage
-        assertThat(gameStateUpdatedMessage.gameState.cardsOnTable).isEqualTo(
-            listOf(Card.Clubs2, Card.Spades6)
-        )
+        val gameStateUpdatedMessage = waitForNextMessageSentByLocalGuest() as Message.GameStateUpdatedMessage
+        assertThat(gameStateUpdatedMessage.gameState.cardsOnTable).isEqualTo(listOf(Card.Clubs2, Card.Spades6))
 
         assertCardInHand(0, Card.Spades4)
         assertCardOnTable(Card.Spades6)
 
         assertCanPickACard(false)
         assertCanPassTurn(false)
+    }
+
+    @Test
+    fun gameOver() {
+        launch()
+
+        goToGameRoom()
+
+        clientTestStub.serverSendsMessageToClient(Message.GameOverMessage, false)
+
+        dudeWaitASec()
+
+        onView(withId(R.id.btnOk)).perform(click())
+
+        onView(withId(R.id.gameListTv)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     private fun playACard(position: Int) {
@@ -97,7 +112,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
         hostSendsJoinGameAck()
         hostSendsInitialWaitingRoomUpdate()
 
-        dudeWaitASec(2)
+        dudeWaitASec()
 
         setLocalPlayerReady()
 
@@ -113,10 +128,9 @@ class GameRoomAsGuestTest : BaseGuestTest() {
             false
         )
 
-        dudeWaitASec(2)
+        dudeWaitASec()
 
-        onView(withId(R.id.pickBtn)).check(matchesWithText(R.string.pdf_pick_a_card))
-        onView(withId(R.id.passBtn)).check(matchesWithText(R.string.pdf_pass))
+        assertGameRoomIsDisplayed()
     }
 
     private fun createGameState(): GameState {

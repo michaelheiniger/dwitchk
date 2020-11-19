@@ -2,17 +2,15 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host
 
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
+import ch.qscqlmpa.dwitch.ui.utils.UiUtil.updateView
 import kotlinx.android.synthetic.main.waiting_room_host_fragment.*
 
 class WaitingRoomHostFragment : OngoingGameBaseFragment() {
@@ -21,24 +19,26 @@ class WaitingRoomHostFragment : OngoingGameBaseFragment() {
 
     private lateinit var viewModel: WaitingRoomHostViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(WaitingRoomHostViewModel::class.java)
-        viewModel.currentCommunicationState().observe(this, Observer { resource -> communicationStateTv.text = getText(resource.id) })
-        viewModel.canGameBeLaunched().observe(this, Observer { canGameBeLaunched -> launchGameBtn.isEnabled = canGameBeLaunched })
-        viewModel.commands().observe(this, Observer { command -> executeNavigationCommand(command) })
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val view = super.onCreateView(inflater, container, savedInstanceState)
+        setupConnectionStateControls()
+        setupCanGameBeLaunchedControls()
         setupLaunchGameButton(view)
         setupCancelGameButton(view)
-        return view
+        setupCommands()
     }
 
     override fun inject() {
         (activity!!.application as App).getGameComponent()!!.inject(this)
+    }
+
+    private fun setupConnectionStateControls() {
+        viewModel.connectionStateInfo().observe(this, { uiInfo -> communicationStateTv.text = getText(uiInfo.textResource.id) })
+    }
+
+    private fun setupCanGameBeLaunchedControls() {
+        viewModel.canGameBeLaunched().updateView(launchGameBtn, this)
     }
 
     private fun setupLaunchGameButton(parentView: View) {
@@ -51,11 +51,13 @@ class WaitingRoomHostFragment : OngoingGameBaseFragment() {
         cancelGame.setOnClickListener { viewModel.cancelGame() }
     }
 
-    private fun executeNavigationCommand(command: WaitingRoomHostCommand) {
-        when (command) {
-            WaitingRoomHostCommand.NavigateToHomeScreen -> MainActivity.start(activity!!)
-            WaitingRoomHostCommand.NavigateToGameRoomScreen -> GameRoomActivity.startForHost(activity!!)
-        }
+    private fun setupCommands() {
+        viewModel.commands().observe(this, { command ->
+            when (command) {
+                WaitingRoomHostCommand.NavigateToHomeScreen -> MainActivity.start(activity!!)
+                WaitingRoomHostCommand.NavigateToGameRoomScreen -> GameRoomActivity.startForHost(activity!!)
+            }
+        })
     }
 
     companion object {

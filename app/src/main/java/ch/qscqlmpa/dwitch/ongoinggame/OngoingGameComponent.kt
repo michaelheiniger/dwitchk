@@ -10,9 +10,10 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.eventprocessors.HostCommunicationEventProcessorModule
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.WebsocketModule
 import ch.qscqlmpa.dwitch.ongoinggame.game.GameModule
+import ch.qscqlmpa.dwitch.ongoinggame.gameroom.GameRoomModule
 import ch.qscqlmpa.dwitch.ongoinggame.messageprocessors.MessageProcessorModule
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStoreModule
-import ch.qscqlmpa.dwitch.service.OngoingGameScope
+import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.WaitingRoomModule
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameScreenBindingModule
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameViewModelBindingModule
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
@@ -28,15 +29,17 @@ import dagger.Subcomponent
 @Subcomponent(modules = [
     OngoingGameModule::class,
     InGameStoreModule::class,
+    WaitingRoomModule::class,
+    GameRoomModule::class,
+    GameModule::class,
     OngoingGameScreenBindingModule::class,
     OngoingGameViewModelBindingModule::class,
-    GameModule::class,
     MessageProcessorModule::class,
+    CommunicationModule::class,
     GuestCommunicationEventProcessorModule::class,
     HostCommunicationEventProcessorModule::class,
     GuestCommunicationModule::class,
     HostCommunicationModule::class,
-    CommunicationModule::class,
     WebsocketModule::class
 ])
 interface OngoingGameComponent {
@@ -51,7 +54,6 @@ interface OngoingGameComponent {
     fun inject(fragment: PlayerDashboardFragment)
 
     val gameAdvertising: GameAdvertising
-
     val hostCommunicator: HostCommunicator
     val guestCommunicator: GuestCommunicator
 }

@@ -1,18 +1,18 @@
 package ch.qscqlmpa.dwitch.ongoinggame.messageprocessors
 
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionId
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEvent
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GameEventRepository
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEvent
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEventRepository
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
 import io.reactivex.Completable
 import javax.inject.Inject
 
-class LaunchGameMessageProcessor @Inject constructor(
+internal class LaunchGameMessageProcessor @Inject constructor(
     private val store: InGameStore,
     private val serviceManager: ServiceManager,
-    private val gameEventRepository: GameEventRepository
+    private val gameEventRepository: GuestGameEventRepository
 ) : MessageProcessor {
 
     override fun process(message: Message, senderLocalConnectionID: LocalConnectionId): Completable {
@@ -29,6 +29,6 @@ class LaunchGameMessageProcessor @Inject constructor(
     }
 
     private fun emitGameLaunchedEvent() {
-        gameEventRepository.notifyOfEvent(GameEvent.GameLaunched)
+        gameEventRepository.notify(GuestGameEvent.GameLaunched)
     }
 }

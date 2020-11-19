@@ -8,7 +8,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ongoinggame.communication.waitingroom.PlayerWr
+import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.PlayerWr
+import ch.qscqlmpa.dwitch.ui.PlayerConnectionStateTextMapper
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.playerlist.PlayerWrAdapter.PlayerViewHolder
 import java.util.*
 
@@ -17,7 +18,8 @@ internal class PlayerWrAdapter : RecyclerView.Adapter<PlayerViewHolder>() {
     private val data: MutableList<PlayerWr> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayerViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.player_wr_item, parent, false)
+        val itemView =
+            LayoutInflater.from(parent.context).inflate(R.layout.player_wr_item, parent, false)
         return PlayerViewHolder(itemView)
     }
 
@@ -44,18 +46,21 @@ internal class PlayerWrAdapter : RecyclerView.Adapter<PlayerViewHolder>() {
 
         private var playerNameTv: TextView = itemView.findViewById(R.id.playerNameTv)
         private var playerReadyCkb: CheckBox = itemView.findViewById(R.id.playerReadyCkb)
+        private var connectionStateTv: TextView = itemView.findViewById(R.id.connectionStateTv)
 
         fun bind(player: PlayerWr) {
             playerNameTv.text = player.name
             playerReadyCkb.isChecked = player.ready
             setReadyCheckboxText()
+            connectionStateTv.text = view.context.getString(
+                PlayerConnectionStateTextMapper.resource(player.connectionState))
         }
 
-        fun setReadyCheckboxText() {
-            if (playerReadyCkb.isChecked) {
-                playerReadyCkb.text = view.context.getString(R.string.ready)
+        private fun setReadyCheckboxText() {
+            playerReadyCkb.text = if (playerReadyCkb.isChecked) {
+                view.context.getString(R.string.ready)
             } else {
-                playerReadyCkb.text = view.context.getString(R.string.not_ready)
+                view.context.getString(R.string.not_ready)
             }
         }
     }
