@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.host
 
+import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionId
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionIdStore
 import ch.qscqlmpa.dwitch.ongoinggame.communication.RecipientType
@@ -49,6 +50,16 @@ constructor(private val commServer: CommServer,
 
     override fun observeCommunicationState(): Observable<HostCommunicationState> {
         return communicationEventRepository.observeEvents()
+    }
+
+    override fun observePlayerConnectionState(): Observable<PlayerConnectionState> {
+        return communicationEventRepository.observeEvents().map { state ->
+            when (state) {
+                HostCommunicationState.Open -> PlayerConnectionState.CONNECTED
+                HostCommunicationState.Closed,
+                HostCommunicationState.Error -> PlayerConnectionState.DISCONNECTED
+            }
+        }
     }
 
     private fun observeCommunicationEvents() {

@@ -107,15 +107,15 @@ class ConnectionGuestViewModelTest : BaseViewModelUnitTest() {
 
         communicationStateSubject.onNext(GuestCommunicationState.Connected)
 
-        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(GuestCommunicationState.Connected.resourceId))
+        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(GuestCommunicationState.Connected.resource))
 
         communicationStateSubject.onNext(GuestCommunicationState.Disconnected)
 
-        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(GuestCommunicationState.Disconnected.resourceId))
+        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(GuestCommunicationState.Disconnected.resource))
 
         communicationStateSubject.onNext(GuestCommunicationState.Error)
 
-        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(GuestCommunicationState.Error.resourceId))
+        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(GuestCommunicationState.Error.resource))
     }
 
     @Test

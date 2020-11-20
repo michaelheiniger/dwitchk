@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard
 
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.ui.CardResourceMapper
 import ch.qscqlmpa.dwitch.ui.EntityTextMapper
 import ch.qscqlmpa.dwitch.ui.ImageInfo
@@ -11,22 +12,28 @@ import ch.qscqlmpa.dwitchengine.model.player.Player
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboard
 import timber.log.Timber
 
-class PlayerDashboardUi(private val dashboard: PlayerDashboard, private val textProvider: TextProvider) {
+class PlayerDashboardUi(
+    private val dashboard: PlayerDashboard,
+    connectionState: PlayerConnectionState,
+    private val textProvider: TextProvider
+) {
+
+    val dashboardEnabled = connectionState == PlayerConnectionState.CONNECTED
 
     fun canStartNewRound(): Boolean {
-        return dashboard.canStartNewRound
+        return dashboardEnabled && dashboard.canStartNewRound
     }
 
     fun canPickACard(): Boolean {
-        return dashboard.canPickACard
+        return dashboardEnabled && dashboard.canPickACard
     }
 
     fun canPass(): Boolean {
-        return dashboard.canPass
+        return dashboardEnabled && dashboard.canPass
     }
 
     fun canPlay(): Boolean {
-        return dashboard.canPlay
+        return dashboardEnabled && dashboard.canPlay
     }
 
     fun cardsInHands(): List<CardItem> {

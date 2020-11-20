@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitch.ongoinggame.communication.host
 
 import ch.qscqlmpa.dwitch.BaseUnitTest
 import ch.qscqlmpa.dwitch.model.game.GameCommonId
+import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionId
 import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionIdStore
 import ch.qscqlmpa.dwitch.ongoinggame.communication.RecipientType
@@ -20,7 +21,6 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -185,9 +185,34 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
         @Test
         fun `Communication events emitted by the repository are simply forwarded`() {
-            every { mockCommEventRepository.observeEvents() } returns Observable.just(HostCommunicationState.ListeningForGuests)
+            every { mockCommEventRepository.observeEvents() } returns Observable.just(HostCommunicationState.Open)
 
-            hostCommunicator.observeCommunicationState().test().assertValue(HostCommunicationState.ListeningForGuests)
+            hostCommunicator.observeCommunicationState().test().assertValue(HostCommunicationState.Open)
+        }
+    }
+
+    @Nested
+    inner class ObservePlayerConnectionState {
+
+        @Test
+        fun `Communication state open is mapped to connected`() {
+            every { mockCommEventRepository.observeEvents() } returns Observable.just(HostCommunicationState.Open)
+
+            hostCommunicator.observePlayerConnectionState().test().assertValue(PlayerConnectionState.CONNECTED)
+        }
+
+        @Test
+        fun `Communication state closed is mapped to disconnected`() {
+            every { mockCommEventRepository.observeEvents() } returns Observable.just(HostCommunicationState.Closed)
+
+            hostCommunicator.observePlayerConnectionState().test().assertValue(PlayerConnectionState.DISCONNECTED)
+        }
+
+        @Test
+        fun `Communication state error is mapped to disconnected`() {
+            every { mockCommEventRepository.observeEvents() } returns Observable.just(HostCommunicationState.Error)
+
+            hostCommunicator.observePlayerConnectionState().test().assertValue(PlayerConnectionState.DISCONNECTED)
         }
     }
 }

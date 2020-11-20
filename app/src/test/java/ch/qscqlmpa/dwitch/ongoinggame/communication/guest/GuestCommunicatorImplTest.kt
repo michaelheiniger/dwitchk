@@ -1,8 +1,10 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.guest
 
 import ch.qscqlmpa.dwitch.BaseUnitTest
+import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.ongoinggame.communication.RecipientType
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.eventprocessors.GuestCommunicationEventDispatcher
+import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicationState
 import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationEventRepository
 import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationState
 import ch.qscqlmpa.dwitch.ongoinggame.messageprocessors.MessageDispatcher
@@ -156,6 +158,31 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
             every { mockCommEventRepository.observeEvents() } returns Observable.just(GuestCommunicationState.Connected)
 
             guestCommunicator.observeCommunicationState().test().assertValue(GuestCommunicationState.Connected)
+        }
+    }
+
+    @Nested
+    inner class ObservePlayerConnectionState {
+
+        @Test
+        fun `Communication state open is mapped to connected`() {
+            every { mockCommEventRepository.observeEvents() } returns Observable.just(GuestCommunicationState.Connected)
+
+            guestCommunicator.observePlayerConnectionState().test().assertValue(PlayerConnectionState.CONNECTED)
+        }
+
+        @Test
+        fun `Communication state closed is mapped to disconnected`() {
+            every { mockCommEventRepository.observeEvents() } returns Observable.just(GuestCommunicationState.Disconnected)
+
+            guestCommunicator.observePlayerConnectionState().test().assertValue(PlayerConnectionState.DISCONNECTED)
+        }
+
+        @Test
+        fun `Communication state error is mapped to disconnected`() {
+            every { mockCommEventRepository.observeEvents() } returns Observable.just(GuestCommunicationState.Error)
+
+            guestCommunicator.observePlayerConnectionState().test().assertValue(PlayerConnectionState.DISCONNECTED)
         }
     }
 }

@@ -1,5 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame.game
 
+import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
+import ch.qscqlmpa.dwitch.ongoinggame.communication.GameCommunicator
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameUpdatedUsecase
 import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
@@ -14,12 +16,17 @@ import timber.log.Timber
 import javax.inject.Inject
 
 internal class PlayerDashboardFacadeImpl @Inject constructor(
+    private val gameCommunicator: GameCommunicator,
     private val gameRepository: GameRepository,
     private val gameUpdatedUsecase: GameUpdatedUsecase,
     private val cardDealerFactory: CardDealerFactory
 ) : PlayerDashboardFacade {
 
     private val playerDashboardRelay = BehaviorRelay.create<PlayerDashboard>()
+
+    override fun observeConnectionState(): Observable<PlayerConnectionState> {
+        return gameCommunicator.observePlayerConnectionState()
+    }
 
     override fun playCard(cardPlayed: Card): Completable {
         return handleGameStateUpdated { engine -> engine.playCard(cardPlayed) }

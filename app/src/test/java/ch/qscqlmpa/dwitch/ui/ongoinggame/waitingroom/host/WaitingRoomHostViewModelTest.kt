@@ -47,13 +47,13 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
         val connectionStateInfo = viewModel.connectionStateInfo()
         subscribeToPublishers(connectionStateInfo)
 
-        communicatorSubject.onNext(HostCommunicationState.ListeningForGuests)
+        communicatorSubject.onNext(HostCommunicationState.Open)
 
-        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(HostCommunicationState.ListeningForGuests.resource))
+        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(HostCommunicationState.Open.resource))
 
-        communicatorSubject.onNext(HostCommunicationState.NotListeningForGuests)
+        communicatorSubject.onNext(HostCommunicationState.Closed)
 
-        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(HostCommunicationState.NotListeningForGuests.resource))
+        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(HostCommunicationState.Closed.resource))
 
         communicatorSubject.onNext(HostCommunicationState.Error)
 

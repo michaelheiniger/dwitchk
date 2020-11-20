@@ -6,7 +6,6 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ongoinggame.GuestFacade
 import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationState
-import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.WaitingRoomGuestFacade
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
@@ -55,7 +54,7 @@ class ConnectionGuestViewModel @Inject constructor(
     }
 
     fun connectionStateInfo(): LiveData<UiInfoModel> {
-        return LiveDataReactiveStreams.fromPublisher(currentCommunicationState().map { state -> UiInfoModel(state.resourceId) })
+        return LiveDataReactiveStreams.fromPublisher(currentCommunicationState().map { state -> UiInfoModel(state.resource) })
     }
 
     fun reconnect() {

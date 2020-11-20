@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.guest
 
+import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.eventprocessors.GuestCommunicationEventDispatcher
 import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationEventRepository
 import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationState
@@ -38,6 +39,16 @@ internal class GuestCommunicatorImpl constructor(
 
     override fun observeCommunicationState(): Observable<GuestCommunicationState> {
         return communicationEventRepository.observeEvents()
+    }
+
+    override fun observePlayerConnectionState(): Observable<PlayerConnectionState> {
+        return communicationEventRepository.observeEvents().map { state ->
+            when (state) {
+                GuestCommunicationState.Connected -> PlayerConnectionState.CONNECTED
+                GuestCommunicationState.Disconnected,
+                GuestCommunicationState.Error -> PlayerConnectionState.DISCONNECTED
+            }
+        }
     }
 
     private fun observeCommunicationEvents() {
