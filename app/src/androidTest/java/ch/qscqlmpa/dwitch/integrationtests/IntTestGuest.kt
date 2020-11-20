@@ -3,13 +3,18 @@ package ch.qscqlmpa.dwitch.integrationtests
 import ch.qscqlmpa.dwitch.PlayerHostTest
 import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.IntTestWebsocketClient
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEvent
+import ch.qscqlmpa.dwitch.ongoinggame.gameroom.GameRoomGuestFacade
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import org.assertj.core.api.Assertions
 
 class IntTestGuest(
     private val guest: PlayerHostTest,
     advertisedGame: AdvertisedGame,
     private val networkHub: NetworkHub
 ) : IntTestPlayer() {
+
+    private lateinit var gameRoomGuestFacade: GameRoomGuestFacade
 
     private val guestLocalId: Long
     lateinit var playerId: PlayerInGameId
@@ -29,6 +34,15 @@ class IntTestGuest(
         ongoingGameComponent.guestCommunicator.connect()
         playerId = appComponent.database.playerDao().gePlayer(guestLocalId).inGameId
         ongoingGameComponent.waitingRoomGuestFacade.updateReadyState(true).blockingGet()
+    }
+
+    fun assertGameOverReceived() {
+        Assertions.assertThat(gameRoomGuestFacade.consumeLastEvent()).isEqualTo(GuestGameEvent.GameOver)
+    }
+
+    override fun hookOnGoingGameComponent() {
+        super.hookOnGoingGameComponent()
+        gameRoomGuestFacade = ongoingGameComponent.gameRoomGuestFacade
     }
 
     private fun getWebsocketClient(): IntTestWebsocketClient {

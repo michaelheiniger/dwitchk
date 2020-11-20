@@ -2,6 +2,8 @@ package ch.qscqlmpa.dwitch.integrationtests
 
 import ch.qscqlmpa.dwitch.model.game.GameCommonId
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.IntTestWebsocketServer
+import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEvent
+import ch.qscqlmpa.dwitch.ongoinggame.gameroom.GameRoomHostFacade
 import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameLaunchableEvent
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetup
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetupFactory
@@ -13,6 +15,8 @@ class IntTestHost(
     private val gameName: String,
     private val networkHub: NetworkHub
 ) : IntTestPlayer() {
+
+    private lateinit var gameRoomHostFacade: GameRoomHostFacade
 
     private var hostLocalId: Long? = null
     lateinit var playerId: PlayerInGameId
@@ -49,7 +53,16 @@ class IntTestHost(
     }
 
     fun endGame() {
-        ongoingGameComponent.gameRoomHostFacade.endGame().blockingGet()
+        gameRoomHostFacade.endGame().blockingGet()
+    }
+
+    fun assertGameOverReceived() {
+        assertThat(gameRoomHostFacade.consumeLastEvent()).isEqualTo(GuestGameEvent.GameOver)
+    }
+
+    override fun hookOnGoingGameComponent() {
+        super.hookOnGoingGameComponent()
+        gameRoomHostFacade = ongoingGameComponent.gameRoomHostFacade
     }
 
     private fun hookupHostToNetworkHub() {

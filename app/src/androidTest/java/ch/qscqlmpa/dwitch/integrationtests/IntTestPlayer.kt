@@ -30,7 +30,7 @@ abstract class IntTestPlayer {
         serviceManager.setAppComponent(appComponent)
     }
 
-    protected fun hookOnGoingGameComponent() {
+    protected open fun hookOnGoingGameComponent() {
         ongoingGameComponent = serviceManager.getOnGoingGameComponent()
         inGameStore = ongoingGameComponent.inGameStore
         playerDashboardFacade = ongoingGameComponent.playerDashboardFacade
@@ -61,10 +61,6 @@ abstract class IntTestPlayer {
             )
         )
         playerDashboardFacade.startNewRound().blockingGet()
-    }
-
-    fun assertGameOverReceived() {
-        assertThat(ongoingGameComponent.gameRoomGuestFacade.consumeLastEvent()).isEqualTo(GuestGameEvent.GameOver)
     }
 
     fun assertDashboard(): PlayerDashboardRobot {
