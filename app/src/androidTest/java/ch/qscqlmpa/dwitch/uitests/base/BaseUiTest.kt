@@ -4,7 +4,6 @@ import android.content.res.Resources
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -91,7 +90,7 @@ abstract class BaseUiTest {
             .setInstance(DeterministicInitialGameSetup(cardsForPlayer, rankForPlayer))
     }
 
-    protected fun dudeWaitASec(seconds: Long = 3L) {
+    protected fun dudeWaitASec(seconds: Long = 2L) {
         Completable.fromAction { Timber.i("Waiting for %d seconds...", seconds) }
                 .delay(seconds, TimeUnit.SECONDS)
                 .blockingGet()
@@ -99,7 +98,7 @@ abstract class BaseUiTest {
 
 
     protected fun setControlText(resourceId: Int, text: String) {
-        onView(ViewMatchers.withId(resourceId)).perform(replaceText(text))
+        onView(withId(resourceId)).perform(replaceText(text))
     }
 
     protected fun assertControlTextContent(resourceId: Int, textResourceId: Int) {
