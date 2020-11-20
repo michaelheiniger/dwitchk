@@ -24,7 +24,7 @@ internal abstract class EventRepository<T> {
 
     fun consumeLastEvent(): T? {
         val event = lastEvent.get()
-        Timber.d("Last event consumed: %s", event)
+        Timber.d("Last event consumed: $event")
         return event
     }
 
@@ -32,9 +32,9 @@ internal abstract class EventRepository<T> {
         if (relay.hasObservers()) {
             relay.accept(event)
             lastEvent.set(null)
-            Timber.i("New event consumed: %s", event)
+            Timber.i("New event consumed: $event")
         } else {
-            Timber.i("New event stored (waiting for a consummer): %s", event)
+            Timber.i("New event stored (waiting for a consumer): $event")
             lastEvent.set(event)
         }
     }

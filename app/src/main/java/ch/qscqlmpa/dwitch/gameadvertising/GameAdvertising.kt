@@ -22,7 +22,7 @@ class GameAdvertising @Inject constructor(
     }
 
     fun startAdvertising(gameInfo: GameInfo): Completable {
-        Timber.i("Advertise game: %s", gameInfo)
+        Timber.i("Advertise game: $gameInfo")
         return advertisingScheduler()
             .subscribeOn(schedulerFactory.timeScheduler())
             .doOnNext { network.sendAdvertisement(DESTINATION_PORT, gameInfoAsStr(gameInfo)) }

@@ -91,7 +91,7 @@ abstract class BaseUiTest {
     }
 
     protected fun dudeWaitASec(seconds: Long = 2L) {
-        Completable.fromAction { Timber.i("Waiting for %d seconds...", seconds) }
+        Completable.fromAction { Timber.i("Waiting for $seconds seconds...") }
                 .delay(seconds, TimeUnit.SECONDS)
                 .blockingGet()
     }

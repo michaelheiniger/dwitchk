@@ -51,7 +51,7 @@ class WebsocketCommServer @Inject constructor(
             if (recipientSocket != null) {
                 websocketServer.send(recipientSocket, serializedMessage)
             } else {
-                Timber.e("Message sent to %s but no socket found", recipientAdress)
+                Timber.e("Message sent to $recipientAdress but no socket found")
             }
         }
     }
@@ -89,7 +89,7 @@ class WebsocketCommServer @Inject constructor(
             .map { onOpen ->
                 val senderAddress = buildAddressFromConnection(onOpen.conn!!)!!
                 val localConnectionId = connectionIdStore.addConnectionId(senderAddress)
-                Timber.d("Client connected %s (assign local connection ID %s)", senderAddress, localConnectionId)
+                Timber.d("Client connected $senderAddress (assign local connection ID $localConnectionId)")
                 ServerCommunicationEvent.ClientConnected(localConnectionId)
             }
     }
@@ -105,7 +105,7 @@ class WebsocketCommServer @Inject constructor(
             .flatMap { onClose ->
                 val senderAddress = buildAddressFromConnection(onClose.conn!!)
                 if (senderAddress != null) {
-                    Timber.d("Client disconnected %s", senderAddress)
+                    Timber.d("Client disconnected $senderAddress")
                     val localConnectionId =
                         connectionIdStore.getLocalConnectionIdForAddress(senderAddress)
                     return@flatMap Observable.just(ServerCommunicationEvent.ClientDisconnected(localConnectionId))
@@ -148,7 +148,7 @@ class WebsocketCommServer @Inject constructor(
     override fun closeConnectionWithClient(localConnectionId: LocalConnectionId) {
         val address = connectionIdStore.getAddress(localConnectionId)
 
-        Timber.i("Connection with remote connection ID %s closed by host.", address)
+        Timber.i("Connection with remote connection ID $address closed by host.")
 
         if (address != null) {
             val senderSocket = websocketServer.getConnections().find { webSocket ->

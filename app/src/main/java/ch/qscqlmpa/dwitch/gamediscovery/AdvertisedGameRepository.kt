@@ -23,7 +23,7 @@ class AdvertisedGameRepository @Inject constructor(
             cleanUpScheduler(),
             { game, _ -> game }
         )
-            .doOnNext { game -> Timber.v("New game discovered: %s ", game.toString()) }
+            .doOnNext { game -> Timber.v("New game discovered: $game") }
             .scan(
                 mapOf<String, AdvertisedGame>(),
                 { mapOfGames, game -> buildUpdatedMap(mapOfGames, game) }

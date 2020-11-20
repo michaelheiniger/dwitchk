@@ -15,7 +15,7 @@ internal class GuestConnectedEventProcessor @Inject constructor(
         event as ServerCommunicationEvent.ClientConnected
 
         val address = localConnectionIdStore.getAddress(event.localConnectionId)
-        Timber.i("Client connected with address: %s", address)
+        Timber.i("Client connected with address: $address")
 
         // Nothing to do
         return Completable.complete()

@@ -56,7 +56,7 @@ abstract class BaseInstrumentedTest {
     }
 
     protected fun dudeWaitAMinute(seconds: Long = 1L) {
-        Completable.fromAction { Timber.i("Waiting for %d seconds...", seconds) }
+        Completable.fromAction { Timber.i("Waiting for $seconds seconds...") }
                 .delay(seconds, TimeUnit.SECONDS)
                 .blockingGet()
     }

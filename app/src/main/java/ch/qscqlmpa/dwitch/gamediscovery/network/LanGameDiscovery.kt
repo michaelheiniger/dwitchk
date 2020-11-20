@@ -44,7 +44,7 @@ class LanGameDiscovery @Inject constructor(
     }
 
     private fun buildAdvertisedGame(packet: Packet): AdvertisedGame {
-        Timber.v("Packet received: %s", packet)
+        Timber.v("Packet received: $packet")
         val gameInfo = serializerFactory.unserializeGameInfo(packet.message)
         return AdvertisedGame(
             gameInfo.gameName,

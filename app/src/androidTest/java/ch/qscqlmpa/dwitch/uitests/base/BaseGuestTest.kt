@@ -45,7 +45,7 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
                 .timeout(10, TimeUnit.SECONDS)
                 .blockingFirst()
         val message = serializerFactory.unserializeMessage(messageSerialized)
-        Timber.d("Message sent to host: %s", message)
+        Timber.d("Message sent to host: $message")
         return message
     }
 

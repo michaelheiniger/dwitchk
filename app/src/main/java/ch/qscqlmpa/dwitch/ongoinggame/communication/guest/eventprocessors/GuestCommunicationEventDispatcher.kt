@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.guest.eventprocessors
 
-import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.ClientCommunicationEvent
 import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameScope
+import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.ClientCommunicationEvent
 import io.reactivex.Completable
 import timber.log.Timber
 import javax.inject.Inject
@@ -14,7 +14,7 @@ class GuestCommunicationEventDispatcher @Inject constructor(
 ) {
 
     fun dispatch(event: ClientCommunicationEvent): Completable {
-        Timber.d("Dispatching ClientCommunicationEvent %s", event.javaClass)
+        Timber.d("Dispatching ClientCommunicationEvent ${event.javaClass}")
         return eventProcessors.getValue(event.javaClass).get().process(event)
     }
 }

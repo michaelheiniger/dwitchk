@@ -47,7 +47,7 @@ class IntTestWebsocketClient constructor(
     }
 
     override fun send(message: String) {
-        Timber.i("Message sent to server: %s", message)
+        Timber.i("Message sent to server: $message")
         networkHub.sendToHost(guestIdTestHost, message)
     }
 
