@@ -14,6 +14,7 @@ import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCanPassTurn
 import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCanPickACard
 import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCardInHand
 import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCardOnTable
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertGameRoomIsDisplayed
 import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.passTurn
 import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.pickACard
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.clickOnButton
@@ -169,6 +170,6 @@ class GameRoomAsHostTest : BaseHostTest() {
 
         dudeWaitASec()
 
-        assertControlTextContent(R.id.startNewRoundBtn, R.string.pdf_start_new_round)
+        assertGameRoomIsDisplayed()
     }
 }
