@@ -7,7 +7,7 @@ import ch.qscqlmpa.dwitch.model.player.Player
 import ch.qscqlmpa.dwitch.ongoinggame.communication.RecipientType
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.ClientCommunicationEvent
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.GuestCommunicator
-import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationEventRepository
+import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationStateRepository
 import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationState
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend
 import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
@@ -18,7 +18,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.Completable
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -27,7 +26,7 @@ class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
 
     private val mockCommunicator = mockk<GuestCommunicator>(relaxed = true)
 
-    private lateinit var commEventRepository: GuestCommunicationEventRepository
+    private lateinit var commStateRepository: GuestCommunicationStateRepository
 
     private lateinit var processorGuest: GuestConnectedToHostEventProcessor
 
@@ -37,11 +36,11 @@ class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
     @BeforeEach
     override fun setup() {
         super.setup()
-        commEventRepository = GuestCommunicationEventRepository()
+        commStateRepository = GuestCommunicationStateRepository()
         processorGuest = GuestConnectedToHostEventProcessor(
             mockInGameStore,
             mockCommunicator,
-            commEventRepository
+            commStateRepository
         )
         setupCommunicatorMock()
     }
@@ -89,7 +88,7 @@ class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
     }
 
     private fun assertCommunicationStateIsNowConnected() {
-        assertThat(commEventRepository.consumeLastEvent()).isEqualTo(GuestCommunicationState.Connected)
+        assertThat(commStateRepository.observeEvents().blockingFirst()).isEqualTo(GuestCommunicationState.Connected)
     }
 
     private fun setupTest(localPlayerInGameId: PlayerInGameId) {

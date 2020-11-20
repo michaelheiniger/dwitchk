@@ -6,7 +6,7 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.LocalConnectionIdStore
 import ch.qscqlmpa.dwitch.ongoinggame.communication.RecipientType
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.eventprocessors.HostCommunicationEventDispatcher
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.AddressType
-import ch.qscqlmpa.dwitch.ongoinggame.events.HostCommunicationEventRepository
+import ch.qscqlmpa.dwitch.ongoinggame.events.HostCommunicationStateRepository
 import ch.qscqlmpa.dwitch.ongoinggame.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
@@ -19,7 +19,7 @@ internal class HostCommunicatorImpl
 constructor(private val commServer: CommServer,
             private val messageDispatcher: MessageDispatcher,
             private val communicationEventDispatcher: HostCommunicationEventDispatcher,
-            private val communicationEventRepository: HostCommunicationEventRepository,
+            private val communicationStateRepository: HostCommunicationStateRepository,
             private val localConnectionIdStore: LocalConnectionIdStore,
             private val schedulerFactory: SchedulerFactory
 ) : HostCommunicator {
@@ -49,11 +49,11 @@ constructor(private val commServer: CommServer,
     }
 
     override fun observeCommunicationState(): Observable<HostCommunicationState> {
-        return communicationEventRepository.observeEvents()
+        return communicationStateRepository.observeEvents()
     }
 
     override fun observePlayerConnectionState(): Observable<PlayerConnectionState> {
-        return communicationEventRepository.observeEvents().map { state ->
+        return communicationStateRepository.observeEvents().map { state ->
             when (state) {
                 HostCommunicationState.Open -> PlayerConnectionState.CONNECTED
                 HostCommunicationState.Closed,

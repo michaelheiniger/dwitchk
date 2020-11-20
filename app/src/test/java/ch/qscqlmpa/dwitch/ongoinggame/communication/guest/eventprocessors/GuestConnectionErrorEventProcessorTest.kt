@@ -2,24 +2,23 @@ package ch.qscqlmpa.dwitch.ongoinggame.communication.guest.eventprocessors
 
 import ch.qscqlmpa.dwitch.BaseUnitTest
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.ClientCommunicationEvent
-import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationEventRepository
+import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationStateRepository
 import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationState
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class GuestConnectionErrorEventProcessorTest : BaseUnitTest() {
 
-    private lateinit var commEventRepository: GuestCommunicationEventRepository
+    private lateinit var commStateRepository: GuestCommunicationStateRepository
 
     private lateinit var processorGuest: GuestConnectionErrorEventProcessor
 
     @BeforeEach
     override fun setup() {
         super.setup()
-        commEventRepository = GuestCommunicationEventRepository()
-        processorGuest = GuestConnectionErrorEventProcessor(commEventRepository)
+        commStateRepository = GuestCommunicationStateRepository()
+        processorGuest = GuestConnectionErrorEventProcessor(commStateRepository)
     }
 
     @Test
@@ -27,6 +26,6 @@ internal class GuestConnectionErrorEventProcessorTest : BaseUnitTest() {
         processorGuest.process(ClientCommunicationEvent.ConnectionError("Error"))
             .test().assertComplete()
 
-        assertThat(commEventRepository.consumeLastEvent()).isEqualTo(GuestCommunicationState.Error)
+        assertThat(commStateRepository.observeEvents().blockingFirst()).isEqualTo(GuestCommunicationState.Error)
     }
 }

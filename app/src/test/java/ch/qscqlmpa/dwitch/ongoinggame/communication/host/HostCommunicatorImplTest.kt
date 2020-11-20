@@ -9,7 +9,7 @@ import ch.qscqlmpa.dwitch.ongoinggame.communication.RecipientType
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.eventprocessors.HostCommunicationEventDispatcher
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.Address
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.AddressType
-import ch.qscqlmpa.dwitch.ongoinggame.events.HostCommunicationEventRepository
+import ch.qscqlmpa.dwitch.ongoinggame.events.HostCommunicationStateRepository
 import ch.qscqlmpa.dwitch.ongoinggame.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeReceived
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend
@@ -33,7 +33,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
     private val mockCommunicationEventDispatcher = mockk<HostCommunicationEventDispatcher>(relaxed = true)
 
-    private val mockCommEventRepository = mockk<HostCommunicationEventRepository>(relaxed = true)
+    private val mockCommEventRepository = mockk<HostCommunicationStateRepository>(relaxed = true)
 
     private lateinit var localConnectionIdStore: LocalConnectionIdStore
 

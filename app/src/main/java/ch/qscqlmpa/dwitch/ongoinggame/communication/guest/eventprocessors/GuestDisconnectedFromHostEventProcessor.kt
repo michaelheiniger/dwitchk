@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitch.ongoinggame.communication.guest.eventprocessors
 
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.ClientCommunicationEvent
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.GuestCommunicator
-import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationEventRepository
+import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationStateRepository
 import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationState
 import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
 import io.reactivex.Completable
@@ -15,14 +15,14 @@ import javax.inject.Inject
  */
 internal class GuestDisconnectedFromHostEventProcessor @Inject constructor(
     private val store: InGameStore,
-    private val commEventRepository: GuestCommunicationEventRepository,
+    private val commStateRepository: GuestCommunicationStateRepository,
     private val communicator: GuestCommunicator
 ) : GuestCommunicationEventProcessor {
 
     override fun process(event: ClientCommunicationEvent): Completable {
         Timber.i("Process GuestDisconnectedFromHostEvent")
         return Completable.fromAction {
-            commEventRepository.notify(GuestCommunicationState.Disconnected)
+            commStateRepository.notify(GuestCommunicationState.Disconnected)
             communicator.closeConnection()
             store.setAllPlayersToDisconnected()
         }

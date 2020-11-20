@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.guest
 
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.eventprocessors.GuestCommunicationEventDispatcher
-import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationEventRepository
+import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationStateRepository
 import ch.qscqlmpa.dwitch.ongoinggame.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameScope
@@ -21,14 +21,14 @@ internal class GuestCommunicationModule {
             commClient: CommClient,
             messageDispatcher: MessageDispatcher,
             guestCommunicationEventDispatcher: GuestCommunicationEventDispatcher,
-            communicationEventRepository: GuestCommunicationEventRepository,
+            communicationStateRepository: GuestCommunicationStateRepository,
             schedulerFactory: SchedulerFactory
         ): GuestCommunicator {
             return GuestCommunicatorImpl(
                 commClient,
                 messageDispatcher,
                 guestCommunicationEventDispatcher,
-                communicationEventRepository,
+                communicationStateRepository,
                 schedulerFactory
             )
         }

@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitch.ongoinggame.communication.guest.eventprocessors
 import ch.qscqlmpa.dwitch.BaseUnitTest
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.ClientCommunicationEvent
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.GuestCommunicator
-import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationEventRepository
+import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationStateRepository
 import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationState
 import io.mockk.confirmVerified
 import io.mockk.mockk
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 
 internal class GuestDisconnectedFromHostEventProcessorTest : BaseUnitTest() {
 
-    private lateinit var commEventRepository: GuestCommunicationEventRepository
+    private lateinit var commStateRepository: GuestCommunicationStateRepository
 
     private val mockCommunicator = mockk<GuestCommunicator>(relaxed = true)
 
@@ -23,10 +23,10 @@ internal class GuestDisconnectedFromHostEventProcessorTest : BaseUnitTest() {
     @BeforeEach
     override fun setup() {
         super.setup()
-        commEventRepository = GuestCommunicationEventRepository()
+        commStateRepository = GuestCommunicationStateRepository()
         processorGuest = GuestDisconnectedFromHostEventProcessor(
             mockInGameStore,
-            commEventRepository,
+            commStateRepository,
             mockCommunicator
         )
     }
@@ -35,7 +35,7 @@ internal class GuestDisconnectedFromHostEventProcessorTest : BaseUnitTest() {
     fun `Notify that Guest communication state is now Disconnected`() {
         launchTest()
 
-        assertThat(commEventRepository.consumeLastEvent()).isEqualTo(GuestCommunicationState.Disconnected)
+        assertThat(commStateRepository.observeEvents().blockingFirst()).isEqualTo(GuestCommunicationState.Disconnected)
     }
 
     @Test

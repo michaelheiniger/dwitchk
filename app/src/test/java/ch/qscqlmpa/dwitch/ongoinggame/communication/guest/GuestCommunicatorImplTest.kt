@@ -4,8 +4,7 @@ import ch.qscqlmpa.dwitch.BaseUnitTest
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.ongoinggame.communication.RecipientType
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.eventprocessors.GuestCommunicationEventDispatcher
-import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicationState
-import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationEventRepository
+import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationStateRepository
 import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationState
 import ch.qscqlmpa.dwitch.ongoinggame.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeReceived
@@ -18,7 +17,6 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -32,7 +30,7 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
 
     private val mockCommunicationEventDispatcher = mockk<GuestCommunicationEventDispatcher>(relaxed = true)
 
-    private val mockCommEventRepository = mockk<GuestCommunicationEventRepository>(relaxed = true)
+    private val mockCommEventRepository = mockk<GuestCommunicationStateRepository>(relaxed = true)
 
     private lateinit var guestCommunicator: GuestCommunicator
 

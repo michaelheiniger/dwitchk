@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitch.ongoinggame.communication.guest
 
 import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.eventprocessors.GuestCommunicationEventDispatcher
-import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationEventRepository
+import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationStateRepository
 import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationState
 import ch.qscqlmpa.dwitch.ongoinggame.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend
@@ -16,7 +16,7 @@ internal class GuestCommunicatorImpl constructor(
     private val commClient: CommClient,
     private val messageDispatcher: MessageDispatcher,
     private val communicationEventDispatcher: GuestCommunicationEventDispatcher,
-    private val communicationEventRepository: GuestCommunicationEventRepository,
+    private val communicationStateRepository: GuestCommunicationStateRepository,
     private val schedulerFactory: SchedulerFactory
 ) : GuestCommunicator {
 
@@ -38,11 +38,11 @@ internal class GuestCommunicatorImpl constructor(
     }
 
     override fun observeCommunicationState(): Observable<GuestCommunicationState> {
-        return communicationEventRepository.observeEvents()
+        return communicationStateRepository.observeEvents()
     }
 
     override fun observePlayerConnectionState(): Observable<PlayerConnectionState> {
-        return communicationEventRepository.observeEvents().map { state ->
+        return communicationStateRepository.observeEvents().map { state ->
             when (state) {
                 GuestCommunicationState.Connected -> PlayerConnectionState.CONNECTED
                 GuestCommunicationState.Disconnected,
