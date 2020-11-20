@@ -11,7 +11,7 @@ import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
 import ch.qscqlmpa.dwitch.persistence.AppRoomDatabase
 import ch.qscqlmpa.dwitch.persistence.IntTestDatabaseModule
 import ch.qscqlmpa.dwitch.scheduler.TestSchedulerModule
-import ch.qscqlmpa.dwitch.usecases.NewGameUsecase
+import ch.qscqlmpa.dwitch.home.usecases.NewGameUsecase
 import dagger.Component
 import javax.inject.Singleton
 

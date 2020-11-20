@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.usecases
+package ch.qscqlmpa.dwitch.home.usecases
 
 import ch.qscqlmpa.dwitch.gameadvertising.GameInfo
 import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGame

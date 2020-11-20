@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.home
 
-import ch.qscqlmpa.dwitch.usecases.NewGameUsecase
+import ch.qscqlmpa.dwitch.home.usecases.NewGameUsecase
 import io.reactivex.Completable
 import javax.inject.Inject
 
