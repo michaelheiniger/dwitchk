@@ -12,13 +12,13 @@ import ch.qscqlmpa.dwitchengine.model.player.Player
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboard
 import timber.log.Timber
 
-class PlayerDashboardUi(
+data class PlayerDashboardUi(
     private val dashboard: PlayerDashboard,
-    connectionState: PlayerConnectionState,
+    private val connectionState: PlayerConnectionState,
     private val textProvider: TextProvider
 ) {
 
-    val dashboardEnabled = connectionState == PlayerConnectionState.CONNECTED
+    private val dashboardEnabled = connectionState == PlayerConnectionState.CONNECTED
 
     fun canStartNewRound(): Boolean {
         return dashboardEnabled && dashboard.canStartNewRound

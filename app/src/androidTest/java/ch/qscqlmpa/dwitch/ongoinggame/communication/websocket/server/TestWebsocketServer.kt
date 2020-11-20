@@ -24,6 +24,7 @@ class TestWebsocketServer constructor(address: InetSocketAddress) : WebsocketSer
 
     override fun start() {
         Timber.d("start()")
+        onStart(true)
     }
 
     override fun stop() {

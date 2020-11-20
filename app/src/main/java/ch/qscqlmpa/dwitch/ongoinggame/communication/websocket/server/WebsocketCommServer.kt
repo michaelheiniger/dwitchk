@@ -63,10 +63,19 @@ class WebsocketCommServer @Inject constructor(
     override fun observeCommunicationEvents(): Observable<ServerCommunicationEvent> {
         return Observable.merge(
             listOf(
+                observeOnStartEvents(),
                 observeOnOpenEvents(),
                 observeOnCloseEvents()
             )
         )
+    }
+
+    private fun observeOnStartEvents(): Observable<ServerCommunicationEvent> {
+        return websocketServer.observeOnStartEvents()
+            .map {
+                Timber.d("Server is now listening for connections")
+                ServerCommunicationEvent.ListeningForConnections
+            }
     }
 
     private fun observeOnOpenEvents(): Observable<ServerCommunicationEvent> {
@@ -80,11 +89,7 @@ class WebsocketCommServer @Inject constructor(
             .map { onOpen ->
                 val senderAddress = buildAddressFromConnection(onOpen.conn!!)!!
                 val localConnectionId = connectionIdStore.addConnectionId(senderAddress)
-                Timber.d(
-                    "Client connected %s (assign local connection ID %s)",
-                    senderAddress,
-                    localConnectionId
-                )
+                Timber.d("Client connected %s (assign local connection ID %s)", senderAddress, localConnectionId)
                 ServerCommunicationEvent.ClientConnected(localConnectionId)
             }
     }

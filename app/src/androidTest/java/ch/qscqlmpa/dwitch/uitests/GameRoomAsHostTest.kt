@@ -51,6 +51,32 @@ class GameRoomAsHostTest : BaseHostTest() {
     }
 
     @Test
+    fun playACard() {
+        launch()
+
+        goToGameRoom()
+
+        assertCardInHand(0, Card.Hearts5)
+        assertCardInHand(1, Card.Clubs3)
+        assertCardOnTable(Card.Clubs2)
+
+//        dudeWaitASec()
+
+        playACard(0)
+
+//        dudeWaitASec()
+
+        val gameStateUpdatedMessage = waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
+        assertThat(gameStateUpdatedMessage.gameState.cardsOnTable.size).isEqualTo(2)
+
+        assertCardInHand(0, Card.Clubs3)
+        assertCardOnTable(Card.Hearts5)
+
+        assertCanPickACard(false)
+        assertCanPassTurn(false)
+    }
+
+    @Test
     fun pickACardAndPassTurn() {
         launch()
 
@@ -80,28 +106,6 @@ class GameRoomAsHostTest : BaseHostTest() {
 
         val gameStateUpdatedMessage2 =  waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
         assertThat(gameStateUpdatedMessage2.gameState.player(host.inGameId).state).isEqualTo(PlayerState.Waiting)
-
-        assertCanPickACard(false)
-        assertCanPassTurn(false)
-    }
-
-    @Test
-    fun playACard() {
-        launch()
-
-        goToGameRoom()
-
-        assertCardInHand(0, Card.Hearts5)
-        assertCardInHand(1, Card.Clubs3)
-        assertCardOnTable(Card.Clubs2)
-
-        playACard(0)
-
-        val gameStateUpdatedMessage = waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
-        assertThat(gameStateUpdatedMessage.gameState.cardsOnTable.size).isEqualTo(2)
-
-        assertCardInHand(0, Card.Clubs3)
-        assertCardOnTable(Card.Hearts5)
 
         assertCanPickACard(false)
         assertCanPassTurn(false)
