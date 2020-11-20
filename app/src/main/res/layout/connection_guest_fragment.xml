@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity">
+    tools:context="ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest.ConnectionGuestFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -27,8 +27,10 @@
             android:layout_height="wrap_content"
             android:text="@string/reconnect_btn"
             android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@+id/communicationStateTv"
-            app:layout_constraintTop_toBottomOf="@+id/communicationStateTv"
+            android:layout_marginStart="@dimen/standard_margin"
+            app:layout_constraintBottom_toBottomOf="@+id/communicationStateTv"
+            app:layout_constraintStart_toEndOf="@+id/communicationStateTv"
+            app:layout_constraintTop_toTopOf="@+id/communicationStateTv"
             tools:visibility="visible" />
 
         <ProgressBar
@@ -43,31 +45,6 @@
             app:layout_constraintStart_toEndOf="@+id/reconnectBtn"
             app:layout_constraintTop_toTopOf="@+id/reconnectBtn" />
 
-        <Button
-            android:id="@+id/leaveGameBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/leave_game_btn"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/localPlayerReadyCkb" />
-
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/localPlayerReadyCkb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:checked="false"
-            android:text="@string/ready"
-            android:textSize="@dimen/regular_text_size"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <FrameLayout
-            android:id="@+id/connection_fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/reconnectPb" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

@@ -16,6 +16,7 @@ import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStoreModule
 import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.WaitingRoomModule
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameScreenBindingModule
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameViewModelBindingModule
+import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest.ConnectionGuestFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host.GameRoomHostFragment
@@ -52,6 +53,7 @@ interface OngoingGameComponent {
     fun inject(fragment: GameRoomHostFragment)
     fun inject(fragment: GameRoomGuestFragment)
     fun inject(fragment: PlayerDashboardFragment)
+    fun inject(fragment: ConnectionGuestFragment)
 
     val gameAdvertising: GameAdvertising
     val hostCommunicator: HostCommunicator

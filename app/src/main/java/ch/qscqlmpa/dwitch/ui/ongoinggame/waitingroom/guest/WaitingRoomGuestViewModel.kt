@@ -19,17 +19,13 @@ import io.reactivex.Flowable
 import timber.log.Timber
 import javax.inject.Inject
 
-class WaitingRoomGuestViewModel @Inject
-constructor(
+class WaitingRoomGuestViewModel @Inject constructor(
     private val facade: WaitingRoomGuestFacade,
     disposableManager: DisposableManager,
     schedulerFactory: SchedulerFactory
 ) : BaseViewModel(disposableManager, schedulerFactory) {
 
     private val commands = MutableLiveData<WaitingRoomGuestCommand>()
-
-    private val reconnectActionCtrl = MutableLiveData<UiControlModel>()
-    private val reconnectLoadingCtrl = MutableLiveData<UiControlModel>()
 
     fun localPlayerReadyStateInfo(): LiveData<UiCheckboxModel> {
         return LiveDataReactiveStreams.fromPublisher(
@@ -44,43 +40,6 @@ constructor(
                     }
                 })
         )
-    }
-
-    fun reconnectAction(): LiveData<UiControlModel> {
-        val liveDataMerger = MediatorLiveData<UiControlModel>()
-        liveDataMerger.addSource(
-            LiveDataReactiveStreams.fromPublisher(
-                currentCommunicationState()
-                    .map { state ->
-                        when (state) {
-                            GuestCommunicationState.Connected -> UiControlModel(visibility = Visibility.Gone)
-                            GuestCommunicationState.Disconnected,
-                            GuestCommunicationState.Error -> UiControlModel(visibility = Visibility.Visible)
-                        }
-                    }
-            )
-        ) { value -> liveDataMerger.value = value }
-        liveDataMerger.addSource(reconnectActionCtrl) { value -> liveDataMerger.value = value }
-        return liveDataMerger
-    }
-
-    fun reconnectLoading(): LiveData<UiControlModel> {
-        val liveDataMerger = MediatorLiveData<UiControlModel>()
-        liveDataMerger.addSource(
-            LiveDataReactiveStreams.fromPublisher(currentCommunicationState().map { UiControlModel(visibility = Visibility.Gone) })
-        ) { value -> liveDataMerger.value = value }
-        liveDataMerger.addSource(reconnectLoadingCtrl) { value -> liveDataMerger.value = value }
-        return liveDataMerger
-    }
-
-    fun connectionStateInfo(): LiveData<UiInfoModel> {
-        return LiveDataReactiveStreams.fromPublisher(currentCommunicationState().map { state -> UiInfoModel(state.resourceId) })
-    }
-
-    fun reconnect() {
-        reconnectActionCtrl.value = UiControlModel(enabled = false)
-        reconnectLoadingCtrl.value = UiControlModel(visibility = Visibility.Visible)
-        facade.connect()
     }
 
     fun updateReadyState(ready: Boolean) {

@@ -9,6 +9,7 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
+import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest.ConnectionGuestFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.SimpleDialogFragment
 import ch.qscqlmpa.dwitch.ui.utils.UiUtil.updateCheckbox
@@ -21,11 +22,16 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment
 
     private lateinit var viewModel: WaitingRoomGuestViewModel
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        fragmentManager!!.beginTransaction()
+            .add(R.id.connection_fragment_container, ConnectionGuestFragment.create())
+            .commit()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(WaitingRoomGuestViewModel::class.java)
-        setupConnectionStateControls()
         setupLocalPlayerReadyStateControls()
-        setupReconnectionControls()
         setupLeaveGameControls()
         setupCommands()
     }
@@ -38,19 +44,9 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment
         viewModel.acknowledgeGameCanceledEvent()
     }
 
-    private fun setupConnectionStateControls() {
-        viewModel.connectionStateInfo().observe(this, { uiInfo -> communicationStateTv.text = getText(uiInfo.textResource.id) })
-    }
-
     private fun setupLocalPlayerReadyStateControls() {
         localPlayerReadyCkb.setOnClickListener { v -> viewModel.updateReadyState((v as CheckBox).isChecked) }
         viewModel.localPlayerReadyStateInfo().updateCheckbox(localPlayerReadyCkb, this)
-    }
-
-    private fun setupReconnectionControls() {
-        reconnectBtn.setOnClickListener { viewModel.reconnect() }
-        viewModel.reconnectAction().updateView(reconnectBtn, this)
-        viewModel.reconnectLoading().updateView(reconnectPb, this)
     }
 
     private fun setupLeaveGameControls() {

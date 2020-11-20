@@ -7,6 +7,7 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
+import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest.ConnectionGuestFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.SimpleDialogFragment
 
 class GameRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment.DialogListener {
@@ -17,6 +18,13 @@ class GameRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment.Di
 
     override fun inject() {
         (activity!!.application as App).getGameComponent()!!.inject(this)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        fragmentManager!!.beginTransaction()
+            .add(R.id.connection_fragment_container, ConnectionGuestFragment.create())
+            .commit()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
