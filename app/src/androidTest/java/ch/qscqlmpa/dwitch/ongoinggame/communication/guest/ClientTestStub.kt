@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.guest
 
-import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
+import ch.qscqlmpa.dwitchcommunication.model.Message
 import io.reactivex.Observable
 
 interface ClientTestStub {

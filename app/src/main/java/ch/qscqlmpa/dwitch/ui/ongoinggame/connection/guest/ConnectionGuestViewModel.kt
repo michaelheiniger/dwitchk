@@ -4,14 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import ch.qscqlmpa.dwitch.ongoinggame.GuestFacade
-import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationState
-import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
+import ch.qscqlmpa.dwitch.ui.ResourceMapper
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitch.ui.model.UiInfoModel
 import ch.qscqlmpa.dwitch.ui.model.Visibility
-import ch.qscqlmpa.dwitch.utils.DisposableManager
+import ch.qscqlmpa.dwitchcommonutil.DisposableManager
+import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
+import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
+import ch.qscqlmpa.dwitchgame.ongoinggame.game.GuestFacade
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import timber.log.Timber
@@ -54,7 +55,8 @@ class ConnectionGuestViewModel @Inject constructor(
     }
 
     fun connectionStateInfo(): LiveData<UiInfoModel> {
-        return LiveDataReactiveStreams.fromPublisher(currentCommunicationState().map { state -> UiInfoModel(state.resource) })
+        return LiveDataReactiveStreams.fromPublisher(currentCommunicationState()
+            .map { state -> UiInfoModel(ResourceMapper.getResource(state)) })
     }
 
     fun reconnect() {

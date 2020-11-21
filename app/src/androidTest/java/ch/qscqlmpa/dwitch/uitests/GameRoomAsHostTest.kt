@@ -4,11 +4,8 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
-import ch.qscqlmpa.dwitch.Guest1
 import ch.qscqlmpa.dwitch.PlayerHostTest
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
-import ch.qscqlmpa.dwitch.ongoinggame.messages.MessageFactory
 import ch.qscqlmpa.dwitch.uitests.base.BaseHostTest
 import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCanPassTurn
 import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCanPickACard
@@ -17,14 +14,16 @@ import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCardOnTable
 import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertGameRoomIsDisplayed
 import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.passTurn
 import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.pickACard
+import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.clickOnButton
 import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil
 import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.player.PlayerState
 import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
+import ch.qscqlmpa.dwitchcommunication.model.Message
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
 import org.junit.Test
 
 class GameRoomAsHostTest : BaseHostTest() {
@@ -37,11 +36,6 @@ class GameRoomAsHostTest : BaseHostTest() {
             0 to listOf(Card.Hearts5, Card.Clubs3),
             1 to listOf(Card.Spades6, Card.Spades4)
     )
-
-    @Before
-    override fun setup() {
-        super.setup()
-    }
 
     @Test
     fun goToGameRoomScreen() {
@@ -92,7 +86,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         pickACard()
 
         val gameStateUpdatedMessage1 = waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
-        assertThat(gameStateUpdatedMessage1.gameState.player(host.inGameId).hasPickedCard).isTrue()
+        assertThat(gameStateUpdatedMessage1.gameState.player(host.inGameId).hasPickedCard).isTrue
 
         assertCardInHand(0, Card.Hearts5)
         assertCardInHand(1, Card.Clubs3)
@@ -117,7 +111,7 @@ class GameRoomAsHostTest : BaseHostTest() {
 
         goToGameRoom()
 
-        assertControlTextContent(R.id.gameInfoTv, R.string.round_is_beginning)
+        UiUtil.assertControlTextContent(R.id.gameInfoTv, R.string.round_is_beginning)
 
         assertCardInHand(0, Card.Hearts5)
         assertCardInHand(1, Card.Clubs3)
@@ -129,7 +123,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         assertCardInHand(0, Card.Hearts5)
         assertCardOnTable(Card.Clubs3)
 
-        otherPlayerPlaysCard(Guest1, Card.Spades4)
+        otherPlayerPlaysCard(PlayerHostTest.Guest1, Card.Spades4)
         dudeWaitASec()
         assertCardOnTable(Card.Spades4)
 
@@ -137,7 +131,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
         assertCardOnTable(Card.Hearts5)
 
-        assertControlTextContent(R.id.gameInfoTv, R.string.round_is_over)
+        UiUtil.assertControlTextContent(R.id.gameInfoTv, R.string.round_is_over)
 
         clickOnButton(R.id.endGameBtn)
 
@@ -161,8 +155,8 @@ class GameRoomAsHostTest : BaseHostTest() {
     private fun goToGameRoom() {
         goToWaitingRoom()
 
-        guestJoinsGame(Guest1)
-        guestBecomesReady(Guest1)
+        guestJoinsGame(PlayerHostTest.Guest1)
+        guestBecomesReady(PlayerHostTest.Guest1)
 
         onView(withId(R.id.launchGameBtn))
                 .check(matches(withText(R.string.wrhf_launch_game_tv)))

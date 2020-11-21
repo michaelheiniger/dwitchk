@@ -13,7 +13,6 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest.ConnectionGuestFragmen
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.SimpleDialogFragment
 import ch.qscqlmpa.dwitch.ui.utils.UiUtil.updateCheckbox
-import ch.qscqlmpa.dwitch.ui.utils.UiUtil.updateView
 import kotlinx.android.synthetic.main.waiting_room_guest_fragment.*
 
 class WaitingRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment.DialogListener {
@@ -24,7 +23,7 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        fragmentManager!!.beginTransaction()
+        parentFragmentManager.beginTransaction()
             .add(R.id.connection_fragment_container, ConnectionGuestFragment.create())
             .commit()
     }
@@ -37,7 +36,7 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment
     }
 
     override fun inject() {
-        (activity!!.application as App).getGameComponent()!!.inject(this)
+        (activity!!.application as App).getGameUiComponent()!!.inject(this)
     }
 
     override fun onOkClicked() {
@@ -54,7 +53,7 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment
     }
 
     private fun setupCommands() {
-        viewModel.commands().observe(this, { command ->
+        viewModel.commands().observe(viewLifecycleOwner, { command ->
             when (command) {
                 WaitingRoomGuestCommand.NotifyUserGameCanceled -> showGameCanceledDialog()
                 WaitingRoomGuestCommand.NavigateToHomeScreen -> MainActivity.start(activity!!)

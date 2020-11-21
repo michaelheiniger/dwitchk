@@ -25,7 +25,7 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
     private var canPlay: Boolean = false
 
     override fun inject() {
-        (activity!!.application as App).getGameComponent()!!.inject(this)
+        (activity!!.application as App).getGameUiComponent()!!.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

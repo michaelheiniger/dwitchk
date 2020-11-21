@@ -1,19 +1,15 @@
 package ch.qscqlmpa.dwitch.ongoinggame.services
 
-import ch.qscqlmpa.dwitch.gameadvertising.GameInfo
+import ch.qscqlmpa.dwitchgame.appevent.GameCreatedInfo
+import ch.qscqlmpa.dwitchgame.appevent.GameJoinedInfo
 
 interface ServiceManager {
 
-    fun startHostService(gameLocalId: Long, gameInfo: GameInfo, localPlayerLocalId: Long)
+    fun startHostService(gameCreatedInfo: GameCreatedInfo)
 
     fun stopHostService()
 
-    fun startGuestService(
-        gameLocalId: Long,
-        localPlayerLocalId: Long,
-        gamePort: Int,
-        gameIpAddress: String
-    )
+    fun startGuestService(gameJoinedInfo: GameJoinedInfo)
 
     fun stopGuestService()
 

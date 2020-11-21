@@ -1,10 +1,12 @@
 package ch.qscqlmpa.dwitch.uitests.base
 
-import ch.qscqlmpa.dwitch.*
-import ch.qscqlmpa.dwitch.model.player.Player
-import ch.qscqlmpa.dwitch.ongoinggame.messages.GuestMessageFactory
-import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
+import ch.qscqlmpa.dwitch.PlayerHostTest
+import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.clickOnButton
+import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.GuestMessageFactory
+import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchmodel.player.Player
 import org.junit.Assert
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -27,13 +29,13 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
 
         dudeWaitASec()
 
-        host = playerDao.getPlayerByName(hostName)!!
+        host = inGameStore.getPlayer(hostName)!!
 
         /*
         * Note: It also allows to wait for the waiting room to be displayed: otherwise, the messages sent by clients could be
         * missed because the server is not ready yet.
         */
-        assertControlTextContent(R.id.playerListTv, R.string.wra_player_list)
+        UiUtil.assertControlTextContent(R.id.playerListTv, R.string.wra_player_list)
 
         hookOngoingGameDependenciesForHost()
     }
@@ -44,9 +46,9 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
         assertGuestHasJoinedGame()
 
         when (guest) {
-            Guest1 -> guest1 = playerDao.getPlayerByName(Guest1.name)!!
-            Guest2 -> guest2 = playerDao.getPlayerByName(Guest2.name)!!
-            Guest3 -> guest3 = playerDao.getPlayerByName(Guest3.name)!!
+            PlayerHostTest.Guest1 -> guest1 = inGameStore.getPlayer(PlayerHostTest.Guest1.name)!!
+            PlayerHostTest.Guest2 -> guest2 = inGameStore.getPlayer(PlayerHostTest.Guest2.name)!!
+            PlayerHostTest.Guest3 -> guest3 = inGameStore.getPlayer(PlayerHostTest.Guest3.name)!!
         }
     }
 
@@ -67,14 +69,6 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
         return waitForNextMessageSentByHost() as Message.WaitingRoomStateUpdateMessage
     }
 
-    protected fun getPlayer(guest: PlayerHostTest): Player {
-        return when (guest) {
-            Guest1 -> guest1
-            Guest2 -> guest2
-            Guest3 -> guest3
-        }
-    }
-
     private fun assertGuestHasJoinedGame() {
         val joinGameAckMessageForGuest = waitForNextMessageSentByHost() as Message.JoinGameAckMessage
         Assert.assertNotEquals(0, joinGameAckMessageForGuest.playerInGameId)
@@ -90,16 +84,16 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
                 .take(1)
                 .timeout(10, TimeUnit.SECONDS)
                 .blockingFirst()
-        val message = serializerFactory.unserializeMessage(messageSerialized)
+        val message = commSerializerFactory.unserializeMessage(messageSerialized)
         Timber.d("Message sent to client: $message")
         return message
     }
 
     protected fun getGuest(identifier: PlayerHostTest): Player {
         return when (identifier) {
-            Guest1 -> guest1
-            Guest2 -> guest2
-            Guest3 -> guest3
+            PlayerHostTest.Guest1 -> guest1
+            PlayerHostTest.Guest2 -> guest2
+            PlayerHostTest.Guest3 -> guest3
         }
     }
 }

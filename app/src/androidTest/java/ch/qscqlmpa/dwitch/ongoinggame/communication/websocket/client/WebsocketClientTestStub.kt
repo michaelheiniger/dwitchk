@@ -1,15 +1,16 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client
 
 import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.ClientTestStub
-import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
-import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
+import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
+import ch.qscqlmpa.dwitchcommunication.websocket.client.TestWebsocketClient
+import ch.qscqlmpa.dwitchcommunication.model.Message
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 
 class WebsocketClientTestStub(
-        private val client: TestWebsocketClient,
-        private val serializerFactory: SerializerFactory
+    private val client: TestWebsocketClient,
+    private val serializerFactory: SerializerFactory
 ) : ClientTestStub {
 
     override fun connectClientToServer(enableThreadBreak: Boolean) {

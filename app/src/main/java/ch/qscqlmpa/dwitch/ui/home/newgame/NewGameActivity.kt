@@ -8,10 +8,10 @@ import androidx.lifecycle.ViewModelProviders
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
-import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGame
-import ch.qscqlmpa.dwitch.model.player.PlayerRole
 import ch.qscqlmpa.dwitch.ui.home.HomeBaseActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
+import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
+import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import kotlinx.android.synthetic.main.new_game_activity.*
 import timber.log.Timber
 import java.util.*

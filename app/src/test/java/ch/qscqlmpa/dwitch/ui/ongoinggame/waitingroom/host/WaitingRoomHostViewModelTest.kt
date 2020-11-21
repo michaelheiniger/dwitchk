@@ -1,14 +1,15 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host
 
 import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.ongoinggame.communication.host.HostCommunicationState
-import ch.qscqlmpa.dwitch.ongoinggame.usecases.GameLaunchableEvent
-import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.WaitingRoomHostFacade
-import ch.qscqlmpa.dwitch.scheduler.TestSchedulerFactory
+import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.ui.common.Resource
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitch.ui.model.UiInfoModel
 import ch.qscqlmpa.dwitch.ui.model.Visibility
-import ch.qscqlmpa.dwitch.utils.DisposableManager
+import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
+import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
+import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.GameLaunchableEvent
+import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomHostFacade
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
@@ -36,7 +37,7 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
         val schedulerFactory = TestSchedulerFactory()
         schedulerFactory.setTimeScheduler(TestScheduler())
 
-        viewModel = WaitingRoomHostViewModel(mockFacade, DisposableManager(), schedulerFactory)
+        viewModel = WaitingRoomHostViewModel(mockFacade, ch.qscqlmpa.dwitchcommonutil.DisposableManager(), schedulerFactory)
 
         communicatorSubject = PublishSubject.create()
         every { mockFacade.observeCommunicationState() } returns communicatorSubject
@@ -49,15 +50,15 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
 
         communicatorSubject.onNext(HostCommunicationState.Open)
 
-        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(HostCommunicationState.Open.resource))
+        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(Resource(R.string.listening_for_guests)))
 
         communicatorSubject.onNext(HostCommunicationState.Closed)
 
-        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(HostCommunicationState.Closed.resource))
+        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(Resource(R.string.not_listening_for_guests)))
 
         communicatorSubject.onNext(HostCommunicationState.Error)
 
-        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(HostCommunicationState.Error.resource))
+        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(Resource(R.string.host_connection_error)))
     }
 
     @Test

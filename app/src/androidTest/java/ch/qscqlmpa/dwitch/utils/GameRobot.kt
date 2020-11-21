@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.utils
 
-import ch.qscqlmpa.dwitch.model.RoomType
-import ch.qscqlmpa.dwitch.model.game.Game
+import ch.qscqlmpa.dwitchmodel.game.Game
+import ch.qscqlmpa.dwitchmodel.game.RoomType
 import org.junit.Assert.assertEquals
 
 class GameRobot(private val gameTest: Game) {

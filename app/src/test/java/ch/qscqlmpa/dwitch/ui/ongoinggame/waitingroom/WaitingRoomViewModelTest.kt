@@ -1,10 +1,10 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom
 
 import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.PlayerWr
-import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.WaitingRoomFacade
-import ch.qscqlmpa.dwitch.scheduler.TestSchedulerFactory
-import ch.qscqlmpa.dwitch.utils.DisposableManager
+import ch.qscqlmpa.dwitchcommonutil.DisposableManager
+import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
+import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWr
+import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomFacade
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
@@ -23,11 +23,7 @@ class WaitingRoomViewModelTest : BaseViewModelUnitTest() {
     private fun createViewModel() {
         val schedulerFactory = TestSchedulerFactory()
         schedulerFactory.setTimeScheduler(TestScheduler())
-        viewModel = WaitingRoomViewModel(
-                mockFacade,
-                DisposableManager(),
-                schedulerFactory
-        )
+        viewModel = WaitingRoomViewModel(mockFacade, DisposableManager(), schedulerFactory)
     }
 
     @Test

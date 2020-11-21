@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client
 
 import ch.qscqlmpa.dwitch.PlayerHostTest
 import ch.qscqlmpa.dwitch.integrationtests.NetworkHub
+import ch.qscqlmpa.dwitchcommunication.websocket.client.*
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
 import org.java_websocket.handshake.ServerHandshake

@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server
 
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.*
 import ch.qscqlmpa.dwitch.integrationtests.NetworkHub
+import ch.qscqlmpa.dwitchcommunication.websocket.server.*
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
 import org.java_websocket.WebSocket

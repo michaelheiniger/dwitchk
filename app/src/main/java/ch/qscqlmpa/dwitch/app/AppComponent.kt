@@ -1,37 +1,29 @@
 package ch.qscqlmpa.dwitch.app
 
 import android.app.Application
-import ch.qscqlmpa.dwitch.gamediscovery.GameDiscoveryModule
-import ch.qscqlmpa.dwitch.home.HomeModule
-import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameComponent
-import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameModule
-import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializationModule
-import ch.qscqlmpa.dwitch.persistence.DatabaseModule
-import ch.qscqlmpa.dwitch.scheduler.SchedulerModule
-import ch.qscqlmpa.dwitch.service.ServiceBindingModule
+import ch.qscqlmpa.dwitch.ongoinggame.OnGoingGameUiModule
+import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameUiComponent
 import ch.qscqlmpa.dwitch.service.ServiceManagerModule
 import ch.qscqlmpa.dwitch.ui.home.HomeActivityBindingModule
 import ch.qscqlmpa.dwitch.ui.home.HomeViewModelBindingModule
+import ch.qscqlmpa.dwitchgame.di.GameComponent
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
-import javax.inject.Singleton
 
-@Singleton
-@Component(modules = [
-    AndroidInjectionModule::class,
-    ApplicationModule::class,
-    DatabaseModule::class,
-    SerializationModule::class,
-    HomeModule::class,
-    HomeActivityBindingModule::class,
-    HomeViewModelBindingModule::class,
-    ServiceBindingModule::class,
-    ServiceManagerModule::class,
-    GameDiscoveryModule::class,
-    SchedulerModule::class
-])
+@AppScope
+@Component(
+    dependencies = [GameComponent::class],
+    modules = [
+        AndroidInjectionModule::class,
+        ApplicationModule::class,
+        HomeActivityBindingModule::class,
+        HomeViewModelBindingModule::class,
+        ServiceManagerModule::class,
+        SchedulersModule::class,
+    ]
+)
 interface AppComponent : AndroidInjector<App> {
 
     @Component.Builder
@@ -42,8 +34,10 @@ interface AppComponent : AndroidInjector<App> {
 
         fun applicationModule(applicationModule: ApplicationModule): Builder
 
+        fun gameComponent(gameComponent: GameComponent): Builder
+
         fun build(): AppComponent
     }
 
-    fun addInGameComponent(module: OngoingGameModule): OngoingGameComponent
+    fun addOngoingGameUiComponent(module: OnGoingGameUiModule): OngoingGameUiComponent
 }

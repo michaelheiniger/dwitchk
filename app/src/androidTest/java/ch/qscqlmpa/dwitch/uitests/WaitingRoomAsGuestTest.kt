@@ -1,34 +1,21 @@
 package ch.qscqlmpa.dwitch.uitests
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import ch.qscqlmpa.dwitch.Guest2
-import ch.qscqlmpa.dwitch.Guest3
 import ch.qscqlmpa.dwitch.PlayerGuestTest
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.model.player.Player
-import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
-import ch.qscqlmpa.dwitch.model.player.PlayerRole
-import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.uitests.base.BaseGuestTest
+import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import ch.qscqlmpa.dwitch.uitests.utils.WaitingRoomUtil.PLAYER_CONNECTED
 import ch.qscqlmpa.dwitch.uitests.utils.WaitingRoomUtil.PLAYER_DISCONNECTED
 import ch.qscqlmpa.dwitch.utils.PlayerRobot
+import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchmodel.player.Player
+import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
+import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Assert.assertEquals
-import org.junit.Before
 import org.junit.Test
 
 
 class WaitingRoomAsGuestTest : BaseGuestTest() {
-
-    @Before
-    override fun setup() {
-        super.setup()
-    }
 
     @Test
     fun goToWaitingRoomScreen_AckFromHostReceived() {
@@ -53,7 +40,7 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
         assertPlayerInWR(2, PlayerGuestTest.Guest2.name, PLAYER_CONNECTED)
         assertPlayerInWR(3, PlayerGuestTest.Guest3.name, PLAYER_CONNECTED)
 
-        val allPlayers = playerDao.getAllPlayersSortedOnNameAsc()
+        val allPlayers = inGameStore.getPlayersInWaitingRoom()
         assertThat(allPlayers.size).isEqualTo(4)
 
         PlayerRobot(allPlayers[0])
@@ -87,7 +74,7 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
 
         dudeWaitASec()
 
-        var allPlayers = playerDao.getAllPlayersSortedOnNameAsc()
+        var allPlayers = inGameStore.getPlayersInWaitingRoom()
         assertThat(allPlayers.size).isEqualTo(4)
         PlayerRobot(allPlayers[1])
             .assertName(PlayerGuestTest.LocalGuest.name)
@@ -104,8 +91,8 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
         assertPlayerInWR(2, PlayerGuestTest.Guest2.name, PLAYER_CONNECTED)
         assertPlayerInWR(3, PlayerGuestTest.Guest3.name, PLAYER_CONNECTED)
 
-        allPlayers = playerDao.getAllPlayersSortedOnNameAsc()
-        assertEquals(allPlayers.size, 4)
+        allPlayers = inGameStore.getPlayersInWaitingRoom()
+        assertThat(allPlayers.size).isEqualTo(4)
 
         PlayerRobot(allPlayers[0])
             .assertName(PlayerGuestTest.Host.name)
@@ -170,11 +157,11 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
 
         dudeWaitASec()
 
-        onView(withId(R.id.btnOk)).perform(click())
+        UiUtil.clickOnButton(R.id.btnOk)
 
         dudeWaitASec()
 
-        onView(withId(R.id.gameListTv)).check(matches(isDisplayed()))
+        UiUtil.elementIsDisplayed(R.id.gameListTv)
     }
 
     private fun hostSendsInitialWaitingRoomUpdate() {
@@ -203,7 +190,7 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
                     336,
                     PlayerGuestTest.Guest2.inGameId,
                     gameLocalIdAtHost,
-                    Guest2.name,
+                    PlayerGuestTest.Guest2.name,
                     PlayerRole.GUEST,
                     PlayerConnectionState.CONNECTED,
                     true
@@ -212,7 +199,7 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
                     337,
                     PlayerGuestTest.Guest3.inGameId,
                     gameLocalIdAtHost,
-                    Guest3.name,
+                    PlayerGuestTest.Guest3.name,
                     PlayerRole.GUEST,
                     PlayerConnectionState.CONNECTED,
                     true
@@ -221,5 +208,4 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
         )
         clientTestStub.serverSendsMessageToClient(message, false)
     }
-
 }

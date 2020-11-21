@@ -1,13 +1,15 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest
 
 import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationState
-import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.WaitingRoomGuestFacade
-import ch.qscqlmpa.dwitch.scheduler.TestSchedulerFactory
+import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.ui.common.Resource
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitch.ui.model.UiInfoModel
 import ch.qscqlmpa.dwitch.ui.model.Visibility
-import ch.qscqlmpa.dwitch.utils.DisposableManager
+import ch.qscqlmpa.dwitchcommonutil.DisposableManager
+import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
+import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
+import ch.qscqlmpa.dwitchgame.ongoinggame.game.GuestFacade
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -18,7 +20,7 @@ import org.junit.Test
 
 class ConnectionGuestViewModelTest : BaseViewModelUnitTest() {
 
-    private val mockFacade = mockk<WaitingRoomGuestFacade>(relaxed = true)
+    private val mockFacade = mockk<GuestFacade>(relaxed = true)
 
     private lateinit var viewModel: ConnectionGuestViewModel
 
@@ -107,15 +109,15 @@ class ConnectionGuestViewModelTest : BaseViewModelUnitTest() {
 
         communicationStateSubject.onNext(GuestCommunicationState.Connected)
 
-        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(GuestCommunicationState.Connected.resource))
+        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(Resource(R.string.connected_to_host)))
 
         communicationStateSubject.onNext(GuestCommunicationState.Disconnected)
 
-        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(GuestCommunicationState.Disconnected.resource))
+        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(Resource(R.string.disconnected_from_host)))
 
         communicationStateSubject.onNext(GuestCommunicationState.Error)
 
-        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(GuestCommunicationState.Error.resource))
+        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(Resource(R.string.guest_connection_error)))
     }
 
     @Test

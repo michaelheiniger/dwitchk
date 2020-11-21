@@ -38,4 +38,8 @@ abstract class BaseViewModelUnitTest {
         liveDatas.forEach { liveData -> liveData.observe(lifecycleOwner, { /* Nothing to do*/ }) }
         lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
     }
+
+    protected fun unsubscribeFromPublishers() {
+        lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
+    }
 }

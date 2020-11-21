@@ -1,22 +1,17 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.guest
 
 import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.WaitingRoomGuestFacade
-import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationState
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEvent
-import ch.qscqlmpa.dwitch.scheduler.TestSchedulerFactory
+import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomGuestFacade
+import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
+import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
+import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
-import ch.qscqlmpa.dwitch.ui.model.UiControlModel
-import ch.qscqlmpa.dwitch.ui.model.UiInfoModel
-import ch.qscqlmpa.dwitch.ui.model.Visibility
-import ch.qscqlmpa.dwitch.utils.DisposableManager
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.schedulers.TestScheduler
 import io.reactivex.subjects.PublishSubject
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -36,7 +31,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
     override fun setup() {
         super.setup()
 
-        viewModel = WaitingRoomGuestViewModel(mockFacade, DisposableManager(), TestSchedulerFactory())
+        viewModel = WaitingRoomGuestViewModel(mockFacade, ch.qscqlmpa.dwitchcommonutil.DisposableManager(), TestSchedulerFactory())
 
         communicationStateSubject = PublishSubject.create()
         localPlayerReadyStateSubject = PublishSubject.create()

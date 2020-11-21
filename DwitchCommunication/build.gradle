@@ -1,0 +1,73 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlinx-serialization'
+    id 'kotlin-android-extensions'
+
+}
+
+android {
+    compileSdkVersion 29
+
+    defaultConfig {
+        minSdkVersion 24
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    implementation project(path: ':DwitchEngine')
+    implementation project(path: ':DwitchModel')
+
+    // Timber
+    implementation "com.jakewharton.timber:timber:$timberVersion"
+
+    // Dagger
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    implementation project(path: ':DwitchCommonUtil')
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    // Dagger Android
+    implementation "com.google.dagger:dagger-android:$daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+
+    // RxJava
+    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
+    implementation "com.jakewharton.rxrelay2:rxrelay:$rxRelayVersion"
+
+    // Serialization
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$kotlinxSerializationVersion"
+
+    // Java-WebSocket
+    implementation "org.java-websocket:Java-WebSocket:$websocketVersion"
+
+//    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+//    implementation 'androidx.core:core-ktx:1.3.2'
+//    implementation 'androidx.appcompat:appcompat:1.2.0'
+//    implementation 'com.google.android.material:material:1.2.1'
+//    testImplementation 'junit:junit:4.+'
+//    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+//    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+}

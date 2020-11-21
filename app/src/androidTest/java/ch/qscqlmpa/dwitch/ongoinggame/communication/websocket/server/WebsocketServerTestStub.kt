@@ -1,21 +1,19 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server
 
-import ch.qscqlmpa.dwitch.Guest1
-import ch.qscqlmpa.dwitch.Guest2
-import ch.qscqlmpa.dwitch.Guest3
 import ch.qscqlmpa.dwitch.PlayerHostTest
 import ch.qscqlmpa.dwitch.ongoinggame.communication.host.ServerTestStub
-import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
 import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.TestWebSocket
-import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend
+import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
+import ch.qscqlmpa.dwitchcommunication.websocket.server.TestWebsocketServer
+import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import org.java_websocket.WebSocket
 
 class WebsocketServerTestStub(
-        private val server: TestWebsocketServer,
-        private val serializerFactory: SerializerFactory
+    private val server: TestWebsocketServer,
+    private val serializerFactory: SerializerFactory
 ) : ServerTestStub {
 
     private val guest1Socket = TestWebSocket("192.168.1.1", 1025)
@@ -55,9 +53,9 @@ class WebsocketServerTestStub(
 
     private fun getSocketForGuest(guestIdentifier: PlayerHostTest): WebSocket {
         return when (guestIdentifier) {
-            Guest1 -> guest1Socket
-            Guest2 -> guest2Socket
-            Guest3 -> guest3Socket
+            PlayerHostTest.Guest1 -> guest1Socket
+            PlayerHostTest.Guest2 -> guest2Socket
+            PlayerHostTest.Guest3 -> guest3Socket
         }
     }
 }

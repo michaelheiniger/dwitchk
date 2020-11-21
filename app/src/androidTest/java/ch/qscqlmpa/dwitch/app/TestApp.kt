@@ -2,21 +2,41 @@ package ch.qscqlmpa.dwitch.app
 
 import ch.qscqlmpa.dwitch.DaggerTestAppComponent
 import ch.qscqlmpa.dwitch.TestAppComponent
-import ch.qscqlmpa.dwitch.model.RoomType
-import ch.qscqlmpa.dwitch.model.player.PlayerRole
-import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameComponent
-import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameModule
+import ch.qscqlmpa.dwitch.ongoinggame.OnGoingGameUiModule
+import ch.qscqlmpa.dwitchcommunication.di.CommunicationModule
+import ch.qscqlmpa.dwitchcommunication.di.DaggerTestCommunicationComponent
+import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
+import ch.qscqlmpa.dwitchgame.di.DaggerTestGameComponent
+import ch.qscqlmpa.dwitchgame.di.TestGameComponent
+import ch.qscqlmpa.dwitchgame.di.modules.GameModule
+import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameComponent
+import ch.qscqlmpa.dwitchgame.ongoinggame.di.modules.OngoingGameModule
+import ch.qscqlmpa.dwitchmodel.game.RoomType
+import ch.qscqlmpa.dwitchmodel.player.PlayerRole
+import ch.qscqlmpa.dwitchstore.DaggerTestStoreComponent
+import ch.qscqlmpa.dwitchstore.TestStoreComponent
+import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreModule
+import ch.qscqlmpa.dwitchstore.store.TestStoreModule
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import timber.log.Timber
 
 class TestApp : App() {
 
+    lateinit var testStoreComponent: TestStoreComponent
+    lateinit var testGameComponent: TestGameComponent
     lateinit var testAppComponent: TestAppComponent
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+        testStoreComponent = DaggerTestStoreComponent.factory()
+            .create(TestStoreModule(this))
+
+        testGameComponent = DaggerTestGameComponent.factory()
+            .create(GameModule(testStoreComponent.store))
+
         testAppComponent = DaggerTestAppComponent.builder()
                 .applicationModule(ApplicationModule(this))
+                .gameComponent(testGameComponent)
                 .build()
         return testAppComponent
     }
@@ -28,10 +48,39 @@ class TestApp : App() {
                                   hostPort: Int,
                                   hostIpAddress: String
     ): OngoingGameComponent? {
+        Timber.d("startOngoingGame()")
         if (ongoingGameComponent == null) {
-            ongoingGameComponent = testAppComponent.addInGameComponent(
-                OngoingGameModule(playerRole, roomType, gameLocalId,
-                    localPlayerLocalId, hostPort, hostIpAddress)
+            inGameStoreComponent = testStoreComponent.addInGameStoreComponent(
+                InGameStoreModule(gameLocalId, localPlayerLocalId)
+            )
+
+            communicationComponent = DaggerTestCommunicationComponent.factory()
+                .create(CommunicationModule(hostIpAddress, hostPort))
+
+            ongoingGameComponent = testGameComponent.addTestOngoingGameComponent(
+//            ongoingGameComponent = testGameComponent.addOngoingGameComponent(
+                OngoingGameModule(
+                    playerRole,
+                    roomType,
+                    gameLocalId,
+                    localPlayerLocalId,
+                    hostPort,
+                    hostIpAddress,
+                    inGameStoreComponent!!.inGameStore,
+                    communicationComponent!!
+                ),
+            )
+            ongoingGameUiComponent = testAppComponent.addOngoingGameUiComponent(
+                OnGoingGameUiModule(
+                    ongoingGameComponent!!.hostFacade,
+                    ongoingGameComponent!!.guestFacade,
+                    ongoingGameComponent!!.waitingRoomFacade,
+                    ongoingGameComponent!!.waitingRoomHostFacade,
+                    ongoingGameComponent!!.waitingRoomGuestFacade,
+                    ongoingGameComponent!!.gameRoomHostFacade,
+                    ongoingGameComponent!!.gameRoomGuestFacade,
+                    ongoingGameComponent!!.playerDashboardFacade
+                )
             )
         } else {
             Timber.w("startOngoingGame() called when a game is already on-going.")
@@ -39,4 +88,7 @@ class TestApp : App() {
         return ongoingGameComponent
     }
 
+    override fun appEventRepository(): AppEventRepository {
+        return testGameComponent.appEventRepository
+    }
 }

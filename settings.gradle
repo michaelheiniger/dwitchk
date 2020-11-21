@@ -1,3 +1,8 @@
+include ':DwitchCommunication'
+include ':DwitchGame'
+include ':DwitchCommonUtil'
+include ':DwitchStore'
+include ':DwitchModel'
 include ':DwitchEngine'
 include ':app'
 rootProject.name = "Dwitch"

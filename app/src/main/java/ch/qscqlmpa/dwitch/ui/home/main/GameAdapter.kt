@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGame
+import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import java.util.*
 
 internal class GameAdapter(private val listener: GameClickedListener) : RecyclerView.Adapter<GameAdapter.GameViewHolder>() {

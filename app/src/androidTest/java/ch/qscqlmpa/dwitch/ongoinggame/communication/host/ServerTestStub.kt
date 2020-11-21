@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame.communication.host
 
 import ch.qscqlmpa.dwitch.PlayerHostTest
-import ch.qscqlmpa.dwitch.ongoinggame.messages.EnvelopeToSend
+import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import io.reactivex.Observable
 
 interface ServerTestStub {
