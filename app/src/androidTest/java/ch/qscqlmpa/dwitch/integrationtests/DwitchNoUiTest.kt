@@ -9,9 +9,11 @@ import ch.qscqlmpa.dwitchengine.model.player.PlayerState
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@Ignore
 @RunWith(AndroidJUnit4::class)
 class DwitchNoUiTest {
 
