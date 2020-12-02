@@ -7,10 +7,10 @@ import android.view.View
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitch.ui.common.Status
 import ch.qscqlmpa.dwitch.ui.home.HomeBaseActivity
 import ch.qscqlmpa.dwitch.ui.home.newgame.NewGameActivity
+import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import kotlinx.android.synthetic.main.main_activity.*
 import timber.log.Timber
 

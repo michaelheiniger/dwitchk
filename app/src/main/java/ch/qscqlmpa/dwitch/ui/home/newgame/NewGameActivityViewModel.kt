@@ -2,12 +2,12 @@ package ch.qscqlmpa.dwitch.ui.home.newgame
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGame
-import ch.qscqlmpa.dwitch.home.HomeGuestFacade
-import ch.qscqlmpa.dwitch.home.HomeHostFacade
-import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitch.utils.DisposableManager
+import ch.qscqlmpa.dwitchcommonutil.DisposableManager
+import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
+import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
+import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
+import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -62,7 +62,7 @@ constructor(
 
     private fun hostGame(gameName: String, playerName: String) {
         disposableManager.add(
-            hostFacade.hostGame(gameName, playerName)
+            hostFacade.hostGame(gameName, playerName, 8889) //TODO: Take value from sharedPref
                 .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
                 .subscribe(

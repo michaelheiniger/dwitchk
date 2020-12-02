@@ -1,32 +1,22 @@
 package ch.qscqlmpa.dwitch.ongoinggame.services
 
 import android.content.Context
-import ch.qscqlmpa.dwitch.gameadvertising.GameInfo
+import ch.qscqlmpa.dwitchgame.appevent.GameCreatedInfo
+import ch.qscqlmpa.dwitchgame.appevent.GameJoinedInfo
 import javax.inject.Inject
 
 open class ServiceManagerImpl @Inject constructor(private val context: Context) : ServiceManager {
 
-    override fun startHostService(gameLocalId: Long, gameInfo: GameInfo, localPlayerLocalId: Long) {
-        HostInGameService.startService(context, gameLocalId, gameInfo, localPlayerLocalId)
+    override fun startHostService(gameCreatedInfo: GameCreatedInfo) {
+        HostInGameService.startService(context, gameCreatedInfo)
     }
 
     override fun stopHostService() {
         HostInGameService.stopService(context)
     }
 
-    override fun startGuestService(
-        gameLocalId: Long,
-        localPlayerLocalId: Long,
-        gamePort: Int,
-        gameIpAddress: String
-    ) {
-        GuestInGameService.startService(
-            context,
-            gameLocalId,
-            localPlayerLocalId,
-            gamePort,
-            gameIpAddress
-        )
+    override fun startGuestService(gameJoinedInfo: GameJoinedInfo) {
+        GuestInGameService.startService(context, gameJoinedInfo)
     }
 
     override fun stopGuestService() {

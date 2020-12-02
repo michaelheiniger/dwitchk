@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame
 
 import androidx.lifecycle.ViewModel
-import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameScope
+import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameUiScope
 import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest.ConnectionGuestViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestViewModel
@@ -21,7 +21,7 @@ import javax.inject.Named
 abstract class OngoingGameViewModelBindingModule {
 
     @Named("ongoingGame")
-    @OngoingGameScope
+    @OngoingGameUiScope
     @Binds
     abstract fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelFactory
 

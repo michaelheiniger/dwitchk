@@ -11,7 +11,12 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/DwitchCommonUtil" />
+            <option value="$PROJECT_DIR$/DwitchCommunication" />
             <option value="$PROJECT_DIR$/DwitchEngine" />
+            <option value="$PROJECT_DIR$/DwitchGame" />
+            <option value="$PROJECT_DIR$/DwitchModel" />
+            <option value="$PROJECT_DIR$/DwitchStore" />
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>

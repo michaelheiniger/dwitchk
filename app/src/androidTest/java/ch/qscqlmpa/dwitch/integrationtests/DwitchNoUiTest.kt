@@ -1,18 +1,20 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import ch.qscqlmpa.dwitch.Guest1
-import ch.qscqlmpa.dwitch.Guest2
-import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGame
+import ch.qscqlmpa.dwitchcommunication.websocket.PlayerHostTest
+import ch.qscqlmpa.dwitchcommunication.websocket.NetworkHub
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.player.PlayerState
 import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@Ignore
 @RunWith(AndroidJUnit4::class)
 class DwitchNoUiTest {
 
@@ -39,8 +41,8 @@ class DwitchNoUiTest {
         host.createGame()
 
         val advertisedGame = AdvertisedGame(gameName, host.gameCommonId(), gameIpAddress, gamePort)
-        val guest1 = IntTestGuest(Guest1, advertisedGame, networkHub)
-        val guest2 = IntTestGuest(Guest2, advertisedGame, networkHub)
+        val guest1 = IntTestGuest(PlayerHostTest.Guest1, advertisedGame, networkHub)
+        val guest2 = IntTestGuest(PlayerHostTest.Guest2, advertisedGame, networkHub)
 
         guest1.joinGame()
         guest2.joinGame()

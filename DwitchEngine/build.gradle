@@ -2,18 +2,27 @@ apply plugin: 'java-library'
 apply plugin: 'kotlin'
 apply plugin: 'kotlinx-serialization'
 
-def kotlinxSerializationVersion = '1.0-M1-1.4.0-rc'
-def log4jVersion = '2.13.3'
+def dependencyGroup(Closure closure) {
+    closure.delegate = dependencies
+    return closure
+}
 
-dependencies {
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$kotlinxSerializationVersion"
-    annotationProcessor "org.apache.logging.log4j:log4j-core:$log4jVersion"
-
+def test = dependencyGroup {
     // JUnit5 (for unit tests except those of ViewModel)
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.7.0'
     testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.7.0'
 
-    testImplementation 'org.assertj:assertj-core:3.17.2'
+    testImplementation "org.assertj:assertj-core:$assertjVersion"
+}
+
+dependencies {
+
+    // Timber
+    implementation "com.jakewharton.timber:timber:$timberVersion"
+
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$kotlinxSerializationVersion"
+
+    test()
 }

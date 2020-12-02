@@ -1,10 +1,9 @@
 package ch.qscqlmpa.dwitch.ui.base
 
 import androidx.lifecycle.ViewModel
-import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
-import ch.qscqlmpa.dwitch.utils.DisposableManager
+import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 
-abstract class BaseViewModel(protected val disposableManager: DisposableManager,
+abstract class BaseViewModel(protected val disposableManager: ch.qscqlmpa.dwitchcommonutil.DisposableManager,
                              protected val schedulerFactory: SchedulerFactory
 ) : ViewModel() {
 

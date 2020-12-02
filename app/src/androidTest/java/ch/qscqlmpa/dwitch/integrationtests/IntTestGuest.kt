@@ -1,11 +1,12 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
-import ch.qscqlmpa.dwitch.PlayerHostTest
-import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGame
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.IntTestWebsocketClient
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEvent
-import ch.qscqlmpa.dwitch.ongoinggame.gameroom.GameRoomGuestFacade
+import ch.qscqlmpa.dwitchcommunication.websocket.NetworkHub
+import ch.qscqlmpa.dwitchcommunication.websocket.PlayerHostTest
+import ch.qscqlmpa.dwitchcommunication.websocket.client.IntTestWebsocketClient
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
+import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameRoomGuestFacade
 import org.assertj.core.api.Assertions
 
 class IntTestGuest(
@@ -16,24 +17,24 @@ class IntTestGuest(
 
     private lateinit var gameRoomGuestFacade: GameRoomGuestFacade
 
-    private val guestLocalId: Long
+//    private val guestLocalId: Long
     lateinit var playerId: PlayerInGameId
 
     init {
-        appComponent.newGameUsecase.joinGame(advertisedGame, guest.name).blockingGet()
-        val game = appComponent.database.gameDao().getGameByName(advertisedGame.gameName)
-                ?: throw IllegalStateException("New game can't be fetched from store")
-        gameLocalId = game.id
-        guestLocalId = game.localPlayerLocalId
+//        appComponent.newGameUsecase.joinGame(advertisedGame, guest.name).blockingGet()
+//        val game = appComponent.database.gameDao().getGameByName(advertisedGame.gameName)
+//                ?: throw IllegalStateException("New game can't be fetched from store")
+//        gameLocalId = game.id
+//        guestLocalId = game.localPlayerLocalId
 
         hookOnGoingGameComponent()
     }
 
     fun joinGame() {
-        hookUpGuestToNetworkHub()
-        ongoingGameComponent.guestCommunicator.connect()
-        playerId = appComponent.database.playerDao().gePlayer(guestLocalId).inGameId
-        ongoingGameComponent.waitingRoomGuestFacade.updateReadyState(true).blockingGet()
+//        hookUpGuestToNetworkHub()
+//        ongoingGameComponent.guestCommunicator.connect()
+//        playerId = appComponent.database.playerDao().gePlayer(guestLocalId).inGameId
+//        ongoingGameComponent.waitingRoomGuestFacade.updateReadyState(true).blockingGet()
     }
 
     fun assertGameOverReceived() {
@@ -42,16 +43,17 @@ class IntTestGuest(
 
     override fun hookOnGoingGameComponent() {
         super.hookOnGoingGameComponent()
-        gameRoomGuestFacade = ongoingGameComponent.gameRoomGuestFacade
+//        gameRoomGuestFacade = ongoingGameComponent.gameRoomGuestFacade
     }
 
     private fun getWebsocketClient(): IntTestWebsocketClient {
-        return ongoingGameComponent.websocketClientFactory.create() as IntTestWebsocketClient
+//        return ongoingGameComponent.websocketClientFactory.create() as IntTestWebsocketClient
+        TODO()
     }
 
     private fun hookUpGuestToNetworkHub() {
         val websocketClient = getWebsocketClient()
         networkHub.addGuest(guest, websocketClient)
-        websocketClient.setNetworkHub(networkHub, guest)
+//        websocketClient.setNetworkHub(networkHub, guest)
     }
 }

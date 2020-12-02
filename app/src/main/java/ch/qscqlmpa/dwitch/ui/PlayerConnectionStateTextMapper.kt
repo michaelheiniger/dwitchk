@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ui
 
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
+import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 
 object PlayerConnectionStateTextMapper {
 

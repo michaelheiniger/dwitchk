@@ -6,13 +6,12 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProviders
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
-import ch.qscqlmpa.dwitch.common.CommonExtraConstants
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
-import ch.qscqlmpa.dwitch.model.player.PlayerRole
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host.GameRoomHostFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard.PlayerDashboardFragment
+import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 
 class GameRoomActivity : OngoingGameBaseActivity() {
 
@@ -21,7 +20,7 @@ class GameRoomActivity : OngoingGameBaseActivity() {
     private lateinit var viewModel: GameRoomViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (application as App).getGameComponent()!!.inject(this)
+        (application as App).getGameUiComponent()!!.inject(this)
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(GameRoomViewModel::class.java)

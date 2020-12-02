@@ -1,15 +1,14 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard
 
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
-import ch.qscqlmpa.dwitch.ui.CardResourceMapper
-import ch.qscqlmpa.dwitch.ui.EntityTextMapper
 import ch.qscqlmpa.dwitch.ui.ImageInfo
+import ch.qscqlmpa.dwitch.ui.ResourceMapper
 import ch.qscqlmpa.dwitch.ui.utils.TextProvider
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.player.Player
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboard
+import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import timber.log.Timber
 
 data class PlayerDashboardUi(
@@ -43,7 +42,7 @@ data class PlayerDashboardUi(
 
     fun lastCardPlayed(): ImageInfo {
         return ImageInfo(
-            CardResourceMapper.resourceForCard(dashboard.lastCardPlayed),
+            ResourceMapper.getResource(dashboard.lastCardPlayed),
             dashboard.lastCardPlayed.toString()
         )
     }
@@ -62,7 +61,7 @@ data class PlayerDashboardUi(
         }
     }
 
-    private fun playerRank(player: Player) = textProvider.getText(EntityTextMapper.rankText(player.rank))
+    private fun playerRank(player: Player) = textProvider.getText(ResourceMapper.getResource(player.rank))
 
     private fun isCardPlayable(card: Card, dashboard: PlayerDashboard): Boolean {
         Timber.v("Is card $card playable ? ${card.value()} >= ${dashboard.minimumCardValueAllowed.value} : ${card.value() >= dashboard.minimumCardValueAllowed.value}")

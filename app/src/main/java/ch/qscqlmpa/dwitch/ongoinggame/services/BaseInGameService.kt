@@ -11,16 +11,14 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.app.notifications.NotificationChannelFactory.DEFAULT_CHANNEL_ID
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants
-import ch.qscqlmpa.dwitch.gameadvertising.GameInfo
-import ch.qscqlmpa.dwitch.model.RoomType
-import ch.qscqlmpa.dwitch.model.player.PlayerRole
-import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameComponent
-import ch.qscqlmpa.dwitch.service.BaseService
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
+import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameComponent
+import ch.qscqlmpa.dwitchmodel.game.RoomType
+import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import timber.log.Timber
 
-abstract class BaseInGameService : BaseService() {
+abstract class BaseInGameService : Service() {
 
     protected abstract val playerRole: PlayerRole
 
@@ -36,7 +34,7 @@ abstract class BaseInGameService : BaseService() {
             ACTION_CHANGE_ROOM_TO_GAME_ROOM -> actionChangeRoomToGameRoom()
             ACTION_STOP_SERVICE -> actionStopService()
         }
-        return Service.START_REDELIVER_INTENT
+        return START_REDELIVER_INTENT
     }
 
     override fun onDestroy() {
@@ -52,29 +50,6 @@ abstract class BaseInGameService : BaseService() {
         return (application as App).getGameComponent()!!
     }
 
-    protected fun getGameLocalId(intent: Intent): Long {
-        val gameLocalId = intent.getLongExtra(EXTRA_GAME_LOCAL_ID, 0)
-
-        if (gameLocalId == 0L) {
-            throw IllegalArgumentException("The intent to start the service does not specify a game local-ID")
-        }
-        return gameLocalId
-    }
-
-    protected fun getLocalPlayerLocalId(intent: Intent): Long {
-        val localPlayerLocalId =
-            intent.getLongExtra(EXTRA_LOCAL_PLAYER_LOCAL_ID, 0)
-
-        if (localPlayerLocalId == 0L) {
-            throw IllegalArgumentException("The intent to start the service does not specify a local player local-ID")
-        }
-        return localPlayerLocalId
-    }
-
-    protected fun getGameInfo(intent: Intent): GameInfo {
-        return intent.getParcelableExtra(EXTRA_GAME_INFO)
-    }
-
     protected fun showNotification(roomType: RoomType) {
         val notificationIntent = buildNotificationIntent(roomType)
 
@@ -85,12 +60,17 @@ abstract class BaseInGameService : BaseService() {
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
+        val notificationMessage = when (roomType) {
+            RoomType.WAITING_ROOM -> R.string.waitingroom_notification_message
+            RoomType.GAME_ROOM -> R.string.gameroom_notification_message
+        }
+
         val notificationBuilder = NotificationCompat.Builder(this, DEFAULT_CHANNEL_ID)
             .setContentIntent(pendingIntent)
             .setOngoing(true)
             .setSmallIcon(R.drawable.spades_ace)
             .setContentTitle(getText(R.string.notification_title))
-            .setContentText(getText(R.string.notification_message))
+            .setContentText(getText(notificationMessage))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setColor(getColor(R.color.black))
 
@@ -137,10 +117,6 @@ abstract class BaseInGameService : BaseService() {
         const val ACTION_START_SERVICE = "ACTION_START_SERVICE"
         const val ACTION_STOP_SERVICE = "ACTION_STOP_SERVICE"
         const val ACTION_CHANGE_ROOM_TO_GAME_ROOM = "ACTION_GO_TO_GAME_ROOM"
-
-        const val EXTRA_GAME_LOCAL_ID = "game_local_id"
-        const val EXTRA_GAME_INFO = "game_info"
-        const val EXTRA_LOCAL_PLAYER_LOCAL_ID = "local_player_local_id"
 
         @JvmStatic
         protected fun createIntent(context: Context, cls: Class<*>, action: String): Intent {

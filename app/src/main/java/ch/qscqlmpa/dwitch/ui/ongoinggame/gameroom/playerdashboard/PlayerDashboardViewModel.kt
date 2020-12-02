@@ -2,24 +2,20 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
-import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
-import ch.qscqlmpa.dwitch.ongoinggame.game.PlayerDashboardFacade
-import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.utils.TextProvider
-import ch.qscqlmpa.dwitch.utils.DisposableManager
+import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboard
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.functions.BiFunction
+import ch.qscqlmpa.dwitchgame.ongoinggame.game.PlayerDashboardFacade
+import io.reactivex.rxjava3.core.BackpressureStrategy
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import timber.log.Timber
 import javax.inject.Inject
 
 class PlayerDashboardViewModel @Inject constructor(
     private val facade: PlayerDashboardFacade,
-    disposableManager: DisposableManager,
+    disposableManager: ch.qscqlmpa.dwitchcommonutil.DisposableManager,
     schedulerFactory: SchedulerFactory,
     private val textProvider: TextProvider
 ) : BaseViewModel(disposableManager, schedulerFactory) {

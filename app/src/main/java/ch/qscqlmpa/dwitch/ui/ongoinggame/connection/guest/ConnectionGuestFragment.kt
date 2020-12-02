@@ -23,7 +23,7 @@ class ConnectionGuestFragment : OngoingGameBaseFragment() {
     }
 
     override fun inject() {
-        (activity!!.application as App).getGameComponent()!!.inject(this)
+        (activity!!.application as App).getGameUiComponent()!!.inject(this)
     }
 
     private fun setupConnectionStateControls() {

@@ -32,4 +32,11 @@ object UiUtil {
         }
     }
 
+    fun elementIsDisplayed(resourceId: Int) {
+        onView(withId(resourceId)).check(matches(isDisplayed()))
+    }
+
+    fun assertControlTextContent(resourceId: Int, textResourceId: Int) {
+        onView(withId(resourceId)).check(matchesWithText(textResourceId))
+    }
 }

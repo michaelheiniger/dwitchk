@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
-import ch.qscqlmpa.dwitch.model.player.PlayerRole
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.guest.WaitingRoomGuestFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host.WaitingRoomHostFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.playerlist.PlayerWrAdapter
+import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import kotlinx.android.synthetic.main.waiting_room_activity.*
 
 class WaitingRoomActivity : OngoingGameBaseActivity() {
@@ -24,7 +24,7 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
     private lateinit var viewModel: WaitingRoomViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (application as App).getGameComponent()!!.inject(this)
+        (application as App).getGameUiComponent()!!.inject(this)
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)

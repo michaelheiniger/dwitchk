@@ -3,31 +3,31 @@ package ch.qscqlmpa.dwitch.uitests.base
 import android.content.res.Resources
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.replaceText
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.TestRule
-import ch.qscqlmpa.dwitch.gamediscovery.TestNetworkAdapter
-import ch.qscqlmpa.dwitch.ongoinggame.TestOngoingGameComponent
-import ch.qscqlmpa.dwitch.ongoinggame.communication.serialization.SerializerFactory
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.TestWebsocketClient
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.WebsocketClientTestStub
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.TestWebsocketServer
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.WebsocketServerTestStub
-import ch.qscqlmpa.dwitch.ongoinggame.persistence.InGameStore
-import ch.qscqlmpa.dwitch.persistence.AppRoomDatabase
-import ch.qscqlmpa.dwitch.persistence.GameDao
-import ch.qscqlmpa.dwitch.persistence.PlayerDao
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
-import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.matchesWithText
+import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
+import ch.qscqlmpa.dwitchcommunication.di.TestCommunicationComponent
+import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
+import ch.qscqlmpa.dwitchcommunication.websocket.client.TestWebsocketClient
+import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClientTestStub
+import ch.qscqlmpa.dwitchcommunication.websocket.server.TestWebsocketServer
+import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServerTestStub
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetupFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.player.Rank
-import io.reactivex.Completable
+import ch.qscqlmpa.dwitchgame.di.TestGameComponent
+import ch.qscqlmpa.dwitchgame.gamediscovery.TestNetworkAdapter
+import ch.qscqlmpa.dwitchgame.ongoinggame.di.TestOngoingGameComponent
+import ch.qscqlmpa.dwitchstore.TestStoreComponent
+import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
+import ch.qscqlmpa.dwitchstore.store.Store
+import io.reactivex.rxjava3.core.Completable
+import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith
 import timber.log.Timber
@@ -41,19 +41,24 @@ abstract class BaseUiTest {
 
     protected lateinit var res: Resources
 
-    private lateinit var database: AppRoomDatabase
-    protected lateinit var playerDao: PlayerDao
-    protected lateinit var gameDao: GameDao
-    protected lateinit var inGameStore: InGameStore
+    private lateinit var storeComponent: TestStoreComponent
+    private lateinit var gameComponent: TestGameComponent
 
     private lateinit var ongoingGameComponent: TestOngoingGameComponent
-    protected lateinit var serializerFactory: SerializerFactory
+    private lateinit var communicationComponent: TestCommunicationComponent
+
     protected lateinit var networkAdapter: TestNetworkAdapter
+
+    protected lateinit var store: Store
+    protected lateinit var inGameStore: InGameStore
+
+    protected lateinit var commSerializerFactory: SerializerFactory
 
     protected lateinit var serverTestStub: WebsocketServerTestStub
     protected lateinit var clientTestStub: WebsocketClientTestStub
 
-    open fun setup() {
+    @Before
+    fun setup() {
         res = InstrumentationRegistry.getInstrumentation().targetContext.resources
         testRule.init()
     }
@@ -61,28 +66,32 @@ abstract class BaseUiTest {
     protected fun launch() {
         testRule.launchActivity(null)
 
-        database = testRule.app.testAppComponent.database
-        gameDao = database.gameDao()
-        playerDao = database.playerDao()
-        networkAdapter = testRule.app.testAppComponent.testNetworkListener
+//        val testAppComponent = testRule.app.appComponent as TestAppComponent
+        gameComponent = testRule.app.testGameComponent
+        storeComponent = testRule.app.testStoreComponent as TestStoreComponent
+
+        store = storeComponent.store
+        networkAdapter = gameComponent.networkListener as TestNetworkAdapter
     }
 
     protected fun hookOngoingGameDependenciesForHost() {
         hookOngoingGameDependenciesCommon()
-        val server = ongoingGameComponent.websocketServer as TestWebsocketServer
-        serverTestStub = WebsocketServerTestStub(server, serializerFactory)
-        inGameStore = ongoingGameComponent.inGameStore
+        val server = communicationComponent.websocketServer as TestWebsocketServer
+        commSerializerFactory = communicationComponent.serializerFactory
+        serverTestStub = WebsocketServerTestStub(server, commSerializerFactory)
     }
 
     protected fun hookOngoingGameDependenciesForGuest() {
         hookOngoingGameDependenciesCommon()
-        val client = ongoingGameComponent.websocketClientFactory.create() as TestWebsocketClient
-        clientTestStub = WebsocketClientTestStub(client, serializerFactory)
+        val client = communicationComponent.websocketClientFactory.create() as TestWebsocketClient
+        commSerializerFactory = communicationComponent.serializerFactory
+        clientTestStub = WebsocketClientTestStub(client, commSerializerFactory)
     }
 
     private fun hookOngoingGameDependenciesCommon() {
-        ongoingGameComponent = testRule.app.getGameComponent() as TestOngoingGameComponent
-        serializerFactory = ongoingGameComponent.serializerFactory
+        ongoingGameComponent = testRule.app.ongoingGameComponent as TestOngoingGameComponent
+        inGameStore = testRule.app.inGameStoreComponent!!.inGameStore
+        communicationComponent = testRule.app.communicationComponent as TestCommunicationComponent
     }
 
     protected fun initializeInitialGameSetup(cardsForPlayer: Map<Int, List<Card>>, rankForPlayer: Map<Int, Rank>) {
@@ -93,7 +102,7 @@ abstract class BaseUiTest {
     protected fun dudeWaitASec(seconds: Long = 2L) {
         Completable.fromAction { Timber.i("Waiting for $seconds seconds...") }
                 .delay(seconds, TimeUnit.SECONDS)
-                .blockingGet()
+                .blockingSubscribe()
     }
 
 
@@ -101,16 +110,8 @@ abstract class BaseUiTest {
         onView(withId(resourceId)).perform(replaceText(text))
     }
 
-    protected fun assertControlTextContent(resourceId: Int, textResourceId: Int) {
-        onView(withId(resourceId)).check(matchesWithText(textResourceId))
-    }
-
-    protected fun assertControlIsDisplayed(resourceId: Int) {
-        onView(withId(resourceId)).check(matches(isDisplayed()))
-    }
-
     protected fun assertCurrentScreenIsHomeSreen() {
-        assertControlIsDisplayed(R.id.gameListTv)
-        assertControlTextContent(R.id.gameListTv, R.string.ma_game_list_tv)
+        UiUtil.elementIsDisplayed(R.id.gameListTv)
+        UiUtil.assertControlTextContent(R.id.gameListTv, R.string.ma_game_list_tv)
     }
 }

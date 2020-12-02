@@ -2,30 +2,27 @@ package ch.qscqlmpa.dwitch.uitests
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import ch.qscqlmpa.dwitch.PlayerGuestTest
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.game.TestEntityFactory
-import ch.qscqlmpa.dwitch.model.player.Player
-import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
-import ch.qscqlmpa.dwitch.model.player.PlayerRole
-import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
 import ch.qscqlmpa.dwitch.uitests.base.BaseGuestTest
 import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCanPassTurn
 import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCanPickACard
 import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCardInHand
 import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCardOnTable
 import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertGameRoomIsDisplayed
+import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
+import ch.qscqlmpa.dwitch.utils.TestEntityFactory
 import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil
 import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchmodel.player.Player
+import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
+import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
 import org.junit.Test
 
 class GameRoomAsGuestTest : BaseGuestTest() {
@@ -38,11 +35,6 @@ class GameRoomAsGuestTest : BaseGuestTest() {
         0 to listOf(Card.Hearts5, Card.Clubs3),
         1 to listOf(Card.Spades6, Card.Spades4)
     )
-
-    @Before
-    override fun setup() {
-        super.setup()
-    }
 
     @Test
     fun goToGameRoomScreen() {
@@ -87,16 +79,12 @@ class GameRoomAsGuestTest : BaseGuestTest() {
 
         dudeWaitASec()
 
-        onView(withId(R.id.btnOk)).perform(click())
-
-        onView(withId(R.id.gameListTv)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        UiUtil.clickOnButton(R.id.btnOk)
+        UiUtil.elementIsDisplayed(R.id.gameListTv)
     }
 
     private fun playACard(position: Int) {
-        onView(
-            ViewAssertionUtil.withRecyclerView(R.id.cardsInHandRw)
-                .atPositionOnView(position, R.id.cardIv)
-        )
+        onView(ViewAssertionUtil.withRecyclerView(R.id.cardsInHandRw).atPositionOnView(position, R.id.cardIv))
             .perform(click())
     }
 
