@@ -17,7 +17,7 @@ class GameRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment.Di
     override val layoutResource: Int = R.layout.game_room_guest_fragment
 
     override fun inject() {
-        (activity!!.application as App).getGameUiComponent()!!.inject(this)
+        (requireActivity().application as App).getGameUiComponent()!!.inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +40,7 @@ class GameRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment.Di
     private fun observeCommands() {
         viewModel.commands().observe(viewLifecycleOwner, { command ->
             when (command) {
-                GameRoomGuestCommand.NavigateToHomeScreen -> MainActivity.start(activity!!)
+                GameRoomGuestCommand.NavigateToHomeScreen -> MainActivity.start(requireActivity())
                 GameRoomGuestCommand.ShowGameOverInfo -> showGameOverDialog()
             }
         })

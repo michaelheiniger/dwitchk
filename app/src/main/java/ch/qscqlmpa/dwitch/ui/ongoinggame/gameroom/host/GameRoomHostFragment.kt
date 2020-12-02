@@ -16,7 +16,7 @@ class GameRoomHostFragment : OngoingGameBaseFragment() {
     private lateinit var viewModel: GameRoomHostViewModel
 
     override fun inject() {
-        (activity!!.application as App).getGameUiComponent()!!.inject(this)
+        (requireActivity().application as App).getGameUiComponent()!!.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -28,9 +28,9 @@ class GameRoomHostFragment : OngoingGameBaseFragment() {
     }
 
     private fun observeCommands() {
-        viewModel.commands().observe(this, { command ->
+        viewModel.commands().observe(viewLifecycleOwner, { command ->
             when (command) {
-                GameRoomHostCommand.NavigateToHomeScreen -> MainActivity.start(activity!!)
+                GameRoomHostCommand.NavigateToHomeScreen -> MainActivity.start(requireActivity())
             }
         })
     }

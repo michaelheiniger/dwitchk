@@ -23,11 +23,11 @@ class ConnectionGuestFragment : OngoingGameBaseFragment() {
     }
 
     override fun inject() {
-        (activity!!.application as App).getGameUiComponent()!!.inject(this)
+        (requireActivity().application as App).getGameUiComponent()!!.inject(this)
     }
 
     private fun setupConnectionStateControls() {
-        viewModel.connectionStateInfo().observe(this, { uiInfo -> communicationStateTv.text = getText(uiInfo.textResource.id) })
+        viewModel.connectionStateInfo().observe(viewLifecycleOwner, { uiInfo -> communicationStateTv.text = getText(uiInfo.textResource.id) })
     }
 
     private fun setupReconnectionControls() {

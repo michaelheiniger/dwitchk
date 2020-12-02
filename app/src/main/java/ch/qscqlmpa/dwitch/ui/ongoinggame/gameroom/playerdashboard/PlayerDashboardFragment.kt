@@ -25,7 +25,7 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
     private var canPlay: Boolean = false
 
     override fun inject() {
-        (activity!!.application as App).getGameUiComponent()!!.inject(this)
+        (requireActivity().application as App).getGameUiComponent()!!.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,7 +50,7 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
     }
 
     private fun observeAndUpdateDashboard() {
-        viewModel.playerDashboard().observe(this, { dashboard ->
+        viewModel.playerDashboard().observe(viewLifecycleOwner, { dashboard ->
             Timber.d("Dashboard update event: $dashboard")
 
             playersTv.text = dashboard.playersInfo()

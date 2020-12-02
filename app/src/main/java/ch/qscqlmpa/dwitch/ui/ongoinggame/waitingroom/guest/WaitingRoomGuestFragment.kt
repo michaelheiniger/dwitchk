@@ -36,7 +36,7 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment
     }
 
     override fun inject() {
-        (activity!!.application as App).getGameUiComponent()!!.inject(this)
+        (requireActivity().application as App).getGameUiComponent()!!.inject(this)
     }
 
     override fun onOkClicked() {
@@ -56,8 +56,8 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment
         viewModel.commands().observe(viewLifecycleOwner, { command ->
             when (command) {
                 WaitingRoomGuestCommand.NotifyUserGameCanceled -> showGameCanceledDialog()
-                WaitingRoomGuestCommand.NavigateToHomeScreen -> MainActivity.start(activity!!)
-                WaitingRoomGuestCommand.NavigateToGameRoomScreen -> GameRoomActivity.startForGuest(activity!!)
+                WaitingRoomGuestCommand.NavigateToHomeScreen -> MainActivity.start(requireActivity())
+                WaitingRoomGuestCommand.NavigateToGameRoomScreen -> GameRoomActivity.startForGuest(requireActivity())
             }
         })
     }
