@@ -30,15 +30,15 @@ abstract class IntTestPlayer {
     }
 
     fun playCard(card: Card) {
-        playerDashboardFacade.playCard(card).blockingGet()
+        playerDashboardFacade.playCard(card).blockingSubscribe()
     }
 
     fun pickCard() {
-        playerDashboardFacade.pickCard().blockingGet()
+        playerDashboardFacade.pickCard().blockingSubscribe()
     }
 
     fun passTurn() {
-        playerDashboardFacade.passTurn().blockingGet()
+        playerDashboardFacade.passTurn().blockingSubscribe()
     }
 
     fun startNewRound() {
@@ -52,7 +52,7 @@ abstract class IntTestPlayer {
 //                )
 //            )
 //        )
-        playerDashboardFacade.startNewRound().blockingGet()
+        playerDashboardFacade.startNewRound().blockingSubscribe()
     }
 
     fun assertDashboard(): PlayerDashboardRobot {

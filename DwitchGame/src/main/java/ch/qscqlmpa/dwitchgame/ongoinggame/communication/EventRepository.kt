@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication
 
-import com.jakewharton.rxrelay2.PublishRelay
-import io.reactivex.Observable
+import com.jakewharton.rxrelay3.PublishRelay
+import io.reactivex.rxjava3.core.Observable
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicReference
 

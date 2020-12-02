@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.game
 
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 
 interface GuestFacade {
     fun connect()

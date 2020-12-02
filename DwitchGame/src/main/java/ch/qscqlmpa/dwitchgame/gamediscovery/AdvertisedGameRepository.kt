@@ -2,10 +2,9 @@ package ch.qscqlmpa.dwitchgame.gamediscovery
 
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchgame.di.GameScope
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 import org.joda.time.LocalTime
 import timber.log.Timber
-import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 

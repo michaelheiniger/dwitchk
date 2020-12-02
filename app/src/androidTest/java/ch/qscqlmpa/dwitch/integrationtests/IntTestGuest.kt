@@ -1,7 +1,8 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
-import ch.qscqlmpa.dwitch.PlayerHostTest
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.IntTestWebsocketClient
+import ch.qscqlmpa.dwitchcommunication.websocket.NetworkHub
+import ch.qscqlmpa.dwitchcommunication.websocket.PlayerHostTest
+import ch.qscqlmpa.dwitchcommunication.websocket.client.IntTestWebsocketClient
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
@@ -53,6 +54,6 @@ class IntTestGuest(
     private fun hookUpGuestToNetworkHub() {
         val websocketClient = getWebsocketClient()
         networkHub.addGuest(guest, websocketClient)
-        websocketClient.setNetworkHub(networkHub, guest)
+//        websocketClient.setNetworkHub(networkHub, guest)
     }
 }

@@ -11,7 +11,7 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.verify
-import io.reactivex.Completable
+import io.reactivex.rxjava3.core.Completable
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 

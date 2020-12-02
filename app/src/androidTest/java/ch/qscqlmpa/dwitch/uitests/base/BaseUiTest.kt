@@ -8,14 +8,14 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.TestRule
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.WebsocketClientTestStub
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.WebsocketServerTestStub
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import ch.qscqlmpa.dwitchcommunication.di.TestCommunicationComponent
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.client.TestWebsocketClient
+import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClientTestStub
 import ch.qscqlmpa.dwitchcommunication.websocket.server.TestWebsocketServer
+import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServerTestStub
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetupFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
@@ -26,7 +26,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.di.TestOngoingGameComponent
 import ch.qscqlmpa.dwitchstore.TestStoreComponent
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import ch.qscqlmpa.dwitchstore.store.Store
-import io.reactivex.Completable
+import io.reactivex.rxjava3.core.Completable
 import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith
@@ -102,7 +102,7 @@ abstract class BaseUiTest {
     protected fun dudeWaitASec(seconds: Long = 2L) {
         Completable.fromAction { Timber.i("Waiting for $seconds seconds...") }
                 .delay(seconds, TimeUnit.SECONDS)
-                .blockingGet()
+                .blockingSubscribe()
     }
 
 

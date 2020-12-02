@@ -2,8 +2,8 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom
 
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
-import io.reactivex.Completable
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 
 interface WaitingRoomGuestFacade {
 

@@ -2,8 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'de.mannodermaus.android-junit5'
-apply plugin: 'kotlinx-serialization'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -75,8 +73,6 @@ def common = dependencyGroup {
     // Dagger
     implementation "com.google.dagger:dagger:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-
-    // Dagger Android
     implementation "com.google.dagger:dagger-android:$daggerVersion"
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
@@ -85,25 +81,14 @@ def common = dependencyGroup {
     implementation "com.jakewharton.timber:timber:$timberVersion"
 
     // RxJava
-    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
-    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
-    implementation "com.jakewharton.rxrelay2:rxrelay:$rxRelayVersion"
-
+    implementation "io.reactivex.rxjava3:rxjava:$rxJavaVersion"
+    implementation "io.reactivex.rxjava3:rxkotlin:$rxKotlinVersion"
+    implementation "io.reactivex.rxjava3:rxandroid:$rxAndroidVersion"
+    implementation "com.jakewharton.rxrelay3:rxrelay:$rxRelayVersion"
     implementation "androidx.lifecycle:lifecycle-reactivestreams:$lifecycleReactiveStreamsVersion"
 
     // Joda time
     implementation "joda-time:joda-time:$jodaVersion"
-
-    // Java-WebSocket
-    implementation "org.java-websocket:Java-WebSocket:$websocketVersion"
-
-    // Room database
-    implementation "androidx.room:room-runtime:$roomVersion"
-    implementation "androidx.room:room-rxjava2:$roomVersion"
-    kapt "androidx.room:room-compiler:$roomVersion"
-
-    // Serialization
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$kotlinxSerializationVersion"
 }
 
 def ui = dependencyGroup {
@@ -119,18 +104,12 @@ def test = dependencyGroup {
     // JUnit4 (For ViewModel unit tests and instrumented tests)
     testImplementation 'junit:junit:4.12'
 
-    // JUnit5 (for unit tests except those of ViewModel)
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5Version"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
-    testImplementation "org.junit.jupiter:junit-jupiter-params:$junit5Version"
-    testRuntimeOnly "org.junit.vintage:junit-vintage-engine:$junit5Version"
-
     // MockK
     androidTestImplementation "io.mockk:mockk-android:1.9.3"
     testImplementation "io.mockk:mockk:1.9.3"
 
-    testImplementation "org.assertj:assertj-core:3.11.1"
-    androidTestImplementation "org.assertj:assertj-core:3.11.1"
+    testImplementation "org.assertj:assertj-core:$assertjVersion"
+    androidTestImplementation "org.assertj:assertj-core:$assertjVersion"
 
     // Espresso
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

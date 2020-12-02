@@ -3,8 +3,8 @@ package ch.qscqlmpa.dwitchgame.gamediscovery
 
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.NetworkAdapter
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
-import com.jakewharton.rxrelay2.PublishRelay
-import io.reactivex.Maybe
+import com.jakewharton.rxrelay3.PublishRelay
+import io.reactivex.rxjava3.core.Maybe
 import timber.log.Timber
 import java.net.SocketException
 import javax.inject.Inject

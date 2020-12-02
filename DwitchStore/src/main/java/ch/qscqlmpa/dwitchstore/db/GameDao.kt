@@ -9,7 +9,7 @@ import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.InsertGameResult
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 import java.util.*
 
 @Dao

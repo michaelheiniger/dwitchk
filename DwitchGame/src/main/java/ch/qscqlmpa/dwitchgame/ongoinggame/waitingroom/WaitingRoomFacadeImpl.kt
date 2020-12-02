@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom
 
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
 internal class WaitingRoomFacadeImpl @Inject constructor(

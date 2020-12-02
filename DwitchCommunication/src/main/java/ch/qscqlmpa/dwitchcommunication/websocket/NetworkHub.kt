@@ -1,9 +1,7 @@
-package ch.qscqlmpa.dwitch.integrationtests
+package ch.qscqlmpa.dwitchcommunication.websocket
 
-import ch.qscqlmpa.dwitch.PlayerHostTest
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.TestWebSocket
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client.IntTestWebsocketClient
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server.IntTestWebsocketServer
+import ch.qscqlmpa.dwitchcommunication.websocket.client.IntTestWebsocketClient
+import ch.qscqlmpa.dwitchcommunication.websocket.server.IntTestWebsocketServer
 
 class NetworkHub {
 
@@ -19,7 +17,7 @@ class NetworkHub {
     }
 
     fun sendToHost(guest: PlayerHostTest, message: String) {
-        host.onMessage(TestWebSocket(guest.ipAddress, guest.port), message)
+//        host.onMessage(TestWebSocket(guest.ipAddress, guest.port), message)
     }
 
     fun broadcastToGuests(message: String) {
@@ -32,7 +30,7 @@ class NetworkHub {
     }
 
     fun connectToHost(guest: PlayerHostTest) {
-        host.onOpen(TestWebSocket(guest.ipAddress, guest.port), null)
+//        host.onOpen(TestWebSocket(guest.ipAddress, guest.port), null)
         guests.getValue(guest).onOpen(null)
     }
 }

@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.eventprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
-import io.reactivex.Completable
+import io.reactivex.rxjava3.core.Completable
 import timber.log.Timber
 import javax.inject.Inject
 

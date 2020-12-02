@@ -4,7 +4,7 @@ package ch.qscqlmpa.dwitchgame.gamediscovery.network
 import ch.qscqlmpa.dwitchgame.gameadvertising.SerializerFactory
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscovery
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 import org.joda.time.LocalTime
 import timber.log.Timber
 import java.net.SocketException

@@ -1,12 +1,10 @@
-package ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client
+package ch.qscqlmpa.dwitchcommunication.websocket.client
 
-import ch.qscqlmpa.dwitch.ongoinggame.communication.guest.ClientTestStub
-import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
-import ch.qscqlmpa.dwitchcommunication.websocket.client.TestWebsocketClient
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
+import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class WebsocketClientTestStub(
     private val client: TestWebsocketClient,
@@ -14,9 +12,7 @@ class WebsocketClientTestStub(
 ) : ClientTestStub {
 
     override fun connectClientToServer(enableThreadBreak: Boolean) {
-        Completable.fromAction {
-            client.onOpen(null, enableThreadBreak)
-        }
+        Completable.fromAction { client.onOpen(null, enableThreadBreak) }
                 .subscribeOn(Schedulers.io())
                 .subscribe()
     }

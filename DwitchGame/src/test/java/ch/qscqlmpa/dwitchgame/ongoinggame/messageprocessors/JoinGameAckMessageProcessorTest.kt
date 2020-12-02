@@ -7,7 +7,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.JoinGa
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.mockk.every
 import io.mockk.verify
-import io.reactivex.Completable
+import io.reactivex.rxjava3.core.Completable
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 

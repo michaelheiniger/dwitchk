@@ -1,11 +1,11 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import dagger.Lazy
-import io.reactivex.Completable
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
 
 abstract class BaseHostProcessor constructor(
         private val communicatorLazy: Lazy<HostCommunicator>

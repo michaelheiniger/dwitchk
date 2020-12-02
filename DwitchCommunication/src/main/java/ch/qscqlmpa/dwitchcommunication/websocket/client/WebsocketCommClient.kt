@@ -3,13 +3,13 @@ package ch.qscqlmpa.dwitchcommunication.websocket.client
 
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchcommunication.CommClient
-import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import com.jakewharton.rxrelay2.PublishRelay
-import io.reactivex.Completable
-import io.reactivex.Observable
+import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
+import com.jakewharton.rxrelay3.PublishRelay
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import timber.log.Timber
 import javax.inject.Inject
 

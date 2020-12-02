@@ -12,11 +12,11 @@ import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import io.reactivex.Completable
+import io.reactivex.rxjava3.core.Completable
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.assertEquals
 
 class NewGameActivityViewModelTest : BaseViewModelUnitTest() {
 
@@ -43,7 +43,7 @@ class NewGameActivityViewModelTest : BaseViewModelUnitTest() {
 
         viewModel.nextForGuest(advertisedGame, playerName)
 
-        assertEquals(NewGameEvent.SETUP_SUCCESSFUL, viewModel.observeEvents().value)
+        assertThat(viewModel.observeEvents().value).isEqualTo(NewGameEvent.SETUP_SUCCESSFUL)
         verify { mockGuestFacade.joinGame(advertisedGame, playerName) }
 
         confirmVerified(mockGuestFacade)
@@ -67,7 +67,7 @@ class NewGameActivityViewModelTest : BaseViewModelUnitTest() {
 
         viewModel.nextForHost(gameName, playerName)
 
-        assertEquals(NewGameEvent.SETUP_SUCCESSFUL, viewModel.observeEvents().value)
+        assertThat(viewModel.observeEvents().value).isEqualTo(NewGameEvent.SETUP_SUCCESSFUL)
         verify { mockHostFacade.hostGame(gameName, playerName, gamePort) }
 
         confirmVerified(mockHostFacade)

@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.home
 
 import ch.qscqlmpa.dwitchgame.home.usecases.NewGameUsecase
-import io.reactivex.Completable
+import io.reactivex.rxjava3.core.Completable
 import javax.inject.Inject
 
 internal class HomeHostFacadeImpl @Inject constructor(

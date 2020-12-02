@@ -1,16 +1,16 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.Address
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreFactory
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
-import ch.qscqlmpa.dwitchgame.TestEntityFactory
-import ch.qscqlmpa.dwitchgame.TestUtil
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreFactory
 import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchgame.TestEntityFactory
+import ch.qscqlmpa.dwitchgame.TestUtil
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.LeaveGameMessageProcessor
 import io.mockk.every
 import io.mockk.verify
-import io.reactivex.observers.TestObserver
+import io.reactivex.rxjava3.observers.TestObserver
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

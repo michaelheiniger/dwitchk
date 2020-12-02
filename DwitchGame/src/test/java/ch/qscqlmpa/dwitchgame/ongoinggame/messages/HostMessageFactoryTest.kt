@@ -14,14 +14,14 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class HostMessageFactoryTest : BaseUnitTest() {
 
     private lateinit var hostMessageFactory: HostMessageFactory
 
-    @Before
+    @BeforeEach
     override fun setup() {
         super.setup()
         hostMessageFactory = HostMessageFactory(mockInGameStore)

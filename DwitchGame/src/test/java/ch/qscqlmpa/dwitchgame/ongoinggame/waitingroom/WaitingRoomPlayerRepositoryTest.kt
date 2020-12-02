@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import io.mockk.every
-import io.reactivex.Flowable
+import io.reactivex.rxjava3.core.Flowable
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

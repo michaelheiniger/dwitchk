@@ -6,7 +6,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import dagger.Lazy
-import io.reactivex.Completable
+import io.reactivex.rxjava3.core.Completable
 import timber.log.Timber
 import javax.inject.Inject
 

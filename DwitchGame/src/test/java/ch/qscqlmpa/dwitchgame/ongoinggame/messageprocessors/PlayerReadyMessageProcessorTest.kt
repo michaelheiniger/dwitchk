@@ -1,13 +1,13 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.messageprocessors
 
-import ch.qscqlmpa.dwitchgame.LazyImpl
-import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchgame.LazyImpl
+import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.PlayerReadyMessageProcessor
 import io.mockk.every
 import io.mockk.verify
-import io.reactivex.Completable
+import io.reactivex.rxjava3.core.Completable
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -55,7 +55,7 @@ class PlayerReadyMessageProcessorTest : BaseMessageProcessorTest() {
     @Test
     fun `Error is thrown when player is not found in store`() {
 
-        launchTest(true).blockingGet()
+        launchTest(true).blockingSubscribe()
 
         val newReadyState = true
         setupWaitingRoomStateUpdateMessageMock()

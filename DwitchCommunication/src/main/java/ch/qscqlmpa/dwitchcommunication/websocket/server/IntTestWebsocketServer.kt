@@ -1,9 +1,8 @@
-package ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server
+package ch.qscqlmpa.dwitchcommunication.websocket.server
 
-import ch.qscqlmpa.dwitch.integrationtests.NetworkHub
-import ch.qscqlmpa.dwitchcommunication.websocket.server.*
-import com.jakewharton.rxrelay2.PublishRelay
-import io.reactivex.Observable
+import ch.qscqlmpa.dwitchcommunication.websocket.NetworkHub
+import com.jakewharton.rxrelay3.PublishRelay
+import io.reactivex.rxjava3.core.Observable
 import org.java_websocket.WebSocket
 import org.java_websocket.handshake.ClientHandshake
 import java.net.InetSocketAddress

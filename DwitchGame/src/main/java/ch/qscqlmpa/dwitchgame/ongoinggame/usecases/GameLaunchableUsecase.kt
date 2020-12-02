@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWr
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomPlayerRepository
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
 internal class GameLaunchableUsecase @Inject constructor(

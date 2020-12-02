@@ -1,14 +1,12 @@
-package ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.server
+package ch.qscqlmpa.dwitchcommunication.websocket.server
 
-import ch.qscqlmpa.dwitch.PlayerHostTest
-import ch.qscqlmpa.dwitch.ongoinggame.communication.host.ServerTestStub
-import ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.TestWebSocket
-import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
-import ch.qscqlmpa.dwitchcommunication.websocket.server.TestWebsocketServer
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
+import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
+import ch.qscqlmpa.dwitchcommunication.websocket.PlayerHostTest
+import ch.qscqlmpa.dwitchcommunication.websocket.TestWebSocket
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import org.java_websocket.WebSocket
 
 class WebsocketServerTestStub(
@@ -21,18 +19,16 @@ class WebsocketServerTestStub(
     private val guest3Socket = TestWebSocket("192.168.1.3", 1027)
 
     override fun connectClientToServer(connectionInitiator: PlayerHostTest, enableThreadBreak: Boolean) {
-        Completable.fromAction {
-            server.onOpen(getSocketForGuest(connectionInitiator), null, enableThreadBreak)
-        }
-                .subscribeOn(Schedulers.io())
-                .subscribe()
+        Completable.fromAction { server.onOpen(getSocketForGuest(connectionInitiator), null, enableThreadBreak) }
+            .subscribeOn(Schedulers.io())
+            .subscribe()
     }
 
     override fun guestSendsMessageToServer(sender: PlayerHostTest, envelopeToSend: EnvelopeToSend, enableThreadBreak: Boolean) {
         val messageSerialized = serializerFactory.serialize(envelopeToSend.message)
         Completable.fromAction { server.onMessage(getSocketForGuest(sender), messageSerialized, enableThreadBreak) }
-                .subscribeOn(Schedulers.io())
-                .subscribe()
+            .subscribeOn(Schedulers.io())
+            .subscribe()
     }
 
     override fun observeMessagesSent(): Observable<String> {
@@ -47,8 +43,8 @@ class WebsocketServerTestStub(
         Completable.fromAction {
             server.onClose(getSocketForGuest(guestIdentifier), 1, "reason", true, enableThreadBreak)
         }
-                .subscribeOn(Schedulers.io())
-                .subscribe()
+            .subscribeOn(Schedulers.io())
+            .subscribe()
     }
 
     private fun getSocketForGuest(guestIdentifier: PlayerHostTest): WebSocket {

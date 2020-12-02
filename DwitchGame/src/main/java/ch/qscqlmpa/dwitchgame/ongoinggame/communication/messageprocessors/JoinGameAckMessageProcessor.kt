@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
-import io.reactivex.Completable
+import io.reactivex.rxjava3.core.Completable
 import javax.inject.Inject
 
 internal class JoinGameAckMessageProcessor @Inject constructor(private val store: InGameStore) :

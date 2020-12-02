@@ -6,8 +6,8 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.LeaveGameUsecase
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.PlayerReadyUsecase
-import io.reactivex.Completable
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
 internal class WaitingRoomGuestFacadeImpl @Inject constructor(

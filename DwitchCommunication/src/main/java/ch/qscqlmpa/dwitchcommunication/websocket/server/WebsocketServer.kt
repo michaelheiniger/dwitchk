@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchcommunication.websocket.server
 
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 import org.java_websocket.WebSocket
 import org.java_websocket.handshake.ClientHandshake
 

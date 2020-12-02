@@ -3,8 +3,8 @@ package ch.qscqlmpa.dwitchgame.gameadvertising
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchgame.gameadvertising.network.Network
 import ch.qscqlmpa.dwitchmodel.gamediscovery.GameAdvertisingInfo
-import io.reactivex.Completable
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject

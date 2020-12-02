@@ -3,8 +3,9 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.game
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
-import io.reactivex.Observable
 import javax.inject.Inject
+
+import io.reactivex.rxjava3.core.Observable
 
 internal class GameRepository @Inject constructor(private val store: InGameStore) {
 

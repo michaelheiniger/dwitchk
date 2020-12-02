@@ -13,7 +13,7 @@ import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreImpl
 import ch.qscqlmpa.dwitchstore.store.Store
 import ch.qscqlmpa.dwitchstore.store.StoreImpl
 import ch.qscqlmpa.dwitchstore.util.SerializerFactory
-import io.reactivex.Completable
+import io.reactivex.rxjava3.core.Completable
 import kotlinx.serialization.json.Json
 import org.junit.runner.RunWith
 
@@ -62,6 +62,6 @@ internal abstract class BaseInstrumentedTest {
     protected fun dudeWaitAMinute(seconds: Long = 1L) {
         Completable.fromAction { println("Waiting for $seconds seconds...") }
                 .delay(seconds, TimeUnit.SECONDS)
-                .blockingGet()
+                .blockingSubscribe()
     }
 }

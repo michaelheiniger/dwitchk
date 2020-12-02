@@ -1,10 +1,7 @@
-package ch.qscqlmpa.dwitch.ongoinggame.communication.websocket.client
+package ch.qscqlmpa.dwitchcommunication.websocket.client
 
-import ch.qscqlmpa.dwitch.PlayerHostTest
-import ch.qscqlmpa.dwitch.integrationtests.NetworkHub
-import ch.qscqlmpa.dwitchcommunication.websocket.client.*
-import com.jakewharton.rxrelay2.PublishRelay
-import io.reactivex.Observable
+import com.jakewharton.rxrelay3.PublishRelay
+import io.reactivex.rxjava3.core.Observable
 import org.java_websocket.handshake.ServerHandshake
 import timber.log.Timber
 
@@ -20,19 +17,19 @@ class IntTestWebsocketClient constructor(
 
     private val messagesSentRelay = PublishRelay.create<String>()
 
-    private lateinit var networkHub: NetworkHub
-    private lateinit var guestIdTestHost: PlayerHostTest
-
-    fun setNetworkHub(networkHub: NetworkHub, guestIdTestHost: PlayerHostTest) {
-        this.networkHub = networkHub
-        this.guestIdTestHost = guestIdTestHost
-    }
+//    private lateinit var networkHub: NetworkHub
+//    private lateinit var guestIdTestHost: PlayerHostTest
+//
+//    fun setNetworkHub(networkHub: NetworkHub, guestIdTestHost: PlayerHostTest) {
+//        this.networkHub = networkHub
+//        this.guestIdTestHost = guestIdTestHost
+//    }
 
     private var isOpen: Boolean = false
     private var isClosed: Boolean = false
 
     override fun start() {
-        networkHub.connectToHost(guestIdTestHost)
+//        networkHub.connectToHost(guestIdTestHost)
     }
 
     override fun stop() {
@@ -49,7 +46,7 @@ class IntTestWebsocketClient constructor(
 
     override fun send(message: String) {
         Timber.i("Message sent to server: $message")
-        networkHub.sendToHost(guestIdTestHost, message)
+//        networkHub.sendToHost(guestIdTestHost, message)
     }
 
     fun onOpen(handshake: ServerHandshake?) {

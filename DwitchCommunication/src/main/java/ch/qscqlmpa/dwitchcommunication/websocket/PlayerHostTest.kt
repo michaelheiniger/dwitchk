@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch
+package ch.qscqlmpa.dwitchcommunication.websocket
 
 sealed class PlayerHostTest(val name: String, val ipAddress: String, val port: Int)  {
     object Guest1 : PlayerHostTest("Boromir", "192.168.1.1", 8888)

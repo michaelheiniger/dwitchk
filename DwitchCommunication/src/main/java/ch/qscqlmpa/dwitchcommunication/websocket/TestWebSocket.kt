@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.ongoinggame.communication.websocket
+package ch.qscqlmpa.dwitchcommunication.websocket
 
 import org.java_websocket.WebSocket
 import org.java_websocket.drafts.Draft

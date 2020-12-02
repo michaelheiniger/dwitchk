@@ -6,12 +6,13 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.GameCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
-import io.reactivex.Completable
-import io.reactivex.Maybe
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Maybe
 import javax.inject.Inject
 
-class GameStateUpdatedMessageProcessor @Inject constructor(private val store: InGameStore,
-                                                           private val communicator: GameCommunicator
+class GameStateUpdatedMessageProcessor @Inject constructor(
+    private val store: InGameStore,
+    private val communicator: GameCommunicator
 ) : MessageProcessor {
 
     override fun process(message: Message, senderLocalConnectionID: LocalConnectionId): Completable {
@@ -23,11 +24,13 @@ class GameStateUpdatedMessageProcessor @Inject constructor(private val store: In
             val gameStateWithLocalPlayerUpdated = message.gameState
             store.updateGameState(gameStateWithLocalPlayerUpdated)
 
-            if (localPlayer.playerRole == PlayerRole.HOST) {
-                return@fromCallable MessageFactory.createGameStateUpdatedMessage(message.gameState)
+            return@fromCallable if (localPlayer.playerRole == PlayerRole.HOST) {
+                MessageFactory.createGameStateUpdatedMessage(message.gameState)
             } else {
-                return@fromCallable null
+                null
             }
-        }.flatMapCompletable { envelopeToSend -> communicator.sendMessage(envelopeToSend) }
+        }.flatMapCompletable { envelopeToSend ->
+            if (envelopeToSend != null) communicator.sendMessage(envelopeToSend) else Completable.complete()
+        }
     }
 }

@@ -1,10 +1,9 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.host
 
 
-import ch.qscqlmpa.dwitchgame.di.GameScope
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
-import com.jakewharton.rxrelay2.BehaviorRelay
-import io.reactivex.Observable
+import com.jakewharton.rxrelay3.BehaviorRelay
+import io.reactivex.rxjava3.core.Observable
 import timber.log.Timber
 import javax.inject.Inject
 

@@ -10,8 +10,8 @@ import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.RecipientType
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
-import io.reactivex.Completable
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import timber.log.Timber
 
 internal class HostCommunicatorImpl

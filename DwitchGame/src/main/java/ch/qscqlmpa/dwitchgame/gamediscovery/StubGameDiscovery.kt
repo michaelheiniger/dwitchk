@@ -1,7 +1,8 @@
 package ch.qscqlmpa.dwitchgame.gamediscovery
 
-import com.jakewharton.rxrelay2.PublishRelay
-import io.reactivex.Observable
+import com.jakewharton.rxrelay3.PublishRelay
+import io.reactivex.rxjava3.core.Observable
+
 
 class StubGameDiscovery : GameDiscovery {
 

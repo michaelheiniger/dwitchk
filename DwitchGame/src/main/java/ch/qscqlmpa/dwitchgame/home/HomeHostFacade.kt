@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitchgame.home
 
-import io.reactivex.Completable
+import io.reactivex.rxjava3.core.Completable
+
 
 interface HomeHostFacade {
 

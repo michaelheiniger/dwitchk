@@ -1,11 +1,11 @@
 package ch.qscqlmpa.dwitch.uitests.base
 
-import ch.qscqlmpa.dwitch.PlayerHostTest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.clickOnButton
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.GuestMessageFactory
 import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchcommunication.websocket.PlayerHostTest
+import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.GuestMessageFactory
 import ch.qscqlmpa.dwitchmodel.player.Player
 import org.junit.Assert
 import timber.log.Timber
@@ -29,8 +29,6 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
 
         dudeWaitASec()
 
-        host = inGameStore.getPlayer(hostName)!!
-
         /*
         * Note: It also allows to wait for the waiting room to be displayed: otherwise, the messages sent by clients could be
         * missed because the server is not ready yet.
@@ -38,6 +36,8 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
         UiUtil.assertControlTextContent(R.id.playerListTv, R.string.wra_player_list)
 
         hookOngoingGameDependenciesForHost()
+
+        host = inGameStore.getPlayer(hostName)!!
     }
 
     protected fun guestJoinsGame(guest: PlayerHostTest) {

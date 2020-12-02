@@ -1,7 +1,8 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import ch.qscqlmpa.dwitch.PlayerHostTest
+import ch.qscqlmpa.dwitchcommunication.websocket.PlayerHostTest
+import ch.qscqlmpa.dwitchcommunication.websocket.NetworkHub
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase

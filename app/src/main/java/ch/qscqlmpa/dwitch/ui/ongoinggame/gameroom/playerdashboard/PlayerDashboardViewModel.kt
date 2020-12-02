@@ -2,14 +2,14 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.PlayerDashboardFacade
-import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.utils.TextProvider
+import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Completable
-import io.reactivex.Observable
+import ch.qscqlmpa.dwitchgame.ongoinggame.game.PlayerDashboardFacade
+import io.reactivex.rxjava3.core.BackpressureStrategy
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import timber.log.Timber
 import javax.inject.Inject
 

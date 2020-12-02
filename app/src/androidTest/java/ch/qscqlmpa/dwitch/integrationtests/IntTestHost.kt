@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
+import ch.qscqlmpa.dwitchcommunication.websocket.NetworkHub
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
@@ -50,7 +51,7 @@ class IntTestHost(
     }
 
     fun endGame() {
-        gameRoomHostFacade.endGame().blockingGet()
+        gameRoomHostFacade.endGame().blockingSubscribe()
     }
 
     fun assertGameOverReceived() {

@@ -1,8 +1,8 @@
 package ch.qscqlmpa.dwitchgame.appevent
 
 import ch.qscqlmpa.dwitchgame.di.GameScope
-import com.jakewharton.rxrelay2.PublishRelay
-import io.reactivex.Observable
+import com.jakewharton.rxrelay3.PublishRelay
+import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
 @GameScope

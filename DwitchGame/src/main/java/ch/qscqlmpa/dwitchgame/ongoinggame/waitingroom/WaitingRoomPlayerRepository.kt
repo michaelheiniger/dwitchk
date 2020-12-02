@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom
 
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
 @OngoingGameScope

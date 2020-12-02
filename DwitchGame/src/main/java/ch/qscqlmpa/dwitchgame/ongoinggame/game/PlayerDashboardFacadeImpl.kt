@@ -8,10 +8,10 @@ import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboard
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.GameCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.GameUpdatedUsecase
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
-import com.jakewharton.rxrelay2.BehaviorRelay
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
+import com.jakewharton.rxrelay3.BehaviorRelay
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import timber.log.Timber
 import javax.inject.Inject
 

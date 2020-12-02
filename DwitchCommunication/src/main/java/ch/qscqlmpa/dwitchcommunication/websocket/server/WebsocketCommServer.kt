@@ -5,12 +5,12 @@ import ch.qscqlmpa.dwitchcommunication.Address
 import ch.qscqlmpa.dwitchcommunication.AddressType
 import ch.qscqlmpa.dwitchcommunication.CommServer
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
-import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import io.reactivex.Completable
-import io.reactivex.Observable
+import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import org.java_websocket.WebSocket
 import timber.log.Timber
 import javax.inject.Inject

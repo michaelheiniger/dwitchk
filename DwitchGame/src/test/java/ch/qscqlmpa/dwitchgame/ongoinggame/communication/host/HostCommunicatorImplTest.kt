@@ -1,10 +1,12 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.host
 
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
-import ch.qscqlmpa.dwitchcommunication.*
+import ch.qscqlmpa.dwitchcommunication.Address
+import ch.qscqlmpa.dwitchcommunication.AddressType
+import ch.qscqlmpa.dwitchcommunication.CommServer
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreFactory
 import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
@@ -17,9 +19,9 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.Messag
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import io.mockk.*
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested

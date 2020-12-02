@@ -1,7 +1,7 @@
-package ch.qscqlmpa.dwitch.ongoinggame.communication.guest
+package ch.qscqlmpa.dwitchcommunication.websocket.client
 
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 
 interface ClientTestStub {
 

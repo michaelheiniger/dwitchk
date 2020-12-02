@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitchcommonutil.scheduler
 
-import io.reactivex.Scheduler
+import io.reactivex.rxjava3.core.Scheduler
+
 
 interface SchedulerFactory {
 

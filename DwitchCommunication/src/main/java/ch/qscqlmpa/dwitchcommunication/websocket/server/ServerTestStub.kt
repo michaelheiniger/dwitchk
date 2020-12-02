@@ -1,8 +1,8 @@
-package ch.qscqlmpa.dwitch.ongoinggame.communication.host
+package ch.qscqlmpa.dwitchcommunication.websocket.server
 
-import ch.qscqlmpa.dwitch.PlayerHostTest
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
-import io.reactivex.Observable
+import ch.qscqlmpa.dwitchcommunication.websocket.PlayerHostTest
+import io.reactivex.rxjava3.core.Observable
 
 interface ServerTestStub {
 

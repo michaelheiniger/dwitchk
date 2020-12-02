@@ -9,8 +9,8 @@ import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchstore.db.AppRoomDatabase
 import ch.qscqlmpa.dwitchstore.util.SerializerFactory
-import io.reactivex.Flowable
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.Observable
 
 internal class InGameStoreImpl constructor(
     private val gameLocalId: Long,

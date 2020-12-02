@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitchgame.gamediscovery.network.LanGameDiscoveryTest.Compani
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.LanGameDiscoveryTest.Companion.gameAd2
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.mockk.*
-import io.reactivex.Maybe
+import io.reactivex.rxjava3.core.Maybe
 import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter

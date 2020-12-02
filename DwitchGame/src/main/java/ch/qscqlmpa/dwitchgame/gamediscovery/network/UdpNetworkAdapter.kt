@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.gamediscovery.network
 
-import io.reactivex.Maybe
+import io.reactivex.rxjava3.core.Maybe
 import timber.log.Timber
 import java.net.DatagramPacket
 import java.net.DatagramSocket
