@@ -54,7 +54,7 @@ class LeaveGameMessageProcessorTest : BaseMessageProcessorTest() {
         launchTest().assertComplete()
 
         // Assert local connection ID  of guest has been removed from store
-        val guestLocalConnectionId = connectionStore.getLocalConnectionIdForAddress(senderAddress)
+        val guestLocalConnectionId = connectionStore.getConnectionIdForAddress(senderAddress)
         assertThat(guestLocalConnectionId).isNull()
     }
 

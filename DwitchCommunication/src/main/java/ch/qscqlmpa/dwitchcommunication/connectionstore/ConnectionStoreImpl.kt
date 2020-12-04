@@ -30,7 +30,7 @@ internal class ConnectionStoreImpl : ConnectionStore {
         playerInGameMap[connectionId] = playerInGameId
     }
 
-    override fun getLocalConnectionIdForAddress(address: Address): ConnectionId? {
+    override fun getConnectionIdForAddress(address: Address): ConnectionId? {
         return addressReverseMap[address]
     }
 

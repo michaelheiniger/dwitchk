@@ -74,7 +74,7 @@ class JoinGameMessageProcessorTest : BaseMessageProcessorTest() {
         launchTest().test().assertComplete()
 
         // Assert in-game ID added to store
-        val localConnectionId = connectionStore.getLocalConnectionIdForAddress(senderAddress)
+        val localConnectionId = connectionStore.getConnectionIdForAddress(senderAddress)
         assertThat(connectionStore.getInGameId(localConnectionId!!)).isEqualTo(guestPlayer.inGameId)
     }
 

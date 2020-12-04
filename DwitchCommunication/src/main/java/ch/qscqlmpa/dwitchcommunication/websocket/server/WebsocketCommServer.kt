@@ -106,7 +106,7 @@ internal class WebsocketCommServer @Inject constructor(
                 if (senderAddress != null) {
                     Timber.d("Client disconnected $senderAddress")
                     val localConnectionId =
-                        connectionStore.getLocalConnectionIdForAddress(senderAddress)
+                        connectionStore.getConnectionIdForAddress(senderAddress)
                     return@flatMap Observable.just(ServerCommunicationEvent.ClientDisconnected(localConnectionId))
                 } else {
                     val missingConnections = findMissingConnections()
@@ -131,7 +131,7 @@ internal class WebsocketCommServer @Inject constructor(
                 val senderAddress = buildAddressFromConnection(onMessage.conn!!)!!
                 val message = serializerFactory.unserializeMessage(onMessage.message!!)
                 val localConnectionId =
-                    connectionStore.getLocalConnectionIdForAddress(senderAddress)
+                    connectionStore.getConnectionIdForAddress(senderAddress)
                         ?: throw IllegalStateException("Message received ${onMessage.message} from $senderAddress has no local connection ID")
 
                 Timber.i(
