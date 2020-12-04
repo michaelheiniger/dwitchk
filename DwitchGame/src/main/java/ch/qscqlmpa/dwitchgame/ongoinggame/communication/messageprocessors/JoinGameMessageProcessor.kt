@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
@@ -19,7 +19,7 @@ internal class JoinGameMessageProcessor @Inject constructor(
     private val connectionStore: ConnectionStore
 ) : BaseHostProcessor(communicatorLazy) {
 
-    override fun process(message: Message, senderLocalConnectionID: LocalConnectionId): Completable {
+    override fun process(message: Message, senderConnectionID: ConnectionId): Completable {
 
         val msg = message as Message.JoinGameMessage
 
@@ -27,11 +27,11 @@ internal class JoinGameMessageProcessor @Inject constructor(
             .flatMapCompletable { newPlayerLocalId ->
                 Completable.merge(
                     listOf(
-                        storeConnectionIdentifier(senderLocalConnectionID, newPlayerLocalId),
+                        storeConnectionIdentifier(senderConnectionID, newPlayerLocalId),
                         sendMessages(
                             listOf(
                                 hostMessageFactory.createJoinAckMessage(
-                                    senderLocalConnectionID,
+                                    senderConnectionID,
                                     PlayerInGameId(newPlayerLocalId)
                                 ),
                                 hostMessageFactory.createWaitingRoomStateUpdateMessage()
@@ -46,10 +46,10 @@ internal class JoinGameMessageProcessor @Inject constructor(
         return Single.fromCallable { store.insertNewGuestPlayer(playerName) }
     }
 
-    private fun storeConnectionIdentifier(senderLocalConnectionID: LocalConnectionId, newPlayerLocalId: Long): Completable {
+    private fun storeConnectionIdentifier(senderConnectionID: ConnectionId, newPlayerLocalId: Long): Completable {
         return Completable.fromAction {
             val newGuestPlayerInGameId = store.getPlayerInGameId(newPlayerLocalId)
-            connectionStore.mapPlayerIdToConnectionId(senderLocalConnectionID, newGuestPlayerInGameId)
+            connectionStore.mapPlayerIdToConnectionId(senderConnectionID, newGuestPlayerInGameId)
         }
     }
 }

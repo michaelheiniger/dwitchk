@@ -7,7 +7,7 @@ import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.eventprocessors.HostCommunicationEventDispatcher
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.RecipientType
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import io.reactivex.rxjava3.core.Completable
@@ -43,8 +43,8 @@ constructor(private val commServer: CommServer,
         return commServer.sendMessage(envelopeToSend.message, address)
     }
 
-    override fun closeConnectionWithClient(localConnectionId: LocalConnectionId) {
-        commServer.closeConnectionWithClient(localConnectionId)
+    override fun closeConnectionWithClient(connectionId: ConnectionId) {
+        commServer.closeConnectionWithClient(connectionId)
     }
 
     override fun observeCommunicationState(): Observable<HostCommunicationState> {
@@ -86,7 +86,7 @@ constructor(private val commServer: CommServer,
 
     private fun getRecipientAddress(recipient: RecipientType): AddressType {
         return when (recipient) {
-            is RecipientType.Single -> AddressType.Unicast(connectionStore.getAddress(recipient.localId)!!)
+            is RecipientType.Single -> AddressType.Unicast(connectionStore.getAddress(recipient.id)!!)
             RecipientType.All -> AddressType.Broadcast
         }
     }

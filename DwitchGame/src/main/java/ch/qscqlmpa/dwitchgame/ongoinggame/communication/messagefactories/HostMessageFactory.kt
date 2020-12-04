@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories
 
 import ch.qscqlmpa.dwitchcommunication.*
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.RecipientType
@@ -24,7 +24,7 @@ class HostMessageFactory @Inject constructor(private val store: InGameStore) {
     }
 
     fun createJoinAckMessage(
-        recipientId: LocalConnectionId,
+        recipientId: ConnectionId,
         playerInGameId: PlayerInGameId
     ): Single<EnvelopeToSend> {
         return Single.fromCallable {

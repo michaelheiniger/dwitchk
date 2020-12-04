@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.GameCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
@@ -15,7 +15,7 @@ class GameStateUpdatedMessageProcessor @Inject constructor(
     private val communicator: GameCommunicator
 ) : MessageProcessor {
 
-    override fun process(message: Message, senderLocalConnectionID: LocalConnectionId): Completable {
+    override fun process(message: Message, senderConnectionID: ConnectionId): Completable {
 
         message as Message.GameStateUpdatedMessage
 

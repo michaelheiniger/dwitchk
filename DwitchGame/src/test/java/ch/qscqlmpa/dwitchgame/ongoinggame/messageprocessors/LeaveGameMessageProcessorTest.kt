@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.messageprocessors
 import ch.qscqlmpa.dwitchcommunication.Address
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreFactory
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchgame.TestUtil
@@ -25,7 +25,7 @@ class LeaveGameMessageProcessorTest : BaseMessageProcessorTest() {
 
     private val senderAddress = Address("192.168.1.2", 8890)
 
-    private lateinit var senderLocalConnectionId: LocalConnectionId
+    private lateinit var senderConnectionId: ConnectionId
 
     @BeforeEach
     override fun setup() {
@@ -41,8 +41,8 @@ class LeaveGameMessageProcessorTest : BaseMessageProcessorTest() {
 
         setupCommunicatorSendMessageCompleteMock()
 
-        senderLocalConnectionId = connectionStore.addConnectionId(senderAddress)
-        connectionStore.mapPlayerIdToConnectionId(senderLocalConnectionId, guestPlayer.inGameId)
+        senderConnectionId = connectionStore.addConnectionId(senderAddress)
+        connectionStore.mapPlayerIdToConnectionId(senderConnectionId, guestPlayer.inGameId)
     }
 
     @Test
@@ -79,6 +79,6 @@ class LeaveGameMessageProcessorTest : BaseMessageProcessorTest() {
     }
 
     private fun launchTest(): TestObserver<Void> {
-        return processor.process(Message.LeaveGameMessage(guestPlayer.inGameId), senderLocalConnectionId).test()
+        return processor.process(Message.LeaveGameMessage(guestPlayer.inGameId), senderConnectionId).test()
     }
 }

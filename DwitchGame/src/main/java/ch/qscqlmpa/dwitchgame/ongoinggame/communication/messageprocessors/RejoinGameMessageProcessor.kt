@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.RejoinInfo
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
@@ -24,15 +24,15 @@ internal class RejoinGameMessageProcessor @Inject constructor(
 
     override fun process(
         message: Message,
-        senderLocalConnectionID: LocalConnectionId
+        senderConnectionID: ConnectionId
     ): Completable {
 
         val msg = message as Message.RejoinGameMessage
 
-        return getRejoiningInfoIfPossible(msg, senderLocalConnectionID)
+        return getRejoiningInfoIfPossible(msg, senderConnectionID)
             .doOnSuccess { rejoinInfo ->
                 updatePlayer(rejoinInfo.player)
-                updateConnectionStore(rejoinInfo.player, senderLocalConnectionID)
+                updateConnectionStore(rejoinInfo.player, senderConnectionID)
             }
             .flatMapCompletable { rejoinInfo ->
                 sendRejoinAck(rejoinInfo)
@@ -42,7 +42,7 @@ internal class RejoinGameMessageProcessor @Inject constructor(
 
     private fun getRejoiningInfoIfPossible(
         msg: Message.RejoinGameMessage,
-        senderLocalConnectionID: LocalConnectionId
+        senderConnectionID: ConnectionId
     ): Maybe<RejoinInfo> {
         return Maybe.fromCallable {
 
@@ -51,17 +51,17 @@ internal class RejoinGameMessageProcessor @Inject constructor(
 
             if (gameCommonId != msg.gameCommonId) {
                 Timber.e("Game common ID provided doesn't match: closing connection with client.")
-                closeConnectionWithGuest(senderLocalConnectionID)
+                closeConnectionWithGuest(senderConnectionID)
                 return@fromCallable null
             }
 
             if (playerRejoining == null) {
                 Timber.e("Re-joining player not found: closing connection with client.")
-                closeConnectionWithGuest(senderLocalConnectionID)
+                closeConnectionWithGuest(senderConnectionID)
                 return@fromCallable null
             }
 
-            return@fromCallable RejoinInfo(gameCommonId, playerRejoining, senderLocalConnectionID)
+            return@fromCallable RejoinInfo(gameCommonId, playerRejoining, senderConnectionID)
         }
     }
 
@@ -73,7 +73,7 @@ internal class RejoinGameMessageProcessor @Inject constructor(
         )
     }
 
-    private fun updateConnectionStore(player: Player, connectionID: LocalConnectionId) {
+    private fun updateConnectionStore(player: Player, connectionID: ConnectionId) {
         connectionStore.mapPlayerIdToConnectionId(connectionID, player.inGameId)
     }
 

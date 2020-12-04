@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.eventprocessors
 
 import ch.qscqlmpa.dwitchcommunication.Address
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
@@ -25,18 +25,18 @@ internal class GuestDisconnectedEventProcessor @Inject constructor(
 
         event as ServerCommunicationEvent.ClientDisconnected
 
-        if (event.localConnectionId != null) {
-            return handleEventWhenConnectionIdIsKnown(event.localConnectionId!!) //TODO: Use "let" to remove the "!!" ?
+        if (event.connectionId != null) {
+            return handleEventWhenConnectionIdIsKnown(event.connectionId!!) //TODO: Use "let" to remove the "!!" ?
         }
         Timber.i("Client disconnected with unknown connection ID.")
         return Completable.complete()
     }
 
-    private fun handleEventWhenConnectionIdIsKnown(localConnectionId: LocalConnectionId): Completable {
-        val playerInGameId = connectionStore.getInGameId(localConnectionId)
-        val senderAddress = connectionStore.getAddress(localConnectionId)
+    private fun handleEventWhenConnectionIdIsKnown(connectionId: ConnectionId): Completable {
+        val playerInGameId = connectionStore.getInGameId(connectionId)
+        val senderAddress = connectionStore.getAddress(connectionId)
 
-        connectionStore.removeConnectionId(localConnectionId)
+        connectionStore.removeConnectionId(connectionId)
         Timber.i("Client disconnected with connection ID: %s", senderAddress)
 
         return if (playerInGameId != null) {

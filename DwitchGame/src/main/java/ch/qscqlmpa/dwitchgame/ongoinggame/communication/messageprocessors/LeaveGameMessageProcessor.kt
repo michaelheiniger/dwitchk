@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
@@ -19,11 +19,11 @@ internal class LeaveGameMessageProcessor @Inject constructor(
     private val communicatorLazy: Lazy<HostCommunicator>
 ) : MessageProcessor {
 
-    override fun process(message: Message, senderLocalConnectionID: LocalConnectionId): Completable {
+    override fun process(message: Message, senderConnectionID: ConnectionId): Completable {
 
         val msg = message as Message.LeaveGameMessage
 
-        connectionStore.removeConnectionId(senderLocalConnectionID)
+        connectionStore.removeConnectionId(senderConnectionID)
 
         val communicator = communicatorLazy.get()
 

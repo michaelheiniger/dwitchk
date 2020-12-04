@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchcommunication
 
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
@@ -19,5 +19,5 @@ interface CommServer {
 
     fun observeReceivedMessages(): Observable<EnvelopeReceived>
 
-    fun closeConnectionWithClient(localConnectionId: LocalConnectionId)
+    fun closeConnectionWithClient(connectionId: ConnectionId)
 }

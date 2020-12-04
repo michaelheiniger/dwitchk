@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.messages
 
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.RecipientType
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
@@ -47,7 +47,7 @@ class HostMessageFactoryTest : BaseUnitTest() {
     fun createJoinAckMessage() {
 
         val gameCommonId = GameCommonId(123L)
-        val localConnectionId = LocalConnectionId(3)
+        val localConnectionId = ConnectionId(3)
         val playerInGameId = PlayerInGameId(2)
 
         val game = mockk<Game>()

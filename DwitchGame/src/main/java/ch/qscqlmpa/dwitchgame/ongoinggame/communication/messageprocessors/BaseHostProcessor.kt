@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import dagger.Lazy
@@ -21,7 +21,7 @@ abstract class BaseHostProcessor constructor(
                 .concatMapCompletable(communicator::sendMessage)
     }
 
-    protected fun closeConnectionWithGuest(connectionId: LocalConnectionId) {
+    protected fun closeConnectionWithGuest(connectionId: ConnectionId) {
         communicatorLazy.get().closeConnectionWithClient(connectionId)
     }
 }

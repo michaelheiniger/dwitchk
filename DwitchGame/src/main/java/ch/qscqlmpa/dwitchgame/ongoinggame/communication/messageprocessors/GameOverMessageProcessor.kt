@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.appevent.AppEvent
 import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
@@ -14,7 +14,7 @@ internal class GameOverMessageProcessor @Inject constructor(
     private val gameEventRepository: GuestGameEventRepository
 ) : MessageProcessor {
 
-    override fun process(message: Message, senderLocalConnectionID: LocalConnectionId): Completable {
+    override fun process(message: Message, senderConnectionID: ConnectionId): Completable {
         return Completable.fromAction {
             appEventRepository.notify(AppEvent.GameLeft)
             gameEventRepository.notify(GuestGameEvent.GameOver)

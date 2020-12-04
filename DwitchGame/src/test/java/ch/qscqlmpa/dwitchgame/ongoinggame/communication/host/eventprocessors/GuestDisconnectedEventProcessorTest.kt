@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.eventprocessors
 import ch.qscqlmpa.dwitchcommunication.Address
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreFactory
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
@@ -69,12 +69,12 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
 
         // ConnectionIdentifierStore is empty
 
-        launchTest(LocalConnectionId(0)).test().assertComplete()
+        launchTest(ConnectionId(0)).test().assertComplete()
 
         verify { mockCommunicator wasNot Called }
         verify { mockHostMessageFactory wasNot Called }
         verify { mockInGameStore wasNot Called }
-        assertThat(connectionStore.getInGameId(LocalConnectionId(0))).isNull()
+        assertThat(connectionStore.getInGameId(ConnectionId(0))).isNull()
         confirmVerified(mockCommunicator)
         confirmVerified(mockHostMessageFactory)
         confirmVerified(mockInGameStore)
@@ -93,11 +93,11 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
         assertThat(connectionStore.getInGameId(guestLocalConnectionId)).isNull()
     }
 
-    private fun launchTest(guestLocalConnectionId: LocalConnectionId): Completable {
-        return processor.process(ServerCommunicationEvent.ClientDisconnected(guestLocalConnectionId))
+    private fun launchTest(guestConnectionId: ConnectionId): Completable {
+        return processor.process(ServerCommunicationEvent.ClientDisconnected(guestConnectionId))
     }
 
-    private fun setupConnectionStore(): LocalConnectionId {
+    private fun setupConnectionStore(): ConnectionId {
         val guestLocalConnectionId = connectionStore.addConnectionId(senderAddress)
         connectionStore.mapPlayerIdToConnectionId(guestLocalConnectionId, guestPlayer.inGameId)
         return guestLocalConnectionId

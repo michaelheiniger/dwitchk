@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.messageprocessors
 
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.LazyImpl
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
@@ -65,6 +65,6 @@ class PlayerReadyMessageProcessorTest : BaseMessageProcessorTest() {
     }
 
     private fun launchTest(ready: Boolean): Completable {
-        return processor.process(Message.PlayerReadyMessage(guestPlayer.inGameId, ready), LocalConnectionId(0))
+        return processor.process(Message.PlayerReadyMessage(guestPlayer.inGameId, ready), ConnectionId(0))
     }
 }

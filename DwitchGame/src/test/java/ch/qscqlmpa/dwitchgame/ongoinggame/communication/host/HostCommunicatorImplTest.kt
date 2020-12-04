@@ -6,7 +6,7 @@ import ch.qscqlmpa.dwitchcommunication.AddressType
 import ch.qscqlmpa.dwitchcommunication.CommServer
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreFactory
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
@@ -174,7 +174,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
         @Test
         fun `Close connection with the specified client `() {
-            val clientLocalConnectionId = LocalConnectionId(234)
+            val clientLocalConnectionId = ConnectionId(234)
 
             hostCommunicator.closeConnectionWithClient(clientLocalConnectionId)
 

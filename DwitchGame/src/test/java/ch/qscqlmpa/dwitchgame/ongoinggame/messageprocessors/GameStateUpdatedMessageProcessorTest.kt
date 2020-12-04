@@ -4,7 +4,7 @@ import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.GameStateUpdatedMessageProcessor
 import ch.qscqlmpa.dwitchmodel.player.Player
@@ -58,7 +58,7 @@ internal class GameStateUpdatedMessageProcessorTest : BaseMessageProcessorTest()
     }
 
     private fun launchTest() {
-        processor.process(Message.GameStateUpdatedMessage(gameState), LocalConnectionId(0))
+        processor.process(Message.GameStateUpdatedMessage(gameState), ConnectionId(0))
             .test().assertComplete()
     }
 

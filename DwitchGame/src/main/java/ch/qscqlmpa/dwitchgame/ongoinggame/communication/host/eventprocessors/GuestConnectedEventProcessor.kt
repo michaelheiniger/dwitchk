@@ -14,7 +14,7 @@ internal class GuestConnectedEventProcessor @Inject constructor(
 
         event as ServerCommunicationEvent.ClientConnected
 
-        val address = connectionStore.getAddress(event.localConnectionId)
+        val address = connectionStore.getAddress(event.connectionId)
         Timber.i("Client connected with address: $address")
 
         // Nothing to do

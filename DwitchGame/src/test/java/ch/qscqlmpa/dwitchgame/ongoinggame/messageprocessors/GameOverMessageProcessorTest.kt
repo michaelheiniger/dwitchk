@@ -4,7 +4,7 @@ import ch.qscqlmpa.dwitchgame.appevent.AppEvent
 import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEventRepository
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.GameOverMessageProcessor
 import io.mockk.mockk
@@ -46,7 +46,7 @@ internal class GameOverMessageProcessorTest : BaseMessageProcessorTest() {
     }
 
     private fun launchTest() {
-        processor.process(Message.GameOverMessage, LocalConnectionId(0))
+        processor.process(Message.GameOverMessage, ConnectionId(0))
             .test()
             .assertComplete()
     }

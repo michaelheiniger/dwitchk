@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitchcommunication.Address
 import ch.qscqlmpa.dwitchcommunication.AddressType
 import ch.qscqlmpa.dwitchcommunication.CommServer
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
@@ -144,8 +144,8 @@ internal class WebsocketCommServer @Inject constructor(
             }
     }
 
-    override fun closeConnectionWithClient(localConnectionId: LocalConnectionId) {
-        val address = connectionStore.getAddress(localConnectionId)
+    override fun closeConnectionWithClient(connectionId: ConnectionId) {
+        val address = connectionStore.getAddress(connectionId)
 
         Timber.i("Connection with remote connection ID $address closed by host.")
 
@@ -159,7 +159,7 @@ internal class WebsocketCommServer @Inject constructor(
         }
     }
 
-    private fun findMissingConnections(): List<LocalConnectionId> {
+    private fun findMissingConnections(): List<ConnectionId> {
         val remainingConnections = websocketServer.getConnections()
             .filter { ws ->
                 ws.remoteSocketAddress != null
