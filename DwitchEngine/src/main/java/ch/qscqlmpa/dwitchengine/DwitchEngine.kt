@@ -16,11 +16,10 @@ import ch.qscqlmpa.dwitchengine.actions.startnewround.StartNewRoundState
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboard
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboardFactory
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInfo
+import ch.qscqlmpa.dwitchengine.model.player.*
+import ch.qscqlmpa.dwitchengine.rules.CardExchangeComputer
 
 /* Important rule: As soon as the last player to have played a card has to play again
 (i.e. a table round has happened but no one could play a card, regardless of the reason: dwitched, pass, ...),
@@ -73,6 +72,12 @@ class DwitchEngine(private val currentGameState: GameState) {
                 cardDealerFactory
         ).getUpdateGameState()
                 .also(this::logUpdatedGameState)
+    }
+
+    fun getCardsExchanges(): List<CardExchange> {
+        return currentGameState.players.values
+            .filter { p -> p.rank != Rank.Neutral }
+            .map { p -> CardExchangeComputer.getCardExchange(p.rank, p.cardsInHand) }
     }
 
     private fun logUpdatedGameState(gameState: GameState) {

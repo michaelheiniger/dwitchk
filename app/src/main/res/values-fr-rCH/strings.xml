@@ -55,4 +55,5 @@
     <string name="waitingroom_notification_message">En attente de bros</string>
     <string name="gameroom_notification_message">Partie en cours</string>
     <string name="guest_connection_error">Impossible de se connecter à l\'hôte, sapristi !</string>
+    <string name="cef_exchange">Echanger</string>
 </resources>

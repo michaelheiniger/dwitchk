@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitchengine.model.player
 
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
+import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 
@@ -32,20 +33,18 @@ object PlayerDashboardFactory {
     }
 
     private fun players(gameState: GameState): Map<PlayerInGameId, Player> {
-        return gameState.playingOrder
-                .map { id -> id to gameState.player(id) }
-                .toMap()
+        return gameState.playingOrder.map { id -> id to gameState.player(id) }.toMap()
     }
 
     private fun canPlay(gameState: GameState, localPlayer: Player): Boolean {
-        return localPlayer == gameState.currentPlayer() && roundIsNotOver(gameState)
+        return localPlayer == gameState.currentPlayer() && roundIsOngoing(gameState)
     }
 
     private fun canPickACard(gameState: GameState, localPlayer: Player): Boolean {
         return if (localPlayer == gameState.currentPlayer()) {
             localPlayer.state == PlayerState.Playing
                     && !localPlayer.hasPickedCard
-                    && roundIsNotOver(gameState)
+                    && roundIsOngoing(gameState)
         } else {
             false
         }
@@ -53,7 +52,7 @@ object PlayerDashboardFactory {
 
     private fun canPass(gameState: GameState, localPlayer: Player): Boolean {
         return if (localPlayer == gameState.currentPlayer()) {
-            localPlayer.hasPickedCard && roundIsNotOver(gameState)
+            localPlayer.hasPickedCard && roundIsOngoing(gameState)
         } else {
             false
         }
@@ -72,8 +71,8 @@ object PlayerDashboardFactory {
         return lastCardOnTable?.name ?: CardName.Blank
     }
 
-    private fun roundIsNotOver(gameState: GameState): Boolean {
-        return !roundIsOver(gameState)
+    private fun roundIsOngoing(gameState: GameState): Boolean {
+        return gameState.phase == GamePhase.RoundIsOnGoing
     }
 
     private fun roundIsOver(gameState: GameState): Boolean {

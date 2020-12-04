@@ -67,6 +67,13 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
         })
     }
 
+    private fun observeCardExchange() {
+        viewModel.cardExchange().observe(viewLifecycleOwner, { cardExchange ->
+            Timber.d("Card exchange event: $cardExchange")
+
+        })
+    }
+
     private fun setImageView(imageView: ImageView, image: ImageInfo) {
         imageView.setImageResource(image.resourceId)
         imageView.contentDescription = image.description

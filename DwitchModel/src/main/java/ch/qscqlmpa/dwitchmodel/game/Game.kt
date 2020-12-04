@@ -35,7 +35,7 @@ data class Game(
     @ColumnInfo(name = "name") val name: String,
 
     /**
-     * State of the game common to all players
+     * State of the game common to all players.
      */
     @ColumnInfo(name = "game_state") val gameState: String,
 

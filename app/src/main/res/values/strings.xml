@@ -67,4 +67,5 @@
     <string name="player_connected">Connected, yay !</string>
     <string name="player_disconnected">Disconnected, damn !</string>
     <string name="leave_game_btn">See ya mate !</string>
+    <string name="cef_exchange">Exchange</string>
 </resources>

@@ -10,6 +10,11 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.game.PlayerDashboardFacade
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import ch.qscqlmpa.dwitchengine.model.game.CardExchange
+import ch.qscqlmpa.dwitchgame.ongoinggame.game.PlayerDashboardFacade
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Completable
+import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -27,9 +32,21 @@ class PlayerDashboardViewModel @Inject constructor(
                 facade.observeConnectionState(),
                 { dashboard, connectionState -> PlayerDashboardUi(dashboard, connectionState, textProvider) }
             ).subscribeOn(schedulerFactory.io())
-            .observeOn(schedulerFactory.ui())
-            .doOnError { error -> Timber.e(error, "Error while observing player dashboard.") }
-            .toFlowable(BackpressureStrategy.LATEST),
+                .observeOn(schedulerFactory.ui())
+                .doOnError { error -> Timber.e(error, "Error while observing player dashboard.") }
+                .toFlowable(BackpressureStrategy.LATEST),
+        )
+    }
+
+    fun cardExchange(): LiveData<CardExchange> {
+        return LiveDataReactiveStreams.fromPublisher(
+            facade.observeDashboard()
+                .filter { dashboard -> dashboard.cardExchange != null }
+                .map { dashboard -> dashboard.cardExchange!! }
+                .subscribeOn(schedulerFactory.io())
+                .observeOn(schedulerFactory.ui())
+                .doOnError { error -> Timber.e(error, "Error while observing card exchange.") }
+                .toFlowable(BackpressureStrategy.LATEST),
         )
     }
 

@@ -2,13 +2,12 @@ package ch.qscqlmpa.dwitchstore.ingamestore
 
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
-import ch.qscqlmpa.dwitchmodel.game.Game
-import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import ch.qscqlmpa.dwitchmodel.game.RoomType
+import ch.qscqlmpa.dwitchmodel.game.*
 import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 
 interface InGameStore {
 
@@ -21,6 +20,12 @@ interface InGameStore {
     fun deleteGame()
     fun updateGameRoom(gameRoom: RoomType)
     fun updateGameState(gameState: GameState)
+
+    fun insertCardExchangeAnswer(cardExchangeAnswer: CardExchangeAnswer)
+    fun getCardExchangeAnswers(): Single<List<CardExchangeAnswer>>
+
+    fun insertDwitchEvent(event: DwitchEventBase)
+    fun observeDwitchEvents(): Observable<DwitchEventBase>
 
     // Player
     fun insertNewGuestPlayer(name: String): Long
