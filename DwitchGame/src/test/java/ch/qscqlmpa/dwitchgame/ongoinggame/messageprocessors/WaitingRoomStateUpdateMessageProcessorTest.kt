@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.messageprocessors
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreFactory
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.WaitingRoomStateUpdateMessageProcessor
 import ch.qscqlmpa.dwitchmodel.player.Player
@@ -98,6 +98,6 @@ class WaitingRoomStateUpdateMessageProcessorTest : BaseMessageProcessorTest() {
     }
 
     private fun launchTest(upToDatePlayerList: List<Player>): Completable {
-        return processor.process(Message.WaitingRoomStateUpdateMessage(upToDatePlayerList), LocalConnectionId(0))
+        return processor.process(Message.WaitingRoomStateUpdateMessage(upToDatePlayerList), ConnectionId(0))
     }
 }

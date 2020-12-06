@@ -1,16 +1,15 @@
 package ch.qscqlmpa.dwitchcommunication.connectionstore
 
-import ch.qscqlmpa.dwitchcommunication.Address
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 
 
 interface ConnectionStore {
 
-    fun addConnectionId(address: Address): LocalConnectionId
-    fun removeConnectionId(localConnectionId: LocalConnectionId)
-    fun mapPlayerIdToConnectionId(localConnectionId: LocalConnectionId, playerInGameId: PlayerInGameId)
-    fun getLocalConnectionIdForAddress(address: Address): LocalConnectionId?
-    fun getAddress(localId: LocalConnectionId): Address?
-    fun getInGameId(localId: LocalConnectionId): PlayerInGameId?
-    fun findMissingConnections(currentConnections: List<Address>): List<LocalConnectionId>
+    /**
+     * Here, "Player" can either be the Host or a Guest. The Host does always have a connectionId.
+     */
+    fun pairConnectionWithPlayer(connectionId: ConnectionId, playerInGameId: PlayerInGameId)
+    fun removeConnectionIdForInGameId(connectionId: ConnectionId)
+    fun getInGameId(connectionId: ConnectionId): PlayerInGameId?
+    fun getConnectionId(playerInGameId: PlayerInGameId): ConnectionId?
 }

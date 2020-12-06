@@ -1,3 +1,3 @@
 package ch.qscqlmpa.dwitchcommunication.connectionstore
 
-data class LocalConnectionId(val id: Long)
+data class ConnectionId(val id: Long)

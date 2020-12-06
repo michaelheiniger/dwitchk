@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest
 
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchcommunication.CommClient
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
+import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.eventprocessors.GuestCommunicationEventDispatcher
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
@@ -31,8 +31,8 @@ internal class GuestCommunicatorImpl constructor(
         commClient.stop()
     }
 
-    override fun sendMessage(envelopeToSend: EnvelopeToSend): Completable {
-        return commClient.sendMessage(envelopeToSend.message)
+    override fun sendMessageToHost(message: Message): Completable {
+        return commClient.sendMessageToServer(message)
     }
 
     override fun observeCommunicationState(): Observable<GuestCommunicationState> {

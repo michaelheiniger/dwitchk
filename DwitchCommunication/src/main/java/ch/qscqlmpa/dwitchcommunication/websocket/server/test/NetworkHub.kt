@@ -1,9 +1,8 @@
-package ch.qscqlmpa.dwitchcommunication.websocket
+package ch.qscqlmpa.dwitchcommunication.websocket.server.test
 
-import ch.qscqlmpa.dwitchcommunication.websocket.client.IntTestWebsocketClient
-import ch.qscqlmpa.dwitchcommunication.websocket.server.IntTestWebsocketServer
+import ch.qscqlmpa.dwitchcommunication.websocket.client.test.IntTestWebsocketClient
 
-class NetworkHub {
+internal class NetworkHub {
 
     private lateinit var host: IntTestWebsocketServer
     private val guests: MutableMap<PlayerHostTest, IntTestWebsocketClient> = mutableMapOf()

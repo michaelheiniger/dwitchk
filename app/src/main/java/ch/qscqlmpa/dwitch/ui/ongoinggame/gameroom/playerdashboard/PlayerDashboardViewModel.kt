@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.utils.TextProvider
+import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.PlayerDashboardFacade
@@ -15,7 +16,7 @@ import javax.inject.Inject
 
 class PlayerDashboardViewModel @Inject constructor(
     private val facade: PlayerDashboardFacade,
-    disposableManager: ch.qscqlmpa.dwitchcommonutil.DisposableManager,
+    disposableManager: DisposableManager,
     schedulerFactory: SchedulerFactory,
     private val textProvider: TextProvider
 ) : BaseViewModel(disposableManager, schedulerFactory) {

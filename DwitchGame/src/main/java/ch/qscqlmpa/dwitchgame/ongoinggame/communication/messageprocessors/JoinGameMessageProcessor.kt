@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
@@ -19,7 +19,7 @@ internal class JoinGameMessageProcessor @Inject constructor(
     private val connectionStore: ConnectionStore
 ) : BaseHostProcessor(communicatorLazy) {
 
-    override fun process(message: Message, senderLocalConnectionID: LocalConnectionId): Completable {
+    override fun process(message: Message, senderConnectionID: ConnectionId): Completable {
 
         val msg = message as Message.JoinGameMessage
 
@@ -27,29 +27,31 @@ internal class JoinGameMessageProcessor @Inject constructor(
             .flatMapCompletable { newPlayerLocalId ->
                 Completable.merge(
                     listOf(
-                        storeConnectionIdentifier(senderLocalConnectionID, newPlayerLocalId),
-                        sendMessages(
-                            listOf(
-                                hostMessageFactory.createJoinAckMessage(
-                                    senderLocalConnectionID,
-                                    PlayerInGameId(newPlayerLocalId)
-                                ),
-                                hostMessageFactory.createWaitingRoomStateUpdateMessage()
-                            )
-                        )
+                        storeConnectionId(senderConnectionID, newPlayerLocalId),
+                        sendMessages(senderConnectionID, newPlayerLocalId)
                     )
                 )
             }
     }
 
+    private fun sendMessages(
+        senderConnectionId: ConnectionId,
+        newPlayerLocalId: Long
+    ) = sendMessages(
+        listOf(
+            hostMessageFactory.createJoinAckMessage(senderConnectionId, PlayerInGameId(newPlayerLocalId)),
+            hostMessageFactory.createWaitingRoomStateUpdateMessage()
+        )
+    )
+
     private fun insertNewGuestPlayer(playerName: String): Single<Long> {
         return Single.fromCallable { store.insertNewGuestPlayer(playerName) }
     }
 
-    private fun storeConnectionIdentifier(senderLocalConnectionID: LocalConnectionId, newPlayerLocalId: Long): Completable {
+    private fun storeConnectionId(senderConnectionId: ConnectionId, newPlayerLocalId: Long): Completable {
         return Completable.fromAction {
             val newGuestPlayerInGameId = store.getPlayerInGameId(newPlayerLocalId)
-            connectionStore.mapPlayerIdToConnectionId(senderLocalConnectionID, newGuestPlayerInGameId)
+            connectionStore.pairConnectionWithPlayer(senderConnectionId, newGuestPlayerInGameId)
         }
     }
 }

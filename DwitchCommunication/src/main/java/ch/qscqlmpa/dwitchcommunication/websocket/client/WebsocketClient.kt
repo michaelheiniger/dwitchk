@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchcommunication.websocket.client
 import io.reactivex.rxjava3.core.Observable
 import org.java_websocket.handshake.ServerHandshake
 
-interface WebsocketClient {
+internal interface WebsocketClient {
 
     fun start()
 
@@ -24,8 +24,8 @@ interface WebsocketClient {
     fun observeOnErrorEvents(): Observable<OnError>
 }
 
-data class OnOpen(val handshake: ServerHandshake?)
-data class OnClose(val code: Int, val reason: String?, val remote: Boolean)
-data class OnMessage(val ipAddress: String, val port: Int, val message: String?)
-data class OnError(val ex: Exception?)
+internal data class OnOpen(val handshake: ServerHandshake?)
+internal data class OnClose(val code: Int, val reason: String?, val remote: Boolean)
+internal data class OnMessage(val ipAddress: String, val port: Int, val message: String?)
+internal data class OnError(val ex: Exception?)
 

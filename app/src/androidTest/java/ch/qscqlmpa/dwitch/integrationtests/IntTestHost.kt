@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
-import ch.qscqlmpa.dwitchcommunication.websocket.NetworkHub
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
@@ -9,8 +8,7 @@ import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import org.assertj.core.api.Assertions.assertThat
 
 class IntTestHost(
-    private val gameName: String,
-    private val networkHub: NetworkHub
+    private val gameName: String
 ) : IntTestPlayer() {
 
     private lateinit var gameRoomHostFacade: GameRoomHostFacade

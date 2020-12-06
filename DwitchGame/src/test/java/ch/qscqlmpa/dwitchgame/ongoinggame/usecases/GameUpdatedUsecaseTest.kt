@@ -1,11 +1,9 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
+import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.GameCommunicator
-import ch.qscqlmpa.dwitchcommunication.model.RecipientType
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
-import ch.qscqlmpa.dwitchcommunication.model.Message
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -25,7 +23,7 @@ internal class GameUpdatedUsecaseTest : BaseUnitTest() {
 
         usecase = GameUpdatedUsecase(mockInGameStore, mockCommunicator)
 
-        every { mockCommunicator.sendMessage(any()) } returns Completable.complete()
+        every { mockCommunicator.sendMessageToHost(any()) } returns Completable.complete()
     }
 
     @Test
@@ -38,15 +36,11 @@ internal class GameUpdatedUsecaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `should send up-to-date game state to all`() {
+    fun `should send up-to-date game state to host`() {
         val gameState = TestEntityFactory.createGameState()
 
         usecase.handleUpdatedGameState(gameState).test().assertComplete()
 
-        val messageWrapperRef = EnvelopeToSend(
-            RecipientType.All,
-            Message.GameStateUpdatedMessage(gameState)
-        )
-        verify { mockCommunicator.sendMessage(messageWrapperRef) }
+        verify { mockCommunicator.sendMessageToHost(Message.GameStateUpdatedMessage(gameState)) }
     }
 }

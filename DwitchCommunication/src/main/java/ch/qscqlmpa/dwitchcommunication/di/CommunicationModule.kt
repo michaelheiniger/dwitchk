@@ -4,6 +4,7 @@ import ch.qscqlmpa.dwitchcommunication.CommClient
 import ch.qscqlmpa.dwitchcommunication.CommServer
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreImpl
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreInternal
 import ch.qscqlmpa.dwitchcommunication.di.Qualifiers.HOST_IP_ADDRESS
 import ch.qscqlmpa.dwitchcommunication.di.Qualifiers.HOST_PORT
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
@@ -48,7 +49,7 @@ class CommunicationModule(
     internal fun provideWebCommServer(
         websocketServer: WebsocketServer,
         serializerFactory: SerializerFactory,
-        connectionStore: ConnectionStore
+        connectionStore: ConnectionStoreInternal
     ): CommServer {
         return WebsocketCommServer(websocketServer, serializerFactory, connectionStore)
     }
@@ -61,8 +62,20 @@ class CommunicationModule(
 
     @CommunicationScope
     @Provides
-    fun provideConnectionStore(): ConnectionStore {
+    internal fun provideConnectionStoreImpl(): ConnectionStoreImpl {
         return ConnectionStoreImpl()
+    }
+
+    @CommunicationScope
+    @Provides
+    internal fun provideConnectionStoreInternal(connectionStore: ConnectionStoreImpl): ConnectionStoreInternal {
+        return connectionStore
+    }
+
+    @CommunicationScope
+    @Provides
+    internal fun provideConnectionStore(connectionStore: ConnectionStoreImpl): ConnectionStore {
+        return connectionStore
     }
 }
 

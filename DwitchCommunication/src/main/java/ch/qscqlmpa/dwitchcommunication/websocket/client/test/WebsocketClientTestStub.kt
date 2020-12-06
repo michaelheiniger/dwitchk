@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitchcommunication.websocket.client
+package ch.qscqlmpa.dwitchcommunication.websocket.client.test
 
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
@@ -6,7 +6,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class WebsocketClientTestStub(
+internal class WebsocketClientTestStub(
     private val client: TestWebsocketClient,
     private val serializerFactory: SerializerFactory
 ) : ClientTestStub {

@@ -54,12 +54,8 @@ internal class PlayerDashboardFacadeImpl @Inject constructor(
     }
 
     private fun handleGameStateUpdated(updateGameState: (engine: DwitchEngine) -> GameState): Completable {
-        return Single.fromCallable {
-            val gameState = gameRepository.getGameState()
-            val updatedGameState = updateGameState(DwitchEngine(gameState))
-            updateDashboard(updatedGameState)
-            return@fromCallable updatedGameState
-        }
+        return Single.fromCallable { updateGameState(DwitchEngine(gameRepository.getGameState())) }
+            .doOnSuccess(::updateDashboard)
             .doOnError { error -> Timber.e(error, "Error while updating the game state:") }
             .flatMapCompletable(gameUpdatedUsecase::handleUpdatedGameState)
     }

@@ -4,10 +4,11 @@ package ch.qscqlmpa.dwitchcommunication.websocket.server
 import ch.qscqlmpa.dwitchcommunication.Address
 import ch.qscqlmpa.dwitchcommunication.AddressType
 import ch.qscqlmpa.dwitchcommunication.CommServer
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreInternal
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchcommunication.model.Recipient
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -18,7 +19,7 @@ import javax.inject.Inject
 internal class WebsocketCommServer @Inject constructor(
     private val websocketServer: WebsocketServer,
     private val serializerFactory: SerializerFactory,
-    private val connectionStore: ConnectionStore
+    private val connectionStore: ConnectionStoreInternal
 ) : CommServer {
 
     override fun start() {
@@ -29,19 +30,22 @@ internal class WebsocketCommServer @Inject constructor(
         websocketServer.stop()
     }
 
-    override fun sendMessage(message: Message, recipientAddress: AddressType): Completable {
+    override fun sendMessage(message: Message, recipient: Recipient): Completable {
         val serializedMessage = serializerFactory.serialize(message)
-
-        return when (recipientAddress) {
-            is AddressType.Unicast -> sendUnitcastMessage(serializedMessage, recipientAddress)
+        return when (val address = getRecipientAddress(recipient)) {
+            is AddressType.Unicast -> sendUnicastMessage(serializedMessage, address)
             AddressType.Broadcast -> sendBroadcastMessage(serializedMessage)
         }
     }
 
-    private fun sendUnitcastMessage(
-        serializedMessage: String,
-        recipientAdress: AddressType.Unicast
-    ): Completable {
+    private fun getRecipientAddress(recipient: Recipient): AddressType {
+        return when (recipient) {
+            is Recipient.SingleGuest -> AddressType.Unicast(connectionStore.getAddress(recipient.id)!!)
+            Recipient.AllGuests -> AddressType.Broadcast
+        }
+    }
+
+    private fun sendUnicastMessage(serializedMessage: String, recipientAdress: AddressType.Unicast): Completable {
         return Completable.fromAction {
             val recipientSocket = websocketServer.getConnections().find { webSocket ->
                 webSocket.remoteSocketAddress.address.hostAddress == recipientAdress.destination.ipAddress
@@ -64,17 +68,23 @@ internal class WebsocketCommServer @Inject constructor(
             listOf(
                 observeOnStartEvents(),
                 observeOnOpenEvents(),
+                observeOnErrorEvents(),
                 observeOnCloseEvents()
             )
         )
     }
 
-    private fun observeOnStartEvents(): Observable<ServerCommunicationEvent> {
+    private fun observeOnStartEvents(): Observable<ServerCommunicationEvent.ListeningForConnections> {
         return websocketServer.observeOnStartEvents()
-            .map {
+            .map { onStart ->
                 Timber.d("Server is now listening for connections")
-                ServerCommunicationEvent.ListeningForConnections
+
+                // Add "virtual" connection of the server with itself
+                val hostConnectionId = connectionStore.addConnectionId(onStart.address)
+
+                ServerCommunicationEvent.ListeningForConnections(hostConnectionId)
             }
+
     }
 
     private fun observeOnOpenEvents(): Observable<ServerCommunicationEvent> {
@@ -93,6 +103,12 @@ internal class WebsocketCommServer @Inject constructor(
             }
     }
 
+    private fun observeOnErrorEvents(): Observable<ServerCommunicationEvent.ErrorListeningForConnections> {
+        return websocketServer.observeOnErrorEvents()
+            .map { ServerCommunicationEvent.ErrorListeningForConnections }
+            .doOnNext { connectionStore.clearStore() }
+    }
+
     private fun observeOnCloseEvents(): Observable<ServerCommunicationEvent> {
         return websocketServer.observeOnCloseEvents()
             .filter { onClose ->
@@ -103,15 +119,14 @@ internal class WebsocketCommServer @Inject constructor(
             }
             .flatMap { onClose ->
                 val senderAddress = buildAddressFromConnection(onClose.conn!!)
-                if (senderAddress != null) {
+                return@flatMap if (senderAddress != null) {
                     Timber.d("Client disconnected $senderAddress")
-                    val localConnectionId =
-                        connectionStore.getLocalConnectionIdForAddress(senderAddress)
-                    return@flatMap Observable.just(ServerCommunicationEvent.ClientDisconnected(localConnectionId))
+                    val localConnectionId = connectionStore.getConnectionIdForAddress(senderAddress)
+                    Observable.just(ServerCommunicationEvent.ClientDisconnected(localConnectionId))
                 } else {
                     val missingConnections = findMissingConnections()
                     Timber.d("Client disconnected but no connection info provided. Inferred missing connections: $missingConnections")
-                    return@flatMap Observable.fromIterable(missingConnections.map(ServerCommunicationEvent::ClientDisconnected))
+                    Observable.fromIterable(missingConnections.map(ServerCommunicationEvent::ClientDisconnected))
                 }
             }
     }
@@ -130,24 +145,18 @@ internal class WebsocketCommServer @Inject constructor(
             .map { onMessage ->
                 val senderAddress = buildAddressFromConnection(onMessage.conn!!)!!
                 val message = serializerFactory.unserializeMessage(onMessage.message!!)
-                val localConnectionId =
-                    connectionStore.getLocalConnectionIdForAddress(senderAddress)
-                        ?: throw IllegalStateException("Message received ${onMessage.message} from $senderAddress has no local connection ID")
+                val connectionId = connectionStore.getConnectionIdForAddress(senderAddress)
+                    ?: throw IllegalStateException("Message received ${onMessage.message} from $senderAddress has no connection ID")
 
-                Timber.i(
-                    "Message received %s from %s (local connection ID %s)",
-                    onMessage.message,
-                    senderAddress,
-                    localConnectionId
-                )
-                EnvelopeReceived(localConnectionId, message)
+                Timber.i("Message received %s from %s (connection ID %s)", onMessage.message, senderAddress, connectionId)
+                EnvelopeReceived(connectionId, message)
             }
     }
 
-    override fun closeConnectionWithClient(localConnectionId: LocalConnectionId) {
-        val address = connectionStore.getAddress(localConnectionId)
+    override fun closeConnectionWithClient(connectionId: ConnectionId) {
+        val address = connectionStore.getAddress(connectionId)
 
-        Timber.i("Connection with remote connection ID $address closed by host.")
+        Timber.i("Connection with remote $address closed by host.")
 
         if (address != null) {
             val senderSocket = websocketServer.getConnections().find { webSocket ->
@@ -159,7 +168,7 @@ internal class WebsocketCommServer @Inject constructor(
         }
     }
 
-    private fun findMissingConnections(): List<LocalConnectionId> {
+    private fun findMissingConnections(): List<ConnectionId> {
         val remainingConnections = websocketServer.getConnections()
             .filter { ws ->
                 ws.remoteSocketAddress != null

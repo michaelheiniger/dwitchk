@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchcommunication.websocket.client
 
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchcommunication.CommClient
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
@@ -59,7 +59,7 @@ internal class WebsocketCommClient @Inject constructor(
         return receivedMessages
     }
 
-    override fun sendMessage(message: Message): Completable {
+    override fun sendMessageToServer(message: Message): Completable {
         return Completable.fromAction {
             val serializedMessage = serializerFactory.serialize(message)
             websocketClient.send(serializedMessage)
@@ -79,7 +79,7 @@ internal class WebsocketCommClient @Inject constructor(
                 val message = serializerFactory.unserializeMessage(onMessage.message!!)
 
                 // Only one connection: the one with the Host (ID is irrelevant)
-                EnvelopeReceived(LocalConnectionId(0), message)
+                EnvelopeReceived(ConnectionId(0), message)
             }
     }
 

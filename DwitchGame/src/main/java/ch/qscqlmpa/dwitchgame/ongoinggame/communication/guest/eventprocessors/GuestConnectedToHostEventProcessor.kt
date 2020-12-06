@@ -37,7 +37,7 @@ internal class GuestConnectedToHostEventProcessor @Inject constructor(
                 GuestMessageFactory.createJoinGameMessage(localPlayer.name)
             }
         }
-            .flatMapCompletable(communicator::sendMessage)
+            .flatMapCompletable(communicator::sendMessageToHost)
             .doOnComplete { commStateRepository.notify(GuestCommunicationState.Connected) }
     }
 

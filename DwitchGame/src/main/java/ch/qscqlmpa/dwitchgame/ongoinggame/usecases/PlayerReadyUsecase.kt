@@ -17,6 +17,6 @@ internal class PlayerReadyUsecase @Inject constructor(
             val localPlayerInGameId = store.getLocalPlayerInGameId()
             store.updatePlayerWithReady(localPlayerInGameId, ready)
             GuestMessageFactory.createPlayerReadyMessage(localPlayerInGameId, ready)
-        }.flatMapCompletable(communicator::sendMessage)
+        }.flatMapCompletable(communicator::sendMessageToHost)
     }
 }

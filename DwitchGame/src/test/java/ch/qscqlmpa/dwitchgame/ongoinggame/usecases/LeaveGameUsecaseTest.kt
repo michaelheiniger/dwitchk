@@ -28,25 +28,29 @@ internal class LeaveGameUsecaseTest : BaseUnitTest() {
         super.setup()
         leaveGameUsecase = LeaveGameUsecase(mockInGameStore, mockAppEventRepository, mockCommunicator)
 
-        every { mockCommunicator.sendMessage(any()) } returns Completable.complete()
+        every { mockCommunicator.sendMessageToHost(any()) } returns Completable.complete()
         every { mockInGameStore.getLocalPlayerInGameId() } returns playerInGameId
     }
 
     @Test
     fun `Send leave-game message to host`() {
-        leaveGameUsecase.leaveGame().test().assertComplete()
-        verify { mockCommunicator.sendMessage(GuestMessageFactory.createLeaveGameMessage(playerInGameId)) }
+        launchTest()
+        verify { mockCommunicator.sendMessageToHost(GuestMessageFactory.createLeaveGameMessage(playerInGameId)) }
     }
 
     @Test
     fun `Close connection with host`() {
-        leaveGameUsecase.leaveGame().test().assertComplete()
+        launchTest()
         verify { mockCommunicator.closeConnection() }
     }
 
     @Test
     fun `Stop service`() {
-        leaveGameUsecase.leaveGame().test().assertComplete()
+        launchTest()
         verify { mockAppEventRepository.notify(AppEvent.GameLeft) }
+    }
+
+    private fun launchTest() {
+        leaveGameUsecase.leaveGame().test().assertComplete()
     }
 }

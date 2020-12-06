@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchcommunication.websocket.client
 
-interface WebsocketClientFactory {
+internal interface WebsocketClientFactory {
 
     fun create(): WebsocketClient
 }

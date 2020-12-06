@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitchcommunication.websocket
+package ch.qscqlmpa.dwitchcommunication.websocket.server.test
 
 import org.java_websocket.WebSocket
 import org.java_websocket.drafts.Draft

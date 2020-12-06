@@ -1,11 +1,16 @@
-package ch.qscqlmpa.dwitchcommunication.websocket.client
+package ch.qscqlmpa.dwitchcommunication.websocket.client.test
 
+import ch.qscqlmpa.dwitchcommunication.websocket.client.OnClose
+import ch.qscqlmpa.dwitchcommunication.websocket.client.OnError
+import ch.qscqlmpa.dwitchcommunication.websocket.client.OnMessage
+import ch.qscqlmpa.dwitchcommunication.websocket.client.OnOpen
+import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClient
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
 import org.java_websocket.handshake.ServerHandshake
 import timber.log.Timber
 
-class IntTestWebsocketClient constructor(
+internal class IntTestWebsocketClient constructor(
         private val destinationAddress: String,
         private val destinationPort: Int
 ) : WebsocketClient {
