@@ -5,9 +5,11 @@ import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboard
+import ch.qscqlmpa.dwitchgame.ongoinggame.DwitchEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.GameCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.GameUpdatedUsecase
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.StartCardExchangeUsecase
+import ch.qscqlmpa.dwitchmodel.game.DwitchEvent
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import com.jakewharton.rxrelay3.BehaviorRelay
 import io.reactivex.rxjava3.core.Completable
@@ -21,14 +23,12 @@ internal class PlayerDashboardFacadeImpl @Inject constructor(
     private val gameRepository: GameRepository,
     private val gameUpdatedUsecase: GameUpdatedUsecase,
     private val startCardExchangeUsecase: StartCardExchangeUsecase,
-    private val cardDealerFactory: CardDealerFactory
+    private val cardForExchangeChosenUsecase: CardForExchangeChosenUsecase,
+    private val cardDealerFactory: CardDealerFactory,
+    private val dwitchEventRepository: DwitchEventRepository
 ) : PlayerDashboardFacade {
 
     private val playerDashboardRelay = BehaviorRelay.create<PlayerDashboard>()
-
-    override fun observeConnectionState(): Observable<PlayerConnectionState> {
-        return gameCommunicator.observePlayerConnectionState()
-    }
 
     override fun playCard(cardPlayed: Card): Completable {
         return handleGameStateUpdated { engine -> engine.playCard(cardPlayed) }
@@ -50,6 +50,10 @@ internal class PlayerDashboardFacadeImpl @Inject constructor(
             .flatMapCompletable(startCardExchangeUsecase::startCardExchange)
     }
 
+    override fun observeConnectionState(): Observable<PlayerConnectionState> {
+        return gameCommunicator.observePlayerConnectionState()
+    }
+
     override fun observeDashboard(): Observable<PlayerDashboard> {
         return Observable.merge(
             playerDashboardRelay,
@@ -57,6 +61,20 @@ internal class PlayerDashboardFacadeImpl @Inject constructor(
                 DwitchEngine(gameInfo.gameState).getPlayerDashboard(gameInfo.localPlayerId)
             }
         )
+    }
+
+    override fun getDashboard(): Single<PlayerDashboard> {
+        return gameRepository.getGameInfo().map { gameInfo ->
+            DwitchEngine(gameInfo.gameState).getPlayerDashboard(gameInfo.localPlayerId)
+        }
+    }
+
+    override fun observeCardExchangeEvents(): Observable<DwitchEvent.CardExchange> {
+        return dwitchEventRepository.observeCardExchangeEvents()
+    }
+
+    override fun cardForExchangeChosen() {
+
     }
 
     private fun handleGameStateUpdated(updateGameState: (engine: DwitchEngine) -> GameState): Single<GameState> {

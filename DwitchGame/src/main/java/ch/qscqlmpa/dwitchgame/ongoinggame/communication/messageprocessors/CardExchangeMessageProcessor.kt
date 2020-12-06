@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchmodel.game.DwitchEventBase
+import ch.qscqlmpa.dwitchmodel.game.DwitchEvent
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import io.reactivex.rxjava3.core.Completable
 import org.joda.time.DateTime
@@ -24,10 +24,10 @@ internal class CardExchangeMessageProcessor @Inject constructor(
                 Timber.w("Received CardExchangeMessage intended for another player: $msg")
             } else {
                 store.insertDwitchEvent(
-                    DwitchEventBase.CardExchange(
-                        cardExchange.numCardsToChoose,
-                        cardExchange.allowedCardValues,
-                        DateTime.now()
+                    DwitchEvent.CardExchange(
+                        numCardsToExchange = cardExchange.numCardsToChoose,
+                        allowedCardValues = cardExchange.allowedCardValues,
+                        creationDate = DateTime.now()
                     )
                 )
             }

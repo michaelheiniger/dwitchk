@@ -162,7 +162,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
             val recipientAddress = Address("192.168.1.1", 54245)
             val recipientLocalConnectionId = connectionStore.addConnectionId(recipientAddress)
 
-            hostCommunicator.sendMessage(EnvelopeToSend(RecipientType.Single(recipientLocalConnectionId), messageToSend))
+            hostCommunicator.sendMessage(EnvelopeToSend(RecipientType.SingleGuest(recipientLocalConnectionId), messageToSend))
                 .test().assertComplete()
 
             verify { mockCommServer.sendMessage(messageToSend, AddressType.Unicast(recipientAddress)) }

@@ -14,4 +14,10 @@ object MessageFactory {
     fun createGameOverMessage(): EnvelopeToSend {
         return EnvelopeToSend(RecipientType.All, Message.GameOverMessage)
     }
+
+    fun createCardsForExchangeChoseMessage() {
+        //TODO: The host is also a player that might have to choose cards for the exchange.
+        //TODO: Should it send a message to itself ? only to itself ?
+        return EnvelopeToSend(RecipientType.SingleGuest)
+    }
 }

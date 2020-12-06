@@ -57,7 +57,7 @@ class HostMessageFactoryTest : BaseUnitTest() {
         val msgWrapper = hostMessageFactory.createJoinAckMessage(localConnectionId, playerInGameId).blockingGet()
         val message = (msgWrapper.message as Message.JoinGameAckMessage)
 
-        assertThat(msgWrapper.recipient).isEqualTo(RecipientType.Single(localConnectionId))
+        assertThat(msgWrapper.recipient).isEqualTo(RecipientType.SingleGuest(localConnectionId))
         assertThat(message.gameCommonId).isEqualTo(gameCommonId)
         assertThat(message.playerInGameId).isEqualTo(playerInGameId)
 

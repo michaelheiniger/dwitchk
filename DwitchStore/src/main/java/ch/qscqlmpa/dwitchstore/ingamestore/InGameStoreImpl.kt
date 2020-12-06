@@ -77,16 +77,16 @@ internal class InGameStoreImpl constructor(
             }
     }
 
-    override fun insertDwitchEvent(event: DwitchEventBase) {
+    override fun insertDwitchEvent(event: DwitchEvent) {
         dwitchEventDao.insertEvent2(gameLocalId) { id -> serializerFactory.serialize(event.copyWithId(id)) }
     }
 
-    override fun observeDwitchEvents(): Observable<DwitchEventBase> {
+    override fun observeDwitchEvents(): Observable<DwitchEvent> {
         return dwitchEventDao.observeDwitchEvents(gameLocalId)
             .map { event -> serializerFactory.unserializeDwitchEvent(event.event) }
     }
 
-    override fun deleteDwitchEvent(event: DwitchEventBase): Int {
+    override fun deleteDwitchEvent(event: DwitchEvent): Int {
         return dwitchEventDao.deleteEvent(event.id)
     }
 

@@ -5,12 +5,12 @@ import kotlinx.serialization.Serializable
 import org.joda.time.DateTime
 
 @Serializable
-sealed class DwitchEventBase {
+sealed class DwitchEvent {
 
     abstract val id: Long
     abstract val creationDate: DateTime
 
-    abstract fun copyWithId(id: Long): DwitchEventBase
+    abstract fun copyWithId(id: Long): DwitchEvent
 
     @Serializable
     data class CardExchange(
@@ -18,8 +18,8 @@ sealed class DwitchEventBase {
         val numCardsToExchange: Int,
         val allowedCardValues: List<CardName>,
         @Serializable(with = DateTimeSerializer::class) override val creationDate: DateTime
-    ) : DwitchEventBase() {
-        override fun copyWithId(id: Long): DwitchEventBase {
+    ) : DwitchEvent() {
+        override fun copyWithId(id: Long): DwitchEvent {
             return this.copy(id = id)
         }
     }

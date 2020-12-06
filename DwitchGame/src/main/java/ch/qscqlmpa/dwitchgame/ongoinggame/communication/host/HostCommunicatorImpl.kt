@@ -3,12 +3,12 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.host
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchcommunication.AddressType
 import ch.qscqlmpa.dwitchcommunication.CommServer
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
+import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
+import ch.qscqlmpa.dwitchcommunication.model.RecipientType
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.eventprocessors.HostCommunicationEventDispatcher
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.MessageDispatcher
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
-import ch.qscqlmpa.dwitchcommunication.model.RecipientType
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -86,8 +86,9 @@ constructor(private val commServer: CommServer,
 
     private fun getRecipientAddress(recipient: RecipientType): AddressType {
         return when (recipient) {
-            is RecipientType.Single -> AddressType.Unicast(connectionStore.getAddress(recipient.id)!!)
+            is RecipientType.SingleGuest -> AddressType.Unicast(connectionStore.getAddress(recipient.id)!!)
             RecipientType.All -> AddressType.Broadcast
+            RecipientType.Host -> TODO()
         }
     }
 }

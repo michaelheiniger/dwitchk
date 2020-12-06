@@ -9,6 +9,7 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.ui.ImageInfo
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.cardexchange.CardExchangeFragment
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import kotlinx.android.synthetic.main.player_dashboard_fragment.*
 import timber.log.Timber
@@ -41,6 +42,7 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
         cardsInHandRw.adapter = cardsInHandAdapter
 
         observeAndUpdateDashboard()
+        observeCommands()
     }
 
     override fun onCardClicked(card: Card) {
@@ -67,11 +69,21 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
         })
     }
 
-    private fun observeCardExchange() {
-        viewModel.cardExchange().observe(viewLifecycleOwner, { cardExchange ->
-            Timber.d("Card exchange event: $cardExchange")
-
+    private fun observeCommands() {
+        viewModel.commands().observe(viewLifecycleOwner, { command ->
+            Timber.d("Command: $command")
+            when (command) {
+                is PlayerDashboardCommand.OpenCardExchange -> openCardExchange()
+            }
         })
+    }
+
+    private fun openCardExchange() {
+        val supportFragmentManager = requireActivity().supportFragmentManager
+        val ft = supportFragmentManager.beginTransaction()
+        supportFragmentManager.findFragmentByTag("card_exchange")
+        ft.addToBackStack(null)
+        CardExchangeFragment.create().show(ft, "dialog")
     }
 
     private fun setImageView(imageView: ImageView, image: ImageInfo) {

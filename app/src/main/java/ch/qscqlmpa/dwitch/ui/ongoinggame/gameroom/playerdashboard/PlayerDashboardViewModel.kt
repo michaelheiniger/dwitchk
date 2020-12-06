@@ -2,6 +2,8 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.utils.TextProvider
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
@@ -10,11 +12,6 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.game.PlayerDashboardFacade
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
-import ch.qscqlmpa.dwitchengine.model.game.CardExchange
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.PlayerDashboardFacade
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Completable
-import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -24,6 +21,8 @@ class PlayerDashboardViewModel @Inject constructor(
     schedulerFactory: SchedulerFactory,
     private val textProvider: TextProvider
 ) : BaseViewModel(disposableManager, schedulerFactory) {
+
+    private val commands = MutableLiveData<PlayerDashboardCommand>()
 
     fun playerDashboard(): LiveData<PlayerDashboardUi> {
         return LiveDataReactiveStreams.fromPublisher(
@@ -38,16 +37,11 @@ class PlayerDashboardViewModel @Inject constructor(
         )
     }
 
-    fun cardExchange(): LiveData<CardExchange> {
-        return LiveDataReactiveStreams.fromPublisher(
-            facade.observeDashboard()
-                .filter { dashboard -> dashboard.cardExchange != null }
-                .map { dashboard -> dashboard.cardExchange!! }
-                .subscribeOn(schedulerFactory.io())
-                .observeOn(schedulerFactory.ui())
-                .doOnError { error -> Timber.e(error, "Error while observing card exchange.") }
-                .toFlowable(BackpressureStrategy.LATEST),
-        )
+    fun commands(): LiveData<PlayerDashboardCommand> {
+        val liveDataMerger = MediatorLiveData<PlayerDashboardCommand>()
+        liveDataMerger.addSource(observeCardExchangeEvents()) { value -> liveDataMerger.value = value }
+        liveDataMerger.addSource(commands) { value -> liveDataMerger.value = value }
+        return liveDataMerger
     }
 
     fun playCard(cardPlayed: Card) {
@@ -68,6 +62,17 @@ class PlayerDashboardViewModel @Inject constructor(
     fun startNewRound() {
         performOperation("Start new round successfully.", "Error while starting new round.")
         { facade.startNewRound() }
+    }
+
+    private fun observeCardExchangeEvents(): LiveData<PlayerDashboardCommand> {
+        return LiveDataReactiveStreams.fromPublisher(
+            facade.observeCardExchangeEvents()
+                .map { it -> PlayerDashboardCommand.OpenCardExchange(it) as PlayerDashboardCommand}
+                .subscribeOn(schedulerFactory.io())
+                .observeOn(schedulerFactory.ui())
+                .doOnError { error -> Timber.e(error, "Error while observing card exchange.") }
+                .toFlowable(BackpressureStrategy.LATEST)
+        )
     }
 
     private fun performOperation(successText: String, failureText: String, op: () -> Completable) {
