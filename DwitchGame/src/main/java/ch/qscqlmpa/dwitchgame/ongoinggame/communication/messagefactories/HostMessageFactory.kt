@@ -6,6 +6,7 @@ import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.RecipientType
 import ch.qscqlmpa.dwitchcommunication.model.RejoinInfo
+import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
@@ -17,10 +18,7 @@ import javax.inject.Inject
 class HostMessageFactory @Inject constructor(private val store: InGameStore) {
 
     fun createWaitingRoomStateUpdateMessage(): Single<EnvelopeToSend> {
-        return Single.fromCallable {
-            val players = store.getPlayersInWaitingRoom()
-            return@fromCallable createWaitingRoomStateUpdateMessage(players)
-        }
+        return Single.fromCallable { createWaitingRoomStateUpdateMessage(store.getPlayersInWaitingRoom()) }
     }
 
     fun createJoinAckMessage(
@@ -47,6 +45,11 @@ class HostMessageFactory @Inject constructor(private val store: InGameStore) {
         fun createRejoinAckMessage(rejoinInfo: RejoinInfo): EnvelopeToSend {
             val message = Message.RejoinGameAckMessage(rejoinInfo)
             return EnvelopeToSend(RecipientType.Single(rejoinInfo.connectionID), message)
+        }
+
+        fun createCardExchangeMessage(cardExchange: CardExchange, recipient: ConnectionId): EnvelopeToSend {
+            val message = Message.CardExchangeMessage(cardExchange)
+            return EnvelopeToSend(RecipientType.Single(recipient), message)
         }
 
         private fun createWaitingRoomStateUpdateMessage(playerList: List<Player>): EnvelopeToSend {

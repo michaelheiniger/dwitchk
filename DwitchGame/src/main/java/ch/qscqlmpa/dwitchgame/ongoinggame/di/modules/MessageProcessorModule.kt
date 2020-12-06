@@ -80,4 +80,10 @@ abstract class MessageProcessorModule {
     @IntoMap
     @MessageProcessorKey(Message.GameOverMessage::class)
     internal abstract fun bindGameOverMessageProcessor(messageProcessor: GameOverMessageProcessor): MessageProcessor
+
+    @OngoingGameScope
+    @Binds
+    @IntoMap
+    @MessageProcessorKey(Message.CardExchangeMessage::class)
+    internal abstract fun bindCardExchangeMessageProcessor(messageprocessor: CardExchangeMessageProcessor): MessageProcessor
 }

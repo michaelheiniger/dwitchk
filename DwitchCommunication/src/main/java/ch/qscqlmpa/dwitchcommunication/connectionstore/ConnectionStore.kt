@@ -10,6 +10,7 @@ interface ConnectionStore {
     fun removeConnectionId(connectionId: ConnectionId)
     fun mapPlayerIdToConnectionId(connectionId: ConnectionId, playerInGameId: PlayerInGameId)
     fun getConnectionIdForAddress(address: Address): ConnectionId?
+    fun getConnectionIdForIngameId(inGameId: PlayerInGameId): ConnectionId?
     fun getAddress(id: ConnectionId): Address?
     fun getInGameId(id: ConnectionId): PlayerInGameId?
     fun findMissingConnections(currentConnections: List<Address>): List<ConnectionId>

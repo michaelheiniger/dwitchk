@@ -22,6 +22,7 @@ internal class InGameStoreImpl constructor(
 
     private val gameDao = database.gameDao()
     private val playerDao = database.playerDao()
+    private val dwitchEventDao = database.dwitchEventDao()
 
     // Game
     override fun getGame(): Game {
@@ -77,15 +78,16 @@ internal class InGameStoreImpl constructor(
     }
 
     override fun insertDwitchEvent(event: DwitchEventBase) {
-        gameDao.insertDwitchEvent(DwitchEventStore(
-            gameLocalId = gameLocalId,
-            event = serializerFactory.serialize(event)
-        ))
+        dwitchEventDao.insertEvent2(gameLocalId) { id -> serializerFactory.serialize(event.copyWithId(id)) }
     }
 
     override fun observeDwitchEvents(): Observable<DwitchEventBase> {
-        return gameDao.observeDwitchEvents(gameLocalId)
+        return dwitchEventDao.observeDwitchEvents(gameLocalId)
             .map { event -> serializerFactory.unserializeDwitchEvent(event.event) }
+    }
+
+    override fun deleteDwitchEvent(event: DwitchEventBase): Int {
+        return dwitchEventDao.deleteEvent(event.id)
     }
 
     // Player

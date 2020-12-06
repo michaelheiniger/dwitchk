@@ -68,9 +68,6 @@ internal abstract class GameDao(database: AppRoomDatabase) {
     )
     abstract fun getCardExchangeAnswers(gameLocalId: Long): Single<List<CardExchangeAnswerStore>>
 
-    @Query("SELECT * FROM dwitch_event WHERE game_local_id = :gameLocalId")
-    abstract fun observeDwitchEvents(gameLocalId: Long): Observable<DwitchEventStore>
-
     @Query("SELECT * FROM Game WHERE id=:localId")
     abstract fun getGame(localId: Long): Game
 

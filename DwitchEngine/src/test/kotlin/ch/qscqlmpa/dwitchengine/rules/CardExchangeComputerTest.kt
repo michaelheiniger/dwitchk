@@ -15,31 +15,33 @@ internal class CardExchangeComputerTest {
     @Test
     fun `President must choose 2 cards`() {
         val cardExchange = CardExchangeComputer.getCardExchange(Rank.President, someCards)
-        assertThat(cardExchange.numCardsToChoose).isEqualTo(2)
+        assertThat(cardExchange!!.numCardsToChoose).isEqualTo(2)
     }
 
     @Test
     fun `Vice-President must choose 1 card`() {
         val cardExchange = CardExchangeComputer.getCardExchange(Rank.VicePresident, someCards)
-        assertThat(cardExchange.numCardsToChoose).isEqualTo(1)
+        assertThat(cardExchange!!.numCardsToChoose).isEqualTo(1)
     }
 
     @Test
     fun `Vice-Asshole must choose 1 card`() {
         val cardExchange = CardExchangeComputer.getCardExchange(Rank.ViceAsshole, someCards)
-        assertThat(cardExchange.numCardsToChoose).isEqualTo(1)
+        assertThat(cardExchange!!.numCardsToChoose).isEqualTo(1)
     }
 
     @Test
     fun `Asshole must choose 2 cards`() {
         val cardExchange = CardExchangeComputer.getCardExchange(Rank.Asshole, someCards)
-        assertThat(cardExchange.numCardsToChoose).isEqualTo(2)
+        assertThat(cardExchange!!.numCardsToChoose).isEqualTo(2)
     }
 
     @Test
     fun `Neutral players don't perform any card exchange`() {
-        assertThrows(IllegalArgumentException::class.java) { CardExchangeComputer.getCardExchange(Rank.Neutral, someCards) }
+        val cardExchange = CardExchangeComputer.getCardExchange(Rank.Neutral, someCards)
+        assertThat(cardExchange).isNull()
     }
+
 
     @Test
     fun `President can choose any of its cards`() {
@@ -47,7 +49,7 @@ internal class CardExchangeComputerTest {
 
         val cardExchange = CardExchangeComputer.getCardExchange(Rank.President, cards)
 
-        assertThat(cardExchange.allowedCardValues).containsExactlyInAnyOrder(CardName.Two, CardName.Two, CardName.Three, CardName.Ten, CardName.Ace, CardName.Five)
+        assertThat(cardExchange!!.allowedCardValues).containsExactlyInAnyOrder(CardName.Two, CardName.Two, CardName.Three, CardName.Ten, CardName.Ace, CardName.Five)
     }
 
     @Test
@@ -56,7 +58,7 @@ internal class CardExchangeComputerTest {
 
         val cardExchange = CardExchangeComputer.getCardExchange(Rank.VicePresident, cards)
 
-        assertThat(cardExchange.allowedCardValues).containsExactlyInAnyOrder(CardName.Two, CardName.Two, CardName.Three, CardName.Ten, CardName.Ace, CardName.Five)
+        assertThat(cardExchange!!.allowedCardValues).containsExactlyInAnyOrder(CardName.Two, CardName.Two, CardName.Three, CardName.Ten, CardName.Ace, CardName.Five)
     }
 
     @Test
@@ -65,7 +67,7 @@ internal class CardExchangeComputerTest {
 
         val cardExchange = CardExchangeComputer.getCardExchange(Rank.Asshole, cards)
 
-        assertThat(cardExchange.allowedCardValues).containsExactlyInAnyOrder(CardName.Ace, CardName.Ace)
+        assertThat(cardExchange!!.allowedCardValues).containsExactlyInAnyOrder(CardName.Ace, CardName.Ace)
     }
 
     @Test
@@ -74,7 +76,7 @@ internal class CardExchangeComputerTest {
 
         val cardExchange = CardExchangeComputer.getCardExchange(Rank.Asshole, cards)
 
-        assertThat(cardExchange.allowedCardValues).containsExactlyInAnyOrder(CardName.Ten, CardName.Ace)
+        assertThat(cardExchange!!.allowedCardValues).containsExactlyInAnyOrder(CardName.Ten, CardName.Ace)
     }
 
     @Test
@@ -83,16 +85,16 @@ internal class CardExchangeComputerTest {
 
         val cardExchange = CardExchangeComputer.getCardExchange(Rank.Asshole, cards)
 
-        assertThat(cardExchange.allowedCardValues).containsExactlyInAnyOrder(INITIAL_JOKER, INITIAL_JOKER)
+        assertThat(cardExchange!!.allowedCardValues).containsExactlyInAnyOrder(INITIAL_JOKER, INITIAL_JOKER)
     }
 
     @Test
     fun `Asshole must choose the jokers when it has some (the joker has the highest value) - one joker`() {
-        val cards = listOf(Card.Clubs2, Card.Spades2, Card.Clubs3, Card.Diamonds10, Card.SpadesAce, Card.Hearts5)
+        val cards = listOf(Card.Clubs2, Card.Clubs3, Card.Diamonds10, Card.SpadesAce, Card.Hearts5)
 
         val cardExchange = CardExchangeComputer.getCardExchange(Rank.Asshole, cards)
 
-        assertThat(cardExchange.allowedCardValues).containsExactlyInAnyOrder(INITIAL_JOKER, CardName.Ace)
+        assertThat(cardExchange!!.allowedCardValues).containsExactlyInAnyOrder(INITIAL_JOKER, CardName.Ace)
     }
 
     @Test
@@ -101,7 +103,7 @@ internal class CardExchangeComputerTest {
 
         val cardExchange = CardExchangeComputer.getCardExchange(Rank.ViceAsshole, cards)
 
-        assertThat(cardExchange.allowedCardValues).containsExactlyInAnyOrder(CardName.Ace, CardName.Ace)
+        assertThat(cardExchange!!.allowedCardValues).containsExactlyInAnyOrder(CardName.Ace)
     }
 
     @Test
@@ -110,6 +112,6 @@ internal class CardExchangeComputerTest {
 
         val cardExchange = CardExchangeComputer.getCardExchange(Rank.ViceAsshole, cards)
 
-        assertThat(cardExchange.allowedCardValues).containsExactlyInAnyOrder(INITIAL_JOKER, CardName.Ace)
+        assertThat(cardExchange!!.allowedCardValues).containsExactlyInAnyOrder(INITIAL_JOKER)
     }
 }

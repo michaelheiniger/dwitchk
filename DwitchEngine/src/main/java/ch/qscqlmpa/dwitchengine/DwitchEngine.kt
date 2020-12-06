@@ -74,10 +74,12 @@ class DwitchEngine(private val currentGameState: GameState) {
                 .also(this::logUpdatedGameState)
     }
 
-    fun getCardsExchanges(): List<CardExchange> {
+    fun getCardsExchanges(): List<Pair<PlayerInGameId, CardExchange>> {
         return currentGameState.players.values
-            .filter { p -> p.rank != Rank.Neutral }
-            .map { p -> CardExchangeComputer.getCardExchange(p.rank, p.cardsInHand) }
+            .mapNotNull { p ->
+                val cardExchange = CardExchangeComputer.getCardExchange(p.rank, p.cardsInHand)
+                if (cardExchange != null) Pair(p.inGameId, cardExchange) else null
+            }
     }
 
     private fun logUpdatedGameState(gameState: GameState) {

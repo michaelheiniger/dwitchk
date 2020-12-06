@@ -7,6 +7,7 @@ import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboard
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.GameCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.GameUpdatedUsecase
+import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.StartCardExchangeUsecase
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import com.jakewharton.rxrelay3.BehaviorRelay
 import io.reactivex.rxjava3.core.Completable
@@ -19,6 +20,7 @@ internal class PlayerDashboardFacadeImpl @Inject constructor(
     private val gameCommunicator: GameCommunicator,
     private val gameRepository: GameRepository,
     private val gameUpdatedUsecase: GameUpdatedUsecase,
+    private val startCardExchangeUsecase: StartCardExchangeUsecase,
     private val cardDealerFactory: CardDealerFactory
 ) : PlayerDashboardFacade {
 
@@ -30,18 +32,22 @@ internal class PlayerDashboardFacadeImpl @Inject constructor(
 
     override fun playCard(cardPlayed: Card): Completable {
         return handleGameStateUpdated { engine -> engine.playCard(cardPlayed) }
+            .ignoreElement()
     }
 
     override fun pickCard(): Completable {
         return handleGameStateUpdated { engine -> engine.pickCard() }
+            .ignoreElement()
     }
 
     override fun passTurn(): Completable {
         return handleGameStateUpdated { engine -> engine.passTurn() }
+            .ignoreElement()
     }
 
     override fun startNewRound(): Completable {
         return handleGameStateUpdated { engine -> engine.startNewRound(cardDealerFactory) }
+            .flatMapCompletable(startCardExchangeUsecase::startCardExchange)
     }
 
     override fun observeDashboard(): Observable<PlayerDashboard> {
@@ -53,7 +59,7 @@ internal class PlayerDashboardFacadeImpl @Inject constructor(
         )
     }
 
-    private fun handleGameStateUpdated(updateGameState: (engine: DwitchEngine) -> GameState): Completable {
+    private fun handleGameStateUpdated(updateGameState: (engine: DwitchEngine) -> GameState): Single<GameState> {
         return Single.fromCallable {
             val gameState = gameRepository.getGameState()
             val updatedGameState = updateGameState(DwitchEngine(gameState))
@@ -61,7 +67,10 @@ internal class PlayerDashboardFacadeImpl @Inject constructor(
             return@fromCallable updatedGameState
         }
             .doOnError { error -> Timber.e(error, "Error while updating the game state:") }
-            .flatMapCompletable(gameUpdatedUsecase::handleUpdatedGameState)
+            .flatMap { updatedGameState ->
+                gameUpdatedUsecase.handleUpdatedGameState(updatedGameState)
+                    .andThen(Single.just(updatedGameState))
+            }
     }
 
     private fun updateDashboard(gameState: GameState) {

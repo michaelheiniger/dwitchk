@@ -30,4 +30,6 @@ internal abstract class AppRoomDatabase : RoomDatabase() {
     abstract fun playerDao(): PlayerDao
 
     abstract fun gameDao(): GameDao
+
+    abstract fun dwitchEventDao(): DwitchEventDao
 }

@@ -12,6 +12,7 @@ internal class ConnectionStoreImpl : ConnectionStore {
     private val addressMap: MutableMap<ConnectionId, Address> = HashMap()
     private val addressReverseMap: MutableMap<Address, ConnectionId> = HashMap()
     private val playerInGameMap: MutableMap<ConnectionId, PlayerInGameId> = HashMap()
+    private val playerInGameReverseMap: MutableMap<PlayerInGameId, ConnectionId> = HashMap()
 
     override fun addConnectionId(address: Address): ConnectionId {
         val connectionId = ConnectionId(nextConnectionId.getAndIncrement())
@@ -23,15 +24,21 @@ internal class ConnectionStoreImpl : ConnectionStore {
     override fun removeConnectionId(connectionId: ConnectionId) {
         val address = addressMap.remove(connectionId)
         addressReverseMap.remove(address)
-        playerInGameMap.remove(connectionId)
+        val playerInGameId = playerInGameMap.remove(connectionId)
+        playerInGameReverseMap.remove(playerInGameId)
     }
 
     override fun mapPlayerIdToConnectionId(connectionId: ConnectionId, playerInGameId: PlayerInGameId) {
         playerInGameMap[connectionId] = playerInGameId
+        playerInGameReverseMap[playerInGameId] = connectionId
     }
 
     override fun getConnectionIdForAddress(address: Address): ConnectionId? {
         return addressReverseMap[address]
+    }
+
+    override fun getConnectionIdForIngameId(inGameId: PlayerInGameId): ConnectionId? {
+        return playerInGameReverseMap[inGameId]
     }
 
     override fun getAddress(id: ConnectionId): Address? {
