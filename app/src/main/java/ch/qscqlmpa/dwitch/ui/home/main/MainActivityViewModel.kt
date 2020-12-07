@@ -1,11 +1,13 @@
 package ch.qscqlmpa.dwitch.ui.home.main
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import ch.qscqlmpa.dwitch.gamediscovery.AdvertisedGameRepository
-import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
+import androidx.lifecycle.LiveDataReactiveStreams
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitch.utils.DisposableManager
+import ch.qscqlmpa.dwitchcommonutil.DisposableManager
+import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
+import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGameRepository
+import io.reactivex.rxjava3.core.BackpressureStrategy
+import timber.log.Timber
 import javax.inject.Inject
 
 class MainActivityViewModel @Inject
@@ -15,30 +17,16 @@ constructor(
     schedulerFactory: SchedulerFactory
 ) : BaseViewModel(disposableManager, schedulerFactory) {
 
-    private val advertisedGames = MutableLiveData<AdvertisedGameResponse>()
-
-    private var observingGames = false
-
     fun observeAdvertisedGames(): LiveData<AdvertisedGameResponse> {
-        if (!observingGames) {
-            startObservingAdvertisedGames()
-            observingGames = true
-        }
-        return advertisedGames
-    }
-
-    private fun startObservingAdvertisedGames() {
-        disposableManager.add(gameRepository.listenForAdvertisedGames()
-            .observeOn(schedulerFactory.ui())
-            .subscribe(
-                { games -> advertisedGames.setValue(AdvertisedGameResponse.success(games)) },
-                { error -> advertisedGames.setValue(AdvertisedGameResponse.error(error)) }
-            )
+        return LiveDataReactiveStreams.fromPublisher(
+            gameRepository.listenForAdvertisedGames()
+                .subscribeOn(schedulerFactory.io())
+                .observeOn(schedulerFactory.ui())
+                .map { games -> AdvertisedGameResponse.success(games) }
+                .onErrorReturn { error -> AdvertisedGameResponse.error(error) }
+                .doOnError { error -> Timber.e(error, "Error while observing connected players.") }
+                .doFinally { gameRepository.stopListening() }
+                .toFlowable(BackpressureStrategy.LATEST)
         )
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        gameRepository.stopListening()
     }
 }

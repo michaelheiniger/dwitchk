@@ -13,7 +13,7 @@ abstract class OngoingGameBaseFragment : BaseFragment() {
     lateinit var viewModelFactory: ViewModelFactory
 
     protected fun showDialogFragment(fragment: DialogFragment) {
-        val supportFragmentManager = activity!!.supportFragmentManager
+        val supportFragmentManager = requireActivity().supportFragmentManager
         val ft = supportFragmentManager.beginTransaction()
         val prev = supportFragmentManager.findFragmentByTag("dialog")
         if (prev != null) ft.remove(prev)

@@ -4,32 +4,24 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.WaitingRoomGuestFacade
-import ch.qscqlmpa.dwitch.ongoinggame.events.GuestCommunicationState
-import ch.qscqlmpa.dwitch.ongoinggame.gameevent.GuestGameEvent
-import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
+import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomGuestFacade
+import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
+import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
+import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
-import ch.qscqlmpa.dwitch.ui.model.UiControlModel
-import ch.qscqlmpa.dwitch.ui.model.UiInfoModel
-import ch.qscqlmpa.dwitch.ui.model.Visibility
-import ch.qscqlmpa.dwitch.utils.DisposableManager
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
+import io.reactivex.rxjava3.core.BackpressureStrategy
+import io.reactivex.rxjava3.core.Flowable
 import timber.log.Timber
 import javax.inject.Inject
 
-class WaitingRoomGuestViewModel @Inject
-constructor(
+class WaitingRoomGuestViewModel @Inject constructor(
     private val facade: WaitingRoomGuestFacade,
-    disposableManager: DisposableManager,
+    disposableManager: ch.qscqlmpa.dwitchcommonutil.DisposableManager,
     schedulerFactory: SchedulerFactory
 ) : BaseViewModel(disposableManager, schedulerFactory) {
 
     private val commands = MutableLiveData<WaitingRoomGuestCommand>()
-
-    private val reconnectActionCtrl = MutableLiveData<UiControlModel>()
-    private val reconnectLoadingCtrl = MutableLiveData<UiControlModel>()
 
     fun localPlayerReadyStateInfo(): LiveData<UiCheckboxModel> {
         return LiveDataReactiveStreams.fromPublisher(
@@ -44,43 +36,6 @@ constructor(
                     }
                 })
         )
-    }
-
-    fun reconnectAction(): LiveData<UiControlModel> {
-        val liveDataMerger = MediatorLiveData<UiControlModel>()
-        liveDataMerger.addSource(
-            LiveDataReactiveStreams.fromPublisher(
-                currentCommunicationState()
-                    .map { state ->
-                        when (state) {
-                            GuestCommunicationState.Connected -> UiControlModel(visibility = Visibility.Gone)
-                            GuestCommunicationState.Disconnected,
-                            GuestCommunicationState.Error -> UiControlModel(visibility = Visibility.Visible)
-                        }
-                    }
-            )
-        ) { value -> liveDataMerger.value = value }
-        liveDataMerger.addSource(reconnectActionCtrl) { value -> liveDataMerger.value = value }
-        return liveDataMerger
-    }
-
-    fun reconnectLoading(): LiveData<UiControlModel> {
-        val liveDataMerger = MediatorLiveData<UiControlModel>()
-        liveDataMerger.addSource(
-            LiveDataReactiveStreams.fromPublisher(currentCommunicationState().map { UiControlModel(visibility = Visibility.Gone) })
-        ) { value -> liveDataMerger.value = value }
-        liveDataMerger.addSource(reconnectLoadingCtrl) { value -> liveDataMerger.value = value }
-        return liveDataMerger
-    }
-
-    fun connectionStateInfo(): LiveData<UiInfoModel> {
-        return LiveDataReactiveStreams.fromPublisher(currentCommunicationState().map { state -> UiInfoModel(state.resourceId) })
-    }
-
-    fun reconnect() {
-        reconnectActionCtrl.value = UiControlModel(enabled = false)
-        reconnectLoadingCtrl.value = UiControlModel(visibility = Visibility.Visible)
-        facade.connect()
     }
 
     fun updateReadyState(ready: Boolean) {

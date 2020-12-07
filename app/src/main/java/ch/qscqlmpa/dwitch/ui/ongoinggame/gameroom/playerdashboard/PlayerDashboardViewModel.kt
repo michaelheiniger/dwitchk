@@ -2,14 +2,15 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
-import ch.qscqlmpa.dwitch.ongoinggame.game.PlayerDashboardFacade
-import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.utils.TextProvider
-import ch.qscqlmpa.dwitch.utils.DisposableManager
+import ch.qscqlmpa.dwitchcommonutil.DisposableManager
+import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Completable
+import ch.qscqlmpa.dwitchgame.ongoinggame.game.PlayerDashboardFacade
+import io.reactivex.rxjava3.core.BackpressureStrategy
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -22,12 +23,14 @@ class PlayerDashboardViewModel @Inject constructor(
 
     fun playerDashboard(): LiveData<PlayerDashboardUi> {
         return LiveDataReactiveStreams.fromPublisher(
-            facade.observeDashboard()
-                .map { dashboard -> PlayerDashboardUi(dashboard, textProvider) }
-                .subscribeOn(schedulerFactory.io())
-                .observeOn(schedulerFactory.ui())
-                .doOnError { error -> Timber.e(error, "Error while observing player dashboard.") }
-                .toFlowable(BackpressureStrategy.LATEST)
+            Observable.combineLatest(
+                facade.observeDashboard(),
+                facade.observeConnectionState(),
+                { dashboard, connectionState -> PlayerDashboardUi(dashboard, connectionState, textProvider) }
+            ).subscribeOn(schedulerFactory.io())
+            .observeOn(schedulerFactory.ui())
+            .doOnError { error -> Timber.e(error, "Error while observing player dashboard.") }
+            .toFlowable(BackpressureStrategy.LATEST),
         )
     }
 

@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame
 
+import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest.ConnectionGuestFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host.GameRoomHostFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard.PlayerDashboardFragment
@@ -13,21 +14,24 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class OngoingGameScreenBindingModule {
 
-    @ContributesAndroidInjector(modules = [])
+    @ContributesAndroidInjector
     abstract fun contributeWaitingRoomActivity(): WaitingRoomActivity
 
-    @ContributesAndroidInjector(modules = [])
+    @ContributesAndroidInjector
     abstract fun contributeWaitingRoomHostFragment(): WaitingRoomHostFragment
 
-    @ContributesAndroidInjector(modules = [])
+    @ContributesAndroidInjector
     abstract fun contributeWaitingRoomGuestFragment(): WaitingRoomGuestFragment
 
-    @ContributesAndroidInjector(modules = [])
+    @ContributesAndroidInjector
     abstract fun contributeGameRoomGuestFragment(): GameRoomGuestFragment
 
-    @ContributesAndroidInjector(modules = [])
+    @ContributesAndroidInjector
     abstract fun contributeGameRoomHostFragment(): GameRoomHostFragment
 
-    @ContributesAndroidInjector(modules = [])
+    @ContributesAndroidInjector
     abstract fun contributePlayerDashboardFragment(): PlayerDashboardFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeConnectionGuestFragment(): ConnectionGuestFragment
 }

@@ -30,15 +30,15 @@ class WaitingRoomHostFragment : OngoingGameBaseFragment() {
     }
 
     override fun inject() {
-        (activity!!.application as App).getGameComponent()!!.inject(this)
+        (requireActivity().application as App).getGameUiComponent()!!.inject(this)
     }
 
     private fun setupConnectionStateControls() {
-        viewModel.connectionStateInfo().observe(this, { uiInfo -> communicationStateTv.text = getText(uiInfo.textResource.id) })
+        viewModel.connectionStateInfo().observe(viewLifecycleOwner, { uiInfo -> communicationStateTv.text = getText(uiInfo.textResource.id) })
     }
 
     private fun setupCanGameBeLaunchedControls() {
-        viewModel.canGameBeLaunched().updateView(launchGameBtn, this)
+        viewModel.canGameBeLaunched().updateView(launchGameBtn, viewLifecycleOwner)
     }
 
     private fun setupLaunchGameButton(parentView: View) {
@@ -52,10 +52,10 @@ class WaitingRoomHostFragment : OngoingGameBaseFragment() {
     }
 
     private fun setupCommands() {
-        viewModel.commands().observe(this, { command ->
+        viewModel.commands().observe(viewLifecycleOwner, { command ->
             when (command) {
-                WaitingRoomHostCommand.NavigateToHomeScreen -> MainActivity.start(activity!!)
-                WaitingRoomHostCommand.NavigateToGameRoomScreen -> GameRoomActivity.startForHost(activity!!)
+                WaitingRoomHostCommand.NavigateToHomeScreen -> MainActivity.start(requireActivity())
+                WaitingRoomHostCommand.NavigateToGameRoomScreen -> GameRoomActivity.startForHost(requireActivity())
             }
         })
     }

@@ -3,10 +3,11 @@ package ch.qscqlmpa.dwitch.ongoinggame.services
 import android.content.Context
 import android.content.Intent
 import ch.qscqlmpa.dwitch.app.App
-import ch.qscqlmpa.dwitch.gameadvertising.GameInfo
-import ch.qscqlmpa.dwitch.model.RoomType
-import ch.qscqlmpa.dwitch.model.player.PlayerRole
-import ch.qscqlmpa.dwitch.utils.DisposableManager
+import ch.qscqlmpa.dwitchcommonutil.DisposableManager
+import ch.qscqlmpa.dwitchgame.appevent.GameCreatedInfo
+import ch.qscqlmpa.dwitchmodel.game.RoomType
+import ch.qscqlmpa.dwitchmodel.gamediscovery.GameAdvertisingInfo
+import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import timber.log.Timber
 
 
@@ -17,22 +18,20 @@ class HostInGameService : BaseInGameService() {
     override val playerRole = PlayerRole.HOST
 
     override fun actionStartService(intent: Intent) {
-        val gameLocalId = getGameLocalId(intent)
-        val gameInfo = getGameInfo(intent)
-        val localPlayerLocalId = getLocalPlayerLocalId(intent)
+        val gameCreatedInfo = intent.getParcelableExtra<GameCreatedInfo>(EXTRA_GAME_CREATED_INFO)
 
         Timber.i("Start service")
         showNotification(RoomType.WAITING_ROOM)
         (application as App).startOngoingGame(
             playerRole,
             RoomType.WAITING_ROOM,
-            gameLocalId,
-            localPlayerLocalId,
-            gameInfo.gamePort,
+            gameCreatedInfo.gameLocalId,
+            gameCreatedInfo.localPlayerLocalId,
+            gameCreatedInfo.gamePort,
             "0.0.0.0"
         )
-        getOngoingGameComponent().hostCommunicator.listenForConnections()
-        advertiseGame(gameInfo)
+        getOngoingGameComponent().hostFacade.listenForConnections()
+        advertiseGame(GameAdvertisingInfo(gameCreatedInfo.gameCommonId, gameCreatedInfo.gameName, gameCreatedInfo.gamePort))
     }
 
     override fun actionChangeRoomToGameRoom() {
@@ -42,31 +41,26 @@ class HostInGameService : BaseInGameService() {
     }
 
     override fun cleanUp() {
-        getOngoingGameComponent().hostCommunicator.closeAllConnections()
+        getOngoingGameComponent().hostFacade.closeAllConnections()
         (application as App).stopOngoingGame()
         gameAdvertisingDisposable.dispose()
     }
 
-    private fun advertiseGame(gameInfo: GameInfo) {
+    private fun advertiseGame(gameAdvertisingInfo: GameAdvertisingInfo) {
         gameAdvertisingDisposable.add(
-            getOngoingGameComponent().gameAdvertising.startAdvertising(gameInfo).subscribe()
+            getOngoingGameComponent().hostFacade.advertiseGame(gameAdvertisingInfo).subscribe()
         )
     }
 
     companion object {
 
-        fun startService(
-            context: Context,
-            gameLocalId: Long,
-            gameInfo: GameInfo,
-            localPlayerLocalId: Long
-        ) {
+        private const val EXTRA_GAME_CREATED_INFO = "GameCreatedInfo"
+
+        fun startService(context: Context, gameCreatedInfo: GameCreatedInfo) {
             Timber.i("Starting HostService...()")
             val intent = Intent(context, HostInGameService::class.java)
             intent.action = ACTION_START_SERVICE
-            intent.putExtra(EXTRA_GAME_LOCAL_ID, gameLocalId)
-            intent.putExtra(EXTRA_GAME_INFO, gameInfo)
-            intent.putExtra(EXTRA_LOCAL_PLAYER_LOCAL_ID, localPlayerLocalId)
+            intent.putExtra(EXTRA_GAME_CREATED_INFO, gameCreatedInfo)
             context.startService(intent)
         }
 

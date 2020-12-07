@@ -1,9 +1,9 @@
 package ch.qscqlmpa.dwitch.utils
 
-import ch.qscqlmpa.dwitch.model.player.Player
-import ch.qscqlmpa.dwitch.model.player.PlayerConnectionState
-import ch.qscqlmpa.dwitch.model.player.PlayerRole
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchmodel.player.Player
+import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
+import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import org.assertj.core.api.Assertions.assertThat
 
 class PlayerRobot(private val playerTest: Player) {

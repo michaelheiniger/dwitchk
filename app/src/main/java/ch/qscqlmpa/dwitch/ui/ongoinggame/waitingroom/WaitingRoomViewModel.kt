@@ -2,12 +2,12 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
-import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.PlayerWr
-import ch.qscqlmpa.dwitch.ongoinggame.waitingroom.WaitingRoomFacade
-import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitch.utils.DisposableManager
-import io.reactivex.BackpressureStrategy
+import ch.qscqlmpa.dwitchcommonutil.DisposableManager
+import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
+import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWr
+import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomFacade
+import io.reactivex.rxjava3.core.BackpressureStrategy
 import timber.log.Timber
 import javax.inject.Inject
 

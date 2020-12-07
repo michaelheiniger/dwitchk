@@ -4,11 +4,12 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import ch.qscqlmpa.dwitch.PlayerGuestTest
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.gamediscovery.network.Packet
-import ch.qscqlmpa.dwitch.model.game.GameCommonId
-import ch.qscqlmpa.dwitch.ongoinggame.messages.Message
+import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.clickOnButton
 import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil.withRecyclerView
+import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
+import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import org.assertj.core.api.Assertions.assertThat
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -33,7 +34,7 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
         * Note: It also allows to wait for the waiting room to be displayed: otherwise, the messages sent by clients could be
         * missed because the server is not ready yet.
         */
-        assertControlTextContent(R.id.playerListTv, R.string.wra_player_list)
+        UiUtil.assertControlTextContent(R.id.playerListTv, R.string.wra_player_list)
 
         hookOngoingGameDependenciesForGuest()
     }
@@ -44,8 +45,8 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
                 .take(1)
                 .timeout(10, TimeUnit.SECONDS)
                 .blockingFirst()
-        val message = serializerFactory.unserializeMessage(messageSerialized)
-        Timber.d("Message sent to host: %s", message)
+        val message = commSerializerFactory.unserializeMessage(messageSerialized)
+        Timber.d("Message sent to host: $message")
         return message
     }
 

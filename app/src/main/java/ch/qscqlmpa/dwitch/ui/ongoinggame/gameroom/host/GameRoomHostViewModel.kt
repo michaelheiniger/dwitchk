@@ -2,17 +2,16 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import ch.qscqlmpa.dwitch.ongoinggame.gameroom.GameRoomHostFacade
-import ch.qscqlmpa.dwitch.scheduler.SchedulerFactory
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameRoomHostFacade
+import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitch.utils.DisposableManager
 import timber.log.Timber
 import javax.inject.Inject
 
 internal class GameRoomHostViewModel @Inject
 constructor(
     private val facade: GameRoomHostFacade,
-    disposableManager: DisposableManager,
+    disposableManager: ch.qscqlmpa.dwitchcommonutil.DisposableManager,
     schedulerFactory: SchedulerFactory
 ) : BaseViewModel(disposableManager, schedulerFactory) {
 
