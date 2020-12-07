@@ -17,6 +17,6 @@ class GameUpdatedUsecase @Inject constructor(
         return Single.fromCallable {
             store.updateGameState(gameState)
             MessageFactory.createGameStateUpdatedMessage(gameState)
-        }.flatMapCompletable(communicator::sendMessage)
+        }.flatMapCompletable(communicator::sendMessageToHost)
     }
 }

@@ -59,7 +59,7 @@ internal class WebsocketCommClient @Inject constructor(
         return receivedMessages
     }
 
-    override fun sendMessage(message: Message): Completable {
+    override fun sendMessageToServer(message: Message): Completable {
         return Completable.fromAction {
             val serializedMessage = serializerFactory.serialize(message)
             websocketClient.send(serializedMessage)

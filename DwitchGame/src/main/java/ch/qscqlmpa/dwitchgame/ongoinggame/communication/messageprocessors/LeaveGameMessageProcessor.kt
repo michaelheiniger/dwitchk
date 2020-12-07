@@ -1,7 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
@@ -14,7 +13,6 @@ import javax.inject.Inject
 
 internal class LeaveGameMessageProcessor @Inject constructor(
     private val store: InGameStore,
-    private val connectionStore: ConnectionStore,
     private val hostMessageFactory: HostMessageFactory,
     private val communicatorLazy: Lazy<HostCommunicator>
 ) : MessageProcessor {
@@ -23,7 +21,7 @@ internal class LeaveGameMessageProcessor @Inject constructor(
 
         val msg = message as Message.LeaveGameMessage
 
-        connectionStore.removeConnectionId(senderConnectionID)
+        //TODO: REmove connectionId - playerInGameId mapping from connectionstore ?
 
         val communicator = communicatorLazy.get()
 

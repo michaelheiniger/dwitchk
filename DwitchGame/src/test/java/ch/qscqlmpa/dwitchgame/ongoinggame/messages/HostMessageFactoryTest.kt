@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.messages
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchcommunication.model.RecipientType
+import ch.qscqlmpa.dwitchcommunication.model.Recipient
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
@@ -36,7 +36,7 @@ class HostMessageFactoryTest : BaseUnitTest() {
         val msgWrapper = hostMessageFactory.createWaitingRoomStateUpdateMessage().blockingGet()
         val message = (msgWrapper.message as Message.WaitingRoomStateUpdateMessage)
 
-        assertThat(msgWrapper.recipient).isEqualTo(RecipientType.All)
+        assertThat(msgWrapper.recipient).isEqualTo(Recipient.AllGuests)
         assertThat(message.playerList).isEqualTo(players)
 
         verify { mockInGameStore.getPlayersInWaitingRoom() }
@@ -57,7 +57,7 @@ class HostMessageFactoryTest : BaseUnitTest() {
         val msgWrapper = hostMessageFactory.createJoinAckMessage(localConnectionId, playerInGameId).blockingGet()
         val message = (msgWrapper.message as Message.JoinGameAckMessage)
 
-        assertThat(msgWrapper.recipient).isEqualTo(RecipientType.SingleGuest(localConnectionId))
+        assertThat(msgWrapper.recipient).isEqualTo(Recipient.SingleGuest(localConnectionId))
         assertThat(message.gameCommonId).isEqualTo(gameCommonId)
         assertThat(message.playerInGameId).isEqualTo(playerInGameId)
 
@@ -70,7 +70,7 @@ class HostMessageFactoryTest : BaseUnitTest() {
         val msgWrapper = HostMessageFactory.createCancelGameMessage()
         val message = (msgWrapper.message as Message.CancelGameMessage)
 
-        assertThat(msgWrapper.recipient).isEqualTo(RecipientType.All)
+        assertThat(msgWrapper.recipient).isEqualTo(Recipient.AllGuests)
         assertThat(message).isEqualTo(Message.CancelGameMessage)
     }
 }

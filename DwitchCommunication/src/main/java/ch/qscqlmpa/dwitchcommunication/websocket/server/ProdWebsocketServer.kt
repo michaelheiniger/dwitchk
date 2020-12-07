@@ -1,15 +1,19 @@
 package ch.qscqlmpa.dwitchcommunication.websocket.server
 
+import ch.qscqlmpa.dwitchcommunication.Address
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
 import org.java_websocket.WebSocket
 import org.java_websocket.handshake.ClientHandshake
 import org.java_websocket.server.WebSocketServer
+import timber.log.Timber
 import java.net.InetSocketAddress
 
 
-internal class ProdWebsocketServer constructor(address: InetSocketAddress) : WebSocketServer(address), WebsocketServer {
-    constructor(hostAddress: String, hostPort: Int) : this(InetSocketAddress(hostAddress, hostPort))
+internal class ProdWebsocketServer constructor(
+    private val listeningAddress: String,
+    private val listeningPort: Int
+) : WebSocketServer(InetSocketAddress(listeningAddress, listeningPort)), WebsocketServer {
 
     private val onStartRelay = PublishRelay.create<OnStart>()
     private val onOpenRelay = PublishRelay.create<OnOpen>()
@@ -31,7 +35,7 @@ internal class ProdWebsocketServer constructor(address: InetSocketAddress) : Web
         if (connectionState == WebSocket.READYSTATE.OPEN) {
             websocket.send(message)
         } else {
-//            Timber.e("Cannot send message when connection state is: $connectionState
+            Timber.e("Cannot send message when connection state is: $connectionState")
         }
     }
 
@@ -40,7 +44,7 @@ internal class ProdWebsocketServer constructor(address: InetSocketAddress) : Web
     }
 
     override fun onStart() {
-        onStartRelay.accept(OnStart)
+        onStartRelay.accept(OnStart(Address(listeningAddress, listeningPort)))
     }
 
     override fun onOpen(conn: WebSocket?, handshake: ClientHandshake?) {

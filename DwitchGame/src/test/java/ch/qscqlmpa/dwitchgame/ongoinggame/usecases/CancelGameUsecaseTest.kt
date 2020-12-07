@@ -8,7 +8,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEventRepository
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchcommunication.model.RecipientType
+import ch.qscqlmpa.dwitchcommunication.model.Recipient
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -51,7 +51,7 @@ class CancelGameUsecaseTest : BaseUnitTest() {
     fun `"Cancel game" message is sent`() {
         launchTest()
 
-        val cancelGameMessageWrapper = EnvelopeToSend(RecipientType.All, Message.CancelGameMessage)
+        val cancelGameMessageWrapper = EnvelopeToSend(Recipient.AllGuests, Message.CancelGameMessage)
 
         verify { mockCommunicator.sendMessage(cancelGameMessageWrapper) }
     }

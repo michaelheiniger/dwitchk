@@ -1,6 +1,9 @@
-package ch.qscqlmpa.dwitchcommunication.websocket.client
+package ch.qscqlmpa.dwitchcommunication.websocket.client.test
 
-class TestWebsocketClientFactory constructor(
+import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClient
+import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClientFactory
+
+internal class TestWebsocketClientFactory constructor(
     private val hostIpAddress: String,
     private val hostPort: Int
 ) : WebsocketClientFactory {

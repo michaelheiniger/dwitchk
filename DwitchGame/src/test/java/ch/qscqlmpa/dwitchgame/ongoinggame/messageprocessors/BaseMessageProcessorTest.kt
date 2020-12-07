@@ -20,11 +20,14 @@ abstract class BaseMessageProcessorTest : BaseUnitTest() {
 
     protected fun setupCommunicatorSendMessageCompleteMock() {
         every { mockHostCommunicator.sendMessage(any()) } returns Completable.complete()
-        every { mockGuestCommunicator.sendMessage(any()) } returns Completable.complete()
+    }
+
+    protected fun setupCommunicatorSendMessageToHostCompleteMock() {
+        every { mockGuestCommunicator.sendMessageToHost(any()) } returns Completable.complete()
     }
 
     protected fun setupCommunicatorSendGameState() {
-        every { mockGameCommunicator.sendMessage(any()) } returns Completable.complete()
+        every { mockGameCommunicator.sendMessageToHost(any()) } returns Completable.complete()
     }
 
     protected fun setupWaitingRoomStateUpdateMessageMock(): EnvelopeToSend {

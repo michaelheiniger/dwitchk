@@ -1,15 +1,13 @@
-package ch.qscqlmpa.dwitchcommunication.websocket.server
+package ch.qscqlmpa.dwitchcommunication.websocket.server.test
 
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
+import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
-import ch.qscqlmpa.dwitchcommunication.websocket.PlayerHostTest
-import ch.qscqlmpa.dwitchcommunication.websocket.TestWebSocket
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.java_websocket.WebSocket
 
-class WebsocketServerTestStub(
+internal class WebsocketServerTestStub(
     private val server: TestWebsocketServer,
     private val serializerFactory: SerializerFactory
 ) : ServerTestStub {
@@ -24,8 +22,8 @@ class WebsocketServerTestStub(
             .subscribe()
     }
 
-    override fun guestSendsMessageToServer(sender: PlayerHostTest, envelopeToSend: EnvelopeToSend, enableThreadBreak: Boolean) {
-        val messageSerialized = serializerFactory.serialize(envelopeToSend.message)
+    override fun guestSendsMessageToServer(sender: PlayerHostTest, message: Message, enableThreadBreak: Boolean) {
+        val messageSerialized = serializerFactory.serialize(message)
         Completable.fromAction { server.onMessage(getSocketForGuest(sender), messageSerialized, enableThreadBreak) }
             .subscribeOn(Schedulers.io())
             .subscribe()

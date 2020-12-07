@@ -31,6 +31,9 @@ sealed class Message {
     data class LaunchGameMessage(val gameState: GameState) : Message()
 
     @Serializable
+    object GameOverMessage : Message()
+
+    @Serializable
     data class CardExchangeMessage(val playerInGameId: PlayerInGameId, val cardExchange: CardExchange): Message()
 
     /*****************************************************************************************************************
@@ -56,8 +59,5 @@ sealed class Message {
      *****************************************************************************************************************/
     @Serializable
     data class GameStateUpdatedMessage(val gameState: GameState) : Message()
-
-    @Serializable
-    object GameOverMessage : Message()
 }
 

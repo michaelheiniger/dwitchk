@@ -8,7 +8,7 @@ import ch.qscqlmpa.dwitchmodel.player.Player
 data class RejoinInfo(
     val gameCommonId: GameCommonId,
     val player: Player,
-    val connectionID: ConnectionId
+    val connectionId: ConnectionId
 ) {
     fun inGameId(): PlayerInGameId {
         return player.inGameId

@@ -74,7 +74,7 @@ internal class RejoinGameMessageProcessor @Inject constructor(
     }
 
     private fun updateConnectionStore(player: Player, connectionID: ConnectionId) {
-        connectionStore.mapPlayerIdToConnectionId(connectionID, player.inGameId)
+        connectionStore.pairConnectionWithPlayer(connectionID, player.inGameId)
     }
 
     private fun sendRejoinAck(rejoinInfo: RejoinInfo): Completable {

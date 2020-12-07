@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitchcommunication.websocket.client
+package ch.qscqlmpa.dwitchcommunication.websocket.client.test
 
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import io.reactivex.rxjava3.core.Observable

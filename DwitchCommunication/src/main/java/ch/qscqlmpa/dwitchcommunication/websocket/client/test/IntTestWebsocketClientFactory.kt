@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitchcommunication.websocket.client
+package ch.qscqlmpa.dwitchcommunication.websocket.client.test
 
 //class IntTestWebsocketClientFactory constructor(
 //    private val hostIpAddress: String,

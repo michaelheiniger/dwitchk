@@ -1,8 +1,6 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
-import ch.qscqlmpa.dwitchcommunication.websocket.NetworkHub
-import ch.qscqlmpa.dwitchcommunication.websocket.PlayerHostTest
-import ch.qscqlmpa.dwitchcommunication.websocket.client.IntTestWebsocketClient
+import ch.qscqlmpa.dwitchcommunication.websocket.server.test.PlayerHostTest
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
@@ -11,8 +9,7 @@ import org.assertj.core.api.Assertions
 
 class IntTestGuest(
     private val guest: PlayerHostTest,
-    advertisedGame: AdvertisedGame,
-    private val networkHub: NetworkHub
+    advertisedGame: AdvertisedGame
 ) : IntTestPlayer() {
 
     private lateinit var gameRoomGuestFacade: GameRoomGuestFacade
@@ -46,14 +43,14 @@ class IntTestGuest(
 //        gameRoomGuestFacade = ongoingGameComponent.gameRoomGuestFacade
     }
 
-    private fun getWebsocketClient(): IntTestWebsocketClient {
+//    private fun getWebsocketClient(): IntTestWebsocketClient {
 //        return ongoingGameComponent.websocketClientFactory.create() as IntTestWebsocketClient
-        TODO()
-    }
+//        TODO()
+//    }
 
     private fun hookUpGuestToNetworkHub() {
-        val websocketClient = getWebsocketClient()
-        networkHub.addGuest(guest, websocketClient)
+//        val websocketClient = getWebsocketClient()
+//        networkHub.addGuest(guest, websocketClient)
 //        websocketClient.setNetworkHub(networkHub, guest)
     }
 }
