@@ -87,8 +87,8 @@ class DwitchEngine(private val currentGameState: GameState) {
             .also(this::logUpdatedGameState)
 
         return CardExchangePerformer(
-            CardExchangeState(gameStateUpdated),
-            CardExchangeGameUpdater(gameStateUpdated)
+            CardExchangePerformerState(gameStateUpdated),
+            CardExchangePerformerGameUpdater(gameStateUpdated)
         ).performCardExchange()
             .also(this::logUpdatedGameState)
     }

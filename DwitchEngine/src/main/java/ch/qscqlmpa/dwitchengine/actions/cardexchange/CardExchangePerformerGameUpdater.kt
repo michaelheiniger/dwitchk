@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 
-internal class CardExchangeGameUpdater(currentGameState: GameState) : GameUpdaterBase(currentGameState) {
+internal class CardExchangePerformerGameUpdater(currentGameState: GameState) : GameUpdaterBase(currentGameState) {
 
     fun performCardExchange(
         player1: PlayerInGameId,

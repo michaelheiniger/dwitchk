@@ -7,7 +7,7 @@ import ch.qscqlmpa.dwitchengine.model.player.Player
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 
-internal class CardExchangeState(
+internal class CardExchangePerformerState(
     private val currentGameState: GameState
 ) : GameStateBase(currentGameState) {
 

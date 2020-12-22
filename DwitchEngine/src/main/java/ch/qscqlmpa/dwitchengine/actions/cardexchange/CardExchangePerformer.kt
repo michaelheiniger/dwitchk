@@ -4,8 +4,8 @@ import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 
 internal class CardExchangePerformer(
-    private val state: CardExchangeState,
-    private val gameUpdater: CardExchangeGameUpdater
+    private val state: CardExchangePerformerState,
+    private val gameUpdater: CardExchangePerformerGameUpdater
 ) {
 
     fun cardExchangeReadyToBePerformed(): Boolean {
