@@ -45,7 +45,7 @@ class DwitchEngine(private val currentGameState: GameState) {
         println("Player $currentPlayerId plays card $cardPlayed, current game state: $currentGameState")
         return PlayCard(
             PlayCardState(currentGameState, cardPlayed),
-            PlayCardGameUpdater(currentGameState, cardPlayed)
+            PlayCardGameUpdater(currentGameState)
         ).getUpdatedGameState()
             .also(this::logUpdatedGameState)
     }

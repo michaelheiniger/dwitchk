@@ -7,13 +7,11 @@ import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 
 
-//TODO: Fix inconsistencies like cardPlayed given as instance member and method parameter
 internal class PlayCardGameUpdater(
-    currentGameState: GameState,
-    private val cardPlayed: Card
+    currentGameState: GameState
 ) : GameUpdaterBase(currentGameState) {
 
-    fun clearTable() {
+    fun clearTable(cardPlayed: Card) {
         gameStateMutable.moveCardsFromTableToGraveyard()
         gameStateMutable.gameEvent = GameEvent.TableHasBeenCleared(cardPlayed)
     }
