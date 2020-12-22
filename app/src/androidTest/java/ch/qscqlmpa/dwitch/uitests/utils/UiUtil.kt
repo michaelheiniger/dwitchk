@@ -6,6 +6,7 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry
+import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil
 import org.hamcrest.Matchers.not
 
 object UiUtil {
@@ -22,6 +23,13 @@ object UiUtil {
 
     fun clickOnButton(resourceId: Int) {
         onView(withId(resourceId)).perform(ViewActions.click())
+    }
+
+    fun clickOnRecyclerViewElement(recyclerViewId: Int, elementId: Int, elementPosition: Int) {
+        onView(
+            ViewAssertionUtil.withRecyclerView(recyclerViewId)
+            .atPositionOnView(elementPosition, elementId))
+            .perform(ViewActions.click())
     }
 
     fun assertControlEnabled(resourceId: Int, enabled: Boolean) {

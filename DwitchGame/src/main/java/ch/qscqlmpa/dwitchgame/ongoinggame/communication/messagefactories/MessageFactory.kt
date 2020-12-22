@@ -1,7 +1,9 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories
 
 import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameState
+import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 
 object MessageFactory {
 
@@ -9,9 +11,7 @@ object MessageFactory {
         return Message.GameStateUpdatedMessage(gameState)
     }
 
-    fun createCardsForExchangeChoseMessage() {
-        //TODO: The host is also a player that might have to choose cards for the exchange.
-        //TODO: Should it send a message to itself ? only to itself ?
-        return EnvelopeToSend(RecipientType.SingleGuest)
+    fun createCardsForExchangeChosenMessage(playerId: PlayerInGameId, cards: Set<Card>): Message {
+        return Message.CardsForExchangeMessage(playerId, cards)
     }
 }

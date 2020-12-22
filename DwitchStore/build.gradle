@@ -64,6 +64,9 @@ def test = dependencyGroup {
 
     testImplementation 'android.arch.core:core-testing:1.1.1'
     testImplementation "androidx.room:room-testing:$roomVersion"
+
+    // Joda time
+    implementation "joda-time:joda-time:$jodaVersion"
 }
 
 

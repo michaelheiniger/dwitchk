@@ -15,10 +15,6 @@ internal abstract class GameStateBase(private val currentGameState: GameState) {
         return currentGameState.players.size
     }
 
-    fun gamePhaseIsRoundIsBeginning(): Boolean {
-        return currentGameState.phase == GamePhase.RoundIsBeginning
-    }
-
     fun currentPlayerId(): PlayerInGameId {
         return currentGameState.currentPlayerId
     }

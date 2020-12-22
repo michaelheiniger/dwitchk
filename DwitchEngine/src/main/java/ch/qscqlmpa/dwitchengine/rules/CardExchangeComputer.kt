@@ -12,15 +12,15 @@ internal object CardExchangeComputer {
      * Compute the CardExchange for the player with the given rank and cards in hand.
      * Card exchange always occurs at the beginning of a new round when the joker is always set to CardName.TWO.
      */
-    fun getCardExchange(rank: Rank, cardsInHand: List<Card>): CardExchange? {
+    fun getCardExchange(playerId: PlayerInGameId, rank: Rank, cardsInHand: List<Card>): CardExchange? {
         checkNumCardsInHand(rank, cardsInHand)
 
         return when (rank) {
-            Rank.President -> CardExchange(2, getAllValuesWithoutRestriction(cardsInHand))
-            Rank.VicePresident -> CardExchange(1, getAllValuesWithoutRestriction(cardsInHand))
+            Rank.President -> CardExchange(playerId, 2, getAllValuesWithoutRestriction(cardsInHand))
+            Rank.VicePresident -> CardExchange(playerId, 1, getAllValuesWithoutRestriction(cardsInHand))
             Rank.Neutral -> null
-            Rank.ViceAsshole -> CardExchange(1, getValueOfNCardsWithHighestValue(cardsInHand, 1))
-            Rank.Asshole -> CardExchange(2, getValueOfNCardsWithHighestValue(cardsInHand, 2))
+            Rank.ViceAsshole -> CardExchange(playerId, 1, getValueOfNCardsWithHighestValue(cardsInHand, 1))
+            Rank.Asshole -> CardExchange(playerId, 2, getValueOfNCardsWithHighestValue(cardsInHand, 2))
         }
     }
 

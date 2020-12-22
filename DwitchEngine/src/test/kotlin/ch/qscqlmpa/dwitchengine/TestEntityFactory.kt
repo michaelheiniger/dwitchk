@@ -46,7 +46,7 @@ internal object TestEntityFactory {
                 rank = rank,
                 state = state,
                 dwitched = dwitched,
-                hasPickedCard = hasPickedCard
+                hasPickedACard = hasPickedCard
         )
     }
 
@@ -64,7 +64,7 @@ internal object TestEntityFactory {
                 rank = rank,
                 state = state,
                 dwitched = dwitched,
-                hasPickedCard = hasPickedCard
+                hasPickedACard = hasPickedCard
         )
     }
 
@@ -82,7 +82,7 @@ internal object TestEntityFactory {
                 rank = rank,
                 state = state,
                 dwitched = dwitched,
-                hasPickedCard = hasPickedCard
+                hasPickedACard = hasPickedCard
         )
     }
 
@@ -100,7 +100,7 @@ internal object TestEntityFactory {
                 rank = rank,
                 state = state,
                 dwitched = dwitched,
-                hasPickedCard = hasPickedCard
+                hasPickedACard = hasPickedCard
         )
     }
 
@@ -118,7 +118,7 @@ internal object TestEntityFactory {
                 rank = rank,
                 state = state,
                 dwitched = dwitched,
-                hasPickedCard = hasPickedCard
+                hasPickedACard = hasPickedCard
         )
     }
 
@@ -136,7 +136,7 @@ internal object TestEntityFactory {
                 rank = rank,
                 state = state,
                 dwitched = dwitched,
-                hasPickedCard = hasPickedCard
+                hasPickedACard = hasPickedCard
         )
     }
 

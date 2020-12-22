@@ -56,4 +56,6 @@
     <string name="gameroom_notification_message">Partie en cours</string>
     <string name="guest_connection_error">Impossible de se connecter à l\'hôte, sapristi !</string>
     <string name="cef_exchange">Echanger</string>
+    <string name="choose_cards_to_exchange">Cartes à échanger</string>
+    <string name="round_is_beginning_with_card_exchange">Echange de cartes !</string>
 </resources>

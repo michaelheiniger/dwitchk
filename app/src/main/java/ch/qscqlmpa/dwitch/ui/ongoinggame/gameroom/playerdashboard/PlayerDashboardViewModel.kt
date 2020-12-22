@@ -65,10 +65,10 @@ class PlayerDashboardViewModel @Inject constructor(
         { facade.startNewRound() }
     }
 
-    private fun observeCardExchangeEvents(): LiveData<PlayerDashboardCommand> {
+    private fun observeCardExchangeEvents(): LiveData<PlayerDashboardCommand.OpenCardExchange> {
         return LiveDataReactiveStreams.fromPublisher(
             facade.observeCardExchangeEvents()
-                .map { it -> PlayerDashboardCommand.OpenCardExchange(it) as PlayerDashboardCommand}
+                .map { PlayerDashboardCommand.OpenCardExchange }
                 .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
                 .doOnError { error -> Timber.e(error, "Error while observing card exchange.") }

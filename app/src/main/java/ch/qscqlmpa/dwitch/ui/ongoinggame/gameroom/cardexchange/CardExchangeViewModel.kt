@@ -7,8 +7,9 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard.CardItem
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.PlayerDashboardFacade
-import ch.qscqlmpa.dwitchmodel.game.DwitchEvent
+import io.reactivex.rxjava3.core.Observable
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -18,17 +19,22 @@ class CardExchangeViewModel @Inject constructor(
     schedulerFactory: SchedulerFactory
 ) : BaseViewModel(disposableManager, schedulerFactory) {
 
-    private lateinit var cardExchangeEvent: DwitchEvent.CardExchange
+    private lateinit var cardExchangeEvent: CardExchange
 
     private var cardsInHand: MutableList<Card> = mutableListOf()
     private var cardsChosen: MutableList<Card> = mutableListOf()
 
-    private val cardInHandItems = MutableLiveData<List<CardItem>>()
-    private val cardChosenItems = MutableLiveData<List<CardItem>>()
+    private val commands = MutableLiveData<CardExchangeCommand>()
+    private val cardInHandItems = MutableLiveData<List<CardItem>>(listOf())
+    private val cardChosenItems = MutableLiveData<List<CardItem>>(listOf())
 
     init {
-        getCardsInHand()
-        getCardExchangeEvent()
+        initializeCardsInHand()
+        initialize()
+    }
+
+    fun commands(): LiveData<CardExchangeCommand> {
+        return commands
     }
 
     fun cardsInHand(): LiveData<List<CardItem>> {
@@ -43,7 +49,7 @@ class CardExchangeViewModel @Inject constructor(
         val removalSuccessful = cardsInHand.remove(card)
         if (removalSuccessful) {
             cardsChosen.add(card)
-            updateCardsInHandItems(card)
+            updateCardsInHandItems()
             updateCardChosenItems()
         } else {
             throw IllegalArgumentException("Card $card is not in the hand !")
@@ -54,7 +60,7 @@ class CardExchangeViewModel @Inject constructor(
         val removalSuccessful = cardsChosen.remove(card)
         if (removalSuccessful) {
             cardsInHand.add(card)
-            updateCardsInHandItems(card)
+            updateCardsInHandItems()
             updateCardChosenItems()
         } else {
             throw IllegalArgumentException("Card $card is not in the chose cards !")
@@ -63,11 +69,22 @@ class CardExchangeViewModel @Inject constructor(
 
     fun confirmChoice() {
         Timber.v("confirmChoice()")
-        facade.cardForExchangeChosen()
+        disposableManager.add(
+            facade.submitCardsForExchange(cardChosenItems.value!!.map(CardItem::card).toSet())
+                .subscribeOn(schedulerFactory.io())
+                .observeOn(schedulerFactory.ui())
+                .subscribe(
+                    {
+                        Timber.i("Cards for exchange submitted successfully.")
+                        commands.value = CardExchangeCommand.Close
+                    },
+                    { error -> Timber.e(error, "Error while submitting cards for excĥange.") }
+                ),
+        )
     }
 
-    private fun updateCardsInHandItems(card: Card) {
-        cardInHandItems.value = cardsInHand.map { c -> CardItem(c, isCardSelectable(card)) }
+    private fun updateCardsInHandItems() {
+        cardInHandItems.value = cardsInHand.map { c -> CardItem(c, isCardSelectable(c)) }
     }
 
     private fun updateCardChosenItems() {
@@ -83,28 +100,54 @@ class CardExchangeViewModel @Inject constructor(
         return cardHasAllowedValue
     }
 
-    private fun getCardsInHand() {
-        disposableManager.add(
-            facade.getDashboard()
-                .map { dashboard -> dashboard.cardsInHand }
-                .subscribeOn(schedulerFactory.io())
-                .observeOn(schedulerFactory.ui())
-                .doOnError { error -> Timber.e(error, "Error while observing player dashboard.") }
-                .subscribe(
-                    { cards -> cardsInHand = cards.toMutableList()},
-                    { error -> Timber.e(error, "Error while fetching cards in hand.") }
-                ),
-        )
+    private fun initializeCardsInHand() {
+
     }
 
-    private fun getCardExchangeEvent() {
-            facade.observeCardExchangeEvents()
-                .take(1)
-                .subscribeOn(schedulerFactory.io())
-                .observeOn(schedulerFactory.ui())
-                .subscribe(
-                    { event -> cardExchangeEvent = event},
-                    { error -> Timber.e(error, "Error while observing card exchange.") }
-                )
+    private fun initialize() {
+        disposableManager.add(
+            Observable.zip(
+                facade.observeCardExchangeEvents()
+                    .take(1)
+                    .subscribeOn(schedulerFactory.io())
+                    .observeOn(schedulerFactory.ui()),
+                facade.getDashboard()
+                    .map { dashboard -> dashboard.cardsInHand }
+                    .toObservable()
+                    .subscribeOn(schedulerFactory.io())
+                    .observeOn(schedulerFactory.ui()),
+                { event, cards ->
+                    Timber.d("Card exchange event: $event")
+                    cardExchangeEvent = event
+
+                    Timber.d("Cards in hand: $cards")
+                    cardsInHand = cards.toMutableList()
+                    updateCardsInHandItems()
+                }
+            ).subscribe(
+                {},
+                { error -> Timber.e(error, "Error while initializing card exchange.") }
+            )
+
+//                .subscribe(
+//                    { event ->
+//                        Timber.d("Card exchange event: $event")
+//                        cardExchangeEvent = event
+//                    },
+//                    { error -> Timber.e(error, "Error while observing card exchange.") }
+//                )
+//
+//
+//
+//                .doOnError { error -> Timber.e(error, "Error while observing player dashboard.") }
+//                .subscribe(
+//                    { cards ->
+//                        Timber.d("Cards in hand: $cards")
+//                        cardsInHand = cards.toMutableList()
+//                        updateCardsInHandItems()
+//                    },
+//                    { error -> Timber.e(error, "Error while fetching cards in hand.") }
+//                ),
+        )
     }
 }

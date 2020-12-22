@@ -5,6 +5,7 @@ import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import timber.log.Timber
 import javax.inject.Inject
 
 internal class GameRepository @Inject constructor(private val store: InGameStore) {
@@ -25,7 +26,8 @@ internal class GameRepository @Inject constructor(private val store: InGameStore
     fun observeGameInfo(): Observable<GameInfo> {
         return Observable.combineLatest(
             Observable.fromCallable { store.getLocalPlayerInGameId() },
-            store.observeGameState(),
+            store.observeGameState()
+                .doOnNext { gameState -> Timber.v("observeGameInfo: $gameState")  },
             { localPlayerInGameId, gameState -> GameInfo(gameState, localPlayerInGameId) }
         )
     }

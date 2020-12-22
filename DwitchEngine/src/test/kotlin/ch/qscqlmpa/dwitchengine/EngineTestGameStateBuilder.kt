@@ -12,7 +12,6 @@ class EngineTestGameStateBuilder {
 
     private val playersMap = mutableMapOf<PlayerInGameId, Player>()
 
-
     private var cardsOnTable: List<Card> = emptyList()
 
     private var gameEvent: GameEvent? = null

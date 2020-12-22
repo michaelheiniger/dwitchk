@@ -13,10 +13,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:text="@string/choose_cards_to_exchange"
         android:textSize="@dimen/regular_text_size"
+        app:layout_constraintEnd_toStartOf="@+id/exchangeBtn"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Player1 (P) Player2 (A)" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/exchangeBtn"
@@ -24,6 +26,8 @@
         android:layout_height="wrap_content"
         android:text="@string/cef_exchange"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/chooseCardTv"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -38,6 +42,18 @@
         app:layout_constraintTop_toBottomOf="@id/exchangeBtn"
         tools:listitem="@layout/card_item" />
 
+    <TextView
+        android:id="@+id/cardsInHandTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/cards_in_hand"
+        android:textSize="@dimen/regular_text_size"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardsChosenRw" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cardsInHandRw"
         android:layout_width="match_parent"
@@ -47,7 +63,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardsChosenRw"
+        app:layout_constraintTop_toBottomOf="@id/cardsInHandTv"
         tools:listitem="@layout/card_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

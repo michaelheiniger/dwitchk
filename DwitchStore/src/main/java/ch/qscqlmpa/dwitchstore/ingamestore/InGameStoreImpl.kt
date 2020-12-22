@@ -1,17 +1,18 @@
 package ch.qscqlmpa.dwitchstore.ingamestore
 
+import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
-import ch.qscqlmpa.dwitchmodel.game.*
+import ch.qscqlmpa.dwitchmodel.game.DwitchEvent
+import ch.qscqlmpa.dwitchmodel.game.Game
+import ch.qscqlmpa.dwitchmodel.game.GameCommonId
+import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchstore.db.AppRoomDatabase
-import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeAnswerStore
-import ch.qscqlmpa.dwitchstore.ingamestore.model.DwitchEventStore
 import ch.qscqlmpa.dwitchstore.util.SerializerFactory
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 
 internal class InGameStoreImpl constructor(
     private val gameLocalId: Long,
@@ -56,25 +57,8 @@ internal class InGameStoreImpl constructor(
         gameDao.updateGameState(gameLocalId, serializedGameState)
     }
 
-    override fun insertCardExchangeAnswer(cardExchangeAnswer: CardExchangeAnswer) {
-        gameDao.insertCardExchangeAnswer(
-            CardExchangeAnswerStore(
-                playerLocalId = playerDao.getPlayerByInGameId(cardExchangeAnswer.playerId).id,
-                cardsGiven = serializerFactory.serialize(cardExchangeAnswer.cardsGiven)
-            )
-        )
-    }
-
-    override fun getCardExchangeAnswers(): Single<List<CardExchangeAnswer>> {
-        return gameDao.getCardExchangeAnswers(gameLocalId)
-            .map { answers ->
-                answers.map {
-                    CardExchangeAnswer(
-                        playerDao.getPlayerInGameId(it.playerLocalId),
-                        serializerFactory.unserializeCards(it.cardsGiven)
-                    )
-                }
-            }
+    override fun addCardExchangeEvent(cardExchange: CardExchange) {
+        gameDao.addCardExchangeEvent(gameLocalId, serializerFactory.serialize(cardExchange))
     }
 
     override fun insertDwitchEvent(event: DwitchEvent) {
@@ -86,8 +70,22 @@ internal class InGameStoreImpl constructor(
             .map { event -> serializerFactory.unserializeDwitchEvent(event.event) }
     }
 
+    override fun observeCardExchangeEvents(): Observable<CardExchange> {
+        return gameDao.observeGame(gameLocalId)
+            .filter { game -> game.cardExchangeEvent != null }
+            .map { game -> serializerFactory.unserializeCardExchange(game.cardExchangeEvent!!) }
+    }
+
     override fun deleteDwitchEvent(event: DwitchEvent): Int {
         return dwitchEventDao.deleteEvent(event.id)
+    }
+
+    override fun deleteDwitchEvent(eventId: Long): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteCardExchangeEvent() {
+        return gameDao.deleteCardExchangeEvent(gameLocalId)
     }
 
     // Player

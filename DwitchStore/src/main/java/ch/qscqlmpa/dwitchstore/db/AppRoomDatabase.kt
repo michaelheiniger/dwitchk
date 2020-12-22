@@ -5,7 +5,6 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import ch.qscqlmpa.dwitchmodel.game.Game
 import ch.qscqlmpa.dwitchmodel.player.Player
-import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeAnswerStore
 import ch.qscqlmpa.dwitchstore.ingamestore.model.DwitchEventStore
 import ch.qscqlmpa.dwitchstore.typeconverter.*
 
@@ -15,7 +14,6 @@ import ch.qscqlmpa.dwitchstore.typeconverter.*
         Game::class,
         Player::class,
         DwitchEventStore::class,
-        CardExchangeAnswerStore::class
     ], version = 1, exportSchema = false
 )
 @TypeConverters(

@@ -45,12 +45,12 @@ class PlayerRobot(private val gameState: GameState, private val playerId: Player
     }
 
     fun assertPlayerHasPickedCard(): PlayerRobot {
-        assertThat(gameState.player(playerId).hasPickedCard).isTrue()
+        assertThat(gameState.player(playerId).hasPickedACard).isTrue()
         return this
     }
 
     fun assertPlayerHasNotPickedCard(): PlayerRobot {
-        assertThat(gameState.player(playerId).hasPickedCard).isFalse()
+        assertThat(gameState.player(playerId).hasPickedACard).isFalse()
         return this
     }
 }

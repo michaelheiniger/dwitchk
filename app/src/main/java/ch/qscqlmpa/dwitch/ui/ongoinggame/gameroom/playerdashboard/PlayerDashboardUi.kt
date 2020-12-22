@@ -55,6 +55,7 @@ data class PlayerDashboardUi(
 
     fun gameInfo(): String {
         return when (dashboard.gamePhase) {
+            GamePhase.RoundIsBeginningWithCardExchange -> textProvider.getText(R.string.round_is_beginning_with_card_exchange)
             GamePhase.RoundIsBeginning -> textProvider.getText(R.string.round_is_beginning)
             GamePhase.RoundIsOnGoing -> ""
             GamePhase.RoundIsOver -> textProvider.getText(R.string.round_is_over)

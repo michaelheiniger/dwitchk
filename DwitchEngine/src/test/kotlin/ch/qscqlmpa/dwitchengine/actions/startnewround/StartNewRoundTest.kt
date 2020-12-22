@@ -45,6 +45,7 @@ class StartNewRoundTest : EngineTestBase() {
 
         launchStartNewRoundTest()
         GameStateRobot(gameStateUpdated)
+            .assertGamePhase(GamePhase.RoundIsBeginningWithCardExchange)
             .assertCardsOnTableContainsExactly(Card.Clubs8)
             .assertNumCardsInDeck(CardUtil.deckSize - 7)
             .assertPlayingOrder(listOf(player1Id, player2Id))
@@ -86,6 +87,7 @@ class StartNewRoundTest : EngineTestBase() {
 
         launchStartNewRoundTest()
         GameStateRobot(gameStateUpdated)
+            .assertGamePhase(GamePhase.RoundIsBeginningWithCardExchange)
             .assertCardsOnTableContainsExactly(Card.Clubs6)
             .assertNumCardsInDeck(CardUtil.deckSize - 16)
             .assertPlayingOrder(listOf(player5Id, player4Id, player1Id, player3Id, player2Id))
@@ -124,7 +126,7 @@ class StartNewRoundTest : EngineTestBase() {
     }
 
     @Test
-    fun `Game is properly reset for new round`() {
+    fun `Game is properly updated for new round`() {
         initialGameState = gameStateBuilder
             .addPlayerToGame(player1, PlayerState.Done, Rank.Asshole, emptyList())
             .addPlayerToGame(player2, PlayerState.Done, Rank.President, emptyList())
@@ -145,12 +147,12 @@ class StartNewRoundTest : EngineTestBase() {
 
         launchStartNewRoundTest()
         GameStateRobot(gameStateUpdated)
+            .assertGamePhase(GamePhase.RoundIsBeginningWithCardExchange)
             .assertCardsOnTableContainsExactly(Card.Clubs8)
             .assertNumCardsInGraveyard(0)
             .assertPlayersDoneForRoundIsEmpty()
             .assertJoker(CardName.Two)
             .assertGameEvent(null)
-            .assertGamePhase(GamePhase.RoundIsBeginning)
     }
 
     private fun setupCardDealer(cardsForPlayer: Map<Int, List<Card>>) {

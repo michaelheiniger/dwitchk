@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CardExchange(
+    val playerId: PlayerInGameId,
     val numCardsToChoose: Int,
     val allowedCardValues: List<CardName>
 )

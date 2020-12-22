@@ -79,11 +79,14 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
     }
 
     private fun openCardExchange() {
-        val supportFragmentManager = requireActivity().supportFragmentManager
-        val ft = supportFragmentManager.beginTransaction()
-        supportFragmentManager.findFragmentByTag("card_exchange")
-        ft.addToBackStack(null)
-        CardExchangeFragment.create().show(ft, "dialog")
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .addToBackStack(null)
+            .replace(R.id.game_dashboard_fragment_container, CardExchangeFragment.create(), "card_exchange")
+            .commit()
+//        supportFragmentManager.findFragmentByTag("card_exchange")
+//        ft.addToBackStack(null)
+//        CardExchangeFragment.create().show(ft, "dialog")
     }
 
     private fun setImageView(imageView: ImageView, image: ImageInfo) {

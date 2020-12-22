@@ -17,7 +17,7 @@ internal abstract class DwitchEventDao {
     abstract fun observeDwitchEvents(gameLocalId: Long): Observable<DwitchEventStore>
 
     @Transaction
-    fun insertEvent2(gameLocalId: Long, eventAsString: (id: Long) -> String) {
+    open fun insertEvent2(gameLocalId: Long, eventAsString: (id: Long) -> String) {
         val eventId = insertEvent(
             DwitchEventStore(
             gameLocalId = gameLocalId,

@@ -21,7 +21,7 @@ internal class PassTurnState(private val currentGameState: GameState) : GameStat
     }
 
     private fun checkPlayerHasPickedACard(currentGameState: GameState) {
-        if (!currentGameState.currentPlayer().hasPickedCard) {
+        if (!currentGameState.currentPlayer().hasPickedACard) {
             throw IllegalStateException("The player must first pick a card and then is allowed to pass its turn.")
         }
     }

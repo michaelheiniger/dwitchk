@@ -14,7 +14,7 @@ internal class PlayCardState(
 
     override fun checkState() {
         super.checkState()
-        checkCardPlayedIsAValidMove(currentGameState, cardPlayed)
+        checkCardPlayedIsAValidMove()
     }
 
     fun cardPlayed(): Card {
@@ -87,16 +87,15 @@ internal class PlayCardState(
         return currentGameState.waitingPlayerInOrderAfterLocalPlayer()
     }
 
-
     private fun turnPassedPlayerInOrderAfterLocalPlayer(): List<Player> {
         return currentGameState.activePlayersInPlayingOrderAfterLocalPlayer()
                 .filter { player -> player.state == PlayerState.TurnPassed }
     }
 
-    private fun checkCardPlayedIsAValidMove(gameState: GameState, playedCard: Card) {
-        val lastCardOnTable = gameState.lastCardOnTable()
-        if (!PlayerMove.cardPlayedIsAValidMove(lastCardOnTable, playedCard, gameState.joker)) {
-            throw IllegalArgumentException("The card '$playedCard' may not be played on top of card '$lastCardOnTable'")
+    private fun checkCardPlayedIsAValidMove() {
+        val lastCardOnTable = currentGameState.lastCardOnTable()
+        if (!PlayerMove.cardPlayedIsAValidMove(lastCardOnTable, cardPlayed, currentGameState.joker)) {
+            throw IllegalArgumentException("The card '$cardPlayed' may not be played on top of card '$lastCardOnTable'")
         }
     }
 }

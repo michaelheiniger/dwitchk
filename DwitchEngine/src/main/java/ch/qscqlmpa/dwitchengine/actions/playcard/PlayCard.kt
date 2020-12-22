@@ -16,12 +16,9 @@ internal class PlayCard(
     fun getUpdatedGameState(): GameState {
         playCardState.checkState()
 
+        gameUpdater.setGamePhase(GamePhase.RoundIsOnGoing)
         gameUpdater.undwitchAllPlayers()
         gameUpdater.resetGameEvent()
-
-        if (playCardState.gamePhaseIsRoundIsBeginning()) {
-            gameUpdater.setGamePhase(GamePhase.RoundIsOnGoing)
-        }
 
         gameUpdater.takeCardFromHandAndPutOnTable(localPlayerId, cardPlayed)
 

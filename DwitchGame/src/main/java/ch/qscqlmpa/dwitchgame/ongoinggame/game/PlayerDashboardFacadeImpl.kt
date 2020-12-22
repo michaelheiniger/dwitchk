@@ -3,13 +3,14 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.game
 import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboard
 import ch.qscqlmpa.dwitchgame.ongoinggame.DwitchEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.GameCommunicator
+import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.CardForExchangeChosenUsecase
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.GameUpdatedUsecase
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.StartCardExchangeUsecase
-import ch.qscqlmpa.dwitchmodel.game.DwitchEvent
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import com.jakewharton.rxrelay3.BehaviorRelay
 import io.reactivex.rxjava3.core.Completable
@@ -23,7 +24,7 @@ internal class PlayerDashboardFacadeImpl @Inject constructor(
     private val gameRepository: GameRepository,
     private val gameUpdatedUsecase: GameUpdatedUsecase,
     private val startCardExchangeUsecase: StartCardExchangeUsecase,
-    private val cardForExchangeChosenUsecase: CardForExchangeChosenUsecase,
+    private val cardForExchangeSubmitUsecase: CardForExchangeChosenUsecase,
     private val cardDealerFactory: CardDealerFactory,
     private val dwitchEventRepository: DwitchEventRepository
 ) : PlayerDashboardFacade {
@@ -69,12 +70,12 @@ internal class PlayerDashboardFacadeImpl @Inject constructor(
         }
     }
 
-    override fun observeCardExchangeEvents(): Observable<DwitchEvent.CardExchange> {
+    override fun observeCardExchangeEvents(): Observable<CardExchange> {
         return dwitchEventRepository.observeCardExchangeEvents()
     }
 
-    override fun cardForExchangeChosen() {
-
+    override fun submitCardsForExchange(cards: Set<Card>): Completable {
+        return cardForExchangeSubmitUsecase.chooseCardForExchange(cards)
     }
 
     private fun handleGameStateUpdated(updateGameState: (engine: DwitchEngine) -> GameState): Single<GameState> {

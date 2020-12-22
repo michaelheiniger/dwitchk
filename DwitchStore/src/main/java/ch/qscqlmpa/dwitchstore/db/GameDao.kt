@@ -9,10 +9,8 @@ import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.InsertGameResult
-import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeAnswerStore
 import ch.qscqlmpa.dwitchstore.ingamestore.model.DwitchEventStore
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 import java.util.*
 
 @Dao
@@ -54,19 +52,7 @@ internal abstract class GameDao(database: AppRoomDatabase) {
     abstract fun updateGameState(gameLocalId: Long, gameState: String)
 
     @Insert
-    abstract fun insertCardExchangeAnswer(cardExchangeAnswerStore: CardExchangeAnswerStore)
-
-    @Insert
     abstract fun insertDwitchEvent(dwitchEventStore: DwitchEventStore)
-
-    @Query(
-        """
-            SELECT * FROM card_exchange_answer cea
-            INNER JOIN player p ON cea.player_local_id = p.id
-            WHERE p.game_local_id = :gameLocalId
-        """
-    )
-    abstract fun getCardExchangeAnswers(gameLocalId: Long): Single<List<CardExchangeAnswerStore>>
 
     @Query("SELECT * FROM Game WHERE id=:localId")
     abstract fun getGame(localId: Long): Game
@@ -94,6 +80,24 @@ internal abstract class GameDao(database: AppRoomDatabase) {
     )
     abstract fun deleteGameAndPlayers(gameLocalId: Long)
 
+    @Query(
+        """
+        UPDATE Game
+        SET card_exchange_event = :cardExchangeEvent
+        WHERE id = :gameLocalId
+    """
+    )
+    abstract fun addCardExchangeEvent(gameLocalId: Long, cardExchangeEvent: String)
+
+    @Query(
+        """
+        UPDATE Game
+        SET card_exchange_event = null
+        WHERE id = :gameLocalId
+    """
+    )
+    abstract fun deleteCardExchangeEvent(gameLocalId: Long)
+
     /**
      * Insert game and local player for host in Store.
      * Room requires the method to be "open".
@@ -110,7 +114,8 @@ internal abstract class GameDao(database: AppRoomDatabase) {
             gameCommonId,
             gameName,
             "",
-            0
+            0,
+            null
         )
         val gameLocalId = insertGame(game)
 
@@ -168,7 +173,8 @@ internal abstract class GameDao(database: AppRoomDatabase) {
             gameCommonId,
             gameName,
             "",
-            0
+            0,
+            null
         )
         val gameLocalId = insertGame(game)
 

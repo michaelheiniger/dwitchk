@@ -8,12 +8,9 @@ internal class PickCard(private val pickCardState: PickCardState, private val ga
     fun getUpdatedGameState(): GameState {
         pickCardState.checkState()
 
+        gameUpdater.setGamePhase(GamePhase.RoundIsOnGoing)
         gameUpdater.undwitchAllPlayers()
         gameUpdater.resetGameEvent()
-
-        if (pickCardState.gamePhaseIsRoundIsBeginning()) {
-            gameUpdater.setGamePhase(GamePhase.RoundIsOnGoing)
-        }
 
         gameUpdater.pickCardFromDeckAndPutItInHands()
         gameUpdater.setPlayerHasPickedCard(pickCardState.currentPlayerId())

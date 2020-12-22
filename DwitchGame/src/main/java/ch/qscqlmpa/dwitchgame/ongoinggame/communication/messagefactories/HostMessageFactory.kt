@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories
 
-import ch.qscqlmpa.dwitchcommunication.*
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
@@ -50,9 +49,13 @@ class HostMessageFactory @Inject constructor(private val store: InGameStore) {
             return EnvelopeToSend(Recipient.AllGuests, Message.GameOverMessage)
         }
 
-        fun createCardExchangeMessage(cardExchange: CardExchange, recipient: ConnectionId): EnvelopeToSend {
-            val message = Message.CardExchangeMessage(cardExchange)
-            return EnvelopeToSend(RecipientType.SingleGuest(recipient), message)
+        fun createCardExchangeMessage(inGameId: PlayerInGameId, cardExchange: CardExchange, recipient: ConnectionId): EnvelopeToSend {
+            val message = Message.CardExchangeMessage(inGameId, cardExchange)
+            return EnvelopeToSend(Recipient.SingleGuest(recipient), message)
+        }
+
+        fun createGameStateUpdatedMessage(gameState: GameState): EnvelopeToSend {
+            return EnvelopeToSend(Recipient.AllGuests, Message.GameStateUpdatedMessage(gameState))
         }
 
         private fun createWaitingRoomStateUpdateMessage(playerList: List<Player>): EnvelopeToSend {

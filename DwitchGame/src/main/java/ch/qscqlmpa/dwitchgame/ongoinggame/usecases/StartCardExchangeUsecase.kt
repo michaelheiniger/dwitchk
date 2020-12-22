@@ -20,9 +20,9 @@ class StartCardExchangeUsecase @Inject constructor(
     fun startCardExchange(gameState: GameState): Completable {
         return getCardExchanges(gameState)
             .flatMapCompletable { (inGameId, cardExchange) ->
-                val connectionId = connectionStore.getConnectionIdForIngameId(inGameId)
+                val connectionId = connectionStore.getConnectionId(inGameId)
                 if (connectionId != null) {
-                    communicator.sendMessage(HostMessageFactory.createCardExchangeMessage(cardExchange, connectionId))
+                    communicator.sendMessage(HostMessageFactory.createCardExchangeMessage(inGameId, cardExchange, connectionId))
                 } else {
                     Timber.e("No connection ID found in store for inGameId $inGameId") //TODO: handle case where the message cannot be send
                     Completable.complete()

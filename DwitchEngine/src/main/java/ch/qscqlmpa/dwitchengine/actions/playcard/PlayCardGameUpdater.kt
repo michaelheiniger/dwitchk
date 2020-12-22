@@ -6,6 +6,8 @@ import ch.qscqlmpa.dwitchengine.model.game.GameEvent
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 
+
+//TODO: Fix inconsistencies like cardPlayed given as instance member and method parameter
 internal class PlayCardGameUpdater(
     currentGameState: GameState,
     private val cardPlayed: Card

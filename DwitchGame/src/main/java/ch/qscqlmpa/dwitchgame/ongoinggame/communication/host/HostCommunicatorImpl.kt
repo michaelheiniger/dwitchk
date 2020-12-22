@@ -16,6 +16,7 @@ import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import timber.log.Timber
 
 internal class HostCommunicatorImpl
@@ -46,11 +47,40 @@ constructor(
         commServer.stop()
     }
 
+    //TODO: clean-up and test
     override fun sendMessage(envelopeToSend: EnvelopeToSend): Completable {
-        return commServer.sendMessage(envelopeToSend.message, envelopeToSend.recipient)
+        return when (val recipient = envelopeToSend.recipient) {
+            is Recipient.SingleGuest -> {
+                hostConnectionId()
+                    .flatMapCompletable { hostConnectionId ->
+                        if (hostConnectionId == recipient.id) {
+                            Timber.i("Send message to host: ${envelopeToSend.message}")
+                            Completable.fromAction {
+                                receivedMessageRelay.accept(EnvelopeReceived(hostConnectionId, envelopeToSend.message))
+                            }
+                        } else {
+                            Timber.i("Send envelope to guest: $envelopeToSend")
+                            commServer.sendMessage(envelopeToSend.message, envelopeToSend.recipient)
+                        }
+                    }
+            }
+            Recipient.AllGuests -> {
+                Timber.i("Send envelope to all guests: ${envelopeToSend.message}")
+                commServer.sendMessage(envelopeToSend.message, envelopeToSend.recipient)
+            }
+        }
+    }
+
+    private fun hostConnectionId(): Single<ConnectionId> {
+        return Single.fromCallable {
+            val hostInGameId = inGameStore.getLocalPlayerInGameId()
+            connectionStore.getConnectionId(hostInGameId)
+                ?: throw IllegalStateException("The host has no connection ID.")
+        }
     }
 
     override fun sendMessageToHost(message: Message): Completable {
+        Timber.i("Send message to host: $message")
         return Completable.fromAction {
             val hostInGameId = inGameStore.getLocalPlayerInGameId()
             val connectionId = connectionStore.getConnectionId(hostInGameId)

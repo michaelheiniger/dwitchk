@@ -14,6 +14,8 @@ import ch.qscqlmpa.dwitchcommunication.di.TestCommunicationComponent
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.client.test.ClientTestStub
 import ch.qscqlmpa.dwitchcommunication.websocket.server.test.ServerTestStub
+import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealer
+import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealerFactory
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetupFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
@@ -92,6 +94,11 @@ abstract class BaseUiTest {
     protected fun initializeInitialGameSetup(cardsForPlayer: Map<Int, List<Card>>, rankForPlayer: Map<Int, Rank>) {
         (ongoingGameComponent.initialGameSetupFactory as DeterministicInitialGameSetupFactory)
             .setInstance(DeterministicInitialGameSetup(cardsForPlayer, rankForPlayer))
+    }
+
+    protected fun initializeNewRoundCardDealer(cardsForPlayer: Map<Int, List<Card>>) {
+        (ongoingGameComponent.cardDealerFactory as DeterministicCardDealerFactory)
+            .setInstance(DeterministicCardDealer(cardsForPlayer))
     }
 
     protected fun dudeWaitASec(seconds: Long = 2L) {

@@ -1,9 +1,9 @@
 package ch.qscqlmpa.dwitchcommunication.model
 
+import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
-import ch.qscqlmpa.dwitchmodel.game.CardExchangeAnswer
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.player.Player
 import kotlinx.serialization.Serializable
@@ -51,13 +51,13 @@ sealed class Message {
     @Serializable
     data class PlayerReadyMessage(val playerInGameId: PlayerInGameId, val ready: Boolean) : Message()
 
-    @Serializable
-    data class CardExchangeAnswerMessage(val cardExchangeAnswer: CardExchangeAnswer): Message()
-
     /*****************************************************************************************************************
      * Messages sent by both Host and Guests
      *****************************************************************************************************************/
     @Serializable
     data class GameStateUpdatedMessage(val gameState: GameState) : Message()
+
+    @Serializable
+    data class CardsForExchangeMessage(val playerId: PlayerInGameId, val cards: Set<Card>): Message()
 }
 

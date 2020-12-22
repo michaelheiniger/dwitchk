@@ -22,8 +22,16 @@ internal data class GameStateMutable(
         player(playerId).addCardToHand(card)
     }
 
+    fun addCardsToHand(playerId: PlayerInGameId, cards: List<Card>) {
+        cards.forEach { card -> addCardToHand(playerId, card) }
+    }
+
     fun removeCardFromHand(playerId: PlayerInGameId, card: Card) {
         player(playerId).removeCardFromHand(card)
+    }
+
+    fun removeAllCardsForCardExchange(playerId: PlayerInGameId) {
+        player(playerId).removeAllCardsForExchange()
     }
 
     fun removeTopCardFromDeck(): Card {
@@ -81,6 +89,13 @@ internal data class GameStateMutable(
 
     fun addDonePlayer(playerId: PlayerInGameId, lastCardPlayedIsJoker: Boolean) {
         playersDoneForRound.add(PlayerDone(playerId, lastCardPlayedIsJoker))
+    }
+
+    fun addCardsForExchange(playerId: PlayerInGameId, cards: Set<Card>) {
+        player(playerId).removeCardsFromHand(cards)
+        val cardsForExchange = player(playerId).cardsForExchange
+        cardsForExchange.clear()
+        cardsForExchange.addAll(cards)
     }
 
     fun toGameState(): GameState {

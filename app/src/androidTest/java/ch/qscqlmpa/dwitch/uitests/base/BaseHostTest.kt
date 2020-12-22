@@ -86,19 +86,32 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
     protected fun waitForNextMessageSentByHost(): Message {
         Timber.d("Waiting for next message sent by host...")
         val messageSerialized =
-            Observable.merge(
-                listOf(
-                    serverTestStub.observeMessagesSent(),
-                    serverTestStub.observeMessagesBroadcasted()
-                )
-            )
-//        val messageSerialized = serverTestStub.observeMessagesSent()
+            Observable.merge(listOf(serverTestStub.observeMessagesSent(), serverTestStub.observeMessagesBroadcasted()))
                 .take(1)
                 .timeout(10, TimeUnit.SECONDS)
                 .blockingFirst()
         val message = commSerializerFactory.unserializeMessage(messageSerialized)
         Timber.d("Message sent to client: $message")
         return message
+    }
+
+    protected fun waitForNextNMessageSentByHost(numMessagesExpected: Long): List<Message> {
+        Timber.d("Waiting for next $numMessagesExpected messages sent by host...")
+        val messagesSerialized =
+            Observable.merge(listOf(serverTestStub.observeMessagesSent(), serverTestStub.observeMessagesBroadcasted()))
+                .take(numMessagesExpected)
+                .timeout(10 * numMessagesExpected, TimeUnit.SECONDS)
+                .scan(
+                    mutableListOf<String>(),
+                    { messages, lastMessage ->
+                        messages.add(lastMessage)
+                        messages
+                    }
+                )
+                .blockingLast()
+
+        Timber.d("Messages sent to client: $messagesSerialized")
+        return messagesSerialized.map(commSerializerFactory::unserializeMessage)
     }
 
     protected fun getGuest(identifier: PlayerHostTest): Player {

@@ -4,8 +4,8 @@ package ch.qscqlmpa.dwitchcommunication.websocket.server
 import ch.qscqlmpa.dwitchcommunication.Address
 import ch.qscqlmpa.dwitchcommunication.AddressType
 import ch.qscqlmpa.dwitchcommunication.CommServer
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreInternal
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreInternal
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.Recipient
@@ -45,16 +45,16 @@ internal class WebsocketCommServer @Inject constructor(
         }
     }
 
-    private fun sendUnicastMessage(serializedMessage: String, recipientAdress: AddressType.Unicast): Completable {
+    private fun sendUnicastMessage(serializedMessage: String, recipientAddress: AddressType.Unicast): Completable {
         return Completable.fromAction {
             val recipientSocket = websocketServer.getConnections().find { webSocket ->
-                webSocket.remoteSocketAddress.address.hostAddress == recipientAdress.destination.ipAddress
-                        && webSocket.remoteSocketAddress.port == recipientAdress.destination.port
+                webSocket.remoteSocketAddress.address.hostAddress == recipientAddress.destination.ipAddress
+                        && webSocket.remoteSocketAddress.port == recipientAddress.destination.port
             }
             if (recipientSocket != null) {
                 websocketServer.send(recipientSocket, serializedMessage)
             } else {
-                Timber.e("Message sent to $recipientAdress but no socket found")
+                Timber.e("Message sent to $recipientAddress but no socket found")
             }
         }
     }
@@ -84,7 +84,6 @@ internal class WebsocketCommServer @Inject constructor(
 
                 ServerCommunicationEvent.ListeningForConnections(hostConnectionId)
             }
-
     }
 
     private fun observeOnOpenEvents(): Observable<ServerCommunicationEvent> {
