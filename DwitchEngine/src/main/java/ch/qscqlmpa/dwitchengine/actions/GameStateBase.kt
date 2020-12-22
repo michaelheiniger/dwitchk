@@ -8,7 +8,7 @@ import ch.qscqlmpa.dwitchengine.model.player.PlayerState
 internal abstract class GameStateBase(private val currentGameState: GameState) {
 
     open fun checkState() {
-        checkCurrentPlayerState()
+
     }
 
     fun numPlayersTotal(): Int {
@@ -19,7 +19,7 @@ internal abstract class GameStateBase(private val currentGameState: GameState) {
         return currentGameState.currentPlayerId
     }
 
-    private fun checkCurrentPlayerState() {
+    protected fun checkCurrentPlayerStateIsPlaying() {
         val playerState = currentGameState.currentPlayer().state
         if (PlayerState.Playing != playerState) {
             throw IllegalStateException("Player is not in state $playerState")

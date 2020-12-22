@@ -11,6 +11,7 @@ internal class StartNewRoundState(private val currentGameState: GameState) : Gam
 
     override fun checkState() {
         super.checkState()
+        checkCurrentPlayerStateIsPlaying()
         checkGamePhase(GamePhase.RoundIsOver)
     }
 

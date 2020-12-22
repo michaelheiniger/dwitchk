@@ -14,6 +14,7 @@ internal class PlayCardState(
 
     override fun checkState() {
         super.checkState()
+        checkCurrentPlayerStateIsPlaying()
         checkCardPlayedIsAValidMove()
     }
 

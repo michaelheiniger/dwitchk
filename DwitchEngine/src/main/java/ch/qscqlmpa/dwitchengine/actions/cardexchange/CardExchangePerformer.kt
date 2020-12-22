@@ -23,7 +23,7 @@ internal class CardExchangePerformer(
         }
     }
 
-    fun performCardExchange(): GameState {
+    fun getUpdatedGameState(): GameState {
         gameUpdater.performCardExchange(
             state.presidentId(),
             state.assholeId(),

@@ -8,14 +8,14 @@ import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import ch.qscqlmpa.dwitchengine.rules.CardExchangeComputer
 
-internal class AddCardsForExchangeState(
+internal class CardExchangeChooserState(
     currentGameState: GameState,
     private val playerId: PlayerInGameId,
-    private val cards: Set<Card>
+    private val cardsChosen: Set<Card>
 ) : GameStateBase(currentGameState) {
 
     private val player = currentGameState.player(playerId)
-    private val cardExchange = CardExchangeComputer.getCardExchange(playerId, player.rank, player.cardsInHand)
+    private val cardExchange = CardExchangeComputer.getCardExchange(playerId, player.rank, player.cardsInHand.toSet())
 
     override fun checkState() {
         super.checkState()
@@ -27,7 +27,7 @@ internal class AddCardsForExchangeState(
     }
 
     fun cardsForExchange(): Set<Card> {
-        return cards
+        return cardsChosen
     }
 
     fun cardExchange(): CardExchange {
@@ -38,16 +38,22 @@ internal class AddCardsForExchangeState(
         val cardExchange = cardExchange
             ?: throw IllegalArgumentException("Player with $playerId is not supposed to exchange any cards !")
 
-        require(cardExchange.numCardsToChoose == cards.size) {
-            "Player $playerId must exchange ${cardExchange.numCardsToChoose}, not ${cards.size}"
+        require(cardExchange.numCardsToChoose == cardsChosen.size) {
+            "Player $playerId must exchange ${cardExchange.numCardsToChoose}, not ${cardsChosen.size}"
         }
 
-        //TODO: Check that cards are the cards with the highest value for asshole and viceasshole
+        if (player.rank == Rank.Asshole || player.rank == Rank.ViceAsshole) {
+            checkCardsChosenIsAllowed(cardsChosen, player.cardsInHand)
+        }
+    }
 
-        if (player.rank == Rank.Asshole) {
-            //TODO: Check values
-        } else if (player.rank == Rank.ViceAsshole) {
-            //TODO: Check value
+    private fun checkCardsChosenIsAllowed(cardsChosen: Set<Card>, cardsInHand: List<Card>) {
+        val allowCardValues = CardExchangeComputer.getValueOfNCardsWithHighestValue(cardsInHand.toSet(), cardsChosen.size)
+            .toMutableList()
+        this.cardsChosen.forEach { card ->
+            if (!allowCardValues.remove(card.name)) {
+                throw IllegalArgumentException("Card chosen for exchange is not allowed: there exists a card with higher value than $card")
+            }
         }
     }
 }

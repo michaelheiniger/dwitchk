@@ -8,6 +8,7 @@ internal class PassTurnState(private val currentGameState: GameState) : GameStat
 
     override fun checkState() {
         super.checkState()
+        checkCurrentPlayerStateIsPlaying()
         checkPlayerHasPickedACard(currentGameState)
     }
 

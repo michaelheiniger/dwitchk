@@ -21,7 +21,7 @@ class CardsForExchangeMessageProcessor @Inject constructor(
         val msg = message as Message.CardsForExchangeMessage
 
         return Single.fromCallable {
-            val gameStateUpdated = DwitchEngine(store.getGameState()).addCardsForExchange(msg.playerId, msg.cards)
+            val gameStateUpdated = DwitchEngine(store.getGameState()).chooseCardsForExchange(msg.playerId, msg.cards)
             store.updateGameState(gameStateUpdated)
             HostMessageFactory.createGameStateUpdatedMessage(gameStateUpdated)
         }.flatMapCompletable(::sendMessage)

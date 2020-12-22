@@ -12,7 +12,7 @@ internal object CardExchangeComputer {
      * Compute the CardExchange for the player with the given rank and cards in hand.
      * Card exchange always occurs at the beginning of a new round when the joker is always set to CardName.TWO.
      */
-    fun getCardExchange(playerId: PlayerInGameId, rank: Rank, cardsInHand: List<Card>): CardExchange? {
+    fun getCardExchange(playerId: PlayerInGameId, rank: Rank, cardsInHand: Set<Card>): CardExchange? {
         checkNumCardsInHand(rank, cardsInHand)
 
         return when (rank) {
@@ -24,18 +24,18 @@ internal object CardExchangeComputer {
         }
     }
 
-    private fun checkNumCardsInHand(rank: Rank, cardsInHand: List<Card>) = when (rank) {
+    fun getValueOfNCardsWithHighestValue(cards: Set<Card>, numberOfCards: Int): List<CardName> { // Want to keep duplicated "names"
+        return cards.map(Card::name).sortedWith(CardNameValueDescComparator()).take(numberOfCards)
+    }
+
+    private fun checkNumCardsInHand(rank: Rank, cardsInHand: Set<Card>) = when (rank) {
         Rank.President, Rank.Asshole -> require(cardsInHand.size >= 2)
         Rank.VicePresident, Rank.ViceAsshole -> require(cardsInHand.isNotEmpty())
         else -> {
         } // Nothing to do
     }
 
-    private fun getAllValuesWithoutRestriction(cards: List<Card>): List<CardName> = cards.map(Card::name)
-
-    private fun getValueOfNCardsWithHighestValue(cards: List<Card>, numberOfCards: Int): List<CardName> {
-        return cards.map(Card::name).sortedWith(CardNameValueDescComparator()).take(numberOfCards)
-    }
+    private fun getAllValuesWithoutRestriction(cards: Set<Card>): List<CardName> = cards.map(Card::name) // Want to keep duplicated "names"
 
     private class CardNameValueDescComparator : Comparator<CardName> {
 

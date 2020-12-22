@@ -18,6 +18,7 @@ import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.CardExchange
+import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboard
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboardFactory
@@ -78,27 +79,32 @@ class DwitchEngine(private val currentGameState: GameState) {
             .also(this::logUpdatedGameState)
     }
 
-    fun addCardsForExchange(playerId: PlayerInGameId, cards: Set<Card>): GameState {
-        println("Add exchange cards $cards for Player $currentPlayerId, current game state: $currentGameState")
-        val gameStateUpdated = AddCardsForExchange(
-            AddCardsForExchangeState(currentGameState, playerId, cards),
-            AddCardsForExchangeGameUpdater(currentGameState)
+    fun chooseCardsForExchange(playerId: PlayerInGameId, cards: Set<Card>): GameState {
+        println("Choose exchange cards $cards for Player $currentPlayerId, current game state: $currentGameState")
+        val gameStateUpdated = CardExchangeChooser(
+            CardExchangeChooserState(currentGameState, playerId, cards),
+            CardExchangeChooserGameUpdater(currentGameState)
         ).getUpdatedGameState()
             .also(this::logUpdatedGameState)
 
-        return CardExchangePerformer(
+        val cardExchangePerformer = CardExchangePerformer(
             CardExchangePerformerState(gameStateUpdated),
             CardExchangePerformerGameUpdater(gameStateUpdated)
-        ).performCardExchange()
-            .also(this::logUpdatedGameState)
+        )
+        if (cardExchangePerformer.cardExchangeReadyToBePerformed()) {
+            return cardExchangePerformer
+                .getUpdatedGameState()
+                .also(this::logUpdatedGameState)
+        }
+        return gameStateUpdated
     }
 
-    fun getCardsExchanges(): List<Pair<PlayerInGameId, CardExchange>> {
+    fun getCardsExchanges(): List<CardExchange> {
+        if (currentGameState.phase != GamePhase.RoundIsBeginningWithCardExchange) {
+            throw IllegalStateException("No card exchange is supposed to happen now.")
+        }
         return currentGameState.players.values
-            .mapNotNull { p ->
-                val cardExchange = CardExchangeComputer.getCardExchange(p.inGameId, p.rank, p.cardsInHand)
-                if (cardExchange != null) Pair(p.inGameId, cardExchange) else null
-            }
+            .mapNotNull { p -> CardExchangeComputer.getCardExchange(p.inGameId, p.rank, p.cardsInHand.toSet()) }
     }
 
     private fun logUpdatedGameState(gameState: GameState) {
