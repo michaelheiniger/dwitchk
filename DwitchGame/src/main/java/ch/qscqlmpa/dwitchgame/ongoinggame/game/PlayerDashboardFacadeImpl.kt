@@ -56,12 +56,9 @@ internal class PlayerDashboardFacadeImpl @Inject constructor(
     }
 
     override fun observeDashboard(): Observable<PlayerDashboard> {
-        return Observable.merge(
-            playerDashboardRelay,
-            gameRepository.observeGameInfo().map { gameInfo ->
-                DwitchEngine(gameInfo.gameState).getPlayerDashboard(gameInfo.localPlayerId)
-            }
-        )
+        return gameRepository.observeGameInfo().map { gameInfo ->
+            DwitchEngine(gameInfo.gameState).getPlayerDashboard(gameInfo.localPlayerId)
+        }
     }
 
     override fun getDashboard(): Single<PlayerDashboard> {
@@ -80,16 +77,10 @@ internal class PlayerDashboardFacadeImpl @Inject constructor(
 
     private fun handleGameStateUpdated(updateGameState: (engine: DwitchEngine) -> GameState): Single<GameState> {
         return Single.fromCallable { updateGameState(DwitchEngine(gameRepository.getGameState())) }
-            .doOnSuccess(::updateDashboard)
             .doOnError { error -> Timber.e(error, "Error while updating the game state:") }
             .flatMap { updatedGameState ->
                 gameUpdatedUsecase.handleUpdatedGameState(updatedGameState)
                     .andThen(Single.just(updatedGameState))
             }
-    }
-
-    private fun updateDashboard(gameState: GameState) {
-        val playerId = gameRepository.getLocalPlayerId()
-        playerDashboardRelay.accept(DwitchEngine(gameState).getPlayerDashboard(playerId))
     }
 }
