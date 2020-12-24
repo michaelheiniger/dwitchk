@@ -22,7 +22,7 @@ class StartCardExchangeUsecase @Inject constructor(
                 val playerId = cardExchange.playerId
                 val connectionId = connectionStore.getConnectionId(playerId)
                 if (connectionId != null) {
-                    communicator.sendMessage(HostMessageFactory.createCardExchangeMessage(playerId, cardExchange, connectionId))
+                    communicator.sendMessage(HostMessageFactory.createCardExchangeMessage(cardExchange, connectionId))
                 } else {
                     Timber.e("No connection ID found in store for inGameId $playerId") //TODO: handle case where the message cannot be send
                     Completable.complete()

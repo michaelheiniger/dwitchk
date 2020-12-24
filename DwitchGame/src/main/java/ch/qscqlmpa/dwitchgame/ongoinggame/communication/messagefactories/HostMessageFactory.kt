@@ -49,8 +49,8 @@ class HostMessageFactory @Inject constructor(private val store: InGameStore) {
             return EnvelopeToSend(Recipient.All, Message.GameOverMessage)
         }
 
-        fun createCardExchangeMessage(inGameId: PlayerInGameId, cardExchange: CardExchange, recipient: ConnectionId): EnvelopeToSend {
-            val message = Message.CardExchangeMessage(inGameId, cardExchange)
+        fun createCardExchangeMessage(cardExchange: CardExchange, recipient: ConnectionId): EnvelopeToSend {
+            val message = Message.CardExchangeMessage(cardExchange)
             return EnvelopeToSend(Recipient.Single(recipient), message)
         }
 

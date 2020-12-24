@@ -185,12 +185,11 @@ class GameRoomAsGuestTest : BaseGuestTest() {
 
     private fun hostSendsCardExchangeMessage(gameState: GameState) {
         val cardExchangeOfLocalGuest = DwitchEngine(gameState).getCardsExchanges()
-            .find { (playerId, _) -> playerId == PlayerGuestTest.LocalGuest.inGameId }!!.second
+            .find { (playerId, _) -> playerId == PlayerGuestTest.LocalGuest.inGameId }!!
 
-        val envelope = HostMessageFactory.createCardExchangeMessage(PlayerGuestTest.LocalGuest.inGameId, cardExchangeOfLocalGuest, ConnectionId(2))
+        val envelope = HostMessageFactory.createCardExchangeMessage(cardExchangeOfLocalGuest, ConnectionId(2))
         clientTestStub.serverSendsMessageToClient(envelope.message, true)
     }
-
 
     private fun hostSendsInitialWaitingRoomUpdate() {
         val gameLocalIdAtHost = 1233L

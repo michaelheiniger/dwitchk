@@ -18,7 +18,7 @@ internal class CardExchangeMessageProcessor @Inject constructor(
         val cardExchange = msg.cardExchange
 
         return Completable.fromAction {
-            if (msg.playerInGameId != store.getLocalPlayerInGameId()) {
+            if (cardExchange.playerId != store.getLocalPlayerInGameId()) {
                 Timber.w("Received CardExchangeMessage intended for another player: $msg")
             } else {
                 Timber.i("Received CardExchangeMessage: $msg")

@@ -34,7 +34,7 @@ sealed class Message {
     object GameOverMessage : Message()
 
     @Serializable
-    data class CardExchangeMessage(val playerInGameId: PlayerInGameId, val cardExchange: CardExchange): Message()
+    data class CardExchangeMessage(val cardExchange: CardExchange): Message()
 
     /*****************************************************************************************************************
      * Messages sent by Guests
