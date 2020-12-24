@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.game
 
-import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
@@ -11,10 +10,6 @@ import timber.log.Timber
 import javax.inject.Inject
 
 internal class GameRepository @Inject constructor(private val store: InGameStore) {
-
-    fun getGameEngineWithCurrentGameState(): Single<DwitchEngine> {
-        return Single.fromCallable { DwitchEngine(store.getGameState()) }
-    }
 
     fun getLocalPlayerId(): PlayerInGameId {
         return store.getLocalPlayerInGameId()
@@ -36,7 +31,7 @@ internal class GameRepository @Inject constructor(private val store: InGameStore
         return Observable.combineLatest(
             Observable.fromCallable { store.getLocalPlayerInGameId() },
             store.observeGameState()
-                .doOnNext { gameState -> Timber.v("observeGameInfo: $gameState")  },
+                .doOnNext { gameState -> Timber.v("observeGameInfo: $gameState") },
             { localPlayerInGameId, gameState -> GameInfo(gameState, localPlayerInGameId) }
         )
     }
