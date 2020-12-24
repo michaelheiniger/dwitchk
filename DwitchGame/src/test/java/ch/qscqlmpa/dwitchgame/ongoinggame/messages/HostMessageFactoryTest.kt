@@ -36,7 +36,7 @@ class HostMessageFactoryTest : BaseUnitTest() {
         val msgWrapper = hostMessageFactory.createWaitingRoomStateUpdateMessage().blockingGet()
         val message = (msgWrapper.message as Message.WaitingRoomStateUpdateMessage)
 
-        assertThat(msgWrapper.recipient).isEqualTo(Recipient.AllGuests)
+        assertThat(msgWrapper.recipient).isEqualTo(Recipient.All)
         assertThat(message.playerList).isEqualTo(players)
 
         verify { mockInGameStore.getPlayersInWaitingRoom() }
@@ -57,7 +57,7 @@ class HostMessageFactoryTest : BaseUnitTest() {
         val msgWrapper = hostMessageFactory.createJoinAckMessage(localConnectionId, playerInGameId).blockingGet()
         val message = (msgWrapper.message as Message.JoinGameAckMessage)
 
-        assertThat(msgWrapper.recipient).isEqualTo(Recipient.SingleGuest(localConnectionId))
+        assertThat(msgWrapper.recipient).isEqualTo(Recipient.Single(localConnectionId))
         assertThat(message.gameCommonId).isEqualTo(gameCommonId)
         assertThat(message.playerInGameId).isEqualTo(playerInGameId)
 
@@ -70,7 +70,7 @@ class HostMessageFactoryTest : BaseUnitTest() {
         val msgWrapper = HostMessageFactory.createCancelGameMessage()
         val message = (msgWrapper.message as Message.CancelGameMessage)
 
-        assertThat(msgWrapper.recipient).isEqualTo(Recipient.AllGuests)
+        assertThat(msgWrapper.recipient).isEqualTo(Recipient.All)
         assertThat(message).isEqualTo(Message.CancelGameMessage)
     }
 }

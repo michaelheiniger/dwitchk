@@ -26,41 +26,41 @@ class HostMessageFactory @Inject constructor(private val store: InGameStore) {
         return Single.fromCallable {
             val gameCommonId = store.getGame().gameCommonId
             val message = Message.JoinGameAckMessage(gameCommonId, playerInGameId)
-            EnvelopeToSend(Recipient.SingleGuest(recipientId), message)
+            EnvelopeToSend(Recipient.Single(recipientId), message)
         }
     }
 
     companion object {
 
         fun createCancelGameMessage(): EnvelopeToSend {
-            return EnvelopeToSend(Recipient.AllGuests, Message.CancelGameMessage)
+            return EnvelopeToSend(Recipient.All, Message.CancelGameMessage)
         }
 
         fun createLaunchGameMessage(gameState: GameState): EnvelopeToSend {
-            return EnvelopeToSend(Recipient.AllGuests, Message.LaunchGameMessage(gameState))
+            return EnvelopeToSend(Recipient.All, Message.LaunchGameMessage(gameState))
         }
 
         fun createRejoinAckMessage(rejoinInfo: RejoinInfo): EnvelopeToSend {
             val message = Message.RejoinGameAckMessage(rejoinInfo)
-            return EnvelopeToSend(Recipient.SingleGuest(rejoinInfo.connectionId), message)
+            return EnvelopeToSend(Recipient.Single(rejoinInfo.connectionId), message)
         }
 
         fun createGameOverMessage(): EnvelopeToSend {
-            return EnvelopeToSend(Recipient.AllGuests, Message.GameOverMessage)
+            return EnvelopeToSend(Recipient.All, Message.GameOverMessage)
         }
 
         fun createCardExchangeMessage(inGameId: PlayerInGameId, cardExchange: CardExchange, recipient: ConnectionId): EnvelopeToSend {
             val message = Message.CardExchangeMessage(inGameId, cardExchange)
-            return EnvelopeToSend(Recipient.SingleGuest(recipient), message)
+            return EnvelopeToSend(Recipient.Single(recipient), message)
         }
 
         fun createGameStateUpdatedMessage(gameState: GameState): EnvelopeToSend {
-            return EnvelopeToSend(Recipient.AllGuests, Message.GameStateUpdatedMessage(gameState))
+            return EnvelopeToSend(Recipient.All, Message.GameStateUpdatedMessage(gameState))
         }
 
         private fun createWaitingRoomStateUpdateMessage(playerList: List<Player>): EnvelopeToSend {
             val message = Message.WaitingRoomStateUpdateMessage(playerList)
-            return EnvelopeToSend(Recipient.AllGuests, message)
+            return EnvelopeToSend(Recipient.All, message)
         }
     }
 }

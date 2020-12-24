@@ -40,8 +40,8 @@ internal class WebsocketCommServer @Inject constructor(
 
     private fun getRecipientAddress(recipient: Recipient): AddressType {
         return when (recipient) {
-            is Recipient.SingleGuest -> AddressType.Unicast(connectionStore.getAddress(recipient.id)!!)
-            Recipient.AllGuests -> AddressType.Broadcast
+            is Recipient.Single -> AddressType.Unicast(connectionStore.getAddress(recipient.id)!!)
+            Recipient.All -> AddressType.Broadcast
         }
     }
 

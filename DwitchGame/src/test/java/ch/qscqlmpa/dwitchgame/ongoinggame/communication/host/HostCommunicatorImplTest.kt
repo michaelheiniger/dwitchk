@@ -4,12 +4,12 @@ import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchcommunication.CommServer
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreFactory
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.Recipient
 import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
+import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
@@ -36,7 +36,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
     private val mockCommEventRepository = mockk<HostCommunicationStateRepository>(relaxed = true)
 
-    private lateinit var connectionStore: ConnectionStore
+    private val mockConnectionStore = mockk<ConnectionStore>(relaxed = true)
 
     private lateinit var hostCommunicator: HostCommunicator
 
@@ -44,11 +44,12 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
     private lateinit var receivedMessagesSubject: PublishSubject<EnvelopeReceived>
 
+    private val hostPlayerInGameId = PlayerInGameId(123)
+    private val hostConnectionId = ConnectionId(321)
+
     @BeforeEach
     override fun setup() {
         super.setup()
-
-        connectionStore = ConnectionStoreFactory.createConnectionStore()
 
         hostCommunicator = HostCommunicatorImpl(
             mockInGameStore,
@@ -56,7 +57,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
             mockMessageDispatcher,
             mockCommunicationEventDispatcher,
             mockCommEventRepository,
-            connectionStore,
+            mockConnectionStore,
             TestSchedulerFactory()
         )
 
@@ -129,7 +130,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
             receivedMessagesSubject.onNext(messageReceived1)
             receivedMessagesSubject.onNext(messageReceived2)
 
-            verify(exactly = 1) { mockCommServer.sendMessage(Message.GameStateUpdatedMessage(gameState), Recipient.AllGuests)}
+            verify(exactly = 1) { mockCommServer.sendMessage(Message.GameStateUpdatedMessage(gameState), Recipient.All)}
         }
     }
 
@@ -162,23 +163,42 @@ class HostCommunicatorImplTest : BaseUnitTest() {
         }
 
         @Test
-        fun `Broadcast message to all guests`() {
-            val messageToSend = Message.CancelGameMessage
+        fun `Send message to a single recipient that happens to be the host`() {
+            hostCommunicator.listenForConnections()
 
-            hostCommunicator.sendMessage(EnvelopeToSend(Recipient.AllGuests, messageToSend)).test().assertComplete()
+            every { mockInGameStore.getLocalPlayerInGameId() } returns hostPlayerInGameId
+            every { mockConnectionStore.getConnectionId(hostPlayerInGameId) } returns hostConnectionId
 
-            verify { mockCommServer.sendMessage(messageToSend, Recipient.AllGuests) }
+            val messageToSend = Message.CardsForExchangeMessage(hostPlayerInGameId, setOf(Card.Clubs2, Card.Clubs3))
+
+            hostCommunicator.sendMessage(EnvelopeToSend(Recipient.Single(hostConnectionId), messageToSend))
+                .test().assertComplete()
+
+            verify(exactly = 0) { mockCommServer.sendMessage(messageToSend, any()) }
+            verify { mockMessageDispatcher.dispatch(EnvelopeReceived(hostConnectionId, messageToSend))}
         }
 
         @Test
-        fun `Send message to one specific recipient`() {
+        fun `Broadcast message to all guests`() {
+            val messageToSend = Message.CancelGameMessage
+
+            hostCommunicator.sendMessage(EnvelopeToSend(Recipient.All, messageToSend)).test().assertComplete()
+
+            verify { mockCommServer.sendMessage(messageToSend, Recipient.All) }
+        }
+
+        @Test
+        fun `Send message to one specific guest`() {
+            every { mockInGameStore.getLocalPlayerInGameId() } returns hostPlayerInGameId
+            every { mockConnectionStore.getConnectionId(hostPlayerInGameId) } returns hostConnectionId
+
             val messageToSend = Message.JoinGameAckMessage(GameCommonId(124), PlayerInGameId(45))
             val guestConnectionId = ConnectionId(32)
 
-            hostCommunicator.sendMessage(EnvelopeToSend(Recipient.SingleGuest(guestConnectionId), messageToSend))
+            hostCommunicator.sendMessage(EnvelopeToSend(Recipient.Single(guestConnectionId), messageToSend))
                 .test().assertComplete()
 
-            verify { mockCommServer.sendMessage(messageToSend, Recipient.SingleGuest(guestConnectionId)) }
+            verify { mockCommServer.sendMessage(messageToSend, Recipient.Single(guestConnectionId)) }
         }
     }
 

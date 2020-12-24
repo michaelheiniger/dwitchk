@@ -51,7 +51,7 @@ class CancelGameUsecaseTest : BaseUnitTest() {
     fun `"Cancel game" message is sent`() {
         launchTest()
 
-        val cancelGameMessageWrapper = EnvelopeToSend(Recipient.AllGuests, Message.CancelGameMessage)
+        val cancelGameMessageWrapper = EnvelopeToSend(Recipient.All, Message.CancelGameMessage)
 
         verify { mockCommunicator.sendMessage(cancelGameMessageWrapper) }
     }

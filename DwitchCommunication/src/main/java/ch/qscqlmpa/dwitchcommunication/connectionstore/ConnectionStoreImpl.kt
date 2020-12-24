@@ -42,8 +42,8 @@ internal class ConnectionStoreImpl : ConnectionStore, ConnectionStoreInternal {
         return addressReverseMap[address]
     }
 
-    override fun getAddress(connectionId: ConnectionId): Address? {
-        return addressMap[connectionId]
+    override fun getAddress(id: ConnectionId): Address? {
+        return addressMap[id]
     }
 
     override fun getInGameId(connectionId: ConnectionId): PlayerInGameId? {
