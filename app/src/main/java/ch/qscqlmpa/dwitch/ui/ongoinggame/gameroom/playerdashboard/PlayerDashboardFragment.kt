@@ -55,17 +55,17 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
         viewModel.playerDashboard().observe(viewLifecycleOwner, { dashboard ->
             Timber.d("Dashboard update event: $dashboard")
 
-            playersTv.text = dashboard.playersInfo()
-            gameInfoTv.text = dashboard.gameInfo()
+            playersTv.text = dashboard.playersInfo
+            gameInfoTv.text = dashboard.gameInfo
 
-            startNewRoundBtn.isEnabled = dashboard.canStartNewRound()
-            pickBtn.isEnabled = dashboard.canPickACard()
-            passBtn.isEnabled = dashboard.canPass()
-            canPlay = dashboard.canPlay()
+            startNewRoundBtn.isEnabled = dashboard.canStartNewRound
+            pickBtn.isEnabled = dashboard.canPickACard
+            passBtn.isEnabled = dashboard.canPass
+            canPlay = dashboard.canPlay
 
-            cardsInHandAdapter.setData(dashboard.cardsInHands())
+            cardsInHandAdapter.setData(dashboard.cardsInHands)
 
-            setImageView(lastCardPlayedIv, dashboard.lastCardPlayed())
+            setImageView(lastCardPlayedIv, dashboard.lastCardPlayed)
         })
     }
 

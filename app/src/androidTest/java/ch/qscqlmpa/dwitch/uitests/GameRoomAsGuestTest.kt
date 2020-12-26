@@ -17,7 +17,8 @@ import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.elementIsDisplayed
 import ch.qscqlmpa.dwitch.utils.TestEntityFactory
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchengine.DwitchEngine
+import ch.qscqlmpa.dwitchengine.DwitchEngine.Companion.createNewGame
+import ch.qscqlmpa.dwitchengine.ProdDwitchEngineFactory
 import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealer
 import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealerFactory
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
@@ -163,7 +164,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
             TestEntityFactory.createGuestPlayer1(inGameId = PlayerGuestTest.LocalGuest.inGameId)
         )
         val initialGameSetup = DeterministicInitialGameSetup(cardsForPlayer, rankForPlayer)
-        return DwitchEngine.createNewGame(players.map(Player::toPlayerInfo), initialGameSetup)
+        return createNewGame(players.map(Player::toPlayerInfo), initialGameSetup)
     }
 
     private fun hostStartsNewRound(gameState: GameState): GameState {
@@ -176,7 +177,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
                 )
             )
         )
-        val newRoundGameState = DwitchEngine(gameState).startNewRound(cardDealerFactory)
+        val newRoundGameState = ProdDwitchEngineFactory().create(gameState).startNewRound(cardDealerFactory)
         val message = MessageFactory.createGameStateUpdatedMessage(newRoundGameState)
         clientTestStub.serverSendsMessageToClient(message, false)
 
@@ -184,7 +185,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
     }
 
     private fun hostSendsCardExchangeMessage(gameState: GameState) {
-        val cardExchangeOfLocalGuest = DwitchEngine(gameState).getCardsExchanges()
+        val cardExchangeOfLocalGuest = ProdDwitchEngineFactory().create(gameState).getCardsExchanges()
             .find { (playerId, _) -> playerId == PlayerGuestTest.LocalGuest.inGameId }!!
 
         val envelope = HostMessageFactory.createCardExchangeMessage(cardExchangeOfLocalGuest, ConnectionId(2))

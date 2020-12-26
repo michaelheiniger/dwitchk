@@ -5,12 +5,12 @@ import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.Recipient
 import ch.qscqlmpa.dwitchengine.DwitchEngine
+import ch.qscqlmpa.dwitchengine.TestDwitchEngineFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchgame.TestUtil
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.TestDwitchEngineFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.messageprocessors.BaseMessageProcessorTest
 import io.mockk.every
 import io.mockk.mockk

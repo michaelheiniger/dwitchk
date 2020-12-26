@@ -6,22 +6,18 @@ import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.Recipient
 import ch.qscqlmpa.dwitchengine.DwitchEngine
+import ch.qscqlmpa.dwitchengine.TestDwitchEngineFactory
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.CardExchange
-import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.DwitchEngineFactory
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.TestDwitchEngineFactory
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import kotlin.system.exitProcess
 
 internal class StartCardExchangeUsecaseTest : BaseUnitTest() {
 

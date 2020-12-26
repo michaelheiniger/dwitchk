@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchengine.actions.pickcard
 
-import ch.qscqlmpa.dwitchengine.DwitchEngine
+import ch.qscqlmpa.dwitchengine.DwitchEngineImpl
 import ch.qscqlmpa.dwitchengine.EngineTestBase
 import ch.qscqlmpa.dwitchengine.GameStateRobot
 import ch.qscqlmpa.dwitchengine.PlayerRobot
@@ -48,6 +48,6 @@ class PickCardTest : EngineTestBase() {
 
     private fun launchPickCardTest() {
         val gameState = gameStateBuilder.build()
-        gameStateUpdated = DwitchEngine(gameState).pickCard()
+        gameStateUpdated = DwitchEngineImpl(gameState).pickCard()
     }
 }

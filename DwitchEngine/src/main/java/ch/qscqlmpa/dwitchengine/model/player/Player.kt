@@ -4,14 +4,15 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Player(val id: PlayerInGameId,
-                  val name: String,
-                  val cardsInHand: List<Card>,
-                  val rank: Rank,
-                  val state: PlayerState,
-                  val dwitched: Boolean,
-                  val hasPickedACard: Boolean,
-                  val cardsForExchange: Set<Card> = emptySet()
+data class Player(
+    val id: PlayerInGameId,
+    val name: String,
+    val cardsInHand: List<Card>,
+    val rank: Rank,
+    val status: PlayerStatus,
+    val dwitched: Boolean,
+    val hasPickedACard: Boolean,
+    val cardsForExchange: Set<Card> = emptySet()
 ) {
     val hasNotPickedACard get() = !hasPickedACard
 

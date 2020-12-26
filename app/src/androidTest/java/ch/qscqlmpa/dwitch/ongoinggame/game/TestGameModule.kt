@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealer
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetupFactory
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetupFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.PlayerDashboardFacade
+import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardFacade
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -15,7 +15,7 @@ abstract class TestGameModule {
 
     @OngoingGameScope
     @Binds
-    internal abstract fun provideGameInteractor(gameInteractor: PlayerDashboardFacade): PlayerDashboardFacade
+    internal abstract fun provideGameInteractor(gameInteractor: GameDashboardFacade): GameDashboardFacade
 
     @Module
     companion object {

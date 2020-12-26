@@ -10,7 +10,7 @@ import dagger.Subcomponent
     OngoingGameModule::class,
     WaitingRoomModule::class,
     GameRoomModule::class,
-    TestGameInteractorModule::class,
+    TestGameModule::class,
     MessageProcessorModule::class,
     GuestCommunicationEventProcessorModule::class,
     HostCommunicationEventProcessorModule::class,

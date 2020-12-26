@@ -12,7 +12,7 @@ import dagger.Component
 @GameScope
 @Component(
     modules = [
-        GameModule::class,
+        StoreModule::class,
         HomeModule::class,
         GameDiscoveryModule::class,
         SerializationModule::class,
@@ -29,6 +29,6 @@ interface GameComponent {
 
     @Component.Factory
     interface Factory {
-        fun create(module: GameModule): GameComponent
+        fun create(module: StoreModule): GameComponent
     }
 }

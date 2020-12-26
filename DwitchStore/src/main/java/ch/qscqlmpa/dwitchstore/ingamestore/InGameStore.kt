@@ -11,6 +11,7 @@ import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 
 interface InGameStore {
 
@@ -28,6 +29,7 @@ interface InGameStore {
     fun observeDwitchEvents(): Observable<DwitchEvent>
 
     fun addCardExchangeEvent(cardExchange: CardExchange)
+    fun getCardExchangeEvent(): Single<CardExchange>
     fun observeCardExchangeEvents(): Observable<CardExchange>
 
     fun deleteDwitchEvent(event: DwitchEvent): Int

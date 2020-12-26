@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchengine.actions.playcard
 
-import ch.qscqlmpa.dwitchengine.DwitchEngine
+import ch.qscqlmpa.dwitchengine.DwitchEngineImpl
 import ch.qscqlmpa.dwitchengine.EngineTestBase
 import ch.qscqlmpa.dwitchengine.GameStateRobot
 import ch.qscqlmpa.dwitchengine.PlayerRobot
@@ -422,6 +422,6 @@ class PlayCardTest : EngineTestBase() {
 
     private fun launchPlayCardTest(cardPlayed: Card) {
         val gameState = gameStateBuilder.build()
-        gameStateUpdated = DwitchEngine(gameState).playCard(cardPlayed)
+        gameStateUpdated = DwitchEngineImpl(gameState).playCard(cardPlayed)
     }
 }

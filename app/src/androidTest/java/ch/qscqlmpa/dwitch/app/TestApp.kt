@@ -8,7 +8,7 @@ import ch.qscqlmpa.dwitchcommunication.di.DaggerTestCommunicationComponent
 import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
 import ch.qscqlmpa.dwitchgame.di.DaggerTestGameComponent
 import ch.qscqlmpa.dwitchgame.di.TestGameComponent
-import ch.qscqlmpa.dwitchgame.di.modules.GameModule
+import ch.qscqlmpa.dwitchgame.di.modules.StoreModule
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameComponent
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.modules.OngoingGameModule
 import ch.qscqlmpa.dwitchmodel.game.RoomType
@@ -32,7 +32,7 @@ class TestApp : App() {
             .create(TestStoreModule(this))
 
         testGameComponent = DaggerTestGameComponent.factory()
-            .create(GameModule(testStoreComponent.store))
+            .create(StoreModule(testStoreComponent.store))
 
         testAppComponent = DaggerTestAppComponent.builder()
                 .applicationModule(ApplicationModule(this))

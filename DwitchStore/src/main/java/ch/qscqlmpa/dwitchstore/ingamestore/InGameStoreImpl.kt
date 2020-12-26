@@ -13,6 +13,7 @@ import ch.qscqlmpa.dwitchstore.db.AppRoomDatabase
 import ch.qscqlmpa.dwitchstore.util.SerializerFactory
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 
 internal class InGameStoreImpl constructor(
     private val gameLocalId: Long,
@@ -68,6 +69,11 @@ internal class InGameStoreImpl constructor(
     override fun observeDwitchEvents(): Observable<DwitchEvent> {
         return dwitchEventDao.observeDwitchEvents(gameLocalId)
             .map { event -> serializerFactory.unserializeDwitchEvent(event.event) }
+    }
+
+    override fun getCardExchangeEvent(): Single<CardExchange> {
+        return Single.fromCallable { gameDao.getGame(gameLocalId) }
+            .map { game -> serializerFactory.unserializeCardExchange(game.cardExchangeEvent!!) }
     }
 
     override fun observeCardExchangeEvents(): Observable<CardExchange> {

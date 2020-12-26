@@ -8,13 +8,13 @@ import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.CardExchange
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.PlayerDashboardFacade
-import io.reactivex.rxjava3.core.Observable
+import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardFacade
+import io.reactivex.rxjava3.core.Single
 import timber.log.Timber
 import javax.inject.Inject
 
 class CardExchangeViewModel @Inject constructor(
-    private val facade: PlayerDashboardFacade,
+    private val facade: GameDashboardFacade,
     disposableManager: DisposableManager,
     schedulerFactory: SchedulerFactory
 ) : BaseViewModel(disposableManager, schedulerFactory) {
@@ -29,7 +29,6 @@ class CardExchangeViewModel @Inject constructor(
     private val cardChosenItems = MutableLiveData<List<CardItem>>(listOf())
 
     init {
-        initializeCardsInHand()
         initialize()
     }
 
@@ -100,22 +99,11 @@ class CardExchangeViewModel @Inject constructor(
         return cardHasAllowedValue
     }
 
-    private fun initializeCardsInHand() {
-
-    }
-
     private fun initialize() {
         disposableManager.add(
-            Observable.zip(
-                facade.observeCardExchangeEvents()
-                    .take(1)
-                    .subscribeOn(schedulerFactory.io())
-                    .observeOn(schedulerFactory.ui()),
-                facade.getDashboard()
-                    .map { dashboard -> dashboard.cardsInHand }
-                    .toObservable()
-                    .subscribeOn(schedulerFactory.io())
-                    .observeOn(schedulerFactory.ui()),
+            Single.zip(
+                getCardExchangeEvents(),
+                getDashboard(),
                 { event, cards ->
                     Timber.d("Card exchange event: $event")
                     cardExchangeEvent = event
@@ -128,26 +116,15 @@ class CardExchangeViewModel @Inject constructor(
                 {},
                 { error -> Timber.e(error, "Error while initializing card exchange.") }
             )
-
-//                .subscribe(
-//                    { event ->
-//                        Timber.d("Card exchange event: $event")
-//                        cardExchangeEvent = event
-//                    },
-//                    { error -> Timber.e(error, "Error while observing card exchange.") }
-//                )
-//
-//
-//
-//                .doOnError { error -> Timber.e(error, "Error while observing player dashboard.") }
-//                .subscribe(
-//                    { cards ->
-//                        Timber.d("Cards in hand: $cards")
-//                        cardsInHand = cards.toMutableList()
-//                        updateCardsInHandItems()
-//                    },
-//                    { error -> Timber.e(error, "Error while fetching cards in hand.") }
-//                ),
         )
     }
+
+    private fun getDashboard() = facade.getDashboard()
+        .map { dashboard -> dashboard.localPlayerInfo.cardsInHand }
+        .subscribeOn(schedulerFactory.io())
+        .observeOn(schedulerFactory.ui())
+
+    private fun getCardExchangeEvents() = facade.getCardExchangeEvent()
+        .subscribeOn(schedulerFactory.io())
+        .observeOn(schedulerFactory.ui())
 }

@@ -1,10 +1,8 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
-import ch.qscqlmpa.dwitch.utils.PlayerDashboardRobot
-import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchgame.gameadvertising.SerializerFactory
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.PlayerDashboardFacade
+import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardFacade
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 
 abstract class IntTestPlayer {
@@ -13,7 +11,7 @@ abstract class IntTestPlayer {
     protected var gameLocalId: Long? = null
 //    protected lateinit var ongoingGameComponent: IntTestOngoingGameComponent
     private lateinit var inGameStore: InGameStore
-    private lateinit var playerDashboardFacade: PlayerDashboardFacade
+    private lateinit var playerDashboardFacade: GameDashboardFacade
     protected lateinit var serializerFactory: SerializerFactory
 
 //    private val serviceManager = appComponent.serviceManager as IntTestServiceManager
@@ -55,10 +53,10 @@ abstract class IntTestPlayer {
         playerDashboardFacade.startNewRound().blockingSubscribe()
     }
 
-    fun assertDashboard(): PlayerDashboardRobot {
-        val gameState = inGameStore.getGameState()
-        val engine = DwitchEngine(gameState)
-        val localPlayerInGameId = inGameStore.getLocalPlayerInGameId()
-        return PlayerDashboardRobot(engine.getPlayerDashboard(localPlayerInGameId))
-    }
+//    fun assertDashboard(): PlayerDashboardRobot {
+//        val gameState = inGameStore.getGameState()
+//        val engine = DwitchEngineImpl(gameState)
+//        val localPlayerInGameId = inGameStore.getLocalPlayerInGameId()
+//        return PlayerDashboardRobot(engine.getPlayerDashboard(localPlayerInGameId))
+//    }
 }

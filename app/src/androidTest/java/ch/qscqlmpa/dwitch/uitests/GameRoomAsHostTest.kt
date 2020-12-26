@@ -18,7 +18,7 @@ import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.clickOnButton
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.websocket.server.test.PlayerHostTest
-import ch.qscqlmpa.dwitchengine.DwitchEngine
+import ch.qscqlmpa.dwitchengine.ProdDwitchEngineFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.Rank
@@ -180,14 +180,14 @@ class GameRoomAsHostTest : BaseHostTest() {
         assertCardInHand(0, Card.Diamonds4)
         assertCardInHand(1, Card.Clubs10)
 
-        otherPlayerSendsCardExchangeMessage(setOf(Card.Hearts5, Card.Clubs3))
+        otherPlayerSendsCardExchangeMessage(setOf(Card.Spades6, Card.HeartsAce))
 
         waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
 
         assertCardInHand(0, Card.Diamonds4)
         assertCardInHand(1, Card.Clubs10)
-        assertCardInHand(2, Card.Hearts5)
-        assertCardInHand(3, Card.Clubs3)
+        assertCardInHand(2, Card.Spades6)
+        assertCardInHand(3, Card.HeartsAce)
 
         UiUtil.assertControlTextContent(R.id.gameInfoTv, R.string.round_is_beginning)
     }
@@ -199,7 +199,7 @@ class GameRoomAsHostTest : BaseHostTest() {
 
     private fun otherPlayerPlaysCard(guest: PlayerHostTest, card: Card) {
         val currentGameState = inGameStore.getGameState()
-        val newGameState = DwitchEngine(currentGameState).playCard(card)
+        val newGameState = ProdDwitchEngineFactory().create(currentGameState).playCard(card)
         serverTestStub.guestSendsMessageToServer(guest, MessageFactory.createGameStateUpdatedMessage(newGameState), true)
     }
 

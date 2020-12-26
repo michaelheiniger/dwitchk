@@ -1,6 +1,5 @@
-package ch.qscqlmpa.dwitchgame.ongoinggame.game
+package ch.qscqlmpa.dwitchengine
 
-import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 
 class TestDwitchEngineFactory : DwitchEngineFactory {

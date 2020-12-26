@@ -1,12 +1,11 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
-import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.DwitchEngineFactory
+import ch.qscqlmpa.dwitchengine.DwitchEngineFactory
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import timber.log.Timber

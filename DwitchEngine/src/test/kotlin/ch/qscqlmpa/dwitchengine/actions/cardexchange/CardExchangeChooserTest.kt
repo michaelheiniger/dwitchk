@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchengine.actions.cardexchange
 
-import ch.qscqlmpa.dwitchengine.DwitchEngine
+import ch.qscqlmpa.dwitchengine.DwitchEngineImpl
 import ch.qscqlmpa.dwitchengine.EngineTestBase
 import ch.qscqlmpa.dwitchengine.PlayerRobot
 import ch.qscqlmpa.dwitchengine.model.card.Card
@@ -109,6 +109,6 @@ internal class CardExchangeChooserTest : EngineTestBase() {
 
     private fun launchTestForPlayer1(vararg cardsForExchange: Card) {
         initialGameState = gameStateBuilder.build()
-        gameStateUpdated = DwitchEngine(initialGameState).chooseCardsForExchange(player1.id, setOf(*cardsForExchange))
+        gameStateUpdated = DwitchEngineImpl(initialGameState).chooseCardsForExchange(player1.id, setOf(*cardsForExchange))
     }
 }

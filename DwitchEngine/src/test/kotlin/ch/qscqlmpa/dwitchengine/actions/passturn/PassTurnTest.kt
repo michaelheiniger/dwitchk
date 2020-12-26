@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchengine.actions.passturn
 
-import ch.qscqlmpa.dwitchengine.DwitchEngine
+import ch.qscqlmpa.dwitchengine.DwitchEngineImpl
 import ch.qscqlmpa.dwitchengine.EngineTestBase
 import ch.qscqlmpa.dwitchengine.GameStateRobot
 import ch.qscqlmpa.dwitchengine.PlayerRobot
@@ -74,6 +74,6 @@ class PassTurnTest : EngineTestBase() {
     }
 
     private fun launchPassTurnTest() {
-        gameStateUpdated = DwitchEngine(initialGameState).passTurn()
+        gameStateUpdated = DwitchEngineImpl(initialGameState).passTurn()
     }
 }

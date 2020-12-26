@@ -6,7 +6,10 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameEvent
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.*
+import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerOnboardingInfo
+import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
+import ch.qscqlmpa.dwitchengine.model.player.Rank
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -81,173 +84,228 @@ internal class DwitchEngineTest {
      */
     @Test
     fun `Play whole round with 5 players`() {
-        PlayerDashboardRobot(getPlayerDashboard(hostPlayerId))
+
+        // Playing order is host, guest1, guest2, guest3, guest4
+        createGameInfoRobot()
+            .assertCardsOnTable(listOf(Card.Clubs5))
+            .assertGamePhase(GamePhase.RoundIsBeginning)
+            .assertPlayingOrder(hostPlayerId, guestPlayer1Id, guestPlayer2Id, guestPlayer3Id, guestPlayer4Id)
+        createPlayerInfoRobot(hostPlayerId)
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
-                .assertCardsOnTable(listOf(Card.Clubs5))
                 .assertCanStartNewRound(false)
                 .assertCanEndGame(false)
-                .assertGamePhase(GamePhase.RoundIsBeginning)
+
+        // Host plays a card and dwitches guest1
         playCard(Card.Diamonds5)
 
-        PlayerDashboardRobot(getPlayerDashboard(guestPlayer2Id))
+        createGameInfoRobot()
+            .assertCardsOnTable(listOf(Card.Clubs5, Card.Diamonds5))
+            .assertGamePhase(GamePhase.RoundIsOnGoing)
+        createPlayerInfoRobot(guestPlayer1Id).assertDwitched()
+        createPlayerInfoRobot(guestPlayer2Id)
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
-                .assertCardsOnTable(listOf(Card.Clubs5, Card.Diamonds5))
-                .assertGamePhase(GamePhase.RoundIsOnGoing)
+
+        // Guest2 plays a joker
         playCard(Card.Hearts2)
 
-        PlayerDashboardRobot(getPlayerDashboard(guestPlayer2Id))
+        createGameInfoRobot().assertCardsOnTable(emptyList())
+        createPlayerInfoRobot(guestPlayer2Id)
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
-                .assertCardsOnTable(emptyList())
+
+        // Guest2 plays a card
         playCard(Card.Hearts3)
 
-        PlayerDashboardRobot(getPlayerDashboard(guestPlayer3Id))
+        createGameInfoRobot().assertCardsOnTable(listOf(Card.Hearts3))
+        createPlayerInfoRobot(guestPlayer3Id)
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
-                .assertCardsOnTable(listOf(Card.Hearts3))
+
+        // Guest3 plays a card
         playCard(Card.Spades3)
 
-        PlayerDashboardRobot(getPlayerDashboard(hostPlayerId))
+        createGameInfoRobot().assertCardsOnTable(listOf(Card.Hearts3, Card.Spades3))
+        createPlayerInfoRobot(hostPlayerId)
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
-                .assertCardsOnTable(listOf(Card.Hearts3, Card.Spades3))
+
+        // Host plays a card
         playCard(Card.Diamonds3)
 
-        PlayerDashboardRobot(getPlayerDashboard(guestPlayer2Id))
+        createGameInfoRobot().assertCardsOnTable(listOf(Card.Hearts3, Card.Spades3, Card.Diamonds3))
+        createPlayerInfoRobot(guestPlayer2Id)
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
-                .assertCardsOnTable(listOf(Card.Hearts3, Card.Spades3, Card.Diamonds3))
+
+        // Guest2 plays its last card
         playCard(Card.Hearts4)
 
-        PlayerDashboardRobot(getPlayerDashboard(guestPlayer3Id))
+        createGameInfoRobot().assertCardsOnTable(listOf(Card.Hearts3, Card.Spades3, Card.Diamonds3, Card.Hearts4))
+        createPlayerInfoRobot(guestPlayer3Id)
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
-                .assertCardsOnTable(listOf(Card.Hearts3, Card.Spades3, Card.Diamonds3, Card.Hearts4))
-                .assertPlayerState(guestPlayer2Id, PlayerStatus.Done)
+        createPlayerInfoRobot(guestPlayer2Id).assertPlayerStatus(PlayerStatus.Done)
+
+        // Guest3 plays a joker
         playCard(Card.Spades2)
 
-        PlayerDashboardRobot(getPlayerDashboard(guestPlayer3Id))
+        createGameInfoRobot().assertCardsOnTable(emptyList())
+        createPlayerInfoRobot(guestPlayer3Id)
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
-                .assertCardsOnTable(emptyList())
+
+        // Guest3 plays its last card
         playCard(Card.Spades4)
 
-        PlayerDashboardRobot(getPlayerDashboard(guestPlayer4Id))
+        createGameInfoRobot().assertCardsOnTable(listOf(Card.Spades4))
+        createPlayerInfoRobot(guestPlayer3Id).assertPlayerStatus(PlayerStatus.Done)
+        createPlayerInfoRobot(guestPlayer4Id)
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
-                .assertCardsOnTable(listOf(Card.Spades4))
-                .assertPlayerState(guestPlayer3Id, PlayerStatus.Done)
+
+        // Guest4 plays a card
         playCard(Card.DiamondsJack)
 
-        PlayerDashboardRobot(getPlayerDashboard(hostPlayerId))
+        createGameInfoRobot().assertCardsOnTable(listOf(Card.Spades4, Card.DiamondsJack))
+        createPlayerInfoRobot(hostPlayerId)
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
-                .assertCardsOnTable(listOf(Card.Spades4, Card.DiamondsJack))
+
+        // Host plays its last card
         playCard(Card.Diamonds2)
 
-        PlayerDashboardRobot(getPlayerDashboard(guestPlayer1Id))
+        createGameInfoRobot().assertCardsOnTable(emptyList())
+        createPlayerInfoRobot(hostPlayerId).assertPlayerStatus(PlayerStatus.Done)
+        createPlayerInfoRobot(guestPlayer1Id)
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
-                .assertCardsOnTable(emptyList())
-                .assertPlayerState(hostPlayerId, PlayerStatus.Done)
+
+        // Play a card
         playCard(Card.Clubs3)
 
-        PlayerDashboardRobot(getPlayerDashboard(guestPlayer4Id))
+        createGameInfoRobot().assertCardsOnTable(listOf(Card.Clubs3))
+        createPlayerInfoRobot(guestPlayer4Id)
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
-                .assertCardsOnTable(listOf(Card.Clubs3))
+
+        // Play a card
         playCard(Card.ClubsQueen)
 
-        PlayerDashboardRobot(getPlayerDashboard(guestPlayer1Id))
+        createGameInfoRobot().assertCardsOnTable(listOf(Card.Clubs3, Card.ClubsQueen))
+        createPlayerInfoRobot(guestPlayer1Id)
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
-                .assertCardsOnTable(listOf(Card.Clubs3, Card.ClubsQueen))
+
+        // Play a card
         playCard(Card.Clubs2)
 
-        PlayerDashboardRobot(getPlayerDashboard(guestPlayer1Id))
+        createGameInfoRobot().assertCardsOnTable(emptyList())
+        createPlayerInfoRobot(guestPlayer1Id)
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
-                .assertCardsOnTable(emptyList())
+
+        // Play a card
         playCard(Card.Clubs6)
 
-        PlayerDashboardRobot(getPlayerDashboard(guestPlayer4Id))
+        createGameInfoRobot().assertCardsOnTable(listOf(Card.Clubs6))
+        createPlayerInfoRobot(guestPlayer4Id)
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
-                .assertCardsOnTable(listOf(Card.Clubs6))
+
+        // Play a card
         playCard(Card.HeartsKing)
 
-        PlayerDashboardRobot(getPlayerDashboard(guestPlayer1Id))
+        createGameInfoRobot().assertCardsOnTable(listOf(Card.Clubs6, Card.HeartsKing))
+        createPlayerInfoRobot(guestPlayer1Id)
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
-                .assertCardsOnTable(listOf(Card.Clubs6, Card.HeartsKing))
+
+        // Pick a card
         pickCard()
 
-        PlayerDashboardRobot(getPlayerDashboard(guestPlayer1Id))
+        createGameInfoRobot()
+            .assertCardsOnTable(listOf(Card.Clubs6, Card.HeartsKing))
+            .assertGameEvent(null)
+        createPlayerInfoRobot(guestPlayer1Id)
                 .assertCanPlay(true)
                 .assertCanPass(true)
                 .assertCanPickACard(false)
-                .assertCardsOnTable(listOf(Card.Clubs6, Card.HeartsKing))
-                .assertGameEvent(null)
+
+        // Pass turn
         passTurn()
 
-        PlayerDashboardRobot(getPlayerDashboard(guestPlayer4Id))
+        createGameInfoRobot()
+            .assertCardsOnTable(emptyList())
+            .assertGameEvent(GameEvent.TableHasBeenClearedTurnPassed)
+            .assertGamePhase(GamePhase.RoundIsOnGoing)
+        createPlayerInfoRobot(guestPlayer4Id)
                 .assertCanPlay(true)
                 .assertCanPass(false)
                 .assertCanPickACard(true)
-                .assertCardsOnTable(emptyList())
-                .assertGameEvent(GameEvent.TableHasBeenClearedTurnPassed)
-                .assertGamePhase(GamePhase.RoundIsOnGoing)
+
+        // Play a card
         playCard(Card.SpadesAce)
 
-        PlayerDashboardRobot(getPlayerDashboard(guestPlayer4Id))
+        createGameInfoRobot()
+            .assertCardsOnTable(listOf(Card.SpadesAce))
+            .assertGameEvent(null)
+            .assertGamePhase(GamePhase.RoundIsOver)
+
+        createPlayerInfoRobot(guestPlayer1Id)
+            .assertPlayerStatus(PlayerStatus.Done)
+            .assertPlayerRank(Rank.ViceAsshole)
+        createPlayerInfoRobot(guestPlayer2Id)
+            .assertPlayerRank(Rank.President)
+        createPlayerInfoRobot(guestPlayer3Id)
+            .assertPlayerRank(Rank.VicePresident)
+        createPlayerInfoRobot(hostPlayerId)
+            .assertPlayerRank(Rank.Asshole) // Finished with a Joker
+
+        createPlayerInfoRobot(guestPlayer4Id)
                 .assertCanPlay(false)
                 .assertCanPass(false)
                 .assertCanPickACard(false)
-                .assertCardsOnTable(listOf(Card.SpadesAce))
-                .assertPlayerState(guestPlayer4Id, PlayerStatus.Done)
-                .assertPlayerState(guestPlayer1Id, PlayerStatus.Done)
-                .assertPlayerRank(guestPlayer2Id, Rank.President)
-                .assertPlayerRank(guestPlayer3Id, Rank.VicePresident)
-                .assertPlayerRank(guestPlayer1Id, Rank.ViceAsshole)
-                .assertPlayerRank(hostPlayerId, Rank.Asshole) // Finished with a Joker
-                .assertPlayerRank(guestPlayer4Id, Rank.Neutral)
-                .assertGameEvent(null)
-                .assertGamePhase(GamePhase.RoundIsOver)
+                .assertPlayerStatus(PlayerStatus.Done)
+                .assertPlayerRank(Rank.Neutral)
                 .assertCanStartNewRound(true)
                 .assertCanEndGame(true)
     }
 
     private fun playCard(card: Card) {
-        gameState = DwitchEngine(gameState).playCard(card)
+        gameState = DwitchEngineImpl(gameState).playCard(card)
     }
 
     private fun pickCard() {
-        gameState = DwitchEngine(gameState).pickCard()
+        gameState = DwitchEngineImpl(gameState).pickCard()
     }
 
     private fun passTurn() {
-        gameState = DwitchEngine(gameState).passTurn()
+        gameState = DwitchEngineImpl(gameState).passTurn()
     }
 
-    private fun getPlayerDashboard(playerId: PlayerInGameId): PlayerDashboard {
-        return DwitchEngine(gameState).getPlayerDashboard(playerId)
+    private fun createPlayerInfoRobot(playerId: PlayerInGameId): PlayerInfoRobot {
+        return PlayerInfoRobot(DwitchEngineImpl(gameState).getGameInfo().playerInfos.getValue(playerId))
+    }
+
+    private fun createGameInfoRobot(): GameInfoRobot {
+        return GameInfoRobot(DwitchEngineImpl(gameState).getGameInfo())
     }
 }
