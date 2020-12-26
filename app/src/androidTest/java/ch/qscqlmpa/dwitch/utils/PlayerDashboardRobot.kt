@@ -6,7 +6,7 @@ import ch.qscqlmpa.dwitchengine.model.game.GameEvent
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboard
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
-import ch.qscqlmpa.dwitchengine.model.player.PlayerState
+import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import org.assertj.core.api.Assertions.assertThat
 
@@ -42,7 +42,7 @@ class PlayerDashboardRobot(private val dashboard: PlayerDashboard) {
         return this
     }
 
-    fun assertPlayerState(playerId: PlayerInGameId, state: PlayerState): PlayerDashboardRobot {
+    fun assertPlayerState(playerId: PlayerInGameId, state: PlayerStatus): PlayerDashboardRobot {
         assertThat(dashboard.players.getValue(playerId).state).isEqualTo(state)
         return this
     }

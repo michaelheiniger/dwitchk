@@ -15,7 +15,7 @@ data class Player(val id: PlayerInGameId,
 ) {
     val hasNotPickedACard get() = !hasPickedACard
 
-    val isTheOnePlaying get() = state == PlayerState.Playing
+    val isTheOnePlaying get() = status == PlayerStatus.Playing
 
     fun toPlayerOnboardingInfo(): PlayerOnboardingInfo {
         return PlayerOnboardingInfo(id, name)

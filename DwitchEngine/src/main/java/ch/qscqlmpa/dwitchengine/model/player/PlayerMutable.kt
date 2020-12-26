@@ -7,7 +7,7 @@ internal data class PlayerMutable(
     private val name: String,
     private val cardsInHand: MutableList<Card>,
     var rank: Rank,
-    var state: PlayerState,
+    var state: PlayerStatus,
     var dwitched: Boolean,
     var hasPickedCard: Boolean,
     val cardsForExchange: MutableSet<Card>
@@ -67,7 +67,7 @@ internal data class PlayerMutable(
                 player.name,
                 player.cardsInHand.toMutableList(),
                 player.rank,
-                player.state,
+                player.status,
                 player.dwitched,
                 player.hasPickedACard,
                 player.cardsForExchange.toMutableSet()

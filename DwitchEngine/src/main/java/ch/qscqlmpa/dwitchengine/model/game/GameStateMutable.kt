@@ -54,7 +54,7 @@ internal data class GameStateMutable(
         player(playerId).rank = rank
     }
 
-    fun setPlayerState(playerId: PlayerInGameId, state: PlayerState) {
+    fun setPlayerState(playerId: PlayerInGameId, state: PlayerStatus) {
         player(playerId).state = state
     }
 

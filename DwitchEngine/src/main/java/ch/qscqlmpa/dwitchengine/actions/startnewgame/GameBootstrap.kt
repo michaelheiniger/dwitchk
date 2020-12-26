@@ -7,7 +7,7 @@ import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.Player
 import ch.qscqlmpa.dwitchengine.model.player.PlayerOnboardingInfo
-import ch.qscqlmpa.dwitchengine.model.player.PlayerState
+import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import ch.qscqlmpa.dwitchengine.rules.PlayingOrder
 
@@ -27,7 +27,7 @@ internal object GameBootstrap {
             )
         }
 
-        val currentPlayer = players.find { p -> p.state == PlayerState.Playing }!!
+        val currentPlayer = players.find { p -> p.status == PlayerStatus.Playing }!!
         val cardsInDeck = initialGameSetup.getRemainingCards().toMutableList()
         val firstCardOnTable = cardsInDeck.removeAt(0)
         val activePlayers = players.map(Player::id).toSet()
@@ -50,10 +50,10 @@ internal object GameBootstrap {
         )
     }
 
-    private fun getPlayerState(rank: Rank): PlayerState {
+    private fun getPlayerState(rank: Rank): PlayerStatus {
         return when (rank) {
-            is Rank.President, is Rank.VicePresident, is Rank.Neutral, is Rank.ViceAsshole -> PlayerState.Waiting
-            is Rank.Asshole -> PlayerState.Playing
+            is Rank.President, is Rank.VicePresident, is Rank.Neutral, is Rank.ViceAsshole -> PlayerStatus.Waiting
+            is Rank.Asshole -> PlayerStatus.Playing
         }
     }
 }

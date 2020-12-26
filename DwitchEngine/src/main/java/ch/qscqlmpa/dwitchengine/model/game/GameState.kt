@@ -6,7 +6,7 @@ import ch.qscqlmpa.dwitchengine.model.card.CardUtil
 import ch.qscqlmpa.dwitchengine.model.player.Player
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDone
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
-import ch.qscqlmpa.dwitchengine.model.player.PlayerState
+import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 import ch.qscqlmpa.dwitchengine.utils.ListUtil.shiftRightByN
 import kotlinx.serialization.Serializable
 
@@ -50,7 +50,7 @@ data class GameState(val phase: GamePhase,
 
     fun waitingPlayerInOrderAfterLocalPlayer(): List<Player> {
         return activePlayersInPlayingOrderAfterLocalPlayer()
-                .filter { player -> player.state == PlayerState.Waiting }
+                .filter { player -> player.status == PlayerStatus.Waiting }
     }
 
     fun nextWaitingPlayer(): Player? {
@@ -69,7 +69,7 @@ data class GameState(val phase: GamePhase,
             if (activePlayers.contains(playerDone.playerId)) {
                 throw IllegalStateException("A player in the 'players done' list cannot be an active player at the same time.")
             }
-            if (players.getValue(playerDone.playerId).state != PlayerState.Done) {
+            if (players.getValue(playerDone.playerId).status != PlayerStatus.Done) {
                 throw IllegalStateException("A player in the 'players done' list cannot have a state different than Done")
             }
         }

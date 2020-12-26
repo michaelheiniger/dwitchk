@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchengine.actions.playcard
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.Player
-import ch.qscqlmpa.dwitchengine.model.player.PlayerState
+import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 
 internal class PlayCard(
     private val playCardState: PlayCardState,
@@ -56,7 +56,7 @@ internal class PlayCard(
 
     private fun setLocalPlayerWaitingIfCannotPlay(newCurrentPlayer: Player) {
         if (localPlayerId != newCurrentPlayer.id) {
-            gameUpdater.setPlayerState(localPlayerId, PlayerState.Waiting)
+            gameUpdater.setPlayerState(localPlayerId, PlayerStatus.Waiting)
         }
     }
 

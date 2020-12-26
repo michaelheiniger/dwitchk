@@ -31,7 +31,7 @@ class EngineTestGameStateBuilder {
         cardsTakenFromDeck.addAll(cardsOnTable)
 
         val activePlayers = playersMap
-                .filter { (_, player) -> player.state != PlayerState.Done }
+                .filter { (_, player) -> player.status != PlayerStatus.Done }
                 .map { (_, player) -> player.id }
                 .toSet()
 
@@ -92,7 +92,7 @@ class EngineTestGameStateBuilder {
 
     fun addPlayerToGame(
         player: PlayerOnboardingInfo,
-        state: PlayerState,
+        state: PlayerStatus,
         rank: Rank,
         cardsInHand: List<Card> = emptyList(),
         dwitched: Boolean = false,

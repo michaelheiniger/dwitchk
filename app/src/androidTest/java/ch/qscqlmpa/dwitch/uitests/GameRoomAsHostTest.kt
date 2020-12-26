@@ -20,7 +20,7 @@ import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.websocket.server.test.PlayerHostTest
 import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.player.PlayerState
+import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
 import org.assertj.core.api.Assertions.assertThat
@@ -95,7 +95,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         passTurn()
 
         val gameStateUpdatedMessage2 =  waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
-        assertThat(gameStateUpdatedMessage2.gameState.player(host.inGameId).state).isEqualTo(PlayerState.Waiting)
+        assertThat(gameStateUpdatedMessage2.gameState.player(host.inGameId).status).isEqualTo(PlayerStatus.Waiting)
 
         assertCanPickACard(false)
         assertCanPassTurn(false)

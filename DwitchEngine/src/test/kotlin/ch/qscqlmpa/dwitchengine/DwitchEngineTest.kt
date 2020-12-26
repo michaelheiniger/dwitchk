@@ -132,7 +132,7 @@ internal class DwitchEngineTest {
                 .assertCanPass(false)
                 .assertCanPickACard(true)
                 .assertCardsOnTable(listOf(Card.Hearts3, Card.Spades3, Card.Diamonds3, Card.Hearts4))
-                .assertPlayerState(guestPlayer2Id, PlayerState.Done)
+                .assertPlayerState(guestPlayer2Id, PlayerStatus.Done)
         playCard(Card.Spades2)
 
         PlayerDashboardRobot(getPlayerDashboard(guestPlayer3Id))
@@ -147,7 +147,7 @@ internal class DwitchEngineTest {
                 .assertCanPass(false)
                 .assertCanPickACard(true)
                 .assertCardsOnTable(listOf(Card.Spades4))
-                .assertPlayerState(guestPlayer3Id, PlayerState.Done)
+                .assertPlayerState(guestPlayer3Id, PlayerStatus.Done)
         playCard(Card.DiamondsJack)
 
         PlayerDashboardRobot(getPlayerDashboard(hostPlayerId))
@@ -162,7 +162,7 @@ internal class DwitchEngineTest {
                 .assertCanPass(false)
                 .assertCanPickACard(true)
                 .assertCardsOnTable(emptyList())
-                .assertPlayerState(hostPlayerId, PlayerState.Done)
+                .assertPlayerState(hostPlayerId, PlayerStatus.Done)
         playCard(Card.Clubs3)
 
         PlayerDashboardRobot(getPlayerDashboard(guestPlayer4Id))
@@ -222,8 +222,8 @@ internal class DwitchEngineTest {
                 .assertCanPass(false)
                 .assertCanPickACard(false)
                 .assertCardsOnTable(listOf(Card.SpadesAce))
-                .assertPlayerState(guestPlayer4Id, PlayerState.Done)
-                .assertPlayerState(guestPlayer1Id, PlayerState.Done)
+                .assertPlayerState(guestPlayer4Id, PlayerStatus.Done)
+                .assertPlayerState(guestPlayer1Id, PlayerStatus.Done)
                 .assertPlayerRank(guestPlayer2Id, Rank.President)
                 .assertPlayerRank(guestPlayer3Id, Rank.VicePresident)
                 .assertPlayerRank(guestPlayer1Id, Rank.ViceAsshole)

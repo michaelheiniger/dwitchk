@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchengine
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
-import ch.qscqlmpa.dwitchengine.model.player.PlayerState
+import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import org.assertj.core.api.Assertions.assertThat
 
@@ -29,8 +29,8 @@ class PlayerRobot(private val gameState: GameState, private val playerId: Player
         return this
     }
 
-    fun assertPlayerState(expectedState: PlayerState): PlayerRobot {
-        assertThat(gameState.players.getValue(playerId).state).isEqualTo(expectedState)
+    fun assertPlayerState(expectedStatus: PlayerStatus): PlayerRobot {
+        assertThat(gameState.players.getValue(playerId).status).isEqualTo(expectedStatus)
         return this
     }
 

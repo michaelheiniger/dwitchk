@@ -3,17 +3,17 @@ package ch.qscqlmpa.dwitchengine.model.player
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class PlayerState {
+sealed class PlayerStatus {
 
     @Serializable
-    object Playing : PlayerState()
+    object Playing : PlayerStatus()
 
     @Serializable
-    object TurnPassed : PlayerState()
+    object TurnPassed : PlayerStatus()
 
     @Serializable
-    object Waiting : PlayerState()
+    object Waiting : PlayerStatus()
 
     @Serializable
-    object Done : PlayerState()
+    object Done : PlayerStatus()
 }

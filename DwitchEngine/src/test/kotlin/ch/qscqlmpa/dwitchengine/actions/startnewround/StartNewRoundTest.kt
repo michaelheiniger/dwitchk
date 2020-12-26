@@ -11,7 +11,7 @@ import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.card.CardUtil
 import ch.qscqlmpa.dwitchengine.model.game.GameEvent
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
-import ch.qscqlmpa.dwitchengine.model.player.PlayerState
+import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -32,8 +32,8 @@ class StartNewRoundTest : EngineTestBase() {
     @Test
     fun `Start a new round for 2 players`() {
         initialGameState = gameStateBuilder
-            .addPlayerToGame(player1, PlayerState.Done, Rank.Asshole, emptyList())
-            .addPlayerToGame(player2, PlayerState.Done, Rank.President, emptyList())
+            .addPlayerToGame(player1, PlayerStatus.Done, Rank.Asshole, emptyList())
+            .addPlayerToGame(player2, PlayerStatus.Done, Rank.President, emptyList())
             .build()
 
         setupCardDealer(
@@ -54,13 +54,13 @@ class StartNewRoundTest : EngineTestBase() {
 
         PlayerRobot(gameStateUpdated, player1Id)
             .assertCardsInHandContainsExactly(Card.Clubs2, Card.Clubs3, Card.Clubs4)
-            .assertPlayerState(PlayerState.Playing) // Since Asshole
+            .assertPlayerState(PlayerStatus.Playing) // Since Asshole
             .assertPlayerIsNotDwitched()
             .assertPlayerHasNotPickedCard()
 
         PlayerRobot(gameStateUpdated, player2Id)
             .assertCardsInHandContainsExactly(Card.Clubs5, Card.Clubs6, Card.Clubs7)
-            .assertPlayerState(PlayerState.Waiting)
+            .assertPlayerState(PlayerStatus.Waiting)
             .assertPlayerIsNotDwitched()
             .assertPlayerHasNotPickedCard()
     }
@@ -68,11 +68,11 @@ class StartNewRoundTest : EngineTestBase() {
     @Test
     fun `Start a new round for 5 players`() {
         initialGameState = gameStateBuilder
-            .addPlayerToGame(player1, PlayerState.Done, Rank.Neutral, emptyList())
-            .addPlayerToGame(player2, PlayerState.Done, Rank.President, emptyList())
-            .addPlayerToGame(player3, PlayerState.Done, Rank.VicePresident, emptyList())
-            .addPlayerToGame(player4, PlayerState.Done, Rank.ViceAsshole, emptyList())
-            .addPlayerToGame(player5, PlayerState.Done, Rank.Asshole, emptyList())
+            .addPlayerToGame(player1, PlayerStatus.Done, Rank.Neutral, emptyList())
+            .addPlayerToGame(player2, PlayerStatus.Done, Rank.President, emptyList())
+            .addPlayerToGame(player3, PlayerStatus.Done, Rank.VicePresident, emptyList())
+            .addPlayerToGame(player4, PlayerStatus.Done, Rank.ViceAsshole, emptyList())
+            .addPlayerToGame(player5, PlayerStatus.Done, Rank.Asshole, emptyList())
             .build()
 
         setupCardDealer(
@@ -96,31 +96,31 @@ class StartNewRoundTest : EngineTestBase() {
 
         PlayerRobot(gameStateUpdated, player1Id)
             .assertCardsInHandContainsExactly(Card.Clubs2, Card.Clubs3, Card.Clubs4)
-            .assertPlayerState(PlayerState.Waiting)
+            .assertPlayerState(PlayerStatus.Waiting)
             .assertPlayerIsNotDwitched()
             .assertPlayerHasNotPickedCard()
 
         PlayerRobot(gameStateUpdated, player2Id)
             .assertCardsInHandContainsExactly(Card.Hearts2, Card.Hearts3, Card.Hearts4)
-            .assertPlayerState(PlayerState.Waiting)
+            .assertPlayerState(PlayerStatus.Waiting)
             .assertPlayerIsNotDwitched()
             .assertPlayerHasNotPickedCard()
 
         PlayerRobot(gameStateUpdated, player3Id)
             .assertCardsInHandContainsExactly(Card.Spades2, Card.Spades3, Card.Spades4)
-            .assertPlayerState(PlayerState.Waiting)
+            .assertPlayerState(PlayerStatus.Waiting)
             .assertPlayerIsNotDwitched()
             .assertPlayerHasNotPickedCard()
 
         PlayerRobot(gameStateUpdated, player4Id)
             .assertCardsInHandContainsExactly(Card.Diamonds2, Card.Diamonds3, Card.Diamonds4)
-            .assertPlayerState(PlayerState.Waiting)
+            .assertPlayerState(PlayerStatus.Waiting)
             .assertPlayerIsNotDwitched()
             .assertPlayerHasNotPickedCard()
 
         PlayerRobot(gameStateUpdated, player5Id)
             .assertCardsInHandContainsExactly(Card.Clubs5, Card.Hearts5, Card.Spades5)
-            .assertPlayerState(PlayerState.Playing) // Since Asshole
+            .assertPlayerState(PlayerStatus.Playing) // Since Asshole
             .assertPlayerIsNotDwitched()
             .assertPlayerHasNotPickedCard()
     }
@@ -128,8 +128,8 @@ class StartNewRoundTest : EngineTestBase() {
     @Test
     fun `Game is properly updated for new round`() {
         initialGameState = gameStateBuilder
-            .addPlayerToGame(player1, PlayerState.Done, Rank.Asshole, emptyList())
-            .addPlayerToGame(player2, PlayerState.Done, Rank.President, emptyList())
+            .addPlayerToGame(player1, PlayerStatus.Done, Rank.Asshole, emptyList())
+            .addPlayerToGame(player2, PlayerStatus.Done, Rank.President, emptyList())
 
             // These two statements are mutually exclusive but the goal is to check the reset of their values.
             .setGameEvent(GameEvent.TableHasBeenCleared(Card.Hearts2))

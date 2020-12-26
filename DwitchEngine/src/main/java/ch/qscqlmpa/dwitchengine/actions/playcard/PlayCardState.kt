@@ -90,7 +90,7 @@ internal class PlayCardState(
 
     private fun turnPassedPlayerInOrderAfterLocalPlayer(): List<Player> {
         return currentGameState.activePlayersInPlayingOrderAfterLocalPlayer()
-                .filter { player -> player.state == PlayerState.TurnPassed }
+                .filter { player -> player.status == PlayerStatus.TurnPassed }
     }
 
     private fun checkCardPlayedIsAValidMove() {

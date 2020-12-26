@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchengine.actions
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
-import ch.qscqlmpa.dwitchengine.model.player.PlayerState
+import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 
 internal abstract class GameStateBase(private val currentGameState: GameState) {
 
@@ -20,8 +20,8 @@ internal abstract class GameStateBase(private val currentGameState: GameState) {
     }
 
     protected fun checkCurrentPlayerStateIsPlaying() {
-        val playerState = currentGameState.currentPlayer().state
-        if (PlayerState.Playing != playerState) {
+        val playerState = currentGameState.currentPlayer().status
+        if (PlayerStatus.Playing != playerState) {
             throw IllegalStateException("Player is not in state $playerState")
         }
     }

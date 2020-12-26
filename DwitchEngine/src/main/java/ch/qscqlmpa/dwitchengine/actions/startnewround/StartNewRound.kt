@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.Player
-import ch.qscqlmpa.dwitchengine.model.player.PlayerState
+import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.PlayingOrderRankComparator
 import ch.qscqlmpa.dwitchengine.rules.PlayingOrder
 
@@ -35,8 +35,8 @@ internal class StartNewRound constructor(
 
     private fun setPlayerStates() {
         gameState.getAllPlayersId()
-            .forEach { id -> gameUpdater.setPlayerState(id, PlayerState.Waiting) }
-        gameUpdater.setPlayerState(gameState.asshole(), PlayerState.Playing)
+            .forEach { id -> gameUpdater.setPlayerState(id, PlayerStatus.Waiting) }
+        gameUpdater.setPlayerState(gameState.asshole(), PlayerStatus.Playing)
     }
 
     private fun dealCards() {
