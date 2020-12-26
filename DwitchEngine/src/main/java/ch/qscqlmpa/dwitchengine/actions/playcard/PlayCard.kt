@@ -28,7 +28,7 @@ internal class PlayCard(
             gameUpdater.roundIsOver(playCardState.computeRanks(localPlayerId, playCardState.getLastActivePlayer()))
         } else {
             val newCurrentPlayer = playCardState.findNewCurrentPlayer()
-            gameUpdater.updateCurrentPlayer(newCurrentPlayer.inGameId)
+            gameUpdater.updateCurrentPlayer(newCurrentPlayer.id)
 
             setLocalPlayerWaitingIfCannotPlay(newCurrentPlayer)
 
@@ -46,7 +46,7 @@ internal class PlayCard(
             }
 
             // Prevents from picking more than one card while no one else has played in-between
-            if (newCurrentPlayer.inGameId != localPlayerId) {
+            if (newCurrentPlayer.id != localPlayerId) {
                 gameUpdater.resetPlayerHasPickedCard(localPlayerId)
             }
         }
@@ -55,7 +55,7 @@ internal class PlayCard(
     }
 
     private fun setLocalPlayerWaitingIfCannotPlay(newCurrentPlayer: Player) {
-        if (localPlayerId != newCurrentPlayer.inGameId) {
+        if (localPlayerId != newCurrentPlayer.id) {
             gameUpdater.setPlayerState(localPlayerId, PlayerState.Waiting)
         }
     }
@@ -63,7 +63,7 @@ internal class PlayCard(
     private fun dwitchNextWaitingPlayerIfAny() {
         val nextWaitingPlayer = playCardState.nextWaitingPlayer()
         if (nextWaitingPlayer != null && playCardState.nextWaitingPlayerIsDwitched()) {
-            gameUpdater.dwitchPlayer(nextWaitingPlayer.inGameId)
+            gameUpdater.dwitchPlayer(nextWaitingPlayer.id)
         }
     }
 }

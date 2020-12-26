@@ -7,6 +7,6 @@ import ch.qscqlmpa.dwitchengine.model.player.PlayingOrderRankComparator
 internal object PlayingOrder {
 
     fun getPlayingOrder(players: List<Player>): List<PlayerInGameId> {
-        return players.sortedWith(PlayingOrderRankComparator()).map { p -> p.inGameId }
+        return players.sortedWith(PlayingOrderRankComparator()).map { p -> p.id }
     }
 }

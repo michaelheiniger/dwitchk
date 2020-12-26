@@ -45,7 +45,7 @@ internal class StartNewRound constructor(
         val cardDealer = cardDealerFactory.getCardDealer(gameState.numPlayersTotal())
         gameState.getAllPlayers()
             .sortedWith(PlayingOrderRankComparator())
-            .map(Player::inGameId)
+            .map(Player::id)
             .forEachIndexed { index, id ->
                 gameUpdater.cardsInHandOfPlayer(id, cardDealer.getCardsForPlayer(index))
             }

@@ -13,7 +13,7 @@ import org.assertj.core.api.Assertions.assertThat
 class PlayerDashboardRobot(private val dashboard: PlayerDashboard) {
 
     fun assertLocalPlayerId(id: PlayerInGameId): PlayerDashboardRobot {
-        assertThat(dashboard.localPlayer.inGameId).isEqualTo(id)
+        assertThat(dashboard.localPlayer.id).isEqualTo(id)
         return this
     }
 

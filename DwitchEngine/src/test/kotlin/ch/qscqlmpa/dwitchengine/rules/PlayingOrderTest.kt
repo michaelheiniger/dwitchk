@@ -30,8 +30,8 @@ internal class PlayingOrderTest {
             val order = launchTest(host, guest1)
 
             assertThat(order.size).isEqualTo(2)
-            assertThat(order[0]).isEqualTo(guest1.inGameId)
-            assertThat(order[1]).isEqualTo(host.inGameId)
+            assertThat(order[0]).isEqualTo(guest1.id)
+            assertThat(order[1]).isEqualTo(host.id)
         }
 
         @Test
@@ -43,9 +43,9 @@ internal class PlayingOrderTest {
             val order = launchTest(host, guest1, guest2)
 
             assertThat(order.size).isEqualTo(3)
-            assertThat(order[0]).isEqualTo(guest1.inGameId)
-            assertThat(order[1]).isEqualTo(host.inGameId)
-            assertThat(order[2]).isEqualTo(guest2.inGameId)
+            assertThat(order[0]).isEqualTo(guest1.id)
+            assertThat(order[1]).isEqualTo(host.id)
+            assertThat(order[2]).isEqualTo(guest2.id)
         }
 
         @Test
@@ -58,10 +58,10 @@ internal class PlayingOrderTest {
             val order = launchTest(host, guest1, guest2, guest3)
 
             assertThat(order.size).isEqualTo(4)
-            assertThat(order[0]).isEqualTo(guest2.inGameId)
-            assertThat(order[1]).isEqualTo(guest3.inGameId)
-            assertThat(order[2]).isEqualTo(guest1.inGameId)
-            assertThat(order[3]).isEqualTo(host.inGameId)
+            assertThat(order[0]).isEqualTo(guest2.id)
+            assertThat(order[1]).isEqualTo(guest3.id)
+            assertThat(order[2]).isEqualTo(guest1.id)
+            assertThat(order[3]).isEqualTo(host.id)
         }
 
         @Test
@@ -75,11 +75,11 @@ internal class PlayingOrderTest {
             val order = launchTest(host, guest1, guest2, guest3, guest4)
 
             assertThat(order.size).isEqualTo(5)
-            assertThat(order[0]).isEqualTo(guest3.inGameId)
-            assertThat(order[1]).isEqualTo(guest4.inGameId)
-            assertThat(order[2]).isEqualTo(host.inGameId)
-            assertThat(order[3]).isEqualTo(guest2.inGameId)
-            assertThat(order[4]).isEqualTo(guest1.inGameId)
+            assertThat(order[0]).isEqualTo(guest3.id)
+            assertThat(order[1]).isEqualTo(guest4.id)
+            assertThat(order[2]).isEqualTo(host.id)
+            assertThat(order[3]).isEqualTo(guest2.id)
+            assertThat(order[4]).isEqualTo(guest1.id)
         }
 
         @Test
@@ -94,15 +94,15 @@ internal class PlayingOrderTest {
             val order = launchTest(host, guest1, guest2, guest3, guest4, guest5)
 
             assertThat(order.size).isEqualTo(6)
-            assertThat(order[0]).isEqualTo(guest4.inGameId)
-            assertThat(order[1]).isEqualTo(guest5.inGameId)
+            assertThat(order[0]).isEqualTo(guest4.id)
+            assertThat(order[1]).isEqualTo(guest5.id)
 
             // When the rank is equal, the order of the provided list is used.
-            assertThat(order[2]).isEqualTo(host.inGameId)
-            assertThat(order[3]).isEqualTo(guest1.inGameId)
+            assertThat(order[2]).isEqualTo(host.id)
+            assertThat(order[3]).isEqualTo(guest1.id)
 
-            assertThat(order[4]).isEqualTo(guest3.inGameId)
-            assertThat(order[5]).isEqualTo(guest2.inGameId)
+            assertThat(order[4]).isEqualTo(guest3.id)
+            assertThat(order[5]).isEqualTo(guest2.id)
         }
 
         private fun launchTest(vararg players: Player): List<PlayerInGameId> {

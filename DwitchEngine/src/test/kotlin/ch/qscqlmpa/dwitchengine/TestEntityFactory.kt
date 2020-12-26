@@ -40,7 +40,7 @@ internal object TestEntityFactory {
             hasPickedCard: Boolean = false
     ): Player {
         return Player(
-                inGameId = PlayerInGameId(100),
+                id = PlayerInGameId(100),
                 name = "Aragorn",
                 cardsInHand = cardsInHand,
                 rank = rank,
@@ -58,7 +58,7 @@ internal object TestEntityFactory {
             hasPickedCard: Boolean = false
     ): Player {
         return Player(
-                inGameId = PlayerInGameId(101),
+                id = PlayerInGameId(101),
                 name = "Boromir",
                 cardsInHand = cardsInHand,
                 rank = rank,
@@ -76,7 +76,7 @@ internal object TestEntityFactory {
             hasPickedCard: Boolean = false
     ): Player {
         return Player(
-                inGameId = PlayerInGameId(102),
+                id = PlayerInGameId(102),
                 name = "Celeborn",
                 cardsInHand = cardsInHand,
                 rank = rank,
@@ -94,7 +94,7 @@ internal object TestEntityFactory {
             hasPickedCard: Boolean = false
     ): Player {
         return Player(
-                inGameId = PlayerInGameId(103),
+                id = PlayerInGameId(103),
                 name = "Denethor",
                 cardsInHand = cardsInHand,
                 rank = rank,
@@ -112,7 +112,7 @@ internal object TestEntityFactory {
             hasPickedCard: Boolean = false
     ): Player {
         return Player(
-                inGameId = PlayerInGameId(104),
+                id = PlayerInGameId(104),
                 name = "Eowin",
                 cardsInHand = cardsInHand,
                 rank = rank,
@@ -130,7 +130,7 @@ internal object TestEntityFactory {
             hasPickedCard: Boolean = false
     ): Player {
         return Player(
-                inGameId = PlayerInGameId(105),
+                id = PlayerInGameId(105),
                 name = "Faramir",
                 cardsInHand = cardsInHand,
                 rank = rank,

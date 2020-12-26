@@ -43,19 +43,19 @@ internal class GameBootstrapTest {
         val gameState = GameBootstrap.createNewGame(playersInfo, initialGameSetup)
 
         val asshole = gameState.players.values.find { p -> p.rank == Rank.Asshole }
-        assertThat(gameState.playingOrder[0]).isEqualTo(asshole!!.inGameId)
+        assertThat(gameState.playingOrder[0]).isEqualTo(asshole!!.id)
 
         val viceAsshole = gameState.players.values.find { p -> p.rank == Rank.ViceAsshole }
-        assertThat(gameState.playingOrder[1]).isEqualTo(viceAsshole!!.inGameId)
+        assertThat(gameState.playingOrder[1]).isEqualTo(viceAsshole!!.id)
 
         val neutrals = gameState.players.values.filter { p -> p.rank == Rank.Neutral }
-        assertThat(gameState.playingOrder[2]).isEqualTo(neutrals[0].inGameId)
+        assertThat(gameState.playingOrder[2]).isEqualTo(neutrals[0].id)
 
         val vicePresident = gameState.players.values.find { p -> p.rank == Rank.VicePresident }
-        assertThat(gameState.playingOrder[3]).isEqualTo(vicePresident!!.inGameId)
+        assertThat(gameState.playingOrder[3]).isEqualTo(vicePresident!!.id)
 
         val president = gameState.players.values.find { p -> p.rank == Rank.President }
-        assertThat(gameState.playingOrder[4]).isEqualTo(president!!.inGameId)
+        assertThat(gameState.playingOrder[4]).isEqualTo(president!!.id)
     }
 
     @Test
@@ -103,7 +103,7 @@ internal class GameBootstrapTest {
         val gameState = GameBootstrap.createNewGame(playersInfo, initialGameSetup)
 
         val asshole = gameState.players.values.find { p -> p.rank == Rank.Asshole }
-        assertThat(asshole!!.inGameId).isEqualTo(gameState.currentPlayerId)
+        assertThat(asshole!!.id).isEqualTo(gameState.currentPlayerId)
     }
 
     @Test

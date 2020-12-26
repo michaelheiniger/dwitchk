@@ -21,35 +21,35 @@ internal class CardExchangePerformerState(
     }
 
     fun presidentId(): PlayerInGameId {
-        return president!!.inGameId
+        return president!!.id
     }
 
     fun vicePresidentId(): PlayerInGameId {
-        return vicePresident!!.inGameId
+        return vicePresident!!.id
     }
 
     fun assholeId(): PlayerInGameId {
-        return asshole!!.inGameId
+        return asshole!!.id
     }
 
     fun viceAssholeId(): PlayerInGameId {
-        return viceAsshole!!.inGameId
+        return viceAsshole!!.id
     }
 
     fun cardsGivenUpByPresident(): Set<Card> {
-        return getCardsForExchangeOfPlayer(president!!.inGameId)
+        return getCardsForExchangeOfPlayer(president!!.id)
     }
 
     fun cardsGivenUpByVicePresident(): Set<Card> {
-        return getCardsForExchangeOfPlayer(vicePresident!!.inGameId)
+        return getCardsForExchangeOfPlayer(vicePresident!!.id)
     }
 
     fun cardsGivenUpByAsshole(): Set<Card> {
-        return getCardsForExchangeOfPlayer(asshole!!.inGameId)
+        return getCardsForExchangeOfPlayer(asshole!!.id)
     }
 
     fun cardsGivenUpByViceAsshole(): Set<Card> {
-        return getCardsForExchangeOfPlayer(viceAsshole!!.inGameId)
+        return getCardsForExchangeOfPlayer(viceAsshole!!.id)
     }
 
     private fun getCardsForExchangeOfPlayer(playerId: PlayerInGameId): Set<Card> {

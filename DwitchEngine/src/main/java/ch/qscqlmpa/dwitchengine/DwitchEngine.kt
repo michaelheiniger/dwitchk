@@ -104,7 +104,7 @@ class DwitchEngine(private val currentGameState: GameState) {
             throw IllegalStateException("No card exchange is supposed to happen now.")
         }
         return currentGameState.players.values
-            .mapNotNull { p -> CardExchangeComputer.getCardExchange(p.inGameId, p.rank, p.cardsInHand.toSet()) }
+            .mapNotNull { p -> CardExchangeComputer.getCardExchange(p.id, p.rank, p.cardsInHand.toSet()) }
     }
 
     private fun logUpdatedGameState(gameState: GameState) {

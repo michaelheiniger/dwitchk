@@ -63,7 +63,7 @@ internal data class PlayerMutable(
 
         fun fromPlayer(player: Player): PlayerMutable {
             return PlayerMutable(
-                player.inGameId,
+                player.id,
                 player.name,
                 player.cardsInHand.toMutableList(),
                 player.rank,

@@ -32,7 +32,7 @@ class EngineTestGameStateBuilder {
 
         val activePlayers = playersMap
                 .filter { (_, player) -> player.state != PlayerState.Done }
-                .map { (_, player) -> player.inGameId }
+                .map { (_, player) -> player.id }
                 .toSet()
 
 //        cardsTakenFromDeck.forEach { c -> println(c) }

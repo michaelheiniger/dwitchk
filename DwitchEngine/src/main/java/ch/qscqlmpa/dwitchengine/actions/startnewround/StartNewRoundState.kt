@@ -20,12 +20,12 @@ internal class StartNewRoundState(private val currentGameState: GameState) : Gam
     }
 
     fun getAllPlayersId(): List<PlayerInGameId> {
-        return currentGameState.players.map { (_, player) -> player.inGameId }
+        return currentGameState.players.map { (_, player) -> player.id }
     }
 
     fun asshole(): PlayerInGameId {
         return currentGameState.players
                 .map { (_, player) -> player }
-                .find { player -> player.rank == Rank.Asshole }!!.inGameId
+                .find { player -> player.rank == Rank.Asshole }!!.id
     }
 }

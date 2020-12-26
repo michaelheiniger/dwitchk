@@ -30,16 +30,16 @@ internal object GameBootstrap {
         val currentPlayer = players.find { p -> p.state == PlayerState.Playing }!!
         val cardsInDeck = initialGameSetup.getRemainingCards().toMutableList()
         val firstCardOnTable = cardsInDeck.removeAt(0)
-        val activePlayers = players.map(Player::inGameId).toSet()
+        val activePlayers = players.map(Player::id).toSet()
         val joker = CardName.Two
         val cardsOnTable = listOf(firstCardOnTable)
         val cardGraveyard = emptyList<Card>()
 
         return GameState(
             GamePhase.RoundIsBeginning,
-            players.map { p -> p.inGameId to p }.toMap(),
+            players.map { p -> p.id to p }.toMap(),
             PlayingOrder.getPlayingOrder(players),
-            currentPlayer.inGameId,
+            currentPlayer.id,
             activePlayers,
             emptyList(),
             joker,

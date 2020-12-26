@@ -4,7 +4,7 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Player(val inGameId: PlayerInGameId,
+data class Player(val id: PlayerInGameId,
                   val name: String,
                   val cardsInHand: List<Card>,
                   val rank: Rank,
@@ -18,6 +18,6 @@ data class Player(val inGameId: PlayerInGameId,
     val isTheOnePlaying get() = state == PlayerState.Playing
 
     fun toPlayerInfo(): PlayerOnboardingInfo {
-        return PlayerOnboardingInfo(inGameId, name)
+        return PlayerOnboardingInfo(id, name)
     }
 }

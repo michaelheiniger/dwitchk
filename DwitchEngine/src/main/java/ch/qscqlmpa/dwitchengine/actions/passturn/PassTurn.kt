@@ -13,7 +13,7 @@ internal class PassTurn(private val passTurnState: PassTurnState, private val ga
         gameUpdater.undwitchAllPlayers()
         gameUpdater.resetGameEvent()
 
-        gameUpdater.updateCurrentPlayer(passTurnState.nextWaitingPlayer().inGameId)
+        gameUpdater.updateCurrentPlayer(passTurnState.nextWaitingPlayer().id)
 
         // The localplayer could not pass its turn if there is only one other waiting player that is dwitched
         // --> the table would be cleared and so localplayer would be Playing (and not CardPicked which is necessary to pass the turn)
