@@ -8,21 +8,21 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationSt
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicatorImpl
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.eventprocessors.HostCommunicationEventDispatcher
-import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.MessageDispatcher
+import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
+import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import dagger.Module
 import dagger.Provides
 
 @Module
 internal class HostCommunicationModule {
 
-    @Module
     companion object {
 
         @OngoingGameScope
         @Provides
-        @JvmStatic
         fun provideHostCommunicator(
+            inGameStore: InGameStore,
             commServer: CommServer,
             messageDispatcher: MessageDispatcher,
             hostCommunicationEventDispatcher: HostCommunicationEventDispatcher,
@@ -31,6 +31,7 @@ internal class HostCommunicationModule {
             schedulerFactory: SchedulerFactory
         ): HostCommunicator {
             return HostCommunicatorImpl(
+                inGameStore,
                 commServer,
                 messageDispatcher,
                 hostCommunicationEventDispatcher,

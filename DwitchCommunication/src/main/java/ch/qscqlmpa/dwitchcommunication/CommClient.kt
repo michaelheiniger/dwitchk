@@ -12,7 +12,7 @@ interface CommClient {
 
     fun stop()
 
-    fun sendMessage(message: Message): Completable //TODO: Add recipientAddress (even if it's always the Host, for consistency)
+    fun sendMessageToServer(message: Message): Completable
 
     /**
      * Emits communication events. Stream never completes or throws any errors.

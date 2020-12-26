@@ -2,14 +2,15 @@ package ch.qscqlmpa.dwitchengine.model.player
 
 import ch.qscqlmpa.dwitchengine.model.card.Card
 
-internal data class PlayerMutable(val inGameId: PlayerInGameId,
-                         private val name: String,
-                         private val cardsInHand: MutableList<Card>,
-                         var rank: Rank,
-                         var state: PlayerState,
-                         var dwitched: Boolean,
-                         var hasPickedCard: Boolean
-
+internal data class PlayerMutable(
+    val inGameId: PlayerInGameId,
+    private val name: String,
+    private val cardsInHand: MutableList<Card>,
+    var rank: Rank,
+    var state: PlayerState,
+    var dwitched: Boolean,
+    var hasPickedCard: Boolean,
+    val cardsForExchange: MutableSet<Card>
 ) {
 
     fun cardsInHand(): List<Card> {
@@ -36,15 +37,24 @@ internal data class PlayerMutable(val inGameId: PlayerInGameId,
         }
     }
 
+    fun removeCardsFromHand(cards: Set<Card>) {
+        cards.forEach(::removeCardFromHand)
+    }
+
+    fun removeAllCardsForExchange() {
+        cardsForExchange.clear()
+    }
+
     fun toPlayer(): Player {
         return Player(
-                inGameId,
-                name,
-                cardsInHand,
-                rank,
-                state,
-                dwitched,
-                hasPickedCard
+            inGameId,
+            name,
+            cardsInHand,
+            rank,
+            state,
+            dwitched,
+            hasPickedCard,
+            cardsForExchange
         )
     }
 
@@ -53,13 +63,14 @@ internal data class PlayerMutable(val inGameId: PlayerInGameId,
 
         fun fromPlayer(player: Player): PlayerMutable {
             return PlayerMutable(
-                    player.inGameId,
-                    player.name,
-                    player.cardsInHand.toMutableList(),
-                    player.rank,
-                    player.state,
-                    player.dwitched,
-                    player.hasPickedCard
+                player.inGameId,
+                player.name,
+                player.cardsInHand.toMutableList(),
+                player.rank,
+                player.state,
+                player.dwitched,
+                player.hasPickedACard,
+                player.cardsForExchange.toMutableSet()
             )
         }
     }

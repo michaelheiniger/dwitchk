@@ -5,45 +5,66 @@ import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import java.util.concurrent.atomic.AtomicLong
 
 
-internal class ConnectionStoreImpl : ConnectionStore {
+internal class ConnectionStoreImpl : ConnectionStore, ConnectionStoreInternal {
 
     private val nextLocalConnectionId = AtomicLong(0)
 
-    private val addressMap: MutableMap<LocalConnectionId, Address> = HashMap()
-    private val addressReverseMap: MutableMap<Address, LocalConnectionId> = HashMap()
-    private val playerInGameMap: MutableMap<LocalConnectionId, PlayerInGameId> = HashMap()
+    private val addressMap: MutableMap<ConnectionId, Address> = HashMap()
+    private val addressReverseMap: MutableMap<Address, ConnectionId> = HashMap()
+    private val playerInGameIdMap: MutableMap<ConnectionId, PlayerInGameId> = HashMap()
+    private val playerInGameIdReverseeMap: MutableMap<PlayerInGameId, ConnectionId> = HashMap()
 
-    override fun addConnectionId(address: Address): LocalConnectionId {
-        val localConnectionId = LocalConnectionId(nextLocalConnectionId.getAndIncrement())
+    override fun addConnectionId(address: Address): ConnectionId {
+        val localConnectionId = getNextLocalConnectionId()
         addressMap[localConnectionId] = address
         addressReverseMap[address] = localConnectionId
         return localConnectionId
     }
 
-    override fun removeConnectionId(localConnectionId: LocalConnectionId) {
-        val address = addressMap.remove(localConnectionId)
+    override fun removeConnectionIdForAddress(connectionId: ConnectionId) {
+        val address = addressMap.remove(connectionId)
         addressReverseMap.remove(address)
-        playerInGameMap.remove(localConnectionId)
     }
 
-    override fun mapPlayerIdToConnectionId(localConnectionId: LocalConnectionId, playerInGameId: PlayerInGameId) {
-        playerInGameMap[localConnectionId] = playerInGameId
+    override fun removeConnectionIdForInGameId(connectionId: ConnectionId) {
+        val playerInGameId = playerInGameIdMap.remove(connectionId)
+        if (playerInGameId != null) {
+            playerInGameIdReverseeMap.remove(playerInGameId)
+        }
     }
 
-    override fun getLocalConnectionIdForAddress(address: Address): LocalConnectionId? {
+    override fun pairConnectionWithPlayer(connectionId: ConnectionId, playerInGameId: PlayerInGameId) {
+        playerInGameIdMap[connectionId] = playerInGameId
+        playerInGameIdReverseeMap[playerInGameId] = connectionId
+    }
+
+    override fun getConnectionIdForAddress(address: Address): ConnectionId? {
         return addressReverseMap[address]
     }
 
-    override fun getAddress(localId: LocalConnectionId): Address? {
-        return addressMap[localId]
+    override fun getAddress(id: ConnectionId): Address? {
+        return addressMap[id]
     }
 
-    override fun getInGameId(localId: LocalConnectionId): PlayerInGameId? {
-        return playerInGameMap[localId]
+    override fun getInGameId(connectionId: ConnectionId): PlayerInGameId? {
+        return playerInGameIdMap[connectionId]
     }
 
-    override fun findMissingConnections(currentConnections: List<Address>): List<LocalConnectionId> {
+    override fun getConnectionId(playerInGameId: PlayerInGameId): ConnectionId? {
+        return playerInGameIdReverseeMap[playerInGameId]
+    }
+
+    override fun findMissingConnections(currentConnections: List<Address>): List<ConnectionId> {
         return addressReverseMap.filterKeys { address -> !currentConnections.contains(address) }
             .values.toList()
     }
+
+    override fun clearStore() {
+        addressMap.clear()
+        addressReverseMap.clear()
+        playerInGameIdMap.clear()
+        playerInGameIdReverseeMap.clear()
+    }
+
+    private fun getNextLocalConnectionId() = ConnectionId(nextLocalConnectionId.getAndIncrement())
 }

@@ -35,12 +35,14 @@ data class Game(
     @ColumnInfo(name = "name") val name: String,
 
     /**
-     * State of the game common to all players
+     * State of the game common to all players.
      */
     @ColumnInfo(name = "game_state") val gameState: String,
 
     /**
      * Id of the PlayerPersist record corresponding to the local player
      */
-    @ColumnInfo(name = "local_player_id") val localPlayerLocalId: Long
+    @ColumnInfo(name = "local_player_id") val localPlayerLocalId: Long,
+
+    @ColumnInfo(name = "card_exchange_event") val cardExchangeEvent: String?
 )

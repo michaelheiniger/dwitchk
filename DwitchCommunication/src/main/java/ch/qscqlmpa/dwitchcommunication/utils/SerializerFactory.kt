@@ -1,12 +1,12 @@
 package ch.qscqlmpa.dwitchcommunication.utils
 
-import ch.qscqlmpa.dwitchcommunication.model.Envelope
+import ch.qscqlmpa.dwitchcommunication.di.CommunicationScope
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchmodel.gamediscovery.GameAdvertisingInfo
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
-//@Singleton
+@CommunicationScope
 class SerializerFactory @Inject constructor(private val json: Json) {
 
     // Serialize
@@ -23,10 +23,6 @@ class SerializerFactory @Inject constructor(private val json: Json) {
 
     fun unserializeGameInfo(gameInfoAsStr: String): GameAdvertisingInfo {
         return json.decodeFromString(GameAdvertisingInfo.serializer(), gameInfoAsStr)
-    }
-
-    fun unserializeEnvelope(envelope: String): Envelope {
-        return json.decodeFromString(Envelope.serializer(), envelope)
     }
 
     fun unserializeMessage(message: String): Message {

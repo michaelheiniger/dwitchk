@@ -137,6 +137,14 @@ internal interface PlayerDao {
     )
     fun getPlayer(playerLocalId: Long): Player
 
+    @Query(
+        """
+        SELECT in_game_id FROM Player
+        WHERE id =:playerLocalId
+        """
+    )
+    fun getPlayerInGameId(playerLocalId: Long): PlayerInGameId
+
     //For test purpose only
     @Query(
         """

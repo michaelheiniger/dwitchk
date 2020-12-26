@@ -1,5 +1,7 @@
 package ch.qscqlmpa.dwitchcommunication.model
 
+import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
@@ -28,6 +30,12 @@ sealed class Message {
     @Serializable
     data class LaunchGameMessage(val gameState: GameState) : Message()
 
+    @Serializable
+    object GameOverMessage : Message()
+
+    @Serializable
+    data class CardExchangeMessage(val cardExchange: CardExchange): Message()
+
     /*****************************************************************************************************************
      * Messages sent by Guests
      *****************************************************************************************************************/
@@ -50,6 +58,6 @@ sealed class Message {
     data class GameStateUpdatedMessage(val gameState: GameState) : Message()
 
     @Serializable
-    object GameOverMessage : Message()
+    data class CardsForExchangeMessage(val playerId: PlayerInGameId, val cards: Set<Card>): Message()
 }
 

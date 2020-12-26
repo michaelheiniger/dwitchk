@@ -15,8 +15,8 @@ internal class StartNewRound constructor(
     private val cardDealerFactory: CardDealerFactory
 ) {
 
-    fun getUpdateGameState(): GameState {
-        gameUpdater.setGamePhase(GamePhase.RoundIsBeginning)
+    fun getUpdatedGameState(): GameState {
+        gameUpdater.setGamePhase(GamePhase.RoundIsBeginningWithCardExchange)
         gameUpdater.clearDonePlayersInFinishingOrder()
         gameUpdater.joker(CardName.Two)
         gameUpdater.undwitchAllPlayers()

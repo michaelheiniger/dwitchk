@@ -12,10 +12,10 @@ import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import ch.qscqlmpa.dwitchcommunication.di.TestCommunicationComponent
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
-import ch.qscqlmpa.dwitchcommunication.websocket.client.TestWebsocketClient
-import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClientTestStub
-import ch.qscqlmpa.dwitchcommunication.websocket.server.TestWebsocketServer
-import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServerTestStub
+import ch.qscqlmpa.dwitchcommunication.websocket.client.test.ClientTestStub
+import ch.qscqlmpa.dwitchcommunication.websocket.server.test.ServerTestStub
+import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealer
+import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealerFactory
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetupFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
@@ -54,8 +54,8 @@ abstract class BaseUiTest {
 
     protected lateinit var commSerializerFactory: SerializerFactory
 
-    protected lateinit var serverTestStub: WebsocketServerTestStub
-    protected lateinit var clientTestStub: WebsocketClientTestStub
+    protected lateinit var serverTestStub: ServerTestStub
+    protected lateinit var clientTestStub: ClientTestStub
 
     @Before
     fun setup() {
@@ -66,7 +66,6 @@ abstract class BaseUiTest {
     protected fun launch() {
         testRule.launchActivity(null)
 
-//        val testAppComponent = testRule.app.appComponent as TestAppComponent
         gameComponent = testRule.app.testGameComponent
         storeComponent = testRule.app.testStoreComponent as TestStoreComponent
 
@@ -76,16 +75,14 @@ abstract class BaseUiTest {
 
     protected fun hookOngoingGameDependenciesForHost() {
         hookOngoingGameDependenciesCommon()
-        val server = communicationComponent.websocketServer as TestWebsocketServer
         commSerializerFactory = communicationComponent.serializerFactory
-        serverTestStub = WebsocketServerTestStub(server, commSerializerFactory)
+        serverTestStub = communicationComponent.serverTestStub
     }
 
     protected fun hookOngoingGameDependenciesForGuest() {
         hookOngoingGameDependenciesCommon()
-        val client = communicationComponent.websocketClientFactory.create() as TestWebsocketClient
         commSerializerFactory = communicationComponent.serializerFactory
-        clientTestStub = WebsocketClientTestStub(client, commSerializerFactory)
+        clientTestStub = communicationComponent.clientTestStub
     }
 
     private fun hookOngoingGameDependenciesCommon() {
@@ -97,6 +94,11 @@ abstract class BaseUiTest {
     protected fun initializeInitialGameSetup(cardsForPlayer: Map<Int, List<Card>>, rankForPlayer: Map<Int, Rank>) {
         (ongoingGameComponent.initialGameSetupFactory as DeterministicInitialGameSetupFactory)
             .setInstance(DeterministicInitialGameSetup(cardsForPlayer, rankForPlayer))
+    }
+
+    protected fun initializeNewRoundCardDealer(cardsForPlayer: Map<Int, List<Card>>) {
+        (ongoingGameComponent.cardDealerFactory as DeterministicCardDealerFactory)
+            .setInstance(DeterministicCardDealer(cardsForPlayer))
     }
 
     protected fun dudeWaitASec(seconds: Long = 2L) {

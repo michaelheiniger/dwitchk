@@ -17,13 +17,13 @@ internal object GameBootstrap {
         val players = playersInfo.mapIndexed { index, p ->
             val rank = initialGameSetup.getRankForPlayer(index)
             Player(
-                    p.id,
-                    p.name,
-                    initialGameSetup.getCardsForPlayer(index),
-                    rank,
-                    getPlayerState(rank),
-                    dwitched = false,
-                    hasPickedCard = false
+                p.id,
+                p.name,
+                initialGameSetup.getCardsForPlayer(index),
+                rank,
+                getPlayerState(rank),
+                dwitched = false,
+                hasPickedACard = false
             )
         }
 
@@ -36,18 +36,17 @@ internal object GameBootstrap {
         val cardGraveyard = emptyList<Card>()
 
         return GameState(
-                GamePhase.RoundIsBeginning,
-                players.map { p -> p.inGameId to p }.toMap(),
-                PlayingOrder.getPlayingOrder(players),
-                currentPlayer.inGameId,
-                activePlayers,
-                emptyList(),
-                joker,
-                null,
-                cardsOnTable,
-                cardsInDeck.toList(),
-                cardGraveyard
-
+            GamePhase.RoundIsBeginning,
+            players.map { p -> p.inGameId to p }.toMap(),
+            PlayingOrder.getPlayingOrder(players),
+            currentPlayer.inGameId,
+            activePlayers,
+            emptyList(),
+            joker,
+            null,
+            cardsOnTable,
+            cardsInDeck.toList(),
+            cardGraveyard
         )
     }
 

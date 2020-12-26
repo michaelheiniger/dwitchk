@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
+import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.appevent.AppEvent
 import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
@@ -18,7 +18,7 @@ internal class LeaveGameUsecase @Inject constructor(
 
     fun leaveGame(): Completable {
         return buildLeaveGameMessage()
-            .flatMapCompletable(communicator::sendMessage)
+            .flatMapCompletable(communicator::sendMessageToHost)
             .doOnComplete {
                 communicator.closeConnection()
                 appEventRepository.notify(AppEvent.GameLeft)
@@ -26,10 +26,8 @@ internal class LeaveGameUsecase @Inject constructor(
             .andThen(deleteGameFromStore())
     }
 
-    private fun buildLeaveGameMessage(): Single<EnvelopeToSend> {
-        return Single.fromCallable {
-            GuestMessageFactory.createLeaveGameMessage(store.getLocalPlayerInGameId())
-        }
+    private fun buildLeaveGameMessage(): Single<Message> {
+        return Single.fromCallable { GuestMessageFactory.createLeaveGameMessage(store.getLocalPlayerInGameId()) }
     }
 
     private fun deleteGameFromStore(): Completable {

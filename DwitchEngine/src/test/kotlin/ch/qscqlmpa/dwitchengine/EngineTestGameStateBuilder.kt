@@ -12,7 +12,6 @@ class EngineTestGameStateBuilder {
 
     private val playersMap = mutableMapOf<PlayerInGameId, Player>()
 
-
     private var cardsOnTable: List<Card> = emptyList()
 
     private var gameEvent: GameEvent? = null
@@ -87,11 +86,15 @@ class EngineTestGameStateBuilder {
         playersDoneForRound = list
     }
 
+    fun setPlayerCards(id: PlayerInGameId, cards: List<Card>) {
+        playersMap[id] = playersMap.getValue(id).copy(cardsInHand = cards)
+    }
+
     fun addPlayerToGame(
         player: PlayerInfo,
         state: PlayerState,
         rank: Rank,
-        cardsInHand: List<Card>,
+        cardsInHand: List<Card> = emptyList(),
         dwitched: Boolean = false,
         hasPickedCard: Boolean = false
     ): EngineTestGameStateBuilder {

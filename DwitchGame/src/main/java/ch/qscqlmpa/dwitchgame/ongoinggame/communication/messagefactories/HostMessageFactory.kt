@@ -1,12 +1,11 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories
 
-import ch.qscqlmpa.dwitchcommunication.*
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchcommunication.model.RecipientType
+import ch.qscqlmpa.dwitchcommunication.model.Recipient
 import ch.qscqlmpa.dwitchcommunication.model.RejoinInfo
-
+import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchmodel.player.Player
@@ -17,41 +16,51 @@ import javax.inject.Inject
 class HostMessageFactory @Inject constructor(private val store: InGameStore) {
 
     fun createWaitingRoomStateUpdateMessage(): Single<EnvelopeToSend> {
-        return Single.fromCallable {
-            val players = store.getPlayersInWaitingRoom()
-            return@fromCallable createWaitingRoomStateUpdateMessage(players)
-        }
+        return Single.fromCallable { createWaitingRoomStateUpdateMessage(store.getPlayersInWaitingRoom()) }
     }
 
     fun createJoinAckMessage(
-        recipientId: LocalConnectionId,
+        recipientId: ConnectionId,
         playerInGameId: PlayerInGameId
     ): Single<EnvelopeToSend> {
         return Single.fromCallable {
             val gameCommonId = store.getGame().gameCommonId
             val message = Message.JoinGameAckMessage(gameCommonId, playerInGameId)
-            EnvelopeToSend(RecipientType.Single(recipientId), message)
+            EnvelopeToSend(Recipient.Single(recipientId), message)
         }
     }
 
     companion object {
 
         fun createCancelGameMessage(): EnvelopeToSend {
-            return EnvelopeToSend(RecipientType.All, Message.CancelGameMessage)
+            return EnvelopeToSend(Recipient.All, Message.CancelGameMessage)
         }
 
         fun createLaunchGameMessage(gameState: GameState): EnvelopeToSend {
-            return EnvelopeToSend(RecipientType.All, Message.LaunchGameMessage(gameState))
+            return EnvelopeToSend(Recipient.All, Message.LaunchGameMessage(gameState))
         }
 
         fun createRejoinAckMessage(rejoinInfo: RejoinInfo): EnvelopeToSend {
             val message = Message.RejoinGameAckMessage(rejoinInfo)
-            return EnvelopeToSend(RecipientType.Single(rejoinInfo.connectionID), message)
+            return EnvelopeToSend(Recipient.Single(rejoinInfo.connectionId), message)
+        }
+
+        fun createGameOverMessage(): EnvelopeToSend {
+            return EnvelopeToSend(Recipient.All, Message.GameOverMessage)
+        }
+
+        fun createCardExchangeMessage(cardExchange: CardExchange, recipient: ConnectionId): EnvelopeToSend {
+            val message = Message.CardExchangeMessage(cardExchange)
+            return EnvelopeToSend(Recipient.Single(recipient), message)
+        }
+
+        fun createGameStateUpdatedMessage(gameState: GameState): EnvelopeToSend {
+            return EnvelopeToSend(Recipient.All, Message.GameStateUpdatedMessage(gameState))
         }
 
         private fun createWaitingRoomStateUpdateMessage(playerList: List<Player>): EnvelopeToSend {
             val message = Message.WaitingRoomStateUpdateMessage(playerList)
-            return EnvelopeToSend(RecipientType.All, message)
+            return EnvelopeToSend(Recipient.All, message)
         }
     }
 }

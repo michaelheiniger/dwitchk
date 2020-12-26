@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameUiScope
 import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest.ConnectionGuestViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomViewModel
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.cardexchange.CardExchangeViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host.GameRoomHostViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard.PlayerDashboardViewModel
@@ -59,6 +60,11 @@ abstract class OngoingGameViewModelBindingModule {
     @IntoMap
     @ViewModelKey(PlayerDashboardViewModel::class)
     abstract fun bindPlayerDashboardViewModel(viewModel: PlayerDashboardViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CardExchangeViewModel::class)
+    abstract fun bindCardExchangeViewModel(viewModel: CardExchangeViewModel): ViewModel
 
     @Binds
     @IntoMap

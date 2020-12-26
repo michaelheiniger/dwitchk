@@ -23,49 +23,41 @@ class OnGoingGameUiModule(
     private val playerDashboardFacade: PlayerDashboardFacade
 ) {
 
-    //TODO: Scope ?
     @Provides
     fun provideHostFacade(): HostFacade {
         return hostFacade
     }
 
-    //TODO: Scope ?
     @Provides
     fun provideGuestFacade(): GuestFacade {
         return guestFacade
     }
 
-    //TODO: Scope ?
     @Provides
     fun provideWaitingRoomFacade(): WaitingRoomFacade {
         return waitingRoomFacade
     }
 
-    //TODO: Scope ?
     @Provides
     fun provideWaitingRoomHostFacade(): WaitingRoomHostFacade {
         return waitingRoomHostFacade
     }
 
-    //TODO: Scope ?
     @Provides
     fun provideWaitingRoomGuestFacade(): WaitingRoomGuestFacade {
         return waitingRoomGuestFacade
     }
 
-    //TODO: Scope ?
     @Provides
     fun provideGameRoomHostFacade(): GameRoomHostFacade {
         return gameRoomHostFacade
     }
 
-    //TODO: Scope ?
     @Provides
     fun provideGameRoomGuestFacade(): GameRoomGuestFacade {
         return gameRoomGuestFacade
     }
 
-    //TODO: Scope ?
     @Provides
     fun providePlayerDashboardFacade(): PlayerDashboardFacade {
         return playerDashboardFacade

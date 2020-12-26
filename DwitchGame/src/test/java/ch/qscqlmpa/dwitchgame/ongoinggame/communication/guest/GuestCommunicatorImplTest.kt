@@ -3,9 +3,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchcommunication.CommClient
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchcommunication.model.RecipientType
 import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientCommunicationEvent
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
@@ -134,14 +132,14 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
     inner class SendMessage {
 
         @Test
-        fun `Send message`() {
-            every { mockCommClient.sendMessage(any()) } returns Completable.complete()
+        fun `Send message to host`() {
+            every { mockCommClient.sendMessageToServer(any()) } returns Completable.complete()
             val messageToSend = Message.PlayerReadyMessage(PlayerInGameId(2), true)
 
-            guestCommunicator.sendMessage(EnvelopeToSend(RecipientType.All, messageToSend)).test().assertComplete()
+            guestCommunicator.sendMessageToHost(messageToSend).test().assertComplete()
 
             val messageCap = CapturingSlot<Message>()
-            verify { mockCommClient.sendMessage(capture(messageCap)) }
+            verify { mockCommClient.sendMessageToServer(capture(messageCap)) }
 
             val messageSentCap = messageCap.captured as Message.PlayerReadyMessage
             assertThat(messageSentCap).isEqualTo(messageToSend)

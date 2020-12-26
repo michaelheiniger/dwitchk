@@ -1,9 +1,8 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.messageprocessors
 
-import ch.qscqlmpa.dwitchcommunication.Address
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreFactory
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
@@ -24,9 +23,7 @@ class JoinGameMessageProcessorTest : BaseMessageProcessorTest() {
 
     private val guestPlayer = TestEntityFactory.createGuestPlayer1()
 
-    private val senderAddress = Address("192.168.1.2", 8890)
-
-    private lateinit var senderLocalConnectionId: LocalConnectionId
+    private lateinit var senderConnectionId: ConnectionId
 
     @BeforeEach
     override fun setup() {
@@ -40,9 +37,7 @@ class JoinGameMessageProcessorTest : BaseMessageProcessorTest() {
         )
 
         setupCommunicatorSendMessageCompleteMock()
-        senderLocalConnectionId = connectionStore.addConnectionId(senderAddress)
-        connectionStore.mapPlayerIdToConnectionId(senderLocalConnectionId, guestPlayer.inGameId)
-
+        senderConnectionId = ConnectionId(234)
     }
 
     @Test
@@ -63,7 +58,7 @@ class JoinGameMessageProcessorTest : BaseMessageProcessorTest() {
     }
 
     @Test
-    fun `Local connection ID of the joining player is stored in connection store`() {
+    fun `Connection ID of the joining player is stored in connection store`() {
         setupWaitingRoomStateUpdateMessageMock()
         val joinAckMessageWrapperMock = mockk<EnvelopeToSend>()
         every { mockHostMessageFactory.createJoinAckMessage(any(), any()) } returns Single.just(joinAckMessageWrapperMock)
@@ -74,12 +69,13 @@ class JoinGameMessageProcessorTest : BaseMessageProcessorTest() {
         launchTest().test().assertComplete()
 
         // Assert in-game ID added to store
-        val localConnectionId = connectionStore.getLocalConnectionIdForAddress(senderAddress)
-        assertThat(connectionStore.getInGameId(localConnectionId!!)).isEqualTo(guestPlayer.inGameId)
+        val connectionId = connectionStore.getConnectionId(guestPlayer.inGameId)
+        assertThat(connectionStore.getInGameId(connectionId!!)).isEqualTo(guestPlayer.inGameId)
+        assertThat(connectionId).isEqualTo(senderConnectionId)
     }
 
     @Test
-    fun `A "join ack" and "waiting room state update" messages are sent when a new player joins the game`() {
+    fun `A join ack and waiting room state update messages are sent when a new player joins the game`() {
         val waitingRoomStateUpdateMessageWrapperMock = setupWaitingRoomStateUpdateMessageMock()
         val joinAckMessageWrapperMock = mockk<EnvelopeToSend>()
         every { mockHostMessageFactory.createJoinAckMessage(any(), any()) } returns Single.just(joinAckMessageWrapperMock)
@@ -98,6 +94,6 @@ class JoinGameMessageProcessorTest : BaseMessageProcessorTest() {
     }
 
     private fun launchTest(): Completable {
-        return processor.process(Message.JoinGameMessage(guestPlayer.name), senderLocalConnectionId)
+        return processor.process(Message.JoinGameMessage(guestPlayer.name), senderConnectionId)
     }
 }

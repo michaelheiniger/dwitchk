@@ -1,8 +1,9 @@
 package ch.qscqlmpa.dwitchengine.actions.startnewgame
 
+import ch.qscqlmpa.dwitchengine.GameStateRobot
 import ch.qscqlmpa.dwitchengine.TestEntityFactory
 import ch.qscqlmpa.dwitchengine.initialgamesetup.random.RandomInitialGameSetup
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.player.PlayerState
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import org.assertj.core.api.Assertions.assertThat
@@ -10,7 +11,22 @@ import org.junit.jupiter.api.Test
 
 internal class GameBootstrapTest {
 
-    private val localPlayerId = PlayerInGameId(1L)
+    @Test
+    fun `Game phase is RoundIsBeginning`() {
+        val initialGameSetup = RandomInitialGameSetup(5)
+
+        val playersInfo = listOf(
+            TestEntityFactory.createHostPlayerInfo(),
+            TestEntityFactory.createGuestPlayer1Info(),
+            TestEntityFactory.createGuestPlayer2Info(),
+            TestEntityFactory.createGuestPlayer3Info(),
+            TestEntityFactory.createGuestPlayer4Info()
+        )
+
+        val gameState = GameBootstrap.createNewGame(playersInfo, initialGameSetup)
+
+        GameStateRobot(gameState).assertGamePhase(GamePhase.RoundIsBeginning)
+    }
 
     @Test
     fun `Asshole is first to play followed by vice-asshole then neutrals then vice-president and finally president`() {
@@ -44,7 +60,6 @@ internal class GameBootstrapTest {
 
     @Test
     fun `Asshole is Playing while the others are Waiting`() {
-
         val initialGameSetup = RandomInitialGameSetup(5)
 
         val playersInfo = listOf(
@@ -75,7 +90,6 @@ internal class GameBootstrapTest {
 
     @Test
     fun `Current player is Asshole`() {
-
         val initialGameSetup = RandomInitialGameSetup(5)
 
         val playersInfo = listOf(
@@ -94,7 +108,6 @@ internal class GameBootstrapTest {
 
     @Test
     fun `Active players contain all players`() {
-
         val initialGameSetup = RandomInitialGameSetup(5)
 
         val host = TestEntityFactory.createHostPlayerInfo()

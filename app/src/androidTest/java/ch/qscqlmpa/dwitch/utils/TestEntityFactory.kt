@@ -23,81 +23,82 @@ object TestEntityFactory {
     }
 
     fun createHostPlayer(
-            localId: Long = 10L,
-            inGameId: PlayerInGameId = PlayerInGameId(100),
-            connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
-            ready: Boolean = true
+        localId: Long = 10L,
+        inGameId: PlayerInGameId = PlayerInGameId(100),
+        connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
+        ready: Boolean = true
     ): Player {
         return Player(
-                localId,
-                inGameId,
-                1L,
-                "Aragorn",
-                PlayerRole.HOST,
-                connectionState,
-                ready
+            localId,
+            inGameId,
+            1L,
+            "Aragorn",
+            PlayerRole.HOST,
+            connectionState,
+            ready
         )
     }
 
     fun createGuestPlayer1(
-            localId: Long = 11L,
-            inGameId: PlayerInGameId = PlayerInGameId(101),
-            connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
-            ready: Boolean = true
+        localId: Long = 11L,
+        inGameId: PlayerInGameId = PlayerInGameId(101),
+        connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
+        ready: Boolean = true
     ): Player {
         return Player(
-                localId,
-                inGameId,
-                1L,
-                "Boromir",
-                PlayerRole.GUEST,
-                connectionState,
-                ready
+            localId,
+            inGameId,
+            1L,
+            "Boromir",
+            PlayerRole.GUEST,
+            connectionState,
+            ready
         )
     }
 
     fun createGuestPlayer2(
-            localId: Long = 12L,
-            inGameId: PlayerInGameId = PlayerInGameId(102),
-            connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
-            ready: Boolean = true
+        localId: Long = 12L,
+        inGameId: PlayerInGameId = PlayerInGameId(102),
+        connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
+        ready: Boolean = true
     ): Player {
         return Player(
-                localId,
-                inGameId,
-                1L,
-                "Celeborn",
-                PlayerRole.GUEST,
-                connectionState,
-                ready
+            localId,
+            inGameId,
+            1L,
+            "Celeborn",
+            PlayerRole.GUEST,
+            connectionState,
+            ready
         )
     }
 
     fun createGuestPlayer3(
-            localId: Long = 13L,
-            inGameId: PlayerInGameId = PlayerInGameId(103),
-            connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
-            ready: Boolean = true
+        localId: Long = 13L,
+        inGameId: PlayerInGameId = PlayerInGameId(103),
+        connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
+        ready: Boolean = true
     ): Player {
         return Player(
-                localId,
-                inGameId,
-                1L,
-                "Denethor",
-                PlayerRole.GUEST,
-                connectionState,
-                ready
+            localId,
+            inGameId,
+            1L,
+            "Denethor",
+            PlayerRole.GUEST,
+            connectionState,
+            ready
         )
     }
 
     fun createGameInWaitingRoom(localPlayerLocalId: Long = 10): Game {
         return Game(
-                1L,
-                RoomType.WAITING_ROOM,
-                GameCommonId(65),
-                "Dwitch",
-                "",
-                localPlayerLocalId
+            1L,
+            RoomType.WAITING_ROOM,
+            GameCommonId(65),
+            "Dwitch",
+            "",
+            localPlayerLocalId,
+            null
         )
     }
 
@@ -105,8 +106,8 @@ object TestEntityFactory {
         val hostPlayer = createHostPlayer()
         val players = listOf(hostPlayer, createGuestPlayer1())
         return DwitchEngine.createNewGame(
-                players.map(Player::toPlayerInfo),
-                RandomInitialGameSetup(players.size)
+            players.map(Player::toPlayerInfo),
+            RandomInitialGameSetup(players.size)
         )
     }
 }

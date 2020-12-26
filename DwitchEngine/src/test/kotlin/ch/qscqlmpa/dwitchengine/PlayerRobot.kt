@@ -24,6 +24,11 @@ class PlayerRobot(private val gameState: GameState, private val playerId: Player
         return this
     }
 
+    fun assertCardsForExchangeContainsExactly(vararg expectedCards: Card): PlayerRobot {
+        assertThat(gameState.players.getValue(playerId).cardsForExchange).containsExactly(*expectedCards)
+        return this
+    }
+
     fun assertPlayerState(expectedState: PlayerState): PlayerRobot {
         assertThat(gameState.players.getValue(playerId).state).isEqualTo(expectedState)
         return this
@@ -45,12 +50,12 @@ class PlayerRobot(private val gameState: GameState, private val playerId: Player
     }
 
     fun assertPlayerHasPickedCard(): PlayerRobot {
-        assertThat(gameState.player(playerId).hasPickedCard).isTrue()
+        assertThat(gameState.player(playerId).hasPickedACard).isTrue()
         return this
     }
 
     fun assertPlayerHasNotPickedCard(): PlayerRobot {
-        assertThat(gameState.player(playerId).hasPickedCard).isFalse()
+        assertThat(gameState.player(playerId).hasPickedACard).isFalse()
         return this
     }
 }

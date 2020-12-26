@@ -4,9 +4,10 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.clickOnButton
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchcommunication.websocket.PlayerHostTest
+import ch.qscqlmpa.dwitchcommunication.websocket.server.test.PlayerHostTest
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.GuestMessageFactory
 import ch.qscqlmpa.dwitchmodel.player.Player
+import io.reactivex.rxjava3.core.Observable
 import org.junit.Assert
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -54,7 +55,11 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
 
     protected fun guestBecomesReady(identifier: PlayerHostTest): Message.WaitingRoomStateUpdateMessage {
         val guest = getGuest(identifier)
-        serverTestStub.guestSendsMessageToServer(identifier, GuestMessageFactory.createPlayerReadyMessage(guest.inGameId, true), true)
+        serverTestStub.guestSendsMessageToServer(
+            identifier,
+            GuestMessageFactory.createPlayerReadyMessage(guest.inGameId, true),
+            true
+        )
         return waitForNextMessageSentByHost() as Message.WaitingRoomStateUpdateMessage
     }
 
@@ -80,13 +85,33 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
      */
     protected fun waitForNextMessageSentByHost(): Message {
         Timber.d("Waiting for next message sent by host...")
-        val messageSerialized = serverTestStub.observeMessagesSent()
+        val messageSerialized =
+            Observable.merge(listOf(serverTestStub.observeMessagesSent(), serverTestStub.observeMessagesBroadcasted()))
                 .take(1)
                 .timeout(10, TimeUnit.SECONDS)
                 .blockingFirst()
         val message = commSerializerFactory.unserializeMessage(messageSerialized)
         Timber.d("Message sent to client: $message")
         return message
+    }
+
+    protected fun waitForNextNMessageSentByHost(numMessagesExpected: Long): List<Message> {
+        Timber.d("Waiting for next $numMessagesExpected messages sent by host...")
+        val messagesSerialized =
+            Observable.merge(listOf(serverTestStub.observeMessagesSent(), serverTestStub.observeMessagesBroadcasted()))
+                .take(numMessagesExpected)
+                .timeout(10 * numMessagesExpected, TimeUnit.SECONDS)
+                .scan(
+                    mutableListOf<String>(),
+                    { messages, lastMessage ->
+                        messages.add(lastMessage)
+                        messages
+                    }
+                )
+                .blockingLast()
+
+        Timber.d("Messages sent to client: $messagesSerialized")
+        return messagesSerialized.map(commSerializerFactory::unserializeMessage)
     }
 
     protected fun getGuest(identifier: PlayerHostTest): Player {

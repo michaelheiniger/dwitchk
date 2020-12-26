@@ -1,15 +1,13 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.eventprocessors
 
-import ch.qscqlmpa.dwitchgame.BaseUnitTest
-import ch.qscqlmpa.dwitchcommunication.model.RecipientType
+import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientCommunicationEvent
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
+import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchgame.BaseUnitTest
+import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationStateRepository
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
-import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
-import ch.qscqlmpa.dwitchgame.TestEntityFactory
+import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitchmodel.game.Game
 import ch.qscqlmpa.dwitchmodel.player.Player
 import io.mockk.confirmVerified
@@ -52,14 +50,7 @@ class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
 
         launchTest()
 
-        verify {
-            mockCommunicator.sendMessage(
-                EnvelopeToSend(
-                    RecipientType.All,
-                    Message.JoinGameMessage(localPlayer.name)
-                )
-            )
-        }
+        verify { mockCommunicator.sendMessageToHost(Message.JoinGameMessage(localPlayer.name)) }
         confirmVerified(mockCommunicator)
         assertCommunicationStateIsNowConnected()
     }
@@ -71,14 +62,7 @@ class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
 
         launchTest()
 
-        verify {
-            mockCommunicator.sendMessage(
-                EnvelopeToSend(
-                    RecipientType.All,
-                    Message.RejoinGameMessage(game.gameCommonId, localPlayer.inGameId)
-                )
-            )
-        }
+        verify { mockCommunicator.sendMessageToHost(Message.RejoinGameMessage(game.gameCommonId, localPlayer.inGameId)) }
         confirmVerified(mockCommunicator)
         assertCommunicationStateIsNowConnected()
     }
@@ -111,6 +95,6 @@ class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
     }
 
     private fun setupCommunicatorMock() {
-        every { mockCommunicator.sendMessage((any())) } returns Completable.complete()
+        every { mockCommunicator.sendMessageToHost((any())) } returns Completable.complete()
     }
 }

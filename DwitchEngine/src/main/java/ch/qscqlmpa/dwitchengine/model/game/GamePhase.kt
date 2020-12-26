@@ -9,8 +9,15 @@ sealed class GamePhase {
     object RoundIsBeginning : GamePhase()
 
     @Serializable
+    object RoundIsBeginningWithCardExchange : GamePhase()
+
+    @Serializable
     object RoundIsOnGoing : GamePhase()
 
     @Serializable
     object RoundIsOver : GamePhase()
+
+    fun isOneOf(vararg phases: GamePhase): Boolean {
+        return setOf(*phases).contains(this)
+    }
 }

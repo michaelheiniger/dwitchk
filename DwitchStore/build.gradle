@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion 24
-        targetSdkVersion 29
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
 
@@ -64,6 +64,9 @@ def test = dependencyGroup {
 
     testImplementation 'android.arch.core:core-testing:1.1.1'
     testImplementation "androidx.room:room-testing:$roomVersion"
+
+    // Joda time
+    implementation "joda-time:joda-time:$jodaVersion"
 }
 
 

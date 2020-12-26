@@ -1,28 +1,28 @@
-package ch.qscqlmpa.dwitch.uitests
+ package ch.qscqlmpa.dwitch.uitests
 
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
-import ch.qscqlmpa.dwitchcommunication.websocket.PlayerHostTest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.uitests.base.BaseHostTest
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCanPassTurn
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCanPickACard
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCardInHand
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertCardOnTable
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.assertGameRoomIsDisplayed
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.passTurn
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUtil.pickACard
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.assertCanPassTurn
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.assertCanPickACard
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.assertCardInHand
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.assertCardOnTable
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.assertGameRoomIsDisplayed
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.chooseCardForExchange
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.passTurn
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.pickACard
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.playCard
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.clickOnButton
-import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil
+import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchcommunication.websocket.server.test.PlayerHostTest
 import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.player.PlayerState
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
-import ch.qscqlmpa.dwitchcommunication.model.Message
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
@@ -54,11 +54,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         assertCardInHand(1, Card.Clubs3)
         assertCardOnTable(Card.Clubs2)
 
-//        dudeWaitASec()
-
-        playACard(0)
-
-//        dudeWaitASec()
+        playCard(0)
 
         val gameStateUpdatedMessage = waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
         assertThat(gameStateUpdatedMessage.gameState.cardsOnTable.size).isEqualTo(2)
@@ -86,7 +82,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         pickACard()
 
         val gameStateUpdatedMessage1 = waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
-        assertThat(gameStateUpdatedMessage1.gameState.player(host.inGameId).hasPickedCard).isTrue
+        assertThat(gameStateUpdatedMessage1.gameState.player(host.inGameId).hasPickedACard).isTrue
 
         assertCardInHand(0, Card.Hearts5)
         assertCardInHand(1, Card.Clubs3)
@@ -117,7 +113,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         assertCardInHand(1, Card.Clubs3)
         assertCardOnTable(Card.Clubs2)
 
-        playACard(1) // Local player plays Clubs3
+        playCard(1) // Local player plays Clubs3
         waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
 
         assertCardInHand(0, Card.Hearts5)
@@ -127,7 +123,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         dudeWaitASec()
         assertCardOnTable(Card.Spades4)
 
-        playACard(0) // Local player plays Hearts5 and is done
+        playCard(0) // Local player plays Hearts5 and is done
         waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
         assertCardOnTable(Card.Hearts5)
 
@@ -140,16 +136,71 @@ class GameRoomAsHostTest : BaseHostTest() {
         assertCurrentScreenIsHomeSreen()
     }
 
+    @Test
+    fun playAWholeRoundAndPerformCardExchange() {
+        launch()
+
+        cardsForPlayer = mapOf(
+            0 to listOf(Card.Hearts3), // Host
+            1 to listOf(Card.Spades6) // Guest
+        )
+
+        goToGameRoom()
+
+        UiUtil.assertControlTextContent(R.id.gameInfoTv, R.string.round_is_beginning)
+
+        assertCardInHand(0, Card.Hearts3)
+        assertCardOnTable(Card.Clubs2)
+
+        playCard(0) // Local player plays Hearts3
+        waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
+
+        UiUtil.assertControlTextContent(R.id.gameInfoTv, R.string.round_is_over)
+
+        initializeNewRoundCardDealer(mapOf(
+            0 to listOf(Card.Hearts5, Card.Clubs3, Card.Spades6, Card.HeartsAce), // Guest
+            1 to listOf(Card.Spades6, Card.Spades4, Card.Diamonds4, Card.Clubs10) // Host
+        ))
+
+        clickOnButton(R.id.startNewRoundBtn)
+
+        val messages = waitForNextNMessageSentByHost(2)
+        messages[0] as Message.GameStateUpdatedMessage
+        messages[1] as Message.CardExchangeMessage
+
+        // The host (president) chooses the cards it wants to give up for the exchange with the asshole (guest)
+        chooseCardForExchange(0)
+        chooseCardForExchange(0)
+        clickOnButton(R.id.exchangeBtn)
+
+        dudeWaitASec(4)
+
+        assertGameRoomIsDisplayed()
+
+        assertCardInHand(0, Card.Diamonds4)
+        assertCardInHand(1, Card.Clubs10)
+
+        otherPlayerSendsCardExchangeMessage(setOf(Card.Hearts5, Card.Clubs3))
+
+        waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
+
+        assertCardInHand(0, Card.Diamonds4)
+        assertCardInHand(1, Card.Clubs10)
+        assertCardInHand(2, Card.Hearts5)
+        assertCardInHand(3, Card.Clubs3)
+
+        UiUtil.assertControlTextContent(R.id.gameInfoTv, R.string.round_is_beginning)
+    }
+
+    private fun otherPlayerSendsCardExchangeMessage(cards: Set<Card>) {
+        val message = MessageFactory.createCardsForExchangeChosenMessage(guest1.inGameId, cards)
+        serverTestStub.guestSendsMessageToServer(PlayerHostTest.Guest1, message, true)
+    }
+
     private fun otherPlayerPlaysCard(guest: PlayerHostTest, card: Card) {
         val currentGameState = inGameStore.getGameState()
         val newGameState = DwitchEngine(currentGameState).playCard(card)
         serverTestStub.guestSendsMessageToServer(guest, MessageFactory.createGameStateUpdatedMessage(newGameState), true)
-    }
-
-    private fun playACard(position: Int) {
-        onView(ViewAssertionUtil.withRecyclerView(R.id.cardsInHandRw)
-                .atPositionOnView(position, R.id.cardIv))
-                .perform(click())
     }
 
     private fun goToGameRoom() {

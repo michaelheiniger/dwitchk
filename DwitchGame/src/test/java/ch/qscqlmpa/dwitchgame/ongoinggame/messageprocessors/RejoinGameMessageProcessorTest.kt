@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchgame.TestUtil
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
-import ch.qscqlmpa.dwitchcommunication.connectionstore.LocalConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.RejoinInfo
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
@@ -29,7 +29,7 @@ class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
 
     private val guestPlayer = TestEntityFactory.createGuestPlayer1()
 
-    private val senderLocalConnectionId = LocalConnectionId(0)
+    private val senderLocalConnectionId = ConnectionId(0)
 
     private lateinit var mockWwaitingRoomStateUpdateMessageWrapper: EnvelopeToSend
 

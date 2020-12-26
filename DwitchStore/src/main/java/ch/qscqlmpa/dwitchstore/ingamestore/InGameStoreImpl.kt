@@ -1,7 +1,9 @@
 package ch.qscqlmpa.dwitchstore.ingamestore
 
+import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchmodel.game.DwitchEvent
 import ch.qscqlmpa.dwitchmodel.game.Game
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
@@ -21,6 +23,7 @@ internal class InGameStoreImpl constructor(
 
     private val gameDao = database.gameDao()
     private val playerDao = database.playerDao()
+    private val dwitchEventDao = database.dwitchEventDao()
 
     // Game
     override fun getGame(): Game {
@@ -52,6 +55,37 @@ internal class InGameStoreImpl constructor(
     override fun updateGameState(gameState: GameState) {
         val serializedGameState = serializerFactory.serialize(gameState)
         gameDao.updateGameState(gameLocalId, serializedGameState)
+    }
+
+    override fun addCardExchangeEvent(cardExchange: CardExchange) {
+        gameDao.addCardExchangeEvent(gameLocalId, serializerFactory.serialize(cardExchange))
+    }
+
+    override fun insertDwitchEvent(event: DwitchEvent) {
+        dwitchEventDao.insertEvent2(gameLocalId) { id -> serializerFactory.serialize(event.copyWithId(id)) }
+    }
+
+    override fun observeDwitchEvents(): Observable<DwitchEvent> {
+        return dwitchEventDao.observeDwitchEvents(gameLocalId)
+            .map { event -> serializerFactory.unserializeDwitchEvent(event.event) }
+    }
+
+    override fun observeCardExchangeEvents(): Observable<CardExchange> {
+        return gameDao.observeGame(gameLocalId)
+            .filter { game -> game.cardExchangeEvent != null }
+            .map { game -> serializerFactory.unserializeCardExchange(game.cardExchangeEvent!!) }
+    }
+
+    override fun deleteDwitchEvent(event: DwitchEvent): Int {
+        return dwitchEventDao.deleteEvent(event.id)
+    }
+
+    override fun deleteDwitchEvent(eventId: Long): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteCardExchangeEvent() {
+        return gameDao.deleteCardExchangeEvent(gameLocalId)
     }
 
     // Player

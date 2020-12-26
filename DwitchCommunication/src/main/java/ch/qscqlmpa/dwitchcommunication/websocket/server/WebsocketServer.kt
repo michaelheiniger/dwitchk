@@ -1,10 +1,11 @@
 package ch.qscqlmpa.dwitchcommunication.websocket.server
 
+import ch.qscqlmpa.dwitchcommunication.Address
 import io.reactivex.rxjava3.core.Observable
 import org.java_websocket.WebSocket
 import org.java_websocket.handshake.ClientHandshake
 
-interface WebsocketServer {
+internal interface WebsocketServer {
 
     fun observeOnOpenEvents(): Observable<OnOpen>
 
@@ -27,9 +28,9 @@ interface WebsocketServer {
     fun sendBroadcast(message: String)
 }
 
-data class OnOpen(val conn: WebSocket?, val handshake: ClientHandshake?)
-data class OnClose(val conn: WebSocket?, val code: Int, val reason: String?, val remote: Boolean)
-data class OnMessage(val conn: WebSocket?, val message: String?)
-object OnStart
-data class OnError(val conn: WebSocket?, val ex: Exception?)
+internal data class OnOpen(val conn: WebSocket?, val handshake: ClientHandshake?)
+internal data class OnClose(val conn: WebSocket?, val code: Int, val reason: String?, val remote: Boolean)
+internal data class OnMessage(val conn: WebSocket?, val message: String?)
+internal data class OnStart(val address: Address)
+internal data class OnError(val conn: WebSocket?, val ex: Exception?)
 

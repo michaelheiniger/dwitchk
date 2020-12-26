@@ -4,13 +4,16 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardId
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.card.CardSuit
+import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.game.GameEvent
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.Player
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchmodel.game.DwitchEvent
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreScope
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
@@ -60,6 +63,18 @@ class SerializerFactory @Inject constructor(private val json: Json) {
         return json.encodeToString(PlayerInGameId.serializer(), playerInGameId)
     }
 
+    fun serialize(cards: List<Card>): String {
+        return json.encodeToString(ListSerializer(Card.serializer()), cards)
+    }
+
+    fun serialize(event: DwitchEvent): String {
+        return json.encodeToString(DwitchEvent.serializer(), event)
+    }
+
+    fun serialize(cardExchange: CardExchange): String {
+        return json.encodeToString(CardExchange.serializer(), cardExchange)
+    }
+
     // Unserialize
 
     fun unserializeCard(card: String): Card {
@@ -92,6 +107,18 @@ class SerializerFactory @Inject constructor(private val json: Json) {
 
     fun unserializePlayerInGameId(playerInGameId: String): PlayerInGameId {
         return json.decodeFromString(PlayerInGameId.serializer(), playerInGameId)
+    }
+
+    fun unserializeCards(cards: String): List<Card> {
+        return json.decodeFromString(ListSerializer(Card.serializer()), cards)
+    }
+
+    fun unserializeDwitchEvent(event: String): DwitchEvent {
+        return json.decodeFromString(DwitchEvent.serializer(), event)
+    }
+
+    fun unserializeCardExchange(cardExchange: String): CardExchange {
+        return json.decodeFromString(CardExchange.serializer(), cardExchange)
     }
 }
 

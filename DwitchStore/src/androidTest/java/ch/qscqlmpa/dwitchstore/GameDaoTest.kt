@@ -1,12 +1,12 @@
 package ch.qscqlmpa.dwitchstore
 
-import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
-import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 import ch.qscqlmpa.dwitchmodel.game.Game
+import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.Player
+import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
+import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -45,7 +45,8 @@ internal class GameDaoTest : BaseInstrumentedTest() {
             GameCommonId(0),
             gameName,
             "",
-            insertGameResult.localPlayerLocalId
+            insertGameResult.localPlayerLocalId,
+            null
         )
         val gameTest = gameDao.getGame(insertGameResult.gameLocalId)
 
@@ -82,7 +83,8 @@ internal class GameDaoTest : BaseInstrumentedTest() {
             GameCommonId(0),
             gameName,
             "",
-            insertGameResult.localPlayerLocalId
+            insertGameResult.localPlayerLocalId,
+            null
         )
         val gameTest = gameDao.getGame(insertGameResult.gameLocalId)
 
@@ -131,7 +133,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
             // Goal is to have different values for game ID and player ID in the tests
             gameDaoTest.db.runInTransaction {
                 val gameId = gameDaoTest.gameDao.insertGame(
-                    Game(0, RoomType.WAITING_ROOM, GameCommonId(1), "", "", 1)
+                    Game(0, RoomType.WAITING_ROOM, GameCommonId(1), "", "", 1, null)
                 )
                 val player1 = Player(
                     0,

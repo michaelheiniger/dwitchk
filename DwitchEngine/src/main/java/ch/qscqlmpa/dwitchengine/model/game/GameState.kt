@@ -28,6 +28,10 @@ data class GameState(val phase: GamePhase,
         performSanityChecks()
     }
 
+    val phaseIsPlayable get(): Boolean {
+        return phase.isOneOf(GamePhase.RoundIsBeginning, GamePhase.RoundIsOnGoing)
+    }
+
     fun lastCardOnTable(): Card? {
         return cardsOnTable.lastOrNull()
     }
@@ -72,6 +76,7 @@ data class GameState(val phase: GamePhase,
         val allCardsInGame = listOf(
                 cardsInDeck,
                 players.map { (_, player) -> player.cardsInHand }.flatten(),
+                players.map { (_, player) -> player.cardsForExchange }.flatten(),
                 cardsOnTable,
                 cardsInGraveyard
         ).flatten()

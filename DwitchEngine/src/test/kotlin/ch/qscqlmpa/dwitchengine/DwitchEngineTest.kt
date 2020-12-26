@@ -88,6 +88,7 @@ internal class DwitchEngineTest {
                 .assertCardsOnTable(listOf(Card.Clubs5))
                 .assertCanStartNewRound(false)
                 .assertCanEndGame(false)
+                .assertGamePhase(GamePhase.RoundIsBeginning)
         playCard(Card.Diamonds5)
 
         PlayerDashboardRobot(getPlayerDashboard(guestPlayer2Id))
@@ -95,6 +96,7 @@ internal class DwitchEngineTest {
                 .assertCanPass(false)
                 .assertCanPickACard(true)
                 .assertCardsOnTable(listOf(Card.Clubs5, Card.Diamonds5))
+                .assertGamePhase(GamePhase.RoundIsOnGoing)
         playCard(Card.Hearts2)
 
         PlayerDashboardRobot(getPlayerDashboard(guestPlayer2Id))

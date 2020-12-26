@@ -10,8 +10,13 @@ data class Player(val inGameId: PlayerInGameId,
                   val rank: Rank,
                   val state: PlayerState,
                   val dwitched: Boolean,
-                  val hasPickedCard: Boolean
+                  val hasPickedACard: Boolean,
+                  val cardsForExchange: Set<Card> = emptySet()
 ) {
+    val hasNotPickedACard get() = !hasPickedACard
+
+    val isTheOnePlaying get() = state == PlayerState.Playing
+
     fun toPlayerInfo(): PlayerInfo {
         return PlayerInfo(inGameId, name)
     }

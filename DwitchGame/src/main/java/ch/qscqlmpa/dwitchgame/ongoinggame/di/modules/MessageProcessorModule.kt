@@ -1,13 +1,9 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.di.modules
 
-import ch.qscqlmpa.dwitchgame.ongoinggame.di.MessageProcessorKey
-import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.*
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.GameOverMessageProcessor
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.JoinGameAckMessageProcessor
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.JoinGameMessageProcessor
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.RejoinGameAckMessageProcessor
+import ch.qscqlmpa.dwitchgame.ongoinggame.di.MessageProcessorKey
+import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -80,4 +76,16 @@ abstract class MessageProcessorModule {
     @IntoMap
     @MessageProcessorKey(Message.GameOverMessage::class)
     internal abstract fun bindGameOverMessageProcessor(messageProcessor: GameOverMessageProcessor): MessageProcessor
+
+    @OngoingGameScope
+    @Binds
+    @IntoMap
+    @MessageProcessorKey(Message.CardExchangeMessage::class)
+    internal abstract fun bindCardExchangeMessageProcessor(messageprocessor: CardExchangeMessageProcessor): MessageProcessor
+
+    @OngoingGameScope
+    @Binds
+    @IntoMap
+    @MessageProcessorKey(Message.CardsForExchangeMessage::class)
+    internal abstract fun bindCardsForExchangeMessageProcessor(messageProcessor: CardsForExchangeMessageProcessor): MessageProcessor
 }
