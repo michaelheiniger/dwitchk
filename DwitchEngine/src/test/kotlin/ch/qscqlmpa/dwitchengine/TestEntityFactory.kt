@@ -9,27 +9,27 @@ import ch.qscqlmpa.dwitchengine.model.player.*
 internal object TestEntityFactory {
 
     fun createHostPlayerInfo(): PlayerOnboardingInfo {
-        return createHostPlayer().toPlayerInfo()
+        return createHostPlayer().toPlayerOnboardingInfo()
     }
 
     fun createGuestPlayer1Info(): PlayerOnboardingInfo {
-        return createGuestPlayer1().toPlayerInfo()
+        return createGuestPlayer1().toPlayerOnboardingInfo()
     }
 
     fun createGuestPlayer2Info(): PlayerOnboardingInfo {
-        return createGuestPlayer2().toPlayerInfo()
+        return createGuestPlayer2().toPlayerOnboardingInfo()
     }
 
     fun createGuestPlayer3Info(): PlayerOnboardingInfo {
-        return createGuestPlayer3().toPlayerInfo()
+        return createGuestPlayer3().toPlayerOnboardingInfo()
     }
 
     fun createGuestPlayer4Info(): PlayerOnboardingInfo {
-        return createGuestPlayer4().toPlayerInfo()
+        return createGuestPlayer4().toPlayerOnboardingInfo()
     }
 
     fun createGuestPlayer5Info(): PlayerOnboardingInfo {
-        return createGuestPlayer5().toPlayerInfo()
+        return createGuestPlayer5().toPlayerOnboardingInfo()
     }
 
     fun createHostPlayer(
