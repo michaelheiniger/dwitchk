@@ -6,14 +6,14 @@ import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.Player
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInfo
+import ch.qscqlmpa.dwitchengine.model.player.PlayerOnboardingInfo
 import ch.qscqlmpa.dwitchengine.model.player.PlayerState
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import ch.qscqlmpa.dwitchengine.rules.PlayingOrder
 
 internal object GameBootstrap {
 
-    fun createNewGame(playersInfo: List<PlayerInfo>, initialGameSetup: InitialGameSetup): GameState {
+    fun createNewGame(playersInfo: List<PlayerOnboardingInfo>, initialGameSetup: InitialGameSetup): GameState {
         val players = playersInfo.mapIndexed { index, p ->
             val rank = initialGameSetup.getRankForPlayer(index)
             Player(

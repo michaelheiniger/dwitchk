@@ -13,11 +13,11 @@ import org.junit.jupiter.api.Test
 
 internal class DwitchEngineTest {
 
-    private lateinit var hostPlayer: PlayerInfo
-    private lateinit var guestPlayer1: PlayerInfo
-    private lateinit var guestPlayer2: PlayerInfo
-    private lateinit var guestPlayer3: PlayerInfo
-    private lateinit var guestPlayer4: PlayerInfo
+    private lateinit var hostPlayer: PlayerOnboardingInfo
+    private lateinit var guestPlayer1: PlayerOnboardingInfo
+    private lateinit var guestPlayer2: PlayerOnboardingInfo
+    private lateinit var guestPlayer3: PlayerOnboardingInfo
+    private lateinit var guestPlayer4: PlayerOnboardingInfo
 
     private lateinit var hostPlayerId: PlayerInGameId
     private lateinit var guestPlayer1Id: PlayerInGameId

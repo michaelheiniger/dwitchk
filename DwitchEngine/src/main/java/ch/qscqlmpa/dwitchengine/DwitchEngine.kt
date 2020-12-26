@@ -23,7 +23,7 @@ import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboard
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboardFactory
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInfo
+import ch.qscqlmpa.dwitchengine.model.player.PlayerOnboardingInfo
 import ch.qscqlmpa.dwitchengine.rules.CardExchangeComputer
 
 /* Important rule: As soon as the last player to have played a card has to play again
@@ -112,7 +112,7 @@ class DwitchEngine(private val currentGameState: GameState) {
     }
 
     companion object {
-        fun createNewGame(playersInfo: List<PlayerInfo>, initialGameSetup: InitialGameSetup): GameState {
+        fun createNewGame(playersInfo: List<PlayerOnboardingInfo>, initialGameSetup: InitialGameSetup): GameState {
             println("Start new game, players:  $playersInfo, initial game setup: $initialGameSetup")
             return GameBootstrap.createNewGame(playersInfo, initialGameSetup)
         }

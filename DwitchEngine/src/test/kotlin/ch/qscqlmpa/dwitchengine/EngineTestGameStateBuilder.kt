@@ -91,7 +91,7 @@ class EngineTestGameStateBuilder {
     }
 
     fun addPlayerToGame(
-        player: PlayerInfo,
+        player: PlayerOnboardingInfo,
         state: PlayerState,
         rank: Rank,
         cardsInHand: List<Card> = emptyList(),

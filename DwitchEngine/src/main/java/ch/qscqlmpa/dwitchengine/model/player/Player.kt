@@ -17,7 +17,7 @@ data class Player(val inGameId: PlayerInGameId,
 
     val isTheOnePlaying get() = state == PlayerState.Playing
 
-    fun toPlayerInfo(): PlayerInfo {
-        return PlayerInfo(inGameId, name)
+    fun toPlayerInfo(): PlayerOnboardingInfo {
+        return PlayerOnboardingInfo(inGameId, name)
     }
 }
