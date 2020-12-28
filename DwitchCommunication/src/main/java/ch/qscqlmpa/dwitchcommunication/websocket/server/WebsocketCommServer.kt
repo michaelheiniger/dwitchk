@@ -119,7 +119,7 @@ internal class WebsocketCommServer @Inject constructor(
             .flatMap { onClose ->
                 val senderAddress = buildAddressFromConnection(onClose.conn!!)
                 return@flatMap if (senderAddress != null) {
-                    Timber.d("Client disconnected $senderAddress")
+                    Timber.d("Client disconnected $senderAddress (details: $onClose)")
                     val localConnectionId = connectionStore.getConnectionIdForAddress(senderAddress)
                     Observable.just(ServerCommunicationEvent.ClientDisconnected(localConnectionId))
                 } else {
