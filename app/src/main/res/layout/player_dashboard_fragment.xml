@@ -7,7 +7,7 @@
     tools:context=".ui.ongoinggame.gameroom.playerdashboard.PlayerDashboardFragment">
 
     <TextView
-        android:id="@+id/playersTv"
+        android:id="@+id/playersInfoTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -29,7 +29,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playersTv"
+        app:layout_constraintTop_toBottomOf="@+id/playersInfoTv"
         tools:src="@drawable/spades_ace" />
 
     <TextView
