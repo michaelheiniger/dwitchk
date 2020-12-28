@@ -9,6 +9,7 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
+import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.host.ConnectionHostFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
 import ch.qscqlmpa.dwitch.ui.utils.UiUtil.updateView
 import kotlinx.android.synthetic.main.waiting_room_host_fragment.*
@@ -18,6 +19,13 @@ class WaitingRoomHostFragment : OngoingGameBaseFragment() {
     override val layoutResource: Int = R.layout.waiting_room_host_fragment
 
     private lateinit var viewModel: WaitingRoomHostViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        parentFragmentManager.beginTransaction()
+            .add(R.id.connection_fragment_container, ConnectionHostFragment.create())
+            .commit()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

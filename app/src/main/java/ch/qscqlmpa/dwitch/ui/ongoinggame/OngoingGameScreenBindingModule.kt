@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame
 
 import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest.ConnectionGuestFragment
+import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.host.ConnectionHostFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host.GameRoomHostFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard.PlayerDashboardFragment
@@ -34,4 +35,7 @@ abstract class OngoingGameScreenBindingModule {
 
     @ContributesAndroidInjector
     abstract fun contributeConnectionGuestFragment(): ConnectionGuestFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeConnectionHostFragment(): ConnectionHostFragment
 }

@@ -3,6 +3,7 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame
 import androidx.lifecycle.ViewModel
 import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameUiScope
 import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest.ConnectionGuestViewModel
+import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.host.ConnectionHostViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.cardexchange.CardExchangeViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestViewModel
@@ -70,4 +71,9 @@ abstract class OngoingGameViewModelBindingModule {
     @IntoMap
     @ViewModelKey(ConnectionGuestViewModel::class)
     abstract fun bindConnectionGuestViewModel(viewModel: ConnectionGuestViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ConnectionHostViewModel::class)
+    abstract fun bindConnectionHostViewModel(viewModel: ConnectionHostViewModel): ViewModel
 }

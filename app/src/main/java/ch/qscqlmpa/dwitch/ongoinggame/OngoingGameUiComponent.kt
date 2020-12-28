@@ -3,6 +3,7 @@ package ch.qscqlmpa.dwitch.ongoinggame
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameScreenBindingModule
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameViewModelBindingModule
 import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest.ConnectionGuestFragment
+import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.host.ConnectionHostFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.cardexchange.CardExchangeFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestFragment
@@ -32,4 +33,5 @@ interface OngoingGameUiComponent {
     fun inject(fragment: CardExchangeFragment)
 
     fun inject(fragment: ConnectionGuestFragment)
+    fun inject(fragment: ConnectionHostFragment)
 }
