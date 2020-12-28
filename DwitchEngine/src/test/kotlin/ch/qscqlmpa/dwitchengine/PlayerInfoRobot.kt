@@ -49,11 +49,6 @@ class PlayerInfoRobot(private val info: PlayerInfo) {
         return this
     }
 
-    fun assertCanEndGame(canEndGame: Boolean): PlayerInfoRobot {
-        assertThat(info.canEndGame).isEqualTo(canEndGame)
-        return this
-    }
-
     fun assertDwitched(): PlayerInfoRobot {
         assertThat(info.dwitched).isTrue
         return this

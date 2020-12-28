@@ -17,6 +17,5 @@ data class PlayerInfo(
     val canPickACard: Boolean,
     val canPlay: Boolean,
     val canStartNewRound: Boolean,
-    val canEndGame: Boolean, //FIXME: Currently not used by the UI
     val minimumPlayingCardValueAllowed: CardName
 )

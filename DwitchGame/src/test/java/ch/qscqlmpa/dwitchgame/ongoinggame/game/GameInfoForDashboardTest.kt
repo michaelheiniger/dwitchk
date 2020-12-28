@@ -31,7 +31,6 @@ internal class GameInfoForDashboardTest: BaseUnitTest() {
                     canPickACard = false,
                     canPlay = false,
                     canStartNewRound = true,
-                    canEndGame = true,
                     CardName.Two
                 ),
                 PlayerInGameId(2) to PlayerInfo(
@@ -45,7 +44,6 @@ internal class GameInfoForDashboardTest: BaseUnitTest() {
                     canPickACard = false,
                     canPlay = false,
                     canStartNewRound = true,
-                    canEndGame = true,
                     CardName.Two
                 )
             ),

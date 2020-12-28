@@ -95,7 +95,6 @@ internal class DwitchEngineTest {
                 .assertCanPass(false)
                 .assertCanPickACard(true)
                 .assertCanStartNewRound(false)
-                .assertCanEndGame(false)
 
         // Host plays a card and dwitches guest1
         playCard(Card.Diamonds5)
@@ -286,7 +285,6 @@ internal class DwitchEngineTest {
                 .assertPlayerStatus(PlayerStatus.Done)
                 .assertPlayerRank(Rank.Neutral)
                 .assertCanStartNewRound(true)
-                .assertCanEndGame(true)
     }
 
     private fun playCard(card: Card) {
