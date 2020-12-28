@@ -32,6 +32,7 @@ internal class GuestCommunicatorImpl constructor(
     }
 
     override fun sendMessageToHost(message: Message): Completable {
+        Timber.d("Sending message to host: $message")
         return commClient.sendMessageToServer(message)
     }
 
