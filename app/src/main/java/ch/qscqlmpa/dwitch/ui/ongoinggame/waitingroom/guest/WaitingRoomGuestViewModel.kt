@@ -4,12 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomGuestFacade
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
-import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
+import ch.qscqlmpa.dwitchcommonutil.DisposableManager
+import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
+import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
+import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
+import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomGuestFacade
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
 import timber.log.Timber
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 class WaitingRoomGuestViewModel @Inject constructor(
     private val facade: WaitingRoomGuestFacade,
-    disposableManager: ch.qscqlmpa.dwitchcommonutil.DisposableManager,
+    disposableManager: DisposableManager,
     schedulerFactory: SchedulerFactory
 ) : BaseViewModel(disposableManager, schedulerFactory) {
 

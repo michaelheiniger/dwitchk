@@ -7,6 +7,7 @@ import ch.qscqlmpa.dwitch.ui.ResourceMapper
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitch.ui.model.UiInfoModel
+import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.GameLaunchableEvent
@@ -16,10 +17,9 @@ import io.reactivex.rxjava3.core.Flowable
 import timber.log.Timber
 import javax.inject.Inject
 
-internal class WaitingRoomHostViewModel @Inject
-constructor(
+internal class WaitingRoomHostViewModel @Inject constructor(
     private val facade: WaitingRoomHostFacade,
-    disposableManager: ch.qscqlmpa.dwitchcommonutil.DisposableManager,
+    disposableManager: DisposableManager,
     schedulerFactory: SchedulerFactory
 ) : BaseViewModel(disposableManager, schedulerFactory) {
 
