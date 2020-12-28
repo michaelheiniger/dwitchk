@@ -137,7 +137,6 @@ open class App : DaggerApplication() {
         return gameComponent.appEventRepository
     }
 
-    //FIXME: Le crash vient d'ici !
     @SuppressLint("CheckResult") // Subscription is disposed when app is destroyed
     protected open fun observeAppEvents() {
         appEventRepository().observeEvents()
