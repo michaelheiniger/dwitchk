@@ -65,7 +65,5 @@ internal class GameInfoForDashboardTest: BaseUnitTest() {
 
         // Finally set to false because the player is not the host
         assertThat(dashboard.localPlayerInfo.canStartNewRound).isFalse
-
-
     }
 }
