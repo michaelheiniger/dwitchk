@@ -6,6 +6,6 @@ sealed class ServerCommunicationEvent {
     data class ClientConnected(val connectionId: ConnectionId) : ServerCommunicationEvent()
     data class ClientDisconnected(val connectionId: ConnectionId?) : ServerCommunicationEvent()
     data class ListeningForConnections(val hostConnectionId: ConnectionId) : ServerCommunicationEvent()
-    object ErrorListeningForConnections : ServerCommunicationEvent()
+    data class ErrorListeningForConnections(val exception: Exception?) : ServerCommunicationEvent()
     object NotListeningForConnections : ServerCommunicationEvent()
 }

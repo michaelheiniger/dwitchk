@@ -104,7 +104,7 @@ internal class WebsocketCommServer @Inject constructor(
 
     private fun observeOnErrorEvents(): Observable<ServerCommunicationEvent.ErrorListeningForConnections> {
         return websocketServer.observeOnErrorEvents()
-            .map { ServerCommunicationEvent.ErrorListeningForConnections }
+            .map { onError -> ServerCommunicationEvent.ErrorListeningForConnections(onError.ex) }
             .doOnNext { connectionStore.clearStore() }
     }
 
