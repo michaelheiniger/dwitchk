@@ -22,7 +22,6 @@ class WaitingRoomHostFragment : OngoingGameBaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(WaitingRoomHostViewModel::class.java)
-        setupConnectionStateControls()
         setupCanGameBeLaunchedControls()
         setupLaunchGameButton(view)
         setupCancelGameButton(view)
@@ -31,10 +30,6 @@ class WaitingRoomHostFragment : OngoingGameBaseFragment() {
 
     override fun inject() {
         (requireActivity().application as App).getGameUiComponent()!!.inject(this)
-    }
-
-    private fun setupConnectionStateControls() {
-        viewModel.connectionStateInfo().observe(viewLifecycleOwner, { uiInfo -> communicationStateTv.text = getText(uiInfo.textResource.id) })
     }
 
     private fun setupCanGameBeLaunchedControls() {

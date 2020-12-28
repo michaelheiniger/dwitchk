@@ -44,24 +44,6 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
     }
 
     @Test
-    fun `Connection state info is updated whenever the connection state changes`() {
-        val connectionStateInfo = viewModel.connectionStateInfo()
-        subscribeToPublishers(connectionStateInfo)
-
-        communicatorSubject.onNext(HostCommunicationState.Open)
-
-        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(Resource(R.string.listening_for_guests)))
-
-        communicatorSubject.onNext(HostCommunicationState.Closed)
-
-        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(Resource(R.string.not_listening_for_guests)))
-
-        communicatorSubject.onNext(HostCommunicationState.Error)
-
-        assertThat(connectionStateInfo.value!!).isEqualTo(UiInfoModel(Resource(R.string.host_connection_error)))
-    }
-
-    @Test
     fun `Launch game control is enabled because game is ready to be launched`() {
         setupGameCanBeLaunchedMock(GameLaunchableEvent.GameIsReadyToBeLaunched)
 
