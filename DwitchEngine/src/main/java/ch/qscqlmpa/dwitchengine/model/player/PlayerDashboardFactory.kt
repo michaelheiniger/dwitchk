@@ -11,6 +11,7 @@ class PlayerDashboardFactory(val gameState: GameState) {
 
     fun create(): GameInfo {
         return GameInfo(
+            gameState.currentPlayerId,
             playerInfos(),
             gameState.phase,
             gameState.playingOrder,

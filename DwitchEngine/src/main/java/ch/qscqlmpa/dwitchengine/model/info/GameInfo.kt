@@ -7,6 +7,7 @@ import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
 
 data class GameInfo(
+    val currentPlayerId: PlayerInGameId,
     val playerInfos: Map<PlayerInGameId, PlayerInfo>,
     val gamePhase: GamePhase,
     val playingOrder: List<PlayerInGameId>,
@@ -14,4 +15,8 @@ data class GameInfo(
     val lastCardPlayed: Card,
     val cardsOnTable: List<Card>,
     val gameEvent: GameEvent?
-)
+)  {
+    fun getCurrentPlayer(): PlayerInfo {
+        return playerInfos.getValue(currentPlayerId)
+    }
+}

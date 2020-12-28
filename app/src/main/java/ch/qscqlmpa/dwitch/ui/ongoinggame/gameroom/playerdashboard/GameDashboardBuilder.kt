@@ -1,5 +1,8 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard
 
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.StyleSpan
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ImageInfo
 import ch.qscqlmpa.dwitch.ui.ResourceMapper
@@ -49,21 +52,45 @@ class GameDashboardFactory(
         return dashboardEnabled && localPlayerInfo.canPlay
     }
 
-   private  fun cardsInHands(): List<CardItem> {
+    private fun cardsInHands(): List<CardItem> {
         return localPlayerInfo.cardsInHand.map { card -> CardItem(card, isCardPlayable(card)) }
     }
 
-   private  fun lastCardPlayed(): ImageInfo {
-        return ImageInfo(
-            ResourceMapper.getResource(gameInfo.lastCardPlayed),
-            gameInfo.lastCardPlayed.toString()
-        )
+    private fun lastCardPlayed(): ImageInfo {
+        return ImageInfo(ResourceMapper.getResource(gameInfo.lastCardPlayed), gameInfo.lastCardPlayed.toString())
     }
 
-   private  fun playersInfo(): String {
-        return gameInfo.playingOrder
+    private fun playersInfo(): CharSequence {
+        val text = gameInfo.playingOrder
             .map { id -> gameInfo.playerInfos.getValue(id) }
-            .joinToString(" ") { player -> "${player.name} (${playerRank(player)})" }
+            .map { player -> "${player.name} (${playerRank(player)})" }
+
+        val indexOfCurrentPlayer = gameInfo.playingOrder.indexOf(gameInfo.currentPlayerId)
+        val startIndex = text
+            .take(indexOfCurrentPlayer)
+            .map { s -> s.length + 1 }
+            .sum()
+
+        val endIndex = text
+            .take(indexOfCurrentPlayer + 1)
+            .mapIndexed { index, s ->
+                if (index < text.size - 1) {
+                    s.length + 1
+                }
+                else {
+                    s.length
+                }
+            }
+            .sum()
+
+        gameInfo.getCurrentPlayer().name.length + 3 + playerRank(gameInfo.getCurrentPlayer()).length
+
+        val sb = SpannableStringBuilder(text.joinToString(" "))
+        val bss = StyleSpan(android.graphics.Typeface.BOLD); // Span to make text bold
+        sb.setSpan(bss, startIndex, endIndex, Spannable.SPAN_INCLUSIVE_INCLUSIVE); // make first 4 characters Bold
+
+
+        return sb
     }
 
     private fun gameInfo(): String {
@@ -79,7 +106,8 @@ class GameDashboardFactory(
 
     private fun isCardPlayable(card: Card) = cardHasValueHighEnough(card) || cardIsJoker(card)
 
-    private fun cardHasValueHighEnough(card: Card) = card.value() >= localPlayerInfo.minimumPlayingCardValueAllowed.value || cardIsJoker(card)
+    private fun cardHasValueHighEnough(card: Card) =
+        card.value() >= localPlayerInfo.minimumPlayingCardValueAllowed.value || cardIsJoker(card)
 
     private fun cardIsJoker(card: Card) = card.name == gameInfo.joker
 }
