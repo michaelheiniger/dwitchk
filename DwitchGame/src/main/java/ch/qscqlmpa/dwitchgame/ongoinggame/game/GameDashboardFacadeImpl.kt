@@ -46,24 +46,24 @@ internal class GameDashboardFacadeImpl @Inject constructor(
             .flatMapCompletable(startCardExchangeUsecase::startCardExchange)
     }
 
+    override fun getDashboard(): Single<GameInfoForDashboard> {
+        return gameRepository.getGameInfo().map { gameInfo ->
+                GameInfoForDashboard(dwitchEngineFactory.create(gameInfo.gameState).getGameInfo(), gameInfo.localPlayerId, gameInfo.localPlayerIsHost)
+        }
+    }
+
+    override fun getCardExchangeEvent(): Single<CardExchange> {
+        return dwitchEventRepository.getCardExchangeEvent()
+    }
+
     override fun observeConnectionState(): Observable<PlayerConnectionState> {
         return gameCommunicator.observePlayerConnectionState()
     }
 
     override fun observeGameInfoForDashboard(): Observable<GameInfoForDashboard> {
         return gameRepository.observeGameInfo().map { gameInfo ->
-            GameInfoForDashboard(dwitchEngineFactory.create(gameInfo.gameState).getGameInfo(), gameInfo.localPlayerId)
+            GameInfoForDashboard(dwitchEngineFactory.create(gameInfo.gameState).getGameInfo(), gameInfo.localPlayerId, gameInfo.localPlayerIsHost)
         }
-    }
-
-    override fun getDashboard(): Single<GameInfoForDashboard> {
-        return gameRepository.getGameInfo().map { gameInfo ->
-                GameInfoForDashboard(dwitchEngineFactory.create(gameInfo.gameState).getGameInfo(), gameInfo.localPlayerId)
-        }
-    }
-
-    override fun getCardExchangeEvent(): Single<CardExchange> {
-        return dwitchEventRepository.getCardExchangeEvent()
     }
 
     override fun observeCardExchangeEvents(): Observable<CardExchange> {

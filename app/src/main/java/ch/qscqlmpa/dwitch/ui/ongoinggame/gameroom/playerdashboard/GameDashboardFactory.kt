@@ -20,7 +20,7 @@ class GameDashboardFactory(
 ) {
 
     private val dashboardEnabled = connectionState == PlayerConnectionState.CONNECTED
-    private val gameInfo = gameInfoForDashboard.gameInfo
+    private val gameInfo = gameInfoForDashboard.getGameInfo()
     private val localPlayerInfo = gameInfoForDashboard.localPlayerInfo
 
     fun create(): GameDashboard {
