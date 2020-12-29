@@ -1,15 +1,15 @@
 package ch.qscqlmpa.dwitchengine.rules
 
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDone
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 
 internal object RankComputer {
 
-    fun computePlayersRank(players: List<PlayerDone>): Map<PlayerInGameId, Rank> {
+    fun computePlayersRank(players: List<PlayerDone>): Map<PlayerDwitchId, Rank> {
 
         val numPlayers = players.size
-        val rankMap = mutableMapOf<PlayerInGameId, Rank>()
+        val rankMap = mutableMapOf<PlayerDwitchId, Rank>()
         val (playersWhoFinishedWithJoker, playersWhoDidntFinishWithJoker) = players.partition { lm -> lm.cardPlayedIsJoker }
 
         playersWhoFinishedWithJoker
@@ -39,14 +39,14 @@ internal object RankComputer {
         return rankMap.toMap()
     }
 
-    private fun assignPunitiveRankWhenTwoPlayersForPosition(position: Int, playerId: PlayerInGameId): Pair<PlayerInGameId, Rank> {
+    private fun assignPunitiveRankWhenTwoPlayersForPosition(position: Int, playerId: PlayerDwitchId): Pair<PlayerDwitchId, Rank> {
         return when (position) {
             1 -> playerId to Rank.Asshole
             else -> throw IllegalStateException("At most one player can finish with joker when number players is two")
         }
     }
 
-    private fun assignPunitiveRankWhenThreePlayersForPosition(position: Int, playerId: PlayerInGameId): Pair<PlayerInGameId, Rank> {
+    private fun assignPunitiveRankWhenThreePlayersForPosition(position: Int, playerId: PlayerDwitchId): Pair<PlayerDwitchId, Rank> {
         return when (position) {
             1 -> playerId to Rank.Asshole
             2 -> playerId to Rank.Neutral
@@ -54,7 +54,7 @@ internal object RankComputer {
         }
     }
 
-    private fun assignPunitiveRankWhenFourPlayersForPosition(position: Int, playerId: PlayerInGameId): Pair<PlayerInGameId, Rank> {
+    private fun assignPunitiveRankWhenFourPlayersForPosition(position: Int, playerId: PlayerDwitchId): Pair<PlayerDwitchId, Rank> {
         return when (position) {
             1 -> playerId to Rank.Asshole
             2 -> playerId to Rank.ViceAsshole
@@ -63,7 +63,7 @@ internal object RankComputer {
         }
     }
 
-    private fun assignPunitiveRankWhenMoreThanFourPlayersForPosition(position: Int, playerId: PlayerInGameId, numPlayers: Int): Pair<PlayerInGameId, Rank> {
+    private fun assignPunitiveRankWhenMoreThanFourPlayersForPosition(position: Int, playerId: PlayerDwitchId, numPlayers: Int): Pair<PlayerDwitchId, Rank> {
         return when (position) {
             1 -> playerId to Rank.Asshole
             2 -> playerId to Rank.ViceAsshole
@@ -73,7 +73,7 @@ internal object RankComputer {
         }
     }
 
-    private fun assignRankWhenTwoPlayersForPosition(position: Int, playerId: PlayerInGameId): Pair<PlayerInGameId, Rank> {
+    private fun assignRankWhenTwoPlayersForPosition(position: Int, playerId: PlayerDwitchId): Pair<PlayerDwitchId, Rank> {
         return when (position) {
             1 -> playerId to Rank.President
             2 -> playerId to Rank.Asshole
@@ -81,7 +81,7 @@ internal object RankComputer {
         }
     }
 
-    private fun assignRankWhenThreePlayersForPosition(position: Int, playerId: PlayerInGameId): Pair<PlayerInGameId, Rank> {
+    private fun assignRankWhenThreePlayersForPosition(position: Int, playerId: PlayerDwitchId): Pair<PlayerDwitchId, Rank> {
         return when (position) {
             1 -> playerId to Rank.President
             2 -> playerId to Rank.Neutral
@@ -90,7 +90,7 @@ internal object RankComputer {
         }
     }
 
-    private fun assignRankWhenFourPlayersForPosition(position: Int, playerId: PlayerInGameId): Pair<PlayerInGameId, Rank> {
+    private fun assignRankWhenFourPlayersForPosition(position: Int, playerId: PlayerDwitchId): Pair<PlayerDwitchId, Rank> {
         return when (position) {
             1 -> playerId to Rank.President
             2 -> playerId to Rank.VicePresident
@@ -100,7 +100,7 @@ internal object RankComputer {
         }
     }
 
-    private fun assignRankWhenMoreThanFourPlayersForPosition(position: Int, playerId: PlayerInGameId, numPlayers: Int): Pair<PlayerInGameId, Rank> {
+    private fun assignRankWhenMoreThanFourPlayersForPosition(position: Int, playerId: PlayerDwitchId, numPlayers: Int): Pair<PlayerDwitchId, Rank> {
         return when (position) {
             1 -> playerId to Rank.President
             2 -> playerId to Rank.VicePresident

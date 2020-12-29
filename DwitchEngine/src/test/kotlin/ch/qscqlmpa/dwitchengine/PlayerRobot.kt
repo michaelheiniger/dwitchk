@@ -2,12 +2,12 @@ package ch.qscqlmpa.dwitchengine
 
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import org.assertj.core.api.Assertions.assertThat
 
-class PlayerRobot(private val gameState: GameState, private val playerId: PlayerInGameId) {
+class PlayerRobot(private val gameState: GameState, private val playerId: PlayerDwitchId) {
 
     fun assertNumCardsInHand(expectedValue: Int): PlayerRobot {
         assertThat(gameState.players.getValue(playerId).cardsInHand.size).isEqualTo(expectedValue)

@@ -1,3 +1,3 @@
 package ch.qscqlmpa.dwitchengine.model.player
 
-data class PlayerOnboardingInfo(val id: PlayerInGameId, val name: String)
+data class PlayerOnboardingInfo(val id: PlayerDwitchId, val name: String)

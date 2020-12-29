@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.eventprocessors
 
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientCommunicationEvent
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
@@ -46,7 +46,7 @@ class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
     @Test
     @DisplayName("Send JoinGameMessage because registration with host has not been done yet (in-game ID is 0)")
     fun `Send JoinGameMessage`() {
-        setupTest(PlayerInGameId(0))
+        setupTest(PlayerDwitchId(0))
 
         launchTest()
 
@@ -58,11 +58,11 @@ class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
     @Test
     @DisplayName("Send RejoinGameMessage because registration with host has already been done (in-game ID is not 0)")
     fun `Send RejoinGameMessage`() {
-        setupTest(PlayerInGameId(23))
+        setupTest(PlayerDwitchId(23))
 
         launchTest()
 
-        verify { mockCommunicator.sendMessageToHost(Message.RejoinGameMessage(game.gameCommonId, localPlayer.inGameId)) }
+        verify { mockCommunicator.sendMessageToHost(Message.RejoinGameMessage(game.gameCommonId, localPlayer.dwitchId)) }
         confirmVerified(mockCommunicator)
         assertCommunicationStateIsNowConnected()
     }
@@ -75,14 +75,14 @@ class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
         assertThat(commStateRepository.observeEvents().blockingFirst()).isEqualTo(GuestCommunicationState.Connected)
     }
 
-    private fun setupTest(localPlayerInGameId: PlayerInGameId) {
-        setupPlayer(localPlayerInGameId)
+    private fun setupTest(localPlayerDwitchId: PlayerDwitchId) {
+        setupPlayer(localPlayerDwitchId)
         setupGetPlayerMock()
         setupGame()
     }
 
-    private fun setupPlayer(localPlayerInGameId: PlayerInGameId) {
-        localPlayer = TestEntityFactory.createGuestPlayer1().copy(inGameId = localPlayerInGameId)
+    private fun setupPlayer(localPlayerDwitchId: PlayerDwitchId) {
+        localPlayer = TestEntityFactory.createGuestPlayer1().copy(dwitchId = localPlayerDwitchId)
     }
 
     private fun setupGame() {

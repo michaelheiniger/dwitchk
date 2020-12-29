@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchengine.actions
 
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 
 internal abstract class GameStateBase(private val currentGameState: GameState) {
@@ -15,7 +15,7 @@ internal abstract class GameStateBase(private val currentGameState: GameState) {
         return currentGameState.players.size
     }
 
-    fun currentPlayerId(): PlayerInGameId {
+    fun currentPlayerId(): PlayerDwitchId {
         return currentGameState.currentPlayerId
     }
 

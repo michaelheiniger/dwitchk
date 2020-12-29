@@ -1,11 +1,11 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.game
 
 import ch.qscqlmpa.dwitchengine.model.info.GameInfo
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 
 class GameInfoForDashboard(
     gameInfo: GameInfo,
-    private val localPlayerId: PlayerInGameId,
+    private val localPlayerId: PlayerDwitchId,
     localPlayerIsHost: Boolean
 ) {
 

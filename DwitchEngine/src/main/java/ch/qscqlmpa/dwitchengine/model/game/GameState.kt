@@ -5,17 +5,17 @@ import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.card.CardUtil
 import ch.qscqlmpa.dwitchengine.model.player.Player
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDone
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 import ch.qscqlmpa.dwitchengine.utils.ListUtil.shiftRightByN
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class GameState(val phase: GamePhase,
-                     val players: Map<PlayerInGameId, Player>,
-                     val playingOrder: List<PlayerInGameId>,
-                     val currentPlayerId: PlayerInGameId,
-                     val activePlayers: Set<PlayerInGameId>,
+                     val players: Map<PlayerDwitchId, Player>,
+                     val playingOrder: List<PlayerDwitchId>,
+                     val currentPlayerId: PlayerDwitchId,
+                     val activePlayers: Set<PlayerDwitchId>,
                      val playersDoneForRound: List<PlayerDone>,
                      val joker: CardName,
                      val gameEvent: GameEvent?,
@@ -36,8 +36,8 @@ data class GameState(val phase: GamePhase,
         return cardsOnTable.lastOrNull()
     }
 
-    fun player(inGameId: PlayerInGameId): Player {
-        return players.getValue(inGameId)
+    fun player(dwitchId: PlayerDwitchId): Player {
+        return players.getValue(dwitchId)
     }
 
     fun currentPlayer(): Player {

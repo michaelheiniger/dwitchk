@@ -6,7 +6,7 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameEvent
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.PlayerOnboardingInfo
 import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.Rank
@@ -22,11 +22,11 @@ internal class DwitchEngineTest {
     private lateinit var guestPlayer3: PlayerOnboardingInfo
     private lateinit var guestPlayer4: PlayerOnboardingInfo
 
-    private lateinit var hostPlayerId: PlayerInGameId
-    private lateinit var guestPlayer1Id: PlayerInGameId
-    private lateinit var guestPlayer2Id: PlayerInGameId
-    private lateinit var guestPlayer3Id: PlayerInGameId
-    private lateinit var guestPlayer4Id: PlayerInGameId
+    private lateinit var hostPlayerId: PlayerDwitchId
+    private lateinit var guestPlayer1Id: PlayerDwitchId
+    private lateinit var guestPlayer2Id: PlayerDwitchId
+    private lateinit var guestPlayer3Id: PlayerDwitchId
+    private lateinit var guestPlayer4Id: PlayerDwitchId
 
     private lateinit var gameState: GameState
 
@@ -299,7 +299,7 @@ internal class DwitchEngineTest {
         gameState = DwitchEngineImpl(gameState).passTurn()
     }
 
-    private fun createPlayerInfoRobot(playerId: PlayerInGameId): PlayerInfoRobot {
+    private fun createPlayerInfoRobot(playerId: PlayerDwitchId): PlayerInfoRobot {
         return PlayerInfoRobot(DwitchEngineImpl(gameState).getGameInfo().playerInfos.getValue(playerId))
     }
 

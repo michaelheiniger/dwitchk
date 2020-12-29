@@ -15,7 +15,7 @@ class PlayerDiffCallback(private val oldList: List<PlayerWr>, private val newLis
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].inGameId == newList[newItemPosition].inGameId
+        return oldList[oldItemPosition].dwitchId == newList[newItemPosition].dwitchId
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchstore
 
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchmodel.game.Game
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
@@ -60,7 +60,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
 
         val playerRef = Player(
             insertGameResult.localPlayerLocalId,
-            PlayerInGameId(insertGameResult.localPlayerLocalId),
+            PlayerDwitchId(insertGameResult.localPlayerLocalId),
             insertGameResult.gameLocalId,
             playerName,
             PlayerRole.HOST,
@@ -69,7 +69,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
         )
         val playerTest = playerDao.getPlayer(insertGameResult.localPlayerLocalId)
 
-        assertThat(playerTest).isEqualToIgnoringGivenFields(playerRef, "inGameId")
+        assertThat(playerTest).isEqualToIgnoringGivenFields(playerRef, "dwitchId")
     }
 
     @Test
@@ -115,7 +115,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
 
         val playerRef = Player(
             0,
-            PlayerInGameId(0),
+            PlayerDwitchId(0),
             insertGameResult.gameLocalId,
             playerName,
             PlayerRole.GUEST,
@@ -124,7 +124,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
         )
         val playerTest = playerDao.getPlayerByName(playerRef.name)
 
-        assertThat(playerTest).isEqualToIgnoringGivenFields(playerRef, "id", "inGameId")
+        assertThat(playerTest).isEqualToIgnoringGivenFields(playerRef, "id", "dwitchId")
     }
 
     companion object {
@@ -137,7 +137,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
                 )
                 val player1 = Player(
                     0,
-                    PlayerInGameId(0),
+                    PlayerDwitchId(0),
                     gameId,
                     "",
                     PlayerRole.HOST,
@@ -146,7 +146,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
                 )
                 val player2 = Player(
                     0,
-                    PlayerInGameId(0),
+                    PlayerDwitchId(0),
                     gameId,
                     "",
                     PlayerRole.GUEST,

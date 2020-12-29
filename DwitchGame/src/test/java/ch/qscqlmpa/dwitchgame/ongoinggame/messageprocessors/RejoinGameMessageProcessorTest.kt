@@ -1,13 +1,13 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.messageprocessors
 
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreFactory
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
-import ch.qscqlmpa.dwitchgame.TestEntityFactory
-import ch.qscqlmpa.dwitchgame.TestUtil
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreFactory
+import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.RejoinInfo
+import ch.qscqlmpa.dwitchgame.TestEntityFactory
+import ch.qscqlmpa.dwitchgame.TestUtil
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.RejoinGameMessageProcessor
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
@@ -72,7 +72,7 @@ class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
 
         launchTest()
 
-        assertThat(connectionStore.getInGameId(senderLocalConnectionId)).isEqualTo(guestPlayer.inGameId)
+        assertThat(connectionStore.getDwitchId(senderLocalConnectionId)).isEqualTo(guestPlayer.dwitchId)
     }
 
     @Test
@@ -97,10 +97,10 @@ class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
 
         launchTest()
 
-        verify { mockInGameStore.getPlayer(guestPlayer.inGameId) }
+        verify { mockInGameStore.getPlayer(guestPlayer.dwitchId) }
         verify { mockHostCommunicator.closeConnectionWithClient(senderLocalConnectionId) }
         confirmVerified(mockHostCommunicator)
-        assertThat(connectionStore.getInGameId(senderLocalConnectionId)).isNull()
+        assertThat(connectionStore.getDwitchId(senderLocalConnectionId)).isNull()
     }
 
     @Test
@@ -112,15 +112,15 @@ class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
         verify { mockInGameStore.getGame() }
         verify { mockHostCommunicator.closeConnectionWithClient(senderLocalConnectionId) }
         confirmVerified(mockHostCommunicator)
-        assertThat(connectionStore.getInGameId(senderLocalConnectionId)).isNull()
+        assertThat(connectionStore.getDwitchId(senderLocalConnectionId)).isNull()
     }
 
     private fun mockGuestPlayerFound() {
-        every { mockInGameStore.getPlayer(guestPlayer.inGameId) } returns guestPlayer
+        every { mockInGameStore.getPlayer(guestPlayer.dwitchId) } returns guestPlayer
     }
 
     private fun mockGuestPlayerNotFound() {
-        every { mockInGameStore.getPlayer(guestPlayer.inGameId) } returns null
+        every { mockInGameStore.getPlayer(guestPlayer.dwitchId) } returns null
     }
 
     private fun mockUpdatePlayerWthConnectionStateAndReady() {
@@ -135,7 +135,7 @@ class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
 
     private fun launchTest() {
         processor.process(
-            Message.RejoinGameMessage(game.gameCommonId, guestPlayer.inGameId),
+            Message.RejoinGameMessage(game.gameCommonId, guestPlayer.dwitchId),
             senderLocalConnectionId
         ).test().assertComplete()
     }
@@ -144,7 +144,7 @@ class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
         val otherGameCommonId = GameCommonId(12343)
         assertThat(otherGameCommonId).isNotEqualTo(game.gameCommonId)
         processor.process(
-            Message.RejoinGameMessage(otherGameCommonId, guestPlayer.inGameId),
+            Message.RejoinGameMessage(otherGameCommonId, guestPlayer.dwitchId),
             senderLocalConnectionId
         ).test().assertComplete()
     }

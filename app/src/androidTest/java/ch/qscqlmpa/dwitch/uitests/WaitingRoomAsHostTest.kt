@@ -4,7 +4,6 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
-import ch.qscqlmpa.dwitchcommunication.websocket.server.test.PlayerHostTest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.uitests.base.BaseHostTest
 import ch.qscqlmpa.dwitch.uitests.utils.WaitingRoomUtil.PLAYER_CONNECTED
@@ -12,8 +11,9 @@ import ch.qscqlmpa.dwitch.uitests.utils.WaitingRoomUtil.PLAYER_DISCONNECTED
 import ch.qscqlmpa.dwitch.utils.GameRobot
 import ch.qscqlmpa.dwitch.utils.PlayerRobot
 import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil.withRecyclerView
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.GuestMessageFactory
 import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchcommunication.websocket.server.test.PlayerHostTest
+import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.GuestMessageFactory
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
@@ -72,14 +72,14 @@ class WaitingRoomAsHostTest : BaseHostTest() {
 
         PlayerRobot(allPlayers[1])
                 .assertName(PlayerHostTest.Guest1.name)
-                .assertInGameId(guest1.inGameId) // in-game ID is the same in message and store
+                .assertDwitchId(guest1.dwitchId) // in-game ID is the same in message and store
                 .assertPlayerRole(PlayerRole.GUEST)
                 .assertState(PlayerConnectionState.CONNECTED)
                 .assertReady(false)
 
         PlayerRobot(allPlayers[2])
                 .assertName(PlayerHostTest.Guest2.name)
-                .assertInGameId(guest2.inGameId) // in-game ID is the same in message and store
+                .assertDwitchId(guest2.dwitchId) // in-game ID is the same in message and store
                 .assertPlayerRole(PlayerRole.GUEST)
                 .assertState(PlayerConnectionState.CONNECTED)
                 .assertReady(false)
@@ -225,7 +225,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
         val player = getGuest(guest)
         serverTestStub.connectClientToServer(guest, false)
         val gameCommonId = inGameStore.getGame().gameCommonId
-        val rejoinMessage = GuestMessageFactory.createRejoinGameMessage(gameCommonId, player.inGameId)
+        val rejoinMessage = GuestMessageFactory.createRejoinGameMessage(gameCommonId, player.dwitchId)
         serverTestStub.guestSendsMessageToServer(guest, rejoinMessage, true)
         waitForNextMessageSentByHost() as Message.RejoinGameAckMessage
         waitForNextMessageSentByHost() as Message.WaitingRoomStateUpdateMessage

@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchengine.model.player
 import ch.qscqlmpa.dwitchengine.model.card.Card
 
 internal data class PlayerMutable(
-    val inGameId: PlayerInGameId,
+    val dwitchId: PlayerDwitchId,
     private val name: String,
     private val cardsInHand: MutableList<Card>,
     var rank: Rank,
@@ -33,7 +33,7 @@ internal data class PlayerMutable(
     fun removeCardFromHand(card: Card) {
         val wasCardInHand = cardsInHand.remove(card)
         if (!wasCardInHand) {
-            throw IllegalArgumentException("Player $inGameId does not hold card $card")
+            throw IllegalArgumentException("Player $dwitchId does not hold card $card")
         }
     }
 
@@ -47,7 +47,7 @@ internal data class PlayerMutable(
 
     fun toPlayer(): Player {
         return Player(
-            inGameId,
+            dwitchId,
             name,
             cardsInHand,
             rank,

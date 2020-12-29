@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchengine.rules
 
 import ch.qscqlmpa.dwitchengine.TestEntityFactory
 import ch.qscqlmpa.dwitchengine.model.player.Player
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
@@ -105,7 +105,7 @@ internal class PlayingOrderTest {
             assertThat(order[5]).isEqualTo(guest2.id)
         }
 
-        private fun launchTest(vararg players: Player): List<PlayerInGameId> {
+        private fun launchTest(vararg players: Player): List<PlayerDwitchId> {
             return PlayingOrder.getPlayingOrder(players.toList())
         }
     }

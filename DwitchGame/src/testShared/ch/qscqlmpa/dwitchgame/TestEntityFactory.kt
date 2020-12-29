@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchgame
 import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.initialgamesetup.random.RandomInitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWr
 import ch.qscqlmpa.dwitchmodel.game.Game
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
@@ -15,22 +15,22 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 object TestEntityFactory {
 
     fun createPlayerWr1(): PlayerWr {
-        return PlayerWr(PlayerInGameId(1), "Sheev", true, PlayerConnectionState.CONNECTED)
+        return PlayerWr(PlayerDwitchId(1), "Sheev", true, PlayerConnectionState.CONNECTED)
     }
 
     fun createPlayerWr2(): PlayerWr {
-        return PlayerWr(PlayerInGameId(2), "Obi-Wan", true, PlayerConnectionState.CONNECTED)
+        return PlayerWr(PlayerDwitchId(2), "Obi-Wan", true, PlayerConnectionState.CONNECTED)
     }
 
     fun createHostPlayer(
-            localId: Long = 10L,
-            inGameId: PlayerInGameId = PlayerInGameId(100),
-            connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
-            ready: Boolean = true
+        localId: Long = 10L,
+        dwitchId: PlayerDwitchId = PlayerDwitchId(100),
+        connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
+        ready: Boolean = true
     ): Player {
         return Player(
                 localId,
-                inGameId,
+                dwitchId,
                 1L,
                 "Aragorn",
                 PlayerRole.HOST,
@@ -40,14 +40,14 @@ object TestEntityFactory {
     }
 
     fun createGuestPlayer1(
-            localId: Long = 11L,
-            inGameId: PlayerInGameId = PlayerInGameId(101),
-            connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
-            ready: Boolean = true
+        localId: Long = 11L,
+        dwitchId: PlayerDwitchId = PlayerDwitchId(101),
+        connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
+        ready: Boolean = true
     ): Player {
         return Player(
                 localId,
-                inGameId,
+                dwitchId,
                 1L,
                 "Boromir",
                 PlayerRole.GUEST,
@@ -57,14 +57,14 @@ object TestEntityFactory {
     }
 
     fun createGuestPlayer2(
-            localId: Long = 12L,
-            inGameId: PlayerInGameId = PlayerInGameId(102),
-            connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
-            ready: Boolean = true
+        localId: Long = 12L,
+        dwitchId: PlayerDwitchId = PlayerDwitchId(102),
+        connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
+        ready: Boolean = true
     ): Player {
         return Player(
                 localId,
-                inGameId,
+                dwitchId,
                 1L,
                 "Celeborn",
                 PlayerRole.GUEST,
@@ -74,14 +74,14 @@ object TestEntityFactory {
     }
 
     fun createGuestPlayer3(
-            localId: Long = 13L,
-            inGameId: PlayerInGameId = PlayerInGameId(103),
-            connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
-            ready: Boolean = true
+        localId: Long = 13L,
+        dwitchId: PlayerDwitchId = PlayerDwitchId(103),
+        connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
+        ready: Boolean = true
     ): Player {
         return Player(
                 localId,
-                inGameId,
+                dwitchId,
                 1L,
                 "Denethor",
                 PlayerRole.GUEST,

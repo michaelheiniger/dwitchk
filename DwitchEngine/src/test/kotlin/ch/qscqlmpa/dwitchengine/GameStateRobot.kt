@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.GameEvent
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import org.assertj.core.api.Assertions.assertThat
 
 class GameStateRobot(private val gameState: GameState) {
@@ -35,12 +35,12 @@ class GameStateRobot(private val gameState: GameState) {
         return this
     }
 
-    fun assertActivePlayers(vararg playersId: PlayerInGameId): GameStateRobot {
+    fun assertActivePlayers(vararg playersId: PlayerDwitchId): GameStateRobot {
         assertThat(gameState.activePlayers).containsExactly(*playersId)
         return this
     }
 
-    fun assertCurrentPlayerId(expectedPlayerId: PlayerInGameId): GameStateRobot {
+    fun assertCurrentPlayerId(expectedPlayerId: PlayerDwitchId): GameStateRobot {
         assertThat(gameState.currentPlayerId).isEqualTo(expectedPlayerId)
         return this
     }
@@ -50,7 +50,7 @@ class GameStateRobot(private val gameState: GameState) {
         return this
     }
 
-    fun assertPlayerIsDoneForRound(playerId: PlayerInGameId, cardPlayedIsJoker: Boolean): GameStateRobot {
+    fun assertPlayerIsDoneForRound(playerId: PlayerDwitchId, cardPlayedIsJoker: Boolean): GameStateRobot {
         assertThat(gameState.playersDoneForRound.find { lm -> lm.playerId == playerId }!!.cardPlayedIsJoker)
                 .isEqualTo(cardPlayedIsJoker)
         return this
@@ -86,7 +86,7 @@ class GameStateRobot(private val gameState: GameState) {
         return this
     }
 
-    fun assertPlayingOrder(playingOrder: List<PlayerInGameId>): GameStateRobot {
+    fun assertPlayingOrder(playingOrder: List<PlayerDwitchId>): GameStateRobot {
         assertThat(gameState.playingOrder).isEqualTo(playingOrder)
         return this
     }

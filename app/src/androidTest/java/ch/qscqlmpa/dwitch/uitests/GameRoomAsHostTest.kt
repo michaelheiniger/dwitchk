@@ -82,7 +82,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         pickACard()
 
         val gameStateUpdatedMessage1 = waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
-        assertThat(gameStateUpdatedMessage1.gameState.player(host.inGameId).hasPickedACard).isTrue
+        assertThat(gameStateUpdatedMessage1.gameState.player(host.dwitchId).hasPickedACard).isTrue
 
         assertCardInHand(0, Card.Hearts5)
         assertCardInHand(1, Card.Clubs3)
@@ -95,7 +95,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         passTurn()
 
         val gameStateUpdatedMessage2 =  waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
-        assertThat(gameStateUpdatedMessage2.gameState.player(host.inGameId).status).isEqualTo(PlayerStatus.Waiting)
+        assertThat(gameStateUpdatedMessage2.gameState.player(host.dwitchId).status).isEqualTo(PlayerStatus.Waiting)
 
         assertCanPickACard(false)
         assertCanPassTurn(false)
@@ -193,7 +193,7 @@ class GameRoomAsHostTest : BaseHostTest() {
     }
 
     private fun otherPlayerSendsCardExchangeMessage(cards: Set<Card>) {
-        val message = MessageFactory.createCardsForExchangeChosenMessage(guest1.inGameId, cards)
+        val message = MessageFactory.createCardsForExchangeChosenMessage(guest1.dwitchId, cards)
         serverTestStub.guestSendsMessageToServer(PlayerHostTest.Guest1, message, true)
     }
 

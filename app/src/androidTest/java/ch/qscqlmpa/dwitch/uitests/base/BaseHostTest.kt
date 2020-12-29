@@ -8,7 +8,7 @@ import ch.qscqlmpa.dwitchcommunication.websocket.server.test.PlayerHostTest
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.GuestMessageFactory
 import ch.qscqlmpa.dwitchmodel.player.Player
 import io.reactivex.rxjava3.core.Observable
-import org.junit.Assert
+import org.assertj.core.api.Assertions.assertThat
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
@@ -57,7 +57,7 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
         val guest = getGuest(identifier)
         serverTestStub.guestSendsMessageToServer(
             identifier,
-            GuestMessageFactory.createPlayerReadyMessage(guest.inGameId, true),
+            GuestMessageFactory.createPlayerReadyMessage(guest.dwitchId, true),
             true
         )
         return waitForNextMessageSentByHost() as Message.WaitingRoomStateUpdateMessage
@@ -70,13 +70,13 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
 
     protected fun guestLeavesGame(identifier: PlayerHostTest): Message.WaitingRoomStateUpdateMessage {
         val guest = getGuest(identifier)
-        serverTestStub.guestSendsMessageToServer(identifier, GuestMessageFactory.createLeaveGameMessage(guest.inGameId), true)
+        serverTestStub.guestSendsMessageToServer(identifier, GuestMessageFactory.createLeaveGameMessage(guest.dwitchId), true)
         return waitForNextMessageSentByHost() as Message.WaitingRoomStateUpdateMessage
     }
 
     private fun assertGuestHasJoinedGame() {
         val joinGameAckMessageForGuest = waitForNextMessageSentByHost() as Message.JoinGameAckMessage
-        Assert.assertNotEquals(0, joinGameAckMessageForGuest.playerInGameId)
+        assertThat(joinGameAckMessageForGuest.playerId).isNotEqualTo(0)
         waitForNextMessageSentByHost() as Message.WaitingRoomStateUpdateMessage
     }
 

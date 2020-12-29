@@ -7,7 +7,7 @@ import ch.qscqlmpa.dwitchcommunication.model.Recipient
 import ch.qscqlmpa.dwitchcommunication.model.RejoinInfo
 import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import io.reactivex.rxjava3.core.Single
@@ -21,11 +21,11 @@ class HostMessageFactory @Inject constructor(private val store: InGameStore) {
 
     fun createJoinAckMessage(
         recipientId: ConnectionId,
-        playerInGameId: PlayerInGameId
+        playerDwitchId: PlayerDwitchId
     ): Single<EnvelopeToSend> {
         return Single.fromCallable {
             val gameCommonId = store.getGame().gameCommonId
-            val message = Message.JoinGameAckMessage(gameCommonId, playerInGameId)
+            val message = Message.JoinGameAckMessage(gameCommonId, playerDwitchId)
             EnvelopeToSend(Recipient.Single(recipientId), message)
         }
     }

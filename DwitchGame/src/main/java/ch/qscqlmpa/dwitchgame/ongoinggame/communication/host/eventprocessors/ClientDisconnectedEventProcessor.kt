@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.eventprocessors
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
@@ -32,13 +32,13 @@ internal class ClientDisconnectedEventProcessor @Inject constructor(
     }
 
     private fun handleEventWhenConnectionIdIsKnown(connectionId: ConnectionId): Completable {
-        val playerInGameId = connectionStore.getInGameId(connectionId)
-        connectionStore.removeConnectionIdForInGameId(connectionId)
-        Timber.i("Client disconnected with connection ID $connectionId and in-game ID $playerInGameId")
+        val playerDwitchId = connectionStore.getDwitchId(connectionId)
+        connectionStore.removeConnectionIdForDwitchId(connectionId)
+        Timber.i("Client disconnected with connection ID $connectionId and dwitch ID $playerDwitchId")
 
-        return if (playerInGameId != null) {
+        return if (playerDwitchId != null) {
             val communicator = communicatorLazy.get()
-            updatePlayerWithDisconnectedState(playerInGameId, connectionId)
+            updatePlayerWithDisconnectedState(playerDwitchId, connectionId)
                 .andThen(hostMessageFactory.createWaitingRoomStateUpdateMessage())
                 .flatMapCompletable(communicator::sendMessage)
         } else {
@@ -47,10 +47,10 @@ internal class ClientDisconnectedEventProcessor @Inject constructor(
         }
     }
 
-    private fun updatePlayerWithDisconnectedState(playerInGameId: PlayerInGameId, connectionId: ConnectionId): Completable {
+    private fun updatePlayerWithDisconnectedState(playerDwitchId: PlayerDwitchId, connectionId: ConnectionId): Completable {
         return Completable.fromAction {
             val newState = PlayerConnectionState.DISCONNECTED
-            val numRecordsAffected = store.updatePlayer(playerInGameId, newState, false)
+            val numRecordsAffected = store.updatePlayer(playerDwitchId, newState, false)
 
             if (numRecordsAffected != 1) {
                 throw IllegalStateException("State of player with connection ID $connectionId could not be updated because not found in store.")

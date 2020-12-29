@@ -27,11 +27,11 @@ internal class PlayerReadyMessageProcessor @Inject constructor(
 
     private fun updatePlayerWithReady(message: Message.PlayerReadyMessage): Completable {
         return Completable.fromCallable {
-            val numRecordsAffected = store.updatePlayerWithReady(message.playerInGameId, message.ready)
+            val numRecordsAffected = store.updatePlayerWithReady(message.playerId, message.ready)
             if (numRecordsAffected != 1) {
-                throw IllegalStateException("State of player with in-game ID $${message.playerInGameId} could not be updated because not found in store.")
+                throw IllegalStateException("State of player with in-game ID $${message.playerId} could not be updated because not found in store.")
             } else {
-                Timber.i("Player with in-game ID ${message.playerInGameId} changed ready state to ${message.ready}.")
+                Timber.i("Player with in-game ID ${message.playerId} changed ready state to ${message.ready}.")
             }
         }
     }

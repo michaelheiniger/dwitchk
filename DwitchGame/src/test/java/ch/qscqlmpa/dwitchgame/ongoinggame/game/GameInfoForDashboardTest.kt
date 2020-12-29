@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.info.GameInfo
 import ch.qscqlmpa.dwitchengine.model.info.PlayerInfo
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
@@ -16,11 +16,11 @@ internal class GameInfoForDashboardTest: BaseUnitTest() {
 
     @Test
     fun `Set canStartNewRound to false for local player when it is a guest`() {
-        val localPlayerId = PlayerInGameId(1)
+        val localPlayerId = PlayerDwitchId(1)
         val gameInfo = GameInfo(
-            PlayerInGameId(2),
+            PlayerDwitchId(2),
             mapOf(
-                PlayerInGameId(1) to PlayerInfo(
+                PlayerDwitchId(1) to PlayerInfo(
                     localPlayerId,
                     "Aragorn",
                     Rank.Asshole,
@@ -33,8 +33,8 @@ internal class GameInfoForDashboardTest: BaseUnitTest() {
                     canStartNewRound = true,
                     CardName.Two
                 ),
-                PlayerInGameId(2) to PlayerInfo(
-                    PlayerInGameId(2),
+                PlayerDwitchId(2) to PlayerInfo(
+                    PlayerDwitchId(2),
                     "Gandalf",
                     Rank.President,
                     PlayerStatus.Done,
@@ -48,7 +48,7 @@ internal class GameInfoForDashboardTest: BaseUnitTest() {
                 )
             ),
             GamePhase.RoundIsOver,
-            listOf(PlayerInGameId(1), PlayerInGameId(2)),
+            listOf(PlayerDwitchId(1), PlayerDwitchId(2)),
             CardName.Two,
             Card.Blank,
             listOf(Card.Hearts10),

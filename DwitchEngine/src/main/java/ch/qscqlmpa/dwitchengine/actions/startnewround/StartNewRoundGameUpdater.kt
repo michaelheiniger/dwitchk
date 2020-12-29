@@ -4,7 +4,7 @@ import ch.qscqlmpa.dwitchengine.actions.GameUpdaterBase
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 
 internal class StartNewRoundGameUpdater(currentGameState: GameState) : GameUpdaterBase(currentGameState) {
 
@@ -25,11 +25,11 @@ internal class StartNewRoundGameUpdater(currentGameState: GameState) : GameUpdat
         gameStateMutable.cardsInDeck.addAll(cards)
     }
 
-    fun cardsInHandOfPlayer(playerId: PlayerInGameId, cards: List<Card>) {
+    fun cardsInHandOfPlayer(playerId: PlayerDwitchId, cards: List<Card>) {
         gameStateMutable.players.getValue(playerId).cardsInHand(cards)
     }
 
-    fun playingOrder(playingOrder: List<PlayerInGameId>) {
+    fun playingOrder(playingOrder: List<PlayerDwitchId>) {
         gameStateMutable.playingOrder.clear()
         gameStateMutable.playingOrder.addAll(playingOrder)
     }
@@ -38,7 +38,7 @@ internal class StartNewRoundGameUpdater(currentGameState: GameState) : GameUpdat
         gameStateMutable.playersDoneForRound.clear()
     }
 
-    fun activePlayers(players: List<PlayerInGameId>) {
+    fun activePlayers(players: List<PlayerDwitchId>) {
         gameStateMutable.activePlayers.clear()
         gameStateMutable.activePlayers.addAll(players)
     }

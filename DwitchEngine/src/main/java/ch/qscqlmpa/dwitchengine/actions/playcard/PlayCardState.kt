@@ -58,7 +58,7 @@ internal class PlayCardState(
 
     fun cardPlayedIsJoker() = cardPlayed.name == currentGameState.joker
 
-    fun getLastActivePlayer(): PlayerInGameId {
+    fun getLastActivePlayer(): PlayerDwitchId {
         if (currentGameState.activePlayers.size != 2) {
             throw IllegalStateException("There must be exactly two remaining active players at this step: local player and another one.")
         }
@@ -67,7 +67,7 @@ internal class PlayCardState(
                 ?: throw IllegalStateException()
     }
 
-    fun computeRanks(penultimatePlayerId: PlayerInGameId, lastPlayerId: PlayerInGameId): Map<PlayerInGameId, Rank> {
+    fun computeRanks(penultimatePlayerId: PlayerDwitchId, lastPlayerId: PlayerDwitchId): Map<PlayerDwitchId, Rank> {
         val donePlayersInFinishingOrder = currentGameState.playersDoneForRound.toMutableList()
         donePlayersInFinishingOrder.add(PlayerDone(penultimatePlayerId, cardPlayedIsJoker()))
         donePlayersInFinishingOrder.add(PlayerDone(lastPlayerId, false))

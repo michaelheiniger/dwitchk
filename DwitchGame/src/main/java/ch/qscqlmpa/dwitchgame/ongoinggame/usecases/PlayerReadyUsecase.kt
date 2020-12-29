@@ -14,9 +14,9 @@ internal class PlayerReadyUsecase @Inject constructor(
 
     fun updateReadyState(ready: Boolean): Completable {
         return Single.fromCallable {
-            val localPlayerInGameId = store.getLocalPlayerInGameId()
-            store.updatePlayerWithReady(localPlayerInGameId, ready)
-            GuestMessageFactory.createPlayerReadyMessage(localPlayerInGameId, ready)
+            val localPlayerDwitchId = store.getLocalPlayerDwitchId()
+            store.updatePlayerWithReady(localPlayerDwitchId, ready)
+            GuestMessageFactory.createPlayerReadyMessage(localPlayerDwitchId, ready)
         }.flatMapCompletable(communicator::sendMessageToHost)
     }
 }

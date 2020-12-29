@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.game
 
 import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import io.reactivex.rxjava3.core.Completable
@@ -12,8 +12,8 @@ import javax.inject.Inject
 
 internal class GameRepository @Inject constructor(private val store: InGameStore) {
 
-    fun getLocalPlayerId(): PlayerInGameId {
-        return store.getLocalPlayerInGameId()
+    fun getLocalPlayerId(): PlayerDwitchId {
+        return store.getLocalPlayerDwitchId()
     }
 
     fun getGameState(): GameState {
@@ -23,7 +23,7 @@ internal class GameRepository @Inject constructor(private val store: InGameStore
     fun getGameInfo(): Single<GameInfo> {
         return Single.fromCallable {
             val localPlayer = store.getLocalPlayer()
-            GameInfo(store.getGameState(), localPlayer.inGameId, localPlayer.playerRole == PlayerRole.HOST) }
+            GameInfo(store.getGameState(), localPlayer.dwitchId, localPlayer.playerRole == PlayerRole.HOST) }
     }
 
     fun updateGameState(gameState: GameState): Completable {
@@ -35,7 +35,7 @@ internal class GameRepository @Inject constructor(private val store: InGameStore
             Observable.fromCallable { store.getLocalPlayer() },
             store.observeGameState()
                 .doOnNext { gameState -> Timber.v("observeGameInfo: $gameState") },
-            { localPlayer, gameState -> GameInfo(gameState, localPlayer.inGameId, localPlayer.playerRole == PlayerRole.HOST) }
+            { localPlayer, gameState -> GameInfo(gameState, localPlayer.dwitchId, localPlayer.playerRole == PlayerRole.HOST) }
         )
     }
 }

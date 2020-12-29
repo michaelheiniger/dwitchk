@@ -8,7 +8,7 @@ import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.TestDwitchEngineFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchgame.TestUtil
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.messageprocessors.BaseMessageProcessorTest
@@ -39,7 +39,7 @@ internal class CardsForExchangeMessageProcessorTest: BaseMessageProcessorTest() 
         every { mockEngine.chooseCardsForExchange(any(), any())} returns mockUpdatedGameState
         dwitchEngineFactory.setInstance(mockEngine)
 
-        val message = Message.CardsForExchangeMessage(PlayerInGameId(324), setOf(Card.Clubs2, Card.Clubs3))
+        val message = Message.CardsForExchangeMessage(PlayerDwitchId(324), setOf(Card.Clubs2, Card.Clubs3))
         processor.process(message, ConnectionId(45)).test().assertComplete()
 
         verify { mockInGameStore.updateGameState(mockUpdatedGameState) }

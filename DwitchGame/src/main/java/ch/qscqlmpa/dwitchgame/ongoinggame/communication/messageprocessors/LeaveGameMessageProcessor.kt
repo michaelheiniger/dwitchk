@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
@@ -21,22 +21,20 @@ internal class LeaveGameMessageProcessor @Inject constructor(
 
         val msg = message as Message.LeaveGameMessage
 
-        //TODO: REmove connectionId - playerInGameId mapping from connectionstore ?
-
         val communicator = communicatorLazy.get()
 
-        return deletePlayerFromStore(msg.playerInGameId)
+        return deletePlayerFromStore(msg.playerDwitchId)
             .andThen(hostMessageFactory.createWaitingRoomStateUpdateMessage())
             .flatMapCompletable(communicator::sendMessage)
     }
 
-    private fun deletePlayerFromStore(playerInGameId: PlayerInGameId): Completable {
+    private fun deletePlayerFromStore(playerDwitchId: PlayerDwitchId): Completable {
         return Completable.fromAction {
-            val numRecordsAffected = store.deletePlayer(playerInGameId)
+            val numRecordsAffected = store.deletePlayer(playerDwitchId)
             if (numRecordsAffected != 1) {
-                throw IllegalStateException("Player with in-game ID $playerInGameId is leaving game but is not found in store.")
+                throw IllegalStateException("Player with in-game ID $playerDwitchId is leaving game but is not found in store.")
             } else {
-                Timber.i("Player with in-game ID $playerInGameId was deleted because it is leaving the game.")
+                Timber.i("Player with in-game ID $playerDwitchId was deleted because it is leaving the game.")
             }
         }
     }

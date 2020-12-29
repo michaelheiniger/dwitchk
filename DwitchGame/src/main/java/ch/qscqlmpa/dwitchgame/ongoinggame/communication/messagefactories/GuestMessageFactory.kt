@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories
 
 
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 
 object GuestMessageFactory {
@@ -11,15 +11,15 @@ object GuestMessageFactory {
         return Message.JoinGameMessage(playerName)
     }
 
-    fun createRejoinGameMessage(gameCommonId: GameCommonId, playerInGameId: PlayerInGameId): Message {
-        return Message.RejoinGameMessage(gameCommonId, playerInGameId)
+    fun createRejoinGameMessage(gameCommonId: GameCommonId, playerDwitchId: PlayerDwitchId): Message {
+        return Message.RejoinGameMessage(gameCommonId, playerDwitchId)
     }
 
-    fun createLeaveGameMessage(playerInGameId: PlayerInGameId): Message {
-        return Message.LeaveGameMessage(playerInGameId)
+    fun createLeaveGameMessage(playerDwitchId: PlayerDwitchId): Message {
+        return Message.LeaveGameMessage(playerDwitchId)
     }
 
-    fun createPlayerReadyMessage(playerInGameId: PlayerInGameId, ready: Boolean): Message {
-        return Message.PlayerReadyMessage(playerInGameId, ready)
+    fun createPlayerReadyMessage(playerDwitchId: PlayerDwitchId, ready: Boolean): Message {
+        return Message.PlayerReadyMessage(playerDwitchId, ready)
     }
 }

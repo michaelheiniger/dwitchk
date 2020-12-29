@@ -22,7 +22,7 @@ class PlayerDashboardFactory(val gameState: GameState) {
         )
     }
 
-    private fun playerInfos(): Map<PlayerInGameId, PlayerInfo> {
+    private fun playerInfos(): Map<PlayerDwitchId, PlayerInfo> {
         return gameState.players.entries.map { entry -> entry.key to playerInfo(entry.value) }.toMap()
     }
 
@@ -38,7 +38,6 @@ class PlayerDashboardFactory(val gameState: GameState) {
             canPickACard(player),
             canPlay(player),
             canStartNewRound(),
-            canEndGame(),
             minimumCardValueAllowed()
         )
     }
@@ -56,10 +55,6 @@ class PlayerDashboardFactory(val gameState: GameState) {
     }
 
     private fun canStartNewRound(): Boolean {
-        return roundIsOver()
-    }
-
-    private fun canEndGame(): Boolean {
         return roundIsOver()
     }
 

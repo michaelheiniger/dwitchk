@@ -45,16 +45,16 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
 
         PlayerRobot(allPlayers[0])
             .assertName(PlayerGuestTest.Host.name)
-            .assertInGameId(PlayerGuestTest.Host.inGameId)
+            .assertDwitchId(PlayerGuestTest.Host.id)
         PlayerRobot(allPlayers[1])
             .assertName(PlayerGuestTest.LocalGuest.name)
-            .assertInGameId(PlayerGuestTest.LocalGuest.inGameId)
+            .assertDwitchId(PlayerGuestTest.LocalGuest.id)
         PlayerRobot(allPlayers[2])
             .assertName(PlayerGuestTest.Guest2.name)
-            .assertInGameId(PlayerGuestTest.Guest2.inGameId)
+            .assertDwitchId(PlayerGuestTest.Guest2.id)
         PlayerRobot(allPlayers[3])
             .assertName(PlayerGuestTest.Guest3.name)
-            .assertInGameId(PlayerGuestTest.Guest3.inGameId)
+            .assertDwitchId(PlayerGuestTest.Guest3.id)
     }
 
     @Test
@@ -78,12 +78,12 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
         assertThat(allPlayers.size).isEqualTo(4)
         PlayerRobot(allPlayers[1])
             .assertName(PlayerGuestTest.LocalGuest.name)
-            .assertInGameId(PlayerGuestTest.LocalGuest.inGameId)
+            .assertDwitchId(PlayerGuestTest.LocalGuest.id)
             .assertReady(false)
 
         setLocalPlayerReady()
 
-        clientTestStub.serverSendsMessageToClient(Message.PlayerReadyMessage(PlayerGuestTest.LocalGuest.inGameId, true), false)
+        clientTestStub.serverSendsMessageToClient(Message.PlayerReadyMessage(PlayerGuestTest.LocalGuest.id, true), false)
 
         // Players sorted according to their name ASC
         assertPlayerInWR(0, PlayerGuestTest.Host.name, PLAYER_CONNECTED)
@@ -96,17 +96,17 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
 
         PlayerRobot(allPlayers[0])
             .assertName(PlayerGuestTest.Host.name)
-            .assertInGameId(PlayerGuestTest.Host.inGameId)
+            .assertDwitchId(PlayerGuestTest.Host.id)
         PlayerRobot(allPlayers[1])
             .assertName(PlayerGuestTest.LocalGuest.name)
-            .assertInGameId(PlayerGuestTest.LocalGuest.inGameId)
+            .assertDwitchId(PlayerGuestTest.LocalGuest.id)
             .assertReady(true)
         PlayerRobot(allPlayers[2])
             .assertName(PlayerGuestTest.Guest2.name)
-            .assertInGameId(PlayerGuestTest.Guest2.inGameId)
+            .assertDwitchId(PlayerGuestTest.Guest2.id)
         PlayerRobot(allPlayers[3])
             .assertName(PlayerGuestTest.Guest3.name)
-            .assertInGameId(PlayerGuestTest.Guest3.inGameId)
+            .assertDwitchId(PlayerGuestTest.Guest3.id)
     }
 
     @Test
@@ -170,7 +170,7 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
             listOf(
                 Player(
                     334,
-                    PlayerGuestTest.Host.inGameId,
+                    PlayerGuestTest.Host.id,
                     gameLocalIdAtHost,
                     PlayerGuestTest.Host.name,
                     PlayerRole.HOST,
@@ -179,7 +179,7 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
                 ),
                 Player(
                     335,
-                    PlayerGuestTest.LocalGuest.inGameId,
+                    PlayerGuestTest.LocalGuest.id,
                     gameLocalIdAtHost,
                     PlayerGuestTest.LocalGuest.name,
                     PlayerRole.GUEST,
@@ -188,7 +188,7 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
                 ),
                 Player(
                     336,
-                    PlayerGuestTest.Guest2.inGameId,
+                    PlayerGuestTest.Guest2.id,
                     gameLocalIdAtHost,
                     PlayerGuestTest.Guest2.name,
                     PlayerRole.GUEST,
@@ -197,7 +197,7 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
                 ),
                 Player(
                     337,
-                    PlayerGuestTest.Guest3.inGameId,
+                    PlayerGuestTest.Guest3.id,
                     gameLocalIdAtHost,
                     PlayerGuestTest.Guest3.name,
                     PlayerRole.GUEST,

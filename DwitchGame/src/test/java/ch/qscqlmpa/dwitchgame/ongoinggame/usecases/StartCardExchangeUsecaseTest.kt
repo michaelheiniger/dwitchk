@@ -9,7 +9,7 @@ import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.TestDwitchEngineFactory
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.CardExchange
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import io.mockk.every
@@ -38,14 +38,14 @@ internal class StartCardExchangeUsecaseTest : BaseUnitTest() {
 
     @Test
     fun `Send card-exchange message to each player that has to exchange cards`() {
-        val player1InGameId = PlayerInGameId(1)
-        val player2InGameId = PlayerInGameId(2)
+        val player1DwitchId = PlayerDwitchId(1)
+        val player2DwitchId = PlayerDwitchId(2)
         val connectionId1 = ConnectionId(10)
         val connectionId2 = ConnectionId(11)
-        val cardExchange1 = CardExchange(player1InGameId, 2, listOf(CardName.Two, CardName.Ace))
-        val cardExchange2 = CardExchange(player2InGameId, 2, listOf(CardName.Three, CardName.Four))
-        every { mockConnectionStore.getConnectionId(player1InGameId) } returns connectionId1
-        every { mockConnectionStore.getConnectionId(player2InGameId) } returns connectionId2
+        val cardExchange1 = CardExchange(player1DwitchId, 2, listOf(CardName.Two, CardName.Ace))
+        val cardExchange2 = CardExchange(player2DwitchId, 2, listOf(CardName.Three, CardName.Four))
+        every { mockConnectionStore.getConnectionId(player1DwitchId) } returns connectionId1
+        every { mockConnectionStore.getConnectionId(player2DwitchId) } returns connectionId2
         every { mockDwitchEngine.getCardsExchanges() } returns listOf(cardExchange1, cardExchange2)
         dwitchEngineFactory.setInstance(mockDwitchEngine)
 

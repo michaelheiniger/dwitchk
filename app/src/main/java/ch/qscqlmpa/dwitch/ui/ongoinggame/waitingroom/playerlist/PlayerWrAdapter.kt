@@ -32,7 +32,7 @@ internal class PlayerWrAdapter : RecyclerView.Adapter<PlayerViewHolder>() {
     }
 
     override fun getItemId(position: Int): Long {
-        return data[position].inGameId.value
+        return data[position].dwitchId.value
     }
 
     fun setData(playerList: List<PlayerWr>) {

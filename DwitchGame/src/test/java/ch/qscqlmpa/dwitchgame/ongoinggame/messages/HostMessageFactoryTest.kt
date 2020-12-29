@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.messages
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.Recipient
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
 import ch.qscqlmpa.dwitchmodel.game.Game
@@ -29,7 +29,6 @@ class HostMessageFactoryTest : BaseUnitTest() {
 
     @Test
     fun createWaitingRoomUpdateMessage() {
-
         val players = listOf<Player>(mockk(), mockk())
         every { mockInGameStore.getPlayersInWaitingRoom() } returns players
 
@@ -45,21 +44,20 @@ class HostMessageFactoryTest : BaseUnitTest() {
 
     @Test
     fun createJoinAckMessage() {
-
         val gameCommonId = GameCommonId(123L)
         val localConnectionId = ConnectionId(3)
-        val playerInGameId = PlayerInGameId(2)
+        val playerDwitchId = PlayerDwitchId(2)
 
         val game = mockk<Game>()
         every { game.gameCommonId } returns gameCommonId
         every { mockInGameStore.getGame() } returns game
 
-        val msgWrapper = hostMessageFactory.createJoinAckMessage(localConnectionId, playerInGameId).blockingGet()
+        val msgWrapper = hostMessageFactory.createJoinAckMessage(localConnectionId, playerDwitchId).blockingGet()
         val message = (msgWrapper.message as Message.JoinGameAckMessage)
 
         assertThat(msgWrapper.recipient).isEqualTo(Recipient.Single(localConnectionId))
         assertThat(message.gameCommonId).isEqualTo(gameCommonId)
-        assertThat(message.playerInGameId).isEqualTo(playerInGameId)
+        assertThat(message.playerId).isEqualTo(playerDwitchId)
 
         verify { mockInGameStore.getGame() }
         confirmVerified(mockInGameStore)

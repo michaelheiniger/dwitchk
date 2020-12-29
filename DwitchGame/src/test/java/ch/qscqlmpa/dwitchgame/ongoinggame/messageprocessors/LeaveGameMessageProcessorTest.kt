@@ -20,33 +20,29 @@ class LeaveGameMessageProcessorTest : BaseMessageProcessorTest() {
     @BeforeEach
     override fun setup() {
         super.setup()
-        processor = LeaveGameMessageProcessor(
-                mockInGameStore,
-                mockHostMessageFactory,
-                TestUtil.lazyOf(mockHostCommunicator)
-        )
+        processor = LeaveGameMessageProcessor(mockInGameStore, mockHostMessageFactory, TestUtil.lazyOf(mockHostCommunicator))
         setupCommunicatorSendMessageCompleteMock()
     }
 
     @Test
     fun `Player is deleted from store when leaving the game`() {
-        every { mockInGameStore.deletePlayer(guestPlayer.inGameId) } returns 1
+        every { mockInGameStore.deletePlayer(guestPlayer.dwitchId) } returns 1
         setupWaitingRoomStateUpdateMessageMock()
 
         launchTest().assertComplete()
 
-        verify { mockInGameStore.deletePlayer(guestPlayer.inGameId) }
+        verify { mockInGameStore.deletePlayer(guestPlayer.dwitchId) }
     }
 
     @Test
     fun `Error is thrown when leaving player is not found in store`() {
-        every { mockInGameStore.deletePlayer(guestPlayer.inGameId) } returns 0 // Player not found in store
+        every { mockInGameStore.deletePlayer(guestPlayer.dwitchId) } returns 0 // Player not found in store
         setupWaitingRoomStateUpdateMessageMock()
 
         launchTest().assertError(IllegalStateException::class.java)
     }
 
     private fun launchTest(): TestObserver<Void> {
-        return processor.process(Message.LeaveGameMessage(guestPlayer.inGameId), ConnectionId(312)).test()
+        return processor.process(Message.LeaveGameMessage(guestPlayer.dwitchId), ConnectionId(312)).test()
     }
 }

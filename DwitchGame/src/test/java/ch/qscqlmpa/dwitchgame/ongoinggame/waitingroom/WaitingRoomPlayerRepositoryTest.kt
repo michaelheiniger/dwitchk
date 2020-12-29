@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom
 
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
@@ -26,11 +26,11 @@ class WaitingRoomPlayerRepositoryTest : BaseUnitTest() {
         @Test
         fun `should return players from store`() {
             val hostPlayer =
-                TestEntityFactory.createHostPlayer(inGameId = PlayerInGameId(1), ready = true)
+                TestEntityFactory.createHostPlayer(dwitchId = PlayerDwitchId(1), ready = true)
             val playerGuest1 =
-                TestEntityFactory.createGuestPlayer1(inGameId = PlayerInGameId(2), ready = false)
+                TestEntityFactory.createGuestPlayer1(dwitchId = PlayerDwitchId(2), ready = false)
             val playerGuest2 =
-                TestEntityFactory.createGuestPlayer2(inGameId = PlayerInGameId(3), ready = true)
+                TestEntityFactory.createGuestPlayer2(dwitchId = PlayerDwitchId(3), ready = true)
 
             val players = listOf(hostPlayer, playerGuest1, playerGuest2)
             every { mockInGameStore.observePlayersInWaitingRoom() } returns Flowable.just(players)
@@ -38,19 +38,19 @@ class WaitingRoomPlayerRepositoryTest : BaseUnitTest() {
             repository.observePlayers().test().assertValue(
                 listOf(
                     PlayerWr(
-                        PlayerInGameId(1),
+                        PlayerDwitchId(1),
                         hostPlayer.name,
                         true,
                         PlayerConnectionState.CONNECTED
                     ),
                     PlayerWr(
-                        PlayerInGameId(2),
+                        PlayerDwitchId(2),
                         playerGuest1.name,
                         false,
                         PlayerConnectionState.CONNECTED
                     ),
                     PlayerWr(
-                        PlayerInGameId(3),
+                        PlayerDwitchId(3),
                         playerGuest2.name,
                         true,
                         PlayerConnectionState.CONNECTED

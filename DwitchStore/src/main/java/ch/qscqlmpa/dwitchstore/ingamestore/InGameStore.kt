@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchstore.ingamestore
 
 import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchmodel.game.DwitchEvent
 import ch.qscqlmpa.dwitchmodel.game.Game
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
@@ -40,21 +40,21 @@ interface InGameStore {
     fun insertNewGuestPlayer(name: String): Long
     fun insertNonLocalPlayer(player: Player): Long
 
-    fun updateLocalPlayerWithInGameId(playerInGameId: PlayerInGameId): Int
+    fun updateLocalPlayerWithDwitchId(playerDwitchId: PlayerDwitchId): Int
     fun updateLocalPlayerWithReady(ready: Boolean): Int
-    fun updatePlayerWithReady(playerInGameId: PlayerInGameId, ready: Boolean): Int
-    fun updatePlayer(playerInGameId: PlayerInGameId, state: PlayerConnectionState, ready: Boolean): Int
+    fun updatePlayerWithReady(playerDwitchId: PlayerDwitchId, ready: Boolean): Int
+    fun updatePlayer(playerDwitchId: PlayerDwitchId, state: PlayerConnectionState, ready: Boolean): Int
     fun updatePlayerWithConnectionStateAndReady(playerLocalId: Long, state: PlayerConnectionState, ready: Boolean): Int
     fun setAllPlayersToDisconnected(): Int
 
     fun deletePlayers(playersLocalId: List<Long>): Int
-    fun deletePlayer(playerInGameId: PlayerInGameId): Int
+    fun deletePlayer(playerDwitchId: PlayerDwitchId): Int
 
     fun getLocalPlayer(): Player
     fun observeLocalPlayer(): Observable<Player>
-    fun getLocalPlayerInGameId(): PlayerInGameId
-    fun getPlayerInGameId(playerLocalId: Long): PlayerInGameId
-    fun getPlayer(playerInGameId: PlayerInGameId): Player?
+    fun getLocalPlayerDwitchId(): PlayerDwitchId
+    fun getPlayerDwitchId(playerLocalId: Long): PlayerDwitchId
+    fun getPlayer(playerDwitchId: PlayerDwitchId): Player?
     fun getPlayer(playerLocalId: Long): Player
     fun getPlayer(name: String): Player?
 

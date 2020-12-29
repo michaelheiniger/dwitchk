@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchstore.ingamestore
 
 import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchmodel.game.DwitchEvent
 import ch.qscqlmpa.dwitchmodel.game.Game
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
@@ -103,24 +103,24 @@ internal class InGameStoreImpl constructor(
         return playerDao.insertNonLocalPlayer(gameLocalId, player)
     }
 
-    override fun updateLocalPlayerWithInGameId(playerInGameId: PlayerInGameId): Int {
-        return playerDao.updatePlayerWithInGameId(localPlayerLocalId, playerInGameId)
+    override fun updateLocalPlayerWithDwitchId(playerDwitchId: PlayerDwitchId): Int {
+        return playerDao.updatePlayerWithDwitchId(localPlayerLocalId, playerDwitchId)
     }
 
     override fun updateLocalPlayerWithReady(ready: Boolean): Int {
         return playerDao.updatePlayerWithReady(localPlayerLocalId, ready)
     }
 
-    override fun updatePlayerWithReady(playerInGameId: PlayerInGameId, ready: Boolean): Int {
-        return playerDao.updatePlayerWithReady(playerInGameId, ready)
+    override fun updatePlayerWithReady(playerDwitchId: PlayerDwitchId, ready: Boolean): Int {
+        return playerDao.updatePlayerWithReady(playerDwitchId, ready)
     }
 
     override fun updatePlayer(
-        playerInGameId: PlayerInGameId,
+        playerDwitchId: PlayerDwitchId,
         state: PlayerConnectionState,
         ready: Boolean
     ): Int {
-        return playerDao.updatePlayer(playerInGameId, state, ready)
+        return playerDao.updatePlayer(playerDwitchId, state, ready)
     }
 
     override fun updatePlayerWithConnectionStateAndReady(
@@ -139,8 +139,8 @@ internal class InGameStoreImpl constructor(
         return playerDao.deletePlayers(playersLocalId)
     }
 
-    override fun deletePlayer(playerInGameId: PlayerInGameId): Int {
-        return playerDao.deletePlayer(gameLocalId, playerInGameId)
+    override fun deletePlayer(playerDwitchId: PlayerDwitchId): Int {
+        return playerDao.deletePlayer(gameLocalId, playerDwitchId)
     }
 
     override fun getLocalPlayer(): Player {
@@ -151,16 +151,16 @@ internal class InGameStoreImpl constructor(
         return playerDao.observePlayer(localPlayerLocalId)
     }
 
-    override fun getLocalPlayerInGameId(): PlayerInGameId {
-        return playerDao.gePlayer(localPlayerLocalId).inGameId
+    override fun getLocalPlayerDwitchId(): PlayerDwitchId {
+        return playerDao.gePlayer(localPlayerLocalId).dwitchId
     }
 
-    override fun getPlayerInGameId(playerLocalId: Long): PlayerInGameId {
-        return playerDao.getPlayer(playerLocalId).inGameId
+    override fun getPlayerDwitchId(playerLocalId: Long): PlayerDwitchId {
+        return playerDao.getPlayer(playerLocalId).dwitchId
     }
 
-    override fun getPlayer(playerInGameId: PlayerInGameId): Player {
-        return playerDao.getPlayer(gameLocalId, playerInGameId)
+    override fun getPlayer(playerDwitchId: PlayerDwitchId): Player {
+        return playerDao.getPlayer(gameLocalId, playerDwitchId)
     }
 
     override fun getPlayer(playerLocalId: Long): Player {

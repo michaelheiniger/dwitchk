@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchengine.rules
 
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDone
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
@@ -14,12 +14,12 @@ internal class RankComputerTest {
     @DisplayName("computePlayersRank")
     inner class ComputePlayersRank {
 
-        private val player1Id = PlayerInGameId(1)
-        private val player2Id = PlayerInGameId(2)
-        private val player3Id = PlayerInGameId(3)
-        private val player4Id = PlayerInGameId(4)
-        private val player5Id = PlayerInGameId(5)
-        private val player6Id = PlayerInGameId(6)
+        private val player1Id = PlayerDwitchId(1)
+        private val player2Id = PlayerDwitchId(2)
+        private val player3Id = PlayerDwitchId(3)
+        private val player4Id = PlayerDwitchId(4)
+        private val player5Id = PlayerDwitchId(5)
+        private val player6Id = PlayerDwitchId(6)
 
         @Test
         fun `Two players`() {

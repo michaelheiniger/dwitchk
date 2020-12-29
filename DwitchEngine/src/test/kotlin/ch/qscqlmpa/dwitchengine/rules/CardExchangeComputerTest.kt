@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchengine.rules
 
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -11,7 +11,7 @@ internal class CardExchangeComputerTest {
 
     private val someCards = setOf(Card.Clubs2, Card.Spades2, Card.Clubs3, Card.Diamonds10, Card.SpadesAce, Card.Hearts5)
 
-    private val playerId = PlayerInGameId(2)
+    private val playerId = PlayerDwitchId(2)
 
     @Test
     fun `President must choose 2 cards`() {

@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
 import io.mockk.every
@@ -17,7 +17,7 @@ class PlayerReadyUsecaseTest : BaseUnitTest() {
 
     private lateinit var usecase: PlayerReadyUsecase
 
-    private val localPlayerInGameId = PlayerInGameId(23)
+    private val localPlayerDwitchId = PlayerDwitchId(23)
 
     @BeforeEach
     override fun setup() {
@@ -26,7 +26,7 @@ class PlayerReadyUsecaseTest : BaseUnitTest() {
         usecase = PlayerReadyUsecase(mockInGameStore, mockCommunicator)
 
         every { mockCommunicator.sendMessageToHost(any()) } returns Completable.complete()
-        every { mockInGameStore.getLocalPlayerInGameId() } returns localPlayerInGameId
+        every { mockInGameStore.getLocalPlayerDwitchId() } returns localPlayerDwitchId
     }
 
     @Test
@@ -42,7 +42,7 @@ class PlayerReadyUsecaseTest : BaseUnitTest() {
     private fun playerReadyStateIsUpdated(state: Boolean) {
         usecase.updateReadyState(state).test().assertComplete()
 
-        verify { mockInGameStore.updatePlayerWithReady(localPlayerInGameId, state) }
-        verify { mockCommunicator.sendMessageToHost(Message.PlayerReadyMessage(localPlayerInGameId, state)) }
+        verify { mockInGameStore.updatePlayerWithReady(localPlayerDwitchId, state) }
+        verify { mockCommunicator.sendMessageToHost(Message.PlayerReadyMessage(localPlayerDwitchId, state)) }
     }
 }

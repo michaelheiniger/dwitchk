@@ -10,18 +10,18 @@ import ch.qscqlmpa.dwitchengine.model.player.*
 
 class EngineTestGameStateBuilder {
 
-    private val playersMap = mutableMapOf<PlayerInGameId, Player>()
+    private val playersMap = mutableMapOf<PlayerDwitchId, Player>()
 
     private var cardsOnTable: List<Card> = emptyList()
 
     private var gameEvent: GameEvent? = null
     private var joker: CardName = CardName.Two
     private lateinit var gamePhase: GamePhase
-    private lateinit var localPlayer: PlayerInGameId
-    private lateinit var currentPlayer: PlayerInGameId
+    private lateinit var localPlayer: PlayerDwitchId
+    private lateinit var currentPlayer: PlayerDwitchId
     private var playersDoneForRound: List<PlayerDone> = emptyList()
 
-    private val playingOrder: MutableList<PlayerInGameId> = mutableListOf()
+    private val playingOrder: MutableList<PlayerDwitchId> = mutableListOf()
 
     fun build(): GameState {
         val cardsTakenFromDeck = playersMap
@@ -72,12 +72,12 @@ class EngineTestGameStateBuilder {
         return this
     }
 
-    fun setLocalPlayer(id: PlayerInGameId): EngineTestGameStateBuilder {
+    fun setLocalPlayer(id: PlayerDwitchId): EngineTestGameStateBuilder {
         this.localPlayer = id
         return this
     }
 
-    fun setCurrentPlayer(id: PlayerInGameId): EngineTestGameStateBuilder {
+    fun setCurrentPlayer(id: PlayerDwitchId): EngineTestGameStateBuilder {
         this.currentPlayer = id
         return this
     }
@@ -86,7 +86,7 @@ class EngineTestGameStateBuilder {
         playersDoneForRound = list
     }
 
-    fun setPlayerCards(id: PlayerInGameId, cards: List<Card>) {
+    fun setPlayerCards(id: PlayerDwitchId, cards: List<Card>) {
         playersMap[id] = playersMap.getValue(id).copy(cardsInHand = cards)
     }
 

@@ -7,7 +7,7 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.info.GameInfo
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.PlayerOnboardingInfo
 
 interface DwitchEngine {
@@ -16,7 +16,7 @@ interface DwitchEngine {
     fun pickCard(): GameState
     fun passTurn(): GameState
     fun startNewRound(cardDealerFactory: CardDealerFactory): GameState
-    fun chooseCardsForExchange(playerId: PlayerInGameId, cards: Set<Card>): GameState
+    fun chooseCardsForExchange(playerId: PlayerDwitchId, cards: Set<Card>): GameState
     fun getCardsExchanges(): List<CardExchange>
 
     companion object {

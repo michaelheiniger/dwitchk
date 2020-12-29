@@ -107,7 +107,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
         confirmCardsChoiceForExchange()
 
         val cardsForExchangeMessageMessage = waitForNextMessageSentByLocalGuest() as Message.CardsForExchangeMessage
-        assertThat(cardsForExchangeMessageMessage.playerId).isEqualTo(PlayerGuestTest.LocalGuest.inGameId)
+        assertThat(cardsForExchangeMessageMessage.playerId).isEqualTo(PlayerGuestTest.LocalGuest.id)
         assertThat(cardsForExchangeMessageMessage.cards).isEqualTo(setOf(Card.Spades4, Card.Diamonds4))
 
         assertGameRoomIsDisplayed()
@@ -146,7 +146,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
 
         clientTestStub.serverSendsMessageToClient(
             Message.PlayerReadyMessage(
-                PlayerGuestTest.LocalGuest.inGameId,
+                PlayerGuestTest.LocalGuest.id,
                 true
             ), false
         )
@@ -160,8 +160,8 @@ class GameRoomAsGuestTest : BaseGuestTest() {
 
     private fun createGameState(): GameState {
         val players = listOf(
-            TestEntityFactory.createHostPlayer(inGameId = PlayerGuestTest.Host.inGameId),
-            TestEntityFactory.createGuestPlayer1(inGameId = PlayerGuestTest.LocalGuest.inGameId)
+            TestEntityFactory.createHostPlayer(dwitchId = PlayerGuestTest.Host.id),
+            TestEntityFactory.createGuestPlayer1(dwitchId = PlayerGuestTest.LocalGuest.id)
         )
         val initialGameSetup = DeterministicInitialGameSetup(cardsForPlayer, rankForPlayer)
         return createNewGame(players.map(Player::toPlayerInfo), initialGameSetup)
@@ -186,7 +186,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
 
     private fun hostSendsCardExchangeMessage(gameState: GameState) {
         val cardExchangeOfLocalGuest = ProdDwitchEngineFactory().create(gameState).getCardsExchanges()
-            .find { (playerId, _) -> playerId == PlayerGuestTest.LocalGuest.inGameId }!!
+            .find { (playerId, _) -> playerId == PlayerGuestTest.LocalGuest.id }!!
 
         val envelope = HostMessageFactory.createCardExchangeMessage(cardExchangeOfLocalGuest, ConnectionId(2))
         clientTestStub.serverSendsMessageToClient(envelope.message, true)
@@ -198,7 +198,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
             listOf(
                 Player(
                     334,
-                    PlayerGuestTest.Host.inGameId,
+                    PlayerGuestTest.Host.id,
                     gameLocalIdAtHost,
                     PlayerGuestTest.Host.name,
                     PlayerRole.HOST,
@@ -207,7 +207,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
                 ),
                 Player(
                     335,
-                    PlayerGuestTest.LocalGuest.inGameId,
+                    PlayerGuestTest.LocalGuest.id,
                     gameLocalIdAtHost,
                     PlayerGuestTest.LocalGuest.name,
                     PlayerRole.GUEST,

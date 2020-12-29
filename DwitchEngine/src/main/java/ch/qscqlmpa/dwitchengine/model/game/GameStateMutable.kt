@@ -6,10 +6,10 @@ import ch.qscqlmpa.dwitchengine.model.player.*
 
 internal data class GameStateMutable(
     var phase: GamePhase,
-    val players: Map<PlayerInGameId, PlayerMutable>,
-    val playingOrder: MutableList<PlayerInGameId>,
-    var currentPlayerId: PlayerInGameId,
-    val activePlayers: MutableSet<PlayerInGameId>,
+    val players: Map<PlayerDwitchId, PlayerMutable>,
+    val playingOrder: MutableList<PlayerDwitchId>,
+    var currentPlayerId: PlayerDwitchId,
+    val activePlayers: MutableSet<PlayerDwitchId>,
     val playersDoneForRound: MutableList<PlayerDone>,
     var joker: CardName,
     var gameEvent: GameEvent?,
@@ -18,19 +18,19 @@ internal data class GameStateMutable(
     val cardGraveyard: MutableList<Card>
 ) {
 
-    fun addCardToHand(playerId: PlayerInGameId, card: Card) {
+    fun addCardToHand(playerId: PlayerDwitchId, card: Card) {
         player(playerId).addCardToHand(card)
     }
 
-    fun addCardsToHand(playerId: PlayerInGameId, cards: List<Card>) {
+    fun addCardsToHand(playerId: PlayerDwitchId, cards: List<Card>) {
         cards.forEach { card -> addCardToHand(playerId, card) }
     }
 
-    fun removeCardFromHand(playerId: PlayerInGameId, card: Card) {
+    fun removeCardFromHand(playerId: PlayerDwitchId, card: Card) {
         player(playerId).removeCardFromHand(card)
     }
 
-    fun removeAllCardsForCardExchange(playerId: PlayerInGameId) {
+    fun removeAllCardsForCardExchange(playerId: PlayerDwitchId) {
         player(playerId).removeAllCardsForExchange()
     }
 
@@ -38,7 +38,7 @@ internal data class GameStateMutable(
         return cardsInDeck.removeAt(0)
     }
 
-    fun dwitchPlayer(playerId: PlayerInGameId) {
+    fun dwitchPlayer(playerId: PlayerDwitchId) {
         player(playerId).dwitched = true
     }
 
@@ -50,15 +50,15 @@ internal data class GameStateMutable(
         cardsOnTable.add(card)
     }
 
-    fun setPlayerRank(playerId: PlayerInGameId, rank: Rank) {
+    fun setPlayerRank(playerId: PlayerDwitchId, rank: Rank) {
         player(playerId).rank = rank
     }
 
-    fun setPlayerState(playerId: PlayerInGameId, state: PlayerStatus) {
+    fun setPlayerState(playerId: PlayerDwitchId, state: PlayerStatus) {
         player(playerId).state = state
     }
 
-    fun removePlayerFromActivePlayers(playerId: PlayerInGameId) {
+    fun removePlayerFromActivePlayers(playerId: PlayerDwitchId) {
         val removalSuccessful = activePlayers.remove(playerId)
         if (!removalSuccessful) {
             throw IllegalStateException("Player ${player(playerId)} cannot be removed from active players since it is not an active player.")
@@ -87,11 +87,11 @@ internal data class GameStateMutable(
         cardsOnTable.add(card)
     }
 
-    fun addDonePlayer(playerId: PlayerInGameId, lastCardPlayedIsJoker: Boolean) {
+    fun addDonePlayer(playerId: PlayerDwitchId, lastCardPlayedIsJoker: Boolean) {
         playersDoneForRound.add(PlayerDone(playerId, lastCardPlayedIsJoker))
     }
 
-    fun addCardsForExchange(playerId: PlayerInGameId, cards: Set<Card>) {
+    fun addCardsForExchange(playerId: PlayerDwitchId, cards: Set<Card>) {
         player(playerId).removeCardsFromHand(cards)
         val cardsForExchange = player(playerId).cardsForExchange
         cardsForExchange.clear()
@@ -117,13 +117,13 @@ internal data class GameStateMutable(
         )
     }
 
-    private fun player(inGameId: PlayerInGameId): PlayerMutable {
-        return players.getValue(inGameId)
+    private fun player(dwitchId: PlayerDwitchId): PlayerMutable {
+        return players.getValue(dwitchId)
     }
 
     companion object {
         internal fun fromGameState(gameState: GameState): GameStateMutable {
-            val players = mutableMapOf<PlayerInGameId, PlayerMutable>()
+            val players = mutableMapOf<PlayerDwitchId, PlayerMutable>()
             for (entry in gameState.players.entries) {
                 players[entry.key] = PlayerMutable.fromPlayer(entry.value)
             }

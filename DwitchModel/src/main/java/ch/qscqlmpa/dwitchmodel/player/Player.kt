@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchmodel.player
 
 import androidx.room.*
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.PlayerOnboardingInfo
 import ch.qscqlmpa.dwitchmodel.game.Game
 import kotlinx.serialization.Serializable
@@ -21,7 +21,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Player(
     @PrimaryKey(autoGenerate = true) val id: Long,
-    @ColumnInfo(name = "in_game_id") val inGameId: PlayerInGameId,
+    @ColumnInfo(name = "dwitch_id") val dwitchId: PlayerDwitchId,
     @ColumnInfo(name = "game_local_id") val gameLocalId: Long,
     val name: String,
     @ColumnInfo(name = "player_role") val playerRole: PlayerRole,
@@ -30,6 +30,6 @@ data class Player(
 ) {
 
     fun toPlayerInfo(): PlayerOnboardingInfo {
-        return PlayerOnboardingInfo(inGameId, name)
+        return PlayerOnboardingInfo(dwitchId, name)
     }
 }

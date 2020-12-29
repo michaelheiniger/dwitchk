@@ -33,7 +33,7 @@ class PlayerReadyMessageProcessorTest : BaseMessageProcessorTest() {
 
         val newReadyState = true
         val waitingRoomStateUpdateMessageWrapperMock = setupWaitingRoomStateUpdateMessageMock()
-        every { mockInGameStore.updatePlayerWithReady(guestPlayer.inGameId, newReadyState) } returns 1
+        every { mockInGameStore.updatePlayerWithReady(guestPlayer.dwitchId, newReadyState) } returns 1
 
         launchTest(newReadyState).test().assertComplete()
 
@@ -45,11 +45,11 @@ class PlayerReadyMessageProcessorTest : BaseMessageProcessorTest() {
 
         val newReadyState = true
         setupWaitingRoomStateUpdateMessageMock()
-        every { mockInGameStore.updatePlayerWithReady(guestPlayer.inGameId, newReadyState) } returns 1
+        every { mockInGameStore.updatePlayerWithReady(guestPlayer.dwitchId, newReadyState) } returns 1
 
         launchTest(newReadyState).test().assertComplete()
 
-        verify { mockInGameStore.updatePlayerWithReady(guestPlayer.inGameId, newReadyState) }
+        verify { mockInGameStore.updatePlayerWithReady(guestPlayer.dwitchId, newReadyState) }
     }
 
     @Test
@@ -59,12 +59,12 @@ class PlayerReadyMessageProcessorTest : BaseMessageProcessorTest() {
 
         val newReadyState = true
         setupWaitingRoomStateUpdateMessageMock()
-        every { mockInGameStore.updatePlayerWithReady(guestPlayer.inGameId, newReadyState) } returns 0 // No records is updated
+        every { mockInGameStore.updatePlayerWithReady(guestPlayer.dwitchId, newReadyState) } returns 0 // No records is updated
 
         launchTest(newReadyState).test().assertError(IllegalStateException::class.java)
     }
 
     private fun launchTest(ready: Boolean): Completable {
-        return processor.process(Message.PlayerReadyMessage(guestPlayer.inGameId, ready), ConnectionId(0))
+        return processor.process(Message.PlayerReadyMessage(guestPlayer.dwitchId, ready), ConnectionId(0))
     }
 }

@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchstore.db
 
 import androidx.room.*
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchmodel.game.Game
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
@@ -121,7 +121,7 @@ internal abstract class GameDao(database: AppRoomDatabase) {
 
         val player = Player(
             0,
-            PlayerInGameId(0),
+            PlayerDwitchId(0),
             gameLocalId,
             hostPlayerName,
             PlayerRole.HOST,
@@ -130,7 +130,7 @@ internal abstract class GameDao(database: AppRoomDatabase) {
         )
         val playerLocalId = playerDao.insertPlayer(player)
         playerDao.updatePlayer(
-            player.copy(id = playerLocalId, inGameId = PlayerInGameId(playerLocalId))
+            player.copy(id = playerLocalId, dwitchId = PlayerDwitchId(playerLocalId))
         )
 
         updateGame(game.copy(id = gameLocalId, localPlayerLocalId = playerLocalId))
@@ -180,7 +180,7 @@ internal abstract class GameDao(database: AppRoomDatabase) {
 
         val player = Player(
             0,
-            PlayerInGameId(0),
+            PlayerDwitchId(0),
             gameLocalId,
             guestPlayerName,
             PlayerRole.GUEST,

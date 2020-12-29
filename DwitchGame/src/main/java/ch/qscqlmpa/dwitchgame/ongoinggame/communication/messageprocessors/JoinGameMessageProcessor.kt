@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
@@ -39,7 +39,7 @@ internal class JoinGameMessageProcessor @Inject constructor(
         newPlayerLocalId: Long
     ) = sendMessages(
         listOf(
-            hostMessageFactory.createJoinAckMessage(senderConnectionId, PlayerInGameId(newPlayerLocalId)),
+            hostMessageFactory.createJoinAckMessage(senderConnectionId, PlayerDwitchId(newPlayerLocalId)),
             hostMessageFactory.createWaitingRoomStateUpdateMessage()
         )
     )
@@ -50,8 +50,8 @@ internal class JoinGameMessageProcessor @Inject constructor(
 
     private fun storeConnectionId(senderConnectionId: ConnectionId, newPlayerLocalId: Long): Completable {
         return Completable.fromAction {
-            val newGuestPlayerInGameId = store.getPlayerInGameId(newPlayerLocalId)
-            connectionStore.pairConnectionWithPlayer(senderConnectionId, newGuestPlayerInGameId)
+            val newGuestPlayerDwitchId = store.getPlayerDwitchId(newPlayerLocalId)
+            connectionStore.pairConnectionWithPlayer(senderConnectionId, newGuestPlayerDwitchId)
         }
     }
 }

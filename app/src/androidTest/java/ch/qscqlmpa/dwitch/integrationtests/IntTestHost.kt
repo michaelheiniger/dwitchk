@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetup
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameRoomHostFacade
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
@@ -14,7 +14,7 @@ class IntTestHost(
     private lateinit var gameRoomHostFacade: GameRoomHostFacade
 
     private var hostLocalId: Long? = null
-    lateinit var playerId: PlayerInGameId
+    lateinit var playerId: PlayerDwitchId
 
     fun createGame() {
 //        appComponent.newGameUsecase.hostGame(gameName, "Aragorn").blockingGet()

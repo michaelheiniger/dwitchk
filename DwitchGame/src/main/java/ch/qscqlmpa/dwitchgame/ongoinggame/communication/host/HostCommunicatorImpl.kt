@@ -117,8 +117,8 @@ constructor(
 
     private fun hostConnectionId(): Single<ConnectionId> {
         return Single.fromCallable {
-            val hostInGameId = inGameStore.getLocalPlayerInGameId()
-            connectionStore.getConnectionId(hostInGameId)
+            val hostDwitchId = inGameStore.getLocalPlayerDwitchId()
+            connectionStore.getConnectionId(hostDwitchId)
                 ?: throw IllegalStateException("The host has no connection ID.")
         }
     }

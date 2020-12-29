@@ -15,7 +15,7 @@ class CardForExchangeChosenUsecase @Inject constructor(
 
     fun chooseCardForExchange(cards: Set<Card>): Completable {
         return SingleFromCallable {
-            MessageFactory.createCardsForExchangeChosenMessage(inGameStore.getLocalPlayerInGameId(), cards)
+            MessageFactory.createCardsForExchangeChosenMessage(inGameStore.getLocalPlayerDwitchId(), cards)
         }.flatMapCompletable(communicator::sendMessageToHost)
             .andThen(Completable.fromAction { inGameStore.deleteCardExchangeEvent() })
     }

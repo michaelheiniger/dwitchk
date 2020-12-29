@@ -20,7 +20,7 @@ import ch.qscqlmpa.dwitchstore.typeconverter.*
     RoomTypeTypeConverter::class,
     PlayerStateTypeConverter::class,
     PlayerRoleTypeConverter::class,
-    PlayerInGameIdTypeConverter::class,
+    PlayerDwitchIdTypeConverter::class,
     GameCommonIdTypeConverter::class
 )
 internal abstract class AppRoomDatabase : RoomDatabase() {

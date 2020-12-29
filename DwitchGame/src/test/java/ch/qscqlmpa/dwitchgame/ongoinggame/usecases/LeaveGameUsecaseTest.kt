@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.appevent.AppEvent
 import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test
 
 internal class LeaveGameUsecaseTest : BaseUnitTest() {
 
-    private val playerInGameId = PlayerInGameId(23);
+    private val playerDwitchId = PlayerDwitchId(23);
 
     private val mockAppEventRepository = mockk<AppEventRepository>(relaxed = true)
 
@@ -29,13 +29,13 @@ internal class LeaveGameUsecaseTest : BaseUnitTest() {
         leaveGameUsecase = LeaveGameUsecase(mockInGameStore, mockAppEventRepository, mockCommunicator)
 
         every { mockCommunicator.sendMessageToHost(any()) } returns Completable.complete()
-        every { mockInGameStore.getLocalPlayerInGameId() } returns playerInGameId
+        every { mockInGameStore.getLocalPlayerDwitchId() } returns playerDwitchId
     }
 
     @Test
     fun `Send leave-game message to host`() {
         launchTest()
-        verify { mockCommunicator.sendMessageToHost(GuestMessageFactory.createLeaveGameMessage(playerInGameId)) }
+        verify { mockCommunicator.sendMessageToHost(GuestMessageFactory.createLeaveGameMessage(playerDwitchId)) }
     }
 
     @Test

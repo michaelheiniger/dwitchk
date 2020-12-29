@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchengine.rules
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.CardExchange
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 
 internal object CardExchangeComputer {
@@ -12,7 +12,7 @@ internal object CardExchangeComputer {
      * Compute the CardExchange for the player with the given rank and cards in hand.
      * Card exchange always occurs at the beginning of a new round when the joker is always set to CardName.TWO.
      */
-    fun getCardExchange(playerId: PlayerInGameId, rank: Rank, cardsInHand: Set<Card>): CardExchange? {
+    fun getCardExchange(playerId: PlayerDwitchId, rank: Rank, cardsInHand: Set<Card>): CardExchange? {
         checkNumCardsInHand(rank, cardsInHand)
 
         return when (rank) {

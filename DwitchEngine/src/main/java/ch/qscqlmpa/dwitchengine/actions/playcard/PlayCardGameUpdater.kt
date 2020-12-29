@@ -4,7 +4,7 @@ import ch.qscqlmpa.dwitchengine.actions.GameUpdaterBase
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameEvent
 import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 
 
 internal class PlayCardGameUpdater(
@@ -16,12 +16,12 @@ internal class PlayCardGameUpdater(
         gameStateMutable.gameEvent = GameEvent.TableHasBeenCleared(cardPlayed)
     }
 
-    fun takeCardFromHandAndPutOnTable(playerId: PlayerInGameId, cardPlayed: Card) {
+    fun takeCardFromHandAndPutOnTable(playerId: PlayerDwitchId, cardPlayed: Card) {
         gameStateMutable.removeCardFromHand(playerId, cardPlayed)
         gameStateMutable.addCardToTable(cardPlayed)
     }
 
-    fun dwitchPlayer(playerId: PlayerInGameId) {
+    fun dwitchPlayer(playerId: PlayerDwitchId) {
         gameStateMutable.dwitchPlayer(playerId)
     }
 }

@@ -9,7 +9,7 @@ import ch.qscqlmpa.dwitchengine.model.game.GameEvent
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.Player
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import ch.qscqlmpa.dwitchmodel.game.DwitchEvent
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreScope
@@ -59,8 +59,8 @@ class SerializerFactory @Inject constructor(private val json: Json) {
         return json.encodeToString(GameEvent.serializer(), gameEvent)
     }
 
-    fun serialize(playerInGameId: PlayerInGameId): String {
-        return json.encodeToString(PlayerInGameId.serializer(), playerInGameId)
+    fun serialize(playerDwitchId: PlayerDwitchId): String {
+        return json.encodeToString(PlayerDwitchId.serializer(), playerDwitchId)
     }
 
     fun serialize(cards: List<Card>): String {
@@ -105,8 +105,8 @@ class SerializerFactory @Inject constructor(private val json: Json) {
         return json.decodeFromString(GameEvent.serializer(), gameEvent)
     }
 
-    fun unserializePlayerInGameId(playerInGameId: String): PlayerInGameId {
-        return json.decodeFromString(PlayerInGameId.serializer(), playerInGameId)
+    fun unserializePlayerDwitchId(playerDwitchId: String): PlayerDwitchId {
+        return json.decodeFromString(PlayerDwitchId.serializer(), playerDwitchId)
     }
 
     fun unserializeCards(cards: String): List<Card> {

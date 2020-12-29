@@ -47,12 +47,12 @@ class JoinGameMessageProcessorTest : BaseMessageProcessorTest() {
         every { mockHostMessageFactory.createJoinAckMessage(any(), any()) } returns Single.just(joinAckMessageWrapperMock)
 
         every { mockInGameStore.insertNewGuestPlayer(any()) } returns guestPlayer.id
-        every { mockInGameStore.getPlayerInGameId(any()) } returns guestPlayer.inGameId
+        every { mockInGameStore.getPlayerDwitchId(any()) } returns guestPlayer.dwitchId
 
         launchTest().test().assertComplete()
 
         verify { mockInGameStore.insertNewGuestPlayer(guestPlayer.name) }
-        verify { mockInGameStore.getPlayerInGameId(guestPlayer.id) }
+        verify { mockInGameStore.getPlayerDwitchId(guestPlayer.id) }
 
         confirmVerified(mockInGameStore)
     }
@@ -64,13 +64,13 @@ class JoinGameMessageProcessorTest : BaseMessageProcessorTest() {
         every { mockHostMessageFactory.createJoinAckMessage(any(), any()) } returns Single.just(joinAckMessageWrapperMock)
 
         every { mockInGameStore.insertNewGuestPlayer(any()) } returns guestPlayer.id
-        every { mockInGameStore.getPlayerInGameId(any()) } returns guestPlayer.inGameId
+        every { mockInGameStore.getPlayerDwitchId(any()) } returns guestPlayer.dwitchId
 
         launchTest().test().assertComplete()
 
         // Assert in-game ID added to store
-        val connectionId = connectionStore.getConnectionId(guestPlayer.inGameId)
-        assertThat(connectionStore.getInGameId(connectionId!!)).isEqualTo(guestPlayer.inGameId)
+        val connectionId = connectionStore.getConnectionId(guestPlayer.dwitchId)
+        assertThat(connectionStore.getDwitchId(connectionId!!)).isEqualTo(guestPlayer.dwitchId)
         assertThat(connectionId).isEqualTo(senderConnectionId)
     }
 
@@ -81,7 +81,7 @@ class JoinGameMessageProcessorTest : BaseMessageProcessorTest() {
         every { mockHostMessageFactory.createJoinAckMessage(any(), any()) } returns Single.just(joinAckMessageWrapperMock)
 
         every { mockInGameStore.insertNewGuestPlayer(any()) } returns guestPlayer.id
-        every { mockInGameStore.getPlayerInGameId(any()) } returns guestPlayer.inGameId
+        every { mockInGameStore.getPlayerDwitchId(any()) } returns guestPlayer.dwitchId
 
         launchTest().test().assertComplete()
 

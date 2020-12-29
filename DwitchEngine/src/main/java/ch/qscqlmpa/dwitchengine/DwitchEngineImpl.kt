@@ -20,7 +20,7 @@ import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.info.GameInfo
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboardFactory
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.rules.CardExchangeComputer
 
 /* Important rule: As soon as the last player to have played a card has to play again
@@ -76,7 +76,7 @@ internal class DwitchEngineImpl(private val currentGameState: GameState) : Dwitc
             .also(this::logUpdatedGameState)
     }
 
-    override fun chooseCardsForExchange(playerId: PlayerInGameId, cards: Set<Card>): GameState {
+    override fun chooseCardsForExchange(playerId: PlayerDwitchId, cards: Set<Card>): GameState {
         println("Choose exchange cards $cards for Player $currentPlayerId, current game state: $currentGameState")
         val gameStateUpdated = CardExchangeChooser(
             CardExchangeChooserState(currentGameState, playerId, cards),

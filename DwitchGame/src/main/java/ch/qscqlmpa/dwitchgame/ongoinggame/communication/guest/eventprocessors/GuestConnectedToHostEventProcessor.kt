@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.eventprocessors
 
 import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientCommunicationEvent
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
@@ -30,8 +30,8 @@ internal class GuestConnectedToHostEventProcessor @Inject constructor(
             val localPlayer = store.getLocalPlayer()
 
             if (guestIsAlreadyRegisteredAtHost(localPlayer)) {
-                Timber.d("Send RejoinGameMessage with in-game ID ${localPlayer.inGameId}")
-                GuestMessageFactory.createRejoinGameMessage(game.gameCommonId, localPlayer.inGameId)
+                Timber.d("Send RejoinGameMessage with in-game ID ${localPlayer.dwitchId}")
+                GuestMessageFactory.createRejoinGameMessage(game.gameCommonId, localPlayer.dwitchId)
             } else {
                 Timber.d("Send JoinGameMessage")
                 GuestMessageFactory.createJoinGameMessage(localPlayer.name)
@@ -42,6 +42,6 @@ internal class GuestConnectedToHostEventProcessor @Inject constructor(
     }
 
     private fun guestIsAlreadyRegisteredAtHost(localPlayer: Player): Boolean {
-        return localPlayer.inGameId != PlayerInGameId(0)
+        return localPlayer.dwitchId != PlayerDwitchId(0)
     }
 }

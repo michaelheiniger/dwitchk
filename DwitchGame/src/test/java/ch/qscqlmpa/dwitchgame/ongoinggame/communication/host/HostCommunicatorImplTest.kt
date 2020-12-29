@@ -10,7 +10,7 @@ import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.Recipient
 import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.eventprocessors.HostCommunicationEventDispatcher
@@ -44,7 +44,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
     private lateinit var receivedMessagesSubject: PublishSubject<EnvelopeReceived>
 
-    private val hostPlayerInGameId = PlayerInGameId(123)
+    private val hostPlayerDwitchId = PlayerDwitchId(123)
     private val hostConnectionId = ConnectionId(321)
 
     @BeforeEach
@@ -105,8 +105,8 @@ class HostCommunicatorImplTest : BaseUnitTest() {
         fun `Received messages emitted by server are dispatched`() {
             hostCommunicator.listenForConnections()
 
-            val messageReceived1 = EnvelopeReceived(ConnectionId(1), Message.PlayerReadyMessage(PlayerInGameId(12), true))
-            val messageReceived2 = EnvelopeReceived(ConnectionId(4), Message.PlayerReadyMessage(PlayerInGameId(13), false))
+            val messageReceived1 = EnvelopeReceived(ConnectionId(1), Message.PlayerReadyMessage(PlayerDwitchId(12), true))
+            val messageReceived2 = EnvelopeReceived(ConnectionId(4), Message.PlayerReadyMessage(PlayerDwitchId(13), false))
             receivedMessagesSubject.onNext(messageReceived1)
             receivedMessagesSubject.onNext(messageReceived2)
 
@@ -126,7 +126,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
             val gameState = TestEntityFactory.createGameState()
             val messageReceived1 = EnvelopeReceived(ConnectionId(1), Message.GameStateUpdatedMessage(gameState))
-            val messageReceived2 = EnvelopeReceived(ConnectionId(4), Message.PlayerReadyMessage(PlayerInGameId(13), false))
+            val messageReceived2 = EnvelopeReceived(ConnectionId(4), Message.PlayerReadyMessage(PlayerDwitchId(13), false))
             receivedMessagesSubject.onNext(messageReceived1)
             receivedMessagesSubject.onNext(messageReceived2)
 
@@ -166,10 +166,10 @@ class HostCommunicatorImplTest : BaseUnitTest() {
         fun `Send message to a single recipient that happens to be the host`() {
             hostCommunicator.listenForConnections()
 
-            every { mockInGameStore.getLocalPlayerInGameId() } returns hostPlayerInGameId
-            every { mockConnectionStore.getConnectionId(hostPlayerInGameId) } returns hostConnectionId
+            every { mockInGameStore.getLocalPlayerDwitchId() } returns hostPlayerDwitchId
+            every { mockConnectionStore.getConnectionId(hostPlayerDwitchId) } returns hostConnectionId
 
-            val messageToSend = Message.CardsForExchangeMessage(hostPlayerInGameId, setOf(Card.Clubs2, Card.Clubs3))
+            val messageToSend = Message.CardsForExchangeMessage(hostPlayerDwitchId, setOf(Card.Clubs2, Card.Clubs3))
 
             hostCommunicator.sendMessage(EnvelopeToSend(Recipient.Single(hostConnectionId), messageToSend))
                 .test().assertComplete()
@@ -189,10 +189,10 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
         @Test
         fun `Send message to one specific guest`() {
-            every { mockInGameStore.getLocalPlayerInGameId() } returns hostPlayerInGameId
-            every { mockConnectionStore.getConnectionId(hostPlayerInGameId) } returns hostConnectionId
+            every { mockInGameStore.getLocalPlayerDwitchId() } returns hostPlayerDwitchId
+            every { mockConnectionStore.getConnectionId(hostPlayerDwitchId) } returns hostConnectionId
 
-            val messageToSend = Message.JoinGameAckMessage(GameCommonId(124), PlayerInGameId(45))
+            val messageToSend = Message.JoinGameAckMessage(GameCommonId(124), PlayerDwitchId(45))
             val guestConnectionId = ConnectionId(32)
 
             hostCommunicator.sendMessage(EnvelopeToSend(Recipient.Single(guestConnectionId), messageToSend))

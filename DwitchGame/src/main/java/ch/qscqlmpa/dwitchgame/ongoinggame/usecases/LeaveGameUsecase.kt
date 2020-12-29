@@ -27,7 +27,7 @@ internal class LeaveGameUsecase @Inject constructor(
     }
 
     private fun buildLeaveGameMessage(): Single<Message> {
-        return Single.fromCallable { GuestMessageFactory.createLeaveGameMessage(store.getLocalPlayerInGameId()) }
+        return Single.fromCallable { GuestMessageFactory.createLeaveGameMessage(store.getLocalPlayerDwitchId()) }
     }
 
     private fun deleteGameFromStore(): Completable {

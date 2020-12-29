@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.utils
 
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
@@ -13,8 +13,8 @@ class PlayerRobot(private val playerTest: Player) {
         return this
     }
 
-    fun assertInGameId(inGameId: PlayerInGameId): PlayerRobot {
-        assertThat(playerTest.inGameId).isEqualTo(inGameId)
+    fun assertDwitchId(dwitchId: PlayerDwitchId): PlayerRobot {
+        assertThat(playerTest.dwitchId).isEqualTo(dwitchId)
         return this
     }
 

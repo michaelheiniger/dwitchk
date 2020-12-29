@@ -47,7 +47,7 @@ internal class RejoinGameMessageProcessor @Inject constructor(
         return Maybe.fromCallable {
 
             val gameCommonId = store.getGame().gameCommonId
-            val playerRejoining = store.getPlayer(msg.playerInGameId)
+            val playerRejoining = store.getPlayer(msg.playerDwitchId)
 
             if (gameCommonId != msg.gameCommonId) {
                 Timber.e("Game common ID provided doesn't match: closing connection with client.")
@@ -74,7 +74,7 @@ internal class RejoinGameMessageProcessor @Inject constructor(
     }
 
     private fun updateConnectionStore(player: Player, connectionID: ConnectionId) {
-        connectionStore.pairConnectionWithPlayer(connectionID, player.inGameId)
+        connectionStore.pairConnectionWithPlayer(connectionID, player.dwitchId)
     }
 
     private fun sendRejoinAck(rejoinInfo: RejoinInfo): Completable {

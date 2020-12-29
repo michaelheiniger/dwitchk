@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitch.utils
 
 //class PlayerDashboardRobot(private val dashboard: PlayerDashboard) {
 //
-//    fun assertLocalPlayerId(id: PlayerInGameId): PlayerDashboardRobot {
+//    fun assertLocalPlayerId(id: PlayerDwitchId): PlayerDashboardRobot {
 //        assertThat(dashboard.localPlayer.id).isEqualTo(id)
 //        return this
 //    }
@@ -32,12 +32,12 @@ package ch.qscqlmpa.dwitch.utils
 //        return this
 //    }
 //
-//    fun assertPlayerState(playerId: PlayerInGameId, state: PlayerStatus): PlayerDashboardRobot {
+//    fun assertPlayerState(playerId: PlayerDwitchId, state: PlayerStatus): PlayerDashboardRobot {
 //        assertThat(dashboard.players.getValue(playerId).state).isEqualTo(state)
 //        return this
 //    }
 //
-//    fun assertPlayerRank(playerId: PlayerInGameId, rank: Rank): PlayerDashboardRobot {
+//    fun assertPlayerRank(playerId: PlayerDwitchId, rank: Rank): PlayerDashboardRobot {
 //        assertThat(dashboard.players.getValue(playerId).rank).isEqualTo(rank)
 //        return this
 //    }

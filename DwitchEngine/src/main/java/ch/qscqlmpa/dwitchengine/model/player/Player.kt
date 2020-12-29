@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Player(
-    val id: PlayerInGameId,
+    val id: PlayerDwitchId,
     val name: String,
     val cardsInHand: List<Card>,
     val rank: Rank,

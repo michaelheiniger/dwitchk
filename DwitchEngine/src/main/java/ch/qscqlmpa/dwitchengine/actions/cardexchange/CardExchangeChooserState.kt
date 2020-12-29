@@ -4,13 +4,13 @@ import ch.qscqlmpa.dwitchengine.actions.GameStateBase
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import ch.qscqlmpa.dwitchengine.rules.CardExchangeComputer
 
 internal class CardExchangeChooserState(
     currentGameState: GameState,
-    private val playerId: PlayerInGameId,
+    private val playerId: PlayerDwitchId,
     private val cardsChosen: Set<Card>
 ) : GameStateBase(currentGameState) {
 
@@ -22,7 +22,7 @@ internal class CardExchangeChooserState(
         checkCardExchange()
     }
 
-    fun playerId(): PlayerInGameId {
+    fun playerId(): PlayerDwitchId {
         return playerId
     }
 

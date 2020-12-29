@@ -15,7 +15,7 @@ internal class JoinGameAckMessageProcessor @Inject constructor(private val store
 
         return Completable.fromCallable {
             store.updateGameWithCommonId(msg.gameCommonId)
-            store.updateLocalPlayerWithInGameId(msg.playerInGameId)
+            store.updateLocalPlayerWithDwitchId(msg.playerId)
         }
     }
 }

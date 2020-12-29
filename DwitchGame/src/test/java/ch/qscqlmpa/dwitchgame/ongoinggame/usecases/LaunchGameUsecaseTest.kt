@@ -1,5 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
+import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
+import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetupFactory
 import ch.qscqlmpa.dwitchengine.initialgamesetup.random.RandomInitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.game.GameState
@@ -8,8 +10,6 @@ import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchgame.appevent.AppEvent
 import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
-import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import io.mockk.CapturingSlot
 import io.mockk.every
@@ -46,7 +46,7 @@ internal class LaunchGameUsecaseTest : BaseUnitTest() {
         val hostPlayer = TestEntityFactory.createHostPlayer()
         val guest1Player = TestEntityFactory.createGuestPlayer1()
         every { mockInGameStore.getPlayersInWaitingRoom() } returns listOf(hostPlayer, guest1Player)
-        every { mockInGameStore.getLocalPlayerInGameId() } returns hostPlayer.inGameId
+        every { mockInGameStore.getLocalPlayerDwitchId() } returns hostPlayer.dwitchId
     }
 
     @Test

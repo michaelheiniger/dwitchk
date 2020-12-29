@@ -57,8 +57,8 @@ class ClientDisconnectedEventProcessorTest : BaseUnitTest() {
         launchTest(guestConnectionId).test().assertComplete()
 
         verify { mockCommunicator.sendMessage(waitingRoomStateUpdateMessageWrapperMock) }
-        verify { mockInGameStore.updatePlayer(guestPlayer.inGameId, PlayerConnectionState.DISCONNECTED, false) }
-        assertThat(connectionStore.getInGameId(guestConnectionId)).isNull()
+        verify { mockInGameStore.updatePlayer(guestPlayer.dwitchId, PlayerConnectionState.DISCONNECTED, false) }
+        assertThat(connectionStore.getDwitchId(guestConnectionId)).isNull()
     }
 
     @Test
@@ -71,7 +71,7 @@ class ClientDisconnectedEventProcessorTest : BaseUnitTest() {
         verify { mockCommunicator wasNot Called }
         verify { mockHostMessageFactory wasNot Called }
         verify { mockInGameStore wasNot Called }
-        assertThat(connectionStore.getInGameId(ConnectionId(0))).isNull()
+        assertThat(connectionStore.getDwitchId(ConnectionId(0))).isNull()
         confirmVerified(mockCommunicator)
         confirmVerified(mockHostMessageFactory)
         confirmVerified(mockInGameStore)
@@ -87,7 +87,7 @@ class ClientDisconnectedEventProcessorTest : BaseUnitTest() {
 
         launchTest(guestConnectionId).test().assertError(IllegalStateException::class.java)
 
-        assertThat(connectionStore.getInGameId(guestConnectionId)).isNull()
+        assertThat(connectionStore.getDwitchId(guestConnectionId)).isNull()
     }
 
     private fun launchTest(guestConnectionId: ConnectionId): Completable {
@@ -96,7 +96,7 @@ class ClientDisconnectedEventProcessorTest : BaseUnitTest() {
 
     private fun setupConnectionStore(): ConnectionId {
         val guestConnectionId = ConnectionId(545)
-        connectionStore.pairConnectionWithPlayer(guestConnectionId, guestPlayer.inGameId)
+        connectionStore.pairConnectionWithPlayer(guestConnectionId, guestPlayer.dwitchId)
         return guestConnectionId
     }
 }

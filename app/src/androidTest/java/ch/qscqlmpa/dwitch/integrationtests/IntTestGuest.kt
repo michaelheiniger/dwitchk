@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
 import ch.qscqlmpa.dwitchcommunication.websocket.server.test.PlayerHostTest
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameRoomGuestFacade
@@ -15,7 +15,7 @@ class IntTestGuest(
     private lateinit var gameRoomGuestFacade: GameRoomGuestFacade
 
 //    private val guestLocalId: Long
-    lateinit var playerId: PlayerInGameId
+    lateinit var playerId: PlayerDwitchId
 
     init {
 //        appComponent.newGameUsecase.joinGame(advertisedGame, guest.name).blockingGet()

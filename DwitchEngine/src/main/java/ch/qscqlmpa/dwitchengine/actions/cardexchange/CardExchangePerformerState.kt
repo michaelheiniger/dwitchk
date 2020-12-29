@@ -4,7 +4,7 @@ import ch.qscqlmpa.dwitchengine.actions.GameStateBase
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.Player
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 
 internal class CardExchangePerformerState(
@@ -20,19 +20,19 @@ internal class CardExchangePerformerState(
         return currentGameState.players.size
     }
 
-    fun presidentId(): PlayerInGameId {
+    fun presidentId(): PlayerDwitchId {
         return president!!.id
     }
 
-    fun vicePresidentId(): PlayerInGameId {
+    fun vicePresidentId(): PlayerDwitchId {
         return vicePresident!!.id
     }
 
-    fun assholeId(): PlayerInGameId {
+    fun assholeId(): PlayerDwitchId {
         return asshole!!.id
     }
 
-    fun viceAssholeId(): PlayerInGameId {
+    fun viceAssholeId(): PlayerDwitchId {
         return viceAsshole!!.id
     }
 
@@ -52,7 +52,7 @@ internal class CardExchangePerformerState(
         return getCardsForExchangeOfPlayer(viceAsshole!!.id)
     }
 
-    private fun getCardsForExchangeOfPlayer(playerId: PlayerInGameId): Set<Card> {
+    private fun getCardsForExchangeOfPlayer(playerId: PlayerDwitchId): Set<Card> {
         return currentGameState.player(playerId).cardsForExchange
 
     }

@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchstore.db
 
 import androidx.room.*
-import ch.qscqlmpa.dwitchengine.model.player.PlayerInGameId
+import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
@@ -24,7 +24,7 @@ internal interface PlayerDao {
     fun insertNewGuestPlayer(gameLocalId: Long, name: String): Long {
         val player = Player(
             0,
-            PlayerInGameId(0),
+            PlayerDwitchId(0),
             gameLocalId,
             name,
             PlayerRole.GUEST,
@@ -32,53 +32,33 @@ internal interface PlayerDao {
             false
         )
         val playerLocalId = insertPlayer(player)
-        updatePlayer(
-            player.copy(
-                id = playerLocalId, inGameId = PlayerInGameId(
-                    playerLocalId
-                )
-            )
-        )
+        updatePlayer(player.copy(id = playerLocalId, dwitchId = PlayerDwitchId(playerLocalId)))
         return playerLocalId
     }
 
     @Update
     fun updatePlayer(player: Player)
 
-    @Query("UPDATE Player SET ready=:ready WHERE in_game_id=:playerInGameId")
-    fun updatePlayerWithReady(playerInGameId: PlayerInGameId, ready: Boolean): Int
+    @Query("UPDATE Player SET ready = :ready WHERE dwitch_id = :playerDwitchId")
+    fun updatePlayerWithReady(playerDwitchId: PlayerDwitchId, ready: Boolean): Int
 
-    @Query("UPDATE Player SET ready=:ready WHERE id=:playerLocalId")
+    @Query("UPDATE Player SET ready = :ready WHERE id = :playerLocalId")
     fun updatePlayerWithReady(playerLocalId: Long, ready: Boolean): Int
 
-    @Query("UPDATE Player SET in_game_id=:inGameId WHERE in_game_id=:playerInGameId")
-    fun updatePlayerWithInGameId(playerInGameId: PlayerInGameId, inGameId: PlayerInGameId): Int
-
     @Query(
-        """UPDATE Player 
-            SET connectionState=:state, ready=:ready
-            WHERE in_game_id=:playerInGameId
+        """
+            UPDATE Player 
+            SET connectionState = :state, ready = :ready
+            WHERE dwitch_id = :playerDwitchId
             """
     )
-    fun updatePlayer(
-        playerInGameId: PlayerInGameId,
-        state: PlayerConnectionState,
-        ready: Boolean
-    ): Int
+    fun updatePlayer(playerDwitchId: PlayerDwitchId, state: PlayerConnectionState, ready: Boolean): Int
 
-    @Query("UPDATE Player SET connectionState=:state, ready=:ready WHERE in_game_id=:playerInGameId")
-    fun updatePlayerWithStateAndReady(
-        playerInGameId: PlayerInGameId,
-        state: PlayerConnectionState,
-        ready: Boolean
-    ): Int
+    @Query("UPDATE Player SET connectionState = :state, ready = :ready WHERE dwitch_id = :playerDwitchId")
+    fun updatePlayerWithStateAndReady(playerDwitchId: PlayerDwitchId, state: PlayerConnectionState, ready: Boolean): Int
 
-    @Query("UPDATE Player SET connectionState=:state, ready=:ready WHERE id=:playerLocalId")
-    fun updatePlayerWithConnectionStateAndReady(
-        playerLocalId: Long,
-        state: PlayerConnectionState,
-        ready: Boolean
-    ): Int
+    @Query("UPDATE Player SET connectionState = :state, ready = :ready WHERE id = :playerLocalId")
+    fun updatePlayerWithConnectionStateAndReady(playerLocalId: Long, state: PlayerConnectionState, ready: Boolean): Int
 
     @Query(
         """
@@ -100,56 +80,56 @@ internal interface PlayerDao {
     @Query(
         """
         DELETE FROM Player
-        WHERE game_local_id=:gameLocalId
-        AND in_game_id=:playerInGameId
+        WHERE game_local_id = :gameLocalId
+        AND dwitch_id = :playerDwitchId
         """
     )
-    fun deletePlayer(gameLocalId: Long, playerInGameId: PlayerInGameId): Int
+    fun deletePlayer(gameLocalId: Long, playerDwitchId: PlayerDwitchId): Int
 
     @Query(
         """
         DELETE FROM Player
-        WHERE game_local_id=:gameLocalId
+        WHERE game_local_id = :gameLocalId
         """
     )
     fun deletePlayers(gameLocalId: Long): Int
 
-    @Query("SELECT * FROM Player WHERE id=:playerLocalId")
+    @Query("SELECT * FROM Player WHERE id = :playerLocalId")
     fun gePlayer(playerLocalId: Long): Player
 
-    @Query("SELECT * FROM Player WHERE id=:playerLocalId")
+    @Query("SELECT * FROM Player WHERE id = :playerLocalId")
     fun observePlayer(playerLocalId: Long): Observable<Player>
 
     @Query(
         """
         SELECT * FROM Player
-        WHERE game_local_id=:gameLocalId
-        AND in_game_id=:playerInGameId
+        WHERE game_local_id = :gameLocalId
+        AND dwitch_id = :playerDwitchId
             """
     )
-    fun getPlayer(gameLocalId: Long, playerInGameId: PlayerInGameId): Player
+    fun getPlayer(gameLocalId: Long, playerDwitchId: PlayerDwitchId): Player
 
     @Query(
         """
         SELECT Player.* FROM Player
-        WHERE id =:playerLocalId
+        WHERE id = :playerLocalId
         """
     )
     fun getPlayer(playerLocalId: Long): Player
 
     @Query(
         """
-        SELECT in_game_id FROM Player
-        WHERE id =:playerLocalId
+        SELECT dwitch_id FROM Player
+        WHERE id = :playerLocalId
         """
     )
-    fun getPlayerInGameId(playerLocalId: Long): PlayerInGameId
+    fun getPlayerDwitchId(playerLocalId: Long): PlayerDwitchId
 
     //For test purpose only
     @Query(
         """
         SELECT Player.* FROM Player
-        WHERE name =:name
+        WHERE name = :name
         """
     )
     fun getPlayer(name: String): Player?
@@ -161,7 +141,7 @@ internal interface PlayerDao {
     @Query(
         """
         SELECT Player.* FROM Player
-        WHERE game_local_id=:gameLocalId
+        WHERE game_local_id = :gameLocalId
         ORDER BY Player.name ASC
         """
     )
@@ -170,7 +150,7 @@ internal interface PlayerDao {
     @Query(
         """
         SELECT Player.* FROM Player
-        WHERE Player.game_local_id=:gameLocalId
+        WHERE Player.game_local_id = :gameLocalId
         ORDER BY Player.name ASC
         """
     )
@@ -179,20 +159,11 @@ internal interface PlayerDao {
     @Query(
         """
         UPDATE Player
-        SET in_game_id=:playerInGameId
-        WHERE id=:playerLocalId
+        SET dwitch_id = :playerDwitchId
+        WHERE id = :playerLocalId
         """
     )
-    fun updatePlayerWithInGameId(playerLocalId: Long, playerInGameId: PlayerInGameId): Int
-
-    // ------------------------------- For testing purpose only ------------------------------- //
-    @Query(
-        """
-        SELECT Player.* FROM Player
-        ORDER BY Player.id
-        """
-    )
-    fun getAllPlayersSortedOnIdAsc(): List<Player>
+    fun updatePlayerWithDwitchId(playerLocalId: Long, playerDwitchId: PlayerDwitchId): Int
 
     @Query(
         """
@@ -205,18 +176,9 @@ internal interface PlayerDao {
     @Query(
         """
         SELECT Player.* FROM Player
-        WHERE name=:name
+        WHERE name = :name
         ORDER BY Player.name
         """
     )
     fun getPlayerByName(name: String): Player?
-
-    @Query(
-        """
-        SELECT Player.* FROM Player
-        WHERE in_game_id=:inGameId
-        ORDER BY Player.name
-        """
-    )
-    fun getPlayerByInGameId(inGameId: PlayerInGameId): Player
 }

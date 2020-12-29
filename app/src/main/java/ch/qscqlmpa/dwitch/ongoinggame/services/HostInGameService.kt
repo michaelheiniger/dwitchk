@@ -47,9 +47,7 @@ class HostInGameService : BaseInGameService() {
     }
 
     private fun advertiseGame(gameAdvertisingInfo: GameAdvertisingInfo) {
-        gameAdvertisingDisposable.add(
-            getOngoingGameComponent().hostFacade.advertiseGame(gameAdvertisingInfo).subscribe()
-        )
+        gameAdvertisingDisposable.add(getOngoingGameComponent().hostFacade.advertiseGame(gameAdvertisingInfo).subscribe())
     }
 
     companion object {

@@ -7,8 +7,8 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.clickOnButton
 import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil.withRecyclerView
-import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
 import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import org.assertj.core.api.Assertions.assertThat
 import timber.log.Timber
@@ -62,14 +62,14 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
     }
 
     protected fun hostSendsJoinGameAck() {
-        val message = Message.JoinGameAckMessage(gameCommonId, PlayerGuestTest.LocalGuest.inGameId)
+        val message = Message.JoinGameAckMessage(gameCommonId, PlayerGuestTest.LocalGuest.id)
         clientTestStub.serverSendsMessageToClient(message, false)
     }
 
     protected fun setLocalPlayerReady() {
         clickOnButton(R.id.localPlayerReadyCkb)
         val playerReadyMessage = waitForNextMessageSentByLocalGuest() as Message.PlayerReadyMessage
-        assertThat(PlayerGuestTest.LocalGuest.inGameId).isEqualTo(playerReadyMessage.playerInGameId)
+        assertThat(PlayerGuestTest.LocalGuest.id).isEqualTo(playerReadyMessage.playerId)
         assertThat(true).isEqualTo(playerReadyMessage.ready)
     }
 }
