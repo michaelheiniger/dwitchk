@@ -1,12 +1,9 @@
 package ch.qscqlmpa.dwitch.uitests
 
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.withText
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.uitests.base.BaseUiTest
-import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil.withRecyclerView
+import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
 import org.hamcrest.Matchers.startsWith
 import org.junit.Test
@@ -35,8 +32,6 @@ class HomeScreenTest : BaseUiTest() {
     }
 
     private fun assertGameInGameList(position: Int, beginningOfName: String) {
-        onView(withRecyclerView(R.id.gameListRw)
-                .atPositionOnView(position, R.id.gameNameTv))
-                .check(matches(withText(startsWith(beginningOfName))))
+        UiUtil.assertRecyclerViewElementText(R.id.gameListRw, R.id.gameNameTv, position, startsWith(beginningOfName))
     }
 }
