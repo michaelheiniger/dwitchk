@@ -222,7 +222,7 @@ class PlayCardTest : EngineTestBase() {
 
         PlayerRobot(gameStateUpdated, player3Id)
                 .assertPlayerState(PlayerStatus.Waiting)
-                .assertPlayerIsNotDwitched() // Since no one else could play
+                .assertPlayerIsDwitched()
 
         PlayerRobot(gameStateUpdated, player4Id)
                 .assertPlayerState(PlayerStatus.Waiting)
@@ -284,7 +284,7 @@ class PlayCardTest : EngineTestBase() {
 
         PlayerRobot(gameStateUpdated, player3Id)
                 .assertPlayerState(PlayerStatus.Waiting)
-                .assertPlayerIsNotDwitched() // Since no one else could play
+                .assertPlayerIsDwitched()
 
         PlayerRobot(gameStateUpdated, player4Id)
                 .assertPlayerState(PlayerStatus.Waiting)

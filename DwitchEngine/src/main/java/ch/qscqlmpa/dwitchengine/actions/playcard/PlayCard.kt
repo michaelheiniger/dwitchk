@@ -37,9 +37,7 @@ internal class PlayCard(
                 gameUpdater.setPlayersWhoPassedTheirTurnedToWaiting()
             }
 
-            if (!playCardState.noOtherPlayerCanPlay()) {
-                dwitchNextWaitingPlayerIfAny()
-            }
+             dwitchNextWaitingPlayerIfNeeded()
 
             if (playCardState.currentPlayerHasNoMoreCards()) {
                 gameUpdater.playerIsDone(localPlayerId, playCardState.cardPlayedIsJoker())
@@ -60,7 +58,7 @@ internal class PlayCard(
         }
     }
 
-    private fun dwitchNextWaitingPlayerIfAny() {
+    private fun dwitchNextWaitingPlayerIfNeeded() {
         val nextWaitingPlayer = playCardState.nextWaitingPlayer()
         if (nextWaitingPlayer != null && playCardState.nextWaitingPlayerIsDwitched()) {
             gameUpdater.dwitchPlayer(nextWaitingPlayer.id)
