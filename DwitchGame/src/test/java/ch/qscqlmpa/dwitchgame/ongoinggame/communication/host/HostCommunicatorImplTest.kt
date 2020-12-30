@@ -233,21 +233,21 @@ class HostCommunicatorImplTest : BaseUnitTest() {
         fun `Communication state open is mapped to connected`() {
             every { mockCommEventRepository.observeEvents() } returns Observable.just(HostCommunicationState.Open)
 
-            hostCommunicator.observePlayerConnectionState().test().assertValue(PlayerConnectionState.CONNECTED)
+            hostCommunicator.observeConnectionState().test().assertValue(PlayerConnectionState.CONNECTED)
         }
 
         @Test
         fun `Communication state closed is mapped to disconnected`() {
             every { mockCommEventRepository.observeEvents() } returns Observable.just(HostCommunicationState.Closed)
 
-            hostCommunicator.observePlayerConnectionState().test().assertValue(PlayerConnectionState.DISCONNECTED)
+            hostCommunicator.observeConnectionState().test().assertValue(PlayerConnectionState.DISCONNECTED)
         }
 
         @Test
         fun `Communication state error is mapped to disconnected`() {
             every { mockCommEventRepository.observeEvents() } returns Observable.just(HostCommunicationState.Error)
 
-            hostCommunicator.observePlayerConnectionState().test().assertValue(PlayerConnectionState.DISCONNECTED)
+            hostCommunicator.observeConnectionState().test().assertValue(PlayerConnectionState.DISCONNECTED)
         }
     }
 }

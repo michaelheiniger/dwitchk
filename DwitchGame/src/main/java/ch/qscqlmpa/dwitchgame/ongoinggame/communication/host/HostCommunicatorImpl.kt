@@ -69,7 +69,7 @@ constructor(
         return communicationStateRepository.observeEvents()
     }
 
-    override fun observePlayerConnectionState(): Observable<PlayerConnectionState> {
+    override fun observeConnectionState(): Observable<PlayerConnectionState> {
         return communicationStateRepository.observeEvents().map { state ->
             when (state) {
                 HostCommunicationState.Open -> PlayerConnectionState.CONNECTED

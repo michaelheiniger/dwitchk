@@ -15,10 +15,11 @@ import dagger.Subcomponent
     GuestCommunicationEventProcessorModule::class,
     HostCommunicationEventProcessorModule::class,
     GuestCommunicationModule::class,
-    HostCommunicationModule::class
+    HostCommunicationModule::class,
+    GameAdvertisingModule::class,
+    DwitchEventRepositoryModule::class
 ])
 interface TestOngoingGameComponent : OngoingGameComponent {
-
     val initialGameSetupFactory: InitialGameSetupFactory
     val cardDealerFactory: CardDealerFactory
 }

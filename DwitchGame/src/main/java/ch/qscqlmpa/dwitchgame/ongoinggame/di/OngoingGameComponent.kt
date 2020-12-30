@@ -24,6 +24,8 @@ import dagger.Subcomponent
     HostCommunicationEventProcessorModule::class,
     GuestCommunicationModule::class,
     HostCommunicationModule::class,
+    GameAdvertisingModule::class,
+    DwitchEventRepositoryModule::class
 ])
 interface OngoingGameComponent {
     val hostFacade: HostFacade

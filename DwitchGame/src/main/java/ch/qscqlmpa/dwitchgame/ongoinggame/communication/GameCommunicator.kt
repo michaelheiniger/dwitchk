@@ -7,7 +7,7 @@ import io.reactivex.rxjava3.core.Observable
 
 interface GameCommunicator {
 
-    fun observePlayerConnectionState(): Observable<PlayerConnectionState>
+    fun observeConnectionState(): Observable<PlayerConnectionState>
 
     fun sendMessageToHost(message: Message): Completable
 }

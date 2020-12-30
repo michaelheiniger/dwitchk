@@ -4,14 +4,12 @@ import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.DwitchEngineFactory
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchgame.ongoinggame.DwitchEventRepository
+import ch.qscqlmpa.dwitchgame.ongoinggame.dwitchevent.DwitchEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.GameCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.CardForExchangeChosenUsecase
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.GameUpdatedUsecase
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.StartCardExchangeUsecase
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -27,7 +25,7 @@ internal class GameDashboardFacadeImpl @Inject constructor(
     private val cardDealerFactory: CardDealerFactory,
     private val dwitchEventRepository: DwitchEventRepository,
     private val dwitchEngineFactory: DwitchEngineFactory
-) : GameDashboardFacade {
+) : GameDashboardFacade, GameCommunicator by gameCommunicator, DwitchEventRepository by dwitchEventRepository {
 
     override fun playCard(cardPlayed: Card): Completable {
         return handleGameStateUpdated { engine -> engine.playCard(cardPlayed) }.ignoreElement()
@@ -48,26 +46,22 @@ internal class GameDashboardFacadeImpl @Inject constructor(
 
     override fun getDashboard(): Single<GameInfoForDashboard> {
         return gameRepository.getGameInfo().map { gameInfo ->
-                GameInfoForDashboard(dwitchEngineFactory.create(gameInfo.gameState).getGameInfo(), gameInfo.localPlayerId, gameInfo.localPlayerIsHost)
+            GameInfoForDashboard(
+                dwitchEngineFactory.create(gameInfo.gameState).getGameInfo(),
+                gameInfo.localPlayerId,
+                gameInfo.localPlayerIsHost
+            )
         }
-    }
-
-    override fun getCardExchangeEvent(): Single<CardExchange> {
-        return dwitchEventRepository.getCardExchangeEvent()
-    }
-
-    override fun observeConnectionState(): Observable<PlayerConnectionState> {
-        return gameCommunicator.observePlayerConnectionState()
     }
 
     override fun observeGameInfoForDashboard(): Observable<GameInfoForDashboard> {
         return gameRepository.observeGameInfo().map { gameInfo ->
-            GameInfoForDashboard(dwitchEngineFactory.create(gameInfo.gameState).getGameInfo(), gameInfo.localPlayerId, gameInfo.localPlayerIsHost)
+            GameInfoForDashboard(
+                dwitchEngineFactory.create(gameInfo.gameState).getGameInfo(),
+                gameInfo.localPlayerId,
+                gameInfo.localPlayerIsHost
+            )
         }
-    }
-
-    override fun observeCardExchangeEvents(): Observable<CardExchange> {
-        return dwitchEventRepository.observeCardExchangeEvents()
     }
 
     override fun submitCardsForExchange(cards: Set<Card>): Completable {
