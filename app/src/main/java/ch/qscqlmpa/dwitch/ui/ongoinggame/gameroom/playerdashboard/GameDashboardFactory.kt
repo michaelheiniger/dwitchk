@@ -12,6 +12,7 @@ import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.info.PlayerInfo
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameInfoForDashboard
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
+import timber.log.Timber
 
 class GameDashboardFactory(
     gameInfoForDashboard: GameInfoForDashboard,
@@ -32,7 +33,8 @@ class GameDashboardFactory(
             cardsInHands(),
             lastCardPlayed(),
             playersInfo(),
-            gameInfo()
+            gameInfo(),
+            dwitchEvent()
         )
     }
 
@@ -110,4 +112,14 @@ class GameDashboardFactory(
         card.value() >= localPlayerInfo.minimumPlayingCardValueAllowed.value || cardIsJoker(card)
 
     private fun cardIsJoker(card: Card) = card.name == gameInfo.joker
+
+    private fun dwitchEvent(): String {
+        val dwitchedPlayer = gameInfo.getDwitchedPlayer()
+        Timber.i("Dwitched player: $dwitchedPlayer")
+        return if (dwitchedPlayer != null) {
+            "${dwitchedPlayer.name} is dwitched !"
+        } else {
+            ""
+        }
+    }
 }

@@ -10,5 +10,6 @@ data class GameDashboard(
     val cardsInHands: List<CardItem>,
     val lastCardPlayed: ImageInfo,
     val playersInfo: CharSequence,
-    val gameInfo: String
+    val gameInfo: String,
+    val dwitchEvent: String?
 )

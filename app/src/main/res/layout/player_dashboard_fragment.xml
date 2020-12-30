@@ -19,6 +19,17 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Player1 (P) Player2 (A)" />
 
+    <TextView
+        android:id="@+id/dwitchEventTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textSize="@dimen/regular_text_size"
+        app:layout_constraintEnd_toEndOf="@+id/lastCardPlayedIv"
+        app:layout_constraintStart_toStartOf="@+id/lastCardPlayedIv"
+        app:layout_constraintBottom_toTopOf="@+id/lastCardPlayedIv"
+        tools:text="Dwitch event" />
+
     <ImageView
         android:id="@+id/lastCardPlayedIv"
         android:layout_width="90dp"

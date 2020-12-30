@@ -19,4 +19,8 @@ data class GameInfo(
     fun getCurrentPlayer(): PlayerInfo {
         return playerInfos.getValue(currentPlayerId)
     }
+
+    fun getDwitchedPlayer(): PlayerInfo? {
+        return playerInfos.values.find { p -> p.dwitched }
+    }
 }

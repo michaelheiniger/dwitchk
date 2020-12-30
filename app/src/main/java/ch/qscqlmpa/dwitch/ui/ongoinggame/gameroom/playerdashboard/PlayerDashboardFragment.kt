@@ -57,6 +57,7 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
 
             playersInfoTv.text = dashboard.playersInfo
             gameInfoTv.text = dashboard.gameInfo
+            dwitchEventTv.text = dashboard.dwitchEvent
 
             startNewRoundBtn.isEnabled = dashboard.canStartNewRound
             pickBtn.isEnabled = dashboard.canPickACard
