@@ -20,7 +20,7 @@ internal class HostListeningForConnectionsEventProcessor @Inject constructor(
         event as ServerCommunicationEvent.ListeningForConnections
 
         return Completable.fromAction {
-            Timber.i("current thread: ${Thread.currentThread()}")
+            Timber.i("Listening for connections...")
             val hostConnectionId = store.getLocalPlayerDwitchId()
             connectionStore.pairConnectionWithPlayer(event.hostConnectionId, hostConnectionId)
             communicationStateRepository.notify(HostCommunicationState.Open)
