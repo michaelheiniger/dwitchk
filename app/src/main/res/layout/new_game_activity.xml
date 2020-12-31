@@ -8,17 +8,19 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/left_margin"
+        android:layout_marginTop="@dimen/top_margin"
+        android:layout_marginEnd="@dimen/right_margin"
+        android:layout_marginBottom="@dimen/bottom_margin">
 
         <TextView
             android:id="@+id/playerNameTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:labelFor="@+id/playerNameEdt"
             android:text="@string/nga_player_name_tv"
             android:textSize="@dimen/regular_text_size"
-            android:labelFor="@+id/playerNameEdt"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,22 +28,19 @@
             android:id="@+id/playerNameEdt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:importantForAutofill="no"
             android:inputType="text"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/playerNameTv"
-            android:importantForAutofill="no" />
+            app:layout_constraintTop_toBottomOf="@+id/playerNameTv" />
 
         <TextView
             android:id="@+id/gameNameTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:labelFor="@+id/gameNameEdt"
             android:text="@string/nga_game_name_tv"
             android:textSize="@dimen/regular_text_size"
-            android:labelFor="@+id/gameNameEdt"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/playerNameEdt" />
 
@@ -49,34 +48,32 @@
             android:id="@+id/gameNameEdt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:importantForAutofill="no"
             android:inputType="text"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gameNameTv"
-            android:importantForAutofill="no" />
+            app:layout_constraintTop_toBottomOf="@+id/gameNameTv" />
 
         <Button
             android:id="@+id/backBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onBackClicked"
-            android:layout_marginStart="8dp"
             android:text="@string/nga_back_btn"
-            app:layout_constraintBottom_toBottomOf="@+id/nextBtn"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/nextBtn" />
+            app:layout_constraintTop_toBottomOf="@+id/gameNameEdt" />
 
         <Button
             android:id="@+id/nextBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/top_margin"
             android:onClick="onNextClicked"
-            android:layout_marginEnd="8dp"
             android:text="@string/nga_next_btn"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gameNameEdt" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/backBtn" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

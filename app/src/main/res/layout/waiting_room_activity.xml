@@ -8,14 +8,16 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/left_margin"
+        android:layout_marginTop="@dimen/bottom_margin"
+        android:layout_marginEnd="@dimen/right_margin"
+        android:layout_marginBottom="@dimen/top_margin">
 
         <TextView
             android:id="@+id/playerListTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
             android:text="@string/wra_player_list"
             android:textSize="@dimen/regular_text_size"
             app:layout_constraintStart_toStartOf="parent"
@@ -25,7 +27,7 @@
             android:id="@+id/playerListRw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/playerListTv"
@@ -35,6 +37,7 @@
             android:id="@+id/host_or_guest_fragment_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
