@@ -25,17 +25,17 @@
             android:id="@+id/reconnectBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:layout_marginStart="16dp"
             android:text="@string/reconnect_btn"
             android:visibility="gone"
-            android:layout_marginStart="@dimen/standard_margin"
-            app:layout_constraintBottom_toBottomOf="@+id/communicationStateTv"
-            app:layout_constraintStart_toEndOf="@+id/communicationStateTv"
-            app:layout_constraintTop_toTopOf="@+id/communicationStateTv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/communicationStateTv"
             tools:visibility="visible" />
 
         <ProgressBar
             android:id="@+id/reconnectPb"
-            style="?android:attr/progressBarStyleSmall"
+            style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
