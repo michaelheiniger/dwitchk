@@ -76,13 +76,9 @@ internal class WebsocketCommServer @Inject constructor(
 
     private fun observeOnStartEvents(): Observable<ServerCommunicationEvent.ListeningForConnections> {
         return websocketServer.observeOnStartEvents()
-            .map { onStart ->
+            .map {
                 Timber.d("Server is now listening for connections")
-
-                // Add "virtual" connection of the server with itself
-                val hostConnectionId = connectionStore.addConnectionId(onStart.address)
-
-                ServerCommunicationEvent.ListeningForConnections(hostConnectionId)
+                ServerCommunicationEvent.ListeningForConnections(connectionStore.getHostConnectionId())
             }
     }
 

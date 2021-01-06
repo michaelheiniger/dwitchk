@@ -7,7 +7,9 @@ import java.util.concurrent.atomic.AtomicLong
 
 internal class ConnectionStoreImpl : ConnectionStore, ConnectionStoreInternal {
 
-    private val nextLocalConnectionId = AtomicLong(0)
+    private val hostConnectionId = ConnectionId(0)
+
+    private val nextLocalConnectionId = AtomicLong(1)
 
     private val addressMap: MutableMap<ConnectionId, Address> = HashMap()
     private val addressReverseMap: MutableMap<Address, ConnectionId> = HashMap()
@@ -36,6 +38,10 @@ internal class ConnectionStoreImpl : ConnectionStore, ConnectionStoreInternal {
     override fun pairConnectionWithPlayer(connectionId: ConnectionId, playerDwitchId: PlayerDwitchId) {
         playerDwitchIdMap[connectionId] = playerDwitchId
         playerDwitchIdReverseeMap[playerDwitchId] = connectionId
+    }
+
+    override fun getHostConnectionId(): ConnectionId {
+        return hostConnectionId
     }
 
     override fun getConnectionIdForAddress(address: Address): ConnectionId? {
