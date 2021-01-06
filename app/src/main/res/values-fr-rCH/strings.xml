@@ -11,7 +11,7 @@
     <string name="notification_title">Dwitch</string>
     <string name="stop_game_service">Stop service</string>
     <string name="not_listening_for_guests">Pas prêt à accueillir d\'autres joueurs</string>
-    <string name="listening_for_guests">Prêt à accueillir d\'autres joueurs</string>
+    <string name="listening_for_guests">En ligne</string>
     <string name="connected_to_host">Connecté wouhouh !</string>
     <string name="disconnected_from_host">Déconnecté: ah damned !</string>
     <string name="host_connection_error">Problème réseau: aucun bro peut te rejoindre !</string>
@@ -45,7 +45,7 @@
     <string name="vice_asshole">VTDC</string>
     <string name="asshole">TDC</string>
     <string name="pdf_last_card_played">Dernière carte jouée</string>
-    <string name="grhf_end_game_btn">Terminer la partie</string>
+    <string name="grhf_end_game_btn">Interrompre la partie</string>
     <string name="round_is_beginning">Le tour a commencé !</string>
     <string name="round_is_over">Le tour est terminé !</string>
     <string name="reconnect_btn">Se reconnecter</string>

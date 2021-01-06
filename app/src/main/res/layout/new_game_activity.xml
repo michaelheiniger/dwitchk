@@ -14,45 +14,49 @@
         android:layout_marginEnd="@dimen/right_margin"
         android:layout_marginBottom="@dimen/bottom_margin">
 
-        <TextView
-            android:id="@+id/playerNameTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:labelFor="@+id/playerNameEdt"
-            android:text="@string/nga_player_name_tv"
-            android:textSize="@dimen/regular_text_size"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/playerNameEdt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:importantForAutofill="no"
-            android:inputType="text"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:hint="@string/nga_player_name_tv"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/playerNameTv" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/gameNameTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:labelFor="@+id/gameNameEdt"
-            android:text="@string/nga_game_name_tv"
-            android:textSize="@dimen/regular_text_size"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/playerNameEdt" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:importantForAutofill="no" />
 
-        <EditText
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/gameNameEdt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:importantForAutofill="no"
-            android:inputType="text"
+            android:hint="@string/nga_game_name_tv"
+            android:layout_marginTop="8dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/playerNameEdt">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:importantForAutofill="no" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/nextBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onNextClicked"
+            android:text="@string/nga_next_btn"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gameNameTv" />
+            app:layout_constraintTop_toBottomOf="@+id/gameNameEdt" />
 
         <Button
             android:id="@+id/backBtn"
@@ -60,20 +64,11 @@
             android:layout_height="wrap_content"
             android:onClick="onBackClicked"
             android:text="@string/nga_back_btn"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gameNameEdt" />
+            app:layout_constraintTop_toBottomOf="@+id/nextBtn" />
 
-        <Button
-            android:id="@+id/nextBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/top_margin"
-            android:onClick="onNextClicked"
-            android:text="@string/nga_next_btn"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/backBtn" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

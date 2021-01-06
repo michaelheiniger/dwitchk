@@ -9,8 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/top_margin"
-        >
+        android:layout_marginTop="@dimen/top_margin">
 
         <Button
             android:id="@+id/launchGameBtn"
@@ -23,6 +22,7 @@
 
         <Button
             android:id="@+id/cancelGameBtn"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -33,8 +33,10 @@
         <FrameLayout
             android:id="@+id/connection_fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cancelGameBtn" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

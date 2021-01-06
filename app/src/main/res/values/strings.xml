@@ -14,7 +14,7 @@
     <string name="gameroom_notification_message">In-game</string>
     <string name="stop_game_service">Stop service</string>
     <string name="not_listening_for_guests">Bros can\'t join !</string>
-    <string name="listening_for_guests">Bros can join !</string>
+    <string name="listening_for_guests">Online</string>
     <string name="connected_to_host">Connected to the brost, yay !</string>
     <string name="disconnected_from_host">Disconnected from the brost, damn !</string>
     <string name="guest_connection_error">Can\'t connect to brost, sorry mate !</string>
@@ -60,7 +60,7 @@
     <string name="vice_asshole">VA</string>
     <string name="asshole">A</string>
     <string name="pdf_last_card_played">Last card played</string>
-    <string name="grhf_end_game_btn">End Game</string>
+    <string name="grhf_end_game_btn">Interrupt game</string>
     <string name="round_is_beginning">Round has begun !</string>
     <string name="round_is_beginning_with_card_exchange">Card exchange !</string>
     <string name="round_is_over">Round is over !</string>

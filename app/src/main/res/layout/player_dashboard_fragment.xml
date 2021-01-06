@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textSize="@dimen/regular_text_size"
+        style="@style/info"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -23,9 +24,10 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:textSize="@dimen/regular_text_size"
+        style="@style/info"
+        app:layout_constraintBottom_toTopOf="@+id/lastCardPlayedIv"
         app:layout_constraintEnd_toEndOf="@+id/lastCardPlayedIv"
         app:layout_constraintStart_toStartOf="@+id/lastCardPlayedIv"
-        app:layout_constraintBottom_toTopOf="@+id/lastCardPlayedIv"
         tools:text="Dwitch event" />
 
     <ImageView
@@ -47,6 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textSize="@dimen/regular_text_size"
+        style="@style/info"
         app:layout_constraintEnd_toEndOf="@+id/lastCardPlayedIv"
         app:layout_constraintStart_toStartOf="@+id/lastCardPlayedIv"
         app:layout_constraintTop_toBottomOf="@+id/lastCardPlayedIv"
@@ -64,6 +67,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/pdf_start_new_round"
+        app:layout_constraintEnd_toStartOf="@+id/pickBtn"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guideline2" />
 

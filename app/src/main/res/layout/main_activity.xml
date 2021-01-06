@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:text="@string/ma_game_list_tv"
             android:textSize="@dimen/regular_text_size"
+            style="@style/title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/ma_advertised_games_error_tv"
-            android:textColor="@color/red"
+            style="@style/error"
             android:textSize="@dimen/regular_text_size"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
