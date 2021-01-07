@@ -18,7 +18,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class ClientDisconnectedEventProcessorTest : BaseUnitTest() {
+class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
 
     private lateinit var connectionStore: ConnectionStore
 
@@ -26,7 +26,7 @@ class ClientDisconnectedEventProcessorTest : BaseUnitTest() {
 
     private val mockCommunicator = mockk<HostCommunicator>(relaxed = true)
 
-    private lateinit var processor: ClientDisconnectedEventProcessor
+    private lateinit var processor: GuestDisconnectedEventProcessor
 
     private val guestPlayer = TestEntityFactory.createGuestPlayer1().copy(connectionState = PlayerConnectionState.CONNECTED)
 
@@ -34,7 +34,7 @@ class ClientDisconnectedEventProcessorTest : BaseUnitTest() {
     override fun setup() {
         super.setup()
         connectionStore = ConnectionStoreFactory.createConnectionStore()
-        processor = ClientDisconnectedEventProcessor(
+        processor = GuestDisconnectedEventProcessor(
                 mockInGameStore,
                 connectionStore,
                 mockHostMessageFactory,

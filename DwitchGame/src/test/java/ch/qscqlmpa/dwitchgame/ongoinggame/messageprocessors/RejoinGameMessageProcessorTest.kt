@@ -11,6 +11,7 @@ import ch.qscqlmpa.dwitchgame.TestUtil
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.RejoinGameMessageProcessor
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
+import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -29,9 +30,10 @@ class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
 
     private val guestPlayer = TestEntityFactory.createGuestPlayer1()
 
-    private val senderLocalConnectionId = ConnectionId(0)
+    private val senderLocalConnectionId = ConnectionId(124)
 
-    private lateinit var mockWwaitingRoomStateUpdateMessageWrapper: EnvelopeToSend
+    private lateinit var mockWaitingRoomStateUpdateEnvelope: EnvelopeToSend
+    private lateinit var mockGameStateUpdateEnvelope: EnvelopeToSend
 
     @BeforeEach
     override fun setup() {
@@ -42,33 +44,71 @@ class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
             mockInGameStore,
             TestUtil.lazyOf(mockHostCommunicator),
             mockHostMessageFactory,
+            mockMessageFactory,
             connectionStore
         )
         mockGame()
         mockGuestPlayerFound()
-        mockUpdatePlayerWthConnectionStateAndReady()
+        mockUpdatePlayer()
         setupCommunicatorSendMessageCompleteMock()
-        mockWwaitingRoomStateUpdateMessageWrapper = setupWaitingRoomStateUpdateMessageMock()
+        mockWaitingRoomStateUpdateEnvelope = setupWaitingRoomStateUpdateMessageMock()
+        mockGameStateUpdateEnvelope = setupGameStateUpdateMessageMock()
     }
 
     @Test
-    fun `Send rejoin game ACK and waiting room state updatewhen rejoining player is found in store`() {
+    fun `Send rejoin game ACK when rejoining player is found in store`() {
+        // Test with WaitingRoom
+        mockCurrentRoom(RoomType.WAITING_ROOM)
+
         launchTest()
 
         verify {
             mockHostCommunicator.sendMessage(
-                HostMessageFactory.createRejoinAckMessage(
-                    RejoinInfo(game.gameCommonId, guestPlayer, senderLocalConnectionId)
-                )
+                HostMessageFactory.createRejoinAckMessage(RejoinInfo(game.gameCommonId, guestPlayer, senderLocalConnectionId))
             )
         }
-        verify { mockHostCommunicator.sendMessage(mockWwaitingRoomStateUpdateMessageWrapper) }
-        confirmVerified(mockHostCommunicator)
+
+        // Test with GameRoom
+        mockCurrentRoom(RoomType.GAME_ROOM)
+
+        launchTest()
+
+        verify {
+            mockHostCommunicator.sendMessage(
+                HostMessageFactory.createRejoinAckMessage(RejoinInfo(game.gameCommonId, guestPlayer, senderLocalConnectionId))
+            )
+        }
+    }
+
+    @Test
+    fun `Send waitingroom state update message when rejoining player is found in store and current room is waitingroom`() {
+        mockCurrentRoom(RoomType.WAITING_ROOM)
+
+        launchTest()
+
+        verify { mockHostCommunicator.sendMessage(mockWaitingRoomStateUpdateEnvelope) }
+    }
+
+    @Test
+    fun `Send game state update message when rejoining player is found in store and current room is gameroom`() {
+        mockCurrentRoom(RoomType.GAME_ROOM)
+
+        launchTest()
+
+        verify { mockHostCommunicator.sendMessage(mockGameStateUpdateEnvelope) }
     }
 
     @Test
     fun `Add in-game ID of rejoining player to connection store`() {
-        setupWaitingRoomStateUpdateMessageMock()
+        // Test with WaitingRoom
+        mockCurrentRoom(RoomType.GAME_ROOM)
+
+        launchTest()
+
+        assertThat(connectionStore.getDwitchId(senderLocalConnectionId)).isEqualTo(guestPlayer.dwitchId)
+
+        // Test with GameRoom
+        mockCurrentRoom(RoomType.GAME_ROOM)
 
         launchTest()
 
@@ -76,23 +116,38 @@ class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
     }
 
     @Test
-    fun `Update player in store with connection state "connected" and ready state "not ready"`() {
-        mockUpdatePlayerWthConnectionStateAndReady()
-        setupWaitingRoomStateUpdateMessageMock()
+    fun `Update player in store with connection state connected and ready state not ready when current room is Waitingroom`() {
+        mockCurrentRoom(RoomType.WAITING_ROOM)
 
         launchTest()
 
-        verify {
-            mockInGameStore.updatePlayerWithConnectionStateAndReady(
-                guestPlayer.id,
-                PlayerConnectionState.CONNECTED,
-                false
-            )
-        }
+        verify { mockInGameStore.updatePlayerWithConnectionStateAndReady(guestPlayer.id, PlayerConnectionState.CONNECTED, false) }
+    }
+
+    @Test
+    fun `Update player in store with connection state connected when current room is Gameroom`() {
+        mockCurrentRoom(RoomType.GAME_ROOM)
+
+        launchTest()
+
+        verify { mockInGameStore.updatePlayerWithConnectionState(guestPlayer.id, PlayerConnectionState.CONNECTED) }
     }
 
     @Test
     fun `Kick rejoining player when it cannot be found in store`() {
+        // Test with WaitingRoom
+        mockCurrentRoom(RoomType.WAITING_ROOM)
+        mockGuestPlayerNotFound()
+
+        launchTest()
+
+        verify { mockInGameStore.getPlayer(guestPlayer.dwitchId) }
+        verify { mockHostCommunicator.closeConnectionWithClient(senderLocalConnectionId) }
+        confirmVerified(mockHostCommunicator)
+        assertThat(connectionStore.getDwitchId(senderLocalConnectionId)).isNull()
+
+        // Test with GameRoom
+        mockCurrentRoom(RoomType.GAME_ROOM)
         mockGuestPlayerNotFound()
 
         launchTest()
@@ -105,7 +160,8 @@ class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
 
     @Test
     fun `Kick rejoining player when the provided game common ID does not match the ID of the current game`() {
-        mockGuestPlayerFound()
+        // Test with WaitingRoom
+        mockCurrentRoom(RoomType.WAITING_ROOM)
 
         launchTestWithOtherGameCommonId()
 
@@ -113,6 +169,20 @@ class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
         verify { mockHostCommunicator.closeConnectionWithClient(senderLocalConnectionId) }
         confirmVerified(mockHostCommunicator)
         assertThat(connectionStore.getDwitchId(senderLocalConnectionId)).isNull()
+
+        // Test with GameRoom
+        mockCurrentRoom(RoomType.GAME_ROOM)
+
+        launchTestWithOtherGameCommonId()
+
+        verify { mockInGameStore.getGame() }
+        verify { mockHostCommunicator.closeConnectionWithClient(senderLocalConnectionId) }
+        confirmVerified(mockHostCommunicator)
+        assertThat(connectionStore.getDwitchId(senderLocalConnectionId)).isNull()
+    }
+
+    private fun mockCurrentRoom(room: RoomType) {
+        every { mockInGameStore.getCurrentRoom() } returns room
     }
 
     private fun mockGuestPlayerFound() {
@@ -123,10 +193,9 @@ class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
         every { mockInGameStore.getPlayer(guestPlayer.dwitchId) } returns null
     }
 
-    private fun mockUpdatePlayerWthConnectionStateAndReady() {
-        every {
-            mockInGameStore.updatePlayerWithConnectionStateAndReady(any(), any(), any())
-        } returns 1
+    private fun mockUpdatePlayer() {
+        every { mockInGameStore.updatePlayerWithConnectionStateAndReady(any(), any(), any()) } returns 1
+        every { mockInGameStore.updatePlayerWithConnectionState(any(), any()) } returns 1
     }
 
     private fun mockGame() {
@@ -134,19 +203,15 @@ class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
     }
 
     private fun launchTest() {
-        processor.process(
-            Message.RejoinGameMessage(game.gameCommonId, guestPlayer.dwitchId),
-            senderLocalConnectionId
-        ).test().assertComplete()
+        processor.process(Message.RejoinGameMessage(game.gameCommonId, guestPlayer.dwitchId), senderLocalConnectionId)
+            .test().assertComplete()
     }
 
     private fun launchTestWithOtherGameCommonId() {
         val otherGameCommonId = GameCommonId(12343)
         assertThat(otherGameCommonId).isNotEqualTo(game.gameCommonId)
-        processor.process(
-            Message.RejoinGameMessage(otherGameCommonId, guestPlayer.dwitchId),
-            senderLocalConnectionId
-        ).test().assertComplete()
+        processor.process(Message.RejoinGameMessage(otherGameCommonId, guestPlayer.dwitchId), senderLocalConnectionId)
+            .test().assertComplete()
     }
 
 }

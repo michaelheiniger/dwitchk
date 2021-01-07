@@ -4,14 +4,24 @@ import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
+import io.reactivex.rxjava3.core.Single
+import javax.inject.Inject
 
-object MessageFactory {
+class MessageFactory @Inject constructor(private val store: InGameStore) {
 
-    fun createGameStateUpdatedMessage(gameState: GameState): Message {
-        return Message.GameStateUpdatedMessage(gameState)
+    fun createGameStateUpdatedMessage(): Single<Message> {
+        return Single.fromCallable { Message.GameStateUpdatedMessage(store.getGameState()) }
     }
 
-    fun createCardsForExchangeChosenMessage(playerId: PlayerDwitchId, cards: Set<Card>): Message {
-        return Message.CardsForExchangeMessage(playerId, cards)
+    companion object {
+
+        fun createGameStateUpdatedMessage(gameState: GameState): Message {
+            return Message.GameStateUpdatedMessage(gameState)
+        }
+
+        fun createCardsForExchangeChosenMessage(playerId: PlayerDwitchId, cards: Set<Card>): Message {
+            return Message.CardsForExchangeMessage(playerId, cards)
+        }
     }
 }

@@ -60,6 +60,9 @@ internal interface PlayerDao {
     @Query("UPDATE Player SET connectionState = :state, ready = :ready WHERE id = :playerLocalId")
     fun updatePlayerWithConnectionStateAndReady(playerLocalId: Long, state: PlayerConnectionState, ready: Boolean): Int
 
+    @Query("UPDATE Player SET connectionState = :state WHERE id = :playerLocalId")
+    fun updatePlayerWithConnectionState(playerLocalId: Long, state: PlayerConnectionState): Int
+
     @Query(
         """
             UPDATE Player

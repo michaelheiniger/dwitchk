@@ -31,6 +31,10 @@ internal class InGameStoreImpl constructor(
         return gameDao.getGame(gameLocalId)
     }
 
+    override fun getCurrentRoom(): RoomType {
+        return getGame().currentRoom
+    }
+
     override fun getGameState(): GameState {
         val game = gameDao.getGame(gameLocalId)
         return serializerFactory.unserializeGameState(game.gameState)
@@ -129,6 +133,10 @@ internal class InGameStoreImpl constructor(
         ready: Boolean
     ): Int {
         return playerDao.updatePlayerWithConnectionStateAndReady(playerLocalId, state, ready)
+    }
+
+    override fun updatePlayerWithConnectionState(playerLocalId: Long, state: PlayerConnectionState): Int {
+        return playerDao.updatePlayerWithConnectionState(playerLocalId, state)
     }
 
     override fun setAllPlayersToDisconnected(): Int {

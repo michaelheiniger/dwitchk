@@ -13,7 +13,7 @@ import io.reactivex.rxjava3.core.Completable
 import timber.log.Timber
 import javax.inject.Inject
 
-internal class ClientDisconnectedEventProcessor @Inject constructor(
+internal class GuestDisconnectedEventProcessor @Inject constructor(
     private val store: InGameStore,
     private val connectionStore: ConnectionStore,
     private val hostMessageFactory: HostMessageFactory,

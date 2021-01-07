@@ -17,6 +17,7 @@ interface InGameStore {
 
     // Game
     fun getGame(): Game
+    fun getCurrentRoom(): RoomType
     fun getGameState(): GameState
 
     fun observeGameState(): Observable<GameState>
@@ -45,6 +46,7 @@ interface InGameStore {
     fun updatePlayerWithReady(playerDwitchId: PlayerDwitchId, ready: Boolean): Int
     fun updatePlayer(playerDwitchId: PlayerDwitchId, state: PlayerConnectionState, ready: Boolean): Int
     fun updatePlayerWithConnectionStateAndReady(playerLocalId: Long, state: PlayerConnectionState, ready: Boolean): Int
+    fun updatePlayerWithConnectionState(playerLocalId: Long, state: PlayerConnectionState): Int
     fun setAllPlayersToDisconnected(): Int
 
     fun deletePlayers(playersLocalId: List<Long>): Int

@@ -33,7 +33,7 @@ abstract class HostCommunicationEventProcessorModule {
     @IntoMap
     @HostCommunicationEventProcessorKey(ServerCommunicationEvent.ClientDisconnected::class)
     internal abstract fun bindClientDisconnectedEventProcessor(
-        eventProcessor: ClientDisconnectedEventProcessor
+        eventProcessor: GuestDisconnectedEventProcessor
     ): HostCommunicationEventProcessor
 
     @OngoingGameScope
