@@ -43,34 +43,6 @@ internal class DwitchEngineTest {
         guestPlayer2Id = guestPlayer2.id
         guestPlayer3Id = guestPlayer3.id
         guestPlayer4Id = guestPlayer4.id
-
-        val hostCards = listOf(Card.Diamonds2, Card.Diamonds3, Card.Diamonds5)
-        val guest1Cards = listOf(Card.Clubs2, Card.Clubs3, Card.Clubs4, Card.Clubs6)
-        val guest2Cards = listOf(Card.Hearts2, Card.Hearts3, Card.Hearts4)
-        val guest3Cards = listOf(Card.Spades2, Card.Spades3, Card.Spades4)
-        val guest4Cards = listOf(Card.DiamondsJack, Card.ClubsQueen, Card.HeartsKing, Card.SpadesAce)
-
-        val initialGameSetup = DeterministicInitialGameSetup(
-                mapOf(
-                        0 to hostCards,
-                        1 to guest1Cards,
-                        2 to guest2Cards,
-                        3 to guest3Cards,
-                        4 to guest4Cards
-                ),
-                mapOf(
-                        0 to Rank.Asshole,
-                        1 to Rank.ViceAsshole,
-                        2 to Rank.Neutral,
-                        3 to Rank.VicePresident,
-                        4 to Rank.President
-                )
-        )
-
-        gameState = GameBootstrap.createNewGame(
-                listOf(hostPlayer, guestPlayer1, guestPlayer2, guestPlayer3, guestPlayer4),
-                initialGameSetup
-        )
     }
 
     /**
@@ -85,16 +57,44 @@ internal class DwitchEngineTest {
     @Test
     fun `Play whole round with 5 players`() {
 
+        val hostCards = listOf(Card.Diamonds2, Card.Diamonds3, Card.Diamonds5)
+        val guest1Cards = listOf(Card.Clubs2, Card.Clubs3, Card.Clubs4, Card.Clubs6)
+        val guest2Cards = listOf(Card.Hearts2, Card.Hearts3, Card.Hearts4)
+        val guest3Cards = listOf(Card.Spades2, Card.Spades3, Card.Spades4)
+        val guest4Cards = listOf(Card.DiamondsJack, Card.ClubsQueen, Card.HeartsKing, Card.SpadesAce)
+
+        val initialGameSetup = DeterministicInitialGameSetup(
+            mapOf(
+                0 to hostCards,
+                1 to guest1Cards,
+                2 to guest2Cards,
+                3 to guest3Cards,
+                4 to guest4Cards
+            ),
+            mapOf(
+                0 to Rank.Asshole,
+                1 to Rank.ViceAsshole,
+                2 to Rank.Neutral,
+                3 to Rank.VicePresident,
+                4 to Rank.President
+            )
+        )
+
+        gameState = GameBootstrap.createNewGame(
+            listOf(hostPlayer, guestPlayer1, guestPlayer2, guestPlayer3, guestPlayer4),
+            initialGameSetup
+        )
+
         // Playing order is host, guest1, guest2, guest3, guest4
         createGameInfoRobot()
             .assertCardsOnTable(listOf(Card.Clubs5))
             .assertGamePhase(GamePhase.RoundIsBeginning)
             .assertPlayingOrder(hostPlayerId, guestPlayer1Id, guestPlayer2Id, guestPlayer3Id, guestPlayer4Id)
         createPlayerInfoRobot(hostPlayerId)
-                .assertCanPlay(true)
-                .assertCanPass(false)
-                .assertCanPickACard(true)
-                .assertCanStartNewRound(false)
+            .assertCanPlay(true)
+            .assertCanPass(false)
+            .assertCanPickACard(true)
+            .assertCanStartNewRound(false)
 
         // Host plays a card and dwitches guest1
         playCard(Card.Diamonds5)
@@ -104,54 +104,54 @@ internal class DwitchEngineTest {
             .assertGamePhase(GamePhase.RoundIsOnGoing)
         createPlayerInfoRobot(guestPlayer1Id).assertDwitched()
         createPlayerInfoRobot(guestPlayer2Id)
-                .assertCanPlay(true)
-                .assertCanPass(false)
-                .assertCanPickACard(true)
+            .assertCanPlay(true)
+            .assertCanPass(false)
+            .assertCanPickACard(true)
 
         // Guest2 plays a joker
         playCard(Card.Hearts2)
 
         createGameInfoRobot().assertCardsOnTable(emptyList())
         createPlayerInfoRobot(guestPlayer2Id)
-                .assertCanPlay(true)
-                .assertCanPass(false)
-                .assertCanPickACard(true)
+            .assertCanPlay(true)
+            .assertCanPass(false)
+            .assertCanPickACard(true)
 
         // Guest2 plays a card
         playCard(Card.Hearts3)
 
         createGameInfoRobot().assertCardsOnTable(listOf(Card.Hearts3))
         createPlayerInfoRobot(guestPlayer3Id)
-                .assertCanPlay(true)
-                .assertCanPass(false)
-                .assertCanPickACard(true)
+            .assertCanPlay(true)
+            .assertCanPass(false)
+            .assertCanPickACard(true)
 
         // Guest3 plays a card
         playCard(Card.Spades3)
 
         createGameInfoRobot().assertCardsOnTable(listOf(Card.Hearts3, Card.Spades3))
         createPlayerInfoRobot(hostPlayerId)
-                .assertCanPlay(true)
-                .assertCanPass(false)
-                .assertCanPickACard(true)
+            .assertCanPlay(true)
+            .assertCanPass(false)
+            .assertCanPickACard(true)
 
         // Host plays a card
         playCard(Card.Diamonds3)
 
         createGameInfoRobot().assertCardsOnTable(listOf(Card.Hearts3, Card.Spades3, Card.Diamonds3))
         createPlayerInfoRobot(guestPlayer2Id)
-                .assertCanPlay(true)
-                .assertCanPass(false)
-                .assertCanPickACard(true)
+            .assertCanPlay(true)
+            .assertCanPass(false)
+            .assertCanPickACard(true)
 
         // Guest2 plays its last card
         playCard(Card.Hearts4)
 
         createGameInfoRobot().assertCardsOnTable(listOf(Card.Hearts3, Card.Spades3, Card.Diamonds3, Card.Hearts4))
         createPlayerInfoRobot(guestPlayer3Id)
-                .assertCanPlay(true)
-                .assertCanPass(false)
-                .assertCanPickACard(true)
+            .assertCanPlay(true)
+            .assertCanPass(false)
+            .assertCanPickACard(true)
         createPlayerInfoRobot(guestPlayer2Id).assertPlayerStatus(PlayerStatus.Done)
 
         // Guest3 plays a joker
@@ -159,9 +159,9 @@ internal class DwitchEngineTest {
 
         createGameInfoRobot().assertCardsOnTable(emptyList())
         createPlayerInfoRobot(guestPlayer3Id)
-                .assertCanPlay(true)
-                .assertCanPass(false)
-                .assertCanPickACard(true)
+            .assertCanPlay(true)
+            .assertCanPass(false)
+            .assertCanPickACard(true)
 
         // Guest3 plays its last card
         playCard(Card.Spades4)
@@ -169,18 +169,18 @@ internal class DwitchEngineTest {
         createGameInfoRobot().assertCardsOnTable(listOf(Card.Spades4))
         createPlayerInfoRobot(guestPlayer3Id).assertPlayerStatus(PlayerStatus.Done)
         createPlayerInfoRobot(guestPlayer4Id)
-                .assertCanPlay(true)
-                .assertCanPass(false)
-                .assertCanPickACard(true)
+            .assertCanPlay(true)
+            .assertCanPass(false)
+            .assertCanPickACard(true)
 
         // Guest4 plays a card
         playCard(Card.DiamondsJack)
 
         createGameInfoRobot().assertCardsOnTable(listOf(Card.Spades4, Card.DiamondsJack))
         createPlayerInfoRobot(hostPlayerId)
-                .assertCanPlay(true)
-                .assertCanPass(false)
-                .assertCanPickACard(true)
+            .assertCanPlay(true)
+            .assertCanPass(false)
+            .assertCanPickACard(true)
 
         // Host plays its last card
         playCard(Card.Diamonds2)
@@ -188,54 +188,54 @@ internal class DwitchEngineTest {
         createGameInfoRobot().assertCardsOnTable(emptyList())
         createPlayerInfoRobot(hostPlayerId).assertPlayerStatus(PlayerStatus.Done)
         createPlayerInfoRobot(guestPlayer1Id)
-                .assertCanPlay(true)
-                .assertCanPass(false)
-                .assertCanPickACard(true)
+            .assertCanPlay(true)
+            .assertCanPass(false)
+            .assertCanPickACard(true)
 
         // Play a card
         playCard(Card.Clubs3)
 
         createGameInfoRobot().assertCardsOnTable(listOf(Card.Clubs3))
         createPlayerInfoRobot(guestPlayer4Id)
-                .assertCanPlay(true)
-                .assertCanPass(false)
-                .assertCanPickACard(true)
+            .assertCanPlay(true)
+            .assertCanPass(false)
+            .assertCanPickACard(true)
 
         // Play a card
         playCard(Card.ClubsQueen)
 
         createGameInfoRobot().assertCardsOnTable(listOf(Card.Clubs3, Card.ClubsQueen))
         createPlayerInfoRobot(guestPlayer1Id)
-                .assertCanPlay(true)
-                .assertCanPass(false)
-                .assertCanPickACard(true)
+            .assertCanPlay(true)
+            .assertCanPass(false)
+            .assertCanPickACard(true)
 
         // Play a card
         playCard(Card.Clubs2)
 
         createGameInfoRobot().assertCardsOnTable(emptyList())
         createPlayerInfoRobot(guestPlayer1Id)
-                .assertCanPlay(true)
-                .assertCanPass(false)
-                .assertCanPickACard(true)
+            .assertCanPlay(true)
+            .assertCanPass(false)
+            .assertCanPickACard(true)
 
         // Play a card
         playCard(Card.Clubs6)
 
         createGameInfoRobot().assertCardsOnTable(listOf(Card.Clubs6))
         createPlayerInfoRobot(guestPlayer4Id)
-                .assertCanPlay(true)
-                .assertCanPass(false)
-                .assertCanPickACard(true)
+            .assertCanPlay(true)
+            .assertCanPass(false)
+            .assertCanPickACard(true)
 
         // Play a card
         playCard(Card.HeartsKing)
 
         createGameInfoRobot().assertCardsOnTable(listOf(Card.Clubs6, Card.HeartsKing))
         createPlayerInfoRobot(guestPlayer1Id)
-                .assertCanPlay(true)
-                .assertCanPass(false)
-                .assertCanPickACard(true)
+            .assertCanPlay(true)
+            .assertCanPass(false)
+            .assertCanPickACard(true)
 
         // Pick a card
         pickCard()
@@ -244,9 +244,9 @@ internal class DwitchEngineTest {
             .assertCardsOnTable(listOf(Card.Clubs6, Card.HeartsKing))
             .assertGameEvent(null)
         createPlayerInfoRobot(guestPlayer1Id)
-                .assertCanPlay(true)
-                .assertCanPass(true)
-                .assertCanPickACard(false)
+            .assertCanPlay(true)
+            .assertCanPass(true)
+            .assertCanPickACard(false)
 
         // Pass turn
         passTurn()
@@ -256,9 +256,9 @@ internal class DwitchEngineTest {
             .assertGameEvent(GameEvent.TableHasBeenClearedTurnPassed)
             .assertGamePhase(GamePhase.RoundIsOnGoing)
         createPlayerInfoRobot(guestPlayer4Id)
-                .assertCanPlay(true)
-                .assertCanPass(false)
-                .assertCanPickACard(true)
+            .assertCanPlay(true)
+            .assertCanPass(false)
+            .assertCanPickACard(true)
 
         // Play a card
         playCard(Card.SpadesAce)
@@ -279,12 +279,174 @@ internal class DwitchEngineTest {
             .assertPlayerRank(Rank.Asshole) // Finished with a Joker
 
         createPlayerInfoRobot(guestPlayer4Id)
-                .assertCanPlay(false)
-                .assertCanPass(false)
-                .assertCanPickACard(false)
-                .assertPlayerStatus(PlayerStatus.Done)
-                .assertPlayerRank(Rank.Neutral)
-                .assertCanStartNewRound(true)
+            .assertCanPlay(false)
+            .assertCanPass(false)
+            .assertCanPickACard(false)
+            .assertPlayerStatus(PlayerStatus.Done)
+            .assertPlayerRank(Rank.Neutral)
+            .assertCanStartNewRound(true)
+    }
+
+    /**
+     * Special rule: when playing on top of the first Jack played in the round (instead of "passing"), the player becomes the
+     * asshole. It can be that another player breaks another special rule that make it the new asshole, though.
+     */
+    @Test
+    fun `Player plays a card when last card is the first Jack played of the round and becomes the asshole`() {
+        val hostCards = listOf(Card.Diamonds3, Card.Diamonds6)
+        val guest1Cards = listOf(Card.Clubs4, Card.ClubsJack)
+        val guest2Cards = listOf(Card.HeartsQueen, Card.Hearts3)
+
+        val initialGameSetup = DeterministicInitialGameSetup(
+            mapOf(
+                0 to hostCards,
+                1 to guest1Cards,
+                2 to guest2Cards
+            ),
+            mapOf(
+                0 to Rank.Asshole,
+                1 to Rank.Neutral,
+                2 to Rank.President
+            )
+        )
+
+        gameState = GameBootstrap.createNewGame(
+            listOf(hostPlayer, guestPlayer1, guestPlayer2),
+            initialGameSetup
+        )
+
+        createPlayerInfoRobot(hostPlayerId)
+            .assertPlayerStatus(PlayerStatus.Playing)
+
+        // Host plays a card
+        playCard(Card.Diamonds6)
+
+        createPlayerInfoRobot(guestPlayer1Id)
+            .assertPlayerStatus(PlayerStatus.Playing)
+
+        // Guest1 plays the first Jack of the round
+        playCard(Card.ClubsJack)
+
+        createPlayerInfoRobot(guestPlayer2Id)
+            .assertPlayerStatus(PlayerStatus.Playing)
+
+        // Guest2 plays a card on top of the first Jack of the round --> will become the asshole unless another player breaks
+        // another special rule before the end of the round
+        playCard(Card.HeartsQueen)
+
+        createPlayerInfoRobot(hostPlayerId)
+            .assertPlayerStatus(PlayerStatus.Playing)
+
+        // Host picks a card and pass
+        pickCard()
+        passTurn()
+
+        createPlayerInfoRobot(guestPlayer1Id)
+            .assertPlayerStatus(PlayerStatus.Playing)
+
+        // Guest1 picks a card and pass
+        pickCard()
+        passTurn()
+
+        createPlayerInfoRobot(guestPlayer2Id)
+            .assertPlayerStatus(PlayerStatus.Playing)
+
+        // Guest2 plays its last card and finishes the round
+        playCard(Card.Hearts3)
+
+        createPlayerInfoRobot(hostPlayerId)
+            .assertPlayerStatus(PlayerStatus.Playing)
+
+        // Host plays its last cards and finishes the round
+        playCard(Card.Diamonds3)
+        playCard(Card.Clubs3)
+
+        createGameInfoRobot().assertGamePhase(GamePhase.RoundIsOver)
+
+        // It would the president if it hadn't broken the special rule under test
+        createPlayerInfoRobot(guestPlayer2Id)
+            .assertPlayerRank(Rank.Asshole)
+
+        // It would normally be Neutral but is President because Guest2 broke the rule under test
+        createPlayerInfoRobot(hostPlayerId)
+            .assertPlayerRank(Rank.President)
+
+        createPlayerInfoRobot(guestPlayer1Id)
+            .assertPlayerRank(Rank.Neutral)
+    }
+
+    @Test
+    fun `Player plays the first Jack of the round, all other players pass and no player break any other special rule hence ranks are given according to finishing order`() {
+        val hostCards = listOf(Card.ClubsJack, Card.Diamonds6)
+        val guest1Cards = listOf(Card.Clubs6, Card.Clubs2)
+        val guest2Cards = listOf(Card.HeartsQueen, Card.Hearts3)
+
+        val initialGameSetup = DeterministicInitialGameSetup(
+            mapOf(
+                0 to hostCards,
+                1 to guest1Cards,
+                2 to guest2Cards
+            ),
+            mapOf(
+                0 to Rank.Asshole,
+                1 to Rank.Neutral,
+                2 to Rank.President
+            )
+        )
+
+        gameState = GameBootstrap.createNewGame(
+            listOf(hostPlayer, guestPlayer1, guestPlayer2),
+            initialGameSetup
+        )
+
+        createPlayerInfoRobot(hostPlayerId)
+            .assertPlayerStatus(PlayerStatus.Playing)
+
+        // Host plays the first Jack of the round
+        playCard(Card.ClubsJack)
+
+        createPlayerInfoRobot(guestPlayer1Id)
+            .assertPlayerStatus(PlayerStatus.Playing)
+
+        // Guest1 picks a card and passes
+        pickCard()
+        passTurn()
+
+        createPlayerInfoRobot(guestPlayer2Id)
+            .assertPlayerStatus(PlayerStatus.Playing)
+
+        // Guest2 picks a card and passes
+        pickCard()
+        passTurn()
+
+        createPlayerInfoRobot(hostPlayerId)
+            .assertPlayerStatus(PlayerStatus.Playing)
+
+        // Host plays its last card
+        playCard(Card.Diamonds6)
+
+        createPlayerInfoRobot(guestPlayer1Id)
+            .assertPlayerStatus(PlayerStatus.Playing)
+
+        // Guest1 plays a card and dwitches Guest2
+        playCard(Card.Clubs6)
+
+        // Guest1 plays a joker
+        playCard(Card.Clubs2)
+
+        // Guest1 plays its last card
+        playCard(Card.Clubs4)
+
+        createGameInfoRobot().assertGamePhase(GamePhase.RoundIsOver)
+
+        createPlayerInfoRobot(hostPlayerId)
+            .assertPlayerRank(Rank.President)
+
+        createPlayerInfoRobot(guestPlayer1Id)
+            .assertPlayerRank(Rank.Neutral)
+
+        createPlayerInfoRobot(guestPlayer2Id)
+            .assertPlayerRank(Rank.Asshole)
     }
 
     private fun playCard(card: Card) {

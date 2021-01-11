@@ -21,6 +21,9 @@ internal class PlayCard(
         gameUpdater.resetGameEvent()
 
         gameUpdater.takeCardFromHandAndPutOnTable(localPlayerId, cardPlayed)
+        if (playCardState.isLastCardPlayedTheFirstJokerPlayedOfTheRound()) {
+            gameUpdater.playerPlayedOnTheFirstJokerPlayedOfTheRound(localPlayerId)
+        }
 
         if (playCardState.roundIsOver()) {
             gameUpdater.playerIsDone(localPlayerId, playCardState.cardPlayedIsJoker())

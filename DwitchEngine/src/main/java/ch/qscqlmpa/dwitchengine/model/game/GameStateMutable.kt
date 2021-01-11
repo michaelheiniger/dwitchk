@@ -10,7 +10,8 @@ internal data class GameStateMutable(
     val playingOrder: MutableList<PlayerDwitchId>,
     var currentPlayerId: PlayerDwitchId,
     val activePlayers: MutableSet<PlayerDwitchId>,
-    val playersDoneForRound: MutableList<PlayerDone>,
+    val playersDoneForRound: MutableList<PlayerDwitchId>,
+    val playersWhoBrokeASpecialRule: MutableList<SpecialRuleBreaker>,
     var joker: CardName,
     var gameEvent: GameEvent?,
     val cardsOnTable: MutableList<Card>,
@@ -88,7 +89,10 @@ internal data class GameStateMutable(
     }
 
     fun addDonePlayer(playerId: PlayerDwitchId, lastCardPlayedIsJoker: Boolean) {
-        playersDoneForRound.add(PlayerDone(playerId, lastCardPlayedIsJoker))
+        playersDoneForRound.add(playerId)
+        if (lastCardPlayedIsJoker) {
+            playersWhoBrokeASpecialRule.add(SpecialRuleBreaker.FinishWithJoker(playerId))
+        }
     }
 
     fun addCardsForExchange(playerId: PlayerDwitchId, cards: Set<Card>) {
@@ -109,6 +113,7 @@ internal data class GameStateMutable(
             currentPlayerId,
             activePlayers,
             playersDoneForRound,
+            playersWhoBrokeASpecialRule,
             joker,
             gameEvent,
             cardsOnTable,
@@ -135,6 +140,7 @@ internal data class GameStateMutable(
                 gameState.currentPlayerId,
                 gameState.activePlayers.toMutableSet(),
                 gameState.playersDoneForRound.toMutableList(),
+                gameState.playersWhoBrokeASpecialRule.toMutableList(),
                 gameState.joker,
                 gameState.gameEvent,
                 gameState.cardsOnTable.toMutableList(),

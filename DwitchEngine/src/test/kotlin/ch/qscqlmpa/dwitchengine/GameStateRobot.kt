@@ -6,6 +6,7 @@ import ch.qscqlmpa.dwitchengine.model.game.GameEvent
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.player.SpecialRuleBreaker
 import org.assertj.core.api.Assertions.assertThat
 
 class GameStateRobot(private val gameState: GameState) {
@@ -46,13 +47,32 @@ class GameStateRobot(private val gameState: GameState) {
     }
 
     fun assertPlayersDoneForRoundIsEmpty(): GameStateRobot {
-        assertThat(gameState.playersDoneForRound.isEmpty()).isTrue()
+        assertThat(gameState.playersDoneForRound.isEmpty()).isTrue
         return this
     }
 
-    fun assertPlayerIsDoneForRound(playerId: PlayerDwitchId, cardPlayedIsJoker: Boolean): GameStateRobot {
-        assertThat(gameState.playersDoneForRound.find { lm -> lm.playerId == playerId }!!.cardPlayedIsJoker)
-                .isEqualTo(cardPlayedIsJoker)
+    fun assertPlayerIsDoneForRound(playerId: PlayerDwitchId): GameStateRobot {
+        assertThat(gameState.playersDoneForRound).contains(playerId)
+        return this
+    }
+
+    fun assertPlayerHasFinishedWithJoker(playerId: PlayerDwitchId): GameStateRobot {
+        assertThat(gameState.playersWhoBrokeASpecialRule).contains(SpecialRuleBreaker.FinishWithJoker(playerId))
+        return this
+    }
+
+    fun assertPlayerHasNotFinishedWithJoker(playerId: PlayerDwitchId): GameStateRobot {
+        assertThat(gameState.playersWhoBrokeASpecialRule).noneMatch { p -> p == SpecialRuleBreaker.FinishWithJoker(playerId)}
+        return this
+    }
+
+    fun assertPlayerHasBrokenFirstJackPlayedRule(playerId: PlayerDwitchId): GameStateRobot {
+        assertThat(gameState.playersWhoBrokeASpecialRule).contains(SpecialRuleBreaker.PlayedOnFirstJack(playerId))
+        return this
+    }
+
+    fun assertPlayerHasNotBrokenFirstJackPlayedRule(playerId: PlayerDwitchId): GameStateRobot {
+        assertThat(gameState.playersWhoBrokeASpecialRule).noneMatch { p -> p == SpecialRuleBreaker.PlayedOnFirstJack(playerId)}
         return this
     }
 

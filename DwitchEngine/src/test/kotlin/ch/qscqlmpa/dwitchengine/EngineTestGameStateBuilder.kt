@@ -13,42 +13,45 @@ class EngineTestGameStateBuilder {
     private val playersMap = mutableMapOf<PlayerDwitchId, Player>()
 
     private var cardsOnTable: List<Card> = emptyList()
+    private var cardsInGraveyard: List<Card> = emptyList()
 
     private var gameEvent: GameEvent? = null
     private var joker: CardName = CardName.Two
     private lateinit var gamePhase: GamePhase
     private lateinit var localPlayer: PlayerDwitchId
     private lateinit var currentPlayer: PlayerDwitchId
-    private var playersDoneForRound: List<PlayerDone> = emptyList()
+    private var playersDoneForRound: List<PlayerDwitchId> = emptyList()
 
     private val playingOrder: MutableList<PlayerDwitchId> = mutableListOf()
 
     fun build(): GameState {
         val cardsTakenFromDeck = playersMap
-                .map { (_, player) -> player.cardsInHand }
-                .flatten()
-                .toMutableList()
+            .map { (_, player) -> player.cardsInHand }
+            .flatten()
+            .toMutableList()
         cardsTakenFromDeck.addAll(cardsOnTable)
+        cardsTakenFromDeck.addAll(cardsInGraveyard)
 
         val activePlayers = playersMap
-                .filter { (_, player) -> player.status != PlayerStatus.Done }
-                .map { (_, player) -> player.id }
-                .toSet()
+            .filter { (_, player) -> player.status != PlayerStatus.Done }
+            .map { (_, player) -> player.id }
+            .toSet()
 
 //        cardsTakenFromDeck.forEach { c -> println(c) }
 
         return GameState(
-                gamePhase,
-                playersMap,
-                playingOrder,
-                currentPlayer,
-                activePlayers,
-                playersDoneForRound,
-                joker,
-                gameEvent,
-                cardsOnTable,
-                CardUtil.getAllCardsExcept(cardsTakenFromDeck),
-                emptyList()
+            gamePhase,
+            playersMap,
+            playingOrder,
+            currentPlayer,
+            activePlayers,
+            playersDoneForRound,
+            emptyList(),
+            joker,
+            gameEvent,
+            cardsOnTable,
+            CardUtil.getAllCardsExcept(cardsTakenFromDeck),
+            cardsInGraveyard
         )
     }
 
@@ -72,6 +75,11 @@ class EngineTestGameStateBuilder {
         return this
     }
 
+    fun setGraveyard(vararg cardsInGraveyard: Card): EngineTestGameStateBuilder {
+        this.cardsInGraveyard = listOf(*cardsInGraveyard)
+        return this
+    }
+
     fun setLocalPlayer(id: PlayerDwitchId): EngineTestGameStateBuilder {
         this.localPlayer = id
         return this
@@ -82,7 +90,7 @@ class EngineTestGameStateBuilder {
         return this
     }
 
-    fun setPlayersDoneForRound(list: List<PlayerDone>) {
+    fun setPlayersDoneForRound(list: List<PlayerDwitchId>) {
         playersDoneForRound = list
     }
 
@@ -99,13 +107,13 @@ class EngineTestGameStateBuilder {
         hasPickedCard: Boolean = false
     ): EngineTestGameStateBuilder {
         playersMap[player.id] = Player(
-                player.id,
-                player.name,
-                cardsInHand,
-                rank,
-                state,
-                dwitched,
-                hasPickedCard
+            player.id,
+            player.name,
+            cardsInHand,
+            rank,
+            state,
+            dwitched,
+            hasPickedCard
 
         )
         playingOrder.add(player.id)

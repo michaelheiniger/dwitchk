@@ -42,11 +42,12 @@ internal object GameBootstrap {
             currentPlayer.id,
             activePlayers,
             emptyList(),
+            emptyList(),
             joker,
             null,
             cardsOnTable,
             cardsInDeck.toList(),
-            cardGraveyard
+            cardGraveyard,
         )
     }
 

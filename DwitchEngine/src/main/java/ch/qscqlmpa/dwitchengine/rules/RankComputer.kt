@@ -1,39 +1,45 @@
 package ch.qscqlmpa.dwitchengine.rules
 
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDone
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.player.SpecialRuleBreaker
 
 internal object RankComputer {
 
-    fun computePlayersRank(players: List<PlayerDone>): Map<PlayerDwitchId, Rank> {
+    fun computePlayersRank(
+        playersFinishOrder: List<PlayerDwitchId>,
+        specialRuleBreakers: List<SpecialRuleBreaker>
+    ): Map<PlayerDwitchId, Rank> {
 
-        val numPlayers = players.size
+        val numPlayers = playersFinishOrder.size
         val rankMap = mutableMapOf<PlayerDwitchId, Rank>()
-        val (playersWhoFinishedWithJoker, playersWhoDidntFinishWithJoker) = players.partition { lm -> lm.cardPlayedIsJoker }
 
-        playersWhoFinishedWithJoker
-                .reversed()
-                .mapIndexed { index, lm ->
-                    val position = index + 1
-                    when (numPlayers) {
-                        0, 1 -> throw IllegalStateException("There cannot be less than 2 players in the game.")
-                        2 -> assignPunitiveRankWhenTwoPlayersForPosition(position, lm.playerId)
-                        3 -> assignPunitiveRankWhenThreePlayersForPosition(position, lm.playerId)
-                        4 -> assignPunitiveRankWhenFourPlayersForPosition(position, lm.playerId)
-                        else -> assignPunitiveRankWhenMoreThanFourPlayersForPosition(position, lm.playerId, numPlayers)
-                    }
+        specialRuleBreakers
+            .map { ruleBreaker -> ruleBreaker.playerId }
+            .reversed()
+            .distinct() // In case a player broke more than one rule, keep the last occurrence (.reversed())
+            .mapIndexed { index, ruleBreakerId ->
+                val position = index + 1
+                when (numPlayers) {
+                    0, 1 -> throw IllegalStateException("There cannot be less than 2 players in the game.")
+                    2 -> assignPunitiveRankWhenTwoPlayersForPosition(position, ruleBreakerId)
+                    3 -> assignPunitiveRankWhenThreePlayersForPosition(position, ruleBreakerId)
+                    4 -> assignPunitiveRankWhenFourPlayersForPosition(position, ruleBreakerId)
+                    else -> assignPunitiveRankWhenMoreThanFourPlayersForPosition(position, ruleBreakerId, numPlayers)
                 }
-                .toMap(rankMap)
+            }
+            .toMap(rankMap)
 
-        playersWhoDidntFinishWithJoker.mapIndexed { index, lm ->
+        val otherPlayers = playersFinishOrder.filter { id -> !specialRuleBreakers.map { r -> r.playerId }.contains(id) }
+
+        otherPlayers.mapIndexed { index, playerId ->
             val position = index + 1
             when (numPlayers) {
                 0, 1 -> throw IllegalStateException("There cannot be less than 2 players in the game.")
-                2 -> assignRankWhenTwoPlayersForPosition(position, lm.playerId)
-                3 -> assignRankWhenThreePlayersForPosition(position, lm.playerId)
-                4 -> assignRankWhenFourPlayersForPosition(position, lm.playerId)
-                else -> assignRankWhenMoreThanFourPlayersForPosition(position, lm.playerId, numPlayers)
+                2 -> assignRankWhenTwoPlayersForPosition(position, playerId)
+                3 -> assignRankWhenThreePlayersForPosition(position, playerId)
+                4 -> assignRankWhenFourPlayersForPosition(position, playerId)
+                else -> assignRankWhenMoreThanFourPlayersForPosition(position, playerId, numPlayers)
             }
         }.toMap(rankMap)
         return rankMap.toMap()
@@ -46,7 +52,10 @@ internal object RankComputer {
         }
     }
 
-    private fun assignPunitiveRankWhenThreePlayersForPosition(position: Int, playerId: PlayerDwitchId): Pair<PlayerDwitchId, Rank> {
+    private fun assignPunitiveRankWhenThreePlayersForPosition(
+        position: Int,
+        playerId: PlayerDwitchId
+    ): Pair<PlayerDwitchId, Rank> {
         return when (position) {
             1 -> playerId to Rank.Asshole
             2 -> playerId to Rank.Neutral
@@ -54,7 +63,10 @@ internal object RankComputer {
         }
     }
 
-    private fun assignPunitiveRankWhenFourPlayersForPosition(position: Int, playerId: PlayerDwitchId): Pair<PlayerDwitchId, Rank> {
+    private fun assignPunitiveRankWhenFourPlayersForPosition(
+        position: Int,
+        playerId: PlayerDwitchId
+    ): Pair<PlayerDwitchId, Rank> {
         return when (position) {
             1 -> playerId to Rank.Asshole
             2 -> playerId to Rank.ViceAsshole
@@ -63,7 +75,11 @@ internal object RankComputer {
         }
     }
 
-    private fun assignPunitiveRankWhenMoreThanFourPlayersForPosition(position: Int, playerId: PlayerDwitchId, numPlayers: Int): Pair<PlayerDwitchId, Rank> {
+    private fun assignPunitiveRankWhenMoreThanFourPlayersForPosition(
+        position: Int,
+        playerId: PlayerDwitchId,
+        numPlayers: Int
+    ): Pair<PlayerDwitchId, Rank> {
         return when (position) {
             1 -> playerId to Rank.Asshole
             2 -> playerId to Rank.ViceAsshole
@@ -100,7 +116,11 @@ internal object RankComputer {
         }
     }
 
-    private fun assignRankWhenMoreThanFourPlayersForPosition(position: Int, playerId: PlayerDwitchId, numPlayers: Int): Pair<PlayerDwitchId, Rank> {
+    private fun assignRankWhenMoreThanFourPlayersForPosition(
+        position: Int,
+        playerId: PlayerDwitchId,
+        numPlayers: Int
+    ): Pair<PlayerDwitchId, Rank> {
         return when (position) {
             1 -> playerId to Rank.President
             2 -> playerId to Rank.VicePresident

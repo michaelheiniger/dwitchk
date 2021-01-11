@@ -4,9 +4,9 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.card.CardUtil
 import ch.qscqlmpa.dwitchengine.model.player.Player
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDone
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
+import ch.qscqlmpa.dwitchengine.model.player.SpecialRuleBreaker
 import ch.qscqlmpa.dwitchengine.utils.ListUtil.shiftRightByN
 import kotlinx.serialization.Serializable
 
@@ -16,7 +16,8 @@ data class GameState(val phase: GamePhase,
                      val playingOrder: List<PlayerDwitchId>,
                      val currentPlayerId: PlayerDwitchId,
                      val activePlayers: Set<PlayerDwitchId>,
-                     val playersDoneForRound: List<PlayerDone>,
+                     val playersDoneForRound: List<PlayerDwitchId>,
+                     val playersWhoBrokeASpecialRule: List<SpecialRuleBreaker>,
                      val joker: CardName,
                      val gameEvent: GameEvent?,
                      val cardsOnTable: List<Card>,
@@ -65,11 +66,11 @@ data class GameState(val phase: GamePhase,
     }
 
     private fun performSanityChecks() {
-        playersDoneForRound.forEach { playerDone ->
-            if (activePlayers.contains(playerDone.playerId)) {
+        playersDoneForRound.forEach { id ->
+            if (activePlayers.contains(id)) {
                 throw IllegalStateException("A player in the 'players done' list cannot be an active player at the same time.")
             }
-            if (players.getValue(playerDone.playerId).status != PlayerStatus.Done) {
+            if (players.getValue(id).status != PlayerStatus.Done) {
                 throw IllegalStateException("A player in the 'players done' list cannot have a state different than Done")
             }
         }

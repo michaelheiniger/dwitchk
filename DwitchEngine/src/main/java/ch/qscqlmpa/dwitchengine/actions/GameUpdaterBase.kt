@@ -6,6 +6,7 @@ import ch.qscqlmpa.dwitchengine.model.game.GameStateMutable
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.player.SpecialRuleBreaker
 
 internal abstract class GameUpdaterBase(currentGameState: GameState) {
 
@@ -55,5 +56,9 @@ internal abstract class GameUpdaterBase(currentGameState: GameState) {
 
     fun resetPlayerHasPickedCard(playerId: PlayerDwitchId) {
         gameStateMutable.players.getValue(playerId).hasPickedCard = false
+    }
+
+    fun playerPlayedOnTheFirstJokerPlayedOfTheRound(playerId: PlayerDwitchId) {
+        gameStateMutable.playersWhoBrokeASpecialRule.add(SpecialRuleBreaker.PlayedOnFirstJack(playerId))
     }
 }

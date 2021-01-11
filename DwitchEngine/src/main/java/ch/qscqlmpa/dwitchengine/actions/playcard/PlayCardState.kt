@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitchengine.actions.playcard
 
 import ch.qscqlmpa.dwitchengine.actions.GameStateBase
 import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.*
 import ch.qscqlmpa.dwitchengine.rules.PlayerMove
@@ -64,21 +65,33 @@ internal class PlayCardState(
         }
 
         return currentGameState.activePlayers.find { id -> id != currentGameState.currentPlayerId }
-                ?: throw IllegalStateException()
+            ?: throw IllegalStateException()
     }
 
     fun computeRanks(penultimatePlayerId: PlayerDwitchId, lastPlayerId: PlayerDwitchId): Map<PlayerDwitchId, Rank> {
         val donePlayersInFinishingOrder = currentGameState.playersDoneForRound.toMutableList()
-        donePlayersInFinishingOrder.add(PlayerDone(penultimatePlayerId, cardPlayedIsJoker()))
-        donePlayersInFinishingOrder.add(PlayerDone(lastPlayerId, false))
-        return RankComputer.computePlayersRank(donePlayersInFinishingOrder.toList())
+        donePlayersInFinishingOrder.add(penultimatePlayerId)
+        val playerWhoBrokeASpecialRule = if (cardPlayedIsJoker()) {
+            val tmp = currentGameState.playersWhoBrokeASpecialRule.toMutableList()
+            tmp.add(SpecialRuleBreaker.FinishWithJoker(penultimatePlayerId))
+            tmp
+        } else {
+            currentGameState.playersWhoBrokeASpecialRule
+        }
+        donePlayersInFinishingOrder.add(lastPlayerId)
+        return RankComputer.computePlayersRank(donePlayersInFinishingOrder.toList(), playerWhoBrokeASpecialRule)
+    }
+
+    fun isLastCardPlayedTheFirstJokerPlayedOfTheRound(): Boolean {
+        val lastCard = currentGameState.cardsOnTable.lastOrNull()
+        return lastCard != null && lastCard.name == CardName.Jack && currentGameState.cardsInGraveyard.none { c -> c.name == CardName.Jack }
     }
 
     private fun nextNonDwitchedWaitingPlayer(): Player? {
         val nextWaitingPlayer = nextWaitingPlayer()
         return if (nextWaitingPlayer != null) {
             waitingPlayerInOrderAfterLocalPlayer()
-                    .firstOrNull { player -> if (nextWaitingPlayerIsDwitched()) player != nextWaitingPlayer else true }
+                .firstOrNull { player -> if (nextWaitingPlayerIsDwitched()) player != nextWaitingPlayer else true }
         } else {
             null
         }
@@ -90,7 +103,7 @@ internal class PlayCardState(
 
     private fun turnPassedPlayerInOrderAfterLocalPlayer(): List<Player> {
         return currentGameState.activePlayersInPlayingOrderAfterLocalPlayer()
-                .filter { player -> player.status == PlayerStatus.TurnPassed }
+            .filter { player -> player.status == PlayerStatus.TurnPassed }
     }
 
     private fun checkCardPlayedIsAValidMove() {
