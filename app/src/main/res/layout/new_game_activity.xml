@@ -15,7 +15,7 @@
         android:layout_marginBottom="@dimen/bottom_margin">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/playerNameEdt"
+            android:id="@+id/playerNameTil"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/nga_player_name_tv"
@@ -24,6 +24,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/playerNameEdt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:importantForAutofill="no" />
@@ -31,16 +32,17 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/gameNameEdt"
+            android:id="@+id/gameNameTil"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/nga_game_name_tv"
             android:layout_marginTop="8dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/playerNameEdt">
+            app:layout_constraintTop_toBottomOf="@+id/playerNameTil">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/gameNameEdt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:importantForAutofill="no" />
@@ -56,7 +58,7 @@
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gameNameEdt" />
+            app:layout_constraintTop_toBottomOf="@+id/gameNameTil" />
 
         <Button
             android:id="@+id/backBtn"

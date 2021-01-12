@@ -25,8 +25,8 @@ class NewGameActivity : HomeBaseActivity() {
     private var game: AdvertisedGame? = null
 
     fun onNextClicked(@Suppress("UNUSED_PARAMETER") view: View) {
-        val playerName = playerNameEdt.editText?.text.toString()
-        val gameName = gameNameEdt.editText?.text.toString()
+        val playerName = playerNameEdt.text.toString()
+        val gameName = gameNameEdt.text.toString()
         when (playerRole) {
             PlayerRole.GUEST -> viewModel.nextForGuest(game!!, playerName)
             PlayerRole.HOST -> viewModel.nextForHost(gameName, playerName)
@@ -49,8 +49,8 @@ class NewGameActivity : HomeBaseActivity() {
 
         if (BuildConfig.DEBUG) {
             when (playerRole) {
-                PlayerRole.GUEST -> playerNameEdt.editText?.setText("Mébène")
-                PlayerRole.HOST -> playerNameEdt.editText?.setText("Mirlick")
+                PlayerRole.GUEST -> playerNameEdt.setText("Mébène")
+                PlayerRole.HOST -> playerNameEdt.setText("Mirlick")
             }
         }
 
@@ -90,12 +90,12 @@ class NewGameActivity : HomeBaseActivity() {
         when (playerRole) {
             PlayerRole.GUEST -> {
                 gameNameEdt.isEnabled = false
-                gameNameEdt.editText?.setText(game!!.gameName)
+                gameNameEdt.setText(game!!.gameName)
             }
             PlayerRole.HOST -> {
                 gameNameEdt.isEnabled = true
                 if (BuildConfig.DEBUG) {
-                    gameNameEdt.editText?.setText("Dwiiitch !")
+                    gameNameEdt.setText("Dwiiitch !")
                 }
             }
         }
