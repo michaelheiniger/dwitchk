@@ -119,7 +119,7 @@ class CardExchangeViewModel @Inject constructor(
         )
     }
 
-    private fun getDashboard() = facade.getDashboard()
+    private fun getDashboard() = facade.observeGameInfoForDashboard().firstOrError()
         .map { dashboard -> dashboard.localPlayerInfo.cardsInHand }
         .subscribeOn(schedulerFactory.io())
         .observeOn(schedulerFactory.ui())

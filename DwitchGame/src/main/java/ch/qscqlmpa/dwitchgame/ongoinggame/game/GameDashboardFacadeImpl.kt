@@ -5,8 +5,8 @@ import ch.qscqlmpa.dwitchengine.DwitchEngineFactory
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchgame.ongoinggame.dwitchevent.DwitchEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.GameCommunicator
+import ch.qscqlmpa.dwitchgame.ongoinggame.dwitchevent.DwitchEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.CardForExchangeChosenUsecase
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.GameUpdatedUsecase
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.StartCardExchangeUsecase
@@ -44,24 +44,19 @@ internal class GameDashboardFacadeImpl @Inject constructor(
             .flatMapCompletable(startCardExchangeUsecase::startCardExchange)
     }
 
-    override fun getDashboard(): Single<GameInfoForDashboard> {
-        return gameRepository.getGameInfo().map { gameInfo ->
-            GameInfoForDashboard(
-                dwitchEngineFactory.create(gameInfo.gameState).getGameInfo(),
-                gameInfo.localPlayerId,
-                gameInfo.localPlayerIsHost
-            )
-        }
-    }
-
     override fun observeGameInfoForDashboard(): Observable<GameInfoForDashboard> {
-        return gameRepository.observeGameInfo().map { gameInfo ->
-            GameInfoForDashboard(
-                dwitchEngineFactory.create(gameInfo.gameState).getGameInfo(),
-                gameInfo.localPlayerId,
-                gameInfo.localPlayerIsHost
-            )
-        }
+        return Observable.zip(
+            gameRepository.getGameInfo().toObservable(),
+            gameCommunicator.observeConnectionState(),
+            {gameInfo, localPlayerConnectionState ->
+                GameInfoForDashboard(
+                    dwitchEngineFactory.create(gameInfo.gameState).getGameInfo(),
+                    gameInfo.localPlayerId,
+                    gameInfo.localPlayerIsHost,
+                    localPlayerConnectionState
+                )
+            }
+        )
     }
 
     override fun submitCardsForExchange(cards: Set<Card>): Completable {

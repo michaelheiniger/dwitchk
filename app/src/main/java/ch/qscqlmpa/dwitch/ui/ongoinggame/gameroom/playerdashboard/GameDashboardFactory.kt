@@ -11,17 +11,15 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.info.PlayerInfo
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameInfoForDashboard
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import timber.log.Timber
 
 class GameDashboardFactory(
     gameInfoForDashboard: GameInfoForDashboard,
-    connectionState: PlayerConnectionState,
     private val textProvider: TextProvider
 ) {
 
-    private val dashboardEnabled = connectionState == PlayerConnectionState.CONNECTED
-    private val gameInfo = gameInfoForDashboard.getGameInfo()
+    private val dashboardEnabled = gameInfoForDashboard.dashboardEnabled
+    private val gameInfo = gameInfoForDashboard.gameInfo
     private val localPlayerInfo = gameInfoForDashboard.localPlayerInfo
 
     fun create(): GameDashboard {

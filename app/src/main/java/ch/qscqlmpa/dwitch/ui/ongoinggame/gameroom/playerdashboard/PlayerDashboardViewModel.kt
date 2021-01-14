@@ -12,7 +12,6 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardFacade
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -27,11 +26,9 @@ class PlayerDashboardViewModel @Inject constructor(
 
     fun playerDashboard(): LiveData<GameDashboard> {
         return LiveDataReactiveStreams.fromPublisher(
-            Observable.combineLatest(
-                facade.observeGameInfoForDashboard(),
-                facade.observeConnectionState(),
-                { dashboard, connectionState -> GameDashboardFactory(dashboard, connectionState, textProvider).create() }
-            ).subscribeOn(schedulerFactory.io())
+            facade.observeGameInfoForDashboard()
+                .map { dashboard -> GameDashboardFactory(dashboard, textProvider).create() }
+                .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
                 .doOnError { error -> Timber.e(error, "Error while observing player dashboard.") }
                 .toFlowable(BackpressureStrategy.LATEST),

@@ -2,11 +2,13 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.game
 
 import ch.qscqlmpa.dwitchengine.model.info.GameInfo
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 
 class GameInfoForDashboard(
     gameInfo: GameInfo,
     private val localPlayerId: PlayerDwitchId,
-    localPlayerIsHost: Boolean
+    localPlayerIsHost: Boolean,
+    private val localPlayerConnectionState: PlayerConnectionState
 ) {
 
     private val gameInfoUpdated: GameInfo
@@ -17,12 +19,11 @@ class GameInfoForDashboard(
         val localPlayerInfo = playerInfosMap.getValue(localPlayerId)
         playerInfosMap[localPlayerId] = localPlayerInfo.copy(canStartNewRound = localPlayerInfo.canStartNewRound && localPlayerIsHost)
         gameInfoUpdated = gameInfo.copy(playerInfos = playerInfosMap.toMap())
-
     }
 
     val localPlayerInfo get() = gameInfoUpdated.playerInfos.getValue(localPlayerId)
 
-    fun getGameInfo(): GameInfo {
-        return gameInfoUpdated
-    }
+    val gameInfo get() = gameInfoUpdated
+
+    val dashboardEnabled get() = localPlayerConnectionState == PlayerConnectionState.CONNECTED
 }
