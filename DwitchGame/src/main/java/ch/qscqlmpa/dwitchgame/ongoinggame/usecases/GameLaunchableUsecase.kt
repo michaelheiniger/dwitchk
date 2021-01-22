@@ -2,7 +2,6 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWr
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomPlayerRepository
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
@@ -12,7 +11,6 @@ internal class GameLaunchableUsecase @Inject constructor(
 
     fun gameCanBeLaunched(): Observable<GameLaunchableEvent> {
         return waitingRoomPlayerRepository.observePlayers()
-            .map { players -> players.filter { p -> p.connectionState == PlayerConnectionState.CONNECTED } }
             .map { players ->
                 if (players.size < 2) {
                     GameLaunchableEvent.NotEnoughPlayers

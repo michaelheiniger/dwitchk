@@ -29,7 +29,7 @@ internal class GameLaunchableUsecaseTest : BaseUnitTest() {
     inner class ObserveGameEvent {
 
         @Test
-        fun `send GameIsReadyToBeLaunched when all players are ready`() {
+        fun `Send GameIsReadyToBeLaunched when all players are ready`() {
             val players = listOf(TestEntityFactory.createPlayerWr1(), TestEntityFactory.createPlayerWr2())
             setupPlayerWrListMock(players)
 
@@ -39,7 +39,7 @@ internal class GameLaunchableUsecaseTest : BaseUnitTest() {
         }
 
         @Test
-        fun `send NotAllPlayersAreReady when not all players are ready`() {
+        fun `Send NotAllPlayersAreReady when not all players are ready`() {
             val players = listOf(TestEntityFactory.createPlayerWr1(), TestEntityFactory.createPlayerWr2().copy(ready = false))
             setupPlayerWrListMock(players)
 
@@ -49,7 +49,7 @@ internal class GameLaunchableUsecaseTest : BaseUnitTest() {
         }
 
         @Test
-        fun `send NotEnoughPlayers when not enough players in game`() {
+        fun `Send NotEnoughPlayers when not enough players in game`() {
             val players = listOf(TestEntityFactory.createPlayerWr1())
             setupPlayerWrListMock(players)
 
