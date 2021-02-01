@@ -11,7 +11,6 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeInfo
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 
 interface InGameStore {
 
@@ -28,7 +27,7 @@ interface InGameStore {
     fun updateGameState(gameState: GameState)
 
     fun addCardExchangeEvent(cardExchange: CardExchange)
-    fun getCardExchangeInfo(): Single<CardExchangeInfo>
+    fun getCardExchangeInfo(): CardExchangeInfo
     fun observeCardExchangeEvents(): Observable<CardExchange>
 
     fun deleteCardExchangeEvent()

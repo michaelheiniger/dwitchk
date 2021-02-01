@@ -14,7 +14,6 @@ internal class CardForExchangeChosenUsecase @Inject constructor(
 ) {
 
     fun chooseCardForExchange(cards: Set<Card>): Completable {
-        //TODO: Check that cards provided are valid according to event
         return SingleFromCallable {
             MessageFactory.createCardsForExchangeChosenMessage(inGameStore.getLocalPlayerDwitchId(), cards)
         }.flatMapCompletable(communicator::sendMessageToHost)

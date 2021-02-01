@@ -13,7 +13,6 @@ import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeInfo
 import ch.qscqlmpa.dwitchstore.util.SerializerFactory
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 
 internal class InGameStoreImpl constructor(
     private val gameLocalId: Long,
@@ -69,14 +68,12 @@ internal class InGameStoreImpl constructor(
         gameDao.addCardExchangeEvent(gameLocalId, serializerFactory.serialize(cardExchange))
     }
 
-    override fun getCardExchangeInfo(): Single<CardExchangeInfo> {
-        return Single.fromCallable {
-            val game = gameDao.getGame(gameLocalId)
-            val localPlayer = playerDao.getPlayer(localPlayerLocalId)
-            val cardsInHand = serializerFactory.unserializeGameState(game.gameState!!).player(localPlayer.dwitchId).cardsInHand
-            val cardExchange = serializerFactory.unserializeCardExchange(game.cardExchangeEvent!!)
-            CardExchangeInfo(cardExchange, cardsInHand)
-        }
+    override fun getCardExchangeInfo(): CardExchangeInfo {
+        val game = gameDao.getGame(gameLocalId)
+        val localPlayer = playerDao.getPlayer(localPlayerLocalId)
+        val cardsInHand = serializerFactory.unserializeGameState(game.gameState!!).player(localPlayer.dwitchId).cardsInHand
+        val cardExchange = serializerFactory.unserializeCardExchange(game.cardExchangeEvent!!)
+        return CardExchangeInfo(cardExchange, cardsInHand)
     }
 
     override fun observeCardExchangeEvents(): Observable<CardExchange> {

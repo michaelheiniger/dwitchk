@@ -10,7 +10,7 @@ import javax.inject.Inject
 internal class DwitchEventRepositoryImpl @Inject constructor(private val store: InGameStore) : DwitchEventRepository {
 
     override fun getCardExchangeInfo(): Single<CardExchangeInfo> {
-        return store.getCardExchangeInfo()
+        return Single.fromCallable { store.getCardExchangeInfo() }
     }
 
     override fun observeCardExchangeEvents(): Observable<CardExchange> {
