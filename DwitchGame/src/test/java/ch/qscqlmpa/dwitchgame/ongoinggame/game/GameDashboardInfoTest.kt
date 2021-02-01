@@ -9,10 +9,11 @@ import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
+import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class GameInfoForDashboardTest: BaseUnitTest() {
+internal class GameDashboardInfoTest: BaseUnitTest() {
 
     @Test
     fun `Set canStartNewRound to false for local player when it is a guest`() {
@@ -59,7 +60,7 @@ internal class GameInfoForDashboardTest: BaseUnitTest() {
         assertThat(gameInfo.playerInfos.getValue(localPlayerId).canStartNewRound).isTrue
 
         val localPlayerIsHost = false
-        val dashboard = GameInfoForDashboard(gameInfo, localPlayerId, localPlayerIsHost)
+        val dashboard = GameDashboardInfo(gameInfo, localPlayerId, localPlayerIsHost, PlayerConnectionState.CONNECTED)
 
         // Finally set to false because the player is not the host
         assertThat(dashboard.localPlayerInfo.canStartNewRound).isFalse

@@ -6,6 +6,7 @@ import ch.qscqlmpa.dwitchgame.appevent.AppEvent
 import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.GuestMessageFactory
+import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -17,7 +18,7 @@ internal class LeaveGameUsecaseTest : BaseUnitTest() {
 
     private val playerDwitchId = PlayerDwitchId(23);
 
-    private val mockAppEventRepository = mockk<AppEventRepository>(relaxed = true)
+    private lateinit var appEventRepository: AppEventRepository
 
     private val mockCommunicator = mockk<GuestCommunicator>(relaxed = true)
 
@@ -26,28 +27,48 @@ internal class LeaveGameUsecaseTest : BaseUnitTest() {
     @BeforeEach
     override fun setup() {
         super.setup()
-        leaveGameUsecase = LeaveGameUsecase(mockInGameStore, mockAppEventRepository, mockCommunicator)
+        appEventRepository = AppEventRepository()
+        leaveGameUsecase = LeaveGameUsecase(mockInGameStore, appEventRepository, mockCommunicator)
 
         every { mockCommunicator.sendMessageToHost(any()) } returns Completable.complete()
         every { mockInGameStore.getLocalPlayerDwitchId() } returns playerDwitchId
     }
 
     @Test
-    fun `Send leave-game message to host`() {
+    fun `Local player (guest) is leaving the new game`() {
+        every { mockInGameStore.gameIsNew() } returns true
+        val testObserver = appEventRepository.observeEvents().test()
+        testObserver.assertNoValues()
+
         launchTest()
+
+        testObserver.assertValue(AppEvent.GameLeft)
+
         verify { mockCommunicator.sendMessageToHost(GuestMessageFactory.createLeaveGameMessage(playerDwitchId)) }
-    }
-
-    @Test
-    fun `Close connection with host`() {
-        launchTest()
         verify { mockCommunicator.closeConnection() }
+        confirmVerified(mockCommunicator)
+
+        verify { mockInGameStore.gameIsNew() }
+        verify { mockInGameStore.getLocalPlayerDwitchId() }
+        verify { mockInGameStore.deleteGame() }
+        confirmVerified(mockInGameStore)
     }
 
     @Test
-    fun `Stop service`() {
+    fun `Local player (guest) is leaving the existing game`() {
+        every { mockInGameStore.gameIsNew() } returns false
+        val testObserver = appEventRepository.observeEvents().test()
+        testObserver.assertNoValues()
+
         launchTest()
-        verify { mockAppEventRepository.notify(AppEvent.GameLeft) }
+
+        testObserver.assertValue(AppEvent.GameLeft)
+
+        verify { mockCommunicator.closeConnection() }
+        confirmVerified(mockCommunicator)
+
+        verify { mockInGameStore.gameIsNew() }
+        confirmVerified(mockInGameStore)
     }
 
     private fun launchTest() {

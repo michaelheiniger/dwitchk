@@ -1,15 +1,14 @@
 package ch.qscqlmpa.dwitch.uitests.base
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions
 import ch.qscqlmpa.dwitch.PlayerGuestTest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
-import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.clickOnButton
-import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil.withRecyclerView
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
+import ch.qscqlmpa.dwitchmodel.player.Player
+import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
+import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import org.assertj.core.api.Assertions.assertThat
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -19,16 +18,14 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
     protected val gameCommonId = GameCommonId(12345)
 
     protected open fun goToWaitingRoom() {
-        onView(withRecyclerView(R.id.gameListRw)
-                .atPositionOnView(0, R.id.gameNameTv))
-                .perform(ViewActions.click())
+        advertiseGame()
 
-        setControlText(R.id.playerNameEdt, PlayerGuestTest.LocalGuest.name)
-        setControlText(R.id.gameNameEdt, gameName)
+        UiUtil.clickOnRecyclerViewElement(R.id.gameListRw, R.id.gameNameTv, 0)
 
-        clickOnButton(R.id.nextBtn)
+        UiUtil.setControlText(R.id.playerNameEdt, PlayerGuestTest.LocalGuest.name)
+        UiUtil.clickOnButton(R.id.nextBtn)
 
-        dudeWaitASec()
+        dudeWaitAMillisSec()
 
         /*
         * Note: It also allows to wait for the waiting room to be displayed: otherwise, the messages sent by clients could be
@@ -37,14 +34,21 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
         UiUtil.assertControlTextContent(R.id.playerListTv, R.string.wra_player_list)
 
         hookOngoingGameDependenciesForGuest()
+
+        connectGuestToHost()
+
+        hostSendsJoinGameAck()
+        hostSendsInitialWaitingRoomUpdate()
+
+        dudeWaitAMillisSec()
     }
 
     protected fun waitForNextMessageSentByLocalGuest(): Message {
         Timber.d("Waiting for next message sent by local guest...")
         val messageSerialized = clientTestStub.observeMessagesSent()
-                .take(1)
-                .timeout(10, TimeUnit.SECONDS)
-                .blockingFirst()
+            .take(1)
+            .timeout(10, TimeUnit.SECONDS)
+            .blockingFirst()
         val message = commSerializerFactory.unserializeMessage(messageSerialized)
         Timber.d("Message sent to host: $message")
         return message
@@ -52,13 +56,14 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
 
     protected fun advertiseGame() {
         val hostIpAddress = "192.168.1.1"
-        val gameAd = "{\"gameCommonId\":{\"value\":${gameCommonId.value}},\"gameName\":\"$gameName\",\"gamePort\":8889}"
+        val gameAd = buildSerializedAdvertisedGame(true, gameName, gameCommonId, 8889)
         networkAdapter.setPacket(Packet(gameAd, hostIpAddress, 4355))
     }
 
-    protected fun assertLocalGuestHasSentJoinGameMessage() {
-        val joinGameMessage = waitForNextMessageSentByLocalGuest() as Message.JoinGameMessage
-        assertThat(PlayerGuestTest.LocalGuest.name).isEqualTo(joinGameMessage.playerName)
+    private fun connectGuestToHost() {
+        clientTestStub.connectClientToServer(true)
+        val message = waitForNextMessageSentByLocalGuest()
+        assertThat(message).isInstanceOf(Message.JoinGameMessage::class.java)
     }
 
     protected fun hostSendsJoinGameAck() {
@@ -66,10 +71,54 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
         clientTestStub.serverSendsMessageToClient(message, false)
     }
 
-    protected fun setLocalPlayerReady() {
-        clickOnButton(R.id.localPlayerReadyCkb)
-        val playerReadyMessage = waitForNextMessageSentByLocalGuest() as Message.PlayerReadyMessage
-        assertThat(PlayerGuestTest.LocalGuest.id).isEqualTo(playerReadyMessage.playerId)
-        assertThat(true).isEqualTo(playerReadyMessage.ready)
+    protected fun localPlayerToggleReadyCheckbox() {
+        UiUtil.clickOnButton(R.id.localPlayerReadyCkb)
+        val playerReadyMessage = waitForNextMessageSentByLocalGuest()
+        assertThat(playerReadyMessage).isInstanceOf(Message.PlayerReadyMessage::class.java)
+    }
+
+    private fun hostSendsInitialWaitingRoomUpdate() {
+        val gameLocalIdAtHost = 1233L
+        val message = Message.WaitingRoomStateUpdateMessage(
+            listOf(
+                Player(
+                    334,
+                    PlayerGuestTest.Host.id,
+                    gameLocalIdAtHost,
+                    PlayerGuestTest.Host.name,
+                    PlayerRole.HOST,
+                    PlayerConnectionState.CONNECTED,
+                    true
+                ),
+                Player(
+                    335,
+                    PlayerGuestTest.LocalGuest.id,
+                    gameLocalIdAtHost,
+                    PlayerGuestTest.LocalGuest.name,
+                    PlayerRole.GUEST,
+                    PlayerConnectionState.CONNECTED,
+                    false
+                ),
+                Player(
+                    336,
+                    PlayerGuestTest.Guest2.id,
+                    gameLocalIdAtHost,
+                    PlayerGuestTest.Guest2.name,
+                    PlayerRole.GUEST,
+                    PlayerConnectionState.CONNECTED,
+                    true
+                ),
+                Player(
+                    337,
+                    PlayerGuestTest.Guest3.id,
+                    gameLocalIdAtHost,
+                    PlayerGuestTest.Guest3.name,
+                    PlayerRole.GUEST,
+                    PlayerConnectionState.CONNECTED,
+                    true
+                )
+            )
+        )
+        clientTestStub.serverSendsMessageToClient(message, false)
     }
 }

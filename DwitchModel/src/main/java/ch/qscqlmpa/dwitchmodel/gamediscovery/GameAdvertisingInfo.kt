@@ -8,6 +8,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Parcelize
 data class GameAdvertisingInfo(
+    val isNew: Boolean,
     val gameCommonId: GameCommonId,
     val gameName: String,
     val gamePort: Int

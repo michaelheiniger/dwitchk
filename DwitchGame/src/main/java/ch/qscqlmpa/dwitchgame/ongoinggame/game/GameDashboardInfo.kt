@@ -4,7 +4,7 @@ import ch.qscqlmpa.dwitchengine.model.info.GameInfo
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 
-class GameInfoForDashboard(
+class GameDashboardInfo(
     gameInfo: GameInfo,
     private val localPlayerId: PlayerDwitchId,
     localPlayerIsHost: Boolean,

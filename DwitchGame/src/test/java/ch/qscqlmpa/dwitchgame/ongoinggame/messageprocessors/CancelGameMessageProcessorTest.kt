@@ -1,10 +1,11 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.messageprocessors
 
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEventRepository
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.CancelGameMessageProcessor
+import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
+import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEventRepository
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
@@ -23,14 +24,17 @@ internal class CancelGameMessageProcessorTest : BaseMessageProcessorTest() {
     }
 
     @Test
-    fun `Delete game from store`() {
+    fun `New game is canceled`() {
+        every { mockInGameStore.gameIsNew() } returns true
         processor.process(Message.CancelGameMessage, ConnectionId(0)).test().assertComplete()
 
         verify { mockInGameStore.deleteGame() }
+        verify { mockGameEventRepository.notify(GuestGameEvent.GameCanceled) }
     }
 
     @Test
-    fun `Notify of "game canceled" game event`() {
+    fun `Existing game is canceled`() {
+        every { mockInGameStore.gameIsNew() } returns false
         processor.process(Message.CancelGameMessage, ConnectionId(0)).test().assertComplete()
 
         verify { mockGameEventRepository.notify(GuestGameEvent.GameCanceled) }

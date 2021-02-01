@@ -23,8 +23,7 @@ internal class WaitingRoomHostViewModel @Inject constructor(
 
     fun canGameBeLaunched(): LiveData<UiControlModel> {
         return LiveDataReactiveStreams.fromPublisher(
-            facade.gameCanBeLaunched()
-                .subscribeOn(schedulerFactory.io())
+            facade.observeGameLaunchableEvents()
                 .observeOn(schedulerFactory.ui())
                 .map(::processGameLaunchableEvent)
                 .doOnError { error -> Timber.e(error, "Error while observing if game can be launched.") }
@@ -38,7 +37,6 @@ internal class WaitingRoomHostViewModel @Inject constructor(
 
     fun launchGame() {
         disposableManager.add(facade.launchGame()
-            .subscribeOn(schedulerFactory.io())
             .observeOn(schedulerFactory.ui())
             .subscribe(
                 {
@@ -53,7 +51,6 @@ internal class WaitingRoomHostViewModel @Inject constructor(
     fun cancelGame() {
         disposableManager.add(
             facade.cancelGame()
-                .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
                 .subscribe(
                     {

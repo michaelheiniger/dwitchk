@@ -4,14 +4,6 @@ import ch.qscqlmpa.dwitch.PlayerGuestTest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.uitests.base.BaseGuestTest
 import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.assertCanPassTurn
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.assertCanPickACard
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.assertCardInHand
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.assertCardOnTable
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.assertGameRoomIsDisplayed
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.chooseCardForExchange
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.confirmCardsChoiceForExchange
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.playCard
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.clickOnButton
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.elementIsDisplayed
 import ch.qscqlmpa.dwitch.utils.TestEntityFactory
@@ -50,9 +42,9 @@ class GameRoomAsGuestTest : BaseGuestTest() {
 
         goToGameRoom()
 
-        assertCardInHand(0, Card.Spades6)
-        assertCardInHand(1, Card.Spades4)
-        assertCardOnTable(Card.Clubs2)
+        GameRoomUiUtil.assertCardInHand(0, Card.Spades6)
+        GameRoomUiUtil.assertCardInHand(1, Card.Spades4)
+        GameRoomUiUtil.assertCardOnTable(Card.Clubs2)
     }
 
     @Test
@@ -61,20 +53,20 @@ class GameRoomAsGuestTest : BaseGuestTest() {
 
         goToGameRoom()
 
-        assertCardInHand(0, Card.Spades6)
-        assertCardInHand(1, Card.Spades4)
-        assertCardOnTable(Card.Clubs2)
+        GameRoomUiUtil.assertCardInHand(0, Card.Spades6)
+        GameRoomUiUtil.assertCardInHand(1, Card.Spades4)
+        GameRoomUiUtil.assertCardOnTable(Card.Clubs2)
 
         GameRoomUiUtil.playCard(0)
 
         val gameStateUpdatedMessage = waitForNextMessageSentByLocalGuest() as Message.GameStateUpdatedMessage
         assertThat(gameStateUpdatedMessage.gameState.cardsOnTable).isEqualTo(listOf(Card.Clubs2, Card.Spades6))
 
-        assertCardInHand(0, Card.Spades4)
-        assertCardOnTable(Card.Spades6)
+        GameRoomUiUtil.assertCardInHand(0, Card.Spades4)
+        GameRoomUiUtil.assertCardOnTable(Card.Spades6)
 
-        assertCanPickACard(false)
-        assertCanPassTurn(false)
+        GameRoomUiUtil.assertCanPickACard(false)
+        GameRoomUiUtil.assertCanPassTurn(false)
     }
 
     @Test
@@ -88,7 +80,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
 
         goToGameRoom()
 
-        playCard(0)
+        GameRoomUiUtil.playCard(0)
 
         val gameStateUpdatedMessage = waitForNextMessageSentByLocalGuest() as Message.GameStateUpdatedMessage
         val newRoundGameState = hostStartsNewRound(gameStateUpdatedMessage.gameState)
@@ -96,21 +88,21 @@ class GameRoomAsGuestTest : BaseGuestTest() {
 
         dudeWaitASec()
 
-        assertCardInHand(0, Card.Spades6)
-        assertCardInHand(1, Card.Spades4)
-        assertCardInHand(2, Card.Diamonds4)
-        assertCardInHand(3, Card.Clubs10)
+        GameRoomUiUtil.assertCardInHand(0, Card.Spades6)
+        GameRoomUiUtil.assertCardInHand(1, Card.Spades4)
+        GameRoomUiUtil.assertCardInHand(2, Card.Diamonds4)
+        GameRoomUiUtil.assertCardInHand(3, Card.Clubs10)
 
-        chooseCardForExchange(1)
-        chooseCardForExchange(1)
+        GameRoomUiUtil.chooseCardForExchange(1)
+        GameRoomUiUtil.chooseCardForExchange(1)
 
-        confirmCardsChoiceForExchange()
+        GameRoomUiUtil.confirmCardsChoiceForExchange()
 
         val cardsForExchangeMessageMessage = waitForNextMessageSentByLocalGuest() as Message.CardsForExchangeMessage
         assertThat(cardsForExchangeMessageMessage.playerId).isEqualTo(PlayerGuestTest.LocalGuest.id)
         assertThat(cardsForExchangeMessageMessage.cards).isEqualTo(setOf(Card.Spades4, Card.Diamonds4))
 
-        assertGameRoomIsDisplayed()
+        GameRoomUiUtil.assertGameRoomIsDisplayed()
     }
 
 
@@ -133,29 +125,20 @@ class GameRoomAsGuestTest : BaseGuestTest() {
 
         goToWaitingRoom()
 
-        clientTestStub.connectClientToServer(true)
-
-        assertLocalGuestHasSentJoinGameMessage()
-
         hostSendsJoinGameAck()
         hostSendsInitialWaitingRoomUpdate()
 
         dudeWaitASec()
 
-        setLocalPlayerReady()
+        clickOnButton(R.id.localPlayerReadyCkb)
 
-        clientTestStub.serverSendsMessageToClient(
-            Message.PlayerReadyMessage(
-                PlayerGuestTest.LocalGuest.id,
-                true
-            ), false
-        )
+        clientTestStub.serverSendsMessageToClient(Message.PlayerReadyMessage(PlayerGuestTest.LocalGuest.id, true), false)
 
         clientTestStub.serverSendsMessageToClient(Message.LaunchGameMessage(createGameState()), false)
 
         dudeWaitASec()
 
-        assertGameRoomIsDisplayed()
+        GameRoomUiUtil.assertGameRoomIsDisplayed()
     }
 
     private fun createGameState(): GameState {

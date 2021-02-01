@@ -14,7 +14,7 @@ import io.mockk.mockk
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 
-abstract class BaseMessageProcessorTest : BaseUnitTest() {
+internal abstract class BaseMessageProcessorTest : BaseUnitTest() {
 
     protected val mockMessageFactory = mockk<MessageFactory>(relaxed = true)
     protected val mockHostMessageFactory = mockk<HostMessageFactory>(relaxed = true)

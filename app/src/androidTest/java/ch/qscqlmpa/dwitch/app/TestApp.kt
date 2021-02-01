@@ -58,7 +58,6 @@ class TestApp : App() {
                 .create(CommunicationModule(hostIpAddress, hostPort))
 
             ongoingGameComponent = testGameComponent.addTestOngoingGameComponent(
-//            ongoingGameComponent = testGameComponent.addOngoingGameComponent(
                 OngoingGameModule(
                     playerRole,
                     roomType,
@@ -79,7 +78,7 @@ class TestApp : App() {
                     ongoingGameComponent!!.waitingRoomGuestFacade,
                     ongoingGameComponent!!.gameRoomHostFacade,
                     ongoingGameComponent!!.gameRoomGuestFacade,
-                    ongoingGameComponent!!.playerDashboardFacade
+                    ongoingGameComponent!!.gameDashboardFacade
                 )
             )
         } else {

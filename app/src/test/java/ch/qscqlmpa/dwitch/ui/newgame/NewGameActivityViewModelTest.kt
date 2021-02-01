@@ -39,7 +39,7 @@ class NewGameActivityViewModelTest : BaseViewModelUnitTest() {
     fun nextForGuest_success() {
         every { mockGuestFacade.joinGame(any(), any()) } returns Completable.complete()
 
-        val advertisedGame = AdvertisedGame("Dwiiitch !", GameCommonId(1), "192.168.1.1", gamePort)
+        val advertisedGame = AdvertisedGame(true, "Dwiiitch !", GameCommonId(1), "192.168.1.1", gamePort)
 
         viewModel.nextForGuest(advertisedGame, playerName)
 
@@ -51,7 +51,7 @@ class NewGameActivityViewModelTest : BaseViewModelUnitTest() {
 
     @Test
     fun nextForGuest_error() {
-        val advertisedGame = AdvertisedGame("", GameCommonId(1), "192.168.1.1", gamePort)
+        val advertisedGame = AdvertisedGame(true, "", GameCommonId(1), "192.168.1.1", gamePort)
 
         viewModel.nextForGuest(advertisedGame, playerName)
 

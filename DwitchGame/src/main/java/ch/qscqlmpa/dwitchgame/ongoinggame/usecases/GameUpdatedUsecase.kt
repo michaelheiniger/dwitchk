@@ -8,7 +8,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
-class GameUpdatedUsecase @Inject constructor(
+internal class GameUpdatedUsecase @Inject constructor(
     private val store: InGameStore,
     private val communicator: GameCommunicator
 ) {

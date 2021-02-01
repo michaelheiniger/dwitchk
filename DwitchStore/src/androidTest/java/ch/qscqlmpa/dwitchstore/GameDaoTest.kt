@@ -25,13 +25,11 @@ internal class GameDaoTest : BaseInstrumentedTest() {
     fun updateGameRoom() {
         val insertGameResult = gameDao.insertGameForHost(gameName, playerName)
         val gameInserted = gameDao.getGame(insertGameResult.gameLocalId)
-
         assertThat(gameInserted.currentRoom).isEqualTo(RoomType.WAITING_ROOM)
 
         gameDao.updateGameRoom(insertGameResult.gameLocalId, RoomType.GAME_ROOM)
 
         val gameTest = gameDao.getGame(insertGameResult.gameLocalId)
-
         assertThat(gameTest.currentRoom).isEqualTo(RoomType.GAME_ROOM)
     }
 
@@ -44,13 +42,13 @@ internal class GameDaoTest : BaseInstrumentedTest() {
             RoomType.WAITING_ROOM,
             GameCommonId(0),
             gameName,
-            "",
+            null,
             insertGameResult.localPlayerLocalId,
             null
         )
         val gameTest = gameDao.getGame(insertGameResult.gameLocalId)
 
-        assertThat(gameTest).isEqualToIgnoringGivenFields(gameRef, "gameCommonId")
+        assertThat(gameTest).usingRecursiveComparison().ignoringFields("gameCommonId").isEqualTo(gameRef)
         assertThat(gameTest.gameCommonId).isNotEqualTo(GameCommonId(0))
     }
 
@@ -69,7 +67,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
         )
         val playerTest = playerDao.getPlayer(insertGameResult.localPlayerLocalId)
 
-        assertThat(playerTest).isEqualToIgnoringGivenFields(playerRef, "dwitchId")
+        assertThat(playerTest).usingRecursiveComparison().ignoringFields("dwitchId").isEqualTo(playerRef)
     }
 
     @Test
@@ -82,7 +80,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
             RoomType.WAITING_ROOM,
             GameCommonId(0),
             gameName,
-            "",
+            null,
             insertGameResult.localPlayerLocalId,
             null
         )

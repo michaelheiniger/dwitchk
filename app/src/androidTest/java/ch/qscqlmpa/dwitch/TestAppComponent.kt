@@ -27,11 +27,5 @@ import dagger.android.AndroidInjectionModule
 )
 interface TestAppComponent : AppComponent {
 
-//    val storeComponent: StoreComponent
-
-//    val database: AppRoomDatabase
-//
-//    val testNetworkListener: TestNetworkAdapter
-
     override fun addOngoingGameUiComponent(module: OnGoingGameUiModule): TestOngoingGameUiComponent
 }

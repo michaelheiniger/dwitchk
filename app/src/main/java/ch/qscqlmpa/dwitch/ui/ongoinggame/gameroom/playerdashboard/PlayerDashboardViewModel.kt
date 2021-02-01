@@ -26,9 +26,8 @@ class PlayerDashboardViewModel @Inject constructor(
 
     fun playerDashboard(): LiveData<GameDashboard> {
         return LiveDataReactiveStreams.fromPublisher(
-            facade.observeGameInfoForDashboard()
+            facade.observeDashboardInfo()
                 .map { dashboard -> GameDashboardFactory(dashboard, textProvider).create() }
-                .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
                 .doOnError { error -> Timber.e(error, "Error while observing player dashboard.") }
                 .toFlowable(BackpressureStrategy.LATEST),
@@ -66,7 +65,6 @@ class PlayerDashboardViewModel @Inject constructor(
         return LiveDataReactiveStreams.fromPublisher(
             facade.observeCardExchangeEvents()
                 .map { PlayerDashboardCommand.OpenCardExchange }
-                .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
                 .doOnError { error -> Timber.e(error, "Error while observing card exchange.") }
                 .toFlowable(BackpressureStrategy.LATEST)
@@ -74,12 +72,12 @@ class PlayerDashboardViewModel @Inject constructor(
     }
 
     private fun performOperation(successText: String, failureText: String, op: () -> Completable) {
-        disposableManager.add(op()
-            .subscribeOn(schedulerFactory.io())
-            .observeOn(schedulerFactory.ui())
-            .subscribe(
-                { Timber.d(successText) },
-                { error -> Timber.e(error, failureText) }
-            ))
+        disposableManager.add(
+            op()
+                .observeOn(schedulerFactory.ui())
+                .subscribe(
+                    { Timber.d(successText) },
+                    { error -> Timber.e(error, failureText) }
+                ))
     }
 }

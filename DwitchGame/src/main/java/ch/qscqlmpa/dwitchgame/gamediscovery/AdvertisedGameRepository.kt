@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitchgame.gamediscovery
 
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchgame.di.GameScope
+import ch.qscqlmpa.dwitchstore.store.Store
 import io.reactivex.rxjava3.core.Observable
 import org.joda.time.LocalTime
 import timber.log.Timber
@@ -9,7 +10,8 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @GameScope
-class AdvertisedGameRepository @Inject constructor(
+internal class AdvertisedGameRepository @Inject constructor(
+    private val store: Store,
     private val gameDiscovery: GameDiscovery,
     private val schedulerFactory: SchedulerFactory
 ) {
@@ -20,25 +22,29 @@ class AdvertisedGameRepository @Inject constructor(
 
     fun listenForAdvertisedGames(): Observable<List<AdvertisedGame>> {
         return Observable.combineLatest(
+            store.getGameCommonIdOfResumableGames(),
             advertisedGames(),
             cleanUpScheduler(),
-            { game, _ -> game }
+            { existingGames, game, _ -> Pair(existingGames, game)}
         )
-            .doOnNext { game -> Timber.v("New game discovered: $game") }
+            .filter { (existingGames, game) ->
+                game.isNew || existingGames.contains(game.gameCommonId)
+            }
+            .doOnNext { (_, game) -> Timber.v("Game discovered: $game") }
             .scan(
                 mapOf<String, AdvertisedGame>(),
-                { mapOfGames, game -> buildUpdatedMap(mapOfGames, game) }
+                { mapOfGames, (_, game) -> buildUpdatedMap(mapOfGames, game) }
             )
             .map { mapOfGames -> ArrayList(mapOfGames.values) }
+    }
+
+    fun stopListening() {
+        gameDiscovery.stopListening()
     }
 
     private fun advertisedGames(): Observable<AdvertisedGame> {
         return gameDiscovery.listenForAdvertisedGame()
             .subscribeOn(schedulerFactory.io())
-    }
-
-    fun stopListening() {
-        gameDiscovery.stopListening()
     }
 
     private fun cleanUpScheduler(): Observable<Long> {

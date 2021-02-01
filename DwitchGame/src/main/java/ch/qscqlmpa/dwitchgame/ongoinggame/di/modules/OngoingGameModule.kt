@@ -7,6 +7,7 @@ import ch.qscqlmpa.dwitchcommunication.di.CommunicationComponent
 import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertising
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.GameCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
+import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OnGoingGameQualifiers.CURRENT_ROOM
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OnGoingGameQualifiers.GAME_LOCAL_ID
@@ -104,7 +105,7 @@ class OngoingGameModule(
 
     @OngoingGameScope
     @Provides
-    fun provideGameCommunicator(
+    internal fun provideGameCommunicator(
         playerRole: PlayerRole,
         hostCommunicator: HostCommunicator,
         guestCommunicator: GuestCommunicator
@@ -117,13 +118,13 @@ class OngoingGameModule(
 
     @OngoingGameScope
     @Provides
-    fun provideHostFacade(communicator: HostCommunicator, gameAdvertising: GameAdvertising): HostFacade {
-        return HostFacadeImpl(communicator, gameAdvertising)
+    internal fun provideHostFacade(hostCommunicationStateRepository: HostCommunicationStateRepository, communicator: HostCommunicator, gameAdvertising: GameAdvertising): HostFacade {
+        return HostFacadeImpl(hostCommunicationStateRepository, communicator, gameAdvertising)
     }
 
     @OngoingGameScope
     @Provides
-    fun provideGuestFacade(communicator: GuestCommunicator): GuestFacade {
+    internal fun provideGuestFacade(communicator: GuestCommunicator): GuestFacade {
         return GuestFacadeImpl(communicator)
     }
 }

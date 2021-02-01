@@ -3,13 +3,13 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.cardexchange
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard.CardItem
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardFacade
-import io.reactivex.rxjava3.core.Single
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -20,11 +20,13 @@ class CardExchangeViewModel @Inject constructor(
 ) : BaseViewModel(disposableManager, schedulerFactory) {
 
     private lateinit var cardExchangeEvent: CardExchange
+    private lateinit var selectableCards: Set<Card>
 
     private var cardsInHand: MutableList<Card> = mutableListOf()
     private var cardsChosen: MutableList<Card> = mutableListOf()
 
     private val commands = MutableLiveData<CardExchangeCommand>()
+    private val submitControl = MutableLiveData(UiControlModel(enabled = false))
     private val cardInHandItems = MutableLiveData<List<CardItem>>(listOf())
     private val cardChosenItems = MutableLiveData<List<CardItem>>(listOf())
 
@@ -36,6 +38,10 @@ class CardExchangeViewModel @Inject constructor(
         return commands
     }
 
+    fun submitControl(): LiveData<UiControlModel> {
+        return submitControl
+    }
+
     fun cardsInHand(): LiveData<List<CardItem>> {
         return cardInHandItems
     }
@@ -45,11 +51,20 @@ class CardExchangeViewModel @Inject constructor(
     }
 
     fun cardInHandClicked(card: Card) {
+        if (!selectableCards.contains(card)) {
+            Timber.w("Card $card cannot be chosen because it has a too low value.")
+            return
+        }
+        if (cardsChosen.size == cardExchangeEvent.numCardsToChoose) {
+            Timber.w("No more card can be chosen: already ${cardsChosen.size} chosen.")
+            return
+        }
         val removalSuccessful = cardsInHand.remove(card)
         if (removalSuccessful) {
             cardsChosen.add(card)
             updateCardsInHandItems()
             updateCardChosenItems()
+            updateExchangeCardButton()
         } else {
             throw IllegalArgumentException("Card $card is not in the hand !")
         }
@@ -61,8 +76,9 @@ class CardExchangeViewModel @Inject constructor(
             cardsInHand.add(card)
             updateCardsInHandItems()
             updateCardChosenItems()
+            updateExchangeCardButton()
         } else {
-            throw IllegalArgumentException("Card $card is not in the chose cards !")
+            throw IllegalArgumentException("Card $card is not in the chosen cards !")
         }
     }
 
@@ -70,14 +86,13 @@ class CardExchangeViewModel @Inject constructor(
         Timber.v("confirmChoice()")
         disposableManager.add(
             facade.submitCardsForExchange(cardChosenItems.value!!.map(CardItem::card).toSet())
-                .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
                 .subscribe(
                     {
                         Timber.i("Cards for exchange submitted successfully.")
                         commands.value = CardExchangeCommand.Close
                     },
-                    { error -> Timber.e(error, "Error while submitting cards for excĥange.") }
+                    { error -> Timber.e(error, "Error while submitting cards for exchange.") }
                 ),
         )
     }
@@ -101,30 +116,26 @@ class CardExchangeViewModel @Inject constructor(
 
     private fun initialize() {
         disposableManager.add(
-            Single.zip(
-                getCardExchangeEvents(),
-                getDashboard(),
-                { event, cards ->
-                    Timber.d("Card exchange event: $event")
-                    cardExchangeEvent = event
+            facade.getCardExchangeInfo()
+                .observeOn(schedulerFactory.ui())
+                .subscribe(
+                    { cardExchangeInfo ->
+                        Timber.d("Card exchange info: $cardExchangeInfo")
+                        cardExchangeEvent = cardExchangeInfo.cardExchange
 
-                    Timber.d("Cards in hand: $cards")
-                    cardsInHand = cards.toMutableList()
-                    updateCardsInHandItems()
-                }
-            ).subscribe(
-                {},
-                { error -> Timber.e(error, "Error while initializing card exchange.") }
-            )
+                        Timber.d("Cards in hand: ${cardExchangeInfo.cardsInHand}")
+                        cardsInHand = cardExchangeInfo.cardsInHand.toMutableList()
+                        selectableCards = cardExchangeInfo.cardsInHand.filter(::isCardSelectable).toSet()
+                        updateCardsInHandItems()
+
+                    },
+                    { error -> Timber.e(error, "Error while initializing card exchange.") }
+                )
         )
     }
 
-    private fun getDashboard() = facade.observeGameInfoForDashboard().firstOrError()
-        .map { dashboard -> dashboard.localPlayerInfo.cardsInHand }
-        .subscribeOn(schedulerFactory.io())
-        .observeOn(schedulerFactory.ui())
-
-    private fun getCardExchangeEvents() = facade.getCardExchangeEvent()
-        .subscribeOn(schedulerFactory.io())
-        .observeOn(schedulerFactory.ui())
+    private fun updateExchangeCardButton() {
+        val enabled = cardsChosen.size == cardExchangeEvent.numCardsToChoose
+        submitControl.value = UiControlModel(enabled = enabled)
+    }
 }

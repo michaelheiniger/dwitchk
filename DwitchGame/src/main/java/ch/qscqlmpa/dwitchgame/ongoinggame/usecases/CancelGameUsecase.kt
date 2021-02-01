@@ -19,7 +19,7 @@ internal class CancelGameUsecase @Inject constructor(
 ) {
 
     fun cancelGame(): Completable {
-        return deleteGameFromStore()
+        return deleteGameIfGameIsNew()
             .andThen(sendCancelGameMessage())
             .doOnComplete {
                 appEventRepository.notify(AppEvent.GameOver)
@@ -27,8 +27,12 @@ internal class CancelGameUsecase @Inject constructor(
             }
     }
 
-    private fun deleteGameFromStore(): Completable {
-        return Completable.fromAction { store.deleteGame() }
+    private fun deleteGameIfGameIsNew(): Completable {
+        return Completable.fromAction {
+            if (store.gameIsNew()) {
+                store.deleteGame()
+            }
+        }
     }
 
     private fun sendCancelGameMessage(): Completable {

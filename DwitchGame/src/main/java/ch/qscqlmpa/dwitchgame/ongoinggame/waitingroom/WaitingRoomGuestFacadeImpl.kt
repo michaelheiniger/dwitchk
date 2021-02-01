@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom
 
+import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
@@ -15,7 +16,8 @@ internal class WaitingRoomGuestFacadeImpl @Inject constructor(
     private val playerReadyUsecase: PlayerReadyUsecase,
     private val leaveGameUsecase: LeaveGameUsecase,
     private val wrPlayerRepository: WaitingRoomPlayerRepository,
-    private val gameEventRepository: GuestGameEventRepository
+    private val gameEventRepository: GuestGameEventRepository,
+    private val schedulerFactory: SchedulerFactory
 ) : WaitingRoomGuestFacade {
 
     override fun connect() {
@@ -23,22 +25,27 @@ internal class WaitingRoomGuestFacadeImpl @Inject constructor(
     }
 
     override fun observeCommunicationState(): Observable<GuestCommunicationState> {
-        return guestCommunicator.observeCommunicationState()
+        return guestCommunicator.currentCommunicationState()
+            .subscribeOn(schedulerFactory.io())
     }
 
     override fun updateReadyState(ready: Boolean): Completable {
         return playerReadyUsecase.updateReadyState(ready)
+            .subscribeOn(schedulerFactory.io())
     }
 
     override fun leaveGame(): Completable {
         return leaveGameUsecase.leaveGame()
+            .subscribeOn(schedulerFactory.io())
     }
 
     override fun observeLocalPlayerReadyState(): Observable<Boolean> {
         return wrPlayerRepository.observeLocalPlayer().map(PlayerWr::ready)
+            .subscribeOn(schedulerFactory.io())
     }
 
     override fun observeEvents(): Observable<GuestGameEvent> {
         return gameEventRepository.observeEvents()
+            .subscribeOn(schedulerFactory.io())
     }
 }

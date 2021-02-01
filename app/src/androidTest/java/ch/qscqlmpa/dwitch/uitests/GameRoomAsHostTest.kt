@@ -1,26 +1,13 @@
  package ch.qscqlmpa.dwitch.uitests
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.uitests.base.BaseHostTest
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.assertCanPassTurn
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.assertCanPickACard
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.assertCardInHand
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.assertCardOnTable
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.assertGameRoomIsDisplayed
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.chooseCardForExchange
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.passTurn
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.pickACard
-import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil.playCard
+import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
-import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.clickOnButton
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.websocket.server.test.PlayerHostTest
 import ch.qscqlmpa.dwitchengine.ProdDwitchEngineFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
 import org.assertj.core.api.Assertions.assertThat
@@ -50,20 +37,19 @@ class GameRoomAsHostTest : BaseHostTest() {
 
         goToGameRoom()
 
-        assertCardInHand(0, Card.Hearts5)
-        assertCardInHand(1, Card.Clubs3)
-        assertCardOnTable(Card.Clubs2)
+        GameRoomUiUtil.assertCardInHand(0, Card.Hearts5)
+        GameRoomUiUtil.assertCardInHand(1, Card.Clubs3)
+        GameRoomUiUtil.assertCardOnTable(Card.Clubs2)
 
-        playCard(0)
+        GameRoomUiUtil.playCard(0)
 
-        val gameStateUpdatedMessage = waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
-        assertThat(gameStateUpdatedMessage.gameState.cardsOnTable.size).isEqualTo(2)
+        assertGameStateUpdatedMessageSent()
 
-        assertCardInHand(0, Card.Clubs3)
-        assertCardOnTable(Card.Hearts5)
+        GameRoomUiUtil.assertCardInHand(0, Card.Clubs3)
+        GameRoomUiUtil.assertCardOnTable(Card.Hearts5)
 
-        assertCanPickACard(false)
-        assertCanPassTurn(false)
+        GameRoomUiUtil.assertCanPickACard(false)
+        GameRoomUiUtil.assertCanPassTurn(false)
     }
 
     @Test
@@ -72,33 +58,29 @@ class GameRoomAsHostTest : BaseHostTest() {
 
         goToGameRoom()
 
-        assertCardInHand(0, Card.Hearts5)
-        assertCardInHand(1, Card.Clubs3)
-        assertCardOnTable(Card.Clubs2)
+        GameRoomUiUtil.assertCardInHand(0, Card.Hearts5)
+        GameRoomUiUtil.assertCardInHand(1, Card.Clubs3)
+        GameRoomUiUtil.assertCardOnTable(Card.Clubs2)
 
-        assertCanPickACard(true)
-        assertCanPassTurn(false)
+        GameRoomUiUtil.assertCanPickACard(true)
+        GameRoomUiUtil.assertCanPassTurn(false)
 
-        pickACard()
+        GameRoomUiUtil.pickACard()
+        assertGameStateUpdatedMessageSent()
 
-        val gameStateUpdatedMessage1 = waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
-        assertThat(gameStateUpdatedMessage1.gameState.player(host.dwitchId).hasPickedACard).isTrue
+        GameRoomUiUtil.assertCardInHand(0, Card.Hearts5)
+        GameRoomUiUtil.assertCardInHand(1, Card.Clubs3)
+        GameRoomUiUtil.assertCardInHand(2, Card.Clubs4)
+        GameRoomUiUtil.assertCardOnTable(Card.Clubs2)
 
-        assertCardInHand(0, Card.Hearts5)
-        assertCardInHand(1, Card.Clubs3)
-        assertCardInHand(2, Card.Clubs4)
-        assertCardOnTable(Card.Clubs2)
+        GameRoomUiUtil.assertCanPickACard(false)
+        GameRoomUiUtil.assertCanPassTurn(true)
 
-        assertCanPickACard(false)
-        assertCanPassTurn(true)
+        GameRoomUiUtil.passTurn()
+        assertGameStateUpdatedMessageSent()
 
-        passTurn()
-
-        val gameStateUpdatedMessage2 =  waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
-        assertThat(gameStateUpdatedMessage2.gameState.player(host.dwitchId).status).isEqualTo(PlayerStatus.Waiting)
-
-        assertCanPickACard(false)
-        assertCanPassTurn(false)
+        GameRoomUiUtil.assertCanPickACard(false)
+        GameRoomUiUtil.assertCanPassTurn(false)
     }
 
     @Test
@@ -109,27 +91,27 @@ class GameRoomAsHostTest : BaseHostTest() {
 
         UiUtil.assertControlTextContent(R.id.gameInfoTv, R.string.round_is_beginning)
 
-        assertCardInHand(0, Card.Hearts5)
-        assertCardInHand(1, Card.Clubs3)
-        assertCardOnTable(Card.Clubs2)
+        GameRoomUiUtil.assertCardInHand(0, Card.Hearts5)
+        GameRoomUiUtil.assertCardInHand(1, Card.Clubs3)
+        GameRoomUiUtil.assertCardOnTable(Card.Clubs2)
 
-        playCard(1) // Local player plays Clubs3
-        waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
+        GameRoomUiUtil.playCard(1) // Local player plays Clubs3
+        assertGameStateUpdatedMessageSent()
 
-        assertCardInHand(0, Card.Hearts5)
-        assertCardOnTable(Card.Clubs3)
+        GameRoomUiUtil.assertCardInHand(0, Card.Hearts5)
+        GameRoomUiUtil.assertCardOnTable(Card.Clubs3)
 
         otherPlayerPlaysCard(PlayerHostTest.Guest1, Card.Spades4)
         dudeWaitASec()
-        assertCardOnTable(Card.Spades4)
+        GameRoomUiUtil.assertCardOnTable(Card.Spades4)
 
-        playCard(0) // Local player plays Hearts5 and is done
-        waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
-        assertCardOnTable(Card.Hearts5)
+        GameRoomUiUtil.playCard(0) // Local player plays Hearts5 and is done
+        assertGameStateUpdatedMessageSent()
+        GameRoomUiUtil.assertCardOnTable(Card.Hearts5)
 
         UiUtil.assertControlTextContent(R.id.gameInfoTv, R.string.round_is_over)
 
-        clickOnButton(R.id.endGameBtn)
+        UiUtil.clickOnButton(R.id.endGameBtn)
 
         dudeWaitASec()
 
@@ -149,11 +131,11 @@ class GameRoomAsHostTest : BaseHostTest() {
 
         UiUtil.assertControlTextContent(R.id.gameInfoTv, R.string.round_is_beginning)
 
-        assertCardInHand(0, Card.Hearts3)
-        assertCardOnTable(Card.Clubs2)
+        GameRoomUiUtil.assertCardInHand(0, Card.Hearts3)
+        GameRoomUiUtil.assertCardOnTable(Card.Clubs2)
 
-        playCard(0) // Local player plays Hearts3
-        waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
+        GameRoomUiUtil.playCard(0) // Local player plays Hearts3
+        assertGameStateUpdatedMessageSent()
 
         UiUtil.assertControlTextContent(R.id.gameInfoTv, R.string.round_is_over)
 
@@ -162,32 +144,36 @@ class GameRoomAsHostTest : BaseHostTest() {
             1 to listOf(Card.Spades6, Card.Spades4, Card.Diamonds4, Card.Clubs10) // Host
         ))
 
-        clickOnButton(R.id.startNewRoundBtn)
+        UiUtil.clickOnButton(R.id.startNewRoundBtn)
 
-        val messages = waitForNextNMessageSentByHost(2)
-        messages[0] as Message.GameStateUpdatedMessage
-        messages[1] as Message.CardExchangeMessage
+        val messagesSent = waitForNextNMessageSentByHost(2)
+        assertThat(messagesSent[0]).isInstanceOf(Message.GameStateUpdatedMessage::class.java)
+        assertThat(messagesSent[1]).isInstanceOf(Message.CardExchangeMessage::class.java)
+
+        UiUtil.assertControlEnabled(R.id.exchangeBtn, enabled = false)
 
         // The host (president) chooses the cards it wants to give up for the exchange with the asshole (guest)
-        chooseCardForExchange(0)
-        chooseCardForExchange(0)
-        clickOnButton(R.id.exchangeBtn)
+        GameRoomUiUtil.chooseCardForExchange(0)
+        GameRoomUiUtil.chooseCardForExchange(0)
+        UiUtil.assertControlEnabled(R.id.exchangeBtn, enabled = true)
 
-        dudeWaitASec(4)
+        UiUtil.clickOnButton(R.id.exchangeBtn)
 
-        assertGameRoomIsDisplayed()
+        dudeWaitASec()
 
-        assertCardInHand(0, Card.Diamonds4)
-        assertCardInHand(1, Card.Clubs10)
+        GameRoomUiUtil.assertGameRoomIsDisplayed()
+
+        GameRoomUiUtil.assertCardInHand(0, Card.Diamonds4)
+        GameRoomUiUtil.assertCardInHand(1, Card.Clubs10)
 
         otherPlayerSendsCardExchangeMessage(setOf(Card.Spades6, Card.HeartsAce))
 
-        waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
+        assertGameStateUpdatedMessageSent()
 
-        assertCardInHand(0, Card.Diamonds4)
-        assertCardInHand(1, Card.Clubs10)
-        assertCardInHand(2, Card.Spades6)
-        assertCardInHand(3, Card.HeartsAce)
+        GameRoomUiUtil.assertCardInHand(0, Card.Diamonds4)
+        GameRoomUiUtil.assertCardInHand(1, Card.Clubs10)
+        GameRoomUiUtil.assertCardInHand(2, Card.Spades6)
+        GameRoomUiUtil.assertCardInHand(3, Card.HeartsAce)
 
         UiUtil.assertControlTextContent(R.id.gameInfoTv, R.string.round_is_beginning)
     }
@@ -209,16 +195,21 @@ class GameRoomAsHostTest : BaseHostTest() {
         guestJoinsGame(PlayerHostTest.Guest1)
         guestBecomesReady(PlayerHostTest.Guest1)
 
-        onView(withId(R.id.launchGameBtn))
-                .check(matches(withText(R.string.wrhf_launch_game_tv)))
-                .check(matches(isEnabled()))
+        UiUtil.assertControlEnabled(R.id.launchGameBtn, enabled = true)
 
         initializeInitialGameSetup(cardsForPlayer, rankForPlayer)
 
-        clickOnButton(R.id.launchGameBtn)
+        UiUtil.clickOnButton(R.id.launchGameBtn)
+        val messageSent = waitForNextMessageSentByHost()
+        assertThat(messageSent).isInstanceOf(Message.LaunchGameMessage::class.java)
 
         dudeWaitASec()
 
-        assertGameRoomIsDisplayed()
+        GameRoomUiUtil.assertGameRoomIsDisplayed()
+    }
+
+    private fun assertGameStateUpdatedMessageSent() {
+        val messageSent = waitForNextMessageSentByHost()
+        assertThat(messageSent).isInstanceOf(Message.GameStateUpdatedMessage::class.java)
     }
 }

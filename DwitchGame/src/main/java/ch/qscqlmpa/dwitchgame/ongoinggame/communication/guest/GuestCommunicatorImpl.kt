@@ -34,20 +34,22 @@ internal class GuestCommunicatorImpl constructor(
     override fun sendMessageToHost(message: Message): Completable {
         Timber.d("Sending message to host: $message")
         return commClient.sendMessageToServer(message)
+            .subscribeOn(schedulerFactory.io())
     }
 
-    override fun observeCommunicationState(): Observable<GuestCommunicationState> {
+    override fun currentCommunicationState(): Observable<GuestCommunicationState> {
         return communicationStateRepository.observeEvents()
+            .subscribeOn(schedulerFactory.io())
     }
 
-    override fun observeConnectionState(): Observable<PlayerConnectionState> {
+    override fun observePlayerConnectionState(): Observable<PlayerConnectionState> {
         return communicationStateRepository.observeEvents().map { state ->
             when (state) {
                 GuestCommunicationState.Connected -> PlayerConnectionState.CONNECTED
                 GuestCommunicationState.Disconnected,
                 GuestCommunicationState.Error -> PlayerConnectionState.DISCONNECTED
             }
-        }
+        }.subscribeOn(schedulerFactory.io())
     }
 
     private fun observeCommunicationEvents() {

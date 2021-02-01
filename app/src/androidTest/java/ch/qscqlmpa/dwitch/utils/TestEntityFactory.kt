@@ -1,26 +1,11 @@
 package ch.qscqlmpa.dwitch.utils
 
-import ch.qscqlmpa.dwitchengine.DwitchEngine
-import ch.qscqlmpa.dwitchengine.initialgamesetup.random.RandomInitialGameSetup
-import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
-import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWr
-import ch.qscqlmpa.dwitchmodel.game.Game
-import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 
 object TestEntityFactory {
-
-    fun createPlayerWr1(): PlayerWr {
-        return PlayerWr(PlayerDwitchId(1), "Sheev", true, PlayerConnectionState.CONNECTED)
-    }
-
-    fun createPlayerWr2(): PlayerWr {
-        return PlayerWr(PlayerDwitchId(2), "Obi-Wan", true, PlayerConnectionState.CONNECTED)
-    }
 
     fun createHostPlayer(
         localId: Long = 10L,
@@ -87,27 +72,6 @@ object TestEntityFactory {
             PlayerRole.GUEST,
             connectionState,
             ready
-        )
-    }
-
-    fun createGameInWaitingRoom(localPlayerLocalId: Long = 10): Game {
-        return Game(
-            1L,
-            RoomType.WAITING_ROOM,
-            GameCommonId(65),
-            "Dwitch",
-            "",
-            localPlayerLocalId,
-            null
-        )
-    }
-
-    fun createGameState(): GameState {
-        val hostPlayer = createHostPlayer()
-        val players = listOf(hostPlayer, createGuestPlayer1())
-        return DwitchEngine.createNewGame(
-            players.map(Player::toPlayerInfo),
-            RandomInitialGameSetup(players.size)
         )
     }
 }

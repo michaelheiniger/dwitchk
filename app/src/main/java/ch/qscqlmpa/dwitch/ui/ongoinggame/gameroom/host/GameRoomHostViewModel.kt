@@ -24,7 +24,6 @@ constructor(
 
     fun endGame() {
         disposableManager.add(facade.endGame()
-            .subscribeOn(schedulerFactory.io())
             .observeOn(schedulerFactory.ui())
             .subscribe(
                 {

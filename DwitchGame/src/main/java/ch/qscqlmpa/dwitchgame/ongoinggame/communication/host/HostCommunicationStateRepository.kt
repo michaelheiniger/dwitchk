@@ -13,11 +13,11 @@ internal class HostCommunicationStateRepository @Inject constructor() {
     // Cache last event
     private val relay = BehaviorRelay.create<HostCommunicationState>()
 
-    fun observeEvents(): Observable<HostCommunicationState> {
+    fun currentState(): Observable<HostCommunicationState> {
         return relay
     }
 
-    fun notify(state: HostCommunicationState) {
+    fun updateState(state: HostCommunicationState) {
         Timber.i("New communication state: $state")
         return relay.accept(state)
     }

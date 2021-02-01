@@ -51,7 +51,6 @@ constructor(
     private fun joinGame(advertisedGame: AdvertisedGame, playerName: String) {
         disposableManager.add(
             guestFacade.joinGame(advertisedGame, playerName)
-                .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
                 .subscribe(
                     { event.setValue(NewGameEvent.SETUP_SUCCESSFUL) },
@@ -63,7 +62,6 @@ constructor(
     private fun hostGame(gameName: String, playerName: String) {
         disposableManager.add(
             hostFacade.hostGame(gameName, playerName, 8889) //TODO: Take value from sharedPref
-                .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
                 .subscribe(
                     { event.setValue(NewGameEvent.SETUP_SUCCESSFUL) },

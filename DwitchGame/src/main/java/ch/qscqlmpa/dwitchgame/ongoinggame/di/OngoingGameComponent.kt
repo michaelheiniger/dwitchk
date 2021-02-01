@@ -35,5 +35,5 @@ interface OngoingGameComponent {
     val waitingRoomGuestFacade: WaitingRoomGuestFacade
     val gameRoomHostFacade: GameRoomHostFacade
     val gameRoomGuestFacade: GameRoomGuestFacade
-    val playerDashboardFacade: GameDashboardFacade
+    val gameDashboardFacade: GameDashboardFacade
 }

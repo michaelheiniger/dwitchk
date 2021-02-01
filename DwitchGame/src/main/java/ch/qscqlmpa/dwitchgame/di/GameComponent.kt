@@ -2,7 +2,6 @@ package ch.qscqlmpa.dwitchgame.di
 
 import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
 import ch.qscqlmpa.dwitchgame.di.modules.*
-import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGameRepository
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameComponent
@@ -21,7 +20,6 @@ import dagger.Component
 )
 interface GameComponent {
     val appEventRepository: AppEventRepository
-    val advertisedGameRepository: AdvertisedGameRepository
     val homeHostFacade: HomeHostFacade
     val homeGuestFacade: HomeGuestFacade
 

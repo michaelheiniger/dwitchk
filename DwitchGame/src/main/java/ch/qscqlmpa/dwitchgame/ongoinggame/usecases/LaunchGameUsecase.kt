@@ -20,21 +20,20 @@ internal class LaunchGameUsecase @Inject constructor(
 ) {
 
     fun launchGame(): Completable {
-        return gameInitializerService.getGameState()
-            .flatMapCompletable { gameState ->
-                Completable.merge(
-                    listOf(
-                        saveGameStateInStore(gameState),
-                        sendLaunchGameMessage(gameState)
-                    )
-                )
-            }
+        return Single.fromCallable { store.gameIsNew() }
+            .flatMap { gameIsNew ->
+                if (gameIsNew) {
+                    gameInitializerService.initializeGameState()
+                } else {
+                    fetchExistingGameState()
+                }
+            }.flatMapCompletable(::sendLaunchGameMessage)
             .andThen(changeCurrentRoomService.moveToGameRoom())
             .doOnError { e -> Timber.e(e, "Error while launching game") }
     }
 
-    private fun saveGameStateInStore(gameState: GameState): Completable {
-        return Completable.fromAction { store.updateGameState(gameState) }
+    private fun fetchExistingGameState(): Single<GameState> {
+        return Single.fromCallable { store.getGameState() }
     }
 
     private fun sendLaunchGameMessage(gameState: GameState): Completable {

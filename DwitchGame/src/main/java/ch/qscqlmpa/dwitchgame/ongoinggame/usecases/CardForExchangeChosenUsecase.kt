@@ -8,12 +8,13 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.internal.operators.single.SingleFromCallable
 import javax.inject.Inject
 
-class CardForExchangeChosenUsecase @Inject constructor(
+internal class CardForExchangeChosenUsecase @Inject constructor(
     private val communicator: GameCommunicator,
     private val inGameStore: InGameStore
 ) {
 
     fun chooseCardForExchange(cards: Set<Card>): Completable {
+        //TODO: Check that cards provided are valid according to event
         return SingleFromCallable {
             MessageFactory.createCardsForExchangeChosenMessage(inGameStore.getLocalPlayerDwitchId(), cards)
         }.flatMapCompletable(communicator::sendMessageToHost)

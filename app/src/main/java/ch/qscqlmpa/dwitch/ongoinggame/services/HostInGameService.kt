@@ -18,7 +18,7 @@ class HostInGameService : BaseInGameService() {
     override val playerRole = PlayerRole.HOST
 
     override fun actionStartService(intent: Intent) {
-        val gameCreatedInfo = intent.getParcelableExtra<GameCreatedInfo>(EXTRA_GAME_CREATED_INFO)
+        val gameCreatedInfo = intent.getParcelableExtra<GameCreatedInfo>(EXTRA_GAME_CREATED_INFO)!!
 
         Timber.i("Start service")
         showNotification(RoomType.WAITING_ROOM)
@@ -30,8 +30,8 @@ class HostInGameService : BaseInGameService() {
             gameCreatedInfo.gamePort,
             "0.0.0.0"
         )
-        getOngoingGameComponent().hostFacade.listenForConnections()
-        advertiseGame(GameAdvertisingInfo(gameCreatedInfo.gameCommonId, gameCreatedInfo.gameName, gameCreatedInfo.gamePort))
+        getOngoingGameComponent().hostFacade.startServer()
+        advertiseGame(GameAdvertisingInfo(gameCreatedInfo.isNew, gameCreatedInfo.gameCommonId, gameCreatedInfo.gameName, gameCreatedInfo.gamePort))
     }
 
     override fun actionChangeRoomToGameRoom() {
@@ -41,7 +41,7 @@ class HostInGameService : BaseInGameService() {
     }
 
     override fun cleanUp() {
-        getOngoingGameComponent().hostFacade.closeAllConnections()
+        getOngoingGameComponent().hostFacade.stopServer()
         (application as App).stopOngoingGame()
         gameAdvertisingDisposable.dispose()
     }

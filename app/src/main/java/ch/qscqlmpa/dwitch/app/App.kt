@@ -104,7 +104,7 @@ open class App : DaggerApplication() {
                     ongoingGameComponent!!.waitingRoomGuestFacade,
                     ongoingGameComponent!!.gameRoomHostFacade,
                     ongoingGameComponent!!.gameRoomGuestFacade,
-                    ongoingGameComponent!!.playerDashboardFacade
+                    ongoingGameComponent!!.gameDashboardFacade
                 )
             )
         } else {

@@ -11,7 +11,7 @@ import io.reactivex.rxjava3.core.Completable
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class JoinGameAckMessageProcessorTest : BaseMessageProcessorTest() {
+internal class JoinGameAckMessageProcessorTest : BaseMessageProcessorTest() {
 
     private val gameCommonId = GameCommonId(1L)
     private val guestPlayerDwitchId = TestEntityFactory.createGuestPlayer1().dwitchId

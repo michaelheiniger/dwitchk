@@ -16,6 +16,7 @@ internal class ProdWebsocketServer constructor(
 ) : WebSocketServer(InetSocketAddress(listeningAddress, listeningPort)), WebsocketServer {
 
     private val onStartRelay = PublishRelay.create<OnStart>()
+    private val onStopRelay = PublishRelay.create<OnStop>()
     private val onOpenRelay = PublishRelay.create<OnOpen>()
     private val onCloseRelay = PublishRelay.create<OnClose>()
     private val onMessageRelay = PublishRelay.create<OnMessage>()
@@ -28,6 +29,7 @@ internal class ProdWebsocketServer constructor(
 
     override fun stop() {
         super.stop()
+        onStopRelay.accept(OnStop)
     }
 
     override fun send(websocket: WebSocket, message: String) {

@@ -1,9 +1,6 @@
 package ch.qscqlmpa.dwitch.uitests.base
 
 import android.content.res.Resources
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.replaceText
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import ch.qscqlmpa.dwitch.R
@@ -23,6 +20,7 @@ import ch.qscqlmpa.dwitchengine.model.player.Rank
 import ch.qscqlmpa.dwitchgame.di.TestGameComponent
 import ch.qscqlmpa.dwitchgame.gamediscovery.TestNetworkAdapter
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.TestOngoingGameComponent
+import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.TestStoreComponent
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import ch.qscqlmpa.dwitchstore.store.Store
@@ -38,6 +36,10 @@ abstract class BaseUiTest {
 
     @get:Rule
     var testRule = TestRule(MainActivity::class.java)
+
+    protected val gameName = "LOTR"
+
+    protected val hostName = "Aragorn"
 
     protected lateinit var res: Resources
 
@@ -103,17 +105,27 @@ abstract class BaseUiTest {
 
     protected fun dudeWaitASec(seconds: Long = 2L) {
         Completable.fromAction { Timber.i("Waiting for $seconds seconds...") }
-                .delay(seconds, TimeUnit.SECONDS)
-                .blockingSubscribe()
+            .delay(seconds, TimeUnit.SECONDS)
+            .blockingSubscribe()
     }
 
-
-    protected fun setControlText(resourceId: Int, text: String) {
-        onView(withId(resourceId)).perform(replaceText(text))
+    protected fun dudeWaitAMillisSec(ms: Long = 500L) {
+        Completable.fromAction { Timber.i("Waiting for $ms milliseconds...") }
+            .delay(ms, TimeUnit.MILLISECONDS)
+            .blockingSubscribe()
     }
 
     protected fun assertCurrentScreenIsHomeSreen() {
         UiUtil.elementIsDisplayed(R.id.gameListTv)
         UiUtil.assertControlTextContent(R.id.gameListTv, R.string.ma_game_list_tv)
+    }
+
+    protected fun buildSerializedAdvertisedGame(
+        isNew: Boolean,
+        gameName: String,
+        gameCommonId: GameCommonId,
+        gamePort: Int
+    ): String {
+        return "{\"isNew\": $isNew, \"gameCommonId\":{\"value\":${gameCommonId.value}},\"gameName\":\"$gameName\",\"gamePort\":$gamePort}"
     }
 }

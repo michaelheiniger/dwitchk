@@ -23,6 +23,14 @@ abstract class HostCommunicationEventProcessorModule {
     @OngoingGameScope
     @Binds
     @IntoMap
+    @HostCommunicationEventProcessorKey(ServerCommunicationEvent.NoLongerListeningForConnections::class)
+    internal abstract fun bindHostNoLongerListeningForConnectionsEventProcessor(
+        eventProcessor: HostNoLongerListeningForConnectionsEventProcessor
+    ): HostCommunicationEventProcessor
+
+    @OngoingGameScope
+    @Binds
+    @IntoMap
     @HostCommunicationEventProcessorKey(ServerCommunicationEvent.ClientConnected::class)
     internal abstract fun bindClientConnectedEventProcessor(
         eventProcessor: GuestConnectedEventProcessor

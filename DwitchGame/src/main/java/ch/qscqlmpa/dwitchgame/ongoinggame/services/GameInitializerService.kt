@@ -10,14 +10,16 @@ import javax.inject.Inject
 
 internal class GameInitializerService @Inject constructor(
     private val store: InGameStore,
-    private val initialGameSetupFactory: InitialGameSetupFactory,
+    private val initialGameSetupFactory: InitialGameSetupFactory
 ){
 
-    fun getGameState(): Single<GameState> {
+    fun initializeGameState(): Single<GameState> {
         return Single.fromCallable {
             val players = store.getPlayersInWaitingRoom().map(Player::toPlayerInfo)
             val initialGameSetup = initialGameSetupFactory.getInitialGameSetup(players.size)
-            DwitchEngine.createNewGame(players, initialGameSetup)
+            val gameState = DwitchEngine.createNewGame(players, initialGameSetup)
+            store.updateGameState(gameState)
+            gameState
         }
     }
 }

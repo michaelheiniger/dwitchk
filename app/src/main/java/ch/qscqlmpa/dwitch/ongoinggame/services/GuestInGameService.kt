@@ -47,7 +47,7 @@ class GuestInGameService : BaseInGameService() {
             context: Context,
             gameJoinedInfo: GameJoinedInfo
         ) {
-            Timber.i("Starting GuestService...()")
+            Timber.i("Starting GuestService...")
             val intent = Intent(context, GuestInGameService::class.java)
             intent.action = ACTION_START_SERVICE
             intent.putExtra(EXTRA_GAME_JOINED_INFO, gameJoinedInfo)
@@ -61,7 +61,7 @@ class GuestInGameService : BaseInGameService() {
         }
 
         fun stopService(context: Context) {
-            Timber.i("Stopping GuestService...()")
+            Timber.i("Stopping GuestService...")
             val intent = Intent(context, GuestInGameService::class.java)
             context.stopService(intent)
         }

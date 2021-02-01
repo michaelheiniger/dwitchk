@@ -47,6 +47,7 @@ class LanGameDiscovery @Inject constructor(
         Timber.v("Packet received: $packet")
         val gameInfo = serializerFactory.unserializeGameInfo(packet.message)
         return AdvertisedGame(
+            gameInfo.isNew,
             gameInfo.gameName,
             gameInfo.gameCommonId,
             packet.senderIpAddress,

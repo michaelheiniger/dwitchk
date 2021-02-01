@@ -31,8 +31,6 @@ class CardExchangeFragment : OngoingGameBaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(CardExchangeViewModel::class.java)
 
-        exchangeBtn.setOnClickListener { viewModel.confirmChoice() }
-
         viewModel.commands().observe(viewLifecycleOwner, { command ->
             Timber.d("Command: $command")
             when (command) {
@@ -43,6 +41,9 @@ class CardExchangeFragment : OngoingGameBaseFragment() {
             }
         })
 
+        viewModel.submitControl().observe(viewLifecycleOwner, { model -> exchangeBtn.isEnabled = model.enabled })
+        exchangeBtn.setOnClickListener { viewModel.confirmChoice() }
+
         setupCardsChosen()
         setupCardsInHand()
     }
@@ -52,9 +53,7 @@ class CardExchangeFragment : OngoingGameBaseFragment() {
         cardsChosenRw.layoutManager = GridLayoutManager(context, 4)
         cardsChosenRw.adapter = cardsChosenAdapter
 
-        viewModel.cardsChosen().observe(viewLifecycleOwner, { cardItems ->
-            cardsChosenAdapter.setData(cardItems)
-        })
+        viewModel.cardsChosen().observe(viewLifecycleOwner, { cardItems -> cardsChosenAdapter.setData(cardItems) })
     }
 
     private fun setupCardsInHand() {
@@ -68,13 +67,13 @@ class CardExchangeFragment : OngoingGameBaseFragment() {
         })
     }
 
-    private class CardsInHandClickedListener(private val viewModel: CardExchangeViewModel): CardAdapter.CardClickedListener  {
+    private class CardsInHandClickedListener(private val viewModel: CardExchangeViewModel) : CardAdapter.CardClickedListener {
         override fun onCardClicked(card: Card) {
             viewModel.cardInHandClicked(card)
         }
     }
 
-    private class CardsChosenClickedListener(private val viewModel: CardExchangeViewModel): CardAdapter.CardClickedListener  {
+    private class CardsChosenClickedListener(private val viewModel: CardExchangeViewModel) : CardAdapter.CardClickedListener {
         override fun onCardClicked(card: Card) {
             viewModel.cardChosenClicked(card)
         }

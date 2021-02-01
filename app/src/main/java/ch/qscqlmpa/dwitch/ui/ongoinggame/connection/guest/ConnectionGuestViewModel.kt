@@ -66,8 +66,7 @@ class ConnectionGuestViewModel @Inject constructor(
     }
 
     private fun currentCommunicationState(): Flowable<GuestCommunicationState> {
-        return facade.observeCommunicationState()
-            .subscribeOn(schedulerFactory.io())
+        return facade.currentCommunicationState()
             .observeOn(schedulerFactory.ui())
             .doOnError { error -> Timber.e(error, "Error while observing communication state.") }
             .toFlowable(BackpressureStrategy.LATEST)

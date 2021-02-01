@@ -6,5 +6,5 @@ import io.reactivex.rxjava3.core.Observable
 interface GuestFacade {
     fun connect()
     fun closeConnection()
-    fun observeCommunicationState(): Observable<GuestCommunicationState>
+    fun currentCommunicationState(): Observable<GuestCommunicationState>
 }

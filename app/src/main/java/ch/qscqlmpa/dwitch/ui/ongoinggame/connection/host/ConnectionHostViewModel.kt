@@ -62,12 +62,11 @@ class ConnectionHostViewModel @Inject constructor(
     fun reconnect() {
         reconnectActionCtrl.value = UiControlModel(enabled = false)
         reconnectLoadingCtrl.value = UiControlModel(visibility = Visibility.Visible)
-        facade.listenForConnections()
+        facade.startServer()
     }
 
     private fun currentCommunicationState(): Flowable<HostCommunicationState> {
-        return facade.observeCommunicationState()
-            .subscribeOn(schedulerFactory.io())
+        return facade.currentCommunicationState()
             .observeOn(schedulerFactory.ui())
             .doOnError { error -> Timber.e(error, "Error while observing communication state.") }
             .toFlowable(BackpressureStrategy.LATEST)

@@ -9,8 +9,9 @@ import io.reactivex.rxjava3.core.Completable
 import timber.log.Timber
 import javax.inject.Inject
 
-internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(private val store: InGameStore) :
-    MessageProcessor {
+internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
+    private val store: InGameStore
+) : MessageProcessor {
 
     override fun process(message: Message, senderConnectionID: ConnectionId): Completable {
 
@@ -56,7 +57,13 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(privat
 
         if (playersToUpdate.isNotEmpty()) {
             Timber.v("Players to update: $playersToUpdate")
-            playersToUpdate.forEach { player -> store.updatePlayerWithConnectionStateAndReady(player.id, player.connectionState, player.ready) }
+            playersToUpdate.forEach { player ->
+                store.updatePlayerWithConnectionStateAndReady(
+                    player.id,
+                    player.connectionState,
+                    player.ready
+                )
+            }
         } else {
             Timber.v("No player to update.")
         }

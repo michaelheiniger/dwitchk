@@ -19,8 +19,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import timber.log.Timber
 
-internal class HostCommunicatorImpl
-constructor(
+internal class HostCommunicatorImpl constructor(
     private val inGameStore: InGameStore,
     private val commServer: CommServer,
     private val messageDispatcher: MessageDispatcher,
@@ -34,17 +33,17 @@ constructor(
 
     private val receivedMessageRelay = PublishRelay.create<EnvelopeReceived>()
 
-    override fun listenForConnections() {
-        Timber.i("Listening for connections...")
+    override fun startServer() {
+        Timber.v("Start server")
         observeCommunicationEvents()
         observeReceivedMessages()
         commServer.start()
     }
 
-    override fun closeAllConnections() {
+    override fun stopServer() {
         Timber.i("Close all connections")
-        disposableManager.disposeAndReset()
         commServer.stop()
+        disposableManager.disposeAndReset()
     }
 
     override fun sendMessage(envelopeToSend: EnvelopeToSend): Completable {
@@ -57,6 +56,7 @@ constructor(
     override fun sendMessageToHost(message: Message): Completable {
         Timber.i("Send message to host: $message")
         return hostConnectionId()
+            .subscribeOn(schedulerFactory.io())
             .doOnSuccess { hostConnectionId -> receivedMessageRelay.accept(EnvelopeReceived(hostConnectionId, message)) }
             .ignoreElement()
     }
@@ -65,12 +65,8 @@ constructor(
         commServer.closeConnectionWithClient(connectionId)
     }
 
-    override fun observeCommunicationState(): Observable<HostCommunicationState> {
-        return communicationStateRepository.observeEvents()
-    }
-
-    override fun observeConnectionState(): Observable<PlayerConnectionState> {
-        return communicationStateRepository.observeEvents().map { state ->
+    override fun observePlayerConnectionState(): Observable<PlayerConnectionState> {
+        return communicationStateRepository.currentState().map { state ->
             when (state) {
                 HostCommunicationState.Open -> PlayerConnectionState.CONNECTED
                 HostCommunicationState.Closed,
@@ -80,13 +76,16 @@ constructor(
     }
 
     private fun observeCommunicationEvents() {
-        disposableManager.add(commServer.observeCommunicationEvents()
-            .subscribeOn(schedulerFactory.io())
-            .flatMapCompletable { event -> communicationEventDispatcher.dispatch(event).subscribeOn(schedulerFactory.io()) }
-            .subscribe(
-                { Timber.d("Communication events stream completed") },
-                { error -> Timber.e(error, "Error while observing communication events") }
-            )
+        disposableManager.add(
+            commServer.observeCommunicationEvents()
+                .flatMapCompletable { event ->
+                    communicationEventDispatcher.dispatch(event)
+                        .subscribeOn(schedulerFactory.io())
+                }
+                .subscribe(
+                    { Timber.d("Communication events stream completed") },
+                    { error -> Timber.e(error, "Error while observing communication events") }
+                )
         )
     }
 
@@ -100,7 +99,8 @@ constructor(
             ).flatMapCompletable { envelopeReceived ->
                 Completable.merge(
                     listOf(
-                        dispatchReceivedMessage(envelopeReceived),
+                        messageDispatcher.dispatch(envelopeReceived)
+                            .subscribeOn(schedulerFactory.io()),
                         forwardMessageToGuestsIfNeeded(envelopeReceived)
                     )
                 )
@@ -111,15 +111,11 @@ constructor(
         )
     }
 
-    private fun dispatchReceivedMessage(envelopeReceived: EnvelopeReceived) =
-        messageDispatcher.dispatch(envelopeReceived)
-            .subscribeOn(schedulerFactory.io())
-
     private fun hostConnectionId(): Single<ConnectionId> {
         return Single.fromCallable {
             val hostDwitchId = inGameStore.getLocalPlayerDwitchId()
             connectionStore.getConnectionId(hostDwitchId)
-                ?: throw IllegalStateException("The host has no connection ID.")
+                ?: throw IllegalStateException("The host has no connection ID mapped to its in-game ID: $hostDwitchId.")
         }
     }
 
@@ -145,7 +141,8 @@ constructor(
     private fun forwardMessageToGuestsIfNeeded(envelopeReceived: EnvelopeReceived): Completable {
         return when (envelopeReceived.message) {
             is Message.GameStateUpdatedMessage -> commServer.sendMessage(envelopeReceived.message, Recipient.All)
+                .subscribeOn(schedulerFactory.io())
             else -> Completable.complete()
-        }.subscribeOn(schedulerFactory.io())
+        }
     }
 }

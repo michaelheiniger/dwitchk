@@ -89,8 +89,7 @@ class NewGameActivity : HomeBaseActivity() {
     private fun setGameNameIfNeeded() {
         when (playerRole) {
             PlayerRole.GUEST -> {
-                gameNameEdt.isEnabled = false
-                gameNameEdt.setText(game!!.gameName)
+                gameNameTil.visibility = View.GONE
             }
             PlayerRole.HOST -> {
                 gameNameEdt.isEnabled = true

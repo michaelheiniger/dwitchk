@@ -17,7 +17,7 @@ internal class ErrorListeningForConnectionsEventProcessor @Inject constructor(
 
         return Completable.fromAction {
             Timber.e("Error listening for connections: ${event.exception}")
-            communicationStateRepository.notify(HostCommunicationState.Error)
+            communicationStateRepository.updateState(HostCommunicationState.Error)
         }
     }
 }

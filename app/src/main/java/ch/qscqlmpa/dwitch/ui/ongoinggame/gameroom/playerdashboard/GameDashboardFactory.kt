@@ -10,17 +10,17 @@ import ch.qscqlmpa.dwitch.ui.utils.TextProvider
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.info.PlayerInfo
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameInfoForDashboard
+import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardInfo
 import timber.log.Timber
 
 class GameDashboardFactory(
-    gameInfoForDashboard: GameInfoForDashboard,
+    gameDashboardInfo: GameDashboardInfo,
     private val textProvider: TextProvider
 ) {
 
-    private val dashboardEnabled = gameInfoForDashboard.dashboardEnabled
-    private val gameInfo = gameInfoForDashboard.gameInfo
-    private val localPlayerInfo = gameInfoForDashboard.localPlayerInfo
+    private val dashboardEnabled = gameDashboardInfo.dashboardEnabled
+    private val gameInfo = gameDashboardInfo.gameInfo
+    private val localPlayerInfo = gameDashboardInfo.localPlayerInfo
 
     fun create(): GameDashboard {
         return GameDashboard(

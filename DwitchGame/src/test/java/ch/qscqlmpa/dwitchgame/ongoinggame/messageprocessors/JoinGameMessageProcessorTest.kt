@@ -15,7 +15,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class JoinGameMessageProcessorTest : BaseMessageProcessorTest() {
+internal class JoinGameMessageProcessorTest : BaseMessageProcessorTest() {
 
     private lateinit var connectionStore: ConnectionStore
 
@@ -41,25 +41,9 @@ class JoinGameMessageProcessorTest : BaseMessageProcessorTest() {
     }
 
     @Test
-    fun `A new player record is inserted in store when new player joins the game`() {
-        setupWaitingRoomStateUpdateMessageMock()
-        val joinAckMessageWrapperMock = mockk<EnvelopeToSend>()
-        every { mockHostMessageFactory.createJoinAckMessage(any(), any()) } returns Single.just(joinAckMessageWrapperMock)
-
-        every { mockInGameStore.insertNewGuestPlayer(any()) } returns guestPlayer.id
-        every { mockInGameStore.getPlayerDwitchId(any()) } returns guestPlayer.dwitchId
-
-        launchTest().test().assertComplete()
-
-        verify { mockInGameStore.insertNewGuestPlayer(guestPlayer.name) }
-        verify { mockInGameStore.getPlayerDwitchId(guestPlayer.id) }
-
-        confirmVerified(mockInGameStore)
-    }
-
-    @Test
-    fun `Connection ID of the joining player is stored in connection store`() {
-        setupWaitingRoomStateUpdateMessageMock()
+    fun `A new player joins the new game`() {
+        every { mockInGameStore.gameIsNew() } returns true
+        val waitingRoomStateUpdateMessageWrapperMock = setupWaitingRoomStateUpdateMessageMock()
         val joinAckMessageWrapperMock = mockk<EnvelopeToSend>()
         every { mockHostMessageFactory.createJoinAckMessage(any(), any()) } returns Single.just(joinAckMessageWrapperMock)
 
@@ -72,26 +56,32 @@ class JoinGameMessageProcessorTest : BaseMessageProcessorTest() {
         val connectionId = connectionStore.getConnectionId(guestPlayer.dwitchId)
         assertThat(connectionStore.getDwitchId(connectionId!!)).isEqualTo(guestPlayer.dwitchId)
         assertThat(connectionId).isEqualTo(senderConnectionId)
-    }
-
-    @Test
-    fun `A join ack and waiting room state update messages are sent when a new player joins the game`() {
-        val waitingRoomStateUpdateMessageWrapperMock = setupWaitingRoomStateUpdateMessageMock()
-        val joinAckMessageWrapperMock = mockk<EnvelopeToSend>()
-        every { mockHostMessageFactory.createJoinAckMessage(any(), any()) } returns Single.just(joinAckMessageWrapperMock)
-
-        every { mockInGameStore.insertNewGuestPlayer(any()) } returns guestPlayer.id
-        every { mockInGameStore.getPlayerDwitchId(any()) } returns guestPlayer.dwitchId
-
-        launchTest().test().assertComplete()
 
         verifyOrder {
             mockHostCommunicator.sendMessage(joinAckMessageWrapperMock)
             mockHostCommunicator.sendMessage(waitingRoomStateUpdateMessageWrapperMock)
         }
-
         confirmVerified(mockHostCommunicator)
+
+        verify { mockInGameStore.insertNewGuestPlayer(guestPlayer.name) }
+        verify { mockInGameStore.getPlayerDwitchId(guestPlayer.id) }
+        verify { mockInGameStore.gameIsNew() }
+        confirmVerified(mockInGameStore)
     }
+
+    @Test
+    fun `A player joins the existing game`() {
+        every { mockInGameStore.gameIsNew() } returns false
+
+        launchTest().test().assertComplete()
+
+        verify { mockHostCommunicator.closeConnectionWithClient(senderConnectionId) }
+        confirmVerified(mockHostCommunicator)
+
+        verify { mockInGameStore.gameIsNew() }
+        confirmVerified(mockInGameStore)
+    }
+
 
     private fun launchTest(): Completable {
         return processor.process(Message.JoinGameMessage(guestPlayer.name), senderConnectionId)

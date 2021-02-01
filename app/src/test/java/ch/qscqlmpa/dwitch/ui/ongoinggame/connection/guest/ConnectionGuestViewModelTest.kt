@@ -34,7 +34,7 @@ class ConnectionGuestViewModelTest : BaseViewModelUnitTest() {
 
         communicationStateSubject = PublishSubject.create()
 
-        every { mockFacade.observeCommunicationState() } returns communicationStateSubject
+        every { mockFacade.currentCommunicationState() } returns communicationStateSubject
     }
 
     @Test

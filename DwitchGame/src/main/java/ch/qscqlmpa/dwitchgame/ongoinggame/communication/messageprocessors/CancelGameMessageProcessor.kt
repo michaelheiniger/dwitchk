@@ -15,7 +15,9 @@ internal class CancelGameMessageProcessor @Inject constructor(
 
     override fun process(message: Message, senderConnectionID: ConnectionId): Completable {
         return Completable.fromCallable {
-            store.deleteGame()
+            if (store.gameIsNew()) {
+                store.deleteGame()
+            }
             gameEventRepository.notify(GuestGameEvent.GameCanceled)
         }
     }

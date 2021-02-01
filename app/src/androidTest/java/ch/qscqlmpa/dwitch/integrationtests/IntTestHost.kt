@@ -43,7 +43,6 @@ class IntTestHost(
 //            .setInstance(initialGameSetup)
 //
 //        ongoingGameComponent.waitingRoomHostFacade.launchGame()
-//            .subscribeOn(Schedulers.trampoline())
 //            .observeOn(Schedulers.trampoline())
 //            .blockingGet()
     }

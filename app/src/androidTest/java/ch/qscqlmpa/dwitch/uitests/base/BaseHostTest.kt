@@ -20,15 +20,14 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
     protected lateinit var guest3: Player
 
     protected open fun goToWaitingRoom() {
-
         clickOnButton(R.id.createGameBtn)
 
-        setControlText(R.id.playerNameEdt, hostName)
-        setControlText(R.id.gameNameEdt, gameName)
+        UiUtil.setControlText(R.id.playerNameEdt, hostName)
+        UiUtil.setControlText(R.id.gameNameEdt, gameName)
 
         clickOnButton(R.id.nextBtn)
 
-        dudeWaitASec()
+        dudeWaitAMillisSec()
 
         /*
         * Note: It also allows to wait for the waiting room to be displayed: otherwise, the messages sent by clients could be
@@ -38,12 +37,13 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
 
         hookOngoingGameDependenciesForHost()
 
-        host = inGameStore.getPlayer(hostName)!!
+        host = inGameStore.getPlayer(hostName)!! //TODO: delete. No need to check DB stuff in UI tests
     }
 
     protected fun guestJoinsGame(guest: PlayerHostTest) {
-        serverTestStub.connectClientToServer(guest, false)
-        serverTestStub.guestSendsMessageToServer(guest, GuestMessageFactory.createJoinGameMessage(guest.name), true)
+        serverTestStub.connectClientToServer(guest)
+        dudeWaitAMillisSec()
+        serverTestStub.guestSendsMessageToServer(guest, GuestMessageFactory.createJoinGameMessage(guest.name))
         assertGuestHasJoinedGame()
 
         when (guest) {
@@ -53,31 +53,34 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
         }
     }
 
-    protected fun guestBecomesReady(identifier: PlayerHostTest): Message.WaitingRoomStateUpdateMessage {
+    protected fun guestBecomesReady(identifier: PlayerHostTest) {
         val guest = getGuest(identifier)
         serverTestStub.guestSendsMessageToServer(
             identifier,
-            GuestMessageFactory.createPlayerReadyMessage(guest.dwitchId, true),
-            true
+            GuestMessageFactory.createPlayerReadyMessage(guest.dwitchId, ready = true)
         )
-        return waitForNextMessageSentByHost() as Message.WaitingRoomStateUpdateMessage
+        val messageSent = waitForNextMessageSentByHost()
+        assertThat(messageSent).isInstanceOf(Message.WaitingRoomStateUpdateMessage::class.java)
     }
 
     protected fun guestDisconnects(identifier: PlayerHostTest) {
-        serverTestStub.disconnectFromServer(identifier, true)
-        waitForNextMessageSentByHost() as Message.WaitingRoomStateUpdateMessage
+        serverTestStub.disconnectFromServer(identifier)
+        val messageSent = waitForNextMessageSentByHost()
+        assertThat(messageSent).isInstanceOf(Message.WaitingRoomStateUpdateMessage::class.java)
     }
 
-    protected fun guestLeavesGame(identifier: PlayerHostTest): Message.WaitingRoomStateUpdateMessage {
+    protected fun guestLeavesGame(identifier: PlayerHostTest) {
         val guest = getGuest(identifier)
         serverTestStub.guestSendsMessageToServer(identifier, GuestMessageFactory.createLeaveGameMessage(guest.dwitchId), true)
-        return waitForNextMessageSentByHost() as Message.WaitingRoomStateUpdateMessage
+        val messageSent = waitForNextMessageSentByHost()
+        assertThat(messageSent).isInstanceOf(Message.WaitingRoomStateUpdateMessage::class.java)
     }
 
     private fun assertGuestHasJoinedGame() {
-        val joinGameAckMessageForGuest = waitForNextMessageSentByHost() as Message.JoinGameAckMessage
-        assertThat(joinGameAckMessageForGuest.playerId).isNotEqualTo(0)
-        waitForNextMessageSentByHost() as Message.WaitingRoomStateUpdateMessage
+        val message1 = waitForNextMessageSentByHost()
+        assertThat(message1).isInstanceOf(Message.JoinGameAckMessage::class.java)
+        val message2 = waitForNextMessageSentByHost()
+        assertThat(message2).isInstanceOf(Message.WaitingRoomStateUpdateMessage::class.java)
     }
 
     /**

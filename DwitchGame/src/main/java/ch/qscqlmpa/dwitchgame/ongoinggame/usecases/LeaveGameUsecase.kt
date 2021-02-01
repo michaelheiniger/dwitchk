@@ -17,13 +17,20 @@ internal class LeaveGameUsecase @Inject constructor(
 ) {
 
     fun leaveGame(): Completable {
-        return buildLeaveGameMessage()
-            .flatMapCompletable(communicator::sendMessageToHost)
+        return Single.fromCallable { store.gameIsNew() }
+            .flatMapCompletable { gameIsNew ->
+                if (gameIsNew) {
+                    buildLeaveGameMessage()
+                        .flatMapCompletable(communicator::sendMessageToHost)
+                        .andThen(deleteGameFromStore())
+                } else {
+                    Completable.complete()
+                }
+            }
             .doOnComplete {
                 communicator.closeConnection()
                 appEventRepository.notify(AppEvent.GameLeft)
             }
-            .andThen(deleteGameFromStore())
     }
 
     private fun buildLeaveGameMessage(): Single<Message> {

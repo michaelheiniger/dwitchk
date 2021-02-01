@@ -3,22 +3,19 @@ package ch.qscqlmpa.dwitch.uitests
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.uitests.base.BaseUiTest
-import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.matchesWithErrorText
-import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.matchesWithText
-import ch.qscqlmpa.dwitch.utils.ViewAssertionUtil.withRecyclerView
+import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
-import org.hamcrest.core.IsNot.not
+import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import org.junit.Test
 
 
 class NewGameAsGuestTest : BaseUiTest() {
 
-    private val message1 = "{\"gameCommonId\":{\"value\":23},\"gameName\":\"Kaamelott\",\"gamePort\":8889}"
-    private val message2 = "{\"gameCommonId\":{\"value\":65},\"gameName\":\"Les Bronzés\",\"gamePort\":8890}"
+    private val message1 = buildSerializedAdvertisedGame(true, "Kaamelott", GameCommonId(23), 8890)
+    private val message2 = buildSerializedAdvertisedGame(true, "Les Bronzés", GameCommonId(65), 8891)
     private val packet1 = Packet(message1, "192.168.1.1", 3456)
     private val packet2 = Packet(message2, "192.168.1.2", 7657)
 
@@ -29,14 +26,10 @@ class NewGameAsGuestTest : BaseUiTest() {
         networkAdapter.setPacket(packet1)
         networkAdapter.setPacket(packet2)
 
-        onView(withRecyclerView(R.id.gameListRw).atPositionOnView(1, R.id.gameNameTv))
-                .perform(click())
+        UiUtil.clickOnRecyclerViewElement(R.id.gameListRw, R.id.gameNameTv, 1)
 
-        onView(withId(R.id.playerNameEdt)).perform(replaceText("Bernard Morin"))
-
-        onView(withId(R.id.playerNameEdt)).check(matches(withText("Bernard Morin")))
-        onView(withId(R.id.gameNameEdt)).check(matches(withText("Les Bronzés")))
-        onView(withId(R.id.gameNameEdt)).check(matches(not(isEnabled())))
+        UiUtil.setControlText(R.id.playerNameEdt, "Bernard Morin")
+        UiUtil.assertControlTextContent(R.id.playerNameEdt, "Bernard Morin")
     }
 
     @Test
@@ -46,14 +39,12 @@ class NewGameAsGuestTest : BaseUiTest() {
         networkAdapter.setPacket(packet1)
         networkAdapter.setPacket(packet2)
 
-        onView(withRecyclerView(R.id.gameListRw).atPositionOnView(1, R.id.gameNameTv))
-                .perform(click())
+        UiUtil.clickOnRecyclerViewElement(R.id.gameListRw, R.id.gameNameTv, 1)
 
         onView(withId(R.id.playerNameEdt)).perform(replaceText(""));
 
         onView(withId(R.id.nextBtn)).perform(click())
-
-        onView(withId(R.id.playerNameEdt)).check(matchesWithErrorText(R.string.nge_player_name_empty))
+        UiUtil.assertControlErrorTextContent(R.id.playerNameEdt, R.string.nge_player_name_empty)
     }
 
     @Test
@@ -63,14 +54,11 @@ class NewGameAsGuestTest : BaseUiTest() {
         networkAdapter.setPacket(packet1)
         networkAdapter.setPacket(packet2)
 
-        onView(withRecyclerView(R.id.gameListRw)
-                .atPositionOnView(1, R.id.gameNameTv))
-                .perform(click())
+        UiUtil.clickOnRecyclerViewElement(R.id.gameListRw, R.id.gameNameTv, 1)
 
-        onView(withId(R.id.playerNameEdt)).perform(replaceText("Bernard Morin"))
+        UiUtil.setControlText(R.id.playerNameEdt, "Bernard Morin")
 
-        onView(withId(R.id.backBtn)).perform(click())
-
-        onView(withId(R.id.gameListTv)).check(matchesWithText(R.string.ma_game_list_tv))
+        UiUtil.clickOnButton(R.id.backBtn)
+        UiUtil.assertControlTextContent(R.id.gameListTv, R.string.ma_game_list_tv)
     }
 }

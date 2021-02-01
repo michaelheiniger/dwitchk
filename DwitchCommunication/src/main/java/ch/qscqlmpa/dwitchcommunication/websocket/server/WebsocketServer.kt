@@ -32,5 +32,6 @@ internal data class OnOpen(val conn: WebSocket?, val handshake: ClientHandshake?
 internal data class OnClose(val conn: WebSocket?, val code: Int, val reason: String?, val remote: Boolean)
 internal data class OnMessage(val conn: WebSocket?, val message: String?)
 internal data class OnStart(val address: Address)
+internal object OnStop
 internal data class OnError(val conn: WebSocket?, val ex: Exception?)
 

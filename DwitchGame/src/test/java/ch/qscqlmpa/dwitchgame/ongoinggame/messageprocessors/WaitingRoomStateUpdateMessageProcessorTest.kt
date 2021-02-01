@@ -1,10 +1,10 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.messageprocessors
 
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreFactory
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
-import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreFactory
 import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.WaitingRoomStateUpdateMessageProcessor
 import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
@@ -15,7 +15,7 @@ import io.reactivex.rxjava3.core.Completable
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class WaitingRoomStateUpdateMessageProcessorTest : BaseMessageProcessorTest() {
+internal class WaitingRoomStateUpdateMessageProcessorTest : BaseMessageProcessorTest() {
 
     private lateinit var connectionStore: ConnectionStore
 

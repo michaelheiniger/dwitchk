@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
+ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
@@ -10,6 +10,7 @@ import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import dagger.Lazy
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
+import timber.log.Timber
 import javax.inject.Inject
 
 internal class JoinGameMessageProcessor @Inject constructor(
@@ -22,6 +23,14 @@ internal class JoinGameMessageProcessor @Inject constructor(
     override fun process(message: Message, senderConnectionID: ConnectionId): Completable {
 
         val msg = message as Message.JoinGameMessage
+
+        if (!store.gameIsNew()) {
+            return Completable.fromAction {
+                // Not supposed to happen since the list of advertised games is filtered to show only relevant games.
+                Timber.w("A player has tried to join a game to be resumed by joining it instead of rejoining it. Kicking player...")
+                closeConnectionWithGuest(senderConnectionID)
+            }
+        }
 
         return insertNewGuestPlayer(msg.playerName)
             .flatMapCompletable { newPlayerLocalId ->

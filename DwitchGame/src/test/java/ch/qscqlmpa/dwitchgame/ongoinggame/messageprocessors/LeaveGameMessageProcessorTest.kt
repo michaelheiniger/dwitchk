@@ -11,7 +11,7 @@ import io.reactivex.rxjava3.observers.TestObserver
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class LeaveGameMessageProcessorTest : BaseMessageProcessorTest() {
+internal class LeaveGameMessageProcessorTest : BaseMessageProcessorTest() {
 
     private lateinit var processor: LeaveGameMessageProcessor
 

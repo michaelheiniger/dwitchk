@@ -59,6 +59,7 @@ class NewGameUsecaseTest : BaseUnitTest() {
                 mockAppEventRepository.notify(
                     AppEvent.GameCreated(
                         GameCreatedInfo(
+                            true,
                             gameLocalId,
                             gameCommonId,
                             gameName,
@@ -84,7 +85,7 @@ class NewGameUsecaseTest : BaseUnitTest() {
         private val gamePort = 8889
         private val localPlayerLocalId = 10L
         private val gameIpAddress = "192.168.1.1"
-        private val advertisedGame = AdvertisedGame(gameName, gameCommonId, gameIpAddress, gamePort, LocalTime.now())
+        private val advertisedGame = AdvertisedGame(true, gameName, gameCommonId, gameIpAddress, gamePort, LocalTime.now())
         private val playerName = "Lancelot"
 
         @BeforeEach

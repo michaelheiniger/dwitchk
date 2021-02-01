@@ -20,7 +20,6 @@ internal class WaitingRoomViewModel @Inject constructor(
     fun playersInWaitingRoom(): LiveData<List<PlayerWr>> {
         return LiveDataReactiveStreams.fromPublisher(
             facade.observePlayers()
-                .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
                 .doOnError { error -> Timber.e(error, "Error while observing connected players.") }
                 .toFlowable(BackpressureStrategy.LATEST)

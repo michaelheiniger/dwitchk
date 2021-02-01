@@ -7,7 +7,7 @@ import dagger.Lazy
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 
-abstract class BaseHostProcessor constructor(
+internal abstract class BaseHostProcessor constructor(
         private val communicatorLazy: Lazy<HostCommunicator>
 ) : MessageProcessor {
 

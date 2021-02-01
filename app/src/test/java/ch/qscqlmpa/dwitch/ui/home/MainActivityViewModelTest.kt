@@ -6,9 +6,9 @@ import ch.qscqlmpa.dwitch.ui.home.main.MainActivityViewModel
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
-import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGameRepository
+import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
+import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -21,7 +21,8 @@ import org.junit.Test
 
 class MainActivityViewModelTest : BaseViewModelUnitTest() {
 
-    private val mockGameRepository = mockk<AdvertisedGameRepository>(relaxed = true)
+    private val mockHomeGuestFacade = mockk<HomeGuestFacade>(relaxed = true)
+    private val mockHomeHostFacade = mockk<HomeHostFacade>(relaxed = true)
 
     private lateinit var viewModel: MainActivityViewModel
 
@@ -33,10 +34,15 @@ class MainActivityViewModelTest : BaseViewModelUnitTest() {
 
         val schedulerFactory = TestSchedulerFactory()
         schedulerFactory.setTimeScheduler(TestScheduler())
-        viewModel = MainActivityViewModel(mockGameRepository, DisposableManager(), schedulerFactory)
+        viewModel = MainActivityViewModel(
+            mockHomeGuestFacade,
+            mockHomeHostFacade,
+            DisposableManager(),
+            schedulerFactory
+        )
 
         gameRepositorySubject = PublishSubject.create()
-        every { mockGameRepository.listenForAdvertisedGames() } returns gameRepositorySubject
+        every { mockHomeGuestFacade.listenForAdvertisedGames() } returns gameRepositorySubject
     }
 
     @Test
@@ -44,15 +50,13 @@ class MainActivityViewModelTest : BaseViewModelUnitTest() {
         val response = viewModel.observeAdvertisedGames()
         subscribeToPublishers(response)
 
-        val list = listOf(AdvertisedGame("Kaamelott", GameCommonId(1), "192.168.1.1", 8890, LocalTime.now()))
+        val list = listOf(AdvertisedGame(true, "Kaamelott", GameCommonId(1), "192.168.1.1", 8890, LocalTime.now()))
         gameRepositorySubject.onNext(list)
 
         assertThat(response.value!!.status).isEqualTo(Status.SUCCESS)
         assertThat(response.value!!.advertisedGames).isEqualTo(list)
 
-        verify { mockGameRepository.listenForAdvertisedGames() }
-
-        confirmVerified(mockGameRepository)
+        verify { mockHomeGuestFacade.listenForAdvertisedGames() }
     }
 
     @Test
@@ -65,10 +69,8 @@ class MainActivityViewModelTest : BaseViewModelUnitTest() {
         assertThat(response.value!!.status).isEqualTo(Status.ERROR)
         assertThat(response.value!!.advertisedGames).isEqualTo(emptyList<AdvertisedGame>())
 
-        verify { mockGameRepository.listenForAdvertisedGames() }
-        verify { mockGameRepository.stopListening() } // Because stream terminates
-
-        confirmVerified(mockGameRepository)
+        verify { mockHomeGuestFacade.listenForAdvertisedGames() }
+        verify { mockHomeGuestFacade.stopListeningForAdvertiseGames() } // Because stream terminates
     }
 
     @Test
@@ -76,14 +78,12 @@ class MainActivityViewModelTest : BaseViewModelUnitTest() {
         val response = viewModel.observeAdvertisedGames()
         subscribeToPublishers(response)
 
-        val list = listOf(AdvertisedGame("Kaamelott", GameCommonId(1), "192.168.1.1", 8890, LocalTime.now()))
+        val list = listOf(AdvertisedGame(true, "Kaamelott", GameCommonId(1), "192.168.1.1", 8890, LocalTime.now()))
         gameRepositorySubject.onNext(list)
 
         unsubscribeFromPublishers()
 
-        verify { mockGameRepository.listenForAdvertisedGames() }
-        verify { mockGameRepository.stopListening() }
-
-        confirmVerified(mockGameRepository)
+        verify { mockHomeGuestFacade.listenForAdvertisedGames() }
+        verify { mockHomeGuestFacade.stopListeningForAdvertiseGames() }
     }
 }

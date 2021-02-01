@@ -1,10 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host
 
 import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.common.Resource
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
-import ch.qscqlmpa.dwitch.ui.model.UiInfoModel
 import ch.qscqlmpa.dwitch.ui.model.Visibility
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
@@ -51,7 +48,7 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
         subscribeToPublishers(canGameBeLaunched)
 
         assertThat(canGameBeLaunched.value).isEqualTo(UiControlModel(enabled = true, visibility = Visibility.Visible))
-        verify { mockFacade.gameCanBeLaunched() }
+        verify { mockFacade.observeGameLaunchableEvents() }
         confirmVerified(mockFacade)
     }
 
@@ -63,7 +60,7 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
         subscribeToPublishers(canGameBeLaunched)
 
         assertThat(canGameBeLaunched.value).isEqualTo(UiControlModel(enabled = false, visibility = Visibility.Visible))
-        verify { mockFacade.gameCanBeLaunched() }
+        verify { mockFacade.observeGameLaunchableEvents() }
         confirmVerified(mockFacade)
     }
 
@@ -75,7 +72,7 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
         subscribeToPublishers(canGameBeLaunched)
 
         assertThat(canGameBeLaunched.value).isEqualTo(UiControlModel(enabled = false, visibility = Visibility.Visible))
-        verify { mockFacade.gameCanBeLaunched() }
+        verify { mockFacade.observeGameLaunchableEvents() }
         confirmVerified(mockFacade)
     }
 
@@ -124,6 +121,6 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
     }
 
     private fun setupGameCanBeLaunchedMock(event: GameLaunchableEvent) {
-        every { mockFacade.gameCanBeLaunched() } returns Observable.just(event)
+        every { mockFacade.observeGameLaunchableEvents() } returns Observable.just(event)
     }
 }

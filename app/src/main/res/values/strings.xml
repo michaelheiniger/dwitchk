@@ -1,11 +1,14 @@
 <resources>
     <string name="app_name" translatable="false">Dwitch</string>
     <string name="ma_game_list_tv">Games</string>
+    <string name="ma_existing_game_list_tv">Games to resume</string>
     <string name="ma_advertised_games_error_tv">Having troubles while looking for games, yo !</string>
+    <string name="ma_existing_games_error_tv">Having troubles while fetching existing games, yo !</string>
     <string name="nga_player_name_tv">Player name</string>
     <string name="nga_game_name_tv">Game name</string>
     <string name="nga_next_btn">Let\'s go !</string>
     <string name="ma_create_game_btn">Create game</string>
+    <string name="ma_resume_game_btn">Resume game</string>
     <string name="nga_back_btn">Back to the tavern</string>
     <string name="nge_player_name_empty">Just give me your name, bro !</string>
     <string name="nge_game_name_empty">You got no game, dude !</string>

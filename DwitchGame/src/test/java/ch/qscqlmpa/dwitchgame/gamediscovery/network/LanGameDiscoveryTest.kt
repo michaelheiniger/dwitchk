@@ -17,8 +17,8 @@ import java.net.SocketException
 class LanGameDiscoveryTest : BaseUnitTest() {
 
     companion object {
-        const val gameAd1 = "{\"gameCommonId\":{\"value\":23},\"gameName\":\"Kaamelott\",\"gamePort\":8889}"
-        const val gameAd2 = "{\"gameCommonId\":{\"value\":54},\"gameName\":\"LOTR\",\"gamePort\":8890}"
+        const val gameAd1 = "{\"isNew\":true,\"gameCommonId\":{\"value\":23},\"gameName\":\"Kaamelott\",\"gamePort\":8889}"
+        const val gameAd2 = "{\"isNew\":true,\"gameCommonId\":{\"value\":54},\"gameName\":\"LOTR\",\"gamePort\":8890}"
     }
 
     @BeforeEach
@@ -47,8 +47,8 @@ class LanGameDiscoveryTest : BaseUnitTest() {
         val gameDiscovery = LanGameDiscovery(serializerFactory, TestNetworkAdapter())
 
         gameDiscovery.listenForAdvertisedGame()
-            .doOnNext { (name) ->
-                if (name == "LOTR") {
+            .doOnNext { game ->
+                if (game.gameName == "LOTR") {
                     gameDiscovery.stopListening()
                 }
             }

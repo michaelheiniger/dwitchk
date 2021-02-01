@@ -11,7 +11,7 @@ import io.reactivex.rxjava3.core.Completable
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class PlayerReadyMessageProcessorTest : BaseMessageProcessorTest() {
+internal class PlayerReadyMessageProcessorTest : BaseMessageProcessorTest() {
 
     private lateinit var processor: PlayerReadyMessageProcessor
 

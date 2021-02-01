@@ -2,31 +2,80 @@ package ch.qscqlmpa.dwitch.ui.home.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
+import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
-import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGameRepository
+import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
+import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
+import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
+import ch.qscqlmpa.dwitchmodel.game.ResumableGameInfo
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import timber.log.Timber
 import javax.inject.Inject
 
 class MainActivityViewModel @Inject
 constructor(
-    private val gameRepository: AdvertisedGameRepository,
+    private val homeGuestFacade: HomeGuestFacade,
+    private val homeHostFacade: HomeHostFacade,
     disposableManager: DisposableManager,
     schedulerFactory: SchedulerFactory
 ) : BaseViewModel(disposableManager, schedulerFactory) {
 
+    private val commands = MutableLiveData<MainActivityCommands>()
+
+    fun commands(): LiveData<MainActivityCommands> {
+        return commands
+    }
+
     fun observeAdvertisedGames(): LiveData<AdvertisedGameResponse> {
         return LiveDataReactiveStreams.fromPublisher(
-            gameRepository.listenForAdvertisedGames()
-                .subscribeOn(schedulerFactory.io())
+            homeGuestFacade.listenForAdvertisedGames()
                 .observeOn(schedulerFactory.ui())
                 .map { games -> AdvertisedGameResponse.success(games) }
                 .onErrorReturn { error -> AdvertisedGameResponse.error(error) }
-                .doOnError { error -> Timber.e(error, "Error while observing connected players.") }
-                .doFinally { gameRepository.stopListening() }
+                .doOnError { error -> Timber.e(error, "Error while observing advertised games.") }
+                .doFinally { homeGuestFacade.stopListeningForAdvertiseGames() }
                 .toFlowable(BackpressureStrategy.LATEST)
         )
+    }
+
+    fun observeExistingGames(): LiveData<ExistingGameResponse> {
+        return LiveDataReactiveStreams.fromPublisher(
+            homeHostFacade.resumableGames()
+                .observeOn(schedulerFactory.ui())
+                .map { games -> ExistingGameResponse.success(games) }
+                .onErrorReturn { error -> ExistingGameResponse.error(error) }
+                .doOnError { error -> Timber.e(error, "Error while fetching existing games.") }
+                .toFlowable(BackpressureStrategy.LATEST)
+        )
+    }
+
+    fun joinGame(game: AdvertisedGame) {
+        if (game.isNew) {
+            commands.value = MainActivityCommands.NavigateToNewGameActivityAsGuest(game)
+        } else {
+            disposableManager.add(homeGuestFacade.joinResumedGame(game)
+                .observeOn(schedulerFactory.ui())
+                .subscribe(
+                    {
+                        Timber.i("Game resumed successfully.")
+                        commands.value = MainActivityCommands.NavigateToWaitingRoomAsGuest
+                    },
+                    { error -> Timber.e(error, "Error while resuming game.") }
+                ))
+        }
+    }
+
+    fun resumeGame(resumableGameInfo: ResumableGameInfo) {
+        disposableManager.add(homeHostFacade.resumeGame(resumableGameInfo.id, 8889) //TODO: Take from sharedpref ?
+            .observeOn(schedulerFactory.ui())
+            .subscribe(
+                {
+                    Timber.i("Game resumed successfully.")
+                    commands.value = MainActivityCommands.NavigateToWaitingRoomAsHost
+                },
+                { error -> Timber.e(error, "Error while resuming game.") }
+            ))
     }
 }

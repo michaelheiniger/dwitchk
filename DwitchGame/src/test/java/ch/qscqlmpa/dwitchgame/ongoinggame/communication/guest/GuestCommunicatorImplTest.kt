@@ -153,7 +153,7 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
         fun `Communication events emitted by the repository are simply forwarded`() {
             every { mockCommEventRepository.observeEvents() } returns Observable.just(GuestCommunicationState.Connected)
 
-            guestCommunicator.observeCommunicationState().test().assertValue(GuestCommunicationState.Connected)
+            guestCommunicator.currentCommunicationState().test().assertValue(GuestCommunicationState.Connected)
         }
     }
 
@@ -164,21 +164,21 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
         fun `Communication state open is mapped to connected`() {
             every { mockCommEventRepository.observeEvents() } returns Observable.just(GuestCommunicationState.Connected)
 
-            guestCommunicator.observeConnectionState().test().assertValue(PlayerConnectionState.CONNECTED)
+            guestCommunicator.observePlayerConnectionState().test().assertValue(PlayerConnectionState.CONNECTED)
         }
 
         @Test
         fun `Communication state closed is mapped to disconnected`() {
             every { mockCommEventRepository.observeEvents() } returns Observable.just(GuestCommunicationState.Disconnected)
 
-            guestCommunicator.observeConnectionState().test().assertValue(PlayerConnectionState.DISCONNECTED)
+            guestCommunicator.observePlayerConnectionState().test().assertValue(PlayerConnectionState.DISCONNECTED)
         }
 
         @Test
         fun `Communication state error is mapped to disconnected`() {
             every { mockCommEventRepository.observeEvents() } returns Observable.just(GuestCommunicationState.Error)
 
-            guestCommunicator.observeConnectionState().test().assertValue(PlayerConnectionState.DISCONNECTED)
+            guestCommunicator.observePlayerConnectionState().test().assertValue(PlayerConnectionState.DISCONNECTED)
         }
     }
 }

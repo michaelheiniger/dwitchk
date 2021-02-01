@@ -1,8 +1,12 @@
 package ch.qscqlmpa.dwitchstore.store
 
+import ch.qscqlmpa.dwitchmodel.game.Game
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
+import ch.qscqlmpa.dwitchmodel.game.ResumableGameInfo
+import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchstore.InsertGameResult
 import ch.qscqlmpa.dwitchstore.db.AppRoomDatabase
+import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
 internal class StoreImpl @Inject constructor(private val appRoomDatabase: AppRoomDatabase) : Store {
@@ -24,5 +28,30 @@ internal class StoreImpl @Inject constructor(private val appRoomDatabase: AppRoo
             gameCommonId,
             guestPlayerName
         )
+    }
+
+    override fun updateCurrentRoom(gameId: Long, room: RoomType) {
+        appRoomDatabase.gameDao().updateGameRoom(gameId, room)
+    }
+
+    override fun getGameCommonIdOfResumableGames(): Observable<List<GameCommonId>> {
+        return appRoomDatabase.gameDao().getGameCommonIdOfResumableGames()
+    }
+
+    override fun getResumableGamesInfo(): Observable<List<ResumableGameInfo>> {
+        return appRoomDatabase.gameDao().getResumableGamesInfo()
+    }
+
+    override fun getGame(gameId: Long): Game {
+        return appRoomDatabase.gameDao().getGame(gameId)
+    }
+
+    override fun getGame(gameCommonId: GameCommonId): Game? {
+        return appRoomDatabase.gameDao().getGame(gameCommonId)
+    }
+
+    override fun prepareGuestsForGameResume(gameId: Long) {
+        val game = appRoomDatabase.gameDao().getGame(gameId)
+        appRoomDatabase.playerDao().prepareGuestsForGameResume(gameId, game.localPlayerLocalId)
     }
 }

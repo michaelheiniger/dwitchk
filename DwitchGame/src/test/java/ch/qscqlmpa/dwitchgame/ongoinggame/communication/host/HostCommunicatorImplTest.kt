@@ -16,10 +16,8 @@ import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.eventprocessors.HostCommunicationEventDispatcher
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import io.mockk.*
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -75,7 +73,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
         fun `Start listening for connections`() {
             assertThat(communicationEventsSubject.hasObservers()).isFalse
 
-            hostCommunicator.listenForConnections()
+            hostCommunicator.startServer()
             assertThat(communicationEventsSubject.hasObservers()).isTrue
 
             verifyOrder {
@@ -87,23 +85,23 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
         @Test
         fun `Communication events emitted by server are dispatched`() {
-            hostCommunicator.listenForConnections()
+            hostCommunicator.startServer()
 
             communicationEventsSubject.onNext(ServerCommunicationEvent.ListeningForConnections(ConnectionId(0)))
-            communicationEventsSubject.onNext(ServerCommunicationEvent.NotListeningForConnections)
+            communicationEventsSubject.onNext(ServerCommunicationEvent.NoLongerListeningForConnections)
 
             val dispatchedEventCap = mutableListOf<ServerCommunicationEvent>()
             verify(exactly = 2) { mockCommunicationEventDispatcher.dispatch(capture(dispatchedEventCap)) }
 
             assertThat(dispatchedEventCap[0]).isEqualTo(ServerCommunicationEvent.ListeningForConnections(ConnectionId(0)))
-            assertThat(dispatchedEventCap[1]).isEqualTo(ServerCommunicationEvent.NotListeningForConnections)
+            assertThat(dispatchedEventCap[1]).isEqualTo(ServerCommunicationEvent.NoLongerListeningForConnections)
 
             confirmVerified(mockCommunicationEventDispatcher)
         }
 
         @Test
         fun `Received messages emitted by server are dispatched`() {
-            hostCommunicator.listenForConnections()
+            hostCommunicator.startServer()
 
             val messageReceived1 = EnvelopeReceived(ConnectionId(1), Message.PlayerReadyMessage(PlayerDwitchId(12), true))
             val messageReceived2 = EnvelopeReceived(ConnectionId(4), Message.PlayerReadyMessage(PlayerDwitchId(13), false))
@@ -122,7 +120,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
         @Test
         fun `Received game state update messages received are forwarded to all guests`() {
-            hostCommunicator.listenForConnections()
+            hostCommunicator.startServer()
 
             val gameState = TestEntityFactory.createGameState()
             val messageReceived1 = EnvelopeReceived(ConnectionId(1), Message.GameStateUpdatedMessage(gameState))
@@ -139,9 +137,9 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
         @Test
         fun `Close all connections`() {
-            hostCommunicator.listenForConnections()
+            hostCommunicator.startServer()
 
-            hostCommunicator.closeAllConnections()
+            hostCommunicator.stopServer()
             assertThat(communicationEventsSubject.hasObservers()).isFalse // Observed streams have been disposed.
 
             verifyOrder {
@@ -164,7 +162,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
         @Test
         fun `Send message to a single recipient that happens to be the host`() {
-            hostCommunicator.listenForConnections()
+            hostCommunicator.startServer()
 
             every { mockInGameStore.getLocalPlayerDwitchId() } returns hostPlayerDwitchId
             every { mockConnectionStore.getConnectionId(hostPlayerDwitchId) } returns hostConnectionId
@@ -212,42 +210,6 @@ class HostCommunicatorImplTest : BaseUnitTest() {
             hostCommunicator.closeConnectionWithClient(clientConnectionId)
 
             verify { mockCommServer.closeConnectionWithClient(clientConnectionId) }
-        }
-    }
-
-    @Nested
-    inner class ObserveCommunicationState {
-
-        @Test
-        fun `Communication events emitted by the repository are simply forwarded`() {
-            every { mockCommEventRepository.observeEvents() } returns Observable.just(HostCommunicationState.Open)
-
-            hostCommunicator.observeCommunicationState().test().assertValue(HostCommunicationState.Open)
-        }
-    }
-
-    @Nested
-    inner class ObservePlayerConnectionState {
-
-        @Test
-        fun `Communication state open is mapped to connected`() {
-            every { mockCommEventRepository.observeEvents() } returns Observable.just(HostCommunicationState.Open)
-
-            hostCommunicator.observeConnectionState().test().assertValue(PlayerConnectionState.CONNECTED)
-        }
-
-        @Test
-        fun `Communication state closed is mapped to disconnected`() {
-            every { mockCommEventRepository.observeEvents() } returns Observable.just(HostCommunicationState.Closed)
-
-            hostCommunicator.observeConnectionState().test().assertValue(PlayerConnectionState.DISCONNECTED)
-        }
-
-        @Test
-        fun `Communication state error is mapped to disconnected`() {
-            every { mockCommEventRepository.observeEvents() } returns Observable.just(HostCommunicationState.Error)
-
-            hostCommunicator.observeConnectionState().test().assertValue(PlayerConnectionState.DISCONNECTED)
         }
     }
 }

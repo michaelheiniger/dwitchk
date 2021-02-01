@@ -58,4 +58,7 @@
     <string name="cef_exchange">Echanger</string>
     <string name="choose_cards_to_exchange">Cartes à échanger</string>
     <string name="round_is_beginning_with_card_exchange">Echange de cartes !</string>
+    <string name="ma_resume_game_btn">Reprendre partie</string>
+    <string name="ma_existing_game_list_tv">Parties à reprendre</string>
+    <string name="ma_existing_games_error_tv">Erreur lors de la recherche des parties existantes</string>
 </resources>

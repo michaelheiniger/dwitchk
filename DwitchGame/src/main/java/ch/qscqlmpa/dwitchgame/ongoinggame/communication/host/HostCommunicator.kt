@@ -4,17 +4,14 @@ import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.GameCommunicator
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
 
-interface HostCommunicator : GameCommunicator {
+internal interface HostCommunicator : GameCommunicator {
 
     fun sendMessage(envelopeToSend: EnvelopeToSend): Completable
 
-    fun listenForConnections()
+    fun startServer()
 
-    fun observeCommunicationState(): Observable<HostCommunicationState>
-
-    fun closeAllConnections()
+    fun stopServer()
 
     fun closeConnectionWithClient(connectionId: ConnectionId)
 }

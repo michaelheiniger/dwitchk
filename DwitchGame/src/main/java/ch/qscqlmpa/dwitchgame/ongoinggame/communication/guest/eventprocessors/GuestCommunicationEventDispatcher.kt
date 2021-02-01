@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 @OngoingGameScope
-class GuestCommunicationEventDispatcher @Inject constructor(
+internal class GuestCommunicationEventDispatcher @Inject constructor(
         private val eventProcessors: @JvmSuppressWildcards Map<Class<out ClientCommunicationEvent>,
                 Provider<GuestCommunicationEventProcessor>>
 ) {

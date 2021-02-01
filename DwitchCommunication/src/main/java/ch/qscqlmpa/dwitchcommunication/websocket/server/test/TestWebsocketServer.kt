@@ -1,12 +1,7 @@
 package ch.qscqlmpa.dwitchcommunication.websocket.server.test
 
 import ch.qscqlmpa.dwitchcommunication.Address
-import ch.qscqlmpa.dwitchcommunication.websocket.server.OnClose
-import ch.qscqlmpa.dwitchcommunication.websocket.server.OnError
-import ch.qscqlmpa.dwitchcommunication.websocket.server.OnMessage
-import ch.qscqlmpa.dwitchcommunication.websocket.server.OnOpen
-import ch.qscqlmpa.dwitchcommunication.websocket.server.OnStart
-import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServer
+import ch.qscqlmpa.dwitchcommunication.websocket.server.*
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
 import org.java_websocket.WebSocket
@@ -55,7 +50,6 @@ internal class TestWebsocketServer(
     }
 
     fun onOpen(conn: WebSocket?, handshake: ClientHandshake?, enableThreadBreak: Boolean) {
-        threadBreakIfNeeded(enableThreadBreak)
         if (conn != null) {
             connections.add(conn)
         }

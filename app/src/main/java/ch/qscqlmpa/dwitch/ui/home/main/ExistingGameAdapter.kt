@@ -7,12 +7,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
+import ch.qscqlmpa.dwitchmodel.game.ResumableGameInfo
 import java.util.*
 
-internal class GameAdapter(private val listener: GameClickedListener) : RecyclerView.Adapter<GameAdapter.GameViewHolder>() {
+internal class ExistingGameAdapter(
+    private val listener: ExistingGameClickedListener
+) : RecyclerView.Adapter<ExistingGameAdapter.GameViewHolder>() {
 
-    private val data = ArrayList<AdvertisedGame>()
+    private val data = ArrayList<ResumableGameInfo>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.game_item, parent, false)
@@ -27,7 +29,7 @@ internal class GameAdapter(private val listener: GameClickedListener) : Recycler
         return data.size
     }
 
-    fun setData(gameList: List<AdvertisedGame>?) {
+    fun setData(gameList: List<ResumableGameInfo>?) {
         data.clear()
         if (gameList != null) {
             data.addAll(gameList)
@@ -35,26 +37,27 @@ internal class GameAdapter(private val listener: GameClickedListener) : Recycler
         notifyDataSetChanged()
     }
 
-    internal interface GameClickedListener {
+    internal interface ExistingGameClickedListener {
 
-        fun onGameClicked(advertisedGame: AdvertisedGame)
+        fun onGameClicked(selectedGame: ResumableGameInfo)
     }
 
-    internal class GameViewHolder(itemView: View, listener: GameClickedListener) : RecyclerView.ViewHolder(itemView) {
+    internal class GameViewHolder(itemView: View, listener: ExistingGameClickedListener) : RecyclerView.ViewHolder(itemView) {
 
-        private lateinit var advertisedGame: AdvertisedGame
+        private lateinit var resumableGameInfo: ResumableGameInfo
 
         private var gameNameTv: TextView = itemView.findViewById(R.id.gameNameTv)
 
         init {
             itemView.setOnClickListener {
-                listener.onGameClicked(advertisedGame)
+                listener.onGameClicked(resumableGameInfo)
             }
         }
 
-        fun bind(advertisedGame: AdvertisedGame) {
-            this.advertisedGame = advertisedGame
-            gameNameTv.text = String.format("%s (%s) at %s", advertisedGame.gameName, advertisedGame.gameIpAddress, advertisedGame.discoveryTimeAsString())
+        fun bind(resumableGameInfo: ResumableGameInfo) {
+            this.resumableGameInfo = resumableGameInfo
+            val playersName = resumableGameInfo.playersName.joinToString(separator = ", ")
+            gameNameTv.text = String.format("%s - %s", resumableGameInfo.name, playersName)
         }
     }
 }

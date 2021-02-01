@@ -152,9 +152,9 @@ internal interface PlayerDao {
 
     @Query(
         """
-        SELECT Player.* FROM Player
-        WHERE Player.game_local_id = :gameLocalId
-        ORDER BY Player.name ASC
+        SELECT * FROM Player
+        WHERE game_local_id = :gameLocalId
+        ORDER BY name ASC
         """
     )
     fun getPlayersInWaitingRoom(gameLocalId: Long): List<Player>
@@ -184,4 +184,14 @@ internal interface PlayerDao {
         """
     )
     fun getPlayerByName(name: String): Player?
+
+    @Query(
+        """
+       UPDATE Player
+        SET connectionState = "DISCONNECTED", ready = 0
+        WHERE game_local_id = :gameId
+        AND id != :localPlayerId
+        """
+    )
+    fun prepareGuestsForGameResume(gameId: Long, localPlayerId: Long)
 }

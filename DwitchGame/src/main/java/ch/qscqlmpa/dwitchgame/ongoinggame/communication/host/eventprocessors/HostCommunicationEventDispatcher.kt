@@ -9,13 +9,13 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 @OngoingGameScope
-class HostCommunicationEventDispatcher @Inject constructor(
+internal class HostCommunicationEventDispatcher @Inject constructor(
         private val eventProcessors: @JvmSuppressWildcards Map<Class<out ServerCommunicationEvent>,
                 Provider<HostCommunicationEventProcessor>>
 ) {
 
     fun dispatch(event: ServerCommunicationEvent): Completable {
-        Timber.d("Dispatching ServerCommunicationEvent $event")
+        Timber.d("Dispatching ServerCommunicationEvent $event (thread: ${Thread.currentThread().name})")
         return eventProcessors.getValue(event.javaClass).get().process(event)
     }
 }

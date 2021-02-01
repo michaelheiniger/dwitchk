@@ -5,6 +5,7 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.uitests.base.BaseUiTest
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
+import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import org.hamcrest.Matchers.startsWith
 import org.junit.Test
 
@@ -21,8 +22,8 @@ class HomeScreenTest : BaseUiTest() {
     fun advertisedGameListIsSet() {
         launch()
 
-        val message1 = "{\"gameCommonId\":{\"value\":23},\"gameName\":\"Game 1\",\"gamePort\":8890}"
-        val message2 = "{\"gameCommonId\":{\"value\":65},\"gameName\":\"Game 2\",\"gamePort\":8891}"
+        val message1 = buildSerializedAdvertisedGame(true, "Game 1", GameCommonId(23), 8890)
+        val message2 = buildSerializedAdvertisedGame(true, "Game 2", GameCommonId(65), 8891)
 
         networkAdapter.setPacket(Packet(message1, "192.168.1.1", 2454))
         networkAdapter.setPacket(Packet(message2, "192.168.1.2", 6543))

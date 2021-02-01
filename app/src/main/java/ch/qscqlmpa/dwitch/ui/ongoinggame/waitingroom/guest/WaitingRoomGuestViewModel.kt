@@ -42,7 +42,6 @@ class WaitingRoomGuestViewModel @Inject constructor(
     fun updateReadyState(ready: Boolean) {
         disposableManager.add(
             facade.updateReadyState(ready)
-                .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
                 .subscribe()
         )
@@ -62,7 +61,6 @@ class WaitingRoomGuestViewModel @Inject constructor(
     fun leaveGame() {
         disposableManager.add(
             facade.leaveGame()
-                .subscribeOn(schedulerFactory.io())
                 .observeOn(schedulerFactory.ui())
                 .subscribe(
                     {
@@ -76,7 +74,6 @@ class WaitingRoomGuestViewModel @Inject constructor(
 
     private fun currentCommunicationState(): Flowable<GuestCommunicationState> {
         return facade.observeCommunicationState()
-            .subscribeOn(schedulerFactory.io())
             .observeOn(schedulerFactory.ui())
             .doOnError { error -> Timber.e(error, "Error while observing communication state.") }
             .toFlowable(BackpressureStrategy.LATEST)

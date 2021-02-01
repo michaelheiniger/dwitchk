@@ -4,7 +4,6 @@ import ch.qscqlmpa.dwitchgame.BaseUnitTest
 
 internal class LaunchGameUsecaseTest : BaseUnitTest() {
 
-    //TODO: Create instrumented tests that test the whole usecase without mocking all dependencies
 //    private val mockCommunicator = mockk<HostCommunicator>(relaxed = true)
 //
 //    private val mockAppEventRepository = mockk<AppEventRepository>(relaxed = true)
@@ -32,8 +31,7 @@ internal class LaunchGameUsecaseTest : BaseUnitTest() {
 //        every { mockInGameStore.getLocalPlayerDwitchId() } returns hostPlayer.dwitchId
 //    }
 //
-//    @Test
-//    fun `Send GameLaunched message`() {
+//    private fun sendGameLaunchedMessage() {
 //        launchTest()
 //
 //        val messageWrapperCap = CapturingSlot<EnvelopeToSend>()
@@ -44,7 +42,19 @@ internal class LaunchGameUsecaseTest : BaseUnitTest() {
 //    }
 //
 //    @Test
-//    fun `Save initialized GameState in store`() {
+//    fun `Send GameLaunched message when game is a new one`() {
+//        mockGameIsNew()
+//        sendGameLaunchedMessage()
+//    }
+//
+//    @Test
+//    fun `Send GameLaunched message when game exists already`() {
+//        mockGameExistsAlready()
+//        sendGameLaunchedMessage()
+//    }
+//
+//    @Test
+//    fun `Save initialized GameState in store when game is a new one`() {
 //        launchTest()
 //
 //        val gameStateCap = CapturingSlot<GameState>()
@@ -52,6 +62,9 @@ internal class LaunchGameUsecaseTest : BaseUnitTest() {
 //
 //        assertThat(gameStateCap.captured).isNotNull
 //    }
+//
+////    private fun serviceChangesToGameRoom
+//
 //
 //    @Test
 //    fun `Change room to GameRoom in service`() {
@@ -70,5 +83,12 @@ internal class LaunchGameUsecaseTest : BaseUnitTest() {
 //    private fun launchTest() {
 //        launchGameUsecase.launchGame().test().assertComplete()
 //    }
-
+//
+//    private fun mockGameIsNew() {
+//        every { mockInGameStore.gameIsNew() } returns true
+//    }
+//
+//    private fun mockGameExistsAlready() {
+//        every { mockInGameStore.gameIsNew() } returns false
+//    }
 }

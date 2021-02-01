@@ -1,13 +1,22 @@
 package ch.qscqlmpa.dwitchstore
 
+import ch.qscqlmpa.dwitchstore.db.AppRoomDatabase
 import ch.qscqlmpa.dwitchstore.store.TestStoreModule
 import dagger.Component
 
 @StoreScope
-@Component(modules = [
-    TestStoreModule::class
-])
-interface TestStoreComponent : StoreComponent{
+@Component(
+    modules = [
+        TestStoreModule::class
+    ]
+)
+abstract class TestStoreComponent : StoreComponent {
+
+    internal abstract val db: AppRoomDatabase
+
+    fun clearStore() {
+        db.clearAllTables()
+    }
 
     @Component.Factory
     interface Factory {

@@ -7,6 +7,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class GameCreatedInfo(
+    val isNew: Boolean,
     val gameLocalId: Long,
     val gameCommonId: GameCommonId,
     val gameName: String,
@@ -16,6 +17,7 @@ data class GameCreatedInfo(
 
     constructor(insertGameResult: InsertGameResult, gamePort: Int) :
             this(
+                true,
                 insertGameResult.gameLocalId,
                 insertGameResult.gameCommonId,
                 insertGameResult.gameName,
