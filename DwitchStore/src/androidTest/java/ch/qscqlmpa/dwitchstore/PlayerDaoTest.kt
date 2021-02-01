@@ -1,9 +1,9 @@
 package ch.qscqlmpa.dwitchstore
 
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
-import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchmodel.player.Player
+import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
+import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -50,24 +50,22 @@ internal class PlayerDaoTest : BaseInstrumentedTest() {
         val player1LocalId = playerDao.insertNewGuestPlayer(gameLocalId!!, "Gimli")
         val player2LocalId = playerDao.insertNewGuestPlayer(gameLocalId!!, "Legolas")
 
-        //FIXME
         val player1FromStore = playerDao.getPlayer(player1LocalId)
-//        PlayerRobot(player1FromStore)
-//                .assertGameLocalId(gameLocalId!!)
-//                .assertName("Gimli")
-//                .assertPlayerRole(PlayerRole.GUEST)
-//                .assertState(PlayerConnectionState.CONNECTED)
-//                .assertReady(false)
+        PlayerRobot(player1FromStore)
+                .assertGameLocalId(gameLocalId!!)
+                .assertName("Gimli")
+                .assertPlayerRole(PlayerRole.GUEST)
+                .assertConnectionState(PlayerConnectionState.CONNECTED)
+                .assertReady(false)
         assertThat(player1FromStore.dwitchId).isNotNull() // Do NOT simplify by using "isNotNull", somehow it produces an error
 
-        //FIXME
         val player2FromStore = playerDao.getPlayer(player2LocalId)
-//        PlayerRobot(player2FromStore)
-//                .assertGameLocalId(gameLocalId!!)
-//                .assertName("Legolas")
-//                .assertPlayerRole(PlayerRole.GUEST)
-//                .assertState(PlayerConnectionState.CONNECTED)
-//                .assertReady(false)
+        PlayerRobot(player2FromStore)
+                .assertGameLocalId(gameLocalId!!)
+                .assertName("Legolas")
+                .assertPlayerRole(PlayerRole.GUEST)
+                .assertConnectionState(PlayerConnectionState.CONNECTED)
+                .assertReady(false)
         assertThat(player2FromStore.dwitchId).isNotNull() // Do NOT simplify by using "isNotNull", somehow it produces an error
 
         assertThat(player1FromStore.dwitchId).isNotEqualTo(playersBefore[0].dwitchId)
