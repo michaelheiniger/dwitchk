@@ -28,7 +28,7 @@ class ResumeGameUsecase @Inject constructor(
         return Completable.fromAction {
             val game = store.getGame(gameId)
             store.updateCurrentRoom(gameId, RoomType.WAITING_ROOM)
-            store.prepareGuestsForGameResume(gameId) //TODO: find better name for method
+            store.prepareGuestsForGameResume(gameId)
             startHostService(game, gamePort)
         }
     }
