@@ -5,7 +5,6 @@ import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import ch.qscqlmpa.dwitchmodel.player.Player
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -22,7 +21,7 @@ sealed class Message {
     }
 
     @Serializable
-    data class WaitingRoomStateUpdateMessage(val playerList: List<Player>) : Message()
+    data class WaitingRoomStateUpdateMessage(val playerList: List<PlayerDto>) : Message()
 
     @Serializable
     object CancelGameMessage : Message()

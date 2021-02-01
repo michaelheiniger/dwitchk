@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchcommunication.model.PlayerDto
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
@@ -27,9 +28,9 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
         }
     }
 
-    private fun removePlayersWhoLeftTheGame(playersUpToDate: List<Player>, playersOld: List<Player>) {
+    private fun removePlayersWhoLeftTheGame(playersUpToDate: List<PlayerDto>, playersOld: List<Player>) {
         val playersToRemove = playersOld.map(Player::dwitchId).toHashSet()
-        playersToRemove.removeAll(playersUpToDate.map(Player::dwitchId))
+        playersToRemove.removeAll(playersUpToDate.map(PlayerDto::dwitchId))
         if (playersToRemove.size > 0) {
             Timber.v("Players to remove: $playersToRemove")
             store.deletePlayers(getLocalIdOfPlayersToRemove(playersOld, playersToRemove))
@@ -42,8 +43,7 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
         return playersOld.filter { p -> playersToRemove.contains(p.dwitchId) }.map { p -> p.id }
     }
 
-    private fun updatePlayersWhoseStateChanged(upToDatePlayers: List<Player>, playersOld: List<Player>) {
-
+    private fun updatePlayersWhoseStateChanged(upToDatePlayers: List<PlayerDto>, playersOld: List<Player>) {
         val upToDateOldPlayerPairs = upToDatePlayers.map { upToDatePlayer ->
             val playerOld = playersOld.find { playerOld -> playerOld.dwitchId == upToDatePlayer.dwitchId }
             Pair(upToDatePlayer, playerOld)
@@ -51,17 +51,15 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
 
         val playersToUpdate = upToDateOldPlayerPairs.filter { (upToDatePlayer, playerOld) ->
             playerOld != null && hasAnyRelevantAttributeChanged(playerOld, upToDatePlayer)
-        }.map { (upToDatePlayer, playerOld) ->
-            upToDatePlayer.copy(id = playerOld!!.id) // Replace ID since this is local store specific
-        }
+        }.map { (upToDatePlayer, playerOld) -> Pair(upToDatePlayer, playerOld!!) }
 
         if (playersToUpdate.isNotEmpty()) {
             Timber.v("Players to update: $playersToUpdate")
-            playersToUpdate.forEach { player ->
+            playersToUpdate.forEach { (upToDatePlayer, playerOld) ->
                 store.updatePlayerWithConnectionStateAndReady(
-                    player.id,
-                    player.connectionState,
-                    player.ready
+                    playerOld.id,
+                    upToDatePlayer.connectionState,
+                    upToDatePlayer.ready
                 )
             }
         } else {
@@ -69,11 +67,11 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
         }
     }
 
-    private fun hasAnyRelevantAttributeChanged(playerOld: Player, upToDatePlayer: Player): Boolean {
+    private fun hasAnyRelevantAttributeChanged(playerOld: Player, upToDatePlayer: PlayerDto): Boolean {
         return playerOld.ready != upToDatePlayer.ready || playerOld.connectionState != upToDatePlayer.connectionState
     }
 
-    private fun addNewPlayers(playersUpToDate: List<Player>, playersOld: List<Player>) {
+    private fun addNewPlayers(playersUpToDate: List<PlayerDto>, playersOld: List<Player>) {
         val playersToAdd = playersUpToDate.filter { player ->
             val playerToAdd = playersOld.find { p -> p.dwitchId == player.dwitchId }
             playerToAdd == null
@@ -81,7 +79,17 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
 
         if (playersToAdd.isNotEmpty()) {
             Timber.v("Players to add: $playersToAdd")
-            playersToAdd.forEach { player -> store.insertNonLocalPlayer(player) }
+            store.insertPlayers(playersToAdd.map { p ->
+                Player(
+                    0,
+                    p.dwitchId,
+                    0,
+                    p.name,
+                    p.playerRole,
+                    p.connectionState,
+                    p.ready
+                )
+            })
         } else {
             Timber.v("No player to add.")
         }

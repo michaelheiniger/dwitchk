@@ -91,8 +91,8 @@ internal class InGameStoreImpl constructor(
         return playerDao.insertNewGuestPlayer(gameLocalId, name)
     }
 
-    override fun insertNonLocalPlayer(player: Player): Long {
-        return playerDao.insertNonLocalPlayer(gameLocalId, player)
+    override fun insertPlayers(players: List<Player>) {
+        return playerDao.insertPlayers(players.map { p -> p.copy(gameLocalId = gameLocalId) })
     }
 
     override fun updateLocalPlayerWithDwitchId(playerDwitchId: PlayerDwitchId): Int {

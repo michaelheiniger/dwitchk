@@ -14,11 +14,8 @@ internal interface PlayerDao {
     @Insert
     fun insertPlayer(player: Player): Long
 
-    @Transaction
-    fun insertNonLocalPlayer(gameLocalId: Long, player: Player): Long {
-        val sanitizedPlayer = player.copy(id = 0, gameLocalId = gameLocalId)
-        return insertPlayer(sanitizedPlayer)
-    }
+    @Insert
+    fun insertPlayers(players: List<Player>)
 
     @Transaction
     fun insertNewGuestPlayer(gameLocalId: Long, name: String): Long {
