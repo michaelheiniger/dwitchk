@@ -11,6 +11,7 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.InsertGameResult
 import io.reactivex.rxjava3.core.Observable
+import org.joda.time.DateTime
 import java.util.*
 
 @Dao
@@ -107,6 +108,7 @@ internal abstract class GameDao(database: AppRoomDatabase) {
         val gameCommonId = GameCommonId(Date().time)
         val game = Game(
             0,
+            DateTime.now(),
             RoomType.WAITING_ROOM,
             gameCommonId,
             gameName,
@@ -166,6 +168,7 @@ internal abstract class GameDao(database: AppRoomDatabase) {
     ): InsertGameResult {
         val game = Game(
             0,
+            DateTime.now(),
             RoomType.WAITING_ROOM,
             gameCommonId,
             gameName,
@@ -191,26 +194,21 @@ internal abstract class GameDao(database: AppRoomDatabase) {
         return InsertGameResult(gameLocalId, gameCommonId, gameName, playerLocalId)
     }
 
-    // ------------------------------- For testing purpose only ------------------------------- //
     @Query(
         """
         SELECT game_common_id FROM Game
         WHERE game_state is not null
-        ORDER BY id ASC
+        ORDER BY creation_date DESC
     """
-    ) //TODO: Add creation date attribute to Game and sort on it DESC.
+    )
     abstract fun getGameCommonIdOfResumableGames(): Observable<List<GameCommonId>>
 
     @Transaction // Ensures that both queries (on Game and Player, resp.) are performed atomically.
     @Query(
         """
         SELECT * FROM ResumableGameInfo
-        ORDER BY id ASC
+        ORDER BY creationDate DESC
     """
-    ) //TODO: Add creation date attribute to Game and sort on it DESC.
+    )
     abstract fun getResumableGamesInfo(): Observable<List<ResumableGameInfo>>
-
-
-    @Query("SELECT * FROM Game WHERE name=:gameName ORDER BY id ASC")
-    abstract fun getGameByName(gameName: String): Game?
 }

@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitchmodel.game
 
 import androidx.room.*
 import ch.qscqlmpa.dwitchmodel.player.Player
+import org.joda.time.DateTime
 
 @Entity(
     tableName = "game",
@@ -21,6 +22,8 @@ import ch.qscqlmpa.dwitchmodel.player.Player
 )
 data class Game(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
+
+    @ColumnInfo(name = "creation_date") val creationDate: DateTime,
 
     @ColumnInfo(name = "current_room") val currentRoom: RoomType,
 

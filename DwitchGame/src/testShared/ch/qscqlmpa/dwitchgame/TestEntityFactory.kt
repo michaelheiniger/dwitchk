@@ -11,6 +11,7 @@ import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
+import org.joda.time.DateTime
 
 object TestEntityFactory {
 
@@ -92,12 +93,13 @@ object TestEntityFactory {
 
     fun createGameInWaitingRoom(localPlayerLocalId: Long = 10): Game {
         return Game(
-                1L,
-                RoomType.WAITING_ROOM,
-                GameCommonId(65),
-                "Dwitch",
-                "",
-                localPlayerLocalId,
+            1L,
+            DateTime.now(),
+            RoomType.WAITING_ROOM,
+            GameCommonId(65),
+            "Dwitch",
+            "",
+            localPlayerLocalId,
             null
         )
     }

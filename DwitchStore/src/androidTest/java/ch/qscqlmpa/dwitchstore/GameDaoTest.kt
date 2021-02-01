@@ -8,6 +8,7 @@ import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import org.assertj.core.api.Assertions.assertThat
+import org.joda.time.DateTime
 import org.junit.Before
 import org.junit.Test
 
@@ -39,6 +40,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
 
         val gameRef = Game(
             insertGameResult.gameLocalId,
+            DateTime.now(),
             RoomType.WAITING_ROOM,
             GameCommonId(0),
             gameName,
@@ -48,7 +50,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
         )
         val gameTest = gameDao.getGame(insertGameResult.gameLocalId)
 
-        assertThat(gameTest).usingRecursiveComparison().ignoringFields("gameCommonId").isEqualTo(gameRef)
+        assertThat(gameTest).usingRecursiveComparison().ignoringFields("gameCommonId", "creationDate").isEqualTo(gameRef)
         assertThat(gameTest.gameCommonId).isNotEqualTo(GameCommonId(0))
     }
 
@@ -77,6 +79,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
 
         val gameRef = Game(
             insertGameResult.gameLocalId,
+            DateTime.now(),
             RoomType.WAITING_ROOM,
             GameCommonId(0),
             gameName,
@@ -86,7 +89,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
         )
         val gameTest = gameDao.getGame(insertGameResult.gameLocalId)
 
-        assertThat(gameTest).isEqualToIgnoringGivenFields(gameRef, "gameCommonId")
+        assertThat(gameTest).usingRecursiveComparison().ignoringFields("gameCommonId", "creationDate").isEqualTo(gameRef)
         assertThat(gameTest.gameCommonId).isNotEqualTo(GameCommonId(0))
     }
 
@@ -96,13 +99,13 @@ internal class GameDaoTest : BaseInstrumentedTest() {
         // Create game
         val gameCommonId = GameCommonId(12354)
         val gameLocalId = gameDao.insertGameForGuest(gameName, gameCommonId, playerName).gameLocalId
-        val originalGame = gameDao.getGame(gameLocalId)
+        val gameRef = gameDao.getGame(gameLocalId)
 
         val insertGameResult = gameDao.insertGameForGuest(gameName, gameCommonId, playerName)
 
         val gameTest = gameDao.getGame(insertGameResult.gameLocalId)
 
-        assertThat(originalGame).isEqualToIgnoringGivenFields(gameTest)
+        assertThat(gameTest).usingRecursiveComparison().ignoringFields("gameCommonId", "creationDate").isEqualTo(gameRef)
     }
 
     @Test
@@ -131,7 +134,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
             // Goal is to have different values for game ID and player ID in the tests
             gameDaoTest.db.runInTransaction {
                 val gameId = gameDaoTest.gameDao.insertGame(
-                    Game(0, RoomType.WAITING_ROOM, GameCommonId(1), "", "", 1, null)
+                    Game(0, DateTime.now(), RoomType.WAITING_ROOM, GameCommonId(1), "", "", 1, null)
                 )
                 val player1 = Player(
                     0,
