@@ -11,7 +11,6 @@ import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.Player
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.Rank
-import ch.qscqlmpa.dwitchmodel.game.DwitchEvent
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreScope
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
@@ -67,10 +66,6 @@ class SerializerFactory @Inject constructor(private val json: Json) {
         return json.encodeToString(ListSerializer(Card.serializer()), cards)
     }
 
-    fun serialize(event: DwitchEvent): String {
-        return json.encodeToString(DwitchEvent.serializer(), event)
-    }
-
     fun serialize(cardExchange: CardExchange): String {
         return json.encodeToString(CardExchange.serializer(), cardExchange)
     }
@@ -111,10 +106,6 @@ class SerializerFactory @Inject constructor(private val json: Json) {
 
     fun unserializeCards(cards: String): List<Card> {
         return json.decodeFromString(ListSerializer(Card.serializer()), cards)
-    }
-
-    fun unserializeDwitchEvent(event: String): DwitchEvent {
-        return json.decodeFromString(DwitchEvent.serializer(), event)
     }
 
     fun unserializeCardExchange(cardExchange: String): CardExchange {
