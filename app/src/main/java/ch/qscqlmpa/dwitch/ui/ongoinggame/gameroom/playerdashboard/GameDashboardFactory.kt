@@ -102,7 +102,7 @@ class GameDashboardFactory(
         }
     }
 
-    private fun playerRank(player: PlayerInfo) = textProvider.getText(ResourceMapper.getResource(player.rank))
+    private fun playerRank(player: PlayerInfo) = textProvider.getText(ResourceMapper.getResourceShort(player.rank))
 
     private fun isCardPlayable(card: Card) = cardHasValueHighEnough(card) || cardIsJoker(card)
 

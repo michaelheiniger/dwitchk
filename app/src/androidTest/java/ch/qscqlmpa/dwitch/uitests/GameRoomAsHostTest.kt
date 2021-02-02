@@ -1,4 +1,4 @@
- package ch.qscqlmpa.dwitch.uitests
+package ch.qscqlmpa.dwitch.uitests
 
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.uitests.base.BaseHostTest
@@ -11,17 +11,18 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
 import org.assertj.core.api.Assertions.assertThat
+import org.hamcrest.Matchers
 import org.junit.Test
 
 class GameRoomAsHostTest : BaseHostTest() {
 
     private var rankForPlayer: Map<Int, Rank> = mapOf(
-            0 to Rank.Asshole,
-            1 to Rank.President
+        0 to Rank.Asshole,
+        1 to Rank.President
     )
     private var cardsForPlayer: Map<Int, List<Card>> = mapOf(
-            0 to listOf(Card.Hearts5, Card.Clubs3),
-            1 to listOf(Card.Spades6, Card.Spades4)
+        0 to listOf(Card.Hearts5, Card.Clubs3),
+        1 to listOf(Card.Spades6, Card.Spades4)
     )
 
     @Test
@@ -107,15 +108,45 @@ class GameRoomAsHostTest : BaseHostTest() {
 
         GameRoomUiUtil.playCard(0) // Local player plays Hearts5 and is done
         assertGameStateUpdatedMessageSent()
-        GameRoomUiUtil.assertCardOnTable(Card.Hearts5)
 
-        UiUtil.assertControlTextContent(R.id.gameInfoTv, R.string.round_is_over)
+        closeEndOfRoundDialog()
+
+        GameRoomUiUtil.assertCardOnTable(Card.Hearts5)
 
         UiUtil.clickOnButton(R.id.endGameBtn)
 
         dudeWaitASec()
 
         assertCurrentScreenIsHomeSreen()
+    }
+
+    @Test
+    fun showEndOfRoundResults() {
+        launch()
+
+        cardsForPlayer = mapOf(
+            0 to listOf(Card.Hearts3), // Host
+            1 to listOf(Card.Spades6) // Guest
+        )
+
+        goToGameRoom()
+
+        UiUtil.assertControlTextContent(R.id.gameInfoTv, R.string.round_is_beginning)
+
+        GameRoomUiUtil.assertCardInHand(0, Card.Hearts3)
+        GameRoomUiUtil.assertCardOnTable(Card.Clubs2)
+
+        GameRoomUiUtil.playCard(0) // Local player plays Hearts3
+        assertGameStateUpdatedMessageSent()
+
+        UiUtil.assertControlTextContent(R.id.mainTextTv, Matchers.containsString("${hostName}: President"))
+        UiUtil.assertControlTextContent(R.id.mainTextTv, Matchers.containsString("Boromir: Asshole"))
+
+        closeEndOfRoundDialog()
+
+        dudeWaitASec()
+
+        GameRoomUiUtil.assertGameRoomIsDisplayed()
     }
 
     @Test
@@ -137,12 +168,14 @@ class GameRoomAsHostTest : BaseHostTest() {
         GameRoomUiUtil.playCard(0) // Local player plays Hearts3
         assertGameStateUpdatedMessageSent()
 
-        UiUtil.assertControlTextContent(R.id.gameInfoTv, R.string.round_is_over)
+        closeEndOfRoundDialog()
 
-        initializeNewRoundCardDealer(mapOf(
-            0 to listOf(Card.Hearts5, Card.Clubs3, Card.Spades6, Card.HeartsAce), // Guest
-            1 to listOf(Card.Spades6, Card.Spades4, Card.Diamonds4, Card.Clubs10) // Host
-        ))
+        initializeNewRoundCardDealer(
+            mapOf(
+                0 to listOf(Card.Hearts5, Card.Clubs3, Card.Spades6, Card.HeartsAce), // Guest
+                1 to listOf(Card.Spades6, Card.Spades4, Card.Diamonds4, Card.Clubs10) // Host
+            )
+        )
 
         UiUtil.clickOnButton(R.id.startNewRoundBtn)
 

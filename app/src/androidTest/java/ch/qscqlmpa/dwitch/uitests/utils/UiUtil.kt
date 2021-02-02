@@ -87,6 +87,10 @@ object UiUtil {
         onView(withId(resourceId)).check(matchesWithText(text))
     }
 
+    fun assertControlTextContent(resourceId: Int, matcher: Matcher<String>) {
+        onView(withId(resourceId)).check(matches(withText(matcher)))
+    }
+
     fun assertControlErrorTextContent(resourceId: Int, textResourceId: Int) {
         onView(withId(resourceId)).check(matchesWithErrorText(textResourceId))
     }

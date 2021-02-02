@@ -27,13 +27,23 @@ object ResourceMapper {
         })
     }
 
-    fun getResource(rank: Rank): Int {
+    fun getResourceShort(rank: Rank): Int {
         return when (rank) {
-            Rank.President -> R.string.president
-            Rank.VicePresident -> R.string.vice_president
-            Rank.Neutral -> R.string.neutral
-            Rank.ViceAsshole -> R.string.vice_asshole
-            Rank.Asshole -> R.string.asshole
+            Rank.President -> R.string.president_short
+            Rank.VicePresident -> R.string.vice_president_short
+            Rank.Neutral -> R.string.neutral_short
+            Rank.ViceAsshole -> R.string.vice_asshole_short
+            Rank.Asshole -> R.string.asshole_short
+        }
+    }
+
+    fun getResourceLong(rank: Rank): Int {
+        return when (rank) {
+            Rank.President -> R.string.president_long
+            Rank.VicePresident -> R.string.vice_president_long
+            Rank.Neutral -> R.string.neutral_long
+            Rank.ViceAsshole -> R.string.vice_asshole_long
+            Rank.Asshole -> R.string.asshole_long
         }
     }
 

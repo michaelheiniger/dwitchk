@@ -75,6 +75,7 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
             Timber.d("Command: $command")
             when (command) {
                 is PlayerDashboardCommand.OpenCardExchange -> openCardExchange()
+                is PlayerDashboardCommand.OpenEndOfRound -> showEndOfRoundDialog(command.playersInfo)
             }
         })
     }
@@ -85,9 +86,10 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
             .addToBackStack(null)
             .replace(R.id.game_dashboard_fragment_container, CardExchangeFragment.create(), "card_exchange")
             .commit()
-//        supportFragmentManager.findFragmentByTag("card_exchange")
-//        ft.addToBackStack(null)
-//        CardExchangeFragment.create().show(ft, "dialog")
+    }
+
+    private fun showEndOfRoundDialog(playersInfo: List<PlayerEndOfRoundInfo>) {
+        showDialogFragment(EndOfRoundDialogFragment.newInstance(playersInfo))
     }
 
     private fun setImageView(imageView: ImageView, image: ImageInfo) {

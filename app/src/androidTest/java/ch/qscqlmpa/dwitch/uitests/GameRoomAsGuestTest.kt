@@ -4,8 +4,7 @@ import ch.qscqlmpa.dwitch.PlayerGuestTest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.uitests.base.BaseGuestTest
 import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil
-import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.clickOnButton
-import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.elementIsDisplayed
+import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import ch.qscqlmpa.dwitch.utils.TestEntityFactory
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
@@ -24,6 +23,7 @@ import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import org.assertj.core.api.Assertions.assertThat
+import org.hamcrest.Matchers
 import org.junit.Test
 
 class GameRoomAsGuestTest : BaseGuestTest() {
@@ -71,6 +71,30 @@ class GameRoomAsGuestTest : BaseGuestTest() {
     }
 
     @Test
+    fun showEndOfRoundResults() {
+        launch()
+
+        cardsForPlayer = mapOf(
+            0 to listOf(Card.Hearts5),
+            1 to listOf(Card.Spades6)
+        )
+
+        goToGameRoom()
+
+        GameRoomUiUtil.playCard(0)
+
+        val message = waitForNextMessageSentByLocalGuest()
+        assertThat(message).isInstanceOf(Message.GameStateUpdatedMessage::class.java)
+
+        UiUtil.assertControlTextContent(R.id.mainTextTv, Matchers.containsString("${hostName}: Asshole"))
+        UiUtil.assertControlTextContent(R.id.mainTextTv, Matchers.containsString("Boromir: President"))
+
+        closeEndOfRoundDialog()
+
+        GameRoomUiUtil.assertGameRoomIsDisplayed()
+    }
+
+    @Test
     fun cardExchange() {
         launch()
 
@@ -84,6 +108,9 @@ class GameRoomAsGuestTest : BaseGuestTest() {
         GameRoomUiUtil.playCard(0)
 
         val gameStateUpdatedMessage = waitForNextMessageSentByLocalGuest() as Message.GameStateUpdatedMessage
+
+        closeEndOfRoundDialog()
+
         val newRoundGameState = hostStartsNewRound(gameStateUpdatedMessage.gameState)
         hostSendsCardExchangeMessage(newRoundGameState)
 
@@ -106,7 +133,6 @@ class GameRoomAsGuestTest : BaseGuestTest() {
         GameRoomUiUtil.assertGameRoomIsDisplayed()
     }
 
-
     @Test
     fun gameOver() {
         launch()
@@ -117,8 +143,9 @@ class GameRoomAsGuestTest : BaseGuestTest() {
 
         dudeWaitASec()
 
-        clickOnButton(R.id.btnOk)
-        elementIsDisplayed(R.id.gameListTv)
+        closeEndOfRoundDialog()
+
+        UiUtil.elementIsDisplayed(R.id.gameListTv)
     }
 
     private fun goToGameRoom() {
@@ -131,7 +158,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
 
         dudeWaitASec()
 
-        clickOnButton(R.id.localPlayerReadyCkb)
+        UiUtil.clickOnButton(R.id.localPlayerReadyCkb)
 
         clientTestStub.serverSendsMessageToClient(Message.PlayerReadyMessage(PlayerGuestTest.LocalGuest.id, true), false)
 

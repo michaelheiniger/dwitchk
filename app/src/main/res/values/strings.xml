@@ -1,76 +1,81 @@
 <resources>
     <string name="app_name" translatable="false">Dwitch</string>
-    <string name="ma_game_list_tv">Games</string>
-    <string name="ma_existing_game_list_tv">Games to resume</string>
-    <string name="ma_advertised_games_error_tv">Having troubles while looking for games, yo !</string>
-    <string name="ma_existing_games_error_tv">Having troubles while fetching existing games, yo !</string>
-    <string name="nga_player_name_tv">Player name</string>
-    <string name="nga_game_name_tv">Game name</string>
-    <string name="nga_next_btn">Let\'s go !</string>
-    <string name="ma_create_game_btn">Create game</string>
-    <string name="ma_resume_game_btn">Resume game</string>
-    <string name="nga_back_btn">Back to the tavern</string>
-    <string name="nge_player_name_empty">Just give me your name, bro !</string>
-    <string name="nge_game_name_empty">You got no game, dude !</string>
-    <string name="notification_title">Dwitch</string>
-    <string name="waitingroom_notification_message">Waiting for other mates</string>
-    <string name="gameroom_notification_message">In-game</string>
-    <string name="stop_game_service">Stop service</string>
-    <string name="not_listening_for_guests">Bros can\'t join !</string>
-    <string name="listening_for_guests">Online</string>
-    <string name="connected_to_host">Connected to the brost, yay !</string>
-    <string name="disconnected_from_host">Disconnected from the brost, damn !</string>
-    <string name="guest_connection_error">Can\'t connect to brost, sorry mate !</string>
-    <string name="host_connection_error">Network problem: no bro can join !</string>
-    <string name="wra_player_list">Bros</string>
-    <string name="ready">Go !</string>
-    <string name="not_ready">Wait a sec</string>
-    <string name="wrhf_launch_game_tv">Go go !</string>
-    <string name="wrhf_cancel_game_tv">Cancel game</string>
-    <string name="game_canceled_by_host">Game canceled by brost</string>
-    <string name="game_over">Game over, see ya bro !</string>
-    <string name="ok">Whatever, mate</string>
+    <string name="asshole_long">Asshole</string>
+    <string name="asshole_short">A</string>
     <string name="card">Card</string>
-    <string name="cards_in_hand">Cards in hand</string>
-    <string name="table_cards">Table cards</string>
-    <string name="players">Mates</string>
-    <string name="card_suit_clubs">Clubs</string>
-    <string name="card_suit_diamonds">Diamonds</string>
-    <string name="card_suit_spades">Spades</string>
-    <string name="card_suit_heart">Heart</string>
-    <string name="card_suit_blank" translatable="false">Blank</string>
-    <string name="card_name_two" translatable="false">2</string>
-    <string name="card_name_three" translatable="false">3</string>
-    <string name="card_name_four" translatable="false">4</string>
-    <string name="card_name_five" translatable="false">5</string>
-    <string name="card_name_six" translatable="false">6</string>
-    <string name="card_name_seven" translatable="false">7</string>
-    <string name="card_name_eight" translatable="false">8</string>
-    <string name="card_name_nine" translatable="false">9</string>
-    <string name="card_name_ten" translatable="false">10</string>
-    <string name="card_name_jack">Jack</string>
-    <string name="card_name_queen">Queen</string>
-    <string name="card_name_king">King</string>
     <string name="card_name_ace">Ace</string>
     <string name="card_name_blank" translatable="false">Blank</string>
-    <string name="pdf_play">Play</string>
-    <string name="pdf_pick_a_card">Pick</string>
-    <string name="pdf_start_new_round">New Round</string>
-    <string name="pdf_pass">Pass</string>
-    <string name="president">P</string>
-    <string name="vice_president">VP</string>
-    <string name="neutral">N</string>
-    <string name="vice_asshole">VA</string>
-    <string name="asshole">A</string>
-    <string name="pdf_last_card_played">Last card played</string>
+    <string name="card_name_eight" translatable="false">8</string>
+    <string name="card_name_five" translatable="false">5</string>
+    <string name="card_name_four" translatable="false">4</string>
+    <string name="card_name_jack">Jack</string>
+    <string name="card_name_king">King</string>
+    <string name="card_name_nine" translatable="false">9</string>
+    <string name="card_name_queen">Queen</string>
+    <string name="card_name_seven" translatable="false">7</string>
+    <string name="card_name_six" translatable="false">6</string>
+    <string name="card_name_ten" translatable="false">10</string>
+    <string name="card_name_three" translatable="false">3</string>
+    <string name="card_name_two" translatable="false">2</string>
+    <string name="card_suit_blank" translatable="false">Blank</string>
+    <string name="card_suit_clubs">Clubs</string>
+    <string name="card_suit_diamonds">Diamonds</string>
+    <string name="card_suit_heart">Heart</string>
+    <string name="card_suit_spades">Spades</string>
+    <string name="cards_in_hand">Cards in hand</string>
+    <string name="cef_exchange">Exchange</string>
+    <string name="choose_cards_to_exchange">Cards to exchange</string>
+    <string name="connected_to_host">Connected to the brost, yay !</string>
+    <string name="disconnected_from_host">Disconnected from the brost, damn !</string>
+    <string name="game_canceled_by_host">Game canceled by brost</string>
+    <string name="game_over">Game over, see ya bro !</string>
+    <string name="gameroom_notification_message">In-game</string>
     <string name="grhf_end_game_btn">Interrupt game</string>
+    <string name="guest_connection_error">Can\'t connect to brost, sorry mate !</string>
+    <string name="host_connection_error">Network problem: no bro can join !</string>
+    <string name="leave_game_btn">See ya mate !</string>
+    <string name="listening_for_guests">Online</string>
+    <string name="ma_advertised_games_error_tv">Having troubles while looking for games, yo !</string>
+    <string name="ma_create_game_btn">Create game</string>
+    <string name="ma_existing_game_list_tv">Games to resume</string>
+    <string name="ma_existing_games_error_tv">Having troubles while fetching existing games, yo !</string>
+    <string name="ma_game_list_tv">Games</string>
+    <string name="ma_resume_game_btn">Resume game</string>
+    <string name="neutral_long">Neutral</string>
+    <string name="neutral_short">N</string>
+    <string name="nga_back_btn">Back to the tavern</string>
+    <string name="nga_game_name_tv">Game name</string>
+    <string name="nga_next_btn">Let\'s go !</string>
+    <string name="nga_player_name_tv">Player name</string>
+    <string name="nge_game_name_empty">You got no game, dude !</string>
+    <string name="nge_player_name_empty">Just give me your name, bro !</string>
+    <string name="not_listening_for_guests">Bros can\'t join !</string>
+    <string name="not_ready">Wait a sec</string>
+    <string name="notification_title">Dwitch</string>
+    <string name="ok">Whatever, mate</string>
+    <string name="pdf_last_card_played">Last card played</string>
+    <string name="pdf_pass">Pass</string>
+    <string name="pdf_pick_a_card">Pick</string>
+    <string name="pdf_play">Play</string>
+    <string name="pdf_start_new_round">New Round</string>
+    <string name="player_connected">Connected, yay !</string>
+    <string name="player_disconnected">Disconnected, damn !</string>
+    <string name="players">Mates</string>
+    <string name="president_long">President</string>
+    <string name="president_short">P</string>
+    <string name="ready">Go !</string>
+    <string name="reconnect_btn">Reconnect</string>
     <string name="round_is_beginning">Round has begun !</string>
     <string name="round_is_beginning_with_card_exchange">Card exchange !</string>
     <string name="round_is_over">Round is over !</string>
-    <string name="reconnect_btn">Reconnect</string>
-    <string name="player_connected">Connected, yay !</string>
-    <string name="player_disconnected">Disconnected, damn !</string>
-    <string name="leave_game_btn">See ya mate !</string>
-    <string name="cef_exchange">Exchange</string>
-    <string name="choose_cards_to_exchange">Cards to exchange</string>
+    <string name="stop_game_service">Stop service</string>
+    <string name="table_cards">Table cards</string>
+    <string name="vice_asshole_long">Vice-Asshole</string>
+    <string name="vice_asshole_short">VA</string>
+    <string name="vice_president_long">Vice-President</string>
+    <string name="vice_president_short">VP</string>
+    <string name="waitingroom_notification_message">Waiting for other mates</string>
+    <string name="wra_player_list">Bros</string>
+    <string name="wrhf_cancel_game_tv">Cancel game</string>
+    <string name="wrhf_launch_game_tv">Go go !</string>
 </resources>

@@ -4,12 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import ch.qscqlmpa.dwitch.ui.ResourceMapper
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.utils.TextProvider
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardFacade
+import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardInfo
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Completable
 import timber.log.Timber
@@ -28,6 +31,7 @@ class PlayerDashboardViewModel @Inject constructor(
         return LiveDataReactiveStreams.fromPublisher(
             facade.observeDashboardInfo()
                 .map { dashboard -> GameDashboardFactory(dashboard, textProvider).create() }
+                .doOnNext { bla -> }
                 .observeOn(schedulerFactory.ui())
                 .doOnError { error -> Timber.e(error, "Error while observing player dashboard.") }
                 .toFlowable(BackpressureStrategy.LATEST),
@@ -37,6 +41,7 @@ class PlayerDashboardViewModel @Inject constructor(
     fun commands(): LiveData<PlayerDashboardCommand> {
         val liveDataMerger = MediatorLiveData<PlayerDashboardCommand>()
         liveDataMerger.addSource(observeCardExchangeEvents()) { value -> liveDataMerger.value = value }
+        liveDataMerger.addSource(observeGamePhaseEvents()) { value -> liveDataMerger.value = value }
         liveDataMerger.addSource(commands) { value -> liveDataMerger.value = value }
         return liveDataMerger
     }
@@ -69,6 +74,29 @@ class PlayerDashboardViewModel @Inject constructor(
                 .doOnError { error -> Timber.e(error, "Error while observing card exchange.") }
                 .toFlowable(BackpressureStrategy.LATEST)
         )
+    }
+
+    private fun observeGamePhaseEvents(): LiveData<PlayerDashboardCommand.OpenEndOfRound> {
+        return LiveDataReactiveStreams.fromPublisher(
+            facade.observeDashboardInfo()
+                .distinctUntilChanged{info -> info.gameInfo.gamePhase}
+                .filter { info -> info.gameInfo.gamePhase == GamePhase.RoundIsOver }
+                .map(::mapEndOfRoundInfo)
+                .observeOn(schedulerFactory.ui())
+                .doOnError { error -> Timber.e(error, "Error while observing dashboard info.") }
+                .toFlowable(BackpressureStrategy.LATEST)
+        )
+    }
+
+    private fun mapEndOfRoundInfo(info: GameDashboardInfo): PlayerDashboardCommand.OpenEndOfRound {
+        return when (info.gameInfo.gamePhase) {
+            GamePhase.RoundIsOver ->
+                PlayerDashboardCommand.OpenEndOfRound(
+                    info.gameInfo.playerInfos
+                        .map { (_,p) -> PlayerEndOfRoundInfo(p.name, ResourceMapper.getResourceLong(p.rank)) }
+                )
+            else -> throw IllegalArgumentException("Illegal game phase: ${info.gameInfo.gamePhase}")
+        }
     }
 
     private fun performOperation(successText: String, failureText: String, op: () -> Completable) {
