@@ -1,5 +1,6 @@
-package ch.qscqlmpa.dwitch.uitests
+package ch.qscqlmpa.dwitch
 
+import ch.qscqlmpa.dwitch.uitests.*
 import org.junit.runner.RunWith
 import org.junit.runners.Suite
 

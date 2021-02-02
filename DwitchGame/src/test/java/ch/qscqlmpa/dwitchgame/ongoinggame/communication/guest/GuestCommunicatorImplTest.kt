@@ -11,7 +11,6 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.eventprocessors.Gu
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import io.mockk.*
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.assertj.core.api.Assertions.assertThat
@@ -133,10 +132,9 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
 
         @Test
         fun `Send message to host`() {
-            every { mockCommClient.sendMessageToServer(any()) } returns Completable.complete()
             val messageToSend = Message.PlayerReadyMessage(PlayerDwitchId(2), true)
 
-            guestCommunicator.sendMessageToHost(messageToSend).test().assertComplete()
+            guestCommunicator.sendMessageToHost(messageToSend)
 
             val messageCap = CapturingSlot<Message>()
             verify { mockCommClient.sendMessageToServer(capture(messageCap)) }

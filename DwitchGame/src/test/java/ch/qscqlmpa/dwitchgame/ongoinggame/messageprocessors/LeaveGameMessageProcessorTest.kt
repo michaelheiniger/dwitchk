@@ -21,7 +21,6 @@ internal class LeaveGameMessageProcessorTest : BaseMessageProcessorTest() {
     override fun setup() {
         super.setup()
         processor = LeaveGameMessageProcessor(mockInGameStore, mockHostMessageFactory, TestUtil.lazyOf(mockHostCommunicator))
-        setupCommunicatorSendMessageCompleteMock()
     }
 
     @Test

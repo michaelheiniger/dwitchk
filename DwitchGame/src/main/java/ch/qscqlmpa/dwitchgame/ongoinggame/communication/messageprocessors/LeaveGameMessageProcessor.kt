@@ -23,19 +23,18 @@ internal class LeaveGameMessageProcessor @Inject constructor(
 
         val communicator = communicatorLazy.get()
 
-        return deletePlayerFromStore(msg.playerDwitchId)
-            .andThen(hostMessageFactory.createWaitingRoomStateUpdateMessage())
-            .flatMapCompletable(communicator::sendMessage)
+        return Completable.fromAction {
+            deletePlayerFromStore(msg.playerDwitchId)
+            communicator.sendMessage(hostMessageFactory.createWaitingRoomStateUpdateMessage())
+        }
     }
 
-    private fun deletePlayerFromStore(playerDwitchId: PlayerDwitchId): Completable {
-        return Completable.fromAction {
-            val numRecordsAffected = store.deletePlayer(playerDwitchId)
-            if (numRecordsAffected != 1) {
-                throw IllegalStateException("Player with in-game ID $playerDwitchId is leaving game but is not found in store.")
-            } else {
-                Timber.i("Player with in-game ID $playerDwitchId was deleted because it is leaving the game.")
-            }
+    private fun deletePlayerFromStore(playerDwitchId: PlayerDwitchId) {
+        val numRecordsAffected = store.deletePlayer(playerDwitchId)
+        if (numRecordsAffected != 1) {
+            throw IllegalStateException("Player with in-game ID $playerDwitchId is leaving game but is not found in store.")
+        } else {
+            Timber.i("Player with in-game ID $playerDwitchId was deleted because it is leaving the game.")
         }
     }
 }

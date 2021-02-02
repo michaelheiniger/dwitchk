@@ -107,6 +107,7 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
                 .scan(
                     mutableListOf<String>(),
                     { messages, lastMessage ->
+                        Timber.e("Message sent by host: $lastMessage")
                         messages.add(lastMessage)
                         messages
                     }

@@ -5,13 +5,12 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
-import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class MessageFactory @Inject constructor(private val store: InGameStore) {
 
-    fun createGameStateUpdatedMessage(): Single<Message> {
-        return Single.fromCallable { Message.GameStateUpdatedMessage(store.getGameState()) }
+    fun createGameStateUpdatedMessage(): Message {
+        return Message.GameStateUpdatedMessage(store.getGameState())
     }
 
     companion object {

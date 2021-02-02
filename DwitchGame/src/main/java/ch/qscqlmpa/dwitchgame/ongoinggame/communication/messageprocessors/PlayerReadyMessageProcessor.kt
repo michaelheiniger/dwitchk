@@ -20,19 +20,19 @@ internal class PlayerReadyMessageProcessor @Inject constructor(
 
         message as Message.PlayerReadyMessage
 
-        return updatePlayerWithReady(message)
-                .andThen(hostMessageFactory.createWaitingRoomStateUpdateMessage())
-                .flatMapCompletable { msg -> communicatorLazy.get().sendMessage(msg) }
+        return Completable.fromAction {
+            updatePlayerWithReady(message)
+            val wrStateUpdateMessage = hostMessageFactory.createWaitingRoomStateUpdateMessage()
+            communicatorLazy.get().sendMessage(wrStateUpdateMessage)
+        }
     }
 
-    private fun updatePlayerWithReady(message: Message.PlayerReadyMessage): Completable {
-        return Completable.fromCallable {
-            val numRecordsAffected = store.updatePlayerWithReady(message.playerId, message.ready)
-            if (numRecordsAffected != 1) {
-                throw IllegalStateException("State of player with in-game ID $${message.playerId} could not be updated because not found in store.")
-            } else {
-                Timber.i("Player with in-game ID ${message.playerId} changed ready state to ${message.ready}.")
-            }
+    private fun updatePlayerWithReady(message: Message.PlayerReadyMessage) {
+        val numRecordsAffected = store.updatePlayerWithReady(message.playerId, message.ready)
+        if (numRecordsAffected != 1) {
+            throw IllegalStateException("State of player with in-game ID $${message.playerId} could not be updated because not found in store.")
+        } else {
+            Timber.i("Player with in-game ID ${message.playerId} changed ready state to ${message.ready}.")
         }
     }
 }

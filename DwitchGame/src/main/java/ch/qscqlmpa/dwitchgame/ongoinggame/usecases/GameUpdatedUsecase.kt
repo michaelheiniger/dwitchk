@@ -5,7 +5,6 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.GameCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 internal class GameUpdatedUsecase @Inject constructor(
@@ -14,9 +13,10 @@ internal class GameUpdatedUsecase @Inject constructor(
 ) {
 
     fun handleUpdatedGameState(gameState: GameState): Completable {
-        return Single.fromCallable {
+        return Completable.fromAction {
             store.updateGameState(gameState)
-            MessageFactory.createGameStateUpdatedMessage(gameState)
-        }.flatMapCompletable(communicator::sendMessageToHost)
+            val message = MessageFactory.createGameStateUpdatedMessage(gameState)
+            communicator.sendMessageToHost(message)
+        }
     }
 }

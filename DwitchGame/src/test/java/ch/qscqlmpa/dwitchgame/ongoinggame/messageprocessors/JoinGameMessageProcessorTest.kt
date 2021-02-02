@@ -10,7 +10,6 @@ import ch.qscqlmpa.dwitchgame.TestUtil
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.JoinGameMessageProcessor
 import io.mockk.*
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -36,7 +35,6 @@ internal class JoinGameMessageProcessorTest : BaseMessageProcessorTest() {
                 connectionStore
         )
 
-        setupCommunicatorSendMessageCompleteMock()
         senderConnectionId = ConnectionId(234)
     }
 
@@ -45,7 +43,7 @@ internal class JoinGameMessageProcessorTest : BaseMessageProcessorTest() {
         every { mockInGameStore.gameIsNew() } returns true
         val waitingRoomStateUpdateMessageWrapperMock = setupWaitingRoomStateUpdateMessageMock()
         val joinAckMessageWrapperMock = mockk<EnvelopeToSend>()
-        every { mockHostMessageFactory.createJoinAckMessage(any(), any()) } returns Single.just(joinAckMessageWrapperMock)
+        every { mockHostMessageFactory.createJoinAckMessage(any(), any()) } returns joinAckMessageWrapperMock
 
         every { mockInGameStore.insertNewGuestPlayer(any()) } returns guestPlayer.id
         every { mockInGameStore.getPlayerDwitchId(any()) } returns guestPlayer.dwitchId

@@ -16,7 +16,6 @@ import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 import timber.log.Timber
 
 internal class HostCommunicatorImpl constructor(
@@ -46,19 +45,16 @@ internal class HostCommunicatorImpl constructor(
         disposableManager.disposeAndReset()
     }
 
-    override fun sendMessage(envelopeToSend: EnvelopeToSend): Completable {
-        return when (val recipient = envelopeToSend.recipient) {
+    override fun sendMessage(envelopeToSend: EnvelopeToSend) {
+        when (val recipient = envelopeToSend.recipient) {
             is Recipient.Single -> sendMessageToSingleRecipient(recipient, envelopeToSend)
             Recipient.All -> sendMessageToAllGuests(envelopeToSend)
         }
     }
 
-    override fun sendMessageToHost(message: Message): Completable {
+    override fun sendMessageToHost(message: Message) {
         Timber.i("Send message to host: $message")
-        return hostConnectionId()
-            .subscribeOn(schedulerFactory.io())
-            .doOnSuccess { hostConnectionId -> receivedMessageRelay.accept(EnvelopeReceived(hostConnectionId, message)) }
-            .ignoreElement()
+        receivedMessageRelay.accept(EnvelopeReceived(hostConnectionId(), message))
     }
 
     override fun closeConnectionWithClient(connectionId: ConnectionId) {
@@ -111,38 +107,34 @@ internal class HostCommunicatorImpl constructor(
         )
     }
 
-    private fun hostConnectionId(): Single<ConnectionId> {
-        return Single.fromCallable {
-            val hostDwitchId = inGameStore.getLocalPlayerDwitchId()
-            connectionStore.getConnectionId(hostDwitchId)
-                ?: throw IllegalStateException("The host has no connection ID mapped to its in-game ID: $hostDwitchId.")
-        }
+    private fun hostConnectionId(): ConnectionId {
+        val hostDwitchId = inGameStore.getLocalPlayerDwitchId()
+        return connectionStore.getConnectionId(hostDwitchId)
+            ?: throw IllegalStateException("The host has no connection ID mapped to its in-game ID: $hostDwitchId.")
     }
 
-    private fun sendMessageToAllGuests(envelopeToSend: EnvelopeToSend): Completable {
+    private fun sendMessageToAllGuests(envelopeToSend: EnvelopeToSend) {
         Timber.i("Send message to all guests: ${envelopeToSend.message}")
-        return commServer.sendMessage(envelopeToSend.message, envelopeToSend.recipient)
+        commServer.sendMessage(envelopeToSend.message, envelopeToSend.recipient)
         //TODO: Should messages with recipient "All" be also sent to the host ? It doesn't seem needed since the message
         // is sent by the host.
     }
 
-    private fun sendMessageToSingleRecipient(recipient: Recipient.Single, envelopeToSend: EnvelopeToSend): Completable {
-        return hostConnectionId()
-            .flatMapCompletable { hostConnectionId ->
-                if (hostConnectionId == recipient.id) {
-                    sendMessageToHost(envelopeToSend.message)
-                } else {
-                    Timber.i("Send message to guest (${envelopeToSend.recipient}): ${envelopeToSend.message}")
-                    commServer.sendMessage(envelopeToSend.message, envelopeToSend.recipient)
-                }
-            }
+    private fun sendMessageToSingleRecipient(recipient: Recipient.Single, envelopeToSend: EnvelopeToSend) {
+        if (hostConnectionId() == recipient.id) {
+            sendMessageToHost(envelopeToSend.message)
+        } else {
+            Timber.i("Send message to guest (${envelopeToSend.recipient}): ${envelopeToSend.message}")
+            commServer.sendMessage(envelopeToSend.message, envelopeToSend.recipient)
+        }
     }
 
     private fun forwardMessageToGuestsIfNeeded(envelopeReceived: EnvelopeReceived): Completable {
-        return when (envelopeReceived.message) {
-            is Message.GameStateUpdatedMessage -> commServer.sendMessage(envelopeReceived.message, Recipient.All)
-                .subscribeOn(schedulerFactory.io())
-            else -> Completable.complete()
-        }
+        return Completable.fromAction {
+            when (envelopeReceived.message) {
+                is Message.GameStateUpdatedMessage -> commServer.sendMessage(envelopeReceived.message, Recipient.All)
+                else -> Completable.complete()
+            }
+        }.subscribeOn(schedulerFactory.io())
     }
 }

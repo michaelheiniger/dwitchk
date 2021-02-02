@@ -4,9 +4,9 @@ import ch.qscqlmpa.dwitch.PlayerGuestTest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchcommunication.model.PlayerDto
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import org.assertj.core.api.Assertions.assertThat
@@ -78,40 +78,31 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
     }
 
     private fun hostSendsInitialWaitingRoomUpdate() {
-        val gameLocalIdAtHost = 1233L
         val message = Message.WaitingRoomStateUpdateMessage(
             listOf(
-                Player(
-                    334,
+                PlayerDto(
                     PlayerGuestTest.Host.id,
-                    gameLocalIdAtHost,
                     PlayerGuestTest.Host.name,
                     PlayerRole.HOST,
                     PlayerConnectionState.CONNECTED,
                     true
                 ),
-                Player(
-                    335,
+                PlayerDto(
                     PlayerGuestTest.LocalGuest.id,
-                    gameLocalIdAtHost,
                     PlayerGuestTest.LocalGuest.name,
                     PlayerRole.GUEST,
                     PlayerConnectionState.CONNECTED,
                     false
                 ),
-                Player(
-                    336,
+                PlayerDto(
                     PlayerGuestTest.Guest2.id,
-                    gameLocalIdAtHost,
                     PlayerGuestTest.Guest2.name,
                     PlayerRole.GUEST,
                     PlayerConnectionState.CONNECTED,
                     true
                 ),
-                Player(
-                    337,
+                PlayerDto(
                     PlayerGuestTest.Guest3.id,
-                    gameLocalIdAtHost,
                     PlayerGuestTest.Guest3.name,
                     PlayerRole.GUEST,
                     PlayerConnectionState.CONNECTED,

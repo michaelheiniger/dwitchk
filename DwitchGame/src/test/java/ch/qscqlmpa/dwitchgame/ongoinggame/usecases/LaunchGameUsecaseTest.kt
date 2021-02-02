@@ -1,94 +1,76 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
+import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
+import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
+import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
+import ch.qscqlmpa.dwitchgame.ongoinggame.services.ChangeCurrentRoomService
+import ch.qscqlmpa.dwitchgame.ongoinggame.services.GameInitializerService
+import io.mockk.*
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 internal class LaunchGameUsecaseTest : BaseUnitTest() {
 
-//    private val mockCommunicator = mockk<HostCommunicator>(relaxed = true)
-//
-//    private val mockAppEventRepository = mockk<AppEventRepository>(relaxed = true)
-//
-//    private val mockInitialGameSetupFactory = mockk<InitialGameSetupFactory>(relaxed = true)
-//
-//    private lateinit var launchGameUsecase: LaunchGameUsecase
-//
-//    @BeforeEach
-//    override fun setup() {
-//        super.setup()
-//        launchGameUsecase = LaunchGameUsecase(
-//                mockInGameStore,
-//                mockCommunicator,
-//                mockAppEventRepository,
-//                mockInitialGameSetupFactory
-//        )
-//
-//        every { mockCommunicator.sendMessage(ofType(EnvelopeToSend::class)) } returns Completable.complete()
-//        every { mockInitialGameSetupFactory.getInitialGameSetup(any()) } returns RandomInitialGameSetup(2)
-//
-//        val hostPlayer = TestEntityFactory.createHostPlayer()
-//        val guest1Player = TestEntityFactory.createGuestPlayer1()
-//        every { mockInGameStore.getPlayersInWaitingRoom() } returns listOf(hostPlayer, guest1Player)
-//        every { mockInGameStore.getLocalPlayerDwitchId() } returns hostPlayer.dwitchId
-//    }
-//
-//    private fun sendGameLaunchedMessage() {
-//        launchTest()
-//
-//        val messageWrapperCap = CapturingSlot<EnvelopeToSend>()
-//        verify { mockCommunicator.sendMessage(capture(messageWrapperCap)) }
-//
-//        val messageSent = messageWrapperCap.captured.message as Message.LaunchGameMessage
-//        assertThat(messageSent.gameState).isNotNull
-//    }
-//
-//    @Test
-//    fun `Send GameLaunched message when game is a new one`() {
-//        mockGameIsNew()
-//        sendGameLaunchedMessage()
-//    }
-//
-//    @Test
-//    fun `Send GameLaunched message when game exists already`() {
-//        mockGameExistsAlready()
-//        sendGameLaunchedMessage()
-//    }
-//
-//    @Test
-//    fun `Save initialized GameState in store when game is a new one`() {
-//        launchTest()
-//
-//        val gameStateCap = CapturingSlot<GameState>()
-//        verify { mockInGameStore.updateGameState(capture(gameStateCap)) }
-//
-//        assertThat(gameStateCap.captured).isNotNull
-//    }
-//
-////    private fun serviceChangesToGameRoom
-//
-//
-//    @Test
-//    fun `Change room to GameRoom in service`() {
-//        launchTest()
-//
-//        verify { mockAppEventRepository.notify(AppEvent.GameRoomJoinedByHost) }
-//    }
-//
-//    @Test
-//    fun `Update current room to GameRoom in store`() {
-//        launchTest()
-//
-//        verify { mockInGameStore.updateGameRoom(RoomType.GAME_ROOM) }
-//    }
-//
-//    private fun launchTest() {
-//        launchGameUsecase.launchGame().test().assertComplete()
-//    }
-//
-//    private fun mockGameIsNew() {
-//        every { mockInGameStore.gameIsNew() } returns true
-//    }
-//
-//    private fun mockGameExistsAlready() {
-//        every { mockInGameStore.gameIsNew() } returns false
-//    }
+    private val mockChangeCurrentRoomService = mockk<ChangeCurrentRoomService>(relaxed = true)
+
+    private val mockGameInitializerService = mockk<GameInitializerService>(relaxed = true)
+
+    private val mockCommunicator = mockk<HostCommunicator>(relaxed = true)
+
+    private lateinit var launchGameUsecase: LaunchGameUsecase
+
+    private val mockNewGameState = mockk<GameState>()
+    private val mockExistingGameState = mockk<GameState>()
+
+    @BeforeEach
+    override fun setup() {
+        super.setup()
+        launchGameUsecase = LaunchGameUsecase(
+            mockInGameStore,
+            mockGameInitializerService,
+            mockChangeCurrentRoomService,
+            mockCommunicator
+        )
+
+        every { mockGameInitializerService.initializeGameState() } returns mockNewGameState
+        every { mockInGameStore.getGameState() } returns mockExistingGameState
+    }
+
+    @Test
+    fun `Launch new game`() {
+        every { mockInGameStore.gameIsNew() } returns true
+
+        launchTest()
+
+        val envelopeCap = CapturingSlot<EnvelopeToSend>()
+        verify { mockCommunicator.sendMessage(capture(envelopeCap)) }
+        val messageSent = envelopeCap.captured.message as Message.LaunchGameMessage
+        assertThat(messageSent.gameState).isEqualTo(mockNewGameState)
+        confirmVerified(mockCommunicator)
+
+        verify { mockChangeCurrentRoomService.moveToGameRoom() }
+    }
+
+    @Test
+    fun `Launch (resume) existing game`() {
+        every { mockInGameStore.gameIsNew() } returns false
+
+        launchTest()
+
+        val envelopeCap = CapturingSlot<EnvelopeToSend>()
+        verify { mockCommunicator.sendMessage(capture(envelopeCap)) }
+        val messageSent = envelopeCap.captured.message as Message.LaunchGameMessage
+        assertThat(messageSent.gameState).isEqualTo(mockExistingGameState)
+        confirmVerified(mockCommunicator)
+
+        verify { mockChangeCurrentRoomService.moveToGameRoom() }
+    }
+
+
+    private fun launchTest() {
+        launchGameUsecase.launchGame().test().assertComplete()
+    }
 }

@@ -9,6 +9,7 @@ import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeInfo
+import ch.qscqlmpa.dwitchstore.ingamestore.model.GameCommonIdAndCurrentRoom
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 
@@ -16,10 +17,13 @@ interface InGameStore {
 
     // Game
     fun getGame(): Game
+    fun getGameCommonId(): GameCommonId
     fun getCurrentRoom(): RoomType
     fun getGameState(): GameState
     fun gameIsNew(): Boolean
     fun observeGameState(): Observable<GameState>
+    fun getGameCommonIdAndCurrentRoom(): GameCommonIdAndCurrentRoom
+    fun getPlayerLocalId(dwitchId: PlayerDwitchId): Long?
 
     fun updateGameWithCommonId(gameCommonId: GameCommonId)
     fun deleteGame()

@@ -13,7 +13,9 @@ internal class EndGameUsecase @Inject constructor(
 ) {
 
     fun endGame(): Completable {
-        return communicator.sendMessage(HostMessageFactory.createGameOverMessage())
-            .doOnComplete { appEventRepository.notify(AppEvent.GameOver) }
+        return Completable.fromAction {
+            communicator.sendMessage(HostMessageFactory.createGameOverMessage())
+            appEventRepository.notify(AppEvent.GameOver)
+        }
     }
 }

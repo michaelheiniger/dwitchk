@@ -6,7 +6,6 @@ import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.eventprocessors.GuestCommunicationEventDispatcher
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import timber.log.Timber
 
@@ -31,10 +30,9 @@ internal class GuestCommunicatorImpl constructor(
         commClient.stop()
     }
 
-    override fun sendMessageToHost(message: Message): Completable {
+    override fun sendMessageToHost(message: Message) {
         Timber.d("Sending message to host: $message")
-        return commClient.sendMessageToServer(message)
-            .subscribeOn(schedulerFactory.io())
+        commClient.sendMessageToServer(message)
     }
 
     override fun currentCommunicationState(): Observable<GuestCommunicationState> {

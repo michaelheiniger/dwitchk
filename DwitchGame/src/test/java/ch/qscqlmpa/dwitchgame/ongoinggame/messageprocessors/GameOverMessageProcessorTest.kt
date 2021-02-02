@@ -25,7 +25,6 @@ internal class GameOverMessageProcessorTest : BaseMessageProcessorTest() {
         super.setup()
         gameEventRepository = GuestGameEventRepository()
         processor = GameOverMessageProcessor(mockAppEventRepository, gameEventRepository)
-        setupCommunicatorSendGameState()
     }
 
     @Test

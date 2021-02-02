@@ -9,7 +9,6 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMes
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import dagger.Lazy
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Single
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -24,23 +23,17 @@ internal class JoinGameMessageProcessor @Inject constructor(
 
         val msg = message as Message.JoinGameMessage
 
-        if (!store.gameIsNew()) {
-            return Completable.fromAction {
+        return Completable.fromAction {
+            if (store.gameIsNew()) {
+                val newPlayerLocalId = store.insertNewGuestPlayer(msg.playerName)
+                storeConnectionId(senderConnectionID, newPlayerLocalId)
+                sendMessages(senderConnectionID, newPlayerLocalId)
+            } else {
                 // Not supposed to happen since the list of advertised games is filtered to show only relevant games.
                 Timber.w("A player has tried to join a game to be resumed by joining it instead of rejoining it. Kicking player...")
                 closeConnectionWithGuest(senderConnectionID)
             }
         }
-
-        return insertNewGuestPlayer(msg.playerName)
-            .flatMapCompletable { newPlayerLocalId ->
-                Completable.merge(
-                    listOf(
-                        storeConnectionId(senderConnectionID, newPlayerLocalId),
-                        sendMessages(senderConnectionID, newPlayerLocalId)
-                    )
-                )
-            }
     }
 
     private fun sendMessages(
@@ -53,14 +46,8 @@ internal class JoinGameMessageProcessor @Inject constructor(
         )
     )
 
-    private fun insertNewGuestPlayer(playerName: String): Single<Long> {
-        return Single.fromCallable { store.insertNewGuestPlayer(playerName) }
-    }
-
-    private fun storeConnectionId(senderConnectionId: ConnectionId, newPlayerLocalId: Long): Completable {
-        return Completable.fromAction {
-            val newGuestPlayerDwitchId = store.getPlayerDwitchId(newPlayerLocalId)
-            connectionStore.pairConnectionWithPlayer(senderConnectionId, newGuestPlayerDwitchId)
-        }
+    private fun storeConnectionId(senderConnectionId: ConnectionId, newPlayerLocalId: Long) {
+        val newGuestPlayerDwitchId = store.getPlayerDwitchId(newPlayerLocalId)
+        connectionStore.pairConnectionWithPlayer(senderConnectionId, newGuestPlayerDwitchId)
     }
 }

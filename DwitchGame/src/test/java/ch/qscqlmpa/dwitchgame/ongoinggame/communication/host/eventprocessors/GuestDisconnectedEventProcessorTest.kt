@@ -13,7 +13,6 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMes
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import io.mockk.*
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -40,8 +39,6 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
                 mockHostMessageFactory,
                 LazyImpl(mockCommunicator)
         )
-
-        every { mockCommunicator.sendMessage(any()) } returns Completable.complete()
     }
 
     @Test
@@ -52,7 +49,7 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
         val guestConnectionId = setupConnectionStore()
 
         val waitingRoomStateUpdateMessageWrapperMock = mockk<EnvelopeToSend>()
-        every { mockHostMessageFactory.createWaitingRoomStateUpdateMessage() } returns Single.just(waitingRoomStateUpdateMessageWrapperMock)
+        every { mockHostMessageFactory.createWaitingRoomStateUpdateMessage() } returns waitingRoomStateUpdateMessageWrapperMock
 
         launchTest(guestConnectionId).test().assertComplete()
 

@@ -10,7 +10,6 @@ import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import io.reactivex.rxjava3.core.Completable
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -30,7 +29,6 @@ internal class LeaveGameUsecaseTest : BaseUnitTest() {
         appEventRepository = AppEventRepository()
         leaveGameUsecase = LeaveGameUsecase(mockInGameStore, appEventRepository, mockCommunicator)
 
-        every { mockCommunicator.sendMessageToHost(any()) } returns Completable.complete()
         every { mockInGameStore.getLocalPlayerDwitchId() } returns playerDwitchId
     }
 

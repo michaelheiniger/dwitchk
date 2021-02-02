@@ -10,6 +10,7 @@ import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.InsertGameResult
+import ch.qscqlmpa.dwitchstore.ingamestore.model.GameCommonIdAndCurrentRoom
 import io.reactivex.rxjava3.core.Observable
 import org.joda.time.DateTime
 import java.util.*
@@ -52,20 +53,23 @@ internal abstract class GameDao(database: AppRoomDatabase) {
     )
     abstract fun updateGameState(gameLocalId: Long, gameState: String)
 
-    @Query("SELECT * FROM Game WHERE id=:localId")
+    @Query("SELECT * FROM Game WHERE id = :localId")
     abstract fun getGame(localId: Long): Game
 
-    @Query("SELECT * FROM Game WHERE game_common_id=:gameCommonId")
+    @Query("SELECT game_common_id FROM Game WHERE id = :localId ")
+    abstract fun getGameCommonId(localId: Long): GameCommonId
+
+    @Query("SELECT * FROM Game WHERE game_common_id = :gameCommonId")
     abstract fun getGame(gameCommonId: GameCommonId): Game?
 
-    @Query("SELECT * FROM Game WHERE id=:localId")
+    @Query("SELECT * FROM Game WHERE id = :localId")
     abstract fun observeGame(localId: Long): Observable<Game>
 
     @Query(
         """
         UPDATE Game
-        SET game_common_id=:gameCommonId
-        WHERE id=:gameLocalId
+        SET game_common_id = :gameCommonId
+        WHERE id = :gameLocalId
             """
     )
     abstract fun updateGameWithCommonId(gameLocalId: Long, gameCommonId: GameCommonId)
@@ -211,4 +215,12 @@ internal abstract class GameDao(database: AppRoomDatabase) {
     """
     )
     abstract fun getResumableGamesInfo(): Observable<List<ResumableGameInfo>>
+
+    @Query(
+        """
+        SELECT game_common_id, current_room FROM game
+        WHERE id = :gameLocalId
+    """
+    )
+    abstract fun getGameCommonIdAndCurrentRoom(gameLocalId: Long): GameCommonIdAndCurrentRoom
 }

@@ -24,7 +24,6 @@ internal class GameStateUpdatedMessageProcessorTest : BaseMessageProcessorTest()
     override fun setup() {
         super.setup()
         processor = GameStateUpdatedMessageProcessor(mockInGameStore)
-        setupCommunicatorSendGameState()
     }
 
     @Test

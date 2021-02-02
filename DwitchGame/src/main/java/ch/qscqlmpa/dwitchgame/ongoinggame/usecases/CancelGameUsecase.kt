@@ -8,7 +8,6 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEventRepository
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 internal class CancelGameUsecase @Inject constructor(
@@ -19,24 +18,18 @@ internal class CancelGameUsecase @Inject constructor(
 ) {
 
     fun cancelGame(): Completable {
-        return deleteGameIfGameIsNew()
-            .andThen(sendCancelGameMessage())
-            .doOnComplete {
-                appEventRepository.notify(AppEvent.GameOver)
-                gameEventRepository.notify(GuestGameEvent.GameCanceled)
-            }
-    }
-
-    private fun deleteGameIfGameIsNew(): Completable {
         return Completable.fromAction {
             if (store.gameIsNew()) {
                 store.deleteGame()
             }
+            sendCancelGameMessage()
+            appEventRepository.notify(AppEvent.GameOver)
+            gameEventRepository.notify(GuestGameEvent.GameCanceled)
         }
     }
 
-    private fun sendCancelGameMessage(): Completable {
-        return Single.fromCallable { HostMessageFactory.createCancelGameMessage() }
-            .flatMapCompletable(communicator::sendMessage)
+    private fun sendCancelGameMessage() {
+        val message = HostMessageFactory.createCancelGameMessage()
+        communicator.sendMessage(message)
     }
 }

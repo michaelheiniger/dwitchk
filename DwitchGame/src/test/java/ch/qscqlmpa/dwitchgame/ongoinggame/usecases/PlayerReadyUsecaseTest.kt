@@ -7,7 +7,6 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import io.reactivex.rxjava3.core.Completable
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -22,10 +21,7 @@ class PlayerReadyUsecaseTest : BaseUnitTest() {
     @BeforeEach
     override fun setup() {
         super.setup()
-
         usecase = PlayerReadyUsecase(mockInGameStore, mockCommunicator)
-
-        every { mockCommunicator.sendMessageToHost(any()) } returns Completable.complete()
         every { mockInGameStore.getLocalPlayerDwitchId() } returns localPlayerDwitchId
     }
 

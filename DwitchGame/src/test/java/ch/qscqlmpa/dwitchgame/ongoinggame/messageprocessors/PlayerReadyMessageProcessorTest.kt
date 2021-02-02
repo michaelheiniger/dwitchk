@@ -25,7 +25,6 @@ internal class PlayerReadyMessageProcessorTest : BaseMessageProcessorTest() {
                 mockHostMessageFactory,
                 LazyImpl(mockHostCommunicator)
         )
-        setupCommunicatorSendMessageCompleteMock()
     }
 
     @Test

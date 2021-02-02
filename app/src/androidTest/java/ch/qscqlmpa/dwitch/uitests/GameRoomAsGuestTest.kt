@@ -9,6 +9,7 @@ import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.elementIsDisplayed
 import ch.qscqlmpa.dwitch.utils.TestEntityFactory
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchcommunication.model.PlayerDto
 import ch.qscqlmpa.dwitchengine.DwitchEngine.Companion.createNewGame
 import ch.qscqlmpa.dwitchengine.ProdDwitchEngineFactory
 import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealer
@@ -176,22 +177,17 @@ class GameRoomAsGuestTest : BaseGuestTest() {
     }
 
     private fun hostSendsInitialWaitingRoomUpdate() {
-        val gameLocalIdAtHost = 1233L
         val message = Message.WaitingRoomStateUpdateMessage(
             listOf(
-                Player(
-                    334,
+                PlayerDto(
                     PlayerGuestTest.Host.id,
-                    gameLocalIdAtHost,
                     PlayerGuestTest.Host.name,
                     PlayerRole.HOST,
                     PlayerConnectionState.CONNECTED,
                     true
                 ),
-                Player(
-                    335,
+                PlayerDto(
                     PlayerGuestTest.LocalGuest.id,
-                    gameLocalIdAtHost,
                     PlayerGuestTest.LocalGuest.name,
                     PlayerRole.GUEST,
                     PlayerConnectionState.CONNECTED,

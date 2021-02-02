@@ -32,31 +32,29 @@ internal class GuestDisconnectedEventProcessor @Inject constructor(
     }
 
     private fun handleEventWhenConnectionIdIsKnown(connectionId: ConnectionId): Completable {
-        val playerDwitchId = connectionStore.getDwitchId(connectionId)
-        connectionStore.removeConnectionIdForDwitchId(connectionId)
-        Timber.i("Client disconnected with connection ID $connectionId and dwitch ID $playerDwitchId")
+        return Completable.fromAction {
+            val playerDwitchId = connectionStore.getDwitchId(connectionId)
+            connectionStore.removeConnectionIdForDwitchId(connectionId)
+            Timber.i("Client disconnected with connection ID $connectionId and dwitch ID $playerDwitchId")
 
-        return if (playerDwitchId != null) {
-            val communicator = communicatorLazy.get()
-            updatePlayerWithDisconnectedState(playerDwitchId, connectionId)
-                .andThen(hostMessageFactory.createWaitingRoomStateUpdateMessage())
-                .flatMapCompletable(communicator::sendMessage)
-        } else {
-            Timber.i("ClientDisconnected event: no player in-game ID found for connection ID $connectionId")
-            Completable.complete()
+            if (playerDwitchId != null) {
+                updatePlayerWithDisconnectedState(playerDwitchId, connectionId)
+                val message = hostMessageFactory.createWaitingRoomStateUpdateMessage()
+                communicatorLazy.get().sendMessage(message)
+            } else {
+                Timber.i("ClientDisconnected event: no player in-game ID found for connection ID $connectionId")
+            }
         }
     }
 
-    private fun updatePlayerWithDisconnectedState(playerDwitchId: PlayerDwitchId, connectionId: ConnectionId): Completable {
-        return Completable.fromAction {
-            val newState = PlayerConnectionState.DISCONNECTED
-            val numRecordsAffected = store.updatePlayer(playerDwitchId, newState, false)
+    private fun updatePlayerWithDisconnectedState(playerDwitchId: PlayerDwitchId, connectionId: ConnectionId) {
+        val newState = PlayerConnectionState.DISCONNECTED
+        val numRecordsAffected = store.updatePlayer(playerDwitchId, newState, false)
 
-            if (numRecordsAffected != 1) {
-                throw IllegalStateException("State of player with connection ID $connectionId could not be updated because not found in store.")
-            } else {
-                Timber.i("Player with connection ID $connectionId changed state to $newState.")
-            }
+        if (numRecordsAffected != 1) {
+            throw IllegalStateException("State of player with connection ID $connectionId could not be updated because not found in store.")
+        } else {
+            Timber.i("Player with connection ID $connectionId changed state to $newState.")
         }
     }
 }

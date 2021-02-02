@@ -10,7 +10,6 @@ import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.Recipient
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import org.java_websocket.WebSocket
 import timber.log.Timber
@@ -30,7 +29,7 @@ internal class WebsocketCommServer @Inject constructor(
         websocketServer.stop()
     }
 
-    override fun sendMessage(message: Message, recipient: Recipient): Completable {
+    override fun sendMessage(message: Message, recipient: Recipient) {
         val serializedMessage = serializerFactory.serialize(message)
         return when (val address = getRecipientAddress(recipient)) {
             is AddressType.Unicast -> sendUnicastMessage(serializedMessage, address)
@@ -45,22 +44,20 @@ internal class WebsocketCommServer @Inject constructor(
         }
     }
 
-    private fun sendUnicastMessage(serializedMessage: String, recipientAddress: AddressType.Unicast): Completable {
-        return Completable.fromAction {
-            val recipientSocket = websocketServer.getConnections().find { webSocket ->
-                webSocket.remoteSocketAddress.address.hostAddress == recipientAddress.destination.ipAddress
-                        && webSocket.remoteSocketAddress.port == recipientAddress.destination.port
-            }
-            if (recipientSocket != null) {
-                websocketServer.send(recipientSocket, serializedMessage)
-            } else {
-                Timber.e("Message sent to $recipientAddress but no socket found")
-            }
+    private fun sendUnicastMessage(serializedMessage: String, recipientAddress: AddressType.Unicast) {
+        val recipientSocket = websocketServer.getConnections().find { webSocket ->
+            webSocket.remoteSocketAddress.address.hostAddress == recipientAddress.destination.ipAddress
+                    && webSocket.remoteSocketAddress.port == recipientAddress.destination.port
+        }
+        if (recipientSocket != null) {
+            websocketServer.send(recipientSocket, serializedMessage)
+        } else {
+            Timber.e("Message sent to $recipientAddress but no socket found")
         }
     }
 
-    private fun sendBroadcastMessage(serializedMessage: String): Completable {
-        return Completable.fromAction { websocketServer.sendBroadcast(serializedMessage) }
+    private fun sendBroadcastMessage(serializedMessage: String) {
+        websocketServer.sendBroadcast(serializedMessage)
     }
 
     override fun observeCommunicationEvents(): Observable<ServerCommunicationEvent> {

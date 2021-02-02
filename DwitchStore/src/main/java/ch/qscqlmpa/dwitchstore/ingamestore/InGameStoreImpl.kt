@@ -10,6 +10,7 @@ import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchstore.db.AppRoomDatabase
 import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeInfo
+import ch.qscqlmpa.dwitchstore.ingamestore.model.GameCommonIdAndCurrentRoom
 import ch.qscqlmpa.dwitchstore.util.SerializerFactory
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
@@ -29,6 +30,10 @@ internal class InGameStoreImpl constructor(
         return gameDao.getGame(gameLocalId)
     }
 
+    override fun getGameCommonId(): GameCommonId {
+        return gameDao.getGameCommonId(gameLocalId)
+    }
+
     override fun getCurrentRoom(): RoomType {
         return getGame().currentRoom
     }
@@ -45,6 +50,14 @@ internal class InGameStoreImpl constructor(
     override fun observeGameState(): Observable<GameState> {
         return gameDao.observeGame(gameLocalId)
             .map { game -> serializerFactory.unserializeGameState(game.gameState!!) }
+    }
+
+    override fun getGameCommonIdAndCurrentRoom(): GameCommonIdAndCurrentRoom {
+        return gameDao.getGameCommonIdAndCurrentRoom(gameLocalId)
+    }
+
+    override fun getPlayerLocalId(dwitchId: PlayerDwitchId): Long? {
+        return playerDao.getPlayerLocalId(gameLocalId, dwitchId)
     }
 
     override fun updateGameWithCommonId(gameCommonId: GameCommonId) {

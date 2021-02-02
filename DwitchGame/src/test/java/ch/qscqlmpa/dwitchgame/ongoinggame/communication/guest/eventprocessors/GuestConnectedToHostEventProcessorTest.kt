@@ -14,7 +14,6 @@ import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import io.reactivex.rxjava3.core.Completable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -40,7 +39,6 @@ class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
             mockCommunicator,
             commStateRepository
         )
-        setupCommunicatorMock()
     }
 
     @Test
@@ -92,9 +90,5 @@ class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
 
     private fun setupGetPlayerMock() {
         every { mockInGameStore.getLocalPlayer() } returns localPlayer
-    }
-
-    private fun setupCommunicatorMock() {
-        every { mockCommunicator.sendMessageToHost((any())) } returns Completable.complete()
     }
 }

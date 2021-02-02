@@ -15,13 +15,12 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import io.reactivex.rxjava3.core.Completable
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class StartCardExchangeUsecaseTest : BaseUnitTest() {
 
-    private val mockCommunicator = mockk<HostCommunicator>()
+    private val mockCommunicator = mockk<HostCommunicator>(relaxed = true)
     private val mockConnectionStore = mockk<ConnectionStore>()
     private val mockDwitchEngine = mockk<DwitchEngine>()
     private lateinit var dwitchEngineFactory: TestDwitchEngineFactory
@@ -33,7 +32,6 @@ internal class StartCardExchangeUsecaseTest : BaseUnitTest() {
         super.setup()
         dwitchEngineFactory = TestDwitchEngineFactory()
         usecase = StartCardExchangeUsecase(mockCommunicator, mockConnectionStore, dwitchEngineFactory)
-        every { mockCommunicator.sendMessage(any())} returns Completable.complete()
     }
 
     @Test

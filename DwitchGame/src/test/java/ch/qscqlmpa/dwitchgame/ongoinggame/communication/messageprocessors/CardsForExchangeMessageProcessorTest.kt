@@ -29,7 +29,6 @@ internal class CardsForExchangeMessageProcessorTest: BaseMessageProcessorTest() 
         super.setup()
         dwitchEngineFactory = TestDwitchEngineFactory()
         processor = CardsForExchangeMessageProcessor(mockInGameStore, dwitchEngineFactory, TestUtil.lazyOf(mockHostCommunicator))
-        setupCommunicatorSendMessageCompleteMock()
     }
 
     @Test

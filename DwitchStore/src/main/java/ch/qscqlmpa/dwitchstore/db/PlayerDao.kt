@@ -191,4 +191,13 @@ internal interface PlayerDao {
         """
     )
     fun prepareGuestsForGameResume(gameId: Long, localPlayerId: Long)
+
+    @Query(
+        """
+            SELECT id FROM Player
+            WHERE dwitch_id = :dwitchId
+            AND game_local_id = :gameLocalId            
+        """
+    )
+    fun getPlayerLocalId(gameLocalId: Long, dwitchId: PlayerDwitchId): Long?
 }

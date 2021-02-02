@@ -17,7 +17,6 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.eventprocessors.Hos
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.mockk.*
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -157,7 +156,6 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
         @BeforeEach
         fun setup() {
-            every { mockCommServer.sendMessage(any(), any()) } returns Completable.complete()
         }
 
         @Test
@@ -170,7 +168,6 @@ class HostCommunicatorImplTest : BaseUnitTest() {
             val messageToSend = Message.CardsForExchangeMessage(hostPlayerDwitchId, setOf(Card.Clubs2, Card.Clubs3))
 
             hostCommunicator.sendMessage(EnvelopeToSend(Recipient.Single(hostConnectionId), messageToSend))
-                .test().assertComplete()
 
             verify(exactly = 0) { mockCommServer.sendMessage(messageToSend, any()) }
             verify { mockMessageDispatcher.dispatch(EnvelopeReceived(hostConnectionId, messageToSend))}
@@ -180,7 +177,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
         fun `Broadcast message to all guests`() {
             val messageToSend = Message.CancelGameMessage
 
-            hostCommunicator.sendMessage(EnvelopeToSend(Recipient.All, messageToSend)).test().assertComplete()
+            hostCommunicator.sendMessage(EnvelopeToSend(Recipient.All, messageToSend))
 
             verify { mockCommServer.sendMessage(messageToSend, Recipient.All) }
         }
@@ -194,7 +191,6 @@ class HostCommunicatorImplTest : BaseUnitTest() {
             val guestConnectionId = ConnectionId(32)
 
             hostCommunicator.sendMessage(EnvelopeToSend(Recipient.Single(guestConnectionId), messageToSend))
-                .test().assertComplete()
 
             verify { mockCommServer.sendMessage(messageToSend, Recipient.Single(guestConnectionId)) }
         }

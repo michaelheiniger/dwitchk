@@ -7,24 +7,21 @@ import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
-import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class HostMessageFactory @Inject constructor(private val store: InGameStore) {
 
-    fun createWaitingRoomStateUpdateMessage(): Single<EnvelopeToSend> {
-        return Single.fromCallable { createWaitingRoomStateUpdateMessage(store.getPlayersInWaitingRoom()) }
+    fun createWaitingRoomStateUpdateMessage(): EnvelopeToSend {
+        return createWaitingRoomStateUpdateMessage(store.getPlayersInWaitingRoom())
     }
 
     fun createJoinAckMessage(
         recipientId: ConnectionId,
         playerDwitchId: PlayerDwitchId
-    ): Single<EnvelopeToSend> {
-        return Single.fromCallable {
-            val gameCommonId = store.getGame().gameCommonId
-            val message = Message.JoinGameAckMessage(gameCommonId, playerDwitchId)
-            EnvelopeToSend(Recipient.Single(recipientId), message)
-        }
+    ): EnvelopeToSend {
+        val gameCommonId = store.getGameCommonId()
+        val message = Message.JoinGameAckMessage(gameCommonId, playerDwitchId)
+        return EnvelopeToSend(Recipient.Single(recipientId), message)
     }
 
     companion object {

@@ -146,9 +146,11 @@ class GameRoomAsHostTest : BaseHostTest() {
 
         UiUtil.clickOnButton(R.id.startNewRoundBtn)
 
+        // Order is not deterministic because one is sent to a specific guest and the other is broadcasted
         val messagesSent = waitForNextNMessageSentByHost(2)
-        assertThat(messagesSent[0]).isInstanceOf(Message.GameStateUpdatedMessage::class.java)
-        assertThat(messagesSent[1]).isInstanceOf(Message.CardExchangeMessage::class.java)
+        assertThat(messagesSent).anyMatch { m -> m is Message.GameStateUpdatedMessage }
+        assertThat(messagesSent).anyMatch { m -> m is Message.CardExchangeMessage }
+        assertThat(messagesSent.size).isEqualTo(2)
 
         UiUtil.assertControlEnabled(R.id.exchangeBtn, enabled = false)
 

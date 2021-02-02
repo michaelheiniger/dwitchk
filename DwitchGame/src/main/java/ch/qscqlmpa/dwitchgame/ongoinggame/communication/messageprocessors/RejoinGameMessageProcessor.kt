@@ -9,14 +9,12 @@ import ch.qscqlmpa.dwitchcommunication.model.RejoinInfo
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
+import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
-import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import dagger.Lazy
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Maybe
-import io.reactivex.rxjava3.core.Single
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -32,82 +30,69 @@ internal class RejoinGameMessageProcessor @Inject constructor(
 
         val msg = message as Message.RejoinGameMessage
 
-        return Single.fromCallable { store.getCurrentRoom() }
-            .flatMapCompletable { currentRoom ->
-                getRejoiningInfoIfPossible(msg, senderConnectionID)
-                    .doOnSuccess { rejoinInfo ->
-                        updatePlayer(rejoinInfo.player, currentRoom)
-                        updateConnectionStore(rejoinInfo.player, senderConnectionID)
-                    }
-                    .flatMapCompletable { rejoinInfo ->
-                        sendRejoinAck(rejoinInfo)
-                            .andThen(sendMessageAccordingToCurrentRoom())
-                    }
-            }
-    }
+        return Completable.fromAction {
+            val (currentGameCommonId, currentRoom) = store.getGameCommonIdAndCurrentRoom()
 
-    private fun getRejoiningInfoIfPossible(
-        msg: Message.RejoinGameMessage,
-        senderConnectionID: ConnectionId
-    ): Maybe<RejoinInfo> {
-        return Maybe.fromCallable {
-
-            val gameCommonId = store.getGame().gameCommonId
-            val playerRejoining = store.getPlayer(msg.playerDwitchId)
-
-            if (gameCommonId != msg.gameCommonId) {
-                Timber.e("Game common ID provided doesn't match: closing connection with client.")
+            if (currentGameCommonId != msg.gameCommonId) {
+                Timber.e("Game common ID provided doesn't match the current game: closing connection with client.")
                 closeConnectionWithGuest(senderConnectionID)
-                return@fromCallable null
+                return@fromAction
             }
 
-            if (playerRejoining == null) {
+            val rejoinInfo = getRejoiningInfoIfPossible(currentGameCommonId, msg, senderConnectionID)
+            if (rejoinInfo != null) {
+                updatePlayer(rejoinInfo.playerLocalId, currentRoom)
+                connectionStore.pairConnectionWithPlayer(senderConnectionID, rejoinInfo.playerDwitchId)
+                sendMessage(HostMessageFactory.createRejoinAckMessage(rejoinInfo))
+            } else {
                 Timber.e("Re-joining player not found: closing connection with client.")
                 closeConnectionWithGuest(senderConnectionID)
-                return@fromCallable null
+                return@fromAction
             }
-
-            return@fromCallable RejoinInfo(gameCommonId, playerRejoining, senderConnectionID)
+            sendUpdateMessage(currentRoom)
         }
     }
 
-    private fun updatePlayer(player: Player, currentRoom: RoomType) {
+    private fun getRejoiningInfoIfPossible(
+        currentGameCommonId: GameCommonId,
+        msg: Message.RejoinGameMessage,
+        senderConnectionID: ConnectionId
+    ): RejoinInfo? {
+        val playerRejoiningId = store.getPlayerLocalId(msg.playerDwitchId)
+        if (playerRejoiningId != null) {
+            return RejoinInfo(currentGameCommonId, playerRejoiningId, msg.playerDwitchId, senderConnectionID)
+        }
+        return null
+    }
+
+    private fun updatePlayer(playerLocalId: Long, currentRoom: RoomType) {
         when (currentRoom) {
-            RoomType.WAITING_ROOM -> store.updatePlayerWithConnectionStateAndReady(player.id, PlayerConnectionState.CONNECTED, false)
-            RoomType.GAME_ROOM -> store.updatePlayerWithConnectionState(player.id, PlayerConnectionState.CONNECTED)
+            RoomType.WAITING_ROOM -> store.updatePlayerWithConnectionStateAndReady(
+                playerLocalId,
+                PlayerConnectionState.CONNECTED,
+                false
+            )
+            RoomType.GAME_ROOM -> store.updatePlayerWithConnectionState(playerLocalId, PlayerConnectionState.CONNECTED)
             else -> throw IllegalStateException("Current room is null !")
         }
     }
 
-    private fun updateConnectionStore(player: Player, connectionID: ConnectionId) {
-        connectionStore.pairConnectionWithPlayer(connectionID, player.dwitchId)
+    private fun sendUpdateMessage(currentRoom: RoomType) {
+        when (currentRoom) {
+            RoomType.WAITING_ROOM -> sendWaitingRoomStateUpdateMessage()
+            RoomType.GAME_ROOM -> sendGameStateUpdatedMessage()
+            else -> throw IllegalStateException("Current room is null !")
+        }
     }
 
-    private fun sendRejoinAck(rejoinInfo: RejoinInfo): Completable {
-        return sendMessage(HostMessageFactory.createRejoinAckMessage(rejoinInfo))
-    }
-
-    private fun sendMessageAccordingToCurrentRoom(): Completable {
-        return Single.fromCallable { store.getCurrentRoom() }
-            .flatMapCompletable { currentRoom ->
-                when (currentRoom) {
-                    RoomType.WAITING_ROOM -> sendWaitingRoomStateUpdateMessage()
-                    RoomType.GAME_ROOM -> sendGameStateUpdatedMessage()
-                    else -> throw IllegalStateException("Current room is null !")
-                }
-            }
-    }
-
-    private fun sendWaitingRoomStateUpdateMessage(): Completable {
+    private fun sendWaitingRoomStateUpdateMessage() {
         Timber.i("Guest connected: send Waitingroom updated state to everyone.")
-        return hostMessageFactory.createWaitingRoomStateUpdateMessage()
-            .flatMapCompletable(::sendMessage)
+        sendMessage(hostMessageFactory.createWaitingRoomStateUpdateMessage())
     }
 
-    private fun sendGameStateUpdatedMessage(): Completable {
+    private fun sendGameStateUpdatedMessage() {
         Timber.i("Guest connected: send game updated state to everyone.")
-        return messageFactory.createGameStateUpdatedMessage()
-            .map { message -> EnvelopeToSend(Recipient.All, message) }
-            .flatMapCompletable(this::sendMessage)
+        val message = messageFactory.createGameStateUpdatedMessage()
+        sendMessage(EnvelopeToSend(Recipient.All, message))
     }
 }

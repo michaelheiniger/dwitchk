@@ -4,21 +4,18 @@ import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import dagger.Lazy
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Single
 
 internal abstract class BaseHostProcessor constructor(
         private val communicatorLazy: Lazy<HostCommunicator>
 ) : MessageProcessor {
 
-    protected fun sendMessage(message: EnvelopeToSend): Completable {
+    protected fun sendMessage(message: EnvelopeToSend) {
         return communicatorLazy.get().sendMessage(message)
     }
 
-    protected fun sendMessages(messages: List<Single<EnvelopeToSend>>): Completable {
+    protected fun sendMessages(messages: List<EnvelopeToSend>) {
         val communicator = communicatorLazy.get()
-        return Single.merge(messages)
-                .concatMapCompletable(communicator::sendMessage)
+        messages.forEach { message -> communicator.sendMessage(message)}
     }
 
     protected fun closeConnectionWithGuest(connectionId: ConnectionId) {

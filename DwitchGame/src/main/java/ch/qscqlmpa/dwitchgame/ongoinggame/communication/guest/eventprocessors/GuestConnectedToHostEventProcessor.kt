@@ -9,7 +9,6 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.GuestMe
 import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Single
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -25,20 +24,21 @@ internal class GuestConnectedToHostEventProcessor @Inject constructor(
 
         event as ClientCommunicationEvent.ConnectedToHost
 
-        return Single.fromCallable {
+        return Completable.fromAction {
             val game = store.getGame()
             val localPlayer = store.getLocalPlayer()
 
-            if (guestIsAlreadyRegisteredAtHost(localPlayer)) {
+            val message = if (guestIsAlreadyRegisteredAtHost(localPlayer)) {
                 Timber.d("Send RejoinGameMessage with in-game ID ${localPlayer.dwitchId}")
                 GuestMessageFactory.createRejoinGameMessage(game.gameCommonId, localPlayer.dwitchId)
             } else {
                 Timber.d("Send JoinGameMessage")
                 GuestMessageFactory.createJoinGameMessage(localPlayer.name)
             }
+
+            communicator.sendMessageToHost(message)
+            commStateRepository.notify(GuestCommunicationState.Connected)
         }
-            .flatMapCompletable(communicator::sendMessageToHost)
-            .doOnComplete { commStateRepository.notify(GuestCommunicationState.Connected) }
     }
 
     private fun guestIsAlreadyRegisteredAtHost(localPlayer: Player): Boolean {

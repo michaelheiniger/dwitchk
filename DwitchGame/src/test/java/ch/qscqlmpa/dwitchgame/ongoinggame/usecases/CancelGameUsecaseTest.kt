@@ -12,7 +12,6 @@ import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import io.reactivex.rxjava3.core.Completable
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -36,8 +35,6 @@ class CancelGameUsecaseTest : BaseUnitTest() {
             mockAppEventRepository,
             gameEventRepository
         )
-
-        every { mockCommunicator.sendMessage(any()) } returns Completable.complete()
     }
 
     @Test

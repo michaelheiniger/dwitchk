@@ -8,7 +8,6 @@ import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
 import com.jakewharton.rxrelay3.PublishRelay
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import timber.log.Timber
 import javax.inject.Inject
@@ -59,11 +58,9 @@ internal class WebsocketCommClient @Inject constructor(
         return receivedMessages
     }
 
-    override fun sendMessageToServer(message: Message): Completable {
-        return Completable.fromAction {
-            val serializedMessage = serializerFactory.serialize(message)
-            websocketClient.send(serializedMessage)
-        }
+    override fun sendMessageToServer(message: Message) {
+        val serializedMessage = serializerFactory.serialize(message)
+        websocketClient.send(serializedMessage)
     }
 
     private fun observeMessageEvents(): Observable<EnvelopeReceived> {
