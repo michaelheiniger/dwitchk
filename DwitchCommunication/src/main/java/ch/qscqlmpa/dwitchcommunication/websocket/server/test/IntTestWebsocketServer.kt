@@ -13,11 +13,7 @@ internal class IntTestWebsocketServer constructor(
     private val hostPort: Int
     ) : WebsocketServer {
 
-    private val onOpenRelay = PublishRelay.create<OnOpen>()
-    private val onCloseRelay = PublishRelay.create<OnClose>()
-    private val onMessageRelay = PublishRelay.create<OnMessage>()
-    private val onStartRelay = PublishRelay.create<OnStart>()
-    private val onErrorRelay = PublishRelay.create<OnError>()
+    private val onMessageRelay = PublishRelay.create<ServerMessage>()
 
     private var connections = mutableListOf<WebSocket>()
 
@@ -41,47 +37,35 @@ internal class IntTestWebsocketServer constructor(
         networkHub.broadcastToGuests(message)
     }
 
+    override fun observeEvents(): Observable<ServerCommEvent> {
+        TODO("Not yet implemented")
+    }
+
+    override fun observeMessages(): Observable<ServerMessage> {
+        TODO("Not yet implemented")
+    }
+
     fun onStart() {
-        onStartRelay.accept(OnStart(Address(hostAddress, hostPort)))
+//        onStartRelay.accept(OnStart(Address(hostAddress, hostPort)))
     }
 
     fun onOpen(conn: WebSocket?, handshake: ClientHandshake?) {
         if (conn != null) {
             connections.add(conn)
         }
-        onOpenRelay.accept(OnOpen(conn, handshake))
+//        onOpenRelay.accept(OnClientConnect(conn, handshake))
     }
 
     fun onClose(conn: WebSocket?, code: Int, reason: String?, remote: Boolean) {
-        onCloseRelay.accept(OnClose(conn, code, reason, remote))
+//        onCloseRelay.accept(OnClientDisconnect(conn, code, reason, remote))
     }
 
     fun onMessage(conn: WebSocket?, message: String?) {
-        onMessageRelay.accept(OnMessage(conn, message))
+        onMessageRelay.accept(ServerMessage(conn, message))
     }
 
     fun onError(conn: WebSocket?, ex: Exception?) {
-        onErrorRelay.accept(OnError(conn, ex))
-    }
-
-    override fun observeOnOpenEvents(): Observable<OnOpen> {
-        return onOpenRelay
-    }
-
-    override fun observeOnCloseEvents(): Observable<OnClose> {
-        return onCloseRelay
-    }
-
-    override fun observeOnMessageEvents(): Observable<OnMessage> {
-        return onMessageRelay
-    }
-
-    override fun observeOnStartEvents(): Observable<OnStart> {
-        return onStartRelay
-    }
-
-    override fun observeOnErrorEvents(): Observable<OnError> {
-        return onErrorRelay
+//        onErrorRelay.accept(OnError(conn, ex))
     }
 
     override fun getConnections(): Collection<WebSocket> {

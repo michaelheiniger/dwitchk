@@ -42,7 +42,7 @@ internal class GuestDisconnectedFromHostEventProcessorTest : BaseUnitTest() {
     fun `Close connection (release resource)`() {
         launchTest()
 
-        verify { mockCommunicator.closeConnection() }
+        verify { mockCommunicator.disconnect() }
         confirmVerified(mockCommunicator)
     }
 

@@ -114,7 +114,7 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
         fun `Close connection with host`() {
             guestCommunicator.connect()
 
-            guestCommunicator.closeConnection()
+            guestCommunicator.disconnect()
             assertThat(communicationEventsStream.hasObservers()).isFalse // Observed streams have been disposed.
 
             verifyOrder {

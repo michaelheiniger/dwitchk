@@ -35,7 +35,7 @@ class GuestInGameService : BaseInGameService() {
     }
 
     override fun cleanUp() {
-        getOngoingGameComponent().guestFacade.closeConnection()
+        getOngoingGameComponent().guestFacade.disconnect()
         (application as App).stopOngoingGame()
     }
 

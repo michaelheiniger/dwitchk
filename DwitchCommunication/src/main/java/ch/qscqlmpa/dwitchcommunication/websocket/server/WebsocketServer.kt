@@ -6,19 +6,6 @@ import org.java_websocket.WebSocket
 import org.java_websocket.handshake.ClientHandshake
 
 internal interface WebsocketServer {
-
-    fun observeOnOpenEvents(): Observable<OnOpen>
-
-    fun observeOnCloseEvents(): Observable<OnClose>
-
-    fun observeOnMessageEvents(): Observable<OnMessage>
-
-    fun observeOnStartEvents(): Observable<OnStart>
-
-    fun observeOnErrorEvents(): Observable<OnError>
-
-    fun getConnections(): Collection<WebSocket>
-
     fun start()
 
     fun stop()
@@ -26,12 +13,20 @@ internal interface WebsocketServer {
     fun send(websocket: WebSocket, message: String)
 
     fun sendBroadcast(message: String)
+
+    fun observeEvents(): Observable<ServerCommEvent>
+
+    fun observeMessages(): Observable<ServerMessage>
+
+    fun getConnections(): Collection<WebSocket>
 }
 
-internal data class OnOpen(val conn: WebSocket?, val handshake: ClientHandshake?)
-internal data class OnClose(val conn: WebSocket?, val code: Int, val reason: String?, val remote: Boolean)
-internal data class OnMessage(val conn: WebSocket?, val message: String?)
-internal data class OnStart(val address: Address)
-internal object OnStop
-internal data class OnError(val conn: WebSocket?, val ex: Exception?)
+internal sealed class ServerCommEvent {
+    internal data class ClientConnected(val conn: WebSocket?, val handshake: ClientHandshake?): ServerCommEvent()
+    internal data class ClientDisconnected(val conn: WebSocket?, val code: Int, val reason: String?, val remote: Boolean): ServerCommEvent()
+    internal data class Started(val address: Address): ServerCommEvent()
+    internal data class Error(val conn: WebSocket?, val ex: Exception?): ServerCommEvent()
+}
+
+internal data class ServerMessage(val conn: WebSocket?, val message: String?)
 

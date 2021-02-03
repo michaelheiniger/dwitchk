@@ -5,9 +5,9 @@ import io.reactivex.rxjava3.core.Observable
 
 internal interface GuestCommunicator : GameCommunicator {
 
-    fun currentCommunicationState(): Observable<GuestCommunicationState>
-
     fun connect()
 
-    fun closeConnection()
+    fun disconnect()
+
+    fun currentCommunicationState(): Observable<GuestCommunicationState>
 }

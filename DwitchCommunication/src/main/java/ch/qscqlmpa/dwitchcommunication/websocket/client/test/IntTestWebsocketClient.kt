@@ -1,9 +1,7 @@
 package ch.qscqlmpa.dwitchcommunication.websocket.client.test
 
-import ch.qscqlmpa.dwitchcommunication.websocket.client.OnClose
-import ch.qscqlmpa.dwitchcommunication.websocket.client.OnError
-import ch.qscqlmpa.dwitchcommunication.websocket.client.OnMessage
-import ch.qscqlmpa.dwitchcommunication.websocket.client.OnOpen
+import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientCommEvent
+import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientMessage
 import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClient
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
@@ -15,10 +13,10 @@ internal class IntTestWebsocketClient constructor(
         private val destinationPort: Int
 ) : WebsocketClient {
 
-    private val onOpenRelay = PublishRelay.create<OnOpen>()
-    private val onCloseRelay = PublishRelay.create<OnClose>()
-    private val onMessageRelay = PublishRelay.create<OnMessage>()
-    private val onErrorRelay = PublishRelay.create<OnError>()
+//    private val onOpenRelay = PublishRelay.create<OnOpen>()
+//    private val onCloseRelay = PublishRelay.create<OnClose>()
+//    private val onMessageRelay = PublishRelay.create<OnMessage>()
+//    private val onErrorRelay = PublishRelay.create<OnError>()
 
     private val messagesSentRelay = PublishRelay.create<String>()
 
@@ -32,6 +30,14 @@ internal class IntTestWebsocketClient constructor(
 
     private var isOpen: Boolean = false
     private var isClosed: Boolean = false
+
+    override fun observeEvents(): Observable<ClientCommEvent> {
+        TODO("Not yet implemented")
+    }
+
+    override fun observeMessages(): Observable<ClientMessage> {
+        TODO("Not yet implemented")
+    }
 
     override fun start() {
 //        networkHub.connectToHost(guestIdTestHost)
@@ -55,39 +61,27 @@ internal class IntTestWebsocketClient constructor(
     }
 
     fun onOpen(handshake: ServerHandshake?) {
-        onOpenRelay.accept(OnOpen(handshake))
-        isOpen = true
-        isClosed = false
+        TODO("Not yet implemented")
+//        onOpenRelay.accept(OnOpen(handshake))
+//        isOpen = true
+//        isClosed = false
     }
 
     fun onClose(code: Int, reason: String?, remote: Boolean) {
-        onCloseRelay.accept(OnClose(code, reason, remote))
-        isOpen = false
-        isClosed = true
+        TODO("Not yet implemented")
+//        onCloseRelay.accept(OnClose(code, reason, remote))
+//        isOpen = false
+//        isClosed = true
     }
 
     fun onMessage(message: String) {
-        onMessageRelay.accept(OnMessage(destinationAddress, destinationPort, message))
+        TODO("Not yet implemented")
+//        onMessageRelay.accept(OnMessage(destinationAddress, destinationPort, message))
     }
 
     fun onError(ex: Exception?) {
-        onErrorRelay.accept(OnError(ex))
-    }
-
-    override fun observeOnOpenEvents(): Observable<OnOpen> {
-        return onOpenRelay
-    }
-
-    override fun observeOnCloseEvents(): Observable<OnClose> {
-        return onCloseRelay
-    }
-
-    override fun observeOnMessageEvents(): Observable<OnMessage> {
-        return onMessageRelay
-    }
-
-    override fun observeOnErrorEvents(): Observable<OnError> {
-        return onErrorRelay
+        TODO("Not yet implemented")
+//        onErrorRelay.accept(OnError(ex))
     }
 
     fun observeMessagesSent(): Observable<String> {

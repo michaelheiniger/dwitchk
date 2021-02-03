@@ -14,11 +14,8 @@ internal class TestWebsocketServer(
     private val hostPort: Int
 ): WebsocketServer {
 
-    private val onOpenRelay = PublishRelay.create<OnOpen>()
-    private val onCloseRelay = PublishRelay.create<OnClose>()
-    private val onMessageRelay = PublishRelay.create<OnMessage>()
-    private val onStartRelay = PublishRelay.create<OnStart>()
-    private val onErrorRelay = PublishRelay.create<OnError>()
+    private val eventRelay = PublishRelay.create<ServerCommEvent>()
+    private val messageRelay = PublishRelay.create<ServerMessage>()
 
     private val messageSentRelay = PublishRelay.create<String>()
     private val messageBroadcastedRelay = PublishRelay.create<String>()
@@ -44,51 +41,39 @@ internal class TestWebsocketServer(
         messageBroadcastedRelay.accept(message)
     }
 
+    override fun observeEvents(): Observable<ServerCommEvent> {
+        return eventRelay
+    }
+
+    override fun observeMessages(): Observable<ServerMessage> {
+        return messageRelay
+    }
+
     fun onStart(enableThreadBreak: Boolean) {
         threadBreakIfNeeded(enableThreadBreak)
-        onStartRelay.accept(OnStart(Address(hostIpAddress, hostPort)))
+        eventRelay.accept(ServerCommEvent.Started(Address(hostIpAddress, hostPort)))
     }
 
     fun onOpen(conn: WebSocket?, handshake: ClientHandshake?, enableThreadBreak: Boolean) {
         if (conn != null) {
             connections.add(conn)
         }
-        onOpenRelay.accept(OnOpen(conn, handshake))
+        eventRelay.accept(ServerCommEvent.ClientConnected(conn, handshake))
     }
 
     fun onClose(conn: WebSocket?, code: Int, reason: String?, remote: Boolean, enableThreadBreak: Boolean) {
         threadBreakIfNeeded(enableThreadBreak)
-        onCloseRelay.accept(OnClose(conn, code, reason, remote))
+        eventRelay.accept(ServerCommEvent.ClientDisconnected(conn, code, reason, remote))
     }
 
     fun onMessage(conn: WebSocket?, message: String?, enableThreadBreak: Boolean) {
         threadBreakIfNeeded(enableThreadBreak)
-        onMessageRelay.accept(OnMessage(conn, message))
+        messageRelay.accept(ServerMessage(conn, message))
     }
 
     fun onError(conn: WebSocket?, ex: Exception?, enableThreadBreak: Boolean) {
         threadBreakIfNeeded(enableThreadBreak)
-        onErrorRelay.accept(OnError(conn, ex))
-    }
-
-    override fun observeOnOpenEvents(): Observable<OnOpen> {
-        return onOpenRelay
-    }
-
-    override fun observeOnCloseEvents(): Observable<OnClose> {
-        return onCloseRelay
-    }
-
-    override fun observeOnMessageEvents(): Observable<OnMessage> {
-        return onMessageRelay
-    }
-
-    override fun observeOnStartEvents(): Observable<OnStart> {
-        return onStartRelay
-    }
-
-    override fun observeOnErrorEvents(): Observable<OnError> {
-        return onErrorRelay
+        eventRelay.accept(ServerCommEvent.Error(conn, ex))
     }
 
     override fun getConnections(): Collection<WebSocket> {

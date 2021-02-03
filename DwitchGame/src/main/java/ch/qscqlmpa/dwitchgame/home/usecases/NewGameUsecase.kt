@@ -17,28 +17,16 @@ class NewGameUsecase @Inject constructor(
 ) {
 
     fun hostGame(gameName: String, playerName: String, gamePort: Int): Completable {
-        return Single.fromCallable { store.insertGameForHost(gameName, playerName) }
-            .doAfterSuccess { insertGameResult -> startHostService(insertGameResult, gamePort) }
-            .ignoreElement()
+        return Single.fromCallable {
+            val result = store.insertGameForHost(gameName, playerName)
+            appEventRepository.notify(AppEvent.GameCreated(GameCreatedInfo(result, gamePort)))
+        }.ignoreElement()
     }
 
     fun joinGame(advertisedGame: AdvertisedGame, playerName: String): Completable {
         return Single.fromCallable {
-            store.insertGameForGuest(
-                advertisedGame.gameName,
-                advertisedGame.gameCommonId,
-                playerName
-            )
-        }
-            .doAfterSuccess { result -> startGuestService(result, advertisedGame) }
-            .ignoreElement()
-    }
-
-    private fun startHostService(insertGameResult: InsertGameResult, port: Int) {
-        appEventRepository.notify(AppEvent.GameCreated(GameCreatedInfo(insertGameResult, port)))
-    }
-
-    private fun startGuestService(insertGameResult: InsertGameResult, advertisedGame: AdvertisedGame) {
-        appEventRepository.notify(AppEvent.GameJoined(GameJoinedInfo(insertGameResult, advertisedGame)))
+            val result = store.insertGameForGuest(advertisedGame.gameName, advertisedGame.gameCommonId, playerName)
+            appEventRepository.notify(AppEvent.GameJoined(GameJoinedInfo(result, advertisedGame)))
+        }.ignoreElement()
     }
 }

@@ -160,8 +160,6 @@ class GameRoomAsGuestTest : BaseGuestTest() {
 
         UiUtil.clickOnButton(R.id.localPlayerReadyCkb)
 
-        clientTestStub.serverSendsMessageToClient(Message.PlayerReadyMessage(PlayerGuestTest.LocalGuest.id, true), false)
-
         clientTestStub.serverSendsMessageToClient(Message.LaunchGameMessage(createGameState()), false)
 
         dudeWaitASec()

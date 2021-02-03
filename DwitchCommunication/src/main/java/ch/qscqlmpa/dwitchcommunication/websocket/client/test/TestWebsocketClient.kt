@@ -1,9 +1,7 @@
 package ch.qscqlmpa.dwitchcommunication.websocket.client.test
 
-import ch.qscqlmpa.dwitchcommunication.websocket.client.OnClose
-import ch.qscqlmpa.dwitchcommunication.websocket.client.OnError
-import ch.qscqlmpa.dwitchcommunication.websocket.client.OnMessage
-import ch.qscqlmpa.dwitchcommunication.websocket.client.OnOpen
+import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientCommEvent
+import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientMessage
 import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClient
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
@@ -15,12 +13,10 @@ internal class TestWebsocketClient constructor(
         private val destinationPort: Int
 ) : WebsocketClient {
 
-    private val onOpenRelay = PublishRelay.create<OnOpen>()
-    private val onCloseRelay = PublishRelay.create<OnClose>()
-    private val onMessageRelay = PublishRelay.create<OnMessage>()
-    private val onErrorRelay = PublishRelay.create<OnError>()
-
     private val messagesSentRelay = PublishRelay.create<String>()
+
+    private val eventRelay = PublishRelay.create<ClientCommEvent>()
+    private val messageRelay = PublishRelay.create<ClientMessage>()
 
     private var isOpen: Boolean = false
     private var isClosed: Boolean = false
@@ -47,23 +43,31 @@ internal class TestWebsocketClient constructor(
         messagesSentRelay.accept(message)
     }
 
+    override fun observeEvents(): Observable<ClientCommEvent> {
+        return eventRelay
+    }
+
+    override fun observeMessages(): Observable<ClientMessage> {
+        return messageRelay
+    }
+
     fun onOpen(handshake: ServerHandshake?, enableThreadBreak: Boolean) {
         threadBreakIfNeeded(enableThreadBreak)
-        onOpenRelay.accept(OnOpen(handshake))
+        eventRelay.accept(ClientCommEvent.Connected(handshake))
         isOpen = true
         isClosed = false
     }
 
     fun onClose(code: Int, reason: String?, remote: Boolean, enableThreadBreak: Boolean) {
         threadBreakIfNeeded(enableThreadBreak)
-        onCloseRelay.accept(OnClose(code, reason, remote))
+        eventRelay.accept(ClientCommEvent.Disconnected(code, reason, remote))
         isOpen = false
         isClosed = true
     }
 
     fun onMessage(message: String, enableThreadBreak: Boolean) {
         threadBreakIfNeeded(enableThreadBreak)
-        onMessageRelay.accept(OnMessage(destinationAddress, destinationPort, message))
+        messageRelay.accept(ClientMessage(destinationAddress, destinationPort, message))
     }
 
     private fun threadBreakIfNeeded(enableThreadBreak: Boolean) {
@@ -74,23 +78,7 @@ internal class TestWebsocketClient constructor(
 
     fun onError(ex: Exception?) {
         Thread.sleep(1000)
-        onErrorRelay.accept(OnError(ex))
-    }
-
-    override fun observeOnOpenEvents(): Observable<OnOpen> {
-        return onOpenRelay
-    }
-
-    override fun observeOnCloseEvents(): Observable<OnClose> {
-        return onCloseRelay
-    }
-
-    override fun observeOnMessageEvents(): Observable<OnMessage> {
-        return onMessageRelay
-    }
-
-    override fun observeOnErrorEvents(): Observable<OnError> {
-        return onErrorRelay
+        eventRelay.accept(ClientCommEvent.Error(ex))
     }
 
     fun observeMessagesSent(): Observable<String> {

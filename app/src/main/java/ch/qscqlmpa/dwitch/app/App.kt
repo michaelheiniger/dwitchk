@@ -139,16 +139,15 @@ open class App : DaggerApplication() {
 
     @SuppressLint("CheckResult") // Subscription is disposed when app is destroyed
     protected open fun observeAppEvents() {
-        appEventRepository().observeEvents()
-            .subscribe { event ->
-                when (event) {
-                    is AppEvent.GameCreated -> serviceManager.startHostService(event.gameInfo)
-                    is AppEvent.GameJoined -> serviceManager.startGuestService(event.gameInfo)
-                    AppEvent.GameRoomJoinedByHost -> serviceManager.goToHostGameRoom()
-                    AppEvent.GameRoomJoinedByGuest -> serviceManager.goToGuestGameRoom()
-                    AppEvent.GameOver -> serviceManager.stopHostService()
-                    AppEvent.GameLeft -> serviceManager.stopGuestService()
-                }
+        appEventRepository().observeEvents().subscribe { event ->
+            when (event) {
+                is AppEvent.GameCreated -> serviceManager.startHostService(event.gameInfo)
+                is AppEvent.GameJoined -> serviceManager.startGuestService(event.gameInfo)
+                AppEvent.GameRoomJoinedByHost -> serviceManager.goToHostGameRoom()
+                AppEvent.GameRoomJoinedByGuest -> serviceManager.goToGuestGameRoom()
+                AppEvent.GameOver -> serviceManager.stopHostService()
+                AppEvent.GameLeft -> serviceManager.stopGuestService()
             }
+        }
     }
 }

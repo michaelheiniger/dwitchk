@@ -14,10 +14,8 @@ internal class ProdWebsocketClient constructor(
         private val destinationPort: Int
 ) : WebSocketClient(buildServerUri(destinationAddress, destinationPort)), WebsocketClient {
 
-    private val onOpenRelay = PublishRelay.create<OnOpen>()
-    private val onCloseRelay = PublishRelay.create<OnClose>()
-    private val onMessageRelay = PublishRelay.create<OnMessage>()
-    private val onErrorRelay = PublishRelay.create<OnError>()
+    private val eventRelay = PublishRelay.create<ClientCommEvent>()
+    private val messageRelay = PublishRelay.create<ClientMessage>()
 
     override fun start() {
         connect()
@@ -36,36 +34,28 @@ internal class ProdWebsocketClient constructor(
         }
     }
 
+    override fun observeEvents(): Observable<ClientCommEvent> {
+        return eventRelay
+    }
+
+    override fun observeMessages(): Observable<ClientMessage> {
+        return messageRelay
+    }
+
     override fun onOpen(handshake: ServerHandshake?) {
-        onOpenRelay.accept(OnOpen(handshake))
+        eventRelay.accept(ClientCommEvent.Connected(handshake))
     }
 
     override fun onClose(code: Int, reason: String?, remote: Boolean) {
-        onCloseRelay.accept(OnClose(code, reason, remote))
-    }
-
-    override fun onMessage(messageAsString: String?) {
-        onMessageRelay.accept(OnMessage(destinationAddress, destinationPort, messageAsString))
+        eventRelay.accept(ClientCommEvent.Disconnected(code, reason, remote))
     }
 
     override fun onError(ex: Exception?) {
-        onErrorRelay.accept(OnError(ex))
+        eventRelay.accept(ClientCommEvent.Error(ex))
     }
 
-    override fun observeOnOpenEvents(): Observable<OnOpen> {
-        return onOpenRelay
-    }
-
-    override fun observeOnCloseEvents(): Observable<OnClose> {
-        return onCloseRelay
-    }
-
-    override fun observeOnMessageEvents(): Observable<OnMessage> {
-        return onMessageRelay
-    }
-
-    override fun observeOnErrorEvents(): Observable<OnError> {
-        return onErrorRelay
+    override fun onMessage(messageAsString: String?) {
+        messageRelay.accept(ClientMessage(destinationAddress, destinationPort, messageAsString))
     }
 
     companion object {

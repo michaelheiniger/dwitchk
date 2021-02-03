@@ -18,18 +18,12 @@ internal class LaunchGameMessageProcessor @Inject constructor(
 
     override fun process(message: Message, senderConnectionID: ConnectionId): Completable {
 
-        val msg = message as Message.LaunchGameMessage
+        message as Message.LaunchGameMessage
 
-        return storeGameState(msg)
-            .doOnComplete { appEventRepository.notify(AppEvent.GameRoomJoinedByGuest) }
-            .doOnComplete { emitGameLaunchedEvent() }
-    }
-
-    private fun storeGameState(message: Message.LaunchGameMessage): Completable {
-        return Completable.fromCallable { store.updateGameState(message.gameState) }
-    }
-
-    private fun emitGameLaunchedEvent() {
-        gameEventRepository.notify(GuestGameEvent.GameLaunched)
+        return Completable.fromAction {
+            store.updateGameState(message.gameState)
+            appEventRepository.notify(AppEvent.GameRoomJoinedByGuest)
+            gameEventRepository.notify(GuestGameEvent.GameLaunched)
+        }
     }
 }

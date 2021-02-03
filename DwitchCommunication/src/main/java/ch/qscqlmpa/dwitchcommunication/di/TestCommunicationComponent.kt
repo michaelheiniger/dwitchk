@@ -12,8 +12,6 @@ import dagger.Component
 ])
 interface TestCommunicationComponent : CommunicationComponent {
 
-//    val websocketServer: WebsocketServer
-//    val websocketClientFactory: WebsocketClientFactory
     val serverTestStub: ServerTestStub
     val clientTestStub: ClientTestStub
     val serializerFactory: SerializerFactory

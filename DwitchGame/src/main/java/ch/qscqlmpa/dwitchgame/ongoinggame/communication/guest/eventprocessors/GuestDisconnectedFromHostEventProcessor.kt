@@ -23,7 +23,7 @@ internal class GuestDisconnectedFromHostEventProcessor @Inject constructor(
         Timber.i("Process GuestDisconnectedFromHostEvent")
         return Completable.fromAction {
             commStateRepository.notify(GuestCommunicationState.Disconnected)
-            communicator.closeConnection()
+            communicator.disconnect()
             store.setAllPlayersToDisconnected()
         }
     }

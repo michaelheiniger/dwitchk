@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest
 
+import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchcommunication.CommClient
 import ch.qscqlmpa.dwitchcommunication.model.Message
@@ -17,7 +18,7 @@ internal class GuestCommunicatorImpl constructor(
     private val schedulerFactory: SchedulerFactory
 ) : GuestCommunicator {
 
-    private val disposableManager = ch.qscqlmpa.dwitchcommonutil.DisposableManager()
+    private val disposableManager = DisposableManager()
 
     override fun connect() {
         observeCommunicationEvents()
@@ -25,9 +26,9 @@ internal class GuestCommunicatorImpl constructor(
         commClient.start()
     }
 
-    override fun closeConnection() {
-        disposableManager.disposeAndReset()
+    override fun disconnect() {
         commClient.stop()
+        disposableManager.disposeAndReset()
     }
 
     override fun sendMessageToHost(message: Message) {
@@ -52,8 +53,7 @@ internal class GuestCommunicatorImpl constructor(
 
     private fun observeCommunicationEvents() {
         disposableManager.add(commClient.observeCommunicationEvents()
-            .subscribeOn(schedulerFactory.io())
-            .flatMapCompletable(communicationEventDispatcher::dispatch)
+            .flatMapCompletable { event -> communicationEventDispatcher.dispatch(event).subscribeOn(schedulerFactory.io()) }
             .subscribe(
                 { Timber.d("Communication events stream completed") },
                 { error -> Timber.e(error, "Error while observing communication events") }
@@ -63,8 +63,7 @@ internal class GuestCommunicatorImpl constructor(
 
     private fun observeReceivedMessages() {
         disposableManager.add(commClient.observeReceivedMessages()
-            .subscribeOn(schedulerFactory.io())
-            .flatMapCompletable(messageDispatcher::dispatch)
+            .flatMapCompletable { msg -> messageDispatcher.dispatch(msg).subscribeOn(schedulerFactory.io()) }
             .subscribe(
                 { Timber.d("Received messages stream completed !") },
                 { error -> Timber.e(error, "Error while observing received messages") }

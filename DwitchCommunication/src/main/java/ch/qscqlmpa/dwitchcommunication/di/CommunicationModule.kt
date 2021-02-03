@@ -12,6 +12,7 @@ import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClientFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketCommClient
 import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketCommServer
 import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServer
+import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServerFactory
 import dagger.Module
 import dagger.Provides
 import kotlinx.serialization.json.Json
@@ -37,21 +38,21 @@ class CommunicationModule(
 
     @CommunicationScope
     @Provides
+    internal fun provideCommServer(
+        websocketServerFactory: WebsocketServerFactory,
+        serializerFactory: SerializerFactory,
+        connectionStore: ConnectionStoreInternal
+    ): CommServer {
+        return WebsocketCommServer(websocketServerFactory, serializerFactory, connectionStore)
+    }
+
+    @CommunicationScope
+    @Provides
     internal fun provideCommClient(
         websocketClientFactory: WebsocketClientFactory,
         serializerFactory: SerializerFactory
     ): CommClient {
         return WebsocketCommClient(websocketClientFactory, serializerFactory)
-    }
-
-    @CommunicationScope
-    @Provides
-    internal fun provideWebCommServer(
-        websocketServer: WebsocketServer,
-        serializerFactory: SerializerFactory,
-        connectionStore: ConnectionStoreInternal
-    ): CommServer {
-        return WebsocketCommServer(websocketServer, serializerFactory, connectionStore)
     }
 
     @CommunicationScope

@@ -11,6 +11,8 @@ import ch.qscqlmpa.dwitchcommunication.websocket.client.test.WebsocketClientTest
 import ch.qscqlmpa.dwitchcommunication.websocket.server.test.ServerTestStub
 import ch.qscqlmpa.dwitchcommunication.websocket.server.test.TestWebsocketServer
 import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServer
+import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServerFactory
+import ch.qscqlmpa.dwitchcommunication.websocket.server.test.TestWebsocketServerFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.server.test.WebsocketServerTestStub
 import dagger.Module
 import dagger.Provides
@@ -21,43 +23,37 @@ class TestWebsocketModule {
 
     @CommunicationScope
     @Provides
-    internal fun bindTestWebsocketServer(
+    internal fun bindTestWebsocketServerFactory(
         @Named(HOST_IP_ADDRESS) hostIpAddress: String,
         @Named(HOST_PORT) hostPort: Int
-    ): TestWebsocketServer {
-        return TestWebsocketServer(hostIpAddress, hostPort)
+    ): WebsocketServerFactory {
+        return TestWebsocketServerFactory(hostIpAddress, hostPort)
     }
 
     @CommunicationScope
     @Provides
-    internal fun bindWebsocketServer(server: TestWebsocketServer): WebsocketServer {
-        return server
-    }
-
-    @CommunicationScope
-    @Provides
-    internal fun bindTestWebsocketClientFactory(
+    internal fun bindWebsocketClientFactory(
         @Named(HOST_IP_ADDRESS) hostIpAddress: String,
         @Named(HOST_PORT) hostPort: Int
-    ): TestWebsocketClientFactory {
+    ): WebsocketClientFactory {
         return TestWebsocketClientFactory(hostIpAddress, hostPort)
     }
 
     @CommunicationScope
     @Provides
-    internal fun bindWebsocketClientFactory(clientFactory: TestWebsocketClientFactory): WebsocketClientFactory {
-        return clientFactory
+    internal fun bindServerTestStub(
+        serverFactory: WebsocketServerFactory,
+        serializerFactory: SerializerFactory
+    ): ServerTestStub {
+        return WebsocketServerTestStub(serverFactory.create() as TestWebsocketServer, serializerFactory)
     }
 
     @CommunicationScope
     @Provides
-    internal fun bindServerTestStub(server: TestWebsocketServer, serializerFactory: SerializerFactory): ServerTestStub {
-        return WebsocketServerTestStub(server, serializerFactory)
-    }
-
-    @CommunicationScope
-    @Provides
-    internal fun bindClientTestStub(clientFactory: TestWebsocketClientFactory, serializerFactory: SerializerFactory): ClientTestStub {
+    internal fun bindClientTestStub(
+        clientFactory: WebsocketClientFactory,
+        serializerFactory: SerializerFactory
+    ): ClientTestStub {
         return WebsocketClientTestStub(clientFactory.create() as TestWebsocketClient, serializerFactory)
     }
 }

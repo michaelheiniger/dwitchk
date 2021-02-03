@@ -15,17 +15,16 @@ internal interface WebsocketClient {
 
     fun isClosed(): Boolean
 
-    fun observeOnOpenEvents(): Observable<OnOpen>
+    fun observeEvents(): Observable<ClientCommEvent>
 
-    fun observeOnCloseEvents(): Observable<OnClose>
-
-    fun observeOnMessageEvents(): Observable<OnMessage>
-
-    fun observeOnErrorEvents(): Observable<OnError>
+    fun observeMessages(): Observable<ClientMessage>
 }
 
-internal data class OnOpen(val handshake: ServerHandshake?)
-internal data class OnClose(val code: Int, val reason: String?, val remote: Boolean)
-internal data class OnMessage(val ipAddress: String, val port: Int, val message: String?)
-internal data class OnError(val ex: Exception?)
+internal sealed class ClientCommEvent {
+    internal data class Connected(val handshake: ServerHandshake?): ClientCommEvent()
+    internal data class Disconnected(val code: Int, val reason: String?, val remote: Boolean): ClientCommEvent()
+    internal data class Error(val ex: Exception?): ClientCommEvent()
+}
+
+internal data class ClientMessage(val ipAddress: String, val port: Int, val message: String?)
 

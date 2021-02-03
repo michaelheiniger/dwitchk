@@ -17,45 +17,46 @@ internal class WebsocketCommClient @Inject constructor(
     private val serializerFactory: SerializerFactory
 ) : CommClient {
 
-    private var websocketClient = websocketClientFactory.create()
+    private val disposableManager = DisposableManager()
 
-    private val communicationEvents = PublishRelay.create<ClientCommunicationEvent>()
-    private val receivedMessages = PublishRelay.create<EnvelopeReceived>()
-    private val websocketClientSubscriptions = DisposableManager()
+    private lateinit var websocketClient: WebsocketClient
+
+    private val communicationEventRelay = PublishRelay.create<ClientCommunicationEvent>()
+    private val receivedMessageRelay = PublishRelay.create<EnvelopeReceived>()
 
     override fun start() {
-        if (websocketClient.isOpen()) {
-            throw IllegalStateException("Cannot start because a connection is already open.")
-        }
         websocketClient = websocketClientFactory.create()
-        subscribeToWebsocketStreams()
-        websocketClient.start()
-    }
 
-    private fun subscribeToWebsocketStreams() {
-        websocketClientSubscriptions.add(
-            observeOnOpenEvents().subscribe(communicationEvents),
-            observeOnCloseEvents().subscribe(communicationEvents),
-            observeMessageEvents().subscribe(receivedMessages)
+        disposableManager.add(
+            websocketClient.observeEvents()
+                .flatMap(::processClientCommEvent)
+                .subscribe(communicationEventRelay)
         )
+
+        disposableManager.add(
+            websocketClient.observeMessages()
+                .flatMap(::processMessages)
+                .subscribe(receivedMessageRelay)
+        )
+
+        websocketClient.start()
     }
 
     override fun stop() {
         if (websocketClient.isClosed()) {
             Timber.e("Cannot stop because the connection is already closed.")
         } else {
-            // We don't want to receive the events following the stopping of the websocketClient.
-            websocketClientSubscriptions.disposeAndReset()
             websocketClient.stop()
+            disposableManager.disposeAndReset()
         }
     }
 
     override fun observeCommunicationEvents(): Observable<ClientCommunicationEvent> {
-        return communicationEvents
+        return communicationEventRelay
     }
 
     override fun observeReceivedMessages(): Observable<EnvelopeReceived> {
-        return receivedMessages
+        return receivedMessageRelay
     }
 
     override fun sendMessageToServer(message: Message) {
@@ -63,34 +64,43 @@ internal class WebsocketCommClient @Inject constructor(
         websocketClient.send(serializedMessage)
     }
 
-    private fun observeMessageEvents(): Observable<EnvelopeReceived> {
-        return websocketClient.observeOnMessageEvents()
-            .filter { onMessage ->
-                if (onMessage.message == null) {
+    private fun processClientCommEvent(event: ClientCommEvent): Observable<ClientCommunicationEvent> {
+        return when (event) {
+            is ClientCommEvent.Connected -> processConnectedEvent(event)
+            is ClientCommEvent.Disconnected -> processDisconnectedEvent(event)
+            is ClientCommEvent.Error -> processErrorEvent(event)
+        }
+    }
+
+    private fun processConnectedEvent(event: ClientCommEvent.Connected): Observable<ClientCommunicationEvent> {
+        Timber.i("Connected to Server ($event)")
+        return Observable.just(ClientCommunicationEvent.ConnectedToHost)
+    }
+
+    private fun processDisconnectedEvent(event: ClientCommEvent.Disconnected): Observable<ClientCommunicationEvent> {
+        Timber.i("Disconnected from Server ($event)")
+        return Observable.just(ClientCommunicationEvent.DisconnectedFromHost)
+    }
+
+    private fun processErrorEvent(event: ClientCommEvent.Error): Observable<ClientCommunicationEvent> {
+        Timber.d("Communication error: $event")
+        return Observable.just(ClientCommunicationEvent.ConnectionError(event.ex?.message))
+    }
+
+    private fun processMessages(event: ClientMessage): Observable<EnvelopeReceived> {
+        return Observable.just(event)
+            .filter { envelope ->
+                if (envelope.message == null) {
                     Timber.e("onMessage event filtered because message is null")
                 }
-                onMessage.message != null
+                envelope.message != null
             }
-            .doOnNext { onMessage -> Timber.i("Message received ${onMessage.message}") }
-            .map { onMessage ->
-                val message = serializerFactory.unserializeMessage(onMessage.message!!)
+            .doOnNext { envelope -> Timber.i("Message received ${envelope.message}") }
+            .map { envelope ->
+                val message = serializerFactory.unserializeMessage(envelope.message!!)
 
                 // Only one connection: the one with the Host (ID is irrelevant)
                 EnvelopeReceived(ConnectionId(0), message)
             }
-    }
-
-    private fun observeOnOpenEvents(): Observable<ClientCommunicationEvent> {
-        Timber.i("Observe OnOpen events")
-        return websocketClient.observeOnOpenEvents()
-            .doOnNext { onOpen -> Timber.i("Connected to Server ($onOpen") }
-            .map { ClientCommunicationEvent.ConnectedToHost }
-    }
-
-    private fun observeOnCloseEvents(): Observable<ClientCommunicationEvent> {
-        Timber.i("Observe OnClose events")
-        return websocketClient.observeOnCloseEvents()
-            .doOnNext { onClose -> Timber.i("Disconnected from Server ($onClose)") }
-            .map { ClientCommunicationEvent.DisconnectedFromHost }
     }
 }
