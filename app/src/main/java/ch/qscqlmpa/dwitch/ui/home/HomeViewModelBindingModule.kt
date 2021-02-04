@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitch.ui.home
 
 import androidx.lifecycle.ViewModel
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivityViewModel
-import ch.qscqlmpa.dwitch.ui.home.newgame.NewGameActivityViewModel
+import ch.qscqlmpa.dwitch.ui.home.newgame.NewGameViewModel
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelKey
 import dagger.Binds
@@ -24,6 +24,6 @@ abstract class HomeViewModelBindingModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(NewGameActivityViewModel::class)
-    abstract fun bindNewGameActivityViewModel(viewModel: NewGameActivityViewModel): ViewModel
+    @ViewModelKey(NewGameViewModel::class)
+    abstract fun bindNewGameActivityViewModel(viewModel: NewGameViewModel): ViewModel
 }

@@ -20,7 +20,7 @@ class NewGameActivity : HomeBaseActivity() {
 
     override val layoutResource: Int = R.layout.new_game_activity
 
-    private lateinit var viewModel: NewGameActivityViewModel
+    private lateinit var viewModel: NewGameViewModel
     private lateinit var playerRole: PlayerRole
     private var game: AdvertisedGame? = null
 
@@ -43,7 +43,7 @@ class NewGameActivity : HomeBaseActivity() {
 
         playerRole = PlayerRole.valueOf(intent.getStringExtra(EXTRA_PLAYER_ROLE))
         game = intent.getParcelableExtra(EXTRA_GAME)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(NewGameActivityViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(NewGameViewModel::class.java)
 
         setGameNameIfNeeded()
 

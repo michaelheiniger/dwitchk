@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.newgame
 
 import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.ui.home.newgame.NewGameActivityViewModel
+import ch.qscqlmpa.dwitch.ui.home.newgame.NewGameViewModel
 import ch.qscqlmpa.dwitch.ui.home.newgame.NewGameEvent
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
@@ -18,12 +18,12 @@ import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 
-class NewGameActivityViewModelTest : BaseViewModelUnitTest() {
+class NewGameViewModelTest : BaseViewModelUnitTest() {
 
     private val mockHostFacade = mockk<HomeHostFacade>(relaxed = true)
     private val mockGuestFacade = mockk<HomeGuestFacade>(relaxed = true)
 
-    private lateinit var viewModel: NewGameActivityViewModel
+    private lateinit var viewModel: NewGameViewModel
 
     private val playerName = "Bernard"
     private val gamePort = 8889
@@ -31,7 +31,7 @@ class NewGameActivityViewModelTest : BaseViewModelUnitTest() {
     @Before
     override fun setup() {
         super.setup()
-        viewModel = NewGameActivityViewModel(mockHostFacade, mockGuestFacade,
+        viewModel = NewGameViewModel(mockHostFacade, mockGuestFacade,
             ch.qscqlmpa.dwitchcommonutil.DisposableManager(), TestSchedulerFactory())
     }
 

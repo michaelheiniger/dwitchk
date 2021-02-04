@@ -11,7 +11,7 @@ import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
 import timber.log.Timber
 import javax.inject.Inject
 
-class NewGameActivityViewModel @Inject
+class NewGameViewModel @Inject
 constructor(
     private val hostFacade: HomeHostFacade,
     private val guestFacade: HomeGuestFacade,
