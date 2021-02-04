@@ -15,7 +15,7 @@
             android:id="@+id/launchGameBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:enabled="true"
+            android:enabled="false"
             android:text="@string/wrhf_launch_game_tv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
