@@ -2,8 +2,8 @@ package ch.qscqlmpa.dwitchcommunication.websocket.client
 
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
-import org.java_websocket.WebSocket
 import org.java_websocket.client.WebSocketClient
+import org.java_websocket.enums.ReadyState
 import org.java_websocket.handshake.ServerHandshake
 import timber.log.Timber
 import java.net.URI
@@ -27,7 +27,7 @@ internal class ProdWebsocketClient constructor(
     }
 
     override fun send(message: String) {
-        if (readyState == WebSocket.READYSTATE.OPEN) {
+        if (readyState == ReadyState.OPEN) {
             super.send(message)
         } else {
             Timber.e("Cannot send message when connection state is: $readyState")

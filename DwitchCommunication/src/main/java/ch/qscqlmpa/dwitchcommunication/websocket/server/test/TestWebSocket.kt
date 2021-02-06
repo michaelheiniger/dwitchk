@@ -2,20 +2,28 @@ package ch.qscqlmpa.dwitchcommunication.websocket.server.test
 
 import org.java_websocket.WebSocket
 import org.java_websocket.drafts.Draft
+import org.java_websocket.enums.Opcode
+import org.java_websocket.enums.ReadyState
 import org.java_websocket.framing.Framedata
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
+import javax.net.ssl.SSLSession
 
 internal class TestWebSocket(private val remoteAddress: String, private val remotePort: Int) : WebSocket {
-    override fun sendFragmentedFrame(op: Framedata.Opcode?, buffer: ByteBuffer?, fin: Boolean) {
-        throw NotImplementedError()
+
+    override fun sendFragmentedFrame(op: Opcode?, buffer: ByteBuffer?, fin: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    override fun hasSSLSupport(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun getSSLSession(): SSLSession {
+        TODO("Not yet implemented")
     }
 
     override fun closeConnection(code: Int, message: String?) {
-        throw NotImplementedError()
-    }
-
-    override fun isConnecting(): Boolean {
         throw NotImplementedError()
     }
 
@@ -43,7 +51,7 @@ internal class TestWebSocket(private val remoteAddress: String, private val remo
         throw NotImplementedError()
     }
 
-    override fun getReadyState(): WebSocket.READYSTATE {
+    override fun getReadyState(): ReadyState {
         throw NotImplementedError()
     }
 

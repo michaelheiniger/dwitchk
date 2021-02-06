@@ -4,6 +4,7 @@ import ch.qscqlmpa.dwitchcommunication.Address
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
 import org.java_websocket.WebSocket
+import org.java_websocket.enums.ReadyState
 import org.java_websocket.handshake.ClientHandshake
 import org.java_websocket.server.WebSocketServer
 import timber.log.Timber
@@ -24,7 +25,7 @@ internal class ProdWebsocketServer constructor(
 
     override fun send(websocket: WebSocket, message: String) {
         val connectionState = websocket.readyState
-        if (connectionState == WebSocket.READYSTATE.OPEN) {
+        if (connectionState == ReadyState.OPEN) {
             websocket.send(message)
         } else {
             Timber.e("Cannot send message when connection state is: $connectionState")
