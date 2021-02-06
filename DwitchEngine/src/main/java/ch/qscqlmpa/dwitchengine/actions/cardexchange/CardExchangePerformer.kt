@@ -10,15 +10,15 @@ internal class CardExchangePerformer(
 
     fun cardExchangeReadyToBePerformed(): Boolean {
         return when (val numberOfPlayers = state.numberOfPlayers()) {
-            0,1 -> throw IllegalStateException("There cannot be only $numberOfPlayers players in the game.")
-            2,3 -> {
+            0, 1 -> throw IllegalStateException("There cannot be only $numberOfPlayers players in the game.")
+            2, 3 -> {
                 state.cardsGivenUpByPresident().size == 2 && state.cardsGivenUpByAsshole().size == 2
             }
             else -> {
                 state.cardsGivenUpByPresident().size == 2 &&
-                        state.cardsGivenUpByAsshole().size == 2 &&
-                        state.cardsGivenUpByVicePresident().size == 1 &&
-                        state.cardsGivenUpByViceAsshole().size == 1
+                    state.cardsGivenUpByAsshole().size == 2 &&
+                    state.cardsGivenUpByVicePresident().size == 1 &&
+                    state.cardsGivenUpByViceAsshole().size == 1
             }
         }
     }

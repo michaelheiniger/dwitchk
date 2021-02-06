@@ -5,7 +5,6 @@ import ch.qscqlmpa.dwitch.uitests.base.BaseUiTest
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import org.junit.Test
 
-
 class NewGameAsHostTest : BaseUiTest() {
 
     @Test

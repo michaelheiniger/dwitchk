@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 
 class DeterministicCardDealerFactory(cardDealer: CardDealer?) : CardDealerFactory {
 
-    constructor(): this(null)
+    constructor() : this(null)
 
     private var instance: CardDealer? = cardDealer
 

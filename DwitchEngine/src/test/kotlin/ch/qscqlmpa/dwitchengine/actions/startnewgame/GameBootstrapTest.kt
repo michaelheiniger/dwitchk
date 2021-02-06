@@ -33,11 +33,11 @@ internal class GameBootstrapTest {
         val initialGameSetup = RandomInitialGameSetup(5)
 
         val playersInfo = listOf(
-                TestEntityFactory.createHostPlayerInfo(),
-                TestEntityFactory.createGuestPlayer1Info(),
-                TestEntityFactory.createGuestPlayer2Info(),
-                TestEntityFactory.createGuestPlayer3Info(),
-                TestEntityFactory.createGuestPlayer4Info()
+            TestEntityFactory.createHostPlayerInfo(),
+            TestEntityFactory.createGuestPlayer1Info(),
+            TestEntityFactory.createGuestPlayer2Info(),
+            TestEntityFactory.createGuestPlayer3Info(),
+            TestEntityFactory.createGuestPlayer4Info()
         )
 
         val gameState = GameBootstrap.createNewGame(playersInfo, initialGameSetup)
@@ -63,11 +63,11 @@ internal class GameBootstrapTest {
         val initialGameSetup = RandomInitialGameSetup(5)
 
         val playersInfo = listOf(
-                TestEntityFactory.createHostPlayerInfo(),
-                TestEntityFactory.createGuestPlayer1Info(),
-                TestEntityFactory.createGuestPlayer2Info(),
-                TestEntityFactory.createGuestPlayer3Info(),
-                TestEntityFactory.createGuestPlayer4Info()
+            TestEntityFactory.createHostPlayerInfo(),
+            TestEntityFactory.createGuestPlayer1Info(),
+            TestEntityFactory.createGuestPlayer2Info(),
+            TestEntityFactory.createGuestPlayer3Info(),
+            TestEntityFactory.createGuestPlayer4Info()
         )
 
         val gameState = GameBootstrap.createNewGame(playersInfo, initialGameSetup)
@@ -93,11 +93,11 @@ internal class GameBootstrapTest {
         val initialGameSetup = RandomInitialGameSetup(5)
 
         val playersInfo = listOf(
-                TestEntityFactory.createHostPlayerInfo(),
-                TestEntityFactory.createGuestPlayer1Info(),
-                TestEntityFactory.createGuestPlayer2Info(),
-                TestEntityFactory.createGuestPlayer3Info(),
-                TestEntityFactory.createGuestPlayer4Info()
+            TestEntityFactory.createHostPlayerInfo(),
+            TestEntityFactory.createGuestPlayer1Info(),
+            TestEntityFactory.createGuestPlayer2Info(),
+            TestEntityFactory.createGuestPlayer3Info(),
+            TestEntityFactory.createGuestPlayer4Info()
         )
 
         val gameState = GameBootstrap.createNewGame(playersInfo, initialGameSetup)
@@ -116,13 +116,12 @@ internal class GameBootstrapTest {
         val guest3 = TestEntityFactory.createGuestPlayer3Info()
         val guest4 = TestEntityFactory.createGuestPlayer4Info()
 
-
         val playersInfo = listOf(
-                TestEntityFactory.createHostPlayerInfo(),
-                TestEntityFactory.createGuestPlayer1Info(),
-                TestEntityFactory.createGuestPlayer2Info(),
-                TestEntityFactory.createGuestPlayer3Info(),
-                TestEntityFactory.createGuestPlayer4Info()
+            TestEntityFactory.createHostPlayerInfo(),
+            TestEntityFactory.createGuestPlayer1Info(),
+            TestEntityFactory.createGuestPlayer2Info(),
+            TestEntityFactory.createGuestPlayer3Info(),
+            TestEntityFactory.createGuestPlayer4Info()
         )
 
         val gameState = GameBootstrap.createNewGame(playersInfo, initialGameSetup)

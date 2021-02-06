@@ -54,7 +54,6 @@ internal class CardExchangePerformerState(
 
     private fun getCardsForExchangeOfPlayer(playerId: PlayerDwitchId): Set<Card> {
         return currentGameState.player(playerId).cardsForExchange
-
     }
 
     private fun findPlayerWithRank(rank: Rank): Player? {

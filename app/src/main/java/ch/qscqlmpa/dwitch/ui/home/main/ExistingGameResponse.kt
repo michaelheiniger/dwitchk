@@ -9,17 +9,17 @@ data class ExistingGameResponse(val status: Status, val resumableGames: List<Res
 
         fun success(games: List<ResumableGameInfo>): ExistingGameResponse {
             return ExistingGameResponse(
-                    Status.SUCCESS,
-                    games,
-                    null
+                Status.SUCCESS,
+                games,
+                null
             )
         }
 
         fun error(error: Throwable): ExistingGameResponse {
             return ExistingGameResponse(
-                    Status.ERROR,
-                    emptyList(),
-                    error
+                Status.ERROR,
+                emptyList(),
+                error
             )
         }
     }

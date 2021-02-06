@@ -1,4 +1,4 @@
- package ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic
+package ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic
 
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetup
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetupFactory

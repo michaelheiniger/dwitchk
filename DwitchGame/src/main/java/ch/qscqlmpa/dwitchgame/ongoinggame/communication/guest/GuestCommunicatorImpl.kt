@@ -52,22 +52,24 @@ internal class GuestCommunicatorImpl constructor(
     }
 
     private fun observeCommunicationEvents() {
-        disposableManager.add(commClient.observeCommunicationEvents()
-            .flatMapCompletable { event -> communicationEventDispatcher.dispatch(event).subscribeOn(schedulerFactory.io()) }
-            .subscribe(
-                { Timber.d("Communication events stream completed") },
-                { error -> Timber.e(error, "Error while observing communication events") }
-            )
+        disposableManager.add(
+            commClient.observeCommunicationEvents()
+                .flatMapCompletable { event -> communicationEventDispatcher.dispatch(event).subscribeOn(schedulerFactory.io()) }
+                .subscribe(
+                    { Timber.d("Communication events stream completed") },
+                    { error -> Timber.e(error, "Error while observing communication events") }
+                )
         )
     }
 
     private fun observeReceivedMessages() {
-        disposableManager.add(commClient.observeReceivedMessages()
-            .flatMapCompletable { msg -> messageDispatcher.dispatch(msg).subscribeOn(schedulerFactory.io()) }
-            .subscribe(
-                { Timber.d("Received messages stream completed !") },
-                { error -> Timber.e(error, "Error while observing received messages") }
-            )
+        disposableManager.add(
+            commClient.observeReceivedMessages()
+                .flatMapCompletable { msg -> messageDispatcher.dispatch(msg).subscribeOn(schedulerFactory.io()) }
+                .subscribe(
+                    { Timber.d("Received messages stream completed !") },
+                    { error -> Timber.e(error, "Error while observing received messages") }
+                )
         )
     }
 }

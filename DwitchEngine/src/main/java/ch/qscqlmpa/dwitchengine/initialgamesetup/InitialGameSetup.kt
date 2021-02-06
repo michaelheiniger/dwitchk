@@ -3,7 +3,6 @@ package ch.qscqlmpa.dwitchengine.initialgamesetup
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealer
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 
-
 abstract class InitialGameSetup(private val numPlayers: Int) : CardDealer(numPlayers) {
 
     init {

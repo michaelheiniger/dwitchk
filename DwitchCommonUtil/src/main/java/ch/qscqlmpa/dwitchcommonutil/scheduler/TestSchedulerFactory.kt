@@ -3,7 +3,6 @@ package ch.qscqlmpa.dwitchcommonutil.scheduler
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-
 class TestSchedulerFactory : SchedulerFactory {
 
     private lateinit var timeScheduler: Scheduler

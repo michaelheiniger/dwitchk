@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitchcommunication.websocket.client
 
-
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchcommunication.CommClient
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId

@@ -11,7 +11,6 @@ import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClientFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketCommClient
 import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketCommServer
-import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServer
 import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServerFactory
 import dagger.Module
 import dagger.Provides
@@ -79,4 +78,3 @@ class CommunicationModule(
         return connectionStore
     }
 }
-

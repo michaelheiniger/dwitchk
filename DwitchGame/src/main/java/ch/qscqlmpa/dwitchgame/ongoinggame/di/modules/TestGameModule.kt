@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.di.modules
 
-
 import ch.qscqlmpa.dwitchengine.DwitchEngineFactory
 import ch.qscqlmpa.dwitchengine.ProdDwitchEngineFactory
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory

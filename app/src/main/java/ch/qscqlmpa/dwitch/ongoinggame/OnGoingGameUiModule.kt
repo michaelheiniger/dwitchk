@@ -1,8 +1,8 @@
 package ch.qscqlmpa.dwitch.ongoinggame
 
+import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardFacade
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.GuestFacade
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.HostFacade
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardFacade
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameRoomGuestFacade
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameRoomHostFacade
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomFacade

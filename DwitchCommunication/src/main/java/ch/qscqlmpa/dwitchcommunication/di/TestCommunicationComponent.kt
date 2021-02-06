@@ -6,10 +6,12 @@ import ch.qscqlmpa.dwitchcommunication.websocket.server.test.ServerTestStub
 import dagger.Component
 
 @CommunicationScope
-@Component(modules = [
-    CommunicationModule::class,
-    TestWebsocketModule::class
-])
+@Component(
+    modules = [
+        CommunicationModule::class,
+        TestWebsocketModule::class
+    ]
+)
 interface TestCommunicationComponent : CommunicationComponent {
 
     val serverTestStub: ServerTestStub

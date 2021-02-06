@@ -41,7 +41,7 @@ class NewGameUsecaseTest : BaseUnitTest() {
         @BeforeEach
         fun setup() {
             every { mockStore.insertGameForHost(any(), any()) } returns
-                    InsertGameResult(gameLocalId, gameCommonId, gameName, localPlayerLocalId)
+                InsertGameResult(gameLocalId, gameCommonId, gameName, localPlayerLocalId)
         }
 
         @Test
@@ -91,7 +91,7 @@ class NewGameUsecaseTest : BaseUnitTest() {
         @BeforeEach
         fun setup() {
             every { mockStore.insertGameForGuest(any(), any(), any()) } returns
-                    InsertGameResult(gameLocalId, gameCommonId, gameName, localPlayerLocalId)
+                InsertGameResult(gameLocalId, gameCommonId, gameName, localPlayerLocalId)
         }
 
         @Test

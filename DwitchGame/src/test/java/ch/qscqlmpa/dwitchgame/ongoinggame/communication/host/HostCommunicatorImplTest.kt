@@ -109,7 +109,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
             val dispatchedMessageCap = mutableListOf<EnvelopeReceived>()
             verify(exactly = 2) { mockMessageDispatcher.dispatch(capture(dispatchedMessageCap)) }
-            verify(exactly = 0) { mockCommServer.sendMessage(any(), any())}
+            verify(exactly = 0) { mockCommServer.sendMessage(any(), any()) }
 
             assertThat(dispatchedMessageCap[0]).isEqualTo(messageReceived1)
             assertThat(dispatchedMessageCap[1]).isEqualTo(messageReceived2)
@@ -127,7 +127,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
             receivedMessagesSubject.onNext(messageReceived1)
             receivedMessagesSubject.onNext(messageReceived2)
 
-            verify(exactly = 1) { mockCommServer.sendMessage(Message.GameStateUpdatedMessage(gameState), Recipient.All)}
+            verify(exactly = 1) { mockCommServer.sendMessage(Message.GameStateUpdatedMessage(gameState), Recipient.All) }
         }
     }
 
@@ -170,7 +170,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
             hostCommunicator.sendMessage(EnvelopeToSend(Recipient.Single(hostConnectionId), messageToSend))
 
             verify(exactly = 0) { mockCommServer.sendMessage(messageToSend, any()) }
-            verify { mockMessageDispatcher.dispatch(EnvelopeReceived(hostConnectionId, messageToSend))}
+            verify { mockMessageDispatcher.dispatch(EnvelopeReceived(hostConnectionId, messageToSend)) }
         }
 
         @Test

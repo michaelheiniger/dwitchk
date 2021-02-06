@@ -8,7 +8,6 @@ import ch.qscqlmpa.dwitchmodel.game.ResumableGameInfo
 import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchstore.typeconverter.*
 
-
 @Database(
     entities = [
         Game::class,

@@ -14,19 +14,21 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomHostFacade
 import dagger.Subcomponent
 
 @OngoingGameScope
-@Subcomponent(modules = [
-    OngoingGameModule::class,
-    WaitingRoomModule::class,
-    GameRoomModule::class,
-    GameModule::class,
-    MessageProcessorModule::class,
-    GuestCommunicationEventProcessorModule::class,
-    HostCommunicationEventProcessorModule::class,
-    GuestCommunicationModule::class,
-    HostCommunicationModule::class,
-    GameAdvertisingModule::class,
-    DwitchEventRepositoryModule::class
-])
+@Subcomponent(
+    modules = [
+        OngoingGameModule::class,
+        WaitingRoomModule::class,
+        GameRoomModule::class,
+        GameModule::class,
+        MessageProcessorModule::class,
+        GuestCommunicationEventProcessorModule::class,
+        HostCommunicationEventProcessorModule::class,
+        GuestCommunicationModule::class,
+        HostCommunicationModule::class,
+        GameAdvertisingModule::class,
+        DwitchEventRepositoryModule::class
+    ]
+)
 interface OngoingGameComponent {
     val hostFacade: HostFacade
     val guestFacade: GuestFacade

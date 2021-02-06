@@ -13,15 +13,15 @@ internal class WebsocketClientTestStub(
 
     override fun connectClientToServer(enableThreadBreak: Boolean) {
         Completable.fromAction { client.onOpen(null, enableThreadBreak) }
-                .subscribeOn(Schedulers.io())
-                .subscribe()
+            .subscribeOn(Schedulers.io())
+            .subscribe()
     }
 
     override fun serverSendsMessageToClient(message: Message, enableThreadBreak: Boolean) {
         val messageSerialized = serializerFactory.serialize(message)
         Completable.fromAction { client.onMessage(messageSerialized, enableThreadBreak) }
-                .subscribeOn(Schedulers.io())
-                .subscribe()
+            .subscribeOn(Schedulers.io())
+            .subscribe()
     }
 
     override fun breakConnectionWithHost() {

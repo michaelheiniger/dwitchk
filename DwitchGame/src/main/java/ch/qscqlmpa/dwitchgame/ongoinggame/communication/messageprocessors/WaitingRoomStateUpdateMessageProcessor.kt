@@ -79,17 +79,19 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
 
         if (playersToAdd.isNotEmpty()) {
             Timber.v("Players to add: $playersToAdd")
-            store.insertPlayers(playersToAdd.map { p ->
-                Player(
-                    0,
-                    p.dwitchId,
-                    0,
-                    p.name,
-                    p.playerRole,
-                    p.connectionState,
-                    p.ready
-                )
-            })
+            store.insertPlayers(
+                playersToAdd.map { p ->
+                    Player(
+                        0,
+                        p.dwitchId,
+                        0,
+                        p.name,
+                        p.playerRole,
+                        p.connectionState,
+                        p.ready
+                    )
+                }
+            )
         } else {
             Timber.v("No player to add.")
         }

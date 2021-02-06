@@ -10,7 +10,7 @@ import javax.inject.Provider
 
 @OngoingGameScope
 class MessageDispatcher @Inject constructor(
-        private val messageProcessors: @JvmSuppressWildcards Map<Class<out Message>, Provider<MessageProcessor>>
+    private val messageProcessors: @JvmSuppressWildcards Map<Class<out Message>, Provider<MessageProcessor>>
 ) {
 
     fun dispatch(envelope: EnvelopeReceived): Completable {

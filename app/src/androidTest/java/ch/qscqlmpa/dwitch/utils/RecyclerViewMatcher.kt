@@ -2,9 +2,7 @@ package ch.qscqlmpa.dwitch.utils
 
 import android.content.res.Resources
 import android.view.View
-
 import androidx.recyclerview.widget.RecyclerView
-
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
@@ -32,7 +30,6 @@ class RecyclerViewMatcher(private val recyclerViewId: Int) {
                     } catch (var4: Resources.NotFoundException) {
                         "${Integer.valueOf(recyclerViewId)} (resource name not found)"
                     }
-
                 }
 
                 description.appendText("with id: $idDescription")
@@ -57,7 +54,6 @@ class RecyclerViewMatcher(private val recyclerViewId: Int) {
                     val targetView = childView!!.findViewById<View>(targetViewId)
                     view === targetView
                 }
-
             }
         }
     }

@@ -8,7 +8,7 @@ internal class TestWebsocketClientFactory constructor(
     private val hostPort: Int
 ) : WebsocketClientFactory {
 
-    companion object{
+    companion object {
         private var INSTANCE: WebsocketClient? = null
     }
 

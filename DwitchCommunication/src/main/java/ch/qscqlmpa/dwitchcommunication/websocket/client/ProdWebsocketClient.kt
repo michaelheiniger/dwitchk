@@ -10,8 +10,8 @@ import java.net.URI
 import java.util.*
 
 internal class ProdWebsocketClient constructor(
-        private val destinationAddress: String,
-        private val destinationPort: Int
+    private val destinationAddress: String,
+    private val destinationPort: Int
 ) : WebSocketClient(buildServerUri(destinationAddress, destinationPort)), WebsocketClient {
 
     private val eventRelay = PublishRelay.create<ClientCommEvent>()

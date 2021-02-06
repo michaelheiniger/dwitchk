@@ -8,7 +8,6 @@ import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import timber.log.Timber
 
-
 class GuestInGameService : BaseInGameService() {
 
     override val playerRole = PlayerRole.GUEST

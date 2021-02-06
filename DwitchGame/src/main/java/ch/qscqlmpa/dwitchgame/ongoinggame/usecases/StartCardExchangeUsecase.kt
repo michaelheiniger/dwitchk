@@ -24,7 +24,7 @@ internal class StartCardExchangeUsecase @Inject constructor(
                     if (connectionId != null) {
                         communicator.sendMessage(HostMessageFactory.createCardExchangeMessage(cardExchange, connectionId))
                     } else {
-                        //TODO: handle case where the message cannot be send
+                        // TODO: handle case where the message cannot be send
                         Timber.e("No connection ID found in store for in-game ID: $playerId")
                     }
                 }

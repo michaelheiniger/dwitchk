@@ -28,41 +28,50 @@ class MainActivity : HomeBaseActivity(), AdvertisedGameAdapter.AdvertisedGameCli
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel::class.java)
 
-        viewModel.commands().observe(this, { command ->
-            when (command) {
-                is MainActivityCommands.NavigateToNewGameActivityAsGuest -> JoinNewGameActivity.joinGame(this, command.game)
-                MainActivityCommands.NavigateToWaitingRoomAsHost -> WaitingRoomActivity.startActivityForHost(this)
-                MainActivityCommands.NavigateToWaitingRoomAsGuest -> WaitingRoomActivity.startActivityForGuest(this)
+        viewModel.commands().observe(
+            this,
+            { command ->
+                when (command) {
+                    is MainActivityCommands.NavigateToNewGameActivityAsGuest -> JoinNewGameActivity.joinGame(this, command.game)
+                    MainActivityCommands.NavigateToWaitingRoomAsHost -> WaitingRoomActivity.startActivityForHost(this)
+                    MainActivityCommands.NavigateToWaitingRoomAsGuest -> WaitingRoomActivity.startActivityForGuest(this)
+                }
             }
-        })
+        )
 
         gameListRw.layoutManager = LinearLayoutManager(this)
         gameListRw.adapter = AdvertisedGameAdapter(this)
-        viewModel.observeAdvertisedGames().observe(this, { response ->
-            when (response.status) {
-                Status.LOADING -> { // Nothing to do
-                }
-                Status.SUCCESS -> (gameListRw.adapter as AdvertisedGameAdapter).setData(response.advertisedGames)
-                Status.ERROR -> {
-                    gameListErrorTv.visibility = View.VISIBLE
-                    Timber.e(response.error, "Error while observing advertised games.")
+        viewModel.observeAdvertisedGames().observe(
+            this,
+            { response ->
+                when (response.status) {
+                    Status.LOADING -> { // Nothing to do
+                    }
+                    Status.SUCCESS -> (gameListRw.adapter as AdvertisedGameAdapter).setData(response.advertisedGames)
+                    Status.ERROR -> {
+                        gameListErrorTv.visibility = View.VISIBLE
+                        Timber.e(response.error, "Error while observing advertised games.")
+                    }
                 }
             }
-        })
+        )
 
         existingGameListRw.layoutManager = LinearLayoutManager(this)
         existingGameListRw.adapter = ExistingGameAdapter(this)
-        viewModel.observeExistingGames().observe(this, { response ->
-            when (response.status) {
-                Status.LOADING -> { // Nothing to do
-                }
-                Status.SUCCESS -> (existingGameListRw.adapter as ExistingGameAdapter).setData(response.resumableGames)
-                Status.ERROR -> {
-                    existingGameListErrorTv.visibility = View.VISIBLE
-                    Timber.d(response.error, "Error while observing advertised games.")
+        viewModel.observeExistingGames().observe(
+            this,
+            { response ->
+                when (response.status) {
+                    Status.LOADING -> { // Nothing to do
+                    }
+                    Status.SUCCESS -> (existingGameListRw.adapter as ExistingGameAdapter).setData(response.resumableGames)
+                    Status.ERROR -> {
+                        existingGameListErrorTv.visibility = View.VISIBLE
+                        Timber.d(response.error, "Error while observing advertised games.")
+                    }
                 }
             }
-        })
+        )
     }
 
     override fun onGameClicked(selectedGame: AdvertisedGame) {

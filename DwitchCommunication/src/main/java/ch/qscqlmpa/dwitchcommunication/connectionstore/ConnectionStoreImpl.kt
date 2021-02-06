@@ -4,7 +4,6 @@ import ch.qscqlmpa.dwitchcommunication.Address
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import java.util.concurrent.atomic.AtomicLong
 
-
 internal class ConnectionStoreImpl : ConnectionStore, ConnectionStoreInternal {
 
     private val hostConnectionId = ConnectionId(0)

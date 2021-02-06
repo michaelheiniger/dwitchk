@@ -6,9 +6,7 @@ import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
-import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
-import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
@@ -19,7 +17,6 @@ import org.assertj.core.api.Assertions.fail
 import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers.any
 
 class HostNewGameViewModelTest : BaseViewModelUnitTest() {
 
@@ -33,7 +30,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
     override fun setup() {
         super.setup()
         viewModel = HostNewGameViewModel(mockHostFacade, DisposableManager(), TestSchedulerFactory())
-        every { mockHostFacade.hostGame(any(), any(), any())} returns Completable.complete()
+        every { mockHostFacade.hostGame(any(), any(), any()) } returns Completable.complete()
     }
 
     @Test

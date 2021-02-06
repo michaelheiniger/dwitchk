@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitchgame.di.modules
 
-
 import ch.qscqlmpa.dwitchgame.di.GameScope
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscovery
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.LanGameDiscovery

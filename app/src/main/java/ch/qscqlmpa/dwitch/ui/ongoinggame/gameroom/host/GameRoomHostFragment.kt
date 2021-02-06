@@ -35,11 +35,14 @@ class GameRoomHostFragment : OngoingGameBaseFragment() {
     }
 
     private fun observeCommands() {
-        viewModel.commands().observe(viewLifecycleOwner, { command ->
-            when (command) {
-                GameRoomHostCommand.NavigateToHomeScreen -> MainActivity.start(requireActivity())
+        viewModel.commands().observe(
+            viewLifecycleOwner,
+            { command ->
+                when (command) {
+                    GameRoomHostCommand.NavigateToHomeScreen -> MainActivity.start(requireActivity())
+                }
             }
-        })
+        )
     }
 
     companion object {

@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitchgame.gamediscovery.network
 
-
 import ch.qscqlmpa.dwitchgame.gameadvertising.SerializerFactory
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscovery

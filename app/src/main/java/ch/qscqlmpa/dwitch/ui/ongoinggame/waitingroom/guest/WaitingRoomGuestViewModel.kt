@@ -35,7 +35,8 @@ class WaitingRoomGuestViewModel @Inject constructor(
                         GuestCommunicationState.Disconnected,
                         GuestCommunicationState.Error -> UiCheckboxModel(enabled = false, checked = false)
                     }
-                })
+                }
+            )
         )
     }
 

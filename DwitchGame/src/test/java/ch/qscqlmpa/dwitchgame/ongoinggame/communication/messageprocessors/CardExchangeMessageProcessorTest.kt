@@ -18,12 +18,12 @@ internal class CardExchangeMessageProcessorTest : BaseMessageProcessorTest() {
 
     private val localPlayerDwitchId = PlayerDwitchId(1)
 
-     @BeforeEach
-     override fun setup() {
-         super.setup()
-         processor = CardExchangeMessageProcessor(mockInGameStore)
-         every { mockInGameStore.getLocalPlayerDwitchId() } returns localPlayerDwitchId
-     }
+    @BeforeEach
+    override fun setup() {
+        super.setup()
+        processor = CardExchangeMessageProcessor(mockInGameStore)
+        every { mockInGameStore.getLocalPlayerDwitchId() } returns localPlayerDwitchId
+    }
 
     @Test
     fun `Store received card exchange event when the Dwitch ID matches the ID of the local player`() {

@@ -5,11 +5,11 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameViewModelBindingModule
 import dagger.Subcomponent
 
 @OngoingGameUiScope
-@Subcomponent(modules = [
-    OnGoingGameUiModule::class,
-    OngoingGameScreenBindingModule::class,
-    OngoingGameViewModelBindingModule::class,
-])
-interface TestOngoingGameUiComponent : OngoingGameUiComponent {
-
-}
+@Subcomponent(
+    modules = [
+        OnGoingGameUiModule::class,
+        OngoingGameScreenBindingModule::class,
+        OngoingGameViewModelBindingModule::class,
+    ]
+)
+interface TestOngoingGameUiComponent : OngoingGameUiComponent

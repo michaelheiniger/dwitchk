@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom
 
-
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -38,15 +37,16 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
         playerListRw.layoutManager = LinearLayoutManager(this)
         playerListRw.adapter = PlayerWrAdapter()
 
-        viewModel.playersInWaitingRoom().observe(this,
-            { list -> (playerListRw.adapter as PlayerWrAdapter).setData(list) })
-
+        viewModel.playersInWaitingRoom().observe(
+            this,
+            { list -> (playerListRw.adapter as PlayerWrAdapter).setData(list) }
+        )
     }
 
     private fun setControlFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
-                .add(R.id.host_or_guest_fragment_container, fragment)
-                .commit()
+            .add(R.id.host_or_guest_fragment_container, fragment)
+            .commit()
     }
 
     companion object {

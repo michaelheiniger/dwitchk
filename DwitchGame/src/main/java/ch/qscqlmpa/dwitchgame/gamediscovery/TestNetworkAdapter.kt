@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitchgame.gamediscovery
 
-
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.NetworkAdapter
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
 import com.jakewharton.rxrelay3.PublishRelay
@@ -33,5 +32,4 @@ internal constructor() : NetworkAdapter {
     override fun close() {
         // Nothing to do
     }
-
 }

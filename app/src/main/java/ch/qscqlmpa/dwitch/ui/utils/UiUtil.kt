@@ -11,17 +11,23 @@ import ch.qscqlmpa.dwitch.ui.model.Visibility
 object UiUtil {
 
     fun LiveData<UiControlModel>.updateView(view: View, lifecycleOwner: LifecycleOwner) {
-        this.observe(lifecycleOwner, { model ->
-            view.visibility = mapToAndroidVisibility(model.visibility)
-            view.isEnabled = model.enabled
-        })
+        this.observe(
+            lifecycleOwner,
+            { model ->
+                view.visibility = mapToAndroidVisibility(model.visibility)
+                view.isEnabled = model.enabled
+            }
+        )
     }
 
     fun LiveData<UiCheckboxModel>.updateCheckbox(checkbox: CheckBox, lifecycleOwner: LifecycleOwner) {
-        this.observe(lifecycleOwner, { model ->
-            checkbox.isEnabled = model.enabled
-            checkbox.isChecked = model.checked
-        })
+        this.observe(
+            lifecycleOwner,
+            { model ->
+                checkbox.isEnabled = model.enabled
+                checkbox.isChecked = model.checked
+            }
+        )
     }
 
     private fun mapToAndroidVisibility(visibility: Visibility): Int {

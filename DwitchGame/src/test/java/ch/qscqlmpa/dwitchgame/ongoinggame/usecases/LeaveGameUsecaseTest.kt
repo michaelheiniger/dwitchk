@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test
 
 internal class LeaveGameUsecaseTest : BaseUnitTest() {
 
-    private val playerDwitchId = PlayerDwitchId(23);
+    private val playerDwitchId = PlayerDwitchId(23)
 
     private lateinit var appEventRepository: AppEventRepository
 

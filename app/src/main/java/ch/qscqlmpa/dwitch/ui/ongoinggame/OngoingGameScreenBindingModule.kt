@@ -11,7 +11,6 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host.WaitingRoomHostFragmen
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
-
 @Module
 abstract class OngoingGameScreenBindingModule {
 

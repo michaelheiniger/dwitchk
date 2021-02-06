@@ -14,10 +14,10 @@ data class GameJoinedInfo(
 ) : Parcelable {
 
     constructor(insertGameResult: InsertGameResult, advertisedGame: AdvertisedGame) :
-            this(
-                insertGameResult.gameLocalId,
-                insertGameResult.localPlayerLocalId,
-                advertisedGame.gameIpAddress,
-                advertisedGame.gamePort
-            )
+        this(
+            insertGameResult.gameLocalId,
+            insertGameResult.localPlayerLocalId,
+            advertisedGame.gameIpAddress,
+            advertisedGame.gamePort
+        )
 }

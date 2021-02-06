@@ -40,13 +40,13 @@ internal object TestEntityFactory {
         hasPickedCard: Boolean = false
     ): Player {
         return Player(
-                id = PlayerDwitchId(100),
-                name = "Aragorn",
-                cardsInHand = cardsInHand,
-                rank = rank,
-                status = state,
-                dwitched = dwitched,
-                hasPickedACard = hasPickedCard
+            id = PlayerDwitchId(100),
+            name = "Aragorn",
+            cardsInHand = cardsInHand,
+            rank = rank,
+            status = state,
+            dwitched = dwitched,
+            hasPickedACard = hasPickedCard
         )
     }
 
@@ -58,13 +58,13 @@ internal object TestEntityFactory {
         hasPickedCard: Boolean = false
     ): Player {
         return Player(
-                id = PlayerDwitchId(101),
-                name = "Boromir",
-                cardsInHand = cardsInHand,
-                rank = rank,
-                status = state,
-                dwitched = dwitched,
-                hasPickedACard = hasPickedCard
+            id = PlayerDwitchId(101),
+            name = "Boromir",
+            cardsInHand = cardsInHand,
+            rank = rank,
+            status = state,
+            dwitched = dwitched,
+            hasPickedACard = hasPickedCard
         )
     }
 
@@ -76,13 +76,13 @@ internal object TestEntityFactory {
         hasPickedCard: Boolean = false
     ): Player {
         return Player(
-                id = PlayerDwitchId(102),
-                name = "Celeborn",
-                cardsInHand = cardsInHand,
-                rank = rank,
-                status = state,
-                dwitched = dwitched,
-                hasPickedACard = hasPickedCard
+            id = PlayerDwitchId(102),
+            name = "Celeborn",
+            cardsInHand = cardsInHand,
+            rank = rank,
+            status = state,
+            dwitched = dwitched,
+            hasPickedACard = hasPickedCard
         )
     }
 
@@ -94,13 +94,13 @@ internal object TestEntityFactory {
         hasPickedCard: Boolean = false
     ): Player {
         return Player(
-                id = PlayerDwitchId(103),
-                name = "Denethor",
-                cardsInHand = cardsInHand,
-                rank = rank,
-                status = state,
-                dwitched = dwitched,
-                hasPickedACard = hasPickedCard
+            id = PlayerDwitchId(103),
+            name = "Denethor",
+            cardsInHand = cardsInHand,
+            rank = rank,
+            status = state,
+            dwitched = dwitched,
+            hasPickedACard = hasPickedCard
         )
     }
 
@@ -112,13 +112,13 @@ internal object TestEntityFactory {
         hasPickedCard: Boolean = false
     ): Player {
         return Player(
-                id = PlayerDwitchId(104),
-                name = "Eowin",
-                cardsInHand = cardsInHand,
-                rank = rank,
-                status = state,
-                dwitched = dwitched,
-                hasPickedACard = hasPickedCard
+            id = PlayerDwitchId(104),
+            name = "Eowin",
+            cardsInHand = cardsInHand,
+            rank = rank,
+            status = state,
+            dwitched = dwitched,
+            hasPickedACard = hasPickedCard
         )
     }
 
@@ -130,13 +130,13 @@ internal object TestEntityFactory {
         hasPickedCard: Boolean = false
     ): Player {
         return Player(
-                id = PlayerDwitchId(105),
-                name = "Faramir",
-                cardsInHand = cardsInHand,
-                rank = rank,
-                status = state,
-                dwitched = dwitched,
-                hasPickedACard = hasPickedCard
+            id = PlayerDwitchId(105),
+            name = "Faramir",
+            cardsInHand = cardsInHand,
+            rank = rank,
+            status = state,
+            dwitched = dwitched,
+            hasPickedACard = hasPickedCard
         )
     }
 

@@ -13,7 +13,6 @@ import ch.qscqlmpa.dwitchengine.model.player.Rank
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-
 internal class DwitchEngineTest {
 
     private lateinit var hostPlayer: PlayerOnboardingInfo

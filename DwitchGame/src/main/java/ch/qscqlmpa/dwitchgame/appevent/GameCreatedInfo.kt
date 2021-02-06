@@ -16,12 +16,12 @@ data class GameCreatedInfo(
 ) : Parcelable {
 
     constructor(insertGameResult: InsertGameResult, gamePort: Int) :
-            this(
-                true,
-                insertGameResult.gameLocalId,
-                insertGameResult.gameCommonId,
-                insertGameResult.gameName,
-                insertGameResult.localPlayerLocalId,
-                gamePort
-            )
+        this(
+            true,
+            insertGameResult.gameLocalId,
+            insertGameResult.gameCommonId,
+            insertGameResult.gameName,
+            insertGameResult.localPlayerLocalId,
+            gamePort
+        )
 }

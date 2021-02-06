@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.net.SocketException
 
-
 class LanGameDiscoveryTest : BaseUnitTest() {
 
     companion object {
@@ -34,11 +33,11 @@ class LanGameDiscoveryTest : BaseUnitTest() {
             .doOnNext { (_, _, _) -> gameDiscovery.stopListening() }
             .test()
             .assertValue { advertisedGame ->
-                isDateToday(advertisedGame.discoveryTimeAsString())
-                        && advertisedGame.gameName == "Kaamelott"
-                        && advertisedGame.gameCommonId == GameCommonId(23)
-                        && advertisedGame.gameIpAddress == "192.168.1.1"
-                        && advertisedGame.gamePort == 8889
+                isDateToday(advertisedGame.discoveryTimeAsString()) &&
+                    advertisedGame.gameName == "Kaamelott" &&
+                    advertisedGame.gameCommonId == GameCommonId(23) &&
+                    advertisedGame.gameIpAddress == "192.168.1.1" &&
+                    advertisedGame.gamePort == 8889
             }
     }
 

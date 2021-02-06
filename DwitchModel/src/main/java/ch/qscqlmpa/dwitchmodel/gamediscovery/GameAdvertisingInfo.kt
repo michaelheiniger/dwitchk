@@ -12,4 +12,4 @@ data class GameAdvertisingInfo(
     val gameCommonId: GameCommonId,
     val gameName: String,
     val gamePort: Int
-): Parcelable
+) : Parcelable

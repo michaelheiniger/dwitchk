@@ -15,7 +15,7 @@ data class GameInfo(
     val lastCardPlayed: Card,
     val cardsOnTable: List<Card>,
     val gameEvent: GameEvent?
-)  {
+) {
     fun getCurrentPlayer(): PlayerInfo {
         return playerInfos.getValue(currentPlayerId)
     }

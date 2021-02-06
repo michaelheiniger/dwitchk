@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitchcommunication.websocket.server
 
-
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchcommunication.Address
 import ch.qscqlmpa.dwitchcommunication.AddressType
@@ -77,8 +76,8 @@ internal class WebsocketCommServer @Inject constructor(
         Timber.i("Connection with remote $address closed by host.")
         if (address != null) {
             val senderSocket = websocketServer.getConnections().find { webSocket ->
-                webSocket.remoteSocketAddress.address.hostAddress == address.ipAddress
-                        && webSocket.remoteSocketAddress.port == address.port
+                webSocket.remoteSocketAddress.address.hostAddress == address.ipAddress &&
+                    webSocket.remoteSocketAddress.port == address.port
             }
             senderSocket?.close()
         }
@@ -93,8 +92,8 @@ internal class WebsocketCommServer @Inject constructor(
 
     private fun sendUnicastMessage(serializedMessage: String, recipientAddress: AddressType.Unicast) {
         val recipientSocket = websocketServer.getConnections().find { webSocket ->
-            webSocket.remoteSocketAddress.address.hostAddress == recipientAddress.destination.ipAddress
-                    && webSocket.remoteSocketAddress.port == recipientAddress.destination.port
+            webSocket.remoteSocketAddress.address.hostAddress == recipientAddress.destination.ipAddress &&
+                webSocket.remoteSocketAddress.port == recipientAddress.destination.port
         }
         if (recipientSocket != null) {
             websocketServer.send(recipientSocket, serializedMessage)
@@ -115,7 +114,6 @@ internal class WebsocketCommServer @Inject constructor(
             is ServerCommEvent.ClientDisconnected -> processClientDisconnectedEvent(event)
         }
     }
-
 
     private fun processStartedEvent(): Observable<ServerCommunicationEvent> {
         Timber.d("Server is now listening for connections")
@@ -192,8 +190,8 @@ internal class WebsocketCommServer @Inject constructor(
         val remainingConnections = websocketServer.getConnections()
             .filter { ws ->
                 ws.remoteSocketAddress != null &&
-                        ws.remoteSocketAddress.address != null &&
-                        ws.remoteSocketAddress.address.hostAddress != null
+                    ws.remoteSocketAddress.address != null &&
+                    ws.remoteSocketAddress.address.hostAddress != null
             }
             .map(::Address)
         return connectionStore.findMissingConnections(remainingConnections)

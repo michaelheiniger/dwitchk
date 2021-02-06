@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitchgame.base.BaseGuestTest
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import org.junit.Test
 
-class GuestFacadeTest: BaseGuestTest() {
+class GuestFacadeTest : BaseGuestTest() {
 
     @Test
     fun testStartClientSuccess() {
@@ -13,5 +13,5 @@ class GuestFacadeTest: BaseGuestTest() {
         assertGuestCommunicationState(GuestCommunicationState.Connected)
     }
 
-    //TODO
+    // TODO
 }

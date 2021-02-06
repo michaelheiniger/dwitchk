@@ -19,7 +19,7 @@ import dagger.Component
         SchedulersModule::class,
     ]
 )
-interface TestGameComponent : GameComponent{
+interface TestGameComponent : GameComponent {
 
     val networkListener: NetworkAdapter
 

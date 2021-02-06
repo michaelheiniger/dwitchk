@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.di.modules
 
-
 import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientCommunicationEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.eventprocessors.GuestCommunicationEventProcessor
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.eventprocessors.GuestConnectedToHostEventProcessor
@@ -32,5 +31,4 @@ abstract class GuestCommunicationEventProcessorModule {
     @IntoMap
     @GuestCommunicationEventProcessorKey(ClientCommunicationEvent.ConnectionError::class)
     internal abstract fun bindConnectionErrorEventProcessor(eventProcessorGuest: GuestConnectionErrorEventProcessor): GuestCommunicationEventProcessor
-
 }

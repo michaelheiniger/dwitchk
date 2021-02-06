@@ -55,27 +55,31 @@ constructor(
         if (game.isNew) {
             commands.value = MainActivityCommands.NavigateToNewGameActivityAsGuest(game)
         } else {
-            disposableManager.add(homeGuestFacade.joinResumedGame(game)
-                .observeOn(schedulerFactory.ui())
-                .subscribe(
-                    {
-                        Timber.i("Game resumed successfully.")
-                        commands.value = MainActivityCommands.NavigateToWaitingRoomAsGuest
-                    },
-                    { error -> Timber.e(error, "Error while resuming game.") }
-                ))
+            disposableManager.add(
+                homeGuestFacade.joinResumedGame(game)
+                    .observeOn(schedulerFactory.ui())
+                    .subscribe(
+                        {
+                            Timber.i("Game resumed successfully.")
+                            commands.value = MainActivityCommands.NavigateToWaitingRoomAsGuest
+                        },
+                        { error -> Timber.e(error, "Error while resuming game.") }
+                    )
+            )
         }
     }
 
     fun resumeGame(resumableGameInfo: ResumableGameInfo) {
-        disposableManager.add(homeHostFacade.resumeGame(resumableGameInfo.id, 8889) //TODO: Take from sharedpref ?
-            .observeOn(schedulerFactory.ui())
-            .subscribe(
-                {
-                    Timber.i("Game resumed successfully.")
-                    commands.value = MainActivityCommands.NavigateToWaitingRoomAsHost
-                },
-                { error -> Timber.e(error, "Error while resuming game.") }
-            ))
+        disposableManager.add(
+            homeHostFacade.resumeGame(resumableGameInfo.id, 8889) // TODO: Take from sharedpref ?
+                .observeOn(schedulerFactory.ui())
+                .subscribe(
+                    {
+                        Timber.i("Game resumed successfully.")
+                        commands.value = MainActivityCommands.NavigateToWaitingRoomAsHost
+                    },
+                    { error -> Timber.e(error, "Error while resuming game.") }
+                )
+        )
     }
 }

@@ -3,7 +3,6 @@ package ch.qscqlmpa.dwitchcommonutil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 
-
 open class DisposableManager {
 
     private var compositeDisposable = CompositeDisposable()
@@ -20,5 +19,4 @@ open class DisposableManager {
         dispose()
         compositeDisposable = CompositeDisposable()
     }
-
 }

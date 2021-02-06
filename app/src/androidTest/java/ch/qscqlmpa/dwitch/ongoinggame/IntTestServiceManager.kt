@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.ongoinggame
 
-//class IntTestServiceManager @Inject constructor() : ServiceManager {
+// class IntTestServiceManager @Inject constructor() : ServiceManager {
 //
 //    private lateinit var appComponent: IntTestAppComponent
 //    private lateinit var onGoingGameComponent: IntTestOngoingGameComponent
@@ -62,4 +62,4 @@ package ch.qscqlmpa.dwitch.ongoinggame
 //    override fun goToGuestGameRoom() {
 //        // Nothing to do
 //    }
-//}
+// }

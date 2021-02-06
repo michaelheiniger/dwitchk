@@ -47,23 +47,23 @@ class PlayerDashboardViewModel @Inject constructor(
     }
 
     fun playCard(cardPlayed: Card) {
-        performOperation("Card $cardPlayed played successfully.", "Error while playing card $cardPlayed.")
-        { facade.playCard(cardPlayed) }
+        performOperation("Card $cardPlayed played successfully.", "Error while playing card $cardPlayed.") {
+            facade.playCard(
+                cardPlayed
+            )
+        }
     }
 
     fun pickCard() {
-        performOperation("Card picked successfully.", "Error while picking card.")
-        { facade.pickCard() }
+        performOperation("Card picked successfully.", "Error while picking card.") { facade.pickCard() }
     }
 
     fun passTurn() {
-        performOperation("Turn passed successfully.", "Error while passing turn.")
-        { facade.passTurn() }
+        performOperation("Turn passed successfully.", "Error while passing turn.") { facade.passTurn() }
     }
 
     fun startNewRound() {
-        performOperation("Start new round successfully.", "Error while starting new round.")
-        { facade.startNewRound() }
+        performOperation("Start new round successfully.", "Error while starting new round.") { facade.startNewRound() }
     }
 
     private fun observeCardExchangeEvents(): LiveData<PlayerDashboardCommand.OpenCardExchange> {
@@ -79,7 +79,7 @@ class PlayerDashboardViewModel @Inject constructor(
     private fun observeGamePhaseEvents(): LiveData<PlayerDashboardCommand.OpenEndOfRound> {
         return LiveDataReactiveStreams.fromPublisher(
             facade.observeDashboardInfo()
-                .distinctUntilChanged{info -> info.gameInfo.gamePhase}
+                .distinctUntilChanged { info -> info.gameInfo.gamePhase }
                 .filter { info -> info.gameInfo.gamePhase == GamePhase.RoundIsOver }
                 .map(::mapEndOfRoundInfo)
                 .observeOn(schedulerFactory.ui())
@@ -93,7 +93,7 @@ class PlayerDashboardViewModel @Inject constructor(
             GamePhase.RoundIsOver ->
                 PlayerDashboardCommand.OpenEndOfRound(
                     info.gameInfo.playerInfos
-                        .map { (_,p) -> PlayerEndOfRoundInfo(p.name, ResourceMapper.getResourceLong(p.rank)) }
+                        .map { (_, p) -> PlayerEndOfRoundInfo(p.name, ResourceMapper.getResourceLong(p.rank)) }
                 )
             else -> throw IllegalArgumentException("Illegal game phase: ${info.gameInfo.gamePhase}")
         }
@@ -106,6 +106,7 @@ class PlayerDashboardViewModel @Inject constructor(
                 .subscribe(
                     { Timber.d(successText) },
                     { error -> Timber.e(error, failureText) }
-                ))
+                )
+        )
     }
 }

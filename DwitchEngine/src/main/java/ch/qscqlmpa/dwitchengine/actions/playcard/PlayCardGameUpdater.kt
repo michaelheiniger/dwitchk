@@ -6,7 +6,6 @@ import ch.qscqlmpa.dwitchengine.model.game.GameEvent
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 
-
 internal class PlayCardGameUpdater(
     currentGameState: GameState
 ) : GameUpdaterBase(currentGameState) {

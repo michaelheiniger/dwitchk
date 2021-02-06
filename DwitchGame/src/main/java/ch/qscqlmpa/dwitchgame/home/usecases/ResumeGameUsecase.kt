@@ -34,22 +34,30 @@ class ResumeGameUsecase @Inject constructor(
     }
 
     private fun startHostService(game: Game, gamePort: Int) {
-        appEventRepository.notify(AppEvent.GameCreated(GameCreatedInfo(
-            game.isNew(),
-            game.id,
-            game.gameCommonId,
-            game.name,
-            game.localPlayerLocalId,
-            gamePort
-        )))
+        appEventRepository.notify(
+            AppEvent.GameCreated(
+                GameCreatedInfo(
+                    game.isNew(),
+                    game.id,
+                    game.gameCommonId,
+                    game.name,
+                    game.localPlayerLocalId,
+                    gamePort
+                )
+            )
+        )
     }
 
     private fun startGuestService(game: Game, advertisedGame: AdvertisedGame) {
-        appEventRepository.notify(AppEvent.GameJoined(GameJoinedInfo(
-            game.id,
-            game.localPlayerLocalId,
-            advertisedGame.gameIpAddress,
-            advertisedGame.gamePort
-        )))
+        appEventRepository.notify(
+            AppEvent.GameJoined(
+                GameJoinedInfo(
+                    game.id,
+                    game.localPlayerLocalId,
+                    advertisedGame.gameIpAddress,
+                    advertisedGame.gamePort
+                )
+            )
+        )
     }
 }

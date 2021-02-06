@@ -39,7 +39,7 @@ class CancelGameUsecaseTest : BaseUnitTest() {
 
     @Test
     fun `New game is canceled`() {
-        every { mockInGameStore.gameIsNew()} returns true
+        every { mockInGameStore.gameIsNew() } returns true
         val testObserver = gameEventRepository.observeEvents().test()
         testObserver.assertNoValues()
 
@@ -58,7 +58,7 @@ class CancelGameUsecaseTest : BaseUnitTest() {
 
     @Test
     fun `Existing game is canceled`() {
-        every { mockInGameStore.gameIsNew()} returns false
+        every { mockInGameStore.gameIsNew() } returns false
         val testObserver = gameEventRepository.observeEvents().test()
         testObserver.assertNoValues()
 

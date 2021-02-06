@@ -44,7 +44,7 @@ class HostNewGameViewModel @Inject constructor(
         require(playerName.isNotBlank()) { "Player name cannot be blank" }
         require(gameName.isNotBlank()) { "Game name cannot be blank" }
         disposableManager.add(
-            hostFacade.hostGame(gameName, playerName, 8889) //TODO: Take value from sharedPref
+            hostFacade.hostGame(gameName, playerName, 8889) // TODO: Take value from sharedPref
                 .observeOn(schedulerFactory.ui())
                 .subscribe(
                     { command.setValue(HostNewGameCommand.NavigateToWaitingRoom) },

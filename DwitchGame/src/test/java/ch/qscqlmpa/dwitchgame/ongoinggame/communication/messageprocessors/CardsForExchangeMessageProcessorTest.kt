@@ -18,7 +18,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-internal class CardsForExchangeMessageProcessorTest: BaseMessageProcessorTest() {
+internal class CardsForExchangeMessageProcessorTest : BaseMessageProcessorTest() {
 
     private lateinit var dwitchEngineFactory: TestDwitchEngineFactory
 
@@ -33,15 +33,22 @@ internal class CardsForExchangeMessageProcessorTest: BaseMessageProcessorTest() 
 
     @Test
     fun `Update game state with card exchange info from message`() {
-        val mockEngine = mockk<DwitchEngine>();
-        val mockUpdatedGameState  = mockk<GameState>(); // No point in testing the content since it comes from a mock
-        every { mockEngine.chooseCardsForExchange(any(), any())} returns mockUpdatedGameState
+        val mockEngine = mockk<DwitchEngine>()
+        val mockUpdatedGameState = mockk<GameState>(); // No point in testing the content since it comes from a mock
+        every { mockEngine.chooseCardsForExchange(any(), any()) } returns mockUpdatedGameState
         dwitchEngineFactory.setInstance(mockEngine)
 
         val message = Message.CardsForExchangeMessage(PlayerDwitchId(324), setOf(Card.Clubs2, Card.Clubs3))
         processor.process(message, ConnectionId(45)).test().assertComplete()
 
         verify { mockInGameStore.updateGameState(mockUpdatedGameState) }
-        verify { mockHostCommunicator.sendMessage(EnvelopeToSend(Recipient.All, MessageFactory.createGameStateUpdatedMessage(mockUpdatedGameState)))}
+        verify {
+            mockHostCommunicator.sendMessage(
+                EnvelopeToSend(
+                    Recipient.All,
+                    MessageFactory.createGameStateUpdatedMessage(mockUpdatedGameState)
+                )
+            )
+        }
     }
 }

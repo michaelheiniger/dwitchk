@@ -102,6 +102,4 @@ internal class TestWebSocket(private val remoteAddress: String, private val remo
     override fun isClosed(): Boolean {
         throw NotImplementedError()
     }
-
-
 }

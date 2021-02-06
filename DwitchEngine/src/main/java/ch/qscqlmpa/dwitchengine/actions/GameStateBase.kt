@@ -8,7 +8,6 @@ import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 internal abstract class GameStateBase(private val currentGameState: GameState) {
 
     open fun checkState() {
-
     }
 
     fun numPlayersTotal(): Int {

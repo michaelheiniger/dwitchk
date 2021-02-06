@@ -125,5 +125,4 @@ abstract class BaseInGameService : Service() {
             return intent
         }
     }
-
 }

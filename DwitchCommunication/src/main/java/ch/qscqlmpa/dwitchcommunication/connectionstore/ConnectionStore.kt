@@ -2,7 +2,6 @@ package ch.qscqlmpa.dwitchcommunication.connectionstore
 
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 
-
 interface ConnectionStore {
 
     /**

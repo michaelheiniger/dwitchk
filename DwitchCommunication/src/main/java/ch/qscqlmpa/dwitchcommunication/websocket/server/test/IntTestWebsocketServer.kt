@@ -1,17 +1,17 @@
 package ch.qscqlmpa.dwitchcommunication.websocket.server.test
 
-import ch.qscqlmpa.dwitchcommunication.Address
-import ch.qscqlmpa.dwitchcommunication.websocket.server.*
+import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommEvent
+import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerMessage
+import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServer
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
 import org.java_websocket.WebSocket
 import org.java_websocket.handshake.ClientHandshake
 
-
 internal class IntTestWebsocketServer constructor(
     private val hostAddress: String,
     private val hostPort: Int
-    ) : WebsocketServer {
+) : WebsocketServer {
 
     private val onMessageRelay = PublishRelay.create<ServerMessage>()
 

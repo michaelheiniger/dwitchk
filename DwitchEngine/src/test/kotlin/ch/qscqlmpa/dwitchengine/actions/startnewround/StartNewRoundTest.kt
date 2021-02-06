@@ -157,7 +157,6 @@ class StartNewRoundTest : EngineTestBase() {
 
     private fun setupCardDealer(cardsForPlayer: Map<Int, List<Card>>) {
         cardDealerFactory = DeterministicCardDealerFactory(DeterministicCardDealer(cardsForPlayer))
-
     }
 
     private fun launchStartNewRoundTest() {

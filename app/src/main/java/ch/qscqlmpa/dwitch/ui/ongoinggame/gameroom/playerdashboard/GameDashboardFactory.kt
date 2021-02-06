@@ -76,8 +76,7 @@ class GameDashboardFactory(
             .mapIndexed { index, s ->
                 if (index < text.size - 1) {
                     s.length + 1
-                }
-                else {
+                } else {
                     s.length
                 }
             }
@@ -88,7 +87,6 @@ class GameDashboardFactory(
         val sb = SpannableStringBuilder(text.joinToString(" "))
         val bss = StyleSpan(android.graphics.Typeface.BOLD); // Span to make text bold
         sb.setSpan(bss, startIndex, endIndex, Spannable.SPAN_INCLUSIVE_INCLUSIVE); // make first 4 characters Bold
-
 
         return sb
     }

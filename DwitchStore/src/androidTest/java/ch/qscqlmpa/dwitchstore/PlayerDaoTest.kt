@@ -52,20 +52,20 @@ internal class PlayerDaoTest : BaseInstrumentedTest() {
 
         val player1FromStore = playerDao.getPlayer(player1LocalId)
         PlayerRobot(player1FromStore)
-                .assertGameLocalId(gameLocalId!!)
-                .assertName("Gimli")
-                .assertPlayerRole(PlayerRole.GUEST)
-                .assertConnectionState(PlayerConnectionState.CONNECTED)
-                .assertReady(false)
+            .assertGameLocalId(gameLocalId!!)
+            .assertName("Gimli")
+            .assertPlayerRole(PlayerRole.GUEST)
+            .assertConnectionState(PlayerConnectionState.CONNECTED)
+            .assertReady(false)
         assertThat(player1FromStore.dwitchId).isNotNull() // Do NOT simplify by using "isNotNull", somehow it produces an error
 
         val player2FromStore = playerDao.getPlayer(player2LocalId)
         PlayerRobot(player2FromStore)
-                .assertGameLocalId(gameLocalId!!)
-                .assertName("Legolas")
-                .assertPlayerRole(PlayerRole.GUEST)
-                .assertConnectionState(PlayerConnectionState.CONNECTED)
-                .assertReady(false)
+            .assertGameLocalId(gameLocalId!!)
+            .assertName("Legolas")
+            .assertPlayerRole(PlayerRole.GUEST)
+            .assertConnectionState(PlayerConnectionState.CONNECTED)
+            .assertReady(false)
         assertThat(player2FromStore.dwitchId).isNotNull() // Do NOT simplify by using "isNotNull", somehow it produces an error
 
         assertThat(player1FromStore.dwitchId).isNotEqualTo(playersBefore[0].dwitchId)
@@ -80,12 +80,14 @@ internal class PlayerDaoTest : BaseInstrumentedTest() {
 
     @Test
     fun observePlayersInWaitingRoom() {
-        bootstrapDb(listOf(
+        bootstrapDb(
+            listOf(
                 Player(0, PlayerDwitchId(2), 0, "Saruman", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true),
                 Player(0, PlayerDwitchId(3), 0, "Gimli", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
                 Player(0, PlayerDwitchId(4), 0, "Boromir", PlayerRole.GUEST, PlayerConnectionState.DISCONNECTED, true),
                 Player(0, PlayerDwitchId(5), 0, "Legolas", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true)
-        ))
+            )
+        )
 
         dudeWaitAMinute(1)
 

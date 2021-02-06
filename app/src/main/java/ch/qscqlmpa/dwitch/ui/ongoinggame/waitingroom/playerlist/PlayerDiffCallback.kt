@@ -3,7 +3,6 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.playerlist
 import androidx.recyclerview.widget.DiffUtil
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWr
 
-
 class PlayerDiffCallback(private val oldList: List<PlayerWr>, private val newList: List<PlayerWr>) : DiffUtil.Callback() {
 
     override fun getOldListSize(): Int {

@@ -45,4 +45,4 @@ internal class EventRepositoryTest {
     }
 }
 
-private class MyEventRepository: EventRepository<String>()
+private class MyEventRepository : EventRepository<String>()

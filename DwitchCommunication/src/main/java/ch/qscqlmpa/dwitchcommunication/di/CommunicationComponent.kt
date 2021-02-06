@@ -6,10 +6,12 @@ import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import dagger.Component
 
 @CommunicationScope
-@Component(modules = [
-    CommunicationModule::class,
-    WebsocketModule::class
-])
+@Component(
+    modules = [
+        CommunicationModule::class,
+        WebsocketModule::class
+    ]
+)
 interface CommunicationComponent {
     val commServer: CommServer
     val commClient: CommClient

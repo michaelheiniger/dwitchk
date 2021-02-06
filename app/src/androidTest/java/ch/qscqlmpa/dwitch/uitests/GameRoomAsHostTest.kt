@@ -139,7 +139,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         GameRoomUiUtil.playCard(0) // Local player plays Hearts3
         assertGameStateUpdatedMessageSent()
 
-        UiUtil.assertControlTextContent(R.id.mainTextTv, Matchers.containsString("${hostName}: President"))
+        UiUtil.assertControlTextContent(R.id.mainTextTv, Matchers.containsString("$hostName: President"))
         UiUtil.assertControlTextContent(R.id.mainTextTv, Matchers.containsString("Boromir: Asshole"))
 
         closeEndOfRoundDialog()

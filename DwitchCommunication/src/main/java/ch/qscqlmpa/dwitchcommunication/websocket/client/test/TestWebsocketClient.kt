@@ -9,8 +9,8 @@ import org.java_websocket.handshake.ServerHandshake
 import timber.log.Timber
 
 internal class TestWebsocketClient constructor(
-        private val destinationAddress: String,
-        private val destinationPort: Int
+    private val destinationAddress: String,
+    private val destinationPort: Int
 ) : WebsocketClient {
 
     private val messagesSentRelay = PublishRelay.create<String>()

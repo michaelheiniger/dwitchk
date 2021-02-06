@@ -21,9 +21,9 @@ internal class PlayerReadyMessageProcessorTest : BaseMessageProcessorTest() {
     override fun setup() {
         super.setup()
         processor = PlayerReadyMessageProcessor(
-                mockInGameStore,
-                mockHostMessageFactory,
-                LazyImpl(mockHostCommunicator)
+            mockInGameStore,
+            mockHostMessageFactory,
+            LazyImpl(mockHostCommunicator)
         )
     }
 

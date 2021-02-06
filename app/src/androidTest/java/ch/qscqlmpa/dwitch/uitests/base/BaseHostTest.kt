@@ -37,7 +37,7 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
 
         hookOngoingGameDependenciesForHost()
 
-        host = inGameStore.getPlayer(hostName)!! //TODO: delete. No need to check DB stuff in UI tests
+        host = inGameStore.getPlayer(hostName)!! // TODO: delete. No need to check DB stuff in UI tests
     }
 
     protected fun guestJoinsGame(guest: PlayerHostTest) {

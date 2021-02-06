@@ -6,4 +6,4 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @Parcelize
-data class GameCommonId(val value: Long): Parcelable
+data class GameCommonId(val value: Long) : Parcelable

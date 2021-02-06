@@ -30,13 +30,13 @@ object TestEntityFactory {
         ready: Boolean = true
     ): Player {
         return Player(
-                localId,
-                dwitchId,
-                1L,
-                "Aragorn",
-                PlayerRole.HOST,
-                connectionState,
-                ready
+            localId,
+            dwitchId,
+            1L,
+            "Aragorn",
+            PlayerRole.HOST,
+            connectionState,
+            ready
         )
     }
 
@@ -47,13 +47,13 @@ object TestEntityFactory {
         ready: Boolean = true
     ): Player {
         return Player(
-                localId,
-                dwitchId,
-                1L,
-                "Boromir",
-                PlayerRole.GUEST,
-                connectionState,
-                ready
+            localId,
+            dwitchId,
+            1L,
+            "Boromir",
+            PlayerRole.GUEST,
+            connectionState,
+            ready
         )
     }
 
@@ -64,13 +64,13 @@ object TestEntityFactory {
         ready: Boolean = true
     ): Player {
         return Player(
-                localId,
-                dwitchId,
-                1L,
-                "Celeborn",
-                PlayerRole.GUEST,
-                connectionState,
-                ready
+            localId,
+            dwitchId,
+            1L,
+            "Celeborn",
+            PlayerRole.GUEST,
+            connectionState,
+            ready
         )
     }
 
@@ -81,13 +81,13 @@ object TestEntityFactory {
         ready: Boolean = true
     ): Player {
         return Player(
-                localId,
-                dwitchId,
-                1L,
-                "Denethor",
-                PlayerRole.GUEST,
-                connectionState,
-                ready
+            localId,
+            dwitchId,
+            1L,
+            "Denethor",
+            PlayerRole.GUEST,
+            connectionState,
+            ready
         )
     }
 
@@ -108,8 +108,8 @@ object TestEntityFactory {
         val hostPlayer = createHostPlayer()
         val players = listOf(hostPlayer, createGuestPlayer1())
         return DwitchEngine.createNewGame(
-                players.map(Player::toPlayerInfo),
-                RandomInitialGameSetup(players.size)
+            players.map(Player::toPlayerInfo),
+            RandomInitialGameSetup(players.size)
         )
     }
 }

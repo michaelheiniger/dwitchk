@@ -55,8 +55,10 @@ class ConnectionHostViewModel @Inject constructor(
     }
 
     fun connectionStateInfo(): LiveData<UiInfoModel> {
-        return LiveDataReactiveStreams.fromPublisher(currentCommunicationState()
-            .map { state -> UiInfoModel(ResourceMapper.getResource(state)) })
+        return LiveDataReactiveStreams.fromPublisher(
+            currentCommunicationState()
+                .map { state -> UiInfoModel(ResourceMapper.getResource(state)) }
+        )
     }
 
     fun reconnect() {

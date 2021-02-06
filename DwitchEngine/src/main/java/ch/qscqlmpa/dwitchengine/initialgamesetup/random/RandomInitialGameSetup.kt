@@ -5,7 +5,6 @@ import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 
-
 class RandomInitialGameSetup(private val numPlayers: Int) : InitialGameSetup(numPlayers) {
 
     private val cardDealer = RandomCardDealer(numPlayers)

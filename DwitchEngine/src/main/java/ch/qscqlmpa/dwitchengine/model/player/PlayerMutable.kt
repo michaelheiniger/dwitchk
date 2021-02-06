@@ -58,7 +58,6 @@ internal data class PlayerMutable(
         )
     }
 
-
     companion object {
 
         fun fromPlayer(player: Player): PlayerMutable {

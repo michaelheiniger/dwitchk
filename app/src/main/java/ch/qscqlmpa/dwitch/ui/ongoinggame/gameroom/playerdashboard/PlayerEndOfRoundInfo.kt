@@ -4,4 +4,4 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class PlayerEndOfRoundInfo(val name: String, val rankResource: Int): Parcelable
+data class PlayerEndOfRoundInfo(val name: String, val rankResource: Int) : Parcelable

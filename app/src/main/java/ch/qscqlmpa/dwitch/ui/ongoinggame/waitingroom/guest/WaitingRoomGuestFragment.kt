@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.guest
 
-
 import android.os.Bundle
 import android.view.View
 import android.widget.CheckBox
@@ -53,13 +52,16 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment
     }
 
     private fun setupCommands() {
-        viewModel.commands().observe(viewLifecycleOwner, { command ->
-            when (command) {
-                WaitingRoomGuestCommand.NotifyUserGameCanceled -> showGameCanceledDialog()
-                WaitingRoomGuestCommand.NavigateToHomeScreen -> MainActivity.start(requireActivity())
-                WaitingRoomGuestCommand.NavigateToGameRoomScreen -> GameRoomActivity.startForGuest(requireActivity())
+        viewModel.commands().observe(
+            viewLifecycleOwner,
+            { command ->
+                when (command) {
+                    WaitingRoomGuestCommand.NotifyUserGameCanceled -> showGameCanceledDialog()
+                    WaitingRoomGuestCommand.NavigateToHomeScreen -> MainActivity.start(requireActivity())
+                    WaitingRoomGuestCommand.NavigateToGameRoomScreen -> GameRoomActivity.startForGuest(requireActivity())
+                }
             }
-        })
+        )
     }
 
     private fun showGameCanceledDialog() {

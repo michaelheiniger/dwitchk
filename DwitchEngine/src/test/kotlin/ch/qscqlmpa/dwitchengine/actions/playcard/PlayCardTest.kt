@@ -73,7 +73,6 @@ class PlayCardTest : EngineTestBase() {
         PlayerRobot(gameStateUpdated, player3Id)
             .assertPlayerState(PlayerStatus.Playing)
             .assertPlayerIsNotDwitched()
-
     }
 
     @Test
@@ -101,7 +100,6 @@ class PlayCardTest : EngineTestBase() {
 
         PlayerRobot(gameStateUpdated, player3Id)
             .assertPlayerState(PlayerStatus.Waiting)
-
     }
 
     @Test
@@ -232,7 +230,6 @@ class PlayCardTest : EngineTestBase() {
 
         PlayerRobot(gameStateUpdated, player4Id)
             .assertPlayerState(PlayerStatus.Waiting)
-
     }
 
     @Test
@@ -264,7 +261,6 @@ class PlayCardTest : EngineTestBase() {
 
         PlayerRobot(gameStateUpdated, player4Id)
             .assertPlayerState(PlayerStatus.Playing)
-
     }
 
     @Test
@@ -295,7 +291,6 @@ class PlayCardTest : EngineTestBase() {
 
         PlayerRobot(gameStateUpdated, player4Id)
             .assertPlayerState(PlayerStatus.Waiting)
-
     }
 
     @Test
@@ -355,7 +350,6 @@ class PlayCardTest : EngineTestBase() {
 
         PlayerRobot(gameStateUpdated, player4Id)
             .assertPlayerState(PlayerStatus.Waiting)
-
     }
 
     @Test
@@ -385,7 +379,6 @@ class PlayCardTest : EngineTestBase() {
 
         PlayerRobot(gameStateUpdated, player4Id)
             .assertPlayerState(PlayerStatus.Waiting)
-
     }
 
     @Test

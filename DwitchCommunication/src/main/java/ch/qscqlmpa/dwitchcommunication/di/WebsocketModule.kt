@@ -2,9 +2,7 @@ package ch.qscqlmpa.dwitchcommunication.di
 
 import ch.qscqlmpa.dwitchcommunication.websocket.client.ProdWebsocketClientFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClientFactory
-import ch.qscqlmpa.dwitchcommunication.websocket.server.ProdWebsocketServer
 import ch.qscqlmpa.dwitchcommunication.websocket.server.ProdWebsocketServerFactory
-import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServer
 import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServerFactory
 import dagger.Module
 import dagger.Provides

@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.ui.home.main
 
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

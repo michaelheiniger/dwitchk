@@ -23,14 +23,16 @@ constructor(
     }
 
     fun endGame() {
-        disposableManager.add(facade.endGame()
-            .observeOn(schedulerFactory.ui())
-            .subscribe(
-                {
-                    Timber.d("Game ended successfully.")
-                    commands.value = GameRoomHostCommand.NavigateToHomeScreen
-                },
-                { error -> Timber.e(error, "Error while ending game.") }
-            ))
+        disposableManager.add(
+            facade.endGame()
+                .observeOn(schedulerFactory.ui())
+                .subscribe(
+                    {
+                        Timber.d("Game ended successfully.")
+                        commands.value = GameRoomHostCommand.NavigateToHomeScreen
+                    },
+                    { error -> Timber.e(error, "Error while ending game.") }
+                )
+        )
     }
 }

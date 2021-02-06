@@ -1,18 +1,19 @@
 package ch.qscqlmpa.dwitchcommunication.websocket.server.test
 
 import ch.qscqlmpa.dwitchcommunication.Address
-import ch.qscqlmpa.dwitchcommunication.websocket.server.*
+import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommEvent
+import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerMessage
+import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServer
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
 import org.java_websocket.WebSocket
 import org.java_websocket.handshake.ClientHandshake
 import timber.log.Timber
 
-
 internal class TestWebsocketServer(
     private val hostIpAddress: String,
     private val hostPort: Int
-): WebsocketServer {
+) : WebsocketServer {
 
     private val eventRelay = PublishRelay.create<ServerCommEvent>()
     private val messageRelay = PublishRelay.create<ServerMessage>()

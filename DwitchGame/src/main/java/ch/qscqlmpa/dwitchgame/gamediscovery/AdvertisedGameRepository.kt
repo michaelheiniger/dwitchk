@@ -25,7 +25,7 @@ internal class AdvertisedGameRepository @Inject constructor(
             store.getGameCommonIdOfResumableGames(),
             advertisedGames(),
             cleanUpScheduler(),
-            { existingGames, game, _ -> Pair(existingGames, game)}
+            { existingGames, game, _ -> Pair(existingGames, game) }
         )
             .filter { (existingGames, game) ->
                 game.isNew || existingGames.contains(game.gameCommonId)

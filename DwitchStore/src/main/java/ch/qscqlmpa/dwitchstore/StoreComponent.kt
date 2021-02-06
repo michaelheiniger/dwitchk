@@ -7,9 +7,11 @@ import ch.qscqlmpa.dwitchstore.store.StoreModule
 import dagger.Component
 
 @StoreScope
-@Component(modules = [
-    StoreModule::class,
-])
+@Component(
+    modules = [
+        StoreModule::class,
+    ]
+)
 interface StoreComponent {
 
     val store: Store

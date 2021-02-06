@@ -10,7 +10,6 @@ import ch.qscqlmpa.dwitchmodel.gamediscovery.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import timber.log.Timber
 
-
 class HostInGameService : BaseInGameService() {
 
     private val gameAdvertisingDisposable = DisposableManager()
@@ -47,10 +46,12 @@ class HostInGameService : BaseInGameService() {
     }
 
     private fun advertiseGame(gameAdvertisingInfo: GameAdvertisingInfo) {
-        gameAdvertisingDisposable.add(getOngoingGameComponent().hostFacade.advertiseGame(gameAdvertisingInfo).subscribe(
-            {},
-            { error -> Timber.e(error, "Error while advertising the game.") }
-        ))
+        gameAdvertisingDisposable.add(
+            getOngoingGameComponent().hostFacade.advertiseGame(gameAdvertisingInfo).subscribe(
+                {},
+                { error -> Timber.e(error, "Error while advertising the game.") }
+            )
+        )
     }
 
     companion object {

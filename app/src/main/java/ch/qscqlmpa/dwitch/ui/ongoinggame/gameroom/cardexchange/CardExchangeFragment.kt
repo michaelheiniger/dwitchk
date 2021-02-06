@@ -12,7 +12,6 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import kotlinx.android.synthetic.main.card_exchange_fragment.*
 import timber.log.Timber
 
-
 class CardExchangeFragment : OngoingGameBaseFragment() {
 
     private lateinit var viewModel: CardExchangeViewModel
@@ -31,15 +30,18 @@ class CardExchangeFragment : OngoingGameBaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(CardExchangeViewModel::class.java)
 
-        viewModel.commands().observe(viewLifecycleOwner, { command ->
-            Timber.d("Command: $command")
-            when (command) {
-                CardExchangeCommand.Close -> {
-                    val supportFragmentManager = requireActivity().supportFragmentManager
-                    supportFragmentManager.popBackStack()
+        viewModel.commands().observe(
+            viewLifecycleOwner,
+            { command ->
+                Timber.d("Command: $command")
+                when (command) {
+                    CardExchangeCommand.Close -> {
+                        val supportFragmentManager = requireActivity().supportFragmentManager
+                        supportFragmentManager.popBackStack()
+                    }
                 }
             }
-        })
+        )
 
         viewModel.submitControl().observe(viewLifecycleOwner, { model -> exchangeBtn.isEnabled = model.enabled })
         exchangeBtn.setOnClickListener { viewModel.confirmChoice() }
@@ -61,10 +63,13 @@ class CardExchangeFragment : OngoingGameBaseFragment() {
         cardsInHandRw.layoutManager = GridLayoutManager(context, 4)
         cardsInHandRw.adapter = cardsInHandAdapter
 
-        viewModel.cardsInHand().observe(viewLifecycleOwner, { cardItems ->
-            Timber.d("cardsInHandAdapter updated: $cardItems")
-            cardsInHandAdapter.setData(cardItems)
-        })
+        viewModel.cardsInHand().observe(
+            viewLifecycleOwner,
+            { cardItems ->
+                Timber.d("cardsInHandAdapter updated: $cardItems")
+                cardsInHandAdapter.setData(cardItems)
+            }
+        )
     }
 
     private class CardsInHandClickedListener(private val viewModel: CardExchangeViewModel) : CardAdapter.CardClickedListener {

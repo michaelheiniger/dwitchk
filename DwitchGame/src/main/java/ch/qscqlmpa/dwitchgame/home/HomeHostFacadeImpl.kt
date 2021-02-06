@@ -23,7 +23,7 @@ internal class HomeHostFacadeImpl @Inject constructor(
 
     override fun resumeGame(gameId: Long, gamePort: Int): Completable {
         return resumeGameUsecase.hostResumedGame(gameId, gamePort)
-                    .subscribeOn(schedulerFactory.io())
+            .subscribeOn(schedulerFactory.io())
     }
 
     override fun resumableGames(): Observable<List<ResumableGameInfo>> {

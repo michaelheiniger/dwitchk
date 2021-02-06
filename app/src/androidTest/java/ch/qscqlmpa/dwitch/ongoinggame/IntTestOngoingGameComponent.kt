@@ -1,8 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame
 
-
-//@OngoingGameUiScope
-//@Subcomponent(modules = [
+// @OngoingGameUiScope
+// @Subcomponent(modules = [
 //    OngoingGameModule::class,
 //    InGameStoreModule::class,
 //    WaitingRoomModule::class,
@@ -15,8 +14,8 @@ package ch.qscqlmpa.dwitch.ongoinggame
 //    GuestCommunicationModule::class,
 //    HostCommunicationModule::class,
 //    IntTestWebsocketModule::class
-//])
-//interface IntTestOngoingGameComponent {
+// ])
+// interface IntTestOngoingGameComponent {
 //
 //    val serializerFactory: SerializerFactory
 //
@@ -37,4 +36,4 @@ package ch.qscqlmpa.dwitch.ongoinggame
 //    val guestCommunicator: GuestCommunicator
 //
 //    val playerDashboardFacade: PlayerDashboardFacade
-//}
+// }

@@ -1,16 +1,11 @@
 package ch.qscqlmpa.dwitch.uitests
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.replaceText
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.uitests.base.BaseUiTest
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import org.junit.Test
-
 
 class NewGameAsGuestTest : BaseUiTest() {
 

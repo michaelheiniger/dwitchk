@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.di.modules
 
-
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchcommunication.CommServer
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore

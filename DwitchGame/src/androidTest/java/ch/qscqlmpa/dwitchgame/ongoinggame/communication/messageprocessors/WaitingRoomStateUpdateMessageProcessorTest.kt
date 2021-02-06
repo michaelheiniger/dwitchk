@@ -37,7 +37,8 @@ class WaitingRoomStateUpdateMessageProcessorTest : BaseInstrumentedTest() {
                     PlayerDto(PlayerDwitchId(1), hostName, PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
                     PlayerDto(PlayerDwitchId(2), localPlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
                 )
-            ), ConnectionId(0)
+            ),
+            ConnectionId(0)
         ).test().assertComplete()
 
         val playersAfter = inGameStore.observePlayersInWaitingRoom().blockingFirst()
@@ -54,7 +55,8 @@ class WaitingRoomStateUpdateMessageProcessorTest : BaseInstrumentedTest() {
                     PlayerDto(PlayerDwitchId(1), hostName, PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
                     PlayerDto(PlayerDwitchId(2), localPlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
                 )
-            ), ConnectionId(0)
+            ),
+            ConnectionId(0)
         ).test().assertComplete()
 
         processor.process(
@@ -65,7 +67,8 @@ class WaitingRoomStateUpdateMessageProcessorTest : BaseInstrumentedTest() {
                     PlayerDto(PlayerDwitchId(3), guest2PlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
                     PlayerDto(PlayerDwitchId(4), guest3PlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true),
                 )
-            ), ConnectionId(0)
+            ),
+            ConnectionId(0)
         ).test().assertComplete()
 
         val playersAfter = inGameStore.observePlayersInWaitingRoom().blockingFirst()
@@ -86,7 +89,8 @@ class WaitingRoomStateUpdateMessageProcessorTest : BaseInstrumentedTest() {
                     PlayerDto(PlayerDwitchId(3), guest2PlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
                     PlayerDto(PlayerDwitchId(4), guest3PlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true),
                 )
-            ), ConnectionId(0)
+            ),
+            ConnectionId(0)
         ).test().assertComplete()
 
         val playersBefore = inGameStore.observePlayersInWaitingRoom().blockingFirst()
@@ -98,7 +102,8 @@ class WaitingRoomStateUpdateMessageProcessorTest : BaseInstrumentedTest() {
                     PlayerDto(PlayerDwitchId(1), hostName, PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
                     PlayerDto(PlayerDwitchId(2), localPlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false)
                 )
-            ), ConnectionId(0)
+            ),
+            ConnectionId(0)
         ).test().assertComplete()
 
         val playersAfter = inGameStore.observePlayersInWaitingRoom().blockingFirst()
@@ -117,7 +122,8 @@ class WaitingRoomStateUpdateMessageProcessorTest : BaseInstrumentedTest() {
                     PlayerDto(PlayerDwitchId(3), guest2PlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
                     PlayerDto(PlayerDwitchId(4), guest3PlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true),
                 )
-            ), ConnectionId(0)
+            ),
+            ConnectionId(0)
         ).test().assertComplete()
 
         processor.process(
@@ -128,7 +134,8 @@ class WaitingRoomStateUpdateMessageProcessorTest : BaseInstrumentedTest() {
                     PlayerDto(PlayerDwitchId(3), guest2PlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true),
                     PlayerDto(PlayerDwitchId(4), guest3PlayerName, PlayerRole.GUEST, PlayerConnectionState.DISCONNECTED, true),
                 )
-            ), ConnectionId(0)
+            ),
+            ConnectionId(0)
         ).test().assertComplete()
 
         val players = inGameStore.observePlayersInWaitingRoom().blockingFirst()

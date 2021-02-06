@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.uitests
 
-
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.uitests.base.BaseUiTest
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil

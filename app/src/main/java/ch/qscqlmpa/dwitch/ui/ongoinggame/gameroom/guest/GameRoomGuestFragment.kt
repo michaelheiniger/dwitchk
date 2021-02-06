@@ -38,12 +38,15 @@ class GameRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment.Di
     }
 
     private fun observeCommands() {
-        viewModel.commands().observe(viewLifecycleOwner, { command ->
-            when (command) {
-                GameRoomGuestCommand.NavigateToHomeScreen -> MainActivity.start(requireActivity())
-                GameRoomGuestCommand.ShowGameOverInfo -> showGameOverDialog()
+        viewModel.commands().observe(
+            viewLifecycleOwner,
+            { command ->
+                when (command) {
+                    GameRoomGuestCommand.NavigateToHomeScreen -> MainActivity.start(requireActivity())
+                    GameRoomGuestCommand.ShowGameOverInfo -> showGameOverDialog()
+                }
             }
-        })
+        )
     }
 
     private fun showGameOverDialog() {

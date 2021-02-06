@@ -9,13 +9,15 @@ import ch.qscqlmpa.dwitchgame.di.modules.TestSchedulerModule
 import dagger.Component
 
 @AppScope
-@Component(modules = [
-    TestSchedulerModule::class,
-    TestGameDiscoveryModule::class,
-    HomeModule::class,
-    IntTestDatabaseModule::class,
-    TestServiceManagerModule::class
-])
+@Component(
+    modules = [
+        TestSchedulerModule::class,
+        TestGameDiscoveryModule::class,
+        HomeModule::class,
+        IntTestDatabaseModule::class,
+        TestServiceManagerModule::class
+    ]
+)
 interface IntTestAppComponent {
 
     @Component.Builder

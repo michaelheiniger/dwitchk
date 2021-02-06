@@ -28,4 +28,3 @@ abstract class HomeBaseActivity : BaseActivity(), HasAndroidInjector {
         return androidInjector
     }
 }
-

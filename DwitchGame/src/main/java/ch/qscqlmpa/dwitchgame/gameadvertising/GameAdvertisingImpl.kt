@@ -9,7 +9,6 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-
 internal class GameAdvertisingImpl @Inject constructor(
     private val serializerFactory: SerializerFactory,
     private val schedulerFactory: SchedulerFactory,

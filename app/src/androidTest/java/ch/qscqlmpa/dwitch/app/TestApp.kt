@@ -35,18 +35,19 @@ class TestApp : App() {
             .create(StoreModule(testStoreComponent.store))
 
         testAppComponent = DaggerTestAppComponent.builder()
-                .applicationModule(ApplicationModule(this))
-                .gameComponent(testGameComponent)
-                .build()
+            .applicationModule(ApplicationModule(this))
+            .gameComponent(testGameComponent)
+            .build()
         return testAppComponent
     }
 
-    override fun startOngoingGame(playerRole: PlayerRole,
-                                  roomType: RoomType,
-                                  gameLocalId: Long,
-                                  localPlayerLocalId: Long,
-                                  hostPort: Int,
-                                  hostIpAddress: String
+    override fun startOngoingGame(
+        playerRole: PlayerRole,
+        roomType: RoomType,
+        gameLocalId: Long,
+        localPlayerLocalId: Long,
+        hostPort: Int,
+        hostIpAddress: String
     ): OngoingGameComponent? {
         Timber.d("startOngoingGame()")
         if (ongoingGameComponent == null) {

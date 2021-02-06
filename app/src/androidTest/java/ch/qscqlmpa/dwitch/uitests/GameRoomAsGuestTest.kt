@@ -86,7 +86,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
         val message = waitForNextMessageSentByLocalGuest()
         assertThat(message).isInstanceOf(Message.GameStateUpdatedMessage::class.java)
 
-        UiUtil.assertControlTextContent(R.id.mainTextTv, Matchers.containsString("${hostName}: Asshole"))
+        UiUtil.assertControlTextContent(R.id.mainTextTv, Matchers.containsString("$hostName: Asshole"))
         UiUtil.assertControlTextContent(R.id.mainTextTv, Matchers.containsString("Boromir: President"))
 
         closeEndOfRoundDialog()

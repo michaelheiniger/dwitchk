@@ -29,10 +29,10 @@ internal class JoinGameMessageProcessorTest : BaseMessageProcessorTest() {
         super.setup()
         connectionStore = ConnectionStoreFactory.createConnectionStore()
         processor = JoinGameMessageProcessor(
-                mockInGameStore,
-                TestUtil.lazyOf(mockHostCommunicator),
-                mockHostMessageFactory,
-                connectionStore
+            mockInGameStore,
+            TestUtil.lazyOf(mockHostCommunicator),
+            mockHostMessageFactory,
+            connectionStore
         )
 
         senderConnectionId = ConnectionId(234)
@@ -79,7 +79,6 @@ internal class JoinGameMessageProcessorTest : BaseMessageProcessorTest() {
         verify { mockInGameStore.gameIsNew() }
         confirmVerified(mockInGameStore)
     }
-
 
     private fun launchTest(): Completable {
         return processor.process(Message.JoinGameMessage(guestPlayer.name), senderConnectionId)

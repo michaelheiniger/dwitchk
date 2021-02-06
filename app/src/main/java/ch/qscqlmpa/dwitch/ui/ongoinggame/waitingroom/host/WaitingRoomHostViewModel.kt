@@ -36,15 +36,16 @@ internal class WaitingRoomHostViewModel @Inject constructor(
     }
 
     fun launchGame() {
-        disposableManager.add(facade.launchGame()
-            .observeOn(schedulerFactory.ui())
-            .subscribe(
-                {
-                    Timber.i("Game launched")
-                    commands.value = WaitingRoomHostCommand.NavigateToGameRoomScreen
-                },
-                { error -> Timber.e(error, "Error while launching game") }
-            )
+        disposableManager.add(
+            facade.launchGame()
+                .observeOn(schedulerFactory.ui())
+                .subscribe(
+                    {
+                        Timber.i("Game launched")
+                        commands.value = WaitingRoomHostCommand.NavigateToGameRoomScreen
+                    },
+                    { error -> Timber.e(error, "Error while launching game") }
+                )
         )
     }
 

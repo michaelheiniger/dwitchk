@@ -5,7 +5,6 @@ import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
 import ch.qscqlmpa.dwitchgame.appevent.GameCreatedInfo
 import ch.qscqlmpa.dwitchgame.appevent.GameJoinedInfo
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
-import ch.qscqlmpa.dwitchstore.InsertGameResult
 import ch.qscqlmpa.dwitchstore.store.Store
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single

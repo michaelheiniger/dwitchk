@@ -210,5 +210,4 @@ internal class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
         processor.process(Message.RejoinGameMessage(otherGameCommonId, guestPlayerDwitchId), senderLocalConnectionId)
             .test().assertComplete()
     }
-
 }

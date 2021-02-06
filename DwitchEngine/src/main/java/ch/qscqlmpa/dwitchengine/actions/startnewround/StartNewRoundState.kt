@@ -25,7 +25,7 @@ internal class StartNewRoundState(private val currentGameState: GameState) : Gam
 
     fun asshole(): PlayerDwitchId {
         return currentGameState.players
-                .map { (_, player) -> player }
-                .find { player -> player.rank == Rank.Asshole }!!.id
+            .map { (_, player) -> player }
+            .find { player -> player.rank == Rank.Asshole }!!.id
     }
 }

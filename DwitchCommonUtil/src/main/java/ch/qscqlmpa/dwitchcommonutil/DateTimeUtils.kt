@@ -3,7 +3,6 @@ package ch.qscqlmpa.dwitchcommonutil
 import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
 
-
 object DateTimeUtils {
 
     private const val TIME_FORMAT = "HH:mm:ss"

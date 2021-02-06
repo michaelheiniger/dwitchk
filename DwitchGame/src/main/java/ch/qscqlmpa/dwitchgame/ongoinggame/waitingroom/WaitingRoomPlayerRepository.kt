@@ -10,9 +10,9 @@ internal class WaitingRoomPlayerRepository @Inject constructor(private val store
 
     fun observePlayers(): Observable<List<PlayerWr>> {
         return store.observePlayersInWaitingRoom()
-                .map { players -> players.map(::PlayerWr)}
-                .onBackpressureLatest()
-                .toObservable()
+            .map { players -> players.map(::PlayerWr) }
+            .onBackpressureLatest()
+            .toObservable()
     }
 
     fun observeLocalPlayer(): Observable<PlayerWr> {

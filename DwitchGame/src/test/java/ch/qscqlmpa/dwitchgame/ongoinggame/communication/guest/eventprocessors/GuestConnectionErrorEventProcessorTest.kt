@@ -1,10 +1,9 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.eventprocessors
 
-import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientCommunicationEvent
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationStateRepository
+import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.eventprocessors.GuestConnectionErrorEventProcessor
+import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationStateRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

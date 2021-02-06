@@ -16,7 +16,8 @@ import kotlinx.serialization.Serializable
             onDelete = ForeignKey.CASCADE,
             deferred = true
         )
-    ], indices = [Index("game_local_id")]
+    ],
+    indices = [Index("game_local_id")]
 )
 @Serializable
 data class Player(

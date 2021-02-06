@@ -9,17 +9,17 @@ data class AdvertisedGameResponse(val status: Status, val advertisedGames: List<
 
         fun success(games: List<AdvertisedGame>): AdvertisedGameResponse {
             return AdvertisedGameResponse(
-                    Status.SUCCESS,
-                    games,
-                    null
+                Status.SUCCESS,
+                games,
+                null
             )
         }
 
         fun error(error: Throwable): AdvertisedGameResponse {
             return AdvertisedGameResponse(
-                    Status.ERROR,
-                    emptyList(),
-                    error
+                Status.ERROR,
+                emptyList(),
+                error
             )
         }
     }

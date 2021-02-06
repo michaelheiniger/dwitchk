@@ -125,7 +125,7 @@ internal interface PlayerDao {
     )
     fun getPlayerDwitchId(playerLocalId: Long): PlayerDwitchId
 
-    //For test purpose only
+    // For test purpose only
     @Query(
         """
         SELECT Player.* FROM Player
@@ -133,7 +133,6 @@ internal interface PlayerDao {
         """
     )
     fun getPlayer(name: String): Player?
-
 
     /**
      * @return the list of players that are in the currently active game

@@ -9,7 +9,6 @@ import org.java_websocket.server.WebSocketServer
 import timber.log.Timber
 import java.net.InetSocketAddress
 
-
 internal class ProdWebsocketServer constructor(
     private val listeningAddress: String,
     private val listeningPort: Int

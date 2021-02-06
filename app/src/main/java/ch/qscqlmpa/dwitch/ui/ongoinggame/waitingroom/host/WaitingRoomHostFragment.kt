@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host
 
-
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -55,12 +54,15 @@ class WaitingRoomHostFragment : OngoingGameBaseFragment() {
     }
 
     private fun setupCommands() {
-        viewModel.commands().observe(viewLifecycleOwner, { command ->
-            when (command) {
-                WaitingRoomHostCommand.NavigateToHomeScreen -> MainActivity.start(requireActivity())
-                WaitingRoomHostCommand.NavigateToGameRoomScreen -> GameRoomActivity.startForHost(requireActivity())
+        viewModel.commands().observe(
+            viewLifecycleOwner,
+            { command ->
+                when (command) {
+                    WaitingRoomHostCommand.NavigateToHomeScreen -> MainActivity.start(requireActivity())
+                    WaitingRoomHostCommand.NavigateToGameRoomScreen -> GameRoomActivity.startForHost(requireActivity())
+                }
             }
-        })
+        )
     }
 
     companion object {

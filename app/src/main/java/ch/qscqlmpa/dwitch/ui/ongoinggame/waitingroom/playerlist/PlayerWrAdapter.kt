@@ -8,9 +8,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWr
 import ch.qscqlmpa.dwitch.ui.PlayerConnectionStateTextMapper
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.playerlist.PlayerWrAdapter.PlayerViewHolder
+import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWr
 import java.util.*
 
 internal class PlayerWrAdapter : RecyclerView.Adapter<PlayerViewHolder>() {
@@ -53,7 +53,8 @@ internal class PlayerWrAdapter : RecyclerView.Adapter<PlayerViewHolder>() {
             playerReadyCkb.isChecked = player.ready
             setReadyCheckboxText()
             connectionStateTv.text = view.context.getString(
-                PlayerConnectionStateTextMapper.resource(player.connectionState))
+                PlayerConnectionStateTextMapper.resource(player.connectionState)
+            )
         }
 
         private fun setReadyCheckboxText() {

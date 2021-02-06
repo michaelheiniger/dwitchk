@@ -20,11 +20,13 @@ object ResourceMapper {
     }
 
     fun getResource(state: HostCommunicationState): Resource {
-        return Resource(when (state) {
-            HostCommunicationState.Open -> R.string.listening_for_guests
-            HostCommunicationState.Closed -> R.string.not_listening_for_guests
-            HostCommunicationState.Error -> R.string.host_connection_error
-        })
+        return Resource(
+            when (state) {
+                HostCommunicationState.Open -> R.string.listening_for_guests
+                HostCommunicationState.Closed -> R.string.not_listening_for_guests
+                HostCommunicationState.Error -> R.string.host_connection_error
+            }
+        )
     }
 
     fun getResourceShort(rank: Rank): Int {
@@ -48,7 +50,7 @@ object ResourceMapper {
     }
 
     fun getResource(card: Card): Int {
-        return when(card) {
+        return when (card) {
             Card.Clubs2 -> R.drawable.clubs_2
             Card.Clubs3 -> R.drawable.clubs_3
             Card.Clubs4 -> R.drawable.clubs_4

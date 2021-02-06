@@ -17,7 +17,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.concurrent.TimeUnit
 
-class GameAdvertisingTest: BaseUnitTest() {
+class GameAdvertisingTest : BaseUnitTest() {
 
     private val mockCommunicationStateRepository = mockk<HostCommunicationStateRepository>(relaxed = true)
     private val mockNetwork = mockk<Network>(relaxed = true)
@@ -42,7 +42,7 @@ class GameAdvertisingTest: BaseUnitTest() {
 
         hostFacade.advertiseGame(gameAdvertisingInfo).test()
 
-        timeScheduler.advanceTimeTo(0, TimeUnit.SECONDS);
+        timeScheduler.advanceTimeTo(0, TimeUnit.SECONDS)
 
         verify { mockNetwork.sendAdvertisement(any(), "{\"isNew\":true,\"gameCommonId\":{\"value\":1},\"gameName\":\"gameName\",\"gamePort\":8889}") }
     }

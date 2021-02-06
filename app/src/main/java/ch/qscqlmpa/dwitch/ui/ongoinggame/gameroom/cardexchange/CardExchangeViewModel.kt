@@ -127,7 +127,6 @@ class CardExchangeViewModel @Inject constructor(
                         cardsInHand = cardExchangeInfo.cardsInHand.toMutableList()
                         selectableCards = cardExchangeInfo.cardsInHand.filter(::isCardSelectable).toSet()
                         updateCardsInHandItems()
-
                     },
                     { error -> Timber.e(error, "Error while initializing card exchange.") }
                 )

@@ -11,11 +11,11 @@ internal class PlayingOrderRankComparator : Comparator<Player> {
 
     companion object {
         private val playingOrder = mapOf(
-                Rank.President to 5,
-                Rank.VicePresident to 4,
-                Rank.Neutral to 3,
-                Rank.ViceAsshole to 2,
-                Rank.Asshole to 1
+            Rank.President to 5,
+            Rank.VicePresident to 4,
+            Rank.Neutral to 3,
+            Rank.ViceAsshole to 2,
+            Rank.Asshole to 1
         )
     }
 }

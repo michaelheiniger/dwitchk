@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.host_new_game_activity.*
 import rx.android.BuildConfig
 import rx.subscriptions.CompositeSubscription
 
-
 class HostNewGameActivity : HomeBaseActivity() {
 
     override val layoutResource: Int = R.layout.host_new_game_activity
@@ -62,13 +61,16 @@ class HostNewGameActivity : HomeBaseActivity() {
     }
 
     private fun observeCommands() {
-        viewModel.observeCommands().observe(this, { event ->
-            when (event) {
-                HostNewGameCommand.NavigateToWaitingRoom -> WaitingRoomActivity.startActivityForHost(this)
-                else -> {
-                } // Nothing to do
+        viewModel.observeCommands().observe(
+            this,
+            { event ->
+                when (event) {
+                    HostNewGameCommand.NavigateToWaitingRoom -> WaitingRoomActivity.startActivityForHost(this)
+                    else -> {
+                    } // Nothing to do
+                }
             }
-        })
+        )
     }
 
     private fun observeHostGameControlState() {

@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest
 
-
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProviders

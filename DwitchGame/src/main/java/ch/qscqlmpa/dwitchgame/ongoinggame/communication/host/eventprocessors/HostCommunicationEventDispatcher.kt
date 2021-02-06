@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.eventprocessors
 
-
 import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
 import io.reactivex.rxjava3.core.Completable
@@ -10,8 +9,8 @@ import javax.inject.Provider
 
 @OngoingGameScope
 internal class HostCommunicationEventDispatcher @Inject constructor(
-        private val eventProcessors: @JvmSuppressWildcards Map<Class<out ServerCommunicationEvent>,
-                Provider<HostCommunicationEventProcessor>>
+    private val eventProcessors: @JvmSuppressWildcards Map<Class<out ServerCommunicationEvent>,
+        Provider<HostCommunicationEventProcessor>>
 ) {
 
     fun dispatch(event: ServerCommunicationEvent): Completable {

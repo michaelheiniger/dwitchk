@@ -22,11 +22,12 @@ internal interface WebsocketServer {
 }
 
 internal sealed class ServerCommEvent {
-    internal data class ClientConnected(val conn: WebSocket?, val handshake: ClientHandshake?): ServerCommEvent()
-    internal data class ClientDisconnected(val conn: WebSocket?, val code: Int, val reason: String?, val remote: Boolean): ServerCommEvent()
-    internal data class Started(val address: Address): ServerCommEvent()
-    internal data class Error(val conn: WebSocket?, val ex: Exception?): ServerCommEvent()
+    internal data class ClientConnected(val conn: WebSocket?, val handshake: ClientHandshake?) : ServerCommEvent()
+    internal data class ClientDisconnected(val conn: WebSocket?, val code: Int, val reason: String?, val remote: Boolean) :
+        ServerCommEvent()
+
+    internal data class Started(val address: Address) : ServerCommEvent()
+    internal data class Error(val conn: WebSocket?, val ex: Exception?) : ServerCommEvent()
 }
 
 internal data class ServerMessage(val conn: WebSocket?, val message: String?)
-

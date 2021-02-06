@@ -14,7 +14,6 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import kotlinx.android.synthetic.main.player_dashboard_fragment.*
 import timber.log.Timber
 
-
 class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClickedListener {
 
     private lateinit var viewModel: PlayerDashboardViewModel
@@ -52,32 +51,38 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
     }
 
     private fun observeAndUpdateDashboard() {
-        viewModel.playerDashboard().observe(viewLifecycleOwner, { dashboard ->
-            Timber.d("Dashboard update event: $dashboard")
+        viewModel.playerDashboard().observe(
+            viewLifecycleOwner,
+            { dashboard ->
+                Timber.d("Dashboard update event: $dashboard")
 
-            playersInfoTv.text = dashboard.playersInfo
-            gameInfoTv.text = dashboard.gameInfo
-            dwitchEventTv.text = dashboard.dwitchEvent
+                playersInfoTv.text = dashboard.playersInfo
+                gameInfoTv.text = dashboard.gameInfo
+                dwitchEventTv.text = dashboard.dwitchEvent
 
-            startNewRoundBtn.isEnabled = dashboard.canStartNewRound
-            pickBtn.isEnabled = dashboard.canPickACard
-            passBtn.isEnabled = dashboard.canPass
-            canPlay = dashboard.canPlay
+                startNewRoundBtn.isEnabled = dashboard.canStartNewRound
+                pickBtn.isEnabled = dashboard.canPickACard
+                passBtn.isEnabled = dashboard.canPass
+                canPlay = dashboard.canPlay
 
-            cardsInHandAdapter.setData(dashboard.cardsInHands)
+                cardsInHandAdapter.setData(dashboard.cardsInHands)
 
-            setImageView(lastCardPlayedIv, dashboard.lastCardPlayed)
-        })
+                setImageView(lastCardPlayedIv, dashboard.lastCardPlayed)
+            }
+        )
     }
 
     private fun observeCommands() {
-        viewModel.commands().observe(viewLifecycleOwner, { command ->
-            Timber.d("Command: $command")
-            when (command) {
-                is PlayerDashboardCommand.OpenCardExchange -> openCardExchange()
-                is PlayerDashboardCommand.OpenEndOfRound -> showEndOfRoundDialog(command.playersInfo)
+        viewModel.commands().observe(
+            viewLifecycleOwner,
+            { command ->
+                Timber.d("Command: $command")
+                when (command) {
+                    is PlayerDashboardCommand.OpenCardExchange -> openCardExchange()
+                    is PlayerDashboardCommand.OpenEndOfRound -> showEndOfRoundDialog(command.playersInfo)
+                }
             }
-        })
+        )
     }
 
     private fun openCardExchange() {

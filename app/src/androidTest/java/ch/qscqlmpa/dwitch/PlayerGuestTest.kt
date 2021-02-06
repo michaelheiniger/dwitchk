@@ -8,4 +8,3 @@ sealed class PlayerGuestTest(val name: String, val id: PlayerDwitchId) {
     object Guest2 : PlayerGuestTest("Celeborn", PlayerDwitchId(12))
     object Guest3 : PlayerGuestTest("Denethor", PlayerDwitchId(13))
 }
-

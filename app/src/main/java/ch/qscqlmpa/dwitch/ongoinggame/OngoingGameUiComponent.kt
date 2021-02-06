@@ -15,11 +15,13 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host.WaitingRoomHostFragmen
 import dagger.Subcomponent
 
 @OngoingGameUiScope
-@Subcomponent(modules = [
-    OnGoingGameUiModule::class,
-    OngoingGameScreenBindingModule::class,
-    OngoingGameViewModelBindingModule::class,
-])
+@Subcomponent(
+    modules = [
+        OnGoingGameUiModule::class,
+        OngoingGameScreenBindingModule::class,
+        OngoingGameViewModelBindingModule::class,
+    ]
+)
 interface OngoingGameUiComponent {
 
     fun inject(activity: WaitingRoomActivity)

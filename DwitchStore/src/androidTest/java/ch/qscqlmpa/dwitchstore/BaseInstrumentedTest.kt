@@ -16,9 +16,7 @@ import ch.qscqlmpa.dwitchstore.util.SerializerFactory
 import io.reactivex.rxjava3.core.Completable
 import kotlinx.serialization.json.Json
 import org.junit.runner.RunWith
-
 import java.util.concurrent.TimeUnit
-
 
 @RunWith(AndroidJUnit4::class)
 internal abstract class BaseInstrumentedTest {
@@ -43,8 +41,8 @@ internal abstract class BaseInstrumentedTest {
     open fun setup() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, AppRoomDatabase::class.java)
-                .fallbackToDestructiveMigration()
-                .build()
+            .fallbackToDestructiveMigration()
+            .build()
 
         gameDao = db.gameDao()
         playerDao = db.playerDao()
@@ -61,7 +59,7 @@ internal abstract class BaseInstrumentedTest {
 
     protected fun dudeWaitAMinute(seconds: Long = 1L) {
         Completable.fromAction { println("Waiting for $seconds seconds...") }
-                .delay(seconds, TimeUnit.SECONDS)
-                .blockingSubscribe()
+            .delay(seconds, TimeUnit.SECONDS)
+            .blockingSubscribe()
     }
 }

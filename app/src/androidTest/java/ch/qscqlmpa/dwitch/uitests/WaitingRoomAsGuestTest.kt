@@ -12,7 +12,6 @@ import ch.qscqlmpa.dwitch.uitests.utils.WaitingRoomUtil.assertPlayerInWr
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import org.junit.Test
 
-
 class WaitingRoomAsGuestTest : BaseGuestTest() {
 
     @Test

@@ -30,7 +30,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
     override fun setup() {
         super.setup()
         viewModel = JoinNewGameViewModel(mockGuestFacade, DisposableManager(), TestSchedulerFactory())
-        every { mockGuestFacade.joinGame(any(), any())} returns Completable.complete()
+        every { mockGuestFacade.joinGame(any(), any()) } returns Completable.complete()
     }
 
     @Test

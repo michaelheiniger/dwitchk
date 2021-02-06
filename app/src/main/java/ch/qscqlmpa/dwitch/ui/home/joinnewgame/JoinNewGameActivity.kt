@@ -14,11 +14,9 @@ import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import com.jakewharton.rxbinding.widget.RxTextView
 import kotlinx.android.synthetic.main.join_new_game_activity.*
-import kotlinx.android.synthetic.main.join_new_game_activity.playerNameEdt
 import rx.android.BuildConfig
 import rx.subscriptions.CompositeSubscription
 import java.util.*
-
 
 class JoinNewGameActivity : HomeBaseActivity() {
 
@@ -69,13 +67,16 @@ class JoinNewGameActivity : HomeBaseActivity() {
     }
 
     private fun observeCommands() {
-        viewModel.observeCommands().observe(this, { event ->
-            when (event) {
-                JoinNewGameCommand.NavigateToWaitingRoom -> WaitingRoomActivity.startActivityForGuest(this)
-                else -> {
-                } // Nothing to do
+        viewModel.observeCommands().observe(
+            this,
+            { event ->
+                when (event) {
+                    JoinNewGameCommand.NavigateToWaitingRoom -> WaitingRoomActivity.startActivityForGuest(this)
+                    else -> {
+                    } // Nothing to do
+                }
             }
-        })
+        )
     }
 
     private fun observeJoinGameControlState() {

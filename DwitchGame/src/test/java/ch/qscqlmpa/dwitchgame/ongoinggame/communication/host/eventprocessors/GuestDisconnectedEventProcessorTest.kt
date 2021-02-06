@@ -34,10 +34,10 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
         super.setup()
         connectionStore = ConnectionStoreFactory.createConnectionStore()
         processor = GuestDisconnectedEventProcessor(
-                mockInGameStore,
-                connectionStore,
-                mockHostMessageFactory,
-                LazyImpl(mockCommunicator)
+            mockInGameStore,
+            connectionStore,
+            mockHostMessageFactory,
+            LazyImpl(mockCommunicator)
         )
     }
 

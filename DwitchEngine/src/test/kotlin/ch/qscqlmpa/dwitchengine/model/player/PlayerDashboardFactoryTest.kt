@@ -7,7 +7,6 @@ internal class PlayerDashboardFactoryTest {
 
     @BeforeEach
     fun setup() {
-
     }
 
     @Test

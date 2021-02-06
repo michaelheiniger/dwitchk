@@ -69,7 +69,6 @@ internal class LaunchGameUsecaseTest : BaseUnitTest() {
         verify { mockChangeCurrentRoomService.moveToGameRoom() }
     }
 
-
     private fun launchTest() {
         launchGameUsecase.launchGame().test().assertComplete()
     }

@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard
 
-
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.view.LayoutInflater

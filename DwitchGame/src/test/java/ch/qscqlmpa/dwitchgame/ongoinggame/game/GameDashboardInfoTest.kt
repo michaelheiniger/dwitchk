@@ -13,7 +13,7 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class GameDashboardInfoTest: BaseUnitTest() {
+internal class GameDashboardInfoTest : BaseUnitTest() {
 
     @Test
     fun `Set canStartNewRound to false for local player when it is a guest`() {

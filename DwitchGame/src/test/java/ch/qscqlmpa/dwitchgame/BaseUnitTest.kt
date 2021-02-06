@@ -19,7 +19,6 @@ abstract class BaseUnitTest {
     protected val serializerFactory = SerializerFactory(Json)
 
     open fun setup() {
-
     }
 
     open fun tearDown() {

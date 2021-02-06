@@ -1,9 +1,9 @@
 package ch.qscqlmpa.dwitchcommunication.websocket.client.test
 
-//class IntTestWebsocketClientFactory constructor(
+// class IntTestWebsocketClientFactory constructor(
 //    private val hostIpAddress: String,
 //    private val hostPort: Int,
-//) : WebsocketClientFactory {
+// ) : WebsocketClientFactory {
 //
 //    private var instance: WebsocketClient? = null
 //
@@ -13,4 +13,4 @@ package ch.qscqlmpa.dwitchcommunication.websocket.client.test
 //        }
 //        return instance!!
 //    }
-//}
+// }

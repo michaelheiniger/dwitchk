@@ -40,7 +40,7 @@ internal class PlayCard(
                 gameUpdater.setPlayersWhoPassedTheirTurnedToWaiting()
             }
 
-             dwitchNextWaitingPlayerIfNeeded()
+            dwitchNextWaitingPlayerIfNeeded()
 
             if (playCardState.currentPlayerHasNoMoreCards()) {
                 gameUpdater.playerIsDone(localPlayerId, playCardState.cardPlayedIsJoker())

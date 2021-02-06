@@ -41,8 +41,8 @@ internal abstract class GameUpdaterBase(currentGameState: GameState) {
 
     fun setPlayersWhoPassedTheirTurnedToWaiting() {
         gameStateMutable.allPlayers()
-                .filter { player -> player.state == PlayerStatus.TurnPassed }
-                .forEach { player -> player.state = PlayerStatus.Waiting }
+            .filter { player -> player.state == PlayerStatus.TurnPassed }
+            .forEach { player -> player.state = PlayerStatus.Waiting }
     }
 
     fun updateCurrentPlayer(playerId: PlayerDwitchId) {

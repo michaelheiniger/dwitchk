@@ -16,7 +16,6 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
-
 @InGameStoreScope
 class SerializerFactory @Inject constructor(private val json: Json) {
 
@@ -112,4 +111,3 @@ class SerializerFactory @Inject constructor(private val json: Json) {
         return json.decodeFromString(CardExchange.serializer(), cardExchange)
     }
 }
-

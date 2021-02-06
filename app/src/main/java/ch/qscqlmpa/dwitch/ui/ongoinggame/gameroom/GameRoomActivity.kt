@@ -35,9 +35,9 @@ class GameRoomActivity : OngoingGameBaseActivity() {
         }
 
         supportFragmentManager.beginTransaction()
-                .add(R.id.host_or_guest_fragment_container, controlFragment)
-                .add(R.id.game_dashboard_fragment_container, PlayerDashboardFragment.create())
-                .commit()
+            .add(R.id.host_or_guest_fragment_container, controlFragment)
+            .add(R.id.game_dashboard_fragment_container, PlayerDashboardFragment.create())
+            .commit()
     }
 
     companion object {

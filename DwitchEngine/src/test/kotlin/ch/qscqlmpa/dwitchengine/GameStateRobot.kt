@@ -62,7 +62,7 @@ class GameStateRobot(private val gameState: GameState) {
     }
 
     fun assertPlayerHasNotFinishedWithJoker(playerId: PlayerDwitchId): GameStateRobot {
-        assertThat(gameState.playersWhoBrokeASpecialRule).noneMatch { p -> p == SpecialRuleBreaker.FinishWithJoker(playerId)}
+        assertThat(gameState.playersWhoBrokeASpecialRule).noneMatch { p -> p == SpecialRuleBreaker.FinishWithJoker(playerId) }
         return this
     }
 
@@ -72,7 +72,7 @@ class GameStateRobot(private val gameState: GameState) {
     }
 
     fun assertPlayerHasNotBrokenFirstJackPlayedRule(playerId: PlayerDwitchId): GameStateRobot {
-        assertThat(gameState.playersWhoBrokeASpecialRule).noneMatch { p -> p == SpecialRuleBreaker.PlayedOnFirstJack(playerId)}
+        assertThat(gameState.playersWhoBrokeASpecialRule).noneMatch { p -> p == SpecialRuleBreaker.PlayedOnFirstJack(playerId) }
         return this
     }
 
