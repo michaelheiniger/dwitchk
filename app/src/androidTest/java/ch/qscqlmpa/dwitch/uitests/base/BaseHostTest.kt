@@ -25,7 +25,7 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
         UiUtil.setControlText(R.id.playerNameEdt, hostName)
         UiUtil.setControlText(R.id.gameNameEdt, gameName)
 
-        clickOnButton(R.id.nextBtn)
+        clickOnButton(R.id.hostGameBtn)
 
         dudeWaitAMillisSec()
 

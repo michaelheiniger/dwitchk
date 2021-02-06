@@ -33,10 +33,8 @@
     <string name="neutral_short">N</string>
     <string name="nga_back_btn">Retour à la Taverne</string>
     <string name="nga_game_name_tv">Nom de la partie</string>
-    <string name="nga_next_btn">Allons y, fidèles compagnons de la Comté !</string>
+    <string name="nga_join_game_btn">Allons y, fidèles compagnons de la Comté !</string>
     <string name="nga_player_name_tv">Nom du joueur</string>
-    <string name="nge_game_name_empty">Tu dois mettre un nom de partie, mec !</string>
-    <string name="nge_player_name_empty">Allez, donne moi ton nom, mec !</string>
     <string name="not_listening_for_guests">Pas prêt à accueillir d\'autres joueurs</string>
     <string name="not_ready">Pas prêt</string>
     <string name="notification_title">Dwitch</string>
@@ -66,4 +64,5 @@
     <string name="wra_player_list">Joueurs</string>
     <string name="wrhf_cancel_game_tv">Annuler partie</string>
     <string name="wrhf_launch_game_tv">Go go !</string>
+    <string name="nga_host_game_btn">Allons y, fidèles compagnons de la Comté !</string>
 </resources>

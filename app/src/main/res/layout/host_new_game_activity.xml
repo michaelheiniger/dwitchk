@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.newgame.NewGameActivity">
+    tools:context=".ui.home.hostnewgame.HostNewGameActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -50,12 +50,13 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/nextBtn"
+            android:id="@+id/hostGameBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="onNextClicked"
-            android:text="@string/nga_next_btn"
+            android:onClick="onHostNewGameClick"
+            android:text="@string/nga_join_game_btn"
             android:layout_marginTop="16dp"
+            android:enabled="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/gameNameTil" />
@@ -64,12 +65,12 @@
             android:id="@+id/backBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="onBackClicked"
+            android:onClick="onBackClick"
             android:text="@string/nga_back_btn"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nextBtn" />
+            app:layout_constraintTop_toBottomOf="@+id/hostGameBtn" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

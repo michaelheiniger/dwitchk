@@ -20,31 +20,19 @@ class NewGameAsGuestTest : BaseUiTest() {
     private val packet2 = Packet(message2, "192.168.1.2", 7657)
 
     @Test
-    fun joinGame() {
+    fun inputValidation() {
         launch()
 
         networkAdapter.setPacket(packet1)
         networkAdapter.setPacket(packet2)
 
         UiUtil.clickOnRecyclerViewElement(R.id.gameListRw, R.id.gameNameTv, 1)
+
+        UiUtil.setControlText(R.id.playerNameEdt, "")
+        UiUtil.assertControlEnabled(R.id.joinGameBtn, enabled = false)
 
         UiUtil.setControlText(R.id.playerNameEdt, "Bernard Morin")
-        UiUtil.assertControlTextContent(R.id.playerNameEdt, "Bernard Morin")
-    }
-
-    @Test
-    fun joinGame_validationFailed() {
-        launch()
-
-        networkAdapter.setPacket(packet1)
-        networkAdapter.setPacket(packet2)
-
-        UiUtil.clickOnRecyclerViewElement(R.id.gameListRw, R.id.gameNameTv, 1)
-
-        onView(withId(R.id.playerNameEdt)).perform(replaceText(""));
-
-        onView(withId(R.id.nextBtn)).perform(click())
-        UiUtil.assertControlErrorTextContent(R.id.playerNameEdt, R.string.nge_player_name_empty)
+        UiUtil.assertControlEnabled(R.id.joinGameBtn, enabled = true)
     }
 
     @Test

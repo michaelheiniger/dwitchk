@@ -19,7 +19,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.home.newgame.NewGameActivity" />
+        <activity android:name=".ui.home.hostnewgame.HostNewGameActivity" />
+        <activity android:name=".ui.home.joinnewgame.JoinNewGameActivity" />
         <activity android:name=".ui.ongoinggame.waitingroom.WaitingRoomActivity" />
         <activity android:name=".ui.ongoinggame.gameroom.GameRoomActivity" />
 

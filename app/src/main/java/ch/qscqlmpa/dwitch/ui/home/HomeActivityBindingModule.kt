@@ -1,7 +1,8 @@
 package ch.qscqlmpa.dwitch.ui.home
 
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
-import ch.qscqlmpa.dwitch.ui.home.newgame.NewGameActivity
+import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameActivity
+import ch.qscqlmpa.dwitch.ui.home.joinnewgame.JoinNewGameActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -12,6 +13,9 @@ abstract class HomeActivityBindingModule {
     abstract fun contributeMainActivity(): MainActivity
 
     @ContributesAndroidInjector(modules = [])
-    abstract fun contributeNewGameActivity(): NewGameActivity
+    abstract fun contributeHostNewGameActivity(): HostNewGameActivity
+
+    @ContributesAndroidInjector(modules = [])
+    abstract fun contributeJoinNewGameActivity(): JoinNewGameActivity
 
 }

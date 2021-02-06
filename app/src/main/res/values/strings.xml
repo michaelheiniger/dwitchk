@@ -45,10 +45,9 @@
     <string name="neutral_short">N</string>
     <string name="nga_back_btn">Back to the tavern</string>
     <string name="nga_game_name_tv">Game name</string>
-    <string name="nga_next_btn">Let\'s go !</string>
+    <string name="nga_join_game_btn">Let\'s go !</string>
+    <string name="nga_host_game_btn">Let\'s go !</string>
     <string name="nga_player_name_tv">Player name</string>
-    <string name="nge_game_name_empty">You got no game, dude !</string>
-    <string name="nge_player_name_empty">Just give me your name, bro !</string>
     <string name="not_listening_for_guests">Bros can\'t join !</string>
     <string name="not_ready">Wait a sec</string>
     <string name="notification_title">Dwitch</string>

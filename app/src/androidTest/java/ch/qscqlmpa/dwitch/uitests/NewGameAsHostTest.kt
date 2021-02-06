@@ -9,39 +9,28 @@ import org.junit.Test
 class NewGameAsHostTest : BaseUiTest() {
 
     @Test
-    fun createGame() {
-        launch()
-
-        val gameName = "Les Bronzés font du ski"
-        val playerName = "Jean-Claude Duss"
-
-        UiUtil.clickOnButton(R.id.createGameBtn)
-
-        UiUtil.setControlText(R.id.playerNameEdt, playerName)
-        UiUtil.setControlText(R.id.gameNameEdt, gameName)
-
-        UiUtil.assertControlTextContent(R.id.playerNameEdt, playerName)
-        UiUtil.assertControlTextContent(R.id.gameNameEdt, gameName)
-        UiUtil.assertControlEnabled(R.id.gameNameEdt, true)
-    }
-
-    @Test
-    fun createGame_inputValidation() {
+    fun inputValidation() {
         launch()
 
         UiUtil.clickOnButton(R.id.createGameBtn)
 
-        // Player name
+        UiUtil.setControlText(R.id.playerNameEdt, "")
+        UiUtil.setControlText(R.id.gameNameEdt, "")
+        UiUtil.assertControlEnabled(R.id.hostGameBtn, enabled = false)
+
+        // Player name is missing
         UiUtil.setControlText(R.id.playerNameEdt, "")
         UiUtil.setControlText(R.id.gameNameEdt, "Les Bronzés font du ski")
-        UiUtil.clickOnButton(R.id.nextBtn)
-        UiUtil.assertControlErrorTextContent(R.id.playerNameEdt, R.string.nge_player_name_empty)
+        UiUtil.assertControlEnabled(R.id.hostGameBtn, enabled = false)
 
-        // Game name
+        // Game name is missing
         UiUtil.setControlText(R.id.playerNameEdt, "Jean-Claude Duss")
         UiUtil.setControlText(R.id.gameNameEdt, "")
-        UiUtil.clickOnButton(R.id.nextBtn)
-        UiUtil.assertControlErrorTextContent(R.id.gameNameEdt, R.string.nge_game_name_empty)
+        UiUtil.assertControlEnabled(R.id.hostGameBtn, enabled = false)
+
+        UiUtil.setControlText(R.id.playerNameEdt, "Jean-Claude Duss")
+        UiUtil.setControlText(R.id.gameNameEdt, "Les Bronzés font du ski")
+        UiUtil.assertControlEnabled(R.id.hostGameBtn, enabled = true)
     }
 
     @Test

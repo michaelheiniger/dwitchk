@@ -23,7 +23,7 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
         UiUtil.clickOnRecyclerViewElement(R.id.gameListRw, R.id.gameNameTv, 0)
 
         UiUtil.setControlText(R.id.playerNameEdt, PlayerGuestTest.LocalGuest.name)
-        UiUtil.clickOnButton(R.id.nextBtn)
+        UiUtil.clickOnButton(R.id.joinGameBtn)
 
         dudeWaitAMillisSec()
 

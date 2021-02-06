@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.common.Status
 import ch.qscqlmpa.dwitch.ui.home.HomeBaseActivity
-import ch.qscqlmpa.dwitch.ui.home.newgame.NewGameActivity
+import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameActivity
+import ch.qscqlmpa.dwitch.ui.home.joinnewgame.JoinNewGameActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchmodel.game.ResumableGameInfo
@@ -28,9 +29,8 @@ class MainActivity : HomeBaseActivity(), AdvertisedGameAdapter.AdvertisedGameCli
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel::class.java)
 
         viewModel.commands().observe(this, { command ->
-            Timber.d("Command: $command")
             when (command) {
-                is MainActivityCommands.NavigateToNewGameActivityAsGuest -> NewGameActivity.joinGame(this, command.game)
+                is MainActivityCommands.NavigateToNewGameActivityAsGuest -> JoinNewGameActivity.joinGame(this, command.game)
                 MainActivityCommands.NavigateToWaitingRoomAsHost -> WaitingRoomActivity.startActivityForHost(this)
                 MainActivityCommands.NavigateToWaitingRoomAsGuest -> WaitingRoomActivity.startActivityForGuest(this)
             }
@@ -74,7 +74,7 @@ class MainActivity : HomeBaseActivity(), AdvertisedGameAdapter.AdvertisedGameCli
     }
 
     fun onCreateGameClicked(@Suppress("UNUSED_PARAMETER") view: View) {
-        NewGameActivity.createGame(this)
+        HostNewGameActivity.hostNewGame(this)
     }
 
     companion object {
