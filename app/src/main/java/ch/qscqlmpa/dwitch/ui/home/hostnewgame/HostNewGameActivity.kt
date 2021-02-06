@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
+import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
 import ch.qscqlmpa.dwitch.ui.home.HomeBaseActivity
@@ -13,7 +14,6 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import com.jakewharton.rxbinding.widget.RxTextView
 import kotlinx.android.synthetic.main.host_new_game_activity.*
-import rx.android.BuildConfig
 import rx.subscriptions.CompositeSubscription
 
 class HostNewGameActivity : HomeBaseActivity() {
