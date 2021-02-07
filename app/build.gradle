@@ -138,7 +138,7 @@ dependencies {
     implementation project(path: ':DwitchStore')
     implementation project(path: ':DwitchCommunication')
     implementation project(path: ':DwitchGame')
-    implementation project(path: ':DwitchCommonUtil')
+    implementation project(path: ':DwitchCommon')
     common()
     ui()
     test()

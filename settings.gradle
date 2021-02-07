@@ -1,6 +1,6 @@
 include ':DwitchCommunication'
 include ':DwitchGame'
-include ':DwitchCommonUtil'
+include ':DwitchCommon'
 include ':DwitchStore'
 include ':DwitchModel'
 include ':DwitchEngine'

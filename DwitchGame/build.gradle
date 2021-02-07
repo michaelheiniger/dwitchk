@@ -86,7 +86,7 @@ dependencies {
     implementation project(path: ':DwitchModel')
     implementation project(path: ':DwitchStore')
     implementation project(path: ':DwitchCommunication')
-    implementation project(path: ':DwitchCommonUtil')
+    implementation project(path: ':DwitchCommon')
 
     // Timber
     implementation "com.jakewharton.timber:timber:$timberVersion"
