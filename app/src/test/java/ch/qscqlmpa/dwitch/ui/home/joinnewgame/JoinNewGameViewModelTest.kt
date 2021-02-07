@@ -2,8 +2,6 @@ package ch.qscqlmpa.dwitch.ui.home.joinnewgame
 
 import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
-import ch.qscqlmpa.dwitchcommonutil.DisposableManager
-import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
@@ -12,6 +10,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.fail
 import org.junit.Assert.assertNull
@@ -29,7 +28,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
     @Before
     override fun setup() {
         super.setup()
-        viewModel = JoinNewGameViewModel(mockGuestFacade, DisposableManager(), TestSchedulerFactory())
+        viewModel = JoinNewGameViewModel(mockGuestFacade, Schedulers.trampoline())
         every { mockGuestFacade.joinGame(any(), any()) } returns Completable.complete()
     }
 

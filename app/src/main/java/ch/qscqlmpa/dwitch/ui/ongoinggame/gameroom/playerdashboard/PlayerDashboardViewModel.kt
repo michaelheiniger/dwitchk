@@ -7,23 +7,21 @@ import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.ResourceMapper
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.utils.TextProvider
-import ch.qscqlmpa.dwitchcommonutil.DisposableManager
-import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardFacade
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardInfo
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Scheduler
 import timber.log.Timber
 import javax.inject.Inject
 
 class PlayerDashboardViewModel @Inject constructor(
     private val facade: GameDashboardFacade,
-    disposableManager: DisposableManager,
-    schedulerFactory: SchedulerFactory,
+    private val uiScheduler: Scheduler,
     private val textProvider: TextProvider
-) : BaseViewModel(disposableManager, schedulerFactory) {
+) : BaseViewModel() {
 
     private val commands = MutableLiveData<PlayerDashboardCommand>()
 
@@ -32,7 +30,7 @@ class PlayerDashboardViewModel @Inject constructor(
             facade.observeDashboardInfo()
                 .map { dashboard -> GameDashboardFactory(dashboard, textProvider).create() }
                 .doOnNext { bla -> }
-                .observeOn(schedulerFactory.ui())
+                .observeOn(uiScheduler)
                 .doOnError { error -> Timber.e(error, "Error while observing player dashboard.") }
                 .toFlowable(BackpressureStrategy.LATEST),
         )
@@ -70,7 +68,7 @@ class PlayerDashboardViewModel @Inject constructor(
         return LiveDataReactiveStreams.fromPublisher(
             facade.observeCardExchangeEvents()
                 .map { PlayerDashboardCommand.OpenCardExchange }
-                .observeOn(schedulerFactory.ui())
+                .observeOn(uiScheduler)
                 .doOnError { error -> Timber.e(error, "Error while observing card exchange.") }
                 .toFlowable(BackpressureStrategy.LATEST)
         )
@@ -82,7 +80,7 @@ class PlayerDashboardViewModel @Inject constructor(
                 .distinctUntilChanged { info -> info.gameInfo.gamePhase }
                 .filter { info -> info.gameInfo.gamePhase == GamePhase.RoundIsOver }
                 .map(::mapEndOfRoundInfo)
-                .observeOn(schedulerFactory.ui())
+                .observeOn(uiScheduler)
                 .doOnError { error -> Timber.e(error, "Error while observing dashboard info.") }
                 .toFlowable(BackpressureStrategy.LATEST)
         )
@@ -102,7 +100,7 @@ class PlayerDashboardViewModel @Inject constructor(
     private fun performOperation(successText: String, failureText: String, op: () -> Completable) {
         disposableManager.add(
             op()
-                .observeOn(schedulerFactory.ui())
+                .observeOn(uiScheduler)
                 .subscribe(
                     { Timber.d(successText) },
                     { error -> Timber.e(error, failureText) }

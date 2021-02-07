@@ -4,18 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
-import ch.qscqlmpa.dwitchcommonutil.DisposableManager
-import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
+import io.reactivex.rxjava3.core.Scheduler
 import timber.log.Timber
 import javax.inject.Inject
 
 class JoinNewGameViewModel @Inject constructor(
     private val guestFacade: HomeGuestFacade,
-    disposableManager: DisposableManager,
-    schedulerFactory: SchedulerFactory
-) : BaseViewModel(disposableManager, schedulerFactory) {
+    private val uiScheduler: Scheduler
+) : BaseViewModel() {
 
     private val joinGameControlState = MutableLiveData(UiControlModel(enabled = false))
     private val command = MutableLiveData<JoinNewGameCommand>()
@@ -39,7 +37,7 @@ class JoinNewGameViewModel @Inject constructor(
         require(playerName.isNotBlank()) { "Player name cannot be blank" }
         disposableManager.add(
             guestFacade.joinGame(advertisedGame, playerName)
-                .observeOn(schedulerFactory.ui())
+                .observeOn(uiScheduler)
                 .subscribe(
                     { command.setValue(JoinNewGameCommand.NavigateToWaitingRoom) },
                     { error -> Timber.e(error, "Error while joining the game") }

@@ -2,9 +2,10 @@ package ch.qscqlmpa.dwitch.app
 
 import android.app.Application
 import android.content.Context
-import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import dagger.Module
 import dagger.Provides
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Scheduler
 
 @Module
 class ApplicationModule(private val application: Application) {
@@ -18,9 +19,9 @@ class ApplicationModule(private val application: Application) {
         return application
     }
 
-    // No scope ! We want each client to get a fresh instance
+    @AppScope
     @Provides
-    fun provideDisposableManager(): DisposableManager {
-        return DisposableManager()
+    fun provideUiScheduler(): Scheduler {
+        return AndroidSchedulers.mainThread()
     }
 }

@@ -6,13 +6,12 @@ import ch.qscqlmpa.dwitch.ui.common.Resource
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitch.ui.model.UiInfoModel
 import ch.qscqlmpa.dwitch.ui.model.Visibility
-import ch.qscqlmpa.dwitchcommonutil.DisposableManager
-import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.GuestFacade
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -30,7 +29,7 @@ class ConnectionGuestViewModelTest : BaseViewModelUnitTest() {
     override fun setup() {
         super.setup()
 
-        viewModel = ConnectionGuestViewModel(mockFacade, DisposableManager(), TestSchedulerFactory())
+        viewModel = ConnectionGuestViewModel(mockFacade, Schedulers.trampoline())
 
         communicationStateSubject = PublishSubject.create()
 

@@ -4,13 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitchcommonutil.DisposableManager
-import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
 import ch.qscqlmpa.dwitchmodel.game.ResumableGameInfo
 import io.reactivex.rxjava3.core.BackpressureStrategy
+import io.reactivex.rxjava3.core.Scheduler
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -18,9 +17,8 @@ class MainActivityViewModel @Inject
 constructor(
     private val homeGuestFacade: HomeGuestFacade,
     private val homeHostFacade: HomeHostFacade,
-    disposableManager: DisposableManager,
-    schedulerFactory: SchedulerFactory
-) : BaseViewModel(disposableManager, schedulerFactory) {
+    private val uiScheduler: Scheduler
+) : BaseViewModel() {
 
     private val commands = MutableLiveData<MainActivityCommands>()
 
@@ -31,7 +29,7 @@ constructor(
     fun observeAdvertisedGames(): LiveData<AdvertisedGameResponse> {
         return LiveDataReactiveStreams.fromPublisher(
             homeGuestFacade.listenForAdvertisedGames()
-                .observeOn(schedulerFactory.ui())
+                .observeOn(uiScheduler)
                 .map { games -> AdvertisedGameResponse.success(games) }
                 .onErrorReturn { error -> AdvertisedGameResponse.error(error) }
                 .doOnError { error -> Timber.e(error, "Error while observing advertised games.") }
@@ -43,7 +41,7 @@ constructor(
     fun observeExistingGames(): LiveData<ExistingGameResponse> {
         return LiveDataReactiveStreams.fromPublisher(
             homeHostFacade.resumableGames()
-                .observeOn(schedulerFactory.ui())
+                .observeOn(uiScheduler)
                 .map { games -> ExistingGameResponse.success(games) }
                 .onErrorReturn { error -> ExistingGameResponse.error(error) }
                 .doOnError { error -> Timber.e(error, "Error while fetching existing games.") }
@@ -57,7 +55,7 @@ constructor(
         } else {
             disposableManager.add(
                 homeGuestFacade.joinResumedGame(game)
-                    .observeOn(schedulerFactory.ui())
+                    .observeOn(uiScheduler)
                     .subscribe(
                         {
                             Timber.i("Game resumed successfully.")
@@ -72,7 +70,7 @@ constructor(
     fun resumeGame(resumableGameInfo: ResumableGameInfo) {
         disposableManager.add(
             homeHostFacade.resumeGame(resumableGameInfo.id, 8889) // TODO: Take from sharedpref ?
-                .observeOn(schedulerFactory.ui())
+                .observeOn(uiScheduler)
                 .subscribe(
                     {
                         Timber.i("Game resumed successfully.")

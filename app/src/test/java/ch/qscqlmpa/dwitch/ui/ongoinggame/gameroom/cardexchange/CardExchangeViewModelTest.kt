@@ -2,8 +2,6 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.cardexchange
 
 import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard.CardItem
-import ch.qscqlmpa.dwitchcommonutil.DisposableManager
-import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.CardExchange
@@ -15,6 +13,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.fail
 import org.junit.Before
@@ -174,7 +173,7 @@ class CardExchangeViewModelTest : BaseViewModelUnitTest() {
 
     private fun launchTest(numCardsToChoose: Int, allowedCardValues: List<CardName>, cardsInHand: List<Card>) {
         mockCardExchangeInfo(numCardsToChoose, allowedCardValues, cardsInHand)
-        viewModel = CardExchangeViewModel(mockFacade, DisposableManager(), TestSchedulerFactory())
+        viewModel = CardExchangeViewModel(mockFacade, Schedulers.trampoline())
     }
 
     private fun mockCardExchangeInfo(numCardsToChoose: Int, allowedCardValues: List<CardName>, cardsInHand: List<Card>) {

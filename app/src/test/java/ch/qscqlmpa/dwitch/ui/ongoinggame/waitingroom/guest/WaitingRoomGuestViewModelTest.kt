@@ -2,8 +2,6 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.guest
 
 import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
-import ch.qscqlmpa.dwitchcommonutil.DisposableManager
-import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomGuestFacade
@@ -13,6 +11,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -32,7 +31,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
     override fun setup() {
         super.setup()
 
-        viewModel = WaitingRoomGuestViewModel(mockFacade, DisposableManager(), TestSchedulerFactory())
+        viewModel = WaitingRoomGuestViewModel(mockFacade, Schedulers.trampoline())
 
         communicationStateSubject = PublishSubject.create()
         localPlayerReadyStateSubject = PublishSubject.create()

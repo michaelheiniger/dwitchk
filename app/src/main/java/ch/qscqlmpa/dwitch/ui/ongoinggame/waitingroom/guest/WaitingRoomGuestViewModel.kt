@@ -6,21 +6,19 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
-import ch.qscqlmpa.dwitchcommonutil.DisposableManager
-import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomGuestFacade
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.Scheduler
 import timber.log.Timber
 import javax.inject.Inject
 
 class WaitingRoomGuestViewModel @Inject constructor(
     private val facade: WaitingRoomGuestFacade,
-    disposableManager: DisposableManager,
-    schedulerFactory: SchedulerFactory
-) : BaseViewModel(disposableManager, schedulerFactory) {
+    private val uiScheduler: Scheduler
+) : BaseViewModel() {
 
     private val commands = MutableLiveData<WaitingRoomGuestCommand>()
 
@@ -43,7 +41,7 @@ class WaitingRoomGuestViewModel @Inject constructor(
     fun updateReadyState(ready: Boolean) {
         disposableManager.add(
             facade.updateReadyState(ready)
-                .observeOn(schedulerFactory.ui())
+                .observeOn(uiScheduler)
                 .subscribe()
         )
     }
@@ -62,7 +60,7 @@ class WaitingRoomGuestViewModel @Inject constructor(
     fun leaveGame() {
         disposableManager.add(
             facade.leaveGame()
-                .observeOn(schedulerFactory.ui())
+                .observeOn(uiScheduler)
                 .subscribe(
                     {
                         Timber.i("Left game successfully")
@@ -75,7 +73,7 @@ class WaitingRoomGuestViewModel @Inject constructor(
 
     private fun currentCommunicationState(): Flowable<GuestCommunicationState> {
         return facade.observeCommunicationState()
-            .observeOn(schedulerFactory.ui())
+            .observeOn(uiScheduler)
             .doOnError { error -> Timber.e(error, "Error while observing communication state.") }
             .toFlowable(BackpressureStrategy.LATEST)
     }
@@ -83,7 +81,7 @@ class WaitingRoomGuestViewModel @Inject constructor(
     private fun gameEventLiveData(): LiveData<WaitingRoomGuestCommand> {
         return LiveDataReactiveStreams.fromPublisher(
             facade.observeEvents()
-                .observeOn(schedulerFactory.ui())
+                .observeOn(uiScheduler)
                 .map(::getCommandForGameEvent)
                 .doOnError { error -> Timber.e(error, "Error while observing game events.") }
                 .toFlowable(BackpressureStrategy.LATEST)

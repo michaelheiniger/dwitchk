@@ -4,14 +4,13 @@ import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameCommand
 import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
-import ch.qscqlmpa.dwitchcommonutil.DisposableManager
-import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.fail
 import org.junit.Assert.assertNull
@@ -29,7 +28,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
     @Before
     override fun setup() {
         super.setup()
-        viewModel = HostNewGameViewModel(mockHostFacade, DisposableManager(), TestSchedulerFactory())
+        viewModel = HostNewGameViewModel(mockHostFacade, Schedulers.trampoline())
         every { mockHostFacade.hostGame(any(), any(), any()) } returns Completable.complete()
     }
 

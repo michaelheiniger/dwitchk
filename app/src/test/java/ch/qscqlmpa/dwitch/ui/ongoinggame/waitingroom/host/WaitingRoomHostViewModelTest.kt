@@ -13,6 +13,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.schedulers.TestScheduler
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.assertj.core.api.Assertions.assertThat
@@ -34,7 +35,7 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
         val schedulerFactory = TestSchedulerFactory()
         schedulerFactory.setTimeScheduler(TestScheduler())
 
-        viewModel = WaitingRoomHostViewModel(mockFacade, ch.qscqlmpa.dwitchcommonutil.DisposableManager(), schedulerFactory)
+        viewModel = WaitingRoomHostViewModel(mockFacade, Schedulers.trampoline())
 
         communicatorSubject = PublishSubject.create()
         every { mockFacade.observeCommunicationState() } returns communicatorSubject

@@ -3,9 +3,6 @@ package ch.qscqlmpa.dwitchcommonutil.scheduler
 import io.reactivex.rxjava3.core.Scheduler
 
 interface SchedulerFactory {
-
-    fun ui(): Scheduler
-
     fun io(): Scheduler
 
     fun computation(): Scheduler

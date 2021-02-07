@@ -3,8 +3,6 @@ package ch.qscqlmpa.dwitch.ui.home
 import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.common.Status
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivityViewModel
-import ch.qscqlmpa.dwitchcommonutil.DisposableManager
-import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
@@ -12,7 +10,7 @@ import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import io.reactivex.rxjava3.schedulers.TestScheduler
+import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.assertj.core.api.Assertions.assertThat
 import org.joda.time.LocalTime
@@ -32,13 +30,10 @@ class MainActivityViewModelTest : BaseViewModelUnitTest() {
     override fun setup() {
         super.setup()
 
-        val schedulerFactory = TestSchedulerFactory()
-        schedulerFactory.setTimeScheduler(TestScheduler())
         viewModel = MainActivityViewModel(
             mockHomeGuestFacade,
             mockHomeHostFacade,
-            DisposableManager(),
-            schedulerFactory
+            Schedulers.trampoline()
         )
 
         gameRepositorySubject = PublishSubject.create()

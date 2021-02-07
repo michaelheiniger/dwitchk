@@ -5,19 +5,17 @@ import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitchcommonutil.DisposableManager
-import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameRoomGuestFacade
 import io.reactivex.rxjava3.core.BackpressureStrategy
+import io.reactivex.rxjava3.core.Scheduler
 import timber.log.Timber
 import javax.inject.Inject
 
 internal class GameRoomGuestViewModel @Inject constructor(
     private val facade: GameRoomGuestFacade,
-    disposableManager: DisposableManager,
-    schedulerFactory: SchedulerFactory
-) : BaseViewModel(disposableManager, schedulerFactory) {
+    private val uiScheduler: Scheduler
+) : BaseViewModel() {
 
     private val commands = MutableLiveData<GameRoomGuestCommand>()
 
@@ -35,7 +33,7 @@ internal class GameRoomGuestViewModel @Inject constructor(
     private fun gameEventLiveData(): LiveData<GameRoomGuestCommand> {
         return LiveDataReactiveStreams.fromPublisher(
             facade.observeEvents()
-                .observeOn(schedulerFactory.ui())
+                .observeOn(uiScheduler)
                 .map(::getCommandForGameEvent)
                 .doOnError { error -> Timber.e(error, "Error while observing game events.") }
                 .toFlowable(BackpressureStrategy.LATEST)

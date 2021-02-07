@@ -5,19 +5,17 @@ import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard.CardItem
-import ch.qscqlmpa.dwitchcommonutil.DisposableManager
-import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardFacade
+import io.reactivex.rxjava3.core.Scheduler
 import timber.log.Timber
 import javax.inject.Inject
 
 class CardExchangeViewModel @Inject constructor(
     private val facade: GameDashboardFacade,
-    disposableManager: DisposableManager,
-    schedulerFactory: SchedulerFactory
-) : BaseViewModel(disposableManager, schedulerFactory) {
+    private val uiScheduler: Scheduler
+) : BaseViewModel() {
 
     private lateinit var cardExchangeEvent: CardExchange
     private lateinit var selectableCards: Set<Card>
@@ -86,7 +84,7 @@ class CardExchangeViewModel @Inject constructor(
         Timber.v("confirmChoice()")
         disposableManager.add(
             facade.submitCardsForExchange(cardChosenItems.value!!.map(CardItem::card).toSet())
-                .observeOn(schedulerFactory.ui())
+                .observeOn(uiScheduler)
                 .subscribe(
                     {
                         Timber.i("Cards for exchange submitted successfully.")
@@ -117,7 +115,7 @@ class CardExchangeViewModel @Inject constructor(
     private fun initialize() {
         disposableManager.add(
             facade.getCardExchangeInfo()
-                .observeOn(schedulerFactory.ui())
+                .observeOn(uiScheduler)
                 .subscribe(
                     { cardExchangeInfo ->
                         Timber.d("Card exchange info: $cardExchangeInfo")

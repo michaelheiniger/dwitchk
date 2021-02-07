@@ -9,20 +9,18 @@ import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitch.ui.model.UiInfoModel
 import ch.qscqlmpa.dwitch.ui.model.Visibility
-import ch.qscqlmpa.dwitchcommonutil.DisposableManager
-import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.GuestFacade
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.Scheduler
 import timber.log.Timber
 import javax.inject.Inject
 
 class ConnectionGuestViewModel @Inject constructor(
     private val facade: GuestFacade,
-    disposableManager: DisposableManager,
-    schedulerFactory: SchedulerFactory
-) : BaseViewModel(disposableManager, schedulerFactory) {
+    private val uiScheduler: Scheduler
+) : BaseViewModel() {
 
     private val reconnectActionCtrl = MutableLiveData<UiControlModel>()
     private val reconnectLoadingCtrl = MutableLiveData<UiControlModel>()
@@ -69,7 +67,7 @@ class ConnectionGuestViewModel @Inject constructor(
 
     private fun currentCommunicationState(): Flowable<GuestCommunicationState> {
         return facade.currentCommunicationState()
-            .observeOn(schedulerFactory.ui())
+            .observeOn(uiScheduler)
             .doOnError { error -> Timber.e(error, "Error while observing communication state.") }
             .toFlowable(BackpressureStrategy.LATEST)
     }

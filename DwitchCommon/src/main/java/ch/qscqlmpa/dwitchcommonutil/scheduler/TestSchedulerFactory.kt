@@ -11,10 +11,6 @@ class TestSchedulerFactory : SchedulerFactory {
         this.timeScheduler = timeScheduler
     }
 
-    override fun ui(): Scheduler {
-        return Schedulers.trampoline()
-    }
-
     override fun io(): Scheduler {
         return Schedulers.trampoline()
     }
