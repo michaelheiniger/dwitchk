@@ -39,7 +39,6 @@ dependencies {
     // RxJava
     implementation "io.reactivex.rxjava3:rxjava:$rxJavaVersion"
     implementation "io.reactivex.rxjava3:rxkotlin:$rxKotlinVersion"
-    implementation "io.reactivex.rxjava3:rxandroid:$rxAndroidVersion"
     implementation "com.jakewharton.rxrelay3:rxrelay:$rxRelayVersion"
 
     // Joda time

@@ -38,22 +38,20 @@ android {
 dependencies {
     implementation project(path: ':DwitchEngine')
     implementation project(path: ':DwitchModel')
+    implementation project(path: ':DwitchCommon')
 
     // Timber
     implementation "com.jakewharton.timber:timber:$timberVersion"
 
     // Dagger
     implementation "com.google.dagger:dagger:$daggerVersion"
-    implementation project(path: ':DwitchCommon')
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     implementation "com.google.dagger:dagger-android:$daggerVersion"
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
     // RxJava
-    implementation "io.reactivex.rxjava3:rxjava:$rxJavaVersion"
     implementation "io.reactivex.rxjava3:rxkotlin:$rxKotlinVersion"
-    implementation "io.reactivex.rxjava3:rxandroid:$rxAndroidVersion"
     implementation "com.jakewharton.rxrelay3:rxrelay:$rxRelayVersion"
 
     // Serialization
