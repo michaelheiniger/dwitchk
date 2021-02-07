@@ -13,7 +13,7 @@ import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameActivity
 import ch.qscqlmpa.dwitch.ui.home.joinnewgame.JoinNewGameActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
-import ch.qscqlmpa.dwitchmodel.game.ResumableGameInfo
+import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import kotlinx.android.synthetic.main.main_activity.*
 import timber.log.Timber
 

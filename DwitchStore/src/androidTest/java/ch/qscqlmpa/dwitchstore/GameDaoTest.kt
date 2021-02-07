@@ -1,12 +1,12 @@
 package ch.qscqlmpa.dwitchstore
 
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
-import ch.qscqlmpa.dwitchmodel.game.Game
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
-import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
+import ch.qscqlmpa.dwitchstore.model.Game
+import ch.qscqlmpa.dwitchstore.model.Player
 import org.assertj.core.api.Assertions.assertThat
 import org.joda.time.DateTime
 import org.junit.Before

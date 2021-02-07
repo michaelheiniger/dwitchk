@@ -2,7 +2,6 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchcommunication.model.PlayerDto
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchgame.base.BaseInstrumentedTest
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState

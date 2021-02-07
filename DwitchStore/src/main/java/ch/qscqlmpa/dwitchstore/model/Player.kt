@@ -1,9 +1,10 @@
-package ch.qscqlmpa.dwitchmodel.player
+package ch.qscqlmpa.dwitchstore.model
 
 import androidx.room.*
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.PlayerOnboardingInfo
-import ch.qscqlmpa.dwitchmodel.game.Game
+import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
+import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import kotlinx.serialization.Serializable
 
 @Entity(

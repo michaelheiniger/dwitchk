@@ -2,10 +2,10 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchcommunication.model.PlayerDto
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
-import ch.qscqlmpa.dwitchmodel.player.Player
+import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
+import ch.qscqlmpa.dwitchstore.model.Player
 import io.reactivex.rxjava3.core.Completable
 import timber.log.Timber
 import javax.inject.Inject
@@ -28,9 +28,9 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
         }
     }
 
-    private fun removePlayersWhoLeftTheGame(playersUpToDate: List<PlayerDto>, playersOld: List<Player>) {
+    private fun removePlayersWhoLeftTheGame(playersUpToDate: List<PlayerWr>, playersOld: List<Player>) {
         val playersToRemove = playersOld.map(Player::dwitchId).toHashSet()
-        playersToRemove.removeAll(playersUpToDate.map(PlayerDto::dwitchId))
+        playersToRemove.removeAll(playersUpToDate.map(PlayerWr::dwitchId))
         if (playersToRemove.size > 0) {
             Timber.v("Players to remove: $playersToRemove")
             store.deletePlayers(getLocalIdOfPlayersToRemove(playersOld, playersToRemove))
@@ -43,7 +43,7 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
         return playersOld.filter { p -> playersToRemove.contains(p.dwitchId) }.map { p -> p.id }
     }
 
-    private fun updatePlayersWhoseStateChanged(upToDatePlayers: List<PlayerDto>, playersOld: List<Player>) {
+    private fun updatePlayersWhoseStateChanged(upToDatePlayers: List<PlayerWr>, playersOld: List<Player>) {
         val upToDateOldPlayerPairs = upToDatePlayers.map { upToDatePlayer ->
             val playerOld = playersOld.find { playerOld -> playerOld.dwitchId == upToDatePlayer.dwitchId }
             Pair(upToDatePlayer, playerOld)
@@ -67,11 +67,11 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
         }
     }
 
-    private fun hasAnyRelevantAttributeChanged(playerOld: Player, upToDatePlayer: PlayerDto): Boolean {
+    private fun hasAnyRelevantAttributeChanged(playerOld: Player, upToDatePlayer: PlayerWr): Boolean {
         return playerOld.ready != upToDatePlayer.ready || playerOld.connectionState != upToDatePlayer.connectionState
     }
 
-    private fun addNewPlayers(playersUpToDate: List<PlayerDto>, playersOld: List<Player>) {
+    private fun addNewPlayers(playersUpToDate: List<PlayerWr>, playersOld: List<Player>) {
         val playersToAdd = playersUpToDate.filter { player ->
             val playerToAdd = playersOld.find { p -> p.dwitchId == player.dwitchId }
             playerToAdd == null

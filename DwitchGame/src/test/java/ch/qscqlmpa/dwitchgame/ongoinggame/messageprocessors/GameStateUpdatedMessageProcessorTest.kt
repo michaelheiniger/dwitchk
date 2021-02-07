@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.GameStateUpdatedMessageProcessor
-import ch.qscqlmpa.dwitchmodel.player.Player
+import ch.qscqlmpa.dwitchstore.model.Player
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.verify

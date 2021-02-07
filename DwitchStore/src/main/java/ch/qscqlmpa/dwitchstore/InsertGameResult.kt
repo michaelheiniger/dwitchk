@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchstore
 
-import ch.qscqlmpa.dwitchmodel.game.Game
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
+import ch.qscqlmpa.dwitchstore.model.Game
 
 data class InsertGameResult(
     val gameLocalId: Long,

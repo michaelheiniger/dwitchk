@@ -1,10 +1,10 @@
 package ch.qscqlmpa.dwitchstore.store
 
-import ch.qscqlmpa.dwitchmodel.game.Game
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import ch.qscqlmpa.dwitchmodel.game.ResumableGameInfo
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchstore.InsertGameResult
+import ch.qscqlmpa.dwitchstore.model.Game
+import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import io.reactivex.rxjava3.core.Observable
 
 interface Store {

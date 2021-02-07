@@ -4,6 +4,8 @@ import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
+import ch.qscqlmpa.dwitchmodel.player.PlayerRole
+import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import io.mockk.every
 import io.reactivex.rxjava3.core.Flowable
 import org.junit.jupiter.api.BeforeEach
@@ -40,20 +42,23 @@ class WaitingRoomPlayerRepositoryTest : BaseUnitTest() {
                     PlayerWr(
                         PlayerDwitchId(1),
                         hostPlayer.name,
-                        true,
-                        PlayerConnectionState.CONNECTED
+                        PlayerRole.HOST,
+                        PlayerConnectionState.CONNECTED,
+                        true
                     ),
                     PlayerWr(
                         PlayerDwitchId(2),
                         playerGuest1.name,
-                        false,
-                        PlayerConnectionState.CONNECTED
+                        PlayerRole.GUEST,
+                        PlayerConnectionState.CONNECTED,
+                        false
                     ),
                     PlayerWr(
                         PlayerDwitchId(3),
                         playerGuest2.name,
-                        true,
-                        PlayerConnectionState.CONNECTED
+                        PlayerRole.GUEST,
+                        PlayerConnectionState.CONNECTED,
+                        true
                     )
                 )
             )

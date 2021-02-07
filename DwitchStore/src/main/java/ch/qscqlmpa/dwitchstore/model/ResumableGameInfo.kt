@@ -1,8 +1,7 @@
-package ch.qscqlmpa.dwitchmodel.game
+package ch.qscqlmpa.dwitchstore.model
 
 import androidx.room.DatabaseView
 import androidx.room.Relation
-import ch.qscqlmpa.dwitchmodel.player.Player
 import org.joda.time.DateTime
 
 @DatabaseView(

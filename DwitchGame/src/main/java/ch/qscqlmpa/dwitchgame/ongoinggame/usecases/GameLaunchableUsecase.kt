@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
-import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWr
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomPlayerRepository
+import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 

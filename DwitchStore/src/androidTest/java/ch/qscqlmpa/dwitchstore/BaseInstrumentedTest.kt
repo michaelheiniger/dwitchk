@@ -4,12 +4,12 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import ch.qscqlmpa.dwitchmodel.player.Player
-import ch.qscqlmpa.dwitchstore.db.AppRoomDatabase
-import ch.qscqlmpa.dwitchstore.db.GameDao
-import ch.qscqlmpa.dwitchstore.db.PlayerDao
+import ch.qscqlmpa.dwitchstore.dao.AppRoomDatabase
+import ch.qscqlmpa.dwitchstore.dao.GameDao
+import ch.qscqlmpa.dwitchstore.dao.PlayerDao
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreImpl
+import ch.qscqlmpa.dwitchstore.model.Player
 import ch.qscqlmpa.dwitchstore.store.Store
 import ch.qscqlmpa.dwitchstore.store.StoreImpl
 import ch.qscqlmpa.dwitchstore.util.SerializerFactory

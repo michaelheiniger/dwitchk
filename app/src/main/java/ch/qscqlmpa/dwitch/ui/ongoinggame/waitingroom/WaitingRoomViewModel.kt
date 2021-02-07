@@ -3,8 +3,8 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWr
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomFacade
+import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Scheduler
 import timber.log.Timber

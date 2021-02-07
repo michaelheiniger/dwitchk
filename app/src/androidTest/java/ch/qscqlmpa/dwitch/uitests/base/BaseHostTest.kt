@@ -6,7 +6,7 @@ import ch.qscqlmpa.dwitch.uitests.utils.UiUtil.clickOnButton
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.websocket.server.test.PlayerHostTest
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.GuestMessageFactory
-import ch.qscqlmpa.dwitchmodel.player.Player
+import ch.qscqlmpa.dwitchstore.model.Player
 import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions.assertThat
 import timber.log.Timber

@@ -2,8 +2,8 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom
 
 import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
-import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWr
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomFacade
+import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk

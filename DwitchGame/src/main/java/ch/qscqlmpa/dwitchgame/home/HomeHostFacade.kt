@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.home
 
-import ch.qscqlmpa.dwitchmodel.game.ResumableGameInfo
+import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 

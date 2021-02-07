@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchstore.store
 import android.content.Context
 import androidx.room.Room
 import ch.qscqlmpa.dwitchstore.StoreScope
-import ch.qscqlmpa.dwitchstore.db.AppRoomDatabase
+import ch.qscqlmpa.dwitchstore.dao.AppRoomDatabase
 import dagger.Module
 import dagger.Provides
 

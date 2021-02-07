@@ -6,8 +6,8 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunication
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.GuestMessageFactory
-import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
+import ch.qscqlmpa.dwitchstore.model.Player
 import io.reactivex.rxjava3.core.Completable
 import timber.log.Timber
 import javax.inject.Inject

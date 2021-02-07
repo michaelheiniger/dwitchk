@@ -4,11 +4,11 @@ import ch.qscqlmpa.dwitch.PlayerGuestTest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchcommunication.model.PlayerDto
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
+import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import org.assertj.core.api.Assertions.assertThat
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -80,28 +80,28 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
     private fun hostSendsInitialWaitingRoomUpdate() {
         val message = Message.WaitingRoomStateUpdateMessage(
             listOf(
-                PlayerDto(
+                PlayerWr(
                     PlayerGuestTest.Host.id,
                     PlayerGuestTest.Host.name,
                     PlayerRole.HOST,
                     PlayerConnectionState.CONNECTED,
                     true
                 ),
-                PlayerDto(
+                PlayerWr(
                     PlayerGuestTest.LocalGuest.id,
                     PlayerGuestTest.LocalGuest.name,
                     PlayerRole.GUEST,
                     PlayerConnectionState.CONNECTED,
                     false
                 ),
-                PlayerDto(
+                PlayerWr(
                     PlayerGuestTest.Guest2.id,
                     PlayerGuestTest.Guest2.name,
                     PlayerRole.GUEST,
                     PlayerConnectionState.CONNECTED,
                     true
                 ),
-                PlayerDto(
+                PlayerWr(
                     PlayerGuestTest.Guest3.id,
                     PlayerGuestTest.Guest3.name,
                     PlayerRole.GUEST,

@@ -2,11 +2,12 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchcommunication.model.PlayerDto
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
+import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.EntityMapper
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.WaitingRoomStateUpdateMessageProcessor
-import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
+import ch.qscqlmpa.dwitchmodel.player.PlayerWr
+import ch.qscqlmpa.dwitchstore.model.Player
 import io.mockk.CapturingSlot
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -40,7 +41,7 @@ internal class WaitingRoomStateUpdateMessageProcessorTest : BaseMessageProcessor
             guest3Player
         )
 
-        val upToDatePlayerList = listOf(PlayerDto(hostPlayer), PlayerDto(localGuestPlayer))
+        val upToDatePlayerList = listOf(EntityMapper.toPlayerWr(hostPlayer), EntityMapper.toPlayerWr(localGuestPlayer))
 
         launchTest(upToDatePlayerList).test().assertComplete()
 
@@ -60,10 +61,10 @@ internal class WaitingRoomStateUpdateMessageProcessorTest : BaseMessageProcessor
         )
 
         val upToDatePlayerList = listOf(
-            PlayerDto(hostPlayer),
-            PlayerDto(localGuestPlayer),
-            PlayerDto(guest2Player).copy(ready = false),
-            PlayerDto(guest3Player).copy(connectionState = PlayerConnectionState.DISCONNECTED)
+            EntityMapper.toPlayerWr(hostPlayer),
+            EntityMapper.toPlayerWr(localGuestPlayer),
+            EntityMapper.toPlayerWr(guest2Player).copy(ready = false),
+            EntityMapper.toPlayerWr(guest3Player).copy(connectionState = PlayerConnectionState.DISCONNECTED)
         )
 
         launchTest(upToDatePlayerList).test().assertComplete()
@@ -92,10 +93,10 @@ internal class WaitingRoomStateUpdateMessageProcessorTest : BaseMessageProcessor
         every { mockInGameStore.getPlayersInWaitingRoom() } returns listOf(hostPlayer, localGuestPlayer)
 
         val upToDatePlayerList = listOf(
-            PlayerDto(hostPlayer),
-            PlayerDto(localGuestPlayer),
-            PlayerDto(guest2Player),
-            PlayerDto(guest3Player)
+            EntityMapper.toPlayerWr(hostPlayer),
+            EntityMapper.toPlayerWr(localGuestPlayer),
+            EntityMapper.toPlayerWr(guest2Player),
+            EntityMapper.toPlayerWr(guest3Player)
         )
 
         launchTest(upToDatePlayerList).test().assertComplete()
@@ -123,7 +124,7 @@ internal class WaitingRoomStateUpdateMessageProcessorTest : BaseMessageProcessor
         confirmVerified(mockInGameStore)
     }
 
-    private fun launchTest(upToDatePlayerList: List<PlayerDto>): Completable {
+    private fun launchTest(upToDatePlayerList: List<PlayerWr>): Completable {
         return processor.process(Message.WaitingRoomStateUpdateMessage(upToDatePlayerList), ConnectionId(0))
     }
 }

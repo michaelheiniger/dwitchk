@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitchmodel.game.ResumableGameInfo
+import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import java.util.*
 
 internal class ExistingGameAdapter(

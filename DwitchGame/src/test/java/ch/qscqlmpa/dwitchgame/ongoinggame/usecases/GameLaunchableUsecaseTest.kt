@@ -2,8 +2,8 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
-import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWr
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomPlayerRepository
+import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk

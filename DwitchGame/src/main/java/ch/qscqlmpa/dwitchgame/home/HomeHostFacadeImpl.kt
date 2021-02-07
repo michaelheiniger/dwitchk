@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchgame.home
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchgame.home.usecases.NewGameUsecase
 import ch.qscqlmpa.dwitchgame.home.usecases.ResumeGameUsecase
-import ch.qscqlmpa.dwitchmodel.game.ResumableGameInfo
+import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import ch.qscqlmpa.dwitchstore.store.Store
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable

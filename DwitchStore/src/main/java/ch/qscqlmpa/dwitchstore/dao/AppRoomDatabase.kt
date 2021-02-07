@@ -1,11 +1,11 @@
-package ch.qscqlmpa.dwitchstore.db
+package ch.qscqlmpa.dwitchstore.dao
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import ch.qscqlmpa.dwitchmodel.game.Game
-import ch.qscqlmpa.dwitchmodel.game.ResumableGameInfo
-import ch.qscqlmpa.dwitchmodel.player.Player
+import ch.qscqlmpa.dwitchstore.model.Game
+import ch.qscqlmpa.dwitchstore.model.Player
+import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import ch.qscqlmpa.dwitchstore.typeconverter.*
 
 @Database(

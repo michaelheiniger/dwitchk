@@ -3,8 +3,8 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.services
 import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetupFactory
 import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
+import ch.qscqlmpa.dwitchstore.model.Player
 import javax.inject.Inject
 
 internal class GameInitializerService @Inject constructor(

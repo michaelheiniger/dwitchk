@@ -5,8 +5,8 @@ import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
 import ch.qscqlmpa.dwitchgame.appevent.GameCreatedInfo
 import ch.qscqlmpa.dwitchgame.appevent.GameJoinedInfo
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
-import ch.qscqlmpa.dwitchmodel.game.Game
 import ch.qscqlmpa.dwitchmodel.game.RoomType
+import ch.qscqlmpa.dwitchstore.model.Game
 import ch.qscqlmpa.dwitchstore.store.Store
 import io.reactivex.rxjava3.core.Completable
 import javax.inject.Inject

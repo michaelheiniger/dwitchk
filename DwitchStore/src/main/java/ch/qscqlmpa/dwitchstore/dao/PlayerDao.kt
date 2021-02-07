@@ -1,10 +1,10 @@
-package ch.qscqlmpa.dwitchstore.db
+package ch.qscqlmpa.dwitchstore.dao
 
 import androidx.room.*
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
-import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
+import ch.qscqlmpa.dwitchstore.model.Player
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 

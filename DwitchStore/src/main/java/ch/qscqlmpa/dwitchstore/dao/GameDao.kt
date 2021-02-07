@@ -1,16 +1,16 @@
-package ch.qscqlmpa.dwitchstore.db
+package ch.qscqlmpa.dwitchstore.dao
 
 import androidx.room.*
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
-import ch.qscqlmpa.dwitchmodel.game.Game
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import ch.qscqlmpa.dwitchmodel.game.ResumableGameInfo
 import ch.qscqlmpa.dwitchmodel.game.RoomType
-import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.InsertGameResult
 import ch.qscqlmpa.dwitchstore.ingamestore.model.GameCommonIdAndCurrentRoom
+import ch.qscqlmpa.dwitchstore.model.Game
+import ch.qscqlmpa.dwitchstore.model.Player
+import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import io.reactivex.rxjava3.core.Observable
 import org.joda.time.DateTime
 import java.util.*

@@ -8,7 +8,6 @@ import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import ch.qscqlmpa.dwitch.utils.TestEntityFactory
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchcommunication.model.PlayerDto
 import ch.qscqlmpa.dwitchengine.DwitchEngine.Companion.createNewGame
 import ch.qscqlmpa.dwitchengine.ProdDwitchEngineFactory
 import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealer
@@ -19,9 +18,9 @@ import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
-import ch.qscqlmpa.dwitchmodel.player.Player
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
+import ch.qscqlmpa.dwitchstore.model.Player
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers
 import org.junit.Test

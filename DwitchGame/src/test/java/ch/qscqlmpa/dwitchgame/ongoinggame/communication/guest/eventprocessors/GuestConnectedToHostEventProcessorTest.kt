@@ -8,8 +8,8 @@ import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
-import ch.qscqlmpa.dwitchmodel.game.Game
-import ch.qscqlmpa.dwitchmodel.player.Player
+import ch.qscqlmpa.dwitchstore.model.Game
+import ch.qscqlmpa.dwitchstore.model.Player
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk

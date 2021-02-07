@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchstore
 
-import ch.qscqlmpa.dwitchstore.db.AppRoomDatabase
+import ch.qscqlmpa.dwitchstore.dao.AppRoomDatabase
 import ch.qscqlmpa.dwitchstore.store.TestStoreModule
 import dagger.Component
 

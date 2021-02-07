@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.home.main
 
 import ch.qscqlmpa.dwitch.ui.common.Status
-import ch.qscqlmpa.dwitchmodel.game.ResumableGameInfo
+import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 
 data class ExistingGameResponse(val status: Status, val resumableGames: List<ResumableGameInfo>, val error: Throwable?) {
 

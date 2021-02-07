@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchstore.ingamestore
 
-import ch.qscqlmpa.dwitchstore.db.AppRoomDatabase
+import ch.qscqlmpa.dwitchstore.dao.AppRoomDatabase
 import ch.qscqlmpa.dwitchstore.util.SerializerFactory
 import dagger.Module
 import dagger.Provides
