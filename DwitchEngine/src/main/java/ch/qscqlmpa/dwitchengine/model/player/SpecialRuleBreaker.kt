@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchengine.model.player
 
 import kotlinx.serialization.Serializable
 
-@Serializable()
+@Serializable
 sealed class SpecialRuleBreaker {
 
     abstract val playerId: PlayerDwitchId
