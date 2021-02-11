@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.gamediscovery.network
 
 import io.reactivex.rxjava3.core.Maybe
-import timber.log.Timber
+import mu.KLogging
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.SocketException
@@ -25,7 +25,7 @@ class UdpNetworkAdapter @Inject constructor() : NetworkAdapter {
             try {
                 receiveSocket.receive(receivePacket) // Blocking call
             } catch (e: SocketException) {
-                Timber.d("Socket closed")
+                logger.debug { "Socket closed" }
                 return@fromCallable null
             }
 
@@ -41,4 +41,6 @@ class UdpNetworkAdapter @Inject constructor() : NetworkAdapter {
 //        receiveSocket.disconnect() //TODO: Is that needed ? It makes the app freeze.
         receiveSocket.close()
     }
+
+    companion object : KLogging()
 }

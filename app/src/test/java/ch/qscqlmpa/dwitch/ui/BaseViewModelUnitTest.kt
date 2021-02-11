@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch
+package ch.qscqlmpa.dwitch.ui
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle

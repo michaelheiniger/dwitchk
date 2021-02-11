@@ -15,7 +15,7 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import dagger.Lazy
 import io.reactivex.rxjava3.core.Completable
-import timber.log.Timber
+import mu.KLogging
 import javax.inject.Inject
 
 internal class RejoinGameMessageProcessor @Inject constructor(
@@ -34,7 +34,7 @@ internal class RejoinGameMessageProcessor @Inject constructor(
             val (currentGameCommonId, currentRoom) = store.getGameCommonIdAndCurrentRoom()
 
             if (currentGameCommonId != msg.gameCommonId) {
-                Timber.e("Game common ID provided doesn't match the current game: closing connection with client.")
+                logger.error { "Game common ID provided doesn't match the current game: closing connection with client." }
                 closeConnectionWithGuest(senderConnectionID)
                 return@fromAction
             }
@@ -45,7 +45,7 @@ internal class RejoinGameMessageProcessor @Inject constructor(
                 connectionStore.pairConnectionWithPlayer(senderConnectionID, rejoinInfo.playerDwitchId)
                 sendMessage(HostMessageFactory.createRejoinAckMessage(rejoinInfo))
             } else {
-                Timber.e("Re-joining player not found: closing connection with client.")
+                logger.error { "Re-joining player not found: closing connection with client." }
                 closeConnectionWithGuest(senderConnectionID)
                 return@fromAction
             }
@@ -86,13 +86,15 @@ internal class RejoinGameMessageProcessor @Inject constructor(
     }
 
     private fun sendWaitingRoomStateUpdateMessage() {
-        Timber.i("Guest connected: send Waitingroom updated state to everyone.")
+        logger.info { "Guest connected: send Waitingroom updated state to everyone." }
         sendMessage(hostMessageFactory.createWaitingRoomStateUpdateMessage())
     }
 
     private fun sendGameStateUpdatedMessage() {
-        Timber.i("Guest connected: send game updated state to everyone.")
+        logger.info { "Guest connected: send game updated state to everyone." }
         val message = messageFactory.createGameStateUpdatedMessage()
         sendMessage(EnvelopeToSend(Recipient.All, message))
     }
+
+    companion object : KLogging()
 }

@@ -88,18 +88,17 @@ dependencies {
     implementation project(path: ':DwitchCommunication')
     implementation project(path: ':DwitchCommon')
 
-    // Timber
-    implementation "com.jakewharton.timber:timber:$timberVersion"
+    // Logging
+    implementation "io.github.microutils:kotlin-logging-jvm:$kotlinLoggingVersion"
+    implementation "org.slf4j:slf4j-android:$slf4jVersion"
 
     // Dagger
     implementation "com.google.dagger:dagger:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-    implementation "com.google.dagger:dagger-android:$daggerVersion"
-    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
-    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
-    // Timber
-    implementation "com.jakewharton.timber:timber:$timberVersion"
+    // Logging
+    implementation "io.github.microutils:kotlin-logging-jvm:$kotlinLoggingVersion"
+    implementation "org.slf4j:slf4j-android:$slf4jVersion"
 
     // RxJava
     implementation "io.reactivex.rxjava3:rxkotlin:$rxKotlinVersion"

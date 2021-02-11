@@ -44,7 +44,8 @@ ext {
     rxJavaVersion = '3.0.7'
     rxKotlinVersion = '3.0.1'
     rxRelayVersion = '3.0.0'
-    timberVersion = '4.7.1'
     websocketVersion = '1.5.1'
     junit5Version = '5.7.0'
+    kotlinLoggingVersion = '2.0.2'
+    slf4jVersion = '1.7.21'
 }

@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.cardexchange
 
-import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
+import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard.CardItem
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName

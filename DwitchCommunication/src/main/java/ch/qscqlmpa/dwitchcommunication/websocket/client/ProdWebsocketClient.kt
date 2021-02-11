@@ -2,10 +2,10 @@ package ch.qscqlmpa.dwitchcommunication.websocket.client
 
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
+import mu.KLogging
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.enums.ReadyState
 import org.java_websocket.handshake.ServerHandshake
-import timber.log.Timber
 import java.net.URI
 import java.util.*
 
@@ -30,7 +30,7 @@ internal class ProdWebsocketClient constructor(
         if (readyState == ReadyState.OPEN) {
             super.send(message)
         } else {
-            Timber.e("Cannot send message when connection state is: $readyState")
+            logger.error { "Cannot send message when connection state is: $readyState" }
         }
     }
 
@@ -58,7 +58,7 @@ internal class ProdWebsocketClient constructor(
         messageRelay.accept(ClientMessage(destinationAddress, destinationPort, messageAsString))
     }
 
-    companion object {
+    companion object : KLogging() {
 
         private const val HEART_BEAT_INTERVAL_SEC = 5
 

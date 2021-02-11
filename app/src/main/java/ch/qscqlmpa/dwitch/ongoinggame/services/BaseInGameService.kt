@@ -16,7 +16,7 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameComponent
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
-import timber.log.Timber
+import mu.KLogging
 
 abstract class BaseInGameService : Service() {
 
@@ -106,12 +106,12 @@ abstract class BaseInGameService : Service() {
     }
 
     private fun actionStopService() {
-        Timber.i("Stop service")
+        logger.info { "Stop service" }
         stopSelf()
         cleanUp()
     }
 
-    companion object {
+    companion object : KLogging() {
         private const val NOTIFICATION_ID = 1
 
         const val ACTION_START_SERVICE = "ACTION_START_SERVICE"

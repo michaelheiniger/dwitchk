@@ -19,7 +19,7 @@ import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreModule
 import ch.qscqlmpa.dwitchstore.store.TestStoreModule
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
-import timber.log.Timber
+import mu.KLogging
 
 class TestApp : App() {
 
@@ -49,7 +49,7 @@ class TestApp : App() {
         hostPort: Int,
         hostIpAddress: String
     ): OngoingGameComponent? {
-        Timber.d("startOngoingGame()")
+        logger.debug { "startOngoingGame()" }
         if (ongoingGameComponent == null) {
             inGameStoreComponent = testStoreComponent.addInGameStoreComponent(
                 InGameStoreModule(gameLocalId, localPlayerLocalId)
@@ -83,7 +83,7 @@ class TestApp : App() {
                 )
             )
         } else {
-            Timber.w("startOngoingGame() called when a game is already on-going.")
+            logger.warn { "startOngoingGame() called when a game is already on-going." }
         }
         return ongoingGameComponent
     }
@@ -91,4 +91,6 @@ class TestApp : App() {
     override fun appEventRepository(): AppEventRepository {
         return testGameComponent.appEventRepository
     }
+
+    companion object : KLogging()
 }

@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest
 
-import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.common.Resource
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitch.ui.model.UiInfoModel

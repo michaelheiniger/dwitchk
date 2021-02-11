@@ -9,8 +9,8 @@ import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchmodel.player.PlayerWr
+import mu.KLogging
 import org.assertj.core.api.Assertions.assertThat
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 abstract class BaseGuestTest : BaseOnGoingGameTest() {
@@ -44,13 +44,13 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
     }
 
     protected fun waitForNextMessageSentByLocalGuest(): Message {
-        Timber.d("Waiting for next message sent by local guest...")
+        logger.debug { "Waiting for next message sent by local guest..." }
         val messageSerialized = clientTestStub.observeMessagesSent()
             .take(1)
             .timeout(10, TimeUnit.SECONDS)
             .blockingFirst()
         val message = commSerializerFactory.unserializeMessage(messageSerialized)
-        Timber.d("Message sent to host: $message")
+        logger.debug { "Message sent to host: $message" }
         return message
     }
 
@@ -112,4 +112,6 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
         )
         clientTestStub.serverSendsMessageToClient(message, false)
     }
+
+    companion object : KLogging()
 }

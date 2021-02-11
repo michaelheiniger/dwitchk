@@ -14,7 +14,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardInfo
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Scheduler
-import timber.log.Timber
+import mu.KLogging
 import javax.inject.Inject
 
 class PlayerDashboardViewModel @Inject constructor(
@@ -31,7 +31,7 @@ class PlayerDashboardViewModel @Inject constructor(
                 .map { dashboard -> GameDashboardFactory(dashboard, textProvider).create() }
                 .doOnNext { bla -> }
                 .observeOn(uiScheduler)
-                .doOnError { error -> Timber.e(error, "Error while observing player dashboard.") }
+                .doOnError { error -> logger.error(error) { "Error while observing player dashboard." } }
                 .toFlowable(BackpressureStrategy.LATEST),
         )
     }
@@ -69,7 +69,7 @@ class PlayerDashboardViewModel @Inject constructor(
             facade.observeCardExchangeEvents()
                 .map { PlayerDashboardCommand.OpenCardExchange }
                 .observeOn(uiScheduler)
-                .doOnError { error -> Timber.e(error, "Error while observing card exchange.") }
+                .doOnError { error -> logger.error(error) { "Error while observing card exchange." } }
                 .toFlowable(BackpressureStrategy.LATEST)
         )
     }
@@ -81,7 +81,7 @@ class PlayerDashboardViewModel @Inject constructor(
                 .filter { info -> info.gameInfo.gamePhase == GamePhase.RoundIsOver }
                 .map(::mapEndOfRoundInfo)
                 .observeOn(uiScheduler)
-                .doOnError { error -> Timber.e(error, "Error while observing dashboard info.") }
+                .doOnError { error -> logger.error(error) { "Error while observing dashboard info." } }
                 .toFlowable(BackpressureStrategy.LATEST)
         )
     }
@@ -102,9 +102,11 @@ class PlayerDashboardViewModel @Inject constructor(
             op()
                 .observeOn(uiScheduler)
                 .subscribe(
-                    { Timber.d(successText) },
-                    { error -> Timber.e(error, failureText) }
+                    { logger.debug { successText } },
+                    { error -> logger.error(error) { failureText } }
                 )
         )
     }
+
+    companion object : KLogging()
 }

@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameRoomHostFacade
 import io.reactivex.rxjava3.core.Scheduler
-import timber.log.Timber
+import mu.KLogging
 import javax.inject.Inject
 
 internal class GameRoomHostViewModel @Inject
@@ -26,11 +26,13 @@ constructor(
                 .observeOn(uiScheduler)
                 .subscribe(
                     {
-                        Timber.d("Game ended successfully.")
+                        logger.debug { "Game ended successfully." }
                         commands.value = GameRoomHostCommand.NavigateToHomeScreen
                     },
-                    { error -> Timber.e(error, "Error while ending game.") }
+                    { error -> logger.error(error) { "Error while ending game." } }
                 )
         )
     }
+
+    companion object : KLogging()
 }

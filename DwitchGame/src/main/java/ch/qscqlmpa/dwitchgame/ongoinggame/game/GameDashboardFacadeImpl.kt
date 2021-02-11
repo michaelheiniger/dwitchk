@@ -16,7 +16,7 @@ import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeInfo
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
-import timber.log.Timber
+import mu.KLogging
 import javax.inject.Inject
 
 internal class GameDashboardFacadeImpl @Inject constructor(
@@ -80,10 +80,12 @@ internal class GameDashboardFacadeImpl @Inject constructor(
 
     private fun handleGameStateUpdated(updateGameState: (engine: DwitchEngine) -> GameState): Single<GameState> {
         return Single.fromCallable { updateGameState(dwitchEngineFactory.create(gameRepository.getGameState())) }
-            .doOnError { error -> Timber.e(error, "Error while updating the game state:") }
+            .doOnError { error -> logger.error(error) { "Error while updating the game state:" } }
             .flatMap { updatedGameState ->
                 gameUpdatedUsecase.handleUpdatedGameState(updatedGameState)
                     .andThen(Single.just(updatedGameState))
             }.subscribeOn(schedulerFactory.io())
     }
+
+    companion object : KLogging()
 }

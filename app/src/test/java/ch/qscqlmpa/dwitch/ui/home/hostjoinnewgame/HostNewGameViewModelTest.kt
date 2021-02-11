@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.home.hostjoinnewgame
 
-import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
+import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameCommand
 import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel

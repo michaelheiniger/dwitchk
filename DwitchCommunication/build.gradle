@@ -1,38 +1,8 @@
 plugins {
-    id 'com.android.library'
-    id 'kotlin-android'
+    id 'java-library'
+    id 'kotlin'
     id 'kotlin-kapt'
     id 'kotlinx-serialization'
-    id 'kotlin-android-extensions'
-
-}
-
-android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-
-    defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
 }
 
 dependencies {
@@ -40,15 +10,13 @@ dependencies {
     implementation project(path: ':DwitchModel')
     implementation project(path: ':DwitchCommon')
 
-    // Timber
-    implementation "com.jakewharton.timber:timber:$timberVersion"
+    // Logging
+    implementation "io.github.microutils:kotlin-logging-jvm:$kotlinLoggingVersion"
+    implementation "org.slf4j:slf4j-android:$slf4jVersion"
 
     // Dagger
     implementation "com.google.dagger:dagger:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-    implementation "com.google.dagger:dagger-android:$daggerVersion"
-    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
-    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
     // RxJava
     implementation "io.reactivex.rxjava3:rxkotlin:$rxKotlinVersion"

@@ -15,7 +15,7 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import kotlinx.android.synthetic.main.main_activity.*
-import timber.log.Timber
+import mu.KLogging
 
 class MainActivity : HomeBaseActivity(), AdvertisedGameAdapter.AdvertisedGameClickedListener, ExistingGameAdapter.ExistingGameClickedListener {
 
@@ -50,7 +50,7 @@ class MainActivity : HomeBaseActivity(), AdvertisedGameAdapter.AdvertisedGameCli
                     Status.SUCCESS -> (gameListRw.adapter as AdvertisedGameAdapter).setData(response.advertisedGames)
                     Status.ERROR -> {
                         gameListErrorTv.visibility = View.VISIBLE
-                        Timber.e(response.error, "Error while observing advertised games.")
+                        logger.error(response.error) { "Error while observing advertised games." }
                     }
                 }
             }
@@ -67,7 +67,7 @@ class MainActivity : HomeBaseActivity(), AdvertisedGameAdapter.AdvertisedGameCli
                     Status.SUCCESS -> (existingGameListRw.adapter as ExistingGameAdapter).setData(response.resumableGames)
                     Status.ERROR -> {
                         existingGameListErrorTv.visibility = View.VISIBLE
-                        Timber.d(response.error, "Error while observing advertised games.")
+                        logger.error(response.error) { "Error while observing advertised games." }
                     }
                 }
             }
@@ -86,7 +86,7 @@ class MainActivity : HomeBaseActivity(), AdvertisedGameAdapter.AdvertisedGameCli
         HostNewGameActivity.hostNewGame(this)
     }
 
-    companion object {
+    companion object : KLogging() {
 
         fun start(context: Context) {
             val intent = Intent(context, MainActivity::class.java)

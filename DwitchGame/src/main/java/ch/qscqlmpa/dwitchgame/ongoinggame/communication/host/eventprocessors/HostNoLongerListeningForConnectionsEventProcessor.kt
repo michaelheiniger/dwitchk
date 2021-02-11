@@ -4,7 +4,7 @@ import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationStateRepository
 import io.reactivex.rxjava3.core.Completable
-import timber.log.Timber
+import mu.KLogging
 import javax.inject.Inject
 
 internal class HostNoLongerListeningForConnectionsEventProcessor @Inject constructor(
@@ -16,8 +16,10 @@ internal class HostNoLongerListeningForConnectionsEventProcessor @Inject constru
         event as ServerCommunicationEvent.NoLongerListeningForConnections
 
         return Completable.fromAction {
-            Timber.i("No longer Listening for connections.")
+            logger.info { "No longer Listening for connections." }
             communicationStateRepository.updateState(HostCommunicationState.Closed)
         }
     }
+
+    companion object : KLogging()
 }

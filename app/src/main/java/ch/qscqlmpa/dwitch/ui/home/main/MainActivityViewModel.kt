@@ -10,7 +10,7 @@ import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Scheduler
-import timber.log.Timber
+import mu.KLogging
 import javax.inject.Inject
 
 class MainActivityViewModel @Inject
@@ -32,7 +32,7 @@ constructor(
                 .observeOn(uiScheduler)
                 .map { games -> AdvertisedGameResponse.success(games) }
                 .onErrorReturn { error -> AdvertisedGameResponse.error(error) }
-                .doOnError { error -> Timber.e(error, "Error while observing advertised games.") }
+                .doOnError { error -> logger.error(error) { "Error while observing advertised games." } }
                 .doFinally { homeGuestFacade.stopListeningForAdvertiseGames() }
                 .toFlowable(BackpressureStrategy.LATEST)
         )
@@ -44,7 +44,7 @@ constructor(
                 .observeOn(uiScheduler)
                 .map { games -> ExistingGameResponse.success(games) }
                 .onErrorReturn { error -> ExistingGameResponse.error(error) }
-                .doOnError { error -> Timber.e(error, "Error while fetching existing games.") }
+                .doOnError { error -> logger.error(error) { "Error while fetching existing games." } }
                 .toFlowable(BackpressureStrategy.LATEST)
         )
     }
@@ -58,10 +58,10 @@ constructor(
                     .observeOn(uiScheduler)
                     .subscribe(
                         {
-                            Timber.i("Game resumed successfully.")
+                            logger.info { "Game resumed successfully." }
                             commands.value = MainActivityCommands.NavigateToWaitingRoomAsGuest
                         },
-                        { error -> Timber.e(error, "Error while resuming game.") }
+                        { error -> logger.error(error) { "Error while resuming game." } }
                     )
             )
         }
@@ -73,11 +73,13 @@ constructor(
                 .observeOn(uiScheduler)
                 .subscribe(
                     {
-                        Timber.i("Game resumed successfully.")
+                        logger.info { "Game resumed successfully." }
                         commands.value = MainActivityCommands.NavigateToWaitingRoomAsHost
                     },
-                    { error -> Timber.e(error, "Error while resuming game.") }
+                    { error -> logger.error(error) { "Error while resuming game." } }
                 )
         )
     }
+
+    companion object : KLogging()
 }

@@ -4,7 +4,7 @@ import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
 import io.reactivex.rxjava3.core.Completable
-import timber.log.Timber
+import mu.KLogging
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -16,7 +16,9 @@ class MessageDispatcher @Inject constructor(
     fun dispatch(envelope: EnvelopeReceived): Completable {
         val message = envelope.message
         val sender = envelope.senderId
-        Timber.d("Dispatch message: $message")
+        logger.debug { "Dispatch message: $message" }
         return messageProcessors.getValue(message.javaClass).get().process(message, sender)
     }
+
+    companion object : KLogging()
 }

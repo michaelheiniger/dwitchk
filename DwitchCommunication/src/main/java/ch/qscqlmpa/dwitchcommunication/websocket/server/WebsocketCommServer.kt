@@ -12,8 +12,8 @@ import ch.qscqlmpa.dwitchcommunication.model.Recipient
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
+import mu.KLogging
 import org.java_websocket.WebSocket
-import timber.log.Timber
 import javax.inject.Inject
 
 internal class WebsocketCommServer @Inject constructor(
@@ -73,7 +73,7 @@ internal class WebsocketCommServer @Inject constructor(
 
     override fun closeConnectionWithClient(connectionId: ConnectionId) {
         val address = connectionStore.getAddress(connectionId)
-        Timber.i("Connection with remote $address closed by host.")
+        logger.info { "Connection with remote $address closed by host." }
         if (address != null) {
             val senderSocket = websocketServer.getConnections().find { webSocket ->
                 webSocket.remoteSocketAddress.address.hostAddress == address.ipAddress &&
@@ -98,7 +98,7 @@ internal class WebsocketCommServer @Inject constructor(
         if (recipientSocket != null) {
             websocketServer.send(recipientSocket, serializedMessage)
         } else {
-            Timber.e("Message sent to $recipientAddress but no socket found")
+            logger.error { "Message sent to $recipientAddress but no socket found" }
         }
     }
 
@@ -116,7 +116,7 @@ internal class WebsocketCommServer @Inject constructor(
     }
 
     private fun processStartedEvent(): Observable<ServerCommunicationEvent> {
-        Timber.d("Server is now listening for connections")
+        logger.debug { "Server is now listening for connections" }
         return Observable.just(ServerCommunicationEvent.ListeningForConnections(connectionStore.getHostConnectionId()))
     }
 
@@ -124,20 +124,20 @@ internal class WebsocketCommServer @Inject constructor(
         return Observable.just(clientConnectedEvent)
             .filter { event ->
                 if (event.conn == null) {
-                    Timber.d("OnOpen event filtered because websocket is null")
+                    logger.debug { "OnOpen event filtered because websocket is null" }
                 }
                 event.conn != null
             }
             .map { event ->
                 val senderAddress = buildAddressFromConnection(event.conn!!)!!
                 val localConnectionId = connectionStore.addConnectionId(senderAddress)
-                Timber.d("Client connected $senderAddress (assign local connection ID $localConnectionId)")
+                logger.debug { "Client connected $senderAddress (assign local connection ID $localConnectionId)" }
                 ServerCommunicationEvent.ClientConnected(localConnectionId)
             }
     }
 
     private fun processErrorEvent(event: ServerCommEvent.Error): Observable<ServerCommunicationEvent> {
-        Timber.d("Communication error: $event")
+        logger.debug { "Communication error: $event" }
         connectionStore.clearStore()
         return Observable.just(ServerCommunicationEvent.ErrorListeningForConnections(event.ex))
     }
@@ -146,19 +146,19 @@ internal class WebsocketCommServer @Inject constructor(
         return Observable.just(clientDisconnected)
             .filter { event ->
                 if (event.conn == null) {
-                    Timber.d("OnClose event filtered because websocket is null")
+                    logger.debug { "OnClose event filtered because websocket is null" }
                 }
                 event.conn != null
             }
             .flatMap { event ->
                 val senderAddress = buildAddressFromConnection(event.conn!!)
                 if (senderAddress != null) {
-                    Timber.d("Client disconnected $senderAddress (details: $event)")
+                    logger.debug { "Client disconnected $senderAddress (details: $event)" }
                     val localConnectionId = connectionStore.getConnectionIdForAddress(senderAddress)
                     Observable.just(ServerCommunicationEvent.ClientDisconnected(localConnectionId))
                 } else {
                     val missingConnections = findMissingConnections()
-                    Timber.d("Client disconnected but no connection info provided. Inferred missing connections: $missingConnections")
+                    logger.debug { "Client disconnected but no connection info provided. Inferred missing connections: $missingConnections" }
                     Observable.fromIterable(missingConnections.map(ServerCommunicationEvent::ClientDisconnected))
                 }
             }
@@ -168,10 +168,10 @@ internal class WebsocketCommServer @Inject constructor(
         return Observable.just(serverMessage)
             .filter { messageEvent ->
                 if (messageEvent.conn == null) {
-                    Timber.d("onMessage event filtered because websocket is null")
+                    logger.debug { "onMessage event filtered because websocket is null" }
                 }
                 if (messageEvent.message == null) {
-                    Timber.d("onMessage event filtered because message is null")
+                    logger.debug { "onMessage event filtered because message is null" }
                 }
                 messageEvent.conn != null && messageEvent.message != null
             }
@@ -181,7 +181,7 @@ internal class WebsocketCommServer @Inject constructor(
                 val connectionId = connectionStore.getConnectionIdForAddress(senderAddress)
                     ?: throw IllegalStateException("Message received ${messageEvent.message} from $senderAddress has no connection ID")
 
-                Timber.i("Message received %s from %s (connection ID %s)", messageEvent.message, senderAddress, connectionId)
+                logger.info { "Message received ${messageEvent.message} from $senderAddress (connection ID $connectionId)" }
                 EnvelopeReceived(connectionId, message)
             }
     }
@@ -206,4 +206,6 @@ internal class WebsocketCommServer @Inject constructor(
         }
         return null
     }
+
+    companion object : KLogging()
 }

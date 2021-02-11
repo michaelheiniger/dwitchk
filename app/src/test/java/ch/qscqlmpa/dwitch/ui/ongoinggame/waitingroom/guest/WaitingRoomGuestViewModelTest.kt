@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.guest
 
-import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
+import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent

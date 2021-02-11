@@ -77,8 +77,9 @@ def common = dependencyGroup {
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
-    // Timber
-    implementation "com.jakewharton.timber:timber:$timberVersion"
+    // Logging
+    implementation "io.github.microutils:kotlin-logging-jvm:$kotlinLoggingVersion"
+    implementation "org.slf4j:slf4j-android:$slf4jVersion"
 
     // RxJava
     implementation "io.reactivex.rxjava3:rxkotlin:$rxKotlinVersion"

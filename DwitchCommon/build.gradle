@@ -3,38 +3,7 @@ plugins {
     id 'kotlin'
 }
 
-//android {
-//    compileSdkVersion rootProject.ext.compileSdkVersion
-//
-//    defaultConfig {
-//        minSdkVersion rootProject.ext.minSdkVersion
-//        targetSdkVersion rootProject.ext.targetSdkVersion
-//        versionCode 1
-//        versionName "1.0"
-//
-//        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-//        consumerProguardFiles "consumer-rules.pro"
-//    }
-//
-//    buildTypes {
-//        release {
-//            minifyEnabled false
-//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-//        }
-//    }
-//    compileOptions {
-//        sourceCompatibility JavaVersion.VERSION_1_8
-//        targetCompatibility JavaVersion.VERSION_1_8
-//    }
-//    kotlinOptions {
-//        jvmTarget = '1.8'
-//    }
-//}
-
 dependencies {
-
-    // Timber
-    implementation "com.jakewharton.timber:timber:$timberVersion"
 
     // RxJava
     implementation "io.reactivex.rxjava3:rxjava:$rxJavaVersion"

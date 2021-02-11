@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitchgame.gameadvertising
 
-import ch.qscqlmpa.dwitchmodel.gamediscovery.GameAdvertisingInfo
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 

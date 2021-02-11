@@ -6,7 +6,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunication
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import io.reactivex.rxjava3.core.Completable
-import timber.log.Timber
+import mu.KLogging
 import javax.inject.Inject
 
 /**
@@ -20,11 +20,13 @@ internal class GuestDisconnectedFromHostEventProcessor @Inject constructor(
 ) : GuestCommunicationEventProcessor {
 
     override fun process(event: ClientCommunicationEvent): Completable {
-        Timber.i("Process GuestDisconnectedFromHostEvent")
+        logger.info { "Process GuestDisconnectedFromHostEvent" }
         return Completable.fromAction {
             commStateRepository.notify(GuestCommunicationState.Disconnected)
             communicator.disconnect()
             store.setAllPlayersToDisconnected()
         }
     }
+
+    companion object : KLogging()
 }

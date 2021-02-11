@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.host
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
 import com.jakewharton.rxrelay3.BehaviorRelay
 import io.reactivex.rxjava3.core.Observable
-import timber.log.Timber
+import mu.KLogging
 import javax.inject.Inject
 
 @OngoingGameScope
@@ -17,7 +17,9 @@ internal class HostCommunicationStateRepository @Inject constructor() {
     }
 
     fun updateState(state: HostCommunicationState) {
-        Timber.i("New communication state: $state")
+        logger.info { "New communication state: $state" }
         return relay.accept(state)
     }
+
+    companion object : KLogging()
 }

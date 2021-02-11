@@ -15,7 +15,7 @@ internal interface PlayerDao {
     fun insertPlayer(player: Player): Long
 
     @Insert
-    fun insertPlayers(players: List<Player>)
+    fun insertPlayers(players: List<Player>): List<Long>
 
     @Transaction
     fun insertNewGuestPlayer(gameLocalId: Long, name: String): Long {

@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.home
 
-import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
+import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.common.Status
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivityViewModel
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame

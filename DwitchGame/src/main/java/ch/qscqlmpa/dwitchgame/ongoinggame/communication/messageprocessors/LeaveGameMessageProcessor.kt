@@ -8,7 +8,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMes
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import dagger.Lazy
 import io.reactivex.rxjava3.core.Completable
-import timber.log.Timber
+import mu.KLogging
 import javax.inject.Inject
 
 internal class LeaveGameMessageProcessor @Inject constructor(
@@ -34,7 +34,9 @@ internal class LeaveGameMessageProcessor @Inject constructor(
         if (numRecordsAffected != 1) {
             throw IllegalStateException("Player with in-game ID $playerDwitchId is leaving game but is not found in store.")
         } else {
-            Timber.i("Player with in-game ID $playerDwitchId was deleted because it is leaving the game.")
+            logger.info { "Player with in-game ID $playerDwitchId was deleted because it is leaving the game." }
         }
     }
+
+    companion object : KLogging()
 }

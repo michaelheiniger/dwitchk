@@ -20,6 +20,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMes
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
+import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import ch.qscqlmpa.dwitchstore.model.Player
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers
@@ -203,14 +204,14 @@ class GameRoomAsGuestTest : BaseGuestTest() {
     private fun hostSendsInitialWaitingRoomUpdate() {
         val message = Message.WaitingRoomStateUpdateMessage(
             listOf(
-                PlayerDto(
+                PlayerWr(
                     PlayerGuestTest.Host.id,
                     PlayerGuestTest.Host.name,
                     PlayerRole.HOST,
                     PlayerConnectionState.CONNECTED,
                     true
                 ),
-                PlayerDto(
+                PlayerWr(
                     PlayerGuestTest.LocalGuest.id,
                     PlayerGuestTest.LocalGuest.name,
                     PlayerRole.GUEST,

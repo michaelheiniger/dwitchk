@@ -6,7 +6,7 @@ import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
 import io.reactivex.rxjava3.core.Completable
-import timber.log.Timber
+import mu.KLogging
 import javax.inject.Inject
 
 internal class StartCardExchangeUsecase @Inject constructor(
@@ -25,9 +25,11 @@ internal class StartCardExchangeUsecase @Inject constructor(
                         communicator.sendMessage(HostMessageFactory.createCardExchangeMessage(cardExchange, connectionId))
                     } else {
                         // TODO: handle case where the message cannot be send
-                        Timber.e("No connection ID found in store for in-game ID: $playerId")
+                        logger.error { "No connection ID found in store for in-game ID: $playerId" }
                     }
                 }
         }
     }
+
+    companion object : KLogging()
 }

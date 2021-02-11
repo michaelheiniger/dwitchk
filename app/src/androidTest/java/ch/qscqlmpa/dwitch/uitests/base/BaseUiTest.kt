@@ -25,10 +25,10 @@ import ch.qscqlmpa.dwitchstore.TestStoreComponent
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import ch.qscqlmpa.dwitchstore.store.Store
 import io.reactivex.rxjava3.core.Completable
+import mu.KLogging
 import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
@@ -104,13 +104,13 @@ abstract class BaseUiTest {
     }
 
     protected fun dudeWaitASec(seconds: Long = 2L) {
-        Completable.fromAction { Timber.i("Waiting for $seconds seconds...") }
+        Completable.fromAction { logger.info { "Waiting for $seconds seconds..." } }
             .delay(seconds, TimeUnit.SECONDS)
             .blockingSubscribe()
     }
 
     protected fun dudeWaitAMillisSec(ms: Long = 500L) {
-        Completable.fromAction { Timber.i("Waiting for $ms milliseconds...") }
+        Completable.fromAction { logger.info { "Waiting for $ms milliseconds..." } }
             .delay(ms, TimeUnit.MILLISECONDS)
             .blockingSubscribe()
     }
@@ -128,4 +128,6 @@ abstract class BaseUiTest {
     ): String {
         return "{\"isNew\": $isNew, \"gameCommonId\":{\"value\":${gameCommonId.value}},\"gameName\":\"$gameName\",\"gamePort\":$gamePort}"
     }
+
+    companion object : KLogging()
 }

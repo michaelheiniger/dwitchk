@@ -1,7 +1,6 @@
 package ch.qscqlmpa.dwitch.app
 
 import android.annotation.SuppressLint
-import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.app.notifications.NotificationChannelFactory
 import ch.qscqlmpa.dwitch.ongoinggame.OnGoingGameUiModule
 import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameUiComponent
@@ -24,7 +23,7 @@ import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreModule
 import ch.qscqlmpa.dwitchstore.store.StoreModule
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
-import timber.log.Timber
+import mu.KLogging
 import javax.inject.Inject
 
 open class App : DaggerApplication() {
@@ -58,10 +57,6 @@ open class App : DaggerApplication() {
     override fun onCreate() {
         super.onCreate()
 
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-        }
-
         createNotificationChannels()
         observeAppEvents()
     }
@@ -74,7 +69,7 @@ open class App : DaggerApplication() {
         hostPort: Int,
         hostIpAddress: String
     ): OngoingGameComponent? {
-        Timber.d("startOngoingGame()")
+        logger.debug { "startOngoingGame()" }
         if (ongoingGameComponent == null) {
             inGameStoreComponent = storeComponent.addInGameStoreComponent(
                 InGameStoreModule(gameLocalId, localPlayerLocalId)
@@ -108,7 +103,7 @@ open class App : DaggerApplication() {
                 )
             )
         } else {
-            Timber.w("startOngoingGame() called when a game is already on-going.")
+            logger.warn { "startOngoingGame() called when a game is already on-going." }
         }
         return ongoingGameComponent
     }
@@ -150,4 +145,6 @@ open class App : DaggerApplication() {
             }
         }
     }
+
+    companion object : KLogging()
 }

@@ -38,7 +38,7 @@ interface InGameStore {
 
     // Player
     fun insertNewGuestPlayer(name: String): Long
-    fun insertPlayers(players: List<Player>)
+    fun insertPlayers(players: List<Player>): List<Long>
 
     fun updateLocalPlayerWithDwitchId(playerDwitchId: PlayerDwitchId): Int
     fun updateLocalPlayerWithReady(ready: Boolean): Int

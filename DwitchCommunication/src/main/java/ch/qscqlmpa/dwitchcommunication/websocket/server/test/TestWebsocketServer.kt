@@ -6,9 +6,9 @@ import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerMessage
 import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServer
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
+import mu.KLogging
 import org.java_websocket.WebSocket
 import org.java_websocket.handshake.ClientHandshake
-import timber.log.Timber
 
 internal class TestWebsocketServer(
     private val hostIpAddress: String,
@@ -24,12 +24,12 @@ internal class TestWebsocketServer(
     private var connections = mutableListOf<WebSocket>()
 
     override fun start() {
-        Timber.d("start()")
+        logger.debug { "start()" }
         onStart(true)
     }
 
     override fun stop() {
-        Timber.d("stop()")
+        logger.debug { "stop()" }
     }
 
     override fun send(websocket: WebSocket, message: String) {
@@ -94,4 +94,6 @@ internal class TestWebsocketServer(
             Thread.sleep(1000)
         }
     }
+
+    companion object : KLogging()
 }

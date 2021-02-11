@@ -4,7 +4,7 @@ import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import io.reactivex.rxjava3.core.Completable
-import timber.log.Timber
+import mu.KLogging
 import javax.inject.Inject
 
 internal class CardExchangeMessageProcessor @Inject constructor(
@@ -19,11 +19,13 @@ internal class CardExchangeMessageProcessor @Inject constructor(
 
         return Completable.fromAction {
             if (cardExchange.playerId != store.getLocalPlayerDwitchId()) {
-                Timber.w("Received CardExchangeMessage intended for another player: $msg")
+                logger.warn { "Received CardExchangeMessage intended for another player: $msg" }
             } else {
-                Timber.i("Received CardExchangeMessage: $msg")
+                logger.info { "Received CardExchangeMessage: $msg" }
                 store.addCardExchangeEvent(cardExchange)
             }
         }
     }
+
+    companion object : KLogging()
 }

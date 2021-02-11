@@ -14,7 +14,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.game.GuestFacade
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Scheduler
-import timber.log.Timber
+import mu.KLogging
 import javax.inject.Inject
 
 class ConnectionGuestViewModel @Inject constructor(
@@ -68,7 +68,9 @@ class ConnectionGuestViewModel @Inject constructor(
     private fun currentCommunicationState(): Flowable<GuestCommunicationState> {
         return facade.currentCommunicationState()
             .observeOn(uiScheduler)
-            .doOnError { error -> Timber.e(error, "Error while observing communication state.") }
+            .doOnError { error -> logger.error(error) { "Error while observing communication state." } }
             .toFlowable(BackpressureStrategy.LATEST)
     }
+
+    companion object : KLogging()
 }

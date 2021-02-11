@@ -12,7 +12,7 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.cardexchange.CardExchangeFragment
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import kotlinx.android.synthetic.main.player_dashboard_fragment.*
-import timber.log.Timber
+import mu.KLogging
 
 class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClickedListener {
 
@@ -54,7 +54,7 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
         viewModel.playerDashboard().observe(
             viewLifecycleOwner,
             { dashboard ->
-                Timber.d("Dashboard update event: $dashboard")
+                logger.debug { "Dashboard update event: $dashboard" }
 
                 playersInfoTv.text = dashboard.playersInfo
                 gameInfoTv.text = dashboard.gameInfo
@@ -76,7 +76,7 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
         viewModel.commands().observe(
             viewLifecycleOwner,
             { command ->
-                Timber.d("Command: $command")
+                logger.debug { "Command: $command" }
                 when (command) {
                     is PlayerDashboardCommand.OpenCardExchange -> openCardExchange()
                     is PlayerDashboardCommand.OpenEndOfRound -> showEndOfRoundDialog(command.playersInfo)
@@ -102,7 +102,7 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
         imageView.contentDescription = image.description
     }
 
-    companion object {
+    companion object : KLogging() {
         fun create(): PlayerDashboardFragment {
             return PlayerDashboardFragment()
         }

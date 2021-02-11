@@ -8,7 +8,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.eventprocessors.Gu
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import io.reactivex.rxjava3.core.Observable
-import timber.log.Timber
+import mu.KLogging
 
 internal class GuestCommunicatorImpl constructor(
     private val commClient: CommClient,
@@ -32,7 +32,7 @@ internal class GuestCommunicatorImpl constructor(
     }
 
     override fun sendMessageToHost(message: Message) {
-        Timber.d("Sending message to host: $message")
+        logger.debug { "Sending message to host: $message" }
         commClient.sendMessageToServer(message)
     }
 
@@ -56,8 +56,8 @@ internal class GuestCommunicatorImpl constructor(
             commClient.observeCommunicationEvents()
                 .flatMapCompletable { event -> communicationEventDispatcher.dispatch(event).subscribeOn(schedulerFactory.io()) }
                 .subscribe(
-                    { Timber.d("Communication events stream completed") },
-                    { error -> Timber.e(error, "Error while observing communication events") }
+                    { logger.debug { "Communication events stream completed" } },
+                    { error -> logger.error(error) { "Error while observing communication events" } }
                 )
         )
     }
@@ -67,9 +67,11 @@ internal class GuestCommunicatorImpl constructor(
             commClient.observeReceivedMessages()
                 .flatMapCompletable { msg -> messageDispatcher.dispatch(msg).subscribeOn(schedulerFactory.io()) }
                 .subscribe(
-                    { Timber.d("Received messages stream completed !") },
-                    { error -> Timber.e(error, "Error while observing received messages") }
+                    { logger.debug { "Received messages stream completed !" } },
+                    { error -> logger.error(error) { "Error while observing received messages" } }
                 )
         )
     }
+
+    companion object : KLogging()
 }

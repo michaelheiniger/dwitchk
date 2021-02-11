@@ -5,8 +5,8 @@ import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientMessage
 import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClient
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
+import mu.KLogging
 import org.java_websocket.handshake.ServerHandshake
-import timber.log.Timber
 
 internal class TestWebsocketClient constructor(
     private val destinationAddress: String,
@@ -38,7 +38,7 @@ internal class TestWebsocketClient constructor(
     }
 
     override fun send(message: String) {
-        Timber.i("Message sent to server: $message")
+        logger.info { "Message sent to server: $message" }
         threadBreakIfNeeded(true)
         messagesSentRelay.accept(message)
     }
@@ -84,4 +84,6 @@ internal class TestWebsocketClient constructor(
     fun observeMessagesSent(): Observable<String> {
         return messagesSentRelay
     }
+
+    companion object : KLogging()
 }

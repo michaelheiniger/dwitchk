@@ -3,11 +3,11 @@ package ch.qscqlmpa.dwitchcommunication.websocket.server
 import ch.qscqlmpa.dwitchcommunication.Address
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
+import mu.KLogging
 import org.java_websocket.WebSocket
 import org.java_websocket.enums.ReadyState
 import org.java_websocket.handshake.ClientHandshake
 import org.java_websocket.server.WebSocketServer
-import timber.log.Timber
 import java.net.InetSocketAddress
 
 internal class ProdWebsocketServer constructor(
@@ -28,7 +28,7 @@ internal class ProdWebsocketServer constructor(
         if (connectionState == ReadyState.OPEN) {
             websocket.send(message)
         } else {
-            Timber.e("Cannot send message when connection state is: $connectionState")
+            logger.error { "Cannot send message when connection state is: $connectionState" }
         }
     }
 
@@ -68,7 +68,7 @@ internal class ProdWebsocketServer constructor(
         eventRelay.accept(ServerCommEvent.Error(conn, ex))
     }
 
-    companion object {
+    companion object : KLogging() {
         private const val HEART_BEAT_INTERVAL_SEC = 5
     }
 }

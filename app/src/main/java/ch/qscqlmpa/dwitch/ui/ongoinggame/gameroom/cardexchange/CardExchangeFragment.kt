@@ -10,7 +10,7 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard.CardAdapter
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import kotlinx.android.synthetic.main.card_exchange_fragment.*
-import timber.log.Timber
+import mu.KLogging
 
 class CardExchangeFragment : OngoingGameBaseFragment() {
 
@@ -33,7 +33,7 @@ class CardExchangeFragment : OngoingGameBaseFragment() {
         viewModel.commands().observe(
             viewLifecycleOwner,
             { command ->
-                Timber.d("Command: $command")
+                logger.debug { "Command: $command" }
                 when (command) {
                     CardExchangeCommand.Close -> {
                         val supportFragmentManager = requireActivity().supportFragmentManager
@@ -66,7 +66,7 @@ class CardExchangeFragment : OngoingGameBaseFragment() {
         viewModel.cardsInHand().observe(
             viewLifecycleOwner,
             { cardItems ->
-                Timber.d("cardsInHandAdapter updated: $cardItems")
+                logger.debug { "cardsInHandAdapter updated: $cardItems" }
                 cardsInHandAdapter.setData(cardItems)
             }
         )
@@ -84,7 +84,7 @@ class CardExchangeFragment : OngoingGameBaseFragment() {
         }
     }
 
-    companion object {
+    companion object : KLogging() {
         fun create(): CardExchangeFragment {
             return CardExchangeFragment()
         }

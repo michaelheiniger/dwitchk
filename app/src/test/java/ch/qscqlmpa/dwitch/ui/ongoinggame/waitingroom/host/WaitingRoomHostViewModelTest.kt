@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host
 
-import ch.qscqlmpa.dwitch.BaseViewModelUnitTest
+import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitch.ui.model.Visibility
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory

@@ -3,13 +3,13 @@ package ch.qscqlmpa.dwitchgame.api
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertisingImpl
+import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.gameadvertising.network.Network
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.HostFacade
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.HostFacadeImpl
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import ch.qscqlmpa.dwitchmodel.gamediscovery.GameAdvertisingInfo
 import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.rxjava3.schedulers.TestScheduler

@@ -4,8 +4,8 @@ import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchgame.di.GameScope
 import ch.qscqlmpa.dwitchstore.store.Store
 import io.reactivex.rxjava3.core.Observable
+import mu.KLogging
 import org.joda.time.LocalTime
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -16,7 +16,7 @@ internal class AdvertisedGameRepository @Inject constructor(
     private val schedulerFactory: SchedulerFactory
 ) {
 
-    companion object {
+    companion object : KLogging() {
         const val GAME_AD_TIMEOUT_SEC = 5
     }
 
@@ -30,7 +30,7 @@ internal class AdvertisedGameRepository @Inject constructor(
             .filter { (existingGames, game) ->
                 game.isNew || existingGames.contains(game.gameCommonId)
             }
-            .doOnNext { (_, game) -> Timber.v("Game discovered: $game") }
+            .doOnNext { (_, game) -> logger.trace { "Game discovered: $game" } }
             .scan(
                 mapOf<String, AdvertisedGame>(),
                 { mapOfGames, (_, game) -> buildUpdatedMap(mapOfGames, game) }

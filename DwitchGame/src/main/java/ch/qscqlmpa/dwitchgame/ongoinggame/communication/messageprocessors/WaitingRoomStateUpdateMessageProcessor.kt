@@ -7,7 +7,7 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import ch.qscqlmpa.dwitchstore.model.Player
 import io.reactivex.rxjava3.core.Completable
-import timber.log.Timber
+import mu.KLogging
 import javax.inject.Inject
 
 internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
@@ -32,10 +32,10 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
         val playersToRemove = playersOld.map(Player::dwitchId).toHashSet()
         playersToRemove.removeAll(playersUpToDate.map(PlayerWr::dwitchId))
         if (playersToRemove.size > 0) {
-            Timber.v("Players to remove: $playersToRemove")
+            logger.trace { "Players to remove: $playersToRemove" }
             store.deletePlayers(getLocalIdOfPlayersToRemove(playersOld, playersToRemove))
         } else {
-            Timber.v("No player to remove.")
+            logger.trace { "No player to remove." }
         }
     }
 
@@ -54,7 +54,7 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
         }.map { (upToDatePlayer, playerOld) -> Pair(upToDatePlayer, playerOld!!) }
 
         if (playersToUpdate.isNotEmpty()) {
-            Timber.v("Players to update: $playersToUpdate")
+            logger.trace { "Players to update: $playersToUpdate" }
             playersToUpdate.forEach { (upToDatePlayer, playerOld) ->
                 store.updatePlayerWithConnectionStateAndReady(
                     playerOld.id,
@@ -63,7 +63,7 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
                 )
             }
         } else {
-            Timber.v("No player to update.")
+            logger.trace { "No player to update." }
         }
     }
 
@@ -78,7 +78,7 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
         }
 
         if (playersToAdd.isNotEmpty()) {
-            Timber.v("Players to add: $playersToAdd")
+            logger.trace { "Players to add: $playersToAdd" }
             store.insertPlayers(
                 playersToAdd.map { p ->
                     Player(
@@ -93,7 +93,9 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
                 }
             )
         } else {
-            Timber.v("No player to add.")
+            logger.trace { "No player to add." }
         }
     }
+
+    companion object : KLogging()
 }

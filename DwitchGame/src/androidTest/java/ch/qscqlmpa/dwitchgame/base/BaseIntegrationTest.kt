@@ -16,7 +16,6 @@ import ch.qscqlmpa.dwitchstore.store.TestStoreModule
 import org.junit.After
 import org.junit.Before
 import org.junit.runner.RunWith
-import timber.log.Timber
 
 /**
  * Note: The tests are executed on the AndroidJUnitRunner which has only one thread: subscribeOn()/observeOn() have no effect.
@@ -39,10 +38,6 @@ abstract class BaseIntegrationTest {
     protected var ongoingGameComponent: TestOngoingGameComponent? = null
 
     protected lateinit var inGameStore: InGameStore
-
-    init {
-        Timber.plant(Timber.DebugTree())
-    }
 
     @Before
     fun setupGameAndStoreComponents() {

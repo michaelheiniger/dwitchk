@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication
 
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
-import timber.log.Timber
+import mu.KLogging
 import java.util.concurrent.atomic.AtomicReference
 
 /**
@@ -24,7 +24,7 @@ internal abstract class EventRepository<T> {
 
     fun consumeLastEvent(): T? {
         val event = lastEvent.get()
-        Timber.d("Last event consumed: $event")
+        logger.debug { "Last event consumed: $event" }
         return event
     }
 
@@ -32,10 +32,12 @@ internal abstract class EventRepository<T> {
         if (relay.hasObservers()) {
             relay.accept(event)
             lastEvent.set(null)
-            Timber.i("New event consumed: $event")
+            logger.info { "New event consumed: $event" }
         } else {
-            Timber.i("New event stored (waiting for a consumer): $event")
+            logger.info { "New event stored (waiting for a consumer): $event" }
             lastEvent.set(event)
         }
     }
+
+    companion object : KLogging()
 }

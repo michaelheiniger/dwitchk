@@ -19,8 +19,9 @@ def test = dependencyGroup {
 
 dependencies {
 
-    // Timber
-    implementation "com.jakewharton.timber:timber:$timberVersion"
+    // Logging
+    implementation "io.github.microutils:kotlin-logging-jvm:$kotlinLoggingVersion"
+    implementation "org.slf4j:slf4j-android:$slf4jVersion"
 
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$kotlinxSerializationVersion"
 
