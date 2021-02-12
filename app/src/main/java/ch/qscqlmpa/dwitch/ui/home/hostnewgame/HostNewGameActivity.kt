@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
@@ -35,7 +35,7 @@ class HostNewGameActivity : HomeBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(HostNewGameViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(HostNewGameViewModel::class.java)
 
         setupPlayerNameEdt()
         setupGameNameEdt()

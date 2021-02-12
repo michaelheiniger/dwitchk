@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.cardexchange
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
@@ -28,7 +28,7 @@ class CardExchangeFragment : OngoingGameBaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(CardExchangeViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(CardExchangeViewModel::class.java)
 
         viewModel.commands().observe(
             viewLifecycleOwner,

@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
@@ -25,7 +25,7 @@ class GameRoomHostFragment : OngoingGameBaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(GameRoomHostViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(GameRoomHostViewModel::class.java)
         endGameBtn.setOnClickListener { viewModel.endGame() }
         observeCommands()
     }

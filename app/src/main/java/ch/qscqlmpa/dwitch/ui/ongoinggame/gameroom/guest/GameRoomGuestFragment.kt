@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
@@ -29,7 +29,7 @@ class GameRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment.Di
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(GameRoomGuestViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(GameRoomGuestViewModel::class.java)
         observeCommands()
     }
 

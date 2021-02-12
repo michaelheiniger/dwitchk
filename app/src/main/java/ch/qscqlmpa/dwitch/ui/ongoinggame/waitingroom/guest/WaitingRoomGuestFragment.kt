@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.guest
 import android.os.Bundle
 import android.view.View
 import android.widget.CheckBox
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
@@ -28,7 +28,7 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(WaitingRoomGuestViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(WaitingRoomGuestViewModel::class.java)
         setupLocalPlayerReadyStateControls()
         setupLeaveGameControls()
         setupCommands()

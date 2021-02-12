@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
@@ -23,7 +23,7 @@ class GameRoomActivity : OngoingGameBaseActivity() {
         (application as App).getGameUiComponent()!!.inject(this)
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(GameRoomViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(GameRoomViewModel::class.java)
 
         setFragments(PlayerRole.valueOf(intent.getStringExtra(EXTRA_PLAYER_ROLE)))
     }

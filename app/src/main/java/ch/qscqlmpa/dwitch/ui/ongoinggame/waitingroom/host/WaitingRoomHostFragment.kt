@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
@@ -28,7 +28,7 @@ class WaitingRoomHostFragment : OngoingGameBaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(WaitingRoomHostViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(WaitingRoomHostViewModel::class.java)
         setupCanGameBeLaunchedControls()
         setupLaunchGameButton(view)
         setupCancelGameButton(view)

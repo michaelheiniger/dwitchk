@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.connection.host
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
@@ -16,7 +16,7 @@ class ConnectionHostFragment : OngoingGameBaseFragment() {
     private lateinit var viewModel: ConnectionHostViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ConnectionHostViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(ConnectionHostViewModel::class.java)
         setupConnectionStateControls()
         setupReconnectionControls()
     }

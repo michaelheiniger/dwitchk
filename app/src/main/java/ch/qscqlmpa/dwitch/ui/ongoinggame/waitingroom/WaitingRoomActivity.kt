@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
@@ -26,7 +26,7 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
         (application as App).getGameUiComponent()!!.inject(this)
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
             .get(WaitingRoomViewModel::class.java)
 
         when (PlayerRole.valueOf(intent.getStringExtra(EXTRA_PLAYER_ROLE))) {

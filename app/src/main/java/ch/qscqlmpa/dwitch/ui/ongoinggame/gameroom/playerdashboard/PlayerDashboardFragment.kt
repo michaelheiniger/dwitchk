@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
@@ -30,7 +30,7 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(), CardAdapter.CardClick
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(PlayerDashboardViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(PlayerDashboardViewModel::class.java)
 
         startNewRoundBtn.setOnClickListener { viewModel.startNewRound() }
         pickBtn.setOnClickListener { viewModel.pickCard() }
