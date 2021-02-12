@@ -7,22 +7,21 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.BuildConfig
-import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
+import ch.qscqlmpa.dwitch.databinding.ActivityHostNewGameBinding
 import ch.qscqlmpa.dwitch.ui.home.HomeBaseActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import com.jakewharton.rxbinding.widget.RxTextView
-import kotlinx.android.synthetic.main.host_new_game_activity.*
 import rx.subscriptions.CompositeSubscription
 
 class HostNewGameActivity : HomeBaseActivity() {
 
-    override val layoutResource: Int = R.layout.host_new_game_activity
-
     private lateinit var viewModel: HostNewGameViewModel
 
     private val subscriptions = CompositeSubscription()
+
+    private lateinit var binding: ActivityHostNewGameBinding
 
     fun onHostNewGameClick(@Suppress("UNUSED_PARAMETER") view: View) {
         viewModel.hostGame()
@@ -34,6 +33,9 @@ class HostNewGameActivity : HomeBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        binding = ActivityHostNewGameBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(HostNewGameViewModel::class.java)
 
@@ -47,11 +49,11 @@ class HostNewGameActivity : HomeBaseActivity() {
     override fun onStart() {
         super.onStart()
         subscriptions.add(
-            RxTextView.textChanges(playerNameEdt).subscribe { value -> viewModel.onPlayerNameChange(value.toString()) }
+            RxTextView.textChanges(binding.playerNameEdt).subscribe { value -> viewModel.onPlayerNameChange(value.toString()) }
         )
 
         subscriptions.add(
-            RxTextView.textChanges(gameNameEdt).subscribe { value -> viewModel.onGameNameChange(value.toString()) }
+            RxTextView.textChanges(binding.gameNameEdt).subscribe { value -> viewModel.onGameNameChange(value.toString()) }
         )
     }
 
@@ -74,20 +76,20 @@ class HostNewGameActivity : HomeBaseActivity() {
     }
 
     private fun observeHostGameControlState() {
-        viewModel.observeHostGameControleState().observe(this, { ctrlState -> hostGameBtn.isEnabled = ctrlState.enabled })
+        viewModel.observeHostGameControleState().observe(this, { ctrlState -> binding.hostGameBtn.isEnabled = ctrlState.enabled })
     }
 
     @SuppressLint("SetTextI18n")
     private fun setupPlayerNameEdt() {
         if (BuildConfig.DEBUG) {
-            playerNameEdt.setText("Mirlick")
+            binding.playerNameEdt.setText("Mirlick")
         }
     }
 
     @SuppressLint("SetTextI18n")
     private fun setupGameNameEdt() {
         if (BuildConfig.DEBUG) {
-            gameNameEdt.setText("Dwiiitch !")
+            binding.gameNameEdt.setText("Dwiiitch !")
         }
     }
 

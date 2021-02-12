@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
@@ -10,11 +11,9 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest.ConnectionGuestFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.SimpleDialogFragment
 
-class GameRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment.DialogListener {
+class GameRoomGuestFragment : OngoingGameBaseFragment(R.layout.fragment_game_room_guest) {
 
     private lateinit var viewModel: GameRoomGuestViewModel
-
-    override val layoutResource: Int = R.layout.game_room_guest_fragment
 
     override fun inject() {
         (requireActivity().application as App).getGameUiComponent()!!.inject(this)
@@ -33,10 +32,6 @@ class GameRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment.Di
         observeCommands()
     }
 
-    override fun onOkClicked() {
-        viewModel.acknowledgeGameOver()
-    }
-
     private fun observeCommands() {
         viewModel.commands().observe(
             viewLifecycleOwner,
@@ -50,7 +45,9 @@ class GameRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment.Di
     }
 
     private fun showGameOverDialog() {
-        showDialogFragment(SimpleDialogFragment.newInstance(this, R.string.game_over))
+        val dialog = SimpleDialogFragment.newInstance(R.string.game_over)
+        dialog.show(parentFragmentManager, "game_over_dialog")
+        dialog.setFragmentResultListener(SimpleDialogFragment.requestKey) { _, _ -> viewModel.acknowledgeGameOver() }
     }
 
     companion object {

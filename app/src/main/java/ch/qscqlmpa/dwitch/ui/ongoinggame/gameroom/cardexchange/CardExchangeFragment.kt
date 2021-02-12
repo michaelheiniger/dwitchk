@@ -6,17 +6,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
+import ch.qscqlmpa.dwitch.databinding.FragmentCardExchangeBinding
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard.CardAdapter
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import kotlinx.android.synthetic.main.card_exchange_fragment.*
 import mu.KLogging
 
-class CardExchangeFragment : OngoingGameBaseFragment() {
+class CardExchangeFragment : OngoingGameBaseFragment(R.layout.fragment_card_exchange) {
 
     private lateinit var viewModel: CardExchangeViewModel
-
-    override val layoutResource: Int = R.layout.card_exchange_fragment
 
     private lateinit var cardsChosenAdapter: CardAdapter
 
@@ -28,6 +26,7 @@ class CardExchangeFragment : OngoingGameBaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val binding = FragmentCardExchangeBinding.bind(view)
         viewModel = ViewModelProvider(this, viewModelFactory).get(CardExchangeViewModel::class.java)
 
         viewModel.commands().observe(
@@ -43,25 +42,25 @@ class CardExchangeFragment : OngoingGameBaseFragment() {
             }
         )
 
-        viewModel.submitControl().observe(viewLifecycleOwner, { model -> exchangeBtn.isEnabled = model.enabled })
-        exchangeBtn.setOnClickListener { viewModel.confirmChoice() }
+        viewModel.submitControl().observe(viewLifecycleOwner, { model -> binding.exchangeBtn.isEnabled = model.enabled })
+        binding.exchangeBtn.setOnClickListener { viewModel.confirmChoice() }
 
-        setupCardsChosen()
-        setupCardsInHand()
+        setupCardsChosen(binding)
+        setupCardsInHand(binding)
     }
 
-    private fun setupCardsChosen() {
+    private fun setupCardsChosen(binding: FragmentCardExchangeBinding) {
         cardsChosenAdapter = CardAdapter(CardsChosenClickedListener(viewModel))
-        cardsChosenRw.layoutManager = GridLayoutManager(context, 4)
-        cardsChosenRw.adapter = cardsChosenAdapter
+        binding.cardsChosenRw.layoutManager = GridLayoutManager(context, 4)
+        binding.cardsChosenRw.adapter = cardsChosenAdapter
 
         viewModel.cardsChosen().observe(viewLifecycleOwner, { cardItems -> cardsChosenAdapter.setData(cardItems) })
     }
 
-    private fun setupCardsInHand() {
+    private fun setupCardsInHand(binding: FragmentCardExchangeBinding) {
         cardsInHandAdapter = CardAdapter(CardsInHandClickedListener(viewModel))
-        cardsInHandRw.layoutManager = GridLayoutManager(context, 4)
-        cardsInHandRw.adapter = cardsInHandAdapter
+        binding.cardsInHandRw.layoutManager = GridLayoutManager(context, 4)
+        binding.cardsInHandRw.adapter = cardsInHandAdapter
 
         viewModel.cardsInHand().observe(
             viewLifecycleOwner,

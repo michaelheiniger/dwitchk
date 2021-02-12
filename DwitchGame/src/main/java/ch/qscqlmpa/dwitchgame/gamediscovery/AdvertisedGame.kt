@@ -3,8 +3,8 @@ package ch.qscqlmpa.dwitchgame.gamediscovery
 import android.os.Parcelable
 import ch.qscqlmpa.dwitchgame.gameadvertising.GameCommonIdParceler
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.WriteWith
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 import org.joda.time.LocalTime
 
 @Parcelize

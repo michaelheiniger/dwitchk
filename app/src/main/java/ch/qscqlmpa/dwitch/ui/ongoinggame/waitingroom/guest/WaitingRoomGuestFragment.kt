@@ -3,34 +3,27 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.guest
 import android.os.Bundle
 import android.view.View
 import android.widget.CheckBox
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
+import ch.qscqlmpa.dwitch.databinding.FragmentWaitingRoomGuestBinding
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
-import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest.ConnectionGuestFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.SimpleDialogFragment
 import ch.qscqlmpa.dwitch.ui.utils.UiUtil.updateCheckbox
-import kotlinx.android.synthetic.main.waiting_room_guest_fragment.*
+import mu.KLogging
 
-class WaitingRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment.DialogListener {
-
-    override val layoutResource: Int = R.layout.waiting_room_guest_fragment
+class WaitingRoomGuestFragment : OngoingGameBaseFragment(R.layout.fragment_waiting_room_guest) {
 
     private lateinit var viewModel: WaitingRoomGuestViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        parentFragmentManager.beginTransaction()
-            .add(R.id.connection_fragment_container, ConnectionGuestFragment.create())
-            .commit()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val binding = FragmentWaitingRoomGuestBinding.bind(view)
         viewModel = ViewModelProvider(this, viewModelFactory).get(WaitingRoomGuestViewModel::class.java)
-        setupLocalPlayerReadyStateControls()
-        setupLeaveGameControls()
+        setupLocalPlayerReadyStateControls(binding)
+        setupLeaveGameControls(binding)
         setupCommands()
     }
 
@@ -38,17 +31,13 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment
         (requireActivity().application as App).getGameUiComponent()!!.inject(this)
     }
 
-    override fun onOkClicked() {
-        viewModel.acknowledgeGameCanceledEvent()
+    private fun setupLocalPlayerReadyStateControls(binding: FragmentWaitingRoomGuestBinding) {
+        binding.localPlayerReadyCkb.setOnClickListener { v -> viewModel.updateReadyState((v as CheckBox).isChecked) }
+        viewModel.localPlayerReadyStateInfo().updateCheckbox(binding.localPlayerReadyCkb, this)
     }
 
-    private fun setupLocalPlayerReadyStateControls() {
-        localPlayerReadyCkb.setOnClickListener { v -> viewModel.updateReadyState((v as CheckBox).isChecked) }
-        viewModel.localPlayerReadyStateInfo().updateCheckbox(localPlayerReadyCkb, this)
-    }
-
-    private fun setupLeaveGameControls() {
-        leaveGameBtn.setOnClickListener { viewModel.leaveGame() }
+    private fun setupLeaveGameControls(binding: FragmentWaitingRoomGuestBinding) {
+        binding.leaveGameBtn.setOnClickListener { viewModel.leaveGame() }
     }
 
     private fun setupCommands() {
@@ -65,10 +54,12 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(), SimpleDialogFragment
     }
 
     private fun showGameCanceledDialog() {
-        showDialogFragment(SimpleDialogFragment.newInstance(this, R.string.game_canceled_by_host))
+        val dialog = SimpleDialogFragment.newInstance(R.string.game_canceled_by_host)
+        dialog.show(parentFragmentManager, "game_canceled_dialog")
+        dialog.setFragmentResultListener(SimpleDialogFragment.requestKey) { _,_ -> viewModel.acknowledgeGameCanceledEvent() }
     }
 
-    companion object {
+    companion object : KLogging() {
         fun create(): WaitingRoomGuestFragment {
             return WaitingRoomGuestFragment()
         }

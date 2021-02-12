@@ -3,41 +3,43 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.fragment.app.add
+import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
+import ch.qscqlmpa.dwitch.databinding.ActivityGameRoomBinding
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host.GameRoomHostFragment
-import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard.PlayerDashboardFragment
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 
 class GameRoomActivity : OngoingGameBaseActivity() {
-
-    override val layoutResource: Int = R.layout.game_room_activity
 
     private lateinit var viewModel: GameRoomViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as App).getGameUiComponent()!!.inject(this)
         super.onCreate(savedInstanceState)
-
-        viewModel = ViewModelProvider(this, viewModelFactory).get(GameRoomViewModel::class.java)
-
-        setFragments(PlayerRole.valueOf(intent.getStringExtra(EXTRA_PLAYER_ROLE)))
-    }
-
-    private fun setFragments(playerRole: PlayerRole) {
-        val controlFragment = when (playerRole) {
-            PlayerRole.GUEST -> GameRoomGuestFragment.create()
-            PlayerRole.HOST -> GameRoomHostFragment.create()
+        if (savedInstanceState == null) {
+            setFragmentForRole(PlayerRole.valueOf(intent.getStringExtra(EXTRA_PLAYER_ROLE)!!))
         }
 
-        supportFragmentManager.beginTransaction()
-            .add(R.id.host_or_guest_fragment_container, controlFragment)
-            .add(R.id.game_dashboard_fragment_container, PlayerDashboardFragment.create())
-            .commit()
+        val binding = ActivityGameRoomBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        viewModel = ViewModelProvider(this, viewModelFactory).get(GameRoomViewModel::class.java)
+    }
+
+    private fun setFragmentForRole(playerRole: PlayerRole) {
+        supportFragmentManager.commit {
+            setReorderingAllowed(true)
+            when (playerRole) {
+                PlayerRole.GUEST -> add<GameRoomGuestFragment>(R.id.gra_host_or_guest_fragment_container)
+                PlayerRole.HOST -> add<GameRoomHostFragment>(R.id.gra_host_or_guest_fragment_container)
+            }
+        }
     }
 
     companion object {

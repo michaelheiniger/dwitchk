@@ -1,26 +1,20 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.databinding.FragmentEndOfRoundDialogBinding
 
-class EndOfRoundDialogFragment : DialogFragment() {
+class EndOfRoundDialogFragment : DialogFragment(R.layout.fragment_end_of_round_dialog) {
 
     private lateinit var endOfRoundInfo: List<PlayerEndOfRoundInfo>
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.simple_dialog_fragment, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupMainTextTv(view)
-        setupOkBtn(view)
+        val binding = FragmentEndOfRoundDialogBinding.bind(view)
+        setupMainTextTv(binding)
+        setupOkBtn(binding)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,15 +24,13 @@ class EndOfRoundDialogFragment : DialogFragment() {
         }
     }
 
-    private fun setupMainTextTv(view: View) {
-        val mainTextTv = view.findViewById<TextView>(R.id.mainTextTv)
-        mainTextTv.text = endOfRoundInfo
-            .joinToString(separator = "\n") { info -> "${info.name}: ${getString(info.rankResource)}" }
+    private fun setupMainTextTv(binding: FragmentEndOfRoundDialogBinding) {
+        binding.mainTextTv.text =
+            endOfRoundInfo.joinToString(separator = "\n") { info -> "${info.name}: ${getString(info.rankResource)}" }
     }
 
-    private fun setupOkBtn(view: View) {
-        val okBtn = view.findViewById<Button>(R.id.btnOk)
-        okBtn.setOnClickListener { dismiss() }
+    private fun setupOkBtn(binding: FragmentEndOfRoundDialogBinding) {
+        binding.okBtn.setOnClickListener { dismiss() }
     }
 
     companion object {

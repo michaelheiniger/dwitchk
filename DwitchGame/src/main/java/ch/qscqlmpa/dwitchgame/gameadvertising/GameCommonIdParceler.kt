@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.gameadvertising
 
 import android.os.Parcel
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import kotlinx.android.parcel.Parceler
+import kotlinx.parcelize.Parceler
 
 object GameCommonIdParceler : Parceler<GameCommonId> {
     override fun create(parcel: Parcel) = GameCommonId(parcel.readLong())

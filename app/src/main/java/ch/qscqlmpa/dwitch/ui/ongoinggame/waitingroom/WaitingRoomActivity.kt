@@ -3,50 +3,52 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.add
+import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
+import ch.qscqlmpa.dwitch.databinding.ActivityWaitingRoomBinding
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.guest.WaitingRoomGuestFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host.WaitingRoomHostFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.playerlist.PlayerWrAdapter
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
-import kotlinx.android.synthetic.main.waiting_room_activity.*
 
 class WaitingRoomActivity : OngoingGameBaseActivity() {
-
-    override val layoutResource: Int = R.layout.waiting_room_activity
 
     private lateinit var viewModel: WaitingRoomViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as App).getGameUiComponent()!!.inject(this)
         super.onCreate(savedInstanceState)
-
-        viewModel = ViewModelProvider(this, viewModelFactory)
-            .get(WaitingRoomViewModel::class.java)
-
-        when (PlayerRole.valueOf(intent.getStringExtra(EXTRA_PLAYER_ROLE))) {
-            PlayerRole.GUEST -> setControlFragment(WaitingRoomGuestFragment.create())
-            PlayerRole.HOST -> setControlFragment(WaitingRoomHostFragment.create())
+        if (savedInstanceState == null) {
+            setFragmentForRole(PlayerRole.valueOf(intent.getStringExtra(EXTRA_PLAYER_ROLE)!!))
         }
 
-        playerListRw.layoutManager = LinearLayoutManager(this)
-        playerListRw.adapter = PlayerWrAdapter()
+        val binding = ActivityWaitingRoomBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        viewModel = ViewModelProvider(this, viewModelFactory).get(WaitingRoomViewModel::class.java)
+
+        binding.playerListRw.layoutManager = LinearLayoutManager(this)
+        binding.playerListRw.adapter = PlayerWrAdapter()
 
         viewModel.playersInWaitingRoom().observe(
-            this,
-            { list -> (playerListRw.adapter as PlayerWrAdapter).setData(list) }
+            this, { list -> (binding.playerListRw.adapter as PlayerWrAdapter).setData(list) }
         )
     }
 
-    private fun setControlFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .add(R.id.host_or_guest_fragment_container, fragment)
-            .commit()
+    private fun setFragmentForRole(playerRole: PlayerRole) {
+        supportFragmentManager.commit {
+            setReorderingAllowed(true)
+            when (playerRole) {
+                PlayerRole.GUEST -> add<WaitingRoomGuestFragment>(R.id.wra_host_or_guest_fragment_container)
+                PlayerRole.HOST -> add<WaitingRoomHostFragment>(R.id.wra_host_or_guest_fragment_container)
+            }
+        }
     }
 
     companion object {

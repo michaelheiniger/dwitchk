@@ -4,38 +4,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host.WaitingRoomHostFragment">
+    tools:context="ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/top_margin">
 
-        <Button
-            android:id="@+id/launchGameBtn"
-            android:layout_width="match_parent"
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/localPlayerReadyCkb"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:enabled="false"
-            android:text="@string/wrhf_launch_game_tv"
+            android:checked="false"
+            android:text="@string/ready"
+            android:textSize="@dimen/regular_text_size"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/cancelGameBtn"
+            android:id="@+id/leaveGameBtn"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/wrhf_cancel_game_tv"
+            android:text="@string/leave_game_btn"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/launchGameBtn" />
+            app:layout_constraintTop_toBottomOf="@+id/localPlayerReadyCkb" />
 
-        <FrameLayout
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/connection_fragment_container"
+            android:name="ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest.ConnectionGuestFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cancelGameBtn" />
+            app:layout_constraintTop_toBottomOf="@id/leaveGameBtn" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

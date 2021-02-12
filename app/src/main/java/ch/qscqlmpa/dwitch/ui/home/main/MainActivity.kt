@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.databinding.ActivityMainBinding
 import ch.qscqlmpa.dwitch.ui.common.Status
 import ch.qscqlmpa.dwitch.ui.home.HomeBaseActivity
 import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameActivity
@@ -14,17 +14,17 @@ import ch.qscqlmpa.dwitch.ui.home.joinnewgame.JoinNewGameActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
-import kotlinx.android.synthetic.main.main_activity.*
 import mu.KLogging
 
 class MainActivity : HomeBaseActivity(), AdvertisedGameAdapter.AdvertisedGameClickedListener, ExistingGameAdapter.ExistingGameClickedListener {
-
-    override val layoutResource: Int = R.layout.main_activity
 
     private lateinit var viewModel: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainActivityViewModel::class.java)
 
@@ -39,34 +39,34 @@ class MainActivity : HomeBaseActivity(), AdvertisedGameAdapter.AdvertisedGameCli
             }
         )
 
-        gameListRw.layoutManager = LinearLayoutManager(this)
-        gameListRw.adapter = AdvertisedGameAdapter(this)
+        binding.gameListRw.layoutManager = LinearLayoutManager(this)
+        binding.gameListRw.adapter = AdvertisedGameAdapter(this)
         viewModel.observeAdvertisedGames().observe(
             this,
             { response ->
                 when (response.status) {
                     Status.LOADING -> { // Nothing to do
                     }
-                    Status.SUCCESS -> (gameListRw.adapter as AdvertisedGameAdapter).setData(response.advertisedGames)
+                    Status.SUCCESS -> (binding.gameListRw.adapter as AdvertisedGameAdapter).setData(response.advertisedGames)
                     Status.ERROR -> {
-                        gameListErrorTv.visibility = View.VISIBLE
+                        binding.gameListErrorTv.visibility = View.VISIBLE
                         logger.error(response.error) { "Error while observing advertised games." }
                     }
                 }
             }
         )
 
-        existingGameListRw.layoutManager = LinearLayoutManager(this)
-        existingGameListRw.adapter = ExistingGameAdapter(this)
+        binding.existingGameListRw.layoutManager = LinearLayoutManager(this)
+        binding.existingGameListRw.adapter = ExistingGameAdapter(this)
         viewModel.observeExistingGames().observe(
             this,
             { response ->
                 when (response.status) {
                     Status.LOADING -> { // Nothing to do
                     }
-                    Status.SUCCESS -> (existingGameListRw.adapter as ExistingGameAdapter).setData(response.resumableGames)
+                    Status.SUCCESS -> (binding.existingGameListRw.adapter as ExistingGameAdapter).setData(response.resumableGames)
                     Status.ERROR -> {
-                        existingGameListErrorTv.visibility = View.VISIBLE
+                        binding.existingGameListErrorTv.visibility = View.VISIBLE
                         logger.error(response.error) { "Error while observing advertised games." }
                     }
                 }

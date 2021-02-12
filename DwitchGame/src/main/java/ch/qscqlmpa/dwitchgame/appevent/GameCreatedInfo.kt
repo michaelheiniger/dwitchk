@@ -4,8 +4,8 @@ import android.os.Parcelable
 import ch.qscqlmpa.dwitchgame.gameadvertising.GameCommonIdParceler
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.InsertGameResult
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.WriteWith
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 
 @Parcelize
 data class GameCreatedInfo(

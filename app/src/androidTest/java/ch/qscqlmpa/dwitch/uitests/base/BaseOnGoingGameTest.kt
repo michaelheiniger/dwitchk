@@ -6,6 +6,6 @@ import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 abstract class BaseOnGoingGameTest : BaseUiTest() {
 
     protected fun closeEndOfRoundDialog() {
-        UiUtil.clickOnButton(R.id.btnOk)
+        UiUtil.clickOnButton(R.id.okBtn)
     }
 }

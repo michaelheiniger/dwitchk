@@ -5,14 +5,12 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
+import ch.qscqlmpa.dwitch.databinding.FragmentGameRoomHostBinding
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.host.ConnectionHostFragment
-import kotlinx.android.synthetic.main.game_room_host_fragment.*
 
-class GameRoomHostFragment : OngoingGameBaseFragment() {
-
-    override val layoutResource: Int = R.layout.game_room_host_fragment
+class GameRoomHostFragment : OngoingGameBaseFragment(R.layout.fragment_game_room_host) {
 
     private lateinit var viewModel: GameRoomHostViewModel
 
@@ -25,8 +23,9 @@ class GameRoomHostFragment : OngoingGameBaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val binding = FragmentGameRoomHostBinding.bind(view)
         viewModel = ViewModelProvider(this, viewModelFactory).get(GameRoomHostViewModel::class.java)
-        endGameBtn.setOnClickListener { viewModel.endGame() }
+        binding.endGameBtn.setOnClickListener { viewModel.endGame() }
         observeCommands()
     }
 

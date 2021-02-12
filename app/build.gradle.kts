@@ -2,7 +2,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
-    kotlin("android.extensions")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -22,6 +22,10 @@ android {
         testInstrumentationRunnerArguments(mapOf("clearPackageData" to "true"))
     }
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     buildTypes {
         named("release") {
             isMinifyEnabled = true // Enables code shrinking, obfuscation, and optimization
@@ -38,10 +42,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    androidExtensions {
-        isExperimental = true
-    }
-
     testOptions {
         execution = "ANDROIDX_TEST_ORCHESTRATOR"
     }
@@ -50,6 +50,10 @@ android {
         getByName("main").java.srcDirs("src/main/java")
         getByName("test").java.srcDirs("src/test/java", "src/testShared")
         getByName("androidTest").java.srcDirs("src/androidTest/java", "src/testShared")
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 }
 
@@ -73,6 +77,7 @@ dependencies {
     implementation("com.google.android.material:material:1.3.0")
     implementation("com.jakewharton.rxbinding:rxbinding-kotlin:0.4.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlinVersion}")
+    implementation("androidx.fragment:fragment-ktx:1.3.0")
 
     // Dagger
     implementation("com.google.dagger:dagger-android-support:2.30.1")

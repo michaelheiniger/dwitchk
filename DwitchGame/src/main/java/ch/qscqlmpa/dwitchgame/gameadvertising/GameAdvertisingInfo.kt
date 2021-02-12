@@ -2,8 +2,8 @@ package ch.qscqlmpa.dwitchgame.gameadvertising
 
 import android.os.Parcelable
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.WriteWith
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 import kotlinx.serialization.Serializable
 
 @Serializable

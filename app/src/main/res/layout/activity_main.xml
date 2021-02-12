@@ -16,21 +16,21 @@
 
         <TextView
             android:id="@+id/gameListTv"
+            style="@style/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/ma_game_list_tv"
             android:textSize="@dimen/regular_text_size"
-            style="@style/title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/gameListErrorTv"
+            style="@style/error"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/ma_advertised_games_error_tv"
-            style="@style/error"
             android:textSize="@dimen/regular_text_size"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
@@ -69,22 +69,22 @@
 
         <TextView
             android:id="@+id/existingGameListTv"
+            style="@style/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/ma_existing_game_list_tv"
-            style="@style/title"
             android:textSize="@dimen/regular_text_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/createGameBtn" />
 
         <TextView
             android:id="@+id/existingGameListErrorTv"
+            style="@style/error"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/ma_existing_games_error_tv"
-            style="@style/error"
             android:textSize="@dimen/regular_text_size"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"

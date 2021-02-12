@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchgame.appevent
 import android.os.Parcelable
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchstore.InsertGameResult
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class GameJoinedInfo(

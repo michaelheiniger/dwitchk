@@ -20,7 +20,7 @@
         tools:text="Main Text" />
 
     <Button
-        android:id="@+id/btnOk"
+        android:id="@+id/okBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/ok"

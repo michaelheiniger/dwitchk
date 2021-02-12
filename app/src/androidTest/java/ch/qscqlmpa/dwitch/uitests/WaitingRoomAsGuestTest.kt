@@ -72,7 +72,7 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
         clientTestStub.serverSendsMessageToClient(Message.CancelGameMessage, false)
         dudeWaitAMillisSec()
 
-        clickOnButton(R.id.btnOk)
+        clickOnButton(R.id.okBtn)
         dudeWaitAMillisSec()
 
         elementIsDisplayed(R.id.gameListTv)

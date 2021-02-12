@@ -1,28 +1,22 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.databinding.FragmentSimpleDialogBinding
 import ch.qscqlmpa.dwitch.ui.common.Resource
 
-class SimpleDialogFragment : DialogFragment() {
+class SimpleDialogFragment : DialogFragment(R.layout.fragment_simple_dialog) {
 
     private lateinit var mainTextResource: Resource
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.simple_dialog_fragment, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupMainTextTv(view)
-        setupOkBtn(view)
+        val binding = FragmentSimpleDialogBinding.bind(view)
+        setupMainTextTv(binding)
+        setupOkBtn(binding)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,36 +30,30 @@ class SimpleDialogFragment : DialogFragment() {
         }
     }
 
-    private fun setupMainTextTv(view: View) {
-        val mainTextTv = view.findViewById<TextView>(R.id.mainTextTv)
-        mainTextTv.text = getString(mainTextResource.id)
+    private fun setupMainTextTv(binding: FragmentSimpleDialogBinding) {
+        binding.mainTextTv.text = getString(mainTextResource.id)
     }
 
-    private fun setupOkBtn(view: View) {
-        val okBtn = view.findViewById<Button>(R.id.btnOk)
-        okBtn.setOnClickListener {
-            val dialogListener = targetFragment as DialogListener
-            dialogListener.onOkClicked()
+    private fun setupOkBtn(binding: FragmentSimpleDialogBinding) {
+        binding.okBtn.setOnClickListener {
+            setFragmentResult(requestKey, Bundle())
             dismiss()
         }
     }
 
     companion object {
 
+        const val requestKey = "simpleDialogFragmentRequestKey"
+
         private const val EXTRA_MAIN_TEXT_CONTENT = "mainTextContent"
 
         @JvmStatic
-        fun newInstance(targetFragment: Fragment, mainTextResourceId: Int): DialogFragment {
+        fun newInstance(mainTextResourceId: Int): DialogFragment {
             val dialogFragment = SimpleDialogFragment()
             val arguments = Bundle()
             arguments.putInt(EXTRA_MAIN_TEXT_CONTENT, mainTextResourceId)
             dialogFragment.arguments = arguments
-            dialogFragment.setTargetFragment(targetFragment, 1)
             return dialogFragment
         }
-    }
-
-    interface DialogListener {
-        fun onOkClicked()
     }
 }

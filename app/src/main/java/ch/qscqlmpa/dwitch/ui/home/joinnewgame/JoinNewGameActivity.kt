@@ -7,25 +7,24 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.BuildConfig
-import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
+import ch.qscqlmpa.dwitch.databinding.ActivityJoinNewGameBinding
 import ch.qscqlmpa.dwitch.ui.home.HomeBaseActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import com.jakewharton.rxbinding.widget.RxTextView
-import kotlinx.android.synthetic.main.join_new_game_activity.*
 import rx.subscriptions.CompositeSubscription
 import java.util.*
 
 class JoinNewGameActivity : HomeBaseActivity() {
 
-    override val layoutResource: Int = R.layout.join_new_game_activity
-
     private lateinit var viewModel: JoinNewGameViewModel
     private var game: AdvertisedGame? = null
 
     private val subscriptions = CompositeSubscription()
+
+    private lateinit var binding: ActivityJoinNewGameBinding
 
     fun onJoiNnewGameClick(@Suppress("UNUSED_PARAMETER") view: View) {
         viewModel.joinGame(game!!)
@@ -39,6 +38,9 @@ class JoinNewGameActivity : HomeBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        binding = ActivityJoinNewGameBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         game = intent.getParcelableExtra(EXTRA_GAME)
         viewModel = ViewModelProvider(this, viewModelFactory).get(JoinNewGameViewModel::class.java)
 
@@ -51,7 +53,7 @@ class JoinNewGameActivity : HomeBaseActivity() {
     override fun onStart() {
         super.onStart()
         subscriptions.add(
-            RxTextView.textChanges(playerNameEdt).subscribe { value -> viewModel.onPlayerNameChange(value.toString()) }
+            RxTextView.textChanges(binding.playerNameEdt).subscribe { value -> viewModel.onPlayerNameChange(value.toString()) }
         )
     }
 
@@ -63,7 +65,7 @@ class JoinNewGameActivity : HomeBaseActivity() {
     @SuppressLint("SetTextI18n")
     private fun setupPlayerNameEdt() {
         if (BuildConfig.DEBUG) {
-            playerNameEdt.setText("Mébène")
+            binding.playerNameEdt.setText("Mébène")
         }
     }
 
@@ -81,7 +83,7 @@ class JoinNewGameActivity : HomeBaseActivity() {
     }
 
     private fun observeJoinGameControlState() {
-        viewModel.observeJoinGameControlState().observe(this, { nextControl -> joinGameBtn.isEnabled = nextControl.enabled })
+        viewModel.observeJoinGameControlState().observe(this, { nextControl -> binding.joinGameBtn.isEnabled = nextControl.enabled })
     }
 
     companion object {

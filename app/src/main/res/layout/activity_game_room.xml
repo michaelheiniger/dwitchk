@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity">
+    tools:context="ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="@dimen/left_margin"
@@ -14,41 +15,30 @@
         android:layout_marginEnd="@dimen/right_margin"
         android:layout_marginBottom="@dimen/top_margin">
 
-        <TextView
-            android:id="@+id/playerListTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/wra_player_list"
-            android:textSize="@dimen/regular_text_size"
-            style="@style/title"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/playerListRw"
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/game_dashboard_fragment_container"
+            android:name="ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard.PlayerDashboardFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toTopOf="@id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/playerListTv"
-            app:layout_constraintBottom_toTopOf="@id/guideline"
-            tools:listitem="@layout/player_wr_item" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.6" />
+            app:layout_constraintGuide_percent="0.8" />
 
-        <FrameLayout
-            android:id="@+id/host_or_guest_fragment_container"
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/gra_host_or_guest_fragment_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/guideline" />
 

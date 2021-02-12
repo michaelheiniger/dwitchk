@@ -17,7 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
-    <FrameLayout
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/connection_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"

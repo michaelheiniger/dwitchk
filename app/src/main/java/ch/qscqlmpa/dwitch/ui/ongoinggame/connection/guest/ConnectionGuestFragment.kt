@@ -5,34 +5,33 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
+import ch.qscqlmpa.dwitch.databinding.FragmentConnectionGuestBinding
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
 import ch.qscqlmpa.dwitch.ui.utils.UiUtil.updateView
-import kotlinx.android.synthetic.main.connection_guest_fragment.*
 
-class ConnectionGuestFragment : OngoingGameBaseFragment() {
-
-    override val layoutResource: Int = R.layout.connection_guest_fragment
+class ConnectionGuestFragment : OngoingGameBaseFragment(R.layout.fragment_connection_guest) {
 
     private lateinit var viewModel: ConnectionGuestViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val binding = FragmentConnectionGuestBinding.bind(view)
         viewModel = ViewModelProvider(this, viewModelFactory).get(ConnectionGuestViewModel::class.java)
-        setupConnectionStateControls()
-        setupReconnectionControls()
+        setupConnectionStateControls(binding)
+        setupReconnectionControls(binding)
     }
 
     override fun inject() {
         (requireActivity().application as App).getGameUiComponent()!!.inject(this)
     }
 
-    private fun setupConnectionStateControls() {
-        viewModel.connectionStateInfo().observe(viewLifecycleOwner, { uiInfo -> communicationStateTv.text = getText(uiInfo.textResource.id) })
+    private fun setupConnectionStateControls(binding: FragmentConnectionGuestBinding) {
+        viewModel.connectionStateInfo().observe(viewLifecycleOwner, { uiInfo -> binding.communicationStateTv.text = getText(uiInfo.textResource.id) })
     }
 
-    private fun setupReconnectionControls() {
-        reconnectBtn.setOnClickListener { viewModel.reconnect() }
-        viewModel.reconnectAction().updateView(reconnectBtn, this)
-        viewModel.reconnectLoading().updateView(reconnectPb, this)
+    private fun setupReconnectionControls(binding: FragmentConnectionGuestBinding) {
+        binding.reconnectBtn.setOnClickListener { viewModel.reconnect() }
+        viewModel.reconnectAction().updateView(binding.reconnectBtn, this)
+        viewModel.reconnectLoading().updateView(binding.reconnectPb, this)
     }
 
     companion object {
