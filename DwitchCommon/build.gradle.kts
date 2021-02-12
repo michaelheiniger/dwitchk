@@ -6,10 +6,8 @@ plugins {
 dependencies {
 
     // RxJava
-    implementation("io.reactivex.rxjava3:rxjava:${Libs.rxJavaVersion}")
-    implementation("io.reactivex.rxjava3:rxkotlin:${Libs.rxKotlinVersion}")
-    implementation("com.jakewharton.rxrelay3:rxrelay:${Libs.rxRelayVersion}")
+    implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
 
     // Joda time
-    implementation("joda-time:joda-time:${Libs.jodaVersion}")
+    implementation("joda-time:joda-time:2.10.1")
 }

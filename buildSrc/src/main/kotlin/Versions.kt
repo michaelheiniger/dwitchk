@@ -1,6 +1,7 @@
-object AndroidVersions {
+object Versions {
 
     const val kotlinVersion = "1.4.30"
+
     const val ktlintGradlePluginVersion = "10.0.0"
 
     const val compileSdkVersion = 29

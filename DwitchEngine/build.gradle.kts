@@ -8,17 +8,18 @@ plugins {
 dependencies {
 
     // Logging
-    implementation("io.github.microutils:kotlin-logging-jvm:${Libs.kotlinLoggingVersion}")
-    implementation("org.slf4j:slf4j-android:${Libs.slf4jVersion}")
+    implementation("io.github.microutils:kotlin-logging-jvm:2.0.2")
+    implementation("org.slf4j:slf4j-android:1.7.21")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:${Libs.kotlinxSerializationVersion}")
+    // Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc")
 
-//    test
-    // JUnit5 (for unit tests except those of ViewModel)
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${Libs.junit5Version}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${Libs.junit5Version}")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:${Libs.junit5Version}")
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:${Libs.junit5Version}")
+    // JUnit5
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.7.0")
 
-    testImplementation("org.assertj:assertj-core:${Libs.assertjVersion}")
+    // AssertJ
+    testImplementation("org.assertj:assertj-core:3.18.1")
 }

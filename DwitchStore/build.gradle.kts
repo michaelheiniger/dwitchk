@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion(AndroidVersions.compileSdkVersion)
+    compileSdkVersion(Versions.compileSdkVersion)
 
     defaultConfig {
-        minSdkVersion(AndroidVersions.minSdkVersion)
-        targetSdkVersion(AndroidVersions.targetSdkVersion)
+        minSdkVersion(Versions.minSdkVersion)
+        targetSdkVersion(Versions.targetSdkVersion)
         versionCode = 1
         versionName = "1.0"
 
@@ -38,50 +38,46 @@ dependencies {
     implementation(project(path = ":DwitchModel"))
 
     // Logging
-    implementation("io.github.microutils:kotlin-logging-jvm:${Libs.kotlinLoggingVersion}")
-    implementation("org.slf4j:slf4j-android:${Libs.slf4jVersion}")
+    implementation("io.github.microutils:kotlin-logging-jvm:2.0.2")
+    implementation("org.slf4j:slf4j-android:1.7.21")
 
     // Room database
-    implementation("androidx.room:room-runtime:${Libs.roomVersion}")
-    implementation("androidx.room:room-rxjava3:${Libs.roomVersion}")
-    kapt("androidx.room:room-compiler:${Libs.roomVersion}")
+    implementation("androidx.room:room-runtime:2.3.0-beta01")
+    implementation("androidx.room:room-rxjava3:2.3.0-beta01")
+    kapt("androidx.room:room-compiler:2.3.0-beta01")
+    testImplementation("androidx.room:room-testing:2.3.0-beta01")
 
     // Dagger
-    implementation("com.google.dagger:dagger:${Libs.daggerVersion}")
-    kapt("com.google.dagger:dagger-compiler:${Libs.daggerVersion}")
-    implementation("com.google.dagger:dagger-android:${Libs.daggerVersion}")
-    implementation("com.google.dagger:dagger-android-support:${Libs.daggerVersion}")
-    kapt("com.google.dagger:dagger-android-processor:${Libs.daggerVersion}")
+    implementation("com.google.dagger:dagger-android-support:2.30.1")
+    implementation("com.google.dagger:dagger-android:2.30.1")
+    implementation("com.google.dagger:dagger:2.30.1")
+    kapt("com.google.dagger:dagger-android-processor:2.30.1")
+    kapt("com.google.dagger:dagger-compiler:2.30.1")
+    kaptAndroidTest("com.google.dagger:dagger-compiler:2.30.1")
 
     // Serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:${Libs.kotlinxSerializationVersion}")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc")
 
-    //test
     // JUnit4 (For ViewModel unit tests and instrumented tests)
-    testImplementation("junit:junit:4.12")
+    testImplementation("junit:junit:4.13")
 
     // MockK
     testImplementation("io.mockk:mockk:1.9.3")
     androidTestImplementation("io.mockk:mockk-android:1.9.3")
 
     // AssertJ
-    testImplementation("org.assertj:assertj-core:${Libs.assertjVersion}")
-    androidTestImplementation("org.assertj:assertj-core:${Libs.assertjVersion}")
+    testImplementation("org.assertj:assertj-core:3.18.1")
+    androidTestImplementation("org.assertj:assertj-core:3.18.1")
 
-    // AndroidJUnitRunner and JUnit Rules
+    // Android testing stuff
     androidTestImplementation("androidx.test:core:1.3.0")
     androidTestImplementation("androidx.test:core-ktx:1.3.0")
     androidTestImplementation("androidx.test:runner:1.3.0")
     androidTestImplementation("androidx.test:rules:1.3.0")
     androidTestImplementation("androidx.test.ext:junit-ktx:1.1.2")
-    androidTestUtil("androidx.test:orchestrator:1.3.1-alpha02")
-
-    // Dagger
-    kaptAndroidTest("com.google.dagger:dagger-compiler:${Libs.daggerVersion}")
-
+    androidTestUtil("androidx.test:orchestrator:1.4.0-alpha04")
     testImplementation("android.arch.core:core-testing:1.1.1")
-    testImplementation("androidx.room:room-testing:${Libs.roomVersion}")
 
     // Joda time
-    implementation("joda-time:joda-time:${Libs.jodaVersion}")
+    implementation("joda-time:joda-time:2.10.1")
 }

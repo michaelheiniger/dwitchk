@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion(AndroidVersions.compileSdkVersion)
-    buildToolsVersion(AndroidVersions.buildToolsVersion)
+    compileSdkVersion(Versions.compileSdkVersion)
+    buildToolsVersion(Versions.buildToolsVersion)
     defaultConfig {
         applicationId = "ch.qscqlmpa.dwitch"
-        minSdkVersion(AndroidVersions.minSdkVersion)
-        targetSdkVersion(AndroidVersions.targetSdkVersion)
+        minSdkVersion(Versions.minSdkVersion)
+        targetSdkVersion(Versions.targetSdkVersion)
         versionCode = 1
         versionName = "1.0"
 
@@ -54,78 +54,71 @@ android {
 }
 
 dependencies {
+    // Other modules
+    implementation(project(path = ":DwitchCommon"))
+    implementation(project(path = ":DwitchCommunication"))
     implementation(project(path = ":DwitchEngine"))
+    implementation(project(path = ":DwitchGame"))
     implementation(project(path = ":DwitchModel"))
     implementation(project(path = ":DwitchStore"))
-    implementation(project(path = ":DwitchCommunication"))
-    implementation(project(path = ":DwitchGame"))
-    implementation(project(path = ":DwitchCommon"))
 
-    // common
-
-    // Android
-    implementation("androidx.appcompat:appcompat:1.1.0")
-    implementation("androidx.lifecycle:lifecycle-extensions:2.1.0")
-    implementation("androidx.core:core-ktx:+")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${AndroidVersions.kotlinVersion}")
+    // Android / UI
+    implementation("androidx.appcompat:appcompat:1.2.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.0-alpha2")
+    implementation("androidx.core:core-ktx:1.3.2")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0")
+    implementation("androidx.recyclerview:recyclerview:1.2.0-beta01")
+    implementation("com.google.android.material:material:1.3.0")
+    implementation("com.jakewharton.rxbinding:rxbinding-kotlin:0.4.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlinVersion}")
 
     // Dagger
-    implementation("com.google.dagger:dagger:${Libs.daggerVersion}")
-    kapt("com.google.dagger:dagger-compiler:${Libs.daggerVersion}")
-    implementation("com.google.dagger:dagger-android:${Libs.daggerVersion}")
-    implementation("com.google.dagger:dagger-android-support:${Libs.daggerVersion}")
-    kapt("com.google.dagger:dagger-android-processor:${Libs.daggerVersion}")
+    implementation("com.google.dagger:dagger-android-support:2.30.1")
+    implementation("com.google.dagger:dagger-android:2.30.1")
+    implementation("com.google.dagger:dagger:2.30.1")
+    kapt("com.google.dagger:dagger-android-processor:2.30.1")
+    kapt("com.google.dagger:dagger-compiler:2.30.1")
+    kaptAndroidTest("com.google.dagger:dagger-compiler:2.30.1")
 
     // Logging
-    implementation("io.github.microutils:kotlin-logging-jvm:${Libs.kotlinLoggingVersion}")
-    implementation("org.slf4j:slf4j-android:${Libs.slf4jVersion}")
+    implementation("io.github.microutils:kotlin-logging-jvm:2.0.2")
+    implementation("org.slf4j:slf4j-android:1.7.21")
 
     // RxJava
-    implementation("io.reactivex.rxjava3:rxkotlin:${Libs.rxKotlinVersion}")
-    implementation("io.reactivex.rxjava3:rxandroid:${Libs.rxAndroidVersion}")
-    implementation("com.jakewharton.rxrelay3:rxrelay:${Libs.rxRelayVersion}")
-    implementation("androidx.lifecycle:lifecycle-reactivestreams:${Libs.lifecycleReactiveStreamsVersion}")
+    implementation("androidx.lifecycle:lifecycle-reactivestreams:2.3.0")
+    implementation("com.jakewharton.rxrelay3:rxrelay:3.0.0")
+    implementation("io.reactivex.rxjava3:rxandroid:3.0.0")
+    implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
 
     // Joda time
-    implementation("joda-time:joda-time:${Libs.jodaVersion}")
+    implementation("joda-time:joda-time:2.10.1")
 
-    // ui
-    implementation("com.google.android.material:material:1.2.1")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta5")
-    implementation("androidx.recyclerview:recyclerview:${Libs.recyclerViewVersion}")
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.appcompat:appcompat:1.0.2")
-    implementation("com.jakewharton.rxbinding:rxbinding-kotlin:0.4.0")
-
-    // test
     // JUnit4 (For ViewModel unit tests and instrumented tests)
-    testImplementation("junit:junit:4.12")
+    testImplementation("junit:junit:4.13")
 
-    // MockK
-    androidTestImplementation("io.mockk:mockk-android:1.9.3")
-    testImplementation("io.mockk:mockk:1.9.3")
-
-    testImplementation("org.assertj:assertj-core:${Libs.assertjVersion}")
-    androidTestImplementation("org.assertj:assertj-core:${Libs.assertjVersion}")
+    // Android testing stuff
+    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.2")
+    androidTestImplementation("androidx.test:core-ktx:1.3.0")
+    androidTestImplementation("androidx.test:core:1.3.0")
+    androidTestImplementation("androidx.test:rules:1.3.0")
+    androidTestImplementation("androidx.test:runner:1.3.0")
+    androidTestUtil("androidx.test:orchestrator:1.4.0-alpha04")
 
     // Espresso
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
-    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.2.0")
-
-    // AndroidJUnitRunner and JUnit Rules
-    androidTestImplementation("androidx.test:core:1.3.0")
-    androidTestImplementation("androidx.test:core-ktx:1.3.0")
-    androidTestImplementation("androidx.test:runner:1.3.0")
-    androidTestImplementation("androidx.test:rules:1.3.0")
-    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.2")
-    androidTestUtil("androidx.test:orchestrator:1.3.1-alpha02")
-
-    // Dagger
-    kaptAndroidTest("com.google.dagger:dagger-compiler:${Libs.daggerVersion}")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.3.0")
 
     // To use androidx.arch.core.executor.testing.InstantTaskExecutorRule in ViewModel unit tests
     testImplementation("android.arch.core:core-testing:1.1.1")
-    testImplementation("androidx.room:room-testing:${Libs.roomVersion}")
+    testImplementation("androidx.room:room-testing:2.3.0-beta01")
+
+    // MockK
+    testImplementation("io.mockk:mockk:1.9.3")
+    androidTestImplementation("io.mockk:mockk-android:1.9.3")
+
+    // AssertJ
+    testImplementation("org.assertj:assertj-core:3.18.1")
+    androidTestImplementation("org.assertj:assertj-core:3.18.1")
 }
