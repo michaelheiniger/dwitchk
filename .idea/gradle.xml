@@ -18,6 +18,7 @@
             <option value="$PROJECT_DIR$/DwitchModel" />
             <option value="$PROJECT_DIR$/DwitchStore" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/buildSrc" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
