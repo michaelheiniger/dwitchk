@@ -5,7 +5,7 @@ import io.reactivex.rxjava3.core.Observable
 
 interface ServerTestStub {
 
-    fun connectClientToServer(connectionInitiator: PlayerHostTest, enableThreadBreak: Boolean = false)
+    fun connectClientToServer(connectionInitiator: PlayerHostTest)
 
     fun guestSendsMessageToServer(sender: PlayerHostTest, message: Message, enableThreadBreak: Boolean = false)
 

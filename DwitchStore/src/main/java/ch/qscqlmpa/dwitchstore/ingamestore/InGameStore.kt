@@ -1,12 +1,10 @@
 package ch.qscqlmpa.dwitchstore.ingamestore
 
-import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
-import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeInfo
 import ch.qscqlmpa.dwitchstore.ingamestore.model.GameCommonIdAndCurrentRoom
 import ch.qscqlmpa.dwitchstore.model.Game
 import ch.qscqlmpa.dwitchstore.model.Player
@@ -29,12 +27,6 @@ interface InGameStore {
     fun deleteGame()
     fun updateGameRoom(gameRoom: RoomType)
     fun updateGameState(gameState: GameState)
-
-    fun addCardExchangeEvent(cardExchange: CardExchange)
-    fun getCardExchangeInfo(): CardExchangeInfo
-    fun observeCardExchangeEvents(): Observable<CardExchange>
-
-    fun deleteCardExchangeEvent()
 
     // Player
     fun insertNewGuestPlayer(name: String): Long

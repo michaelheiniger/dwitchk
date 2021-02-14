@@ -120,7 +120,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
 
     private fun guestRejoinsGame(guest: PlayerHostTest) {
         val player = getGuest(guest)
-        serverTestStub.connectClientToServer(guest, false)
+        serverTestStub.connectClientToServer(guest)
         val gameCommonId = inGameStore.getGame().gameCommonId
         val rejoinMessage = GuestMessageFactory.createRejoinGameMessage(gameCommonId, player.dwitchId)
         serverTestStub.guestSendsMessageToServer(guest, rejoinMessage, true)

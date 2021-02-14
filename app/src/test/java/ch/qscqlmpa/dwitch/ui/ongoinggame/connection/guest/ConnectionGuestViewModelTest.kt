@@ -43,7 +43,10 @@ class ConnectionGuestViewModelTest : BaseViewModelUnitTest() {
 
         communicationStateSubject.onNext(GuestCommunicationState.Connected)
 
-        assertThat(reconnectAction.value!!).isEqualToIgnoringGivenFields(UiControlModel(visibility = Visibility.Gone), "enabled")
+        assertThat(reconnectAction.value!!)
+            .usingRecursiveComparison()
+            .ignoringFields("enabled")
+            .isEqualTo(UiControlModel(visibility = Visibility.Gone))
     }
 
     @Test
@@ -53,7 +56,10 @@ class ConnectionGuestViewModelTest : BaseViewModelUnitTest() {
 
         communicationStateSubject.onNext(GuestCommunicationState.Disconnected)
 
-        assertThat(reconnectAction.value!!).isEqualToIgnoringGivenFields(UiControlModel(visibility = Visibility.Visible), "enabled")
+        assertThat(reconnectAction.value!!)
+            .usingRecursiveComparison()
+            .ignoringFields("enabled")
+            .isEqualTo(UiControlModel(visibility = Visibility.Visible))
     }
 
     @Test
@@ -63,7 +69,10 @@ class ConnectionGuestViewModelTest : BaseViewModelUnitTest() {
 
         communicationStateSubject.onNext(GuestCommunicationState.Error)
 
-        assertThat(reconnectAction.value!!).isEqualToIgnoringGivenFields(UiControlModel(visibility = Visibility.Visible), "enabled")
+        assertThat(reconnectAction.value!!)
+            .usingRecursiveComparison()
+            .ignoringFields("enabled")
+            .isEqualTo(UiControlModel(visibility = Visibility.Visible))
     }
 
     @Test
@@ -98,7 +107,10 @@ class ConnectionGuestViewModelTest : BaseViewModelUnitTest() {
 
         viewModel.reconnect()
 
-        assertThat(reconnectLoading.value!!).isEqualToIgnoringGivenFields(UiControlModel(visibility = Visibility.Visible), "enabled")
+        assertThat(reconnectLoading.value!!)
+            .usingRecursiveComparison()
+            .ignoringFields("enabled")
+            .isEqualTo(UiControlModel(visibility = Visibility.Visible))
     }
 
     @Test
@@ -131,10 +143,16 @@ class ConnectionGuestViewModelTest : BaseViewModelUnitTest() {
 
         viewModel.reconnect()
 
-        assertThat(reconnectLoading.value!!).isEqualToIgnoringGivenFields(UiControlModel(visibility = Visibility.Visible), "enabled")
+        assertThat(reconnectLoading.value!!)
+            .usingRecursiveComparison()
+            .ignoringFields("enabled")
+            .isEqualTo(UiControlModel(visibility = Visibility.Visible))
 
         communicationStateSubject.onNext(state) // Change in communication state
 
-        assertThat(reconnectLoading.value!!).isEqualToIgnoringGivenFields(UiControlModel(visibility = Visibility.Gone), "enabled")
+        assertThat(reconnectLoading.value!!)
+            .usingRecursiveComparison()
+            .ignoringFields("enabled")
+            .isEqualTo(UiControlModel(visibility = Visibility.Gone))
     }
 }

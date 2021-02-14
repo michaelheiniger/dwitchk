@@ -5,7 +5,6 @@ import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.Recipient
 import ch.qscqlmpa.dwitchcommunication.model.RejoinInfo
-import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
@@ -44,11 +43,6 @@ class HostMessageFactory @Inject constructor(private val store: InGameStore) {
 
         fun createGameOverMessage(): EnvelopeToSend {
             return EnvelopeToSend(Recipient.All, Message.GameOverMessage)
-        }
-
-        fun createCardExchangeMessage(cardExchange: CardExchange, recipient: ConnectionId): EnvelopeToSend {
-            val message = Message.CardExchangeMessage(cardExchange)
-            return EnvelopeToSend(Recipient.Single(recipient), message)
         }
 
         fun createGameStateUpdatedMessage(gameState: GameState): EnvelopeToSend {

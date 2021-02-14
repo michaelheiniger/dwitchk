@@ -6,7 +6,6 @@ import ch.qscqlmpa.dwitch.uitests.base.BaseGuestTest
 import ch.qscqlmpa.dwitch.uitests.utils.GameRoomUiUtil
 import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import ch.qscqlmpa.dwitch.utils.TestEntityFactory
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchengine.DwitchEngine.Companion.createNewGame
 import ch.qscqlmpa.dwitchengine.ProdDwitchEngineFactory
@@ -16,7 +15,6 @@ import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInit
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.Rank
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
@@ -111,8 +109,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
 
         closeEndOfRoundDialog()
 
-        val newRoundGameState = hostStartsNewRound(gameStateUpdatedMessage.gameState)
-        hostSendsCardExchangeMessage(newRoundGameState)
+        hostStartsNewRound(gameStateUpdatedMessage.gameState)
 
         dudeWaitASec()
 
@@ -129,6 +126,8 @@ class GameRoomAsGuestTest : BaseGuestTest() {
         val cardsForExchangeMessageMessage = waitForNextMessageSentByLocalGuest() as Message.CardsForExchangeMessage
         assertThat(cardsForExchangeMessageMessage.playerId).isEqualTo(PlayerGuestTest.LocalGuest.id)
         assertThat(cardsForExchangeMessageMessage.cards).isEqualTo(setOf(Card.Spades4, Card.Diamonds4))
+
+        dudeWaitAMillisSec()
 
         GameRoomUiUtil.assertGameRoomIsDisplayed()
     }
@@ -191,14 +190,6 @@ class GameRoomAsGuestTest : BaseGuestTest() {
         clientTestStub.serverSendsMessageToClient(message, false)
 
         return newRoundGameState
-    }
-
-    private fun hostSendsCardExchangeMessage(gameState: GameState) {
-        val cardExchangeOfLocalGuest = ProdDwitchEngineFactory().create(gameState).getCardsExchanges()
-            .find { (playerId, _) -> playerId == PlayerGuestTest.LocalGuest.id }!!
-
-        val envelope = HostMessageFactory.createCardExchangeMessage(cardExchangeOfLocalGuest, ConnectionId(2))
-        clientTestStub.serverSendsMessageToClient(envelope.message, true)
     }
 
     private fun hostSendsInitialWaitingRoomUpdate() {

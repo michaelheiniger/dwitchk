@@ -31,5 +31,5 @@ object Log {
     }
 
     @JvmStatic
-    fun isLoggable(tag: String, level: Int) = false
+    fun isLoggable(@Suppress("UNUSED_PARAMETER") tag: String, @Suppress("UNUSED_PARAMETER") level: Int) = false
 }

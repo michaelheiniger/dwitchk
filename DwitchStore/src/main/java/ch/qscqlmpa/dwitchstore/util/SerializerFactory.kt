@@ -4,7 +4,6 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardId
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.card.CardSuit
-import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.game.GameEvent
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
@@ -65,10 +64,6 @@ class SerializerFactory @Inject constructor(private val json: Json) {
         return json.encodeToString(ListSerializer(Card.serializer()), cards)
     }
 
-    fun serialize(cardExchange: CardExchange): String {
-        return json.encodeToString(CardExchange.serializer(), cardExchange)
-    }
-
     // Unserialize
 
     fun unserializeCard(card: String): Card {
@@ -105,9 +100,5 @@ class SerializerFactory @Inject constructor(private val json: Json) {
 
     fun unserializeCards(cards: String): List<Card> {
         return json.decodeFromString(ListSerializer(Card.serializer()), cards)
-    }
-
-    fun unserializeCardExchange(cardExchange: String): CardExchange {
-        return json.decodeFromString(CardExchange.serializer(), cardExchange)
     }
 }

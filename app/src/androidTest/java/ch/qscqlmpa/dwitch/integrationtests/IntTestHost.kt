@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
-import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameRoomHostFacade
@@ -33,7 +32,7 @@ class IntTestHost(
         TODO()
     }
 
-    fun launchGame(initialGameSetup: InitialGameSetup) {
+//    fun launchGame(initialGameSetup: InitialGameSetup) {
 //        val gameLaunchableEvent = ongoingGameComponent.waitingRoomHostFacade.gameCanBeLaunched()
 //            .blockingFirst()
 //        assertThat(gameLaunchableEvent).isEqualTo(GameLaunchableEvent.GameIsReadyToBeLaunched)
@@ -45,7 +44,7 @@ class IntTestHost(
 //        ongoingGameComponent.waitingRoomHostFacade.launchGame()
 //            .observeOn(Schedulers.trampoline())
 //            .blockingGet()
-    }
+//    }
 
     fun endGame() {
         gameRoomHostFacade.endGame().blockingSubscribe()

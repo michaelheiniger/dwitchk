@@ -56,7 +56,7 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(R.layout.fragment_waiti
     private fun showGameCanceledDialog() {
         val dialog = SimpleDialogFragment.newInstance(R.string.game_canceled_by_host)
         dialog.show(parentFragmentManager, "game_canceled_dialog")
-        dialog.setFragmentResultListener(SimpleDialogFragment.requestKey) { _,_ -> viewModel.acknowledgeGameCanceledEvent() }
+        dialog.setFragmentResultListener(SimpleDialogFragment.requestKey) { _, _ -> viewModel.acknowledgeGameCanceledEvent() }
     }
 
     companion object : KLogging() {

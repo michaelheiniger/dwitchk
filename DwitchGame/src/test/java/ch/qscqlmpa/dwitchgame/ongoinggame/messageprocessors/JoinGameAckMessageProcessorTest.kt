@@ -25,7 +25,7 @@ internal class JoinGameAckMessageProcessorTest : BaseMessageProcessorTest() {
     }
 
     @Test
-    fun `Update game with common ID when "join ack" message is received`() {
+    fun `Update game with common ID when join ack message is received`() {
         every { mockInGameStore.updateLocalPlayerWithDwitchId(any()) } returns 1
 
         launchTest().test().assertComplete()
@@ -34,7 +34,7 @@ internal class JoinGameAckMessageProcessorTest : BaseMessageProcessorTest() {
     }
 
     @Test
-    fun `Update local player with in-game ID when "join ack" message is received`() {
+    fun `Update local player with in-game ID when join ack message is received`() {
         every { mockInGameStore.updateLocalPlayerWithDwitchId(any()) } returns 1
 
         launchTest().test().assertComplete()

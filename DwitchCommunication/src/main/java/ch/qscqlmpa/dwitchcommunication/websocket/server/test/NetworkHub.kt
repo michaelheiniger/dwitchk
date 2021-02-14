@@ -15,7 +15,7 @@ internal class NetworkHub {
         guests[guest] = websocket
     }
 
-    fun sendToHost(guest: PlayerHostTest, message: String) {
+    fun sendToHost(@Suppress("UNUSED_PARAMETER") guest: PlayerHostTest, @Suppress("UNUSED_PARAMETER") message: String) {
 //        host.onMessage(TestWebSocket(guest.ipAddress, guest.port), message)
     }
 

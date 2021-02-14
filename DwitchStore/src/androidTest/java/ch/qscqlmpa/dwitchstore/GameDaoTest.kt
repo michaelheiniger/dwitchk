@@ -45,8 +45,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
             GameCommonId(0),
             gameName,
             null,
-            insertGameResult.localPlayerLocalId,
-            null
+            insertGameResult.localPlayerLocalId
         )
         val gameTest = gameDao.getGame(insertGameResult.gameLocalId)
 
@@ -84,8 +83,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
             GameCommonId(0),
             gameName,
             null,
-            insertGameResult.localPlayerLocalId,
-            null
+            insertGameResult.localPlayerLocalId
         )
         val gameTest = gameDao.getGame(insertGameResult.gameLocalId)
 
@@ -125,7 +123,9 @@ internal class GameDaoTest : BaseInstrumentedTest() {
         )
         val playerTest = playerDao.getPlayerByName(playerRef.name)
 
-        assertThat(playerTest).isEqualToIgnoringGivenFields(playerRef, "id", "dwitchId")
+        assertThat(playerTest)
+            .usingRecursiveComparison().ignoringFields("id", "dwitchId")
+            .isEqualTo(playerRef)
     }
 
     companion object {
@@ -134,7 +134,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
             // Goal is to have different values for game ID and player ID in the tests
             gameDaoTest.db.runInTransaction {
                 val gameId = gameDaoTest.gameDao.insertGame(
-                    Game(0, DateTime.now(), RoomType.WAITING_ROOM, GameCommonId(1), "", "", 1, null)
+                    Game(0, DateTime.now(), RoomType.WAITING_ROOM, GameCommonId(1), "", "", 1)
                 )
                 val player1 = Player(
                     0,

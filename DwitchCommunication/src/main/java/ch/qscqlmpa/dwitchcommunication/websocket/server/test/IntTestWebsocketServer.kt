@@ -9,8 +9,8 @@ import org.java_websocket.WebSocket
 import org.java_websocket.handshake.ClientHandshake
 
 internal class IntTestWebsocketServer constructor(
-    private val hostAddress: String,
-    private val hostPort: Int
+    @Suppress("UNUSED_PARAMETER") private val hostAddress: String,
+    @Suppress("UNUSED_PARAMETER") private val hostPort: Int
 ) : WebsocketServer {
 
     private val onMessageRelay = PublishRelay.create<ServerMessage>()
@@ -49,14 +49,19 @@ internal class IntTestWebsocketServer constructor(
 //        onStartRelay.accept(OnStart(Address(hostAddress, hostPort)))
     }
 
-    fun onOpen(conn: WebSocket?, handshake: ClientHandshake?) {
+    fun onOpen(conn: WebSocket?, @Suppress("UNUSED_PARAMETER") handshake: ClientHandshake?) {
         if (conn != null) {
             connections.add(conn)
         }
 //        onOpenRelay.accept(OnClientConnect(conn, handshake))
     }
 
-    fun onClose(conn: WebSocket?, code: Int, reason: String?, remote: Boolean) {
+    fun onClose(
+        @Suppress("UNUSED_PARAMETER") conn: WebSocket?,
+        @Suppress("UNUSED_PARAMETER") code: Int,
+        @Suppress("UNUSED_PARAMETER") reason: String?,
+        @Suppress("UNUSED_PARAMETER") remote: Boolean
+    ) {
 //        onCloseRelay.accept(OnClientDisconnect(conn, code, reason, remote))
     }
 
@@ -64,7 +69,7 @@ internal class IntTestWebsocketServer constructor(
         onMessageRelay.accept(ServerMessage(conn, message))
     }
 
-    fun onError(conn: WebSocket?, ex: Exception?) {
+    fun onError(@Suppress("UNUSED_PARAMETER") conn: WebSocket?, @Suppress("UNUSED_PARAMETER") ex: Exception?) {
 //        onErrorRelay.accept(OnError(conn, ex))
     }
 

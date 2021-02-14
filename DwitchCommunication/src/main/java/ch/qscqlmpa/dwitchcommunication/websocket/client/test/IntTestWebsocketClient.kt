@@ -9,8 +9,8 @@ import mu.KLogging
 import org.java_websocket.handshake.ServerHandshake
 
 internal class IntTestWebsocketClient constructor(
-    private val destinationAddress: String,
-    private val destinationPort: Int
+    @Suppress("UNUSED_PARAMETER") private val destinationAddress: String,
+    @Suppress("UNUSED_PARAMETER") private val destinationPort: Int
 ) : WebsocketClient {
 
 //    private val onOpenRelay = PublishRelay.create<OnOpen>()
@@ -60,26 +60,30 @@ internal class IntTestWebsocketClient constructor(
 //        networkHub.sendToHost(guestIdTestHost, message)
     }
 
-    fun onOpen(handshake: ServerHandshake?) {
+    fun onOpen(@Suppress("UNUSED_PARAMETER") handshake: ServerHandshake?) {
         TODO("Not yet implemented")
 //        onOpenRelay.accept(OnOpen(handshake))
 //        isOpen = true
 //        isClosed = false
     }
 
-    fun onClose(code: Int, reason: String?, remote: Boolean) {
+    fun onClose(
+        @Suppress("UNUSED_PARAMETER") code: Int,
+        @Suppress("UNUSED_PARAMETER") reason: String?,
+        @Suppress("UNUSED_PARAMETER") remote: Boolean
+    ) {
         TODO("Not yet implemented")
 //        onCloseRelay.accept(OnClose(code, reason, remote))
 //        isOpen = false
 //        isClosed = true
     }
 
-    fun onMessage(message: String) {
+    fun onMessage(@Suppress("UNUSED_PARAMETER") message: String) {
         TODO("Not yet implemented")
 //        onMessageRelay.accept(OnMessage(destinationAddress, destinationPort, message))
     }
 
-    fun onError(ex: Exception?) {
+    fun onError(@Suppress("UNUSED_PARAMETER") ex: Exception?) {
         TODO("Not yet implemented")
 //        onErrorRelay.accept(OnError(ex))
     }

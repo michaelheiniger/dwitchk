@@ -1,13 +1,11 @@
 package ch.qscqlmpa.dwitchstore.ingamestore
 
-import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchstore.dao.AppRoomDatabase
-import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeInfo
 import ch.qscqlmpa.dwitchstore.ingamestore.model.GameCommonIdAndCurrentRoom
 import ch.qscqlmpa.dwitchstore.model.Game
 import ch.qscqlmpa.dwitchstore.model.Player
@@ -75,28 +73,6 @@ internal class InGameStoreImpl constructor(
     override fun updateGameState(gameState: GameState) {
         val serializedGameState = serializerFactory.serialize(gameState)
         gameDao.updateGameState(gameLocalId, serializedGameState)
-    }
-
-    override fun addCardExchangeEvent(cardExchange: CardExchange) {
-        gameDao.addCardExchangeEvent(gameLocalId, serializerFactory.serialize(cardExchange))
-    }
-
-    override fun getCardExchangeInfo(): CardExchangeInfo {
-        val game = gameDao.getGame(gameLocalId)
-        val localPlayer = playerDao.getPlayer(localPlayerLocalId)
-        val cardsInHand = serializerFactory.unserializeGameState(game.gameState!!).player(localPlayer.dwitchId).cardsInHand
-        val cardExchange = serializerFactory.unserializeCardExchange(game.cardExchangeEvent!!)
-        return CardExchangeInfo(cardExchange, cardsInHand)
-    }
-
-    override fun observeCardExchangeEvents(): Observable<CardExchange> {
-        return gameDao.observeGame(gameLocalId)
-            .filter { game -> game.cardExchangeEvent != null }
-            .map { game -> serializerFactory.unserializeCardExchange(game.cardExchangeEvent!!) }
-    }
-
-    override fun deleteCardExchangeEvent() {
-        return gameDao.deleteCardExchangeEvent(gameLocalId)
     }
 
     // Player

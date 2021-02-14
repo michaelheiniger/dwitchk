@@ -47,7 +47,7 @@ internal class GuestDisconnectedFromHostEventProcessorTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Set all other players' state to "disconnected" in store`() {
+    fun `Set all other players' state to disconnected in store`() {
         launchTest()
 
         verify { mockInGameStore.setAllPlayersToDisconnected() }

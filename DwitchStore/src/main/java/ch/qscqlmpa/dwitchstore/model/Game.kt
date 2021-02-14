@@ -46,9 +46,7 @@ data class Game(
     /**
      * Id of the PlayerPersist record corresponding to the local player
      */
-    @ColumnInfo(name = "local_player_id") val localPlayerLocalId: Long,
-
-    @ColumnInfo(name = "card_exchange_event") val cardExchangeEvent: String?
+    @ColumnInfo(name = "local_player_id") val localPlayerLocalId: Long
 ) {
     fun isNew(): Boolean {
         return gameState == null

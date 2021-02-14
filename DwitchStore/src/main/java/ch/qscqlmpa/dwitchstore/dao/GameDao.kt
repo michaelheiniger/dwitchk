@@ -82,24 +82,6 @@ internal abstract class GameDao(database: AppRoomDatabase) {
     )
     abstract fun deleteGameAndPlayers(gameLocalId: Long)
 
-    @Query(
-        """
-        UPDATE Game
-        SET card_exchange_event = :cardExchangeEvent
-        WHERE id = :gameLocalId
-    """
-    )
-    abstract fun addCardExchangeEvent(gameLocalId: Long, cardExchangeEvent: String)
-
-    @Query(
-        """
-        UPDATE Game
-        SET card_exchange_event = null
-        WHERE id = :gameLocalId
-    """
-    )
-    abstract fun deleteCardExchangeEvent(gameLocalId: Long)
-
     /**
      * Insert game and local player for host in Store.
      * Room requires the method to be "open".
@@ -117,8 +99,7 @@ internal abstract class GameDao(database: AppRoomDatabase) {
             gameCommonId,
             gameName,
             null,
-            0,
-            null
+            0
         )
         val gameLocalId = insertGame(game)
 
@@ -177,8 +158,7 @@ internal abstract class GameDao(database: AppRoomDatabase) {
             gameCommonId,
             gameName,
             null,
-            0,
-            null
+            0
         )
         val gameLocalId = insertGame(game)
 

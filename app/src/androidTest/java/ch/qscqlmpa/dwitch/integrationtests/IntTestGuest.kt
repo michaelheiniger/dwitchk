@@ -1,15 +1,13 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
-import ch.qscqlmpa.dwitchcommunication.websocket.server.test.PlayerHostTest
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
-import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameRoomGuestFacade
 import org.assertj.core.api.Assertions
 
 class IntTestGuest(
-    private val guest: PlayerHostTest,
-    advertisedGame: AdvertisedGame
+//    private val guest: PlayerHostTest,
+//    advertisedGame: AdvertisedGame
 ) : IntTestPlayer() {
 
     private lateinit var gameRoomGuestFacade: GameRoomGuestFacade

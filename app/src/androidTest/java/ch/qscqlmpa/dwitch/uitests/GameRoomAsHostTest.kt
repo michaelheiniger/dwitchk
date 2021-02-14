@@ -150,7 +150,7 @@ class GameRoomAsHostTest : BaseHostTest() {
     }
 
     @Test
-    fun playAWholeRoundAndPerformCardExchange() {
+    fun cardExchange() {
         launch()
 
         cardsForPlayer = mapOf(
@@ -180,10 +180,8 @@ class GameRoomAsHostTest : BaseHostTest() {
         UiUtil.clickOnButton(R.id.startNewRoundBtn)
 
         // Order is not deterministic because one is sent to a specific guest and the other is broadcasted
-        val messagesSent = waitForNextNMessageSentByHost(2)
-        assertThat(messagesSent).anyMatch { m -> m is Message.GameStateUpdatedMessage }
-        assertThat(messagesSent).anyMatch { m -> m is Message.CardExchangeMessage }
-        assertThat(messagesSent.size).isEqualTo(2)
+        val messageSent = waitForNextMessageSentByHost()
+        assertThat(messageSent).isInstanceOf(Message.GameStateUpdatedMessage::class.java)
 
         UiUtil.assertControlEnabled(R.id.exchangeBtn, enabled = false)
 

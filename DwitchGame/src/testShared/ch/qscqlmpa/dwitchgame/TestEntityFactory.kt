@@ -99,8 +99,7 @@ object TestEntityFactory {
             GameCommonId(65),
             "Dwitch",
             "",
-            localPlayerLocalId,
-            null
+            localPlayerLocalId
         )
     }
 

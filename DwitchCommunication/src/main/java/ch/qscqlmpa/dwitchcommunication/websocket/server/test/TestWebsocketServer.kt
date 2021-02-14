@@ -55,7 +55,7 @@ internal class TestWebsocketServer(
         eventRelay.accept(ServerCommEvent.Started(Address(hostIpAddress, hostPort)))
     }
 
-    fun onOpen(conn: WebSocket?, handshake: ClientHandshake?, enableThreadBreak: Boolean) {
+    fun onOpen(conn: WebSocket?, handshake: ClientHandshake?) {
         if (conn != null) {
             connections.add(conn)
         }

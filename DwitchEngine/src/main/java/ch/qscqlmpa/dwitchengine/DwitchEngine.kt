@@ -17,7 +17,7 @@ interface DwitchEngine {
     fun passTurn(): GameState
     fun startNewRound(cardDealerFactory: CardDealerFactory): GameState
     fun chooseCardsForExchange(playerId: PlayerDwitchId, cards: Set<Card>): GameState
-    fun getCardsExchanges(): List<CardExchange>
+    fun getCardsExchange(playerId: PlayerDwitchId): CardExchange?
 
     companion object {
         fun createNewGame(playersInfo: List<PlayerOnboardingInfo>, initialGameSetup: InitialGameSetup): GameState {

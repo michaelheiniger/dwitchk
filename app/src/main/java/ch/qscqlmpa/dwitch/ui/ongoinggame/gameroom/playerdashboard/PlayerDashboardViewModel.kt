@@ -29,7 +29,6 @@ class PlayerDashboardViewModel @Inject constructor(
         return LiveDataReactiveStreams.fromPublisher(
             facade.observeDashboardInfo()
                 .map { dashboard -> GameDashboardFactory(dashboard, textProvider).create() }
-                .doOnNext { bla -> }
                 .observeOn(uiScheduler)
                 .doOnError { error -> logger.error(error) { "Error while observing player dashboard." } }
                 .toFlowable(BackpressureStrategy.LATEST),

@@ -16,8 +16,8 @@ internal class WebsocketServerTestStub(
     private val guest2Socket = TestWebSocket("192.168.1.2", 1026)
     private val guest3Socket = TestWebSocket("192.168.1.3", 1027)
 
-    override fun connectClientToServer(connectionInitiator: PlayerHostTest, enableThreadBreak: Boolean) {
-        Completable.fromAction { server.onOpen(getSocketForGuest(connectionInitiator), null, enableThreadBreak) }
+    override fun connectClientToServer(connectionInitiator: PlayerHostTest) {
+        Completable.fromAction { server.onOpen(getSocketForGuest(connectionInitiator), null) }
             .subscribeOn(Schedulers.io())
             .subscribe()
     }

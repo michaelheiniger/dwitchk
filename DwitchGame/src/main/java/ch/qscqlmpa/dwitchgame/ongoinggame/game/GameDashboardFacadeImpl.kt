@@ -11,7 +11,6 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.GameCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.dwitchevent.DwitchEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.CardForExchangeChosenUsecase
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.GameUpdatedUsecase
-import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.StartCardExchangeUsecase
 import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeInfo
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -23,7 +22,6 @@ internal class GameDashboardFacadeImpl @Inject constructor(
     private val gameCommunicator: GameCommunicator,
     private val gameRepository: GameRepository,
     private val gameUpdatedUsecase: GameUpdatedUsecase,
-    private val startCardExchangeUsecase: StartCardExchangeUsecase,
     private val cardForExchangeSubmitUsecase: CardForExchangeChosenUsecase,
     private val cardDealerFactory: CardDealerFactory,
     private val dwitchEventRepository: DwitchEventRepository,
@@ -44,8 +42,7 @@ internal class GameDashboardFacadeImpl @Inject constructor(
     }
 
     override fun startNewRound(): Completable {
-        return handleGameStateUpdated { engine -> engine.startNewRound(cardDealerFactory) }
-            .flatMapCompletable(startCardExchangeUsecase::startCardExchange)
+        return handleGameStateUpdated { engine -> engine.startNewRound(cardDealerFactory) }.ignoreElement()
     }
 
     override fun observeDashboardInfo(): Observable<GameDashboardInfo> {
