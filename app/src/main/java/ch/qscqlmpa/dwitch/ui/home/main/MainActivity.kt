@@ -11,12 +11,16 @@ import ch.qscqlmpa.dwitch.ui.common.Status
 import ch.qscqlmpa.dwitch.ui.home.HomeBaseActivity
 import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameActivity
 import ch.qscqlmpa.dwitch.ui.home.joinnewgame.JoinNewGameActivity
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import mu.KLogging
 
-class MainActivity : HomeBaseActivity(), AdvertisedGameAdapter.AdvertisedGameClickedListener, ExistingGameAdapter.ExistingGameClickedListener {
+class MainActivity :
+    HomeBaseActivity(),
+    AdvertisedGameAdapter.AdvertisedGameClickedListener,
+    ExistingGameAdapter.ExistingGameClickedListener {
 
     private lateinit var viewModel: MainActivityViewModel
 
@@ -33,8 +37,10 @@ class MainActivity : HomeBaseActivity(), AdvertisedGameAdapter.AdvertisedGameCli
             { command ->
                 when (command) {
                     is MainActivityCommands.NavigateToNewGameActivityAsGuest -> JoinNewGameActivity.joinGame(this, command.game)
-                    MainActivityCommands.NavigateToWaitingRoomAsHost -> WaitingRoomActivity.startActivityForHost(this)
                     MainActivityCommands.NavigateToWaitingRoomAsGuest -> WaitingRoomActivity.startActivityForGuest(this)
+                    MainActivityCommands.NavigateToWaitingRoomAsHost -> WaitingRoomActivity.startActivityForHost(this)
+                    MainActivityCommands.NavigateToGameRoomAsGuest -> GameRoomActivity.startForGuest(this)
+                    MainActivityCommands.NavigateToGameRoomAsHost -> GameRoomActivity.startForHost(this)
                 }
             }
         )

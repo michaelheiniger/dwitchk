@@ -6,4 +6,6 @@ sealed class MainActivityCommands {
     data class NavigateToNewGameActivityAsGuest(val game: AdvertisedGame) : MainActivityCommands()
     object NavigateToWaitingRoomAsGuest : MainActivityCommands()
     object NavigateToWaitingRoomAsHost : MainActivityCommands()
+    object NavigateToGameRoomAsGuest : MainActivityCommands()
+    object NavigateToGameRoomAsHost : MainActivityCommands()
 }

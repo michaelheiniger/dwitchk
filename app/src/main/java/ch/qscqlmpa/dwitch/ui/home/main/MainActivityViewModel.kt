@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitchgame.appevent.AppEvent
+import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
@@ -17,10 +19,21 @@ class MainActivityViewModel @Inject
 constructor(
     private val homeGuestFacade: HomeGuestFacade,
     private val homeHostFacade: HomeHostFacade,
+    appEventRepository: AppEventRepository,
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
     private val commands = MutableLiveData<MainActivityCommands>()
+
+    init {
+        when (appEventRepository.lastEvent()) {
+            is AppEvent.GameCreated -> MainActivityCommands.NavigateToGameRoomAsHost
+            is AppEvent.GameJoined -> MainActivityCommands.NavigateToWaitingRoomAsGuest
+            AppEvent.GameRoomJoinedByGuest -> MainActivityCommands.NavigateToGameRoomAsGuest
+            AppEvent.GameRoomJoinedByHost -> MainActivityCommands.NavigateToGameRoomAsHost
+            else -> null // Nothing to do
+        }?.also { commands.value = it }
+    }
 
     fun commands(): LiveData<MainActivityCommands> {
         return commands
