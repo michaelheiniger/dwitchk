@@ -3,6 +3,7 @@ package ch.qscqlmpa.dwitch.ui.home
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.common.Status
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivityViewModel
+import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
@@ -21,6 +22,7 @@ class MainActivityViewModelTest : BaseViewModelUnitTest() {
 
     private val mockHomeGuestFacade = mockk<HomeGuestFacade>(relaxed = true)
     private val mockHomeHostFacade = mockk<HomeHostFacade>(relaxed = true)
+    private val mockAppEventRepository = mockk<AppEventRepository>(relaxed = true)
 
     private lateinit var viewModel: MainActivityViewModel
 
@@ -33,6 +35,7 @@ class MainActivityViewModelTest : BaseViewModelUnitTest() {
         viewModel = MainActivityViewModel(
             mockHomeGuestFacade,
             mockHomeHostFacade,
+            mockAppEventRepository,
             Schedulers.trampoline()
         )
 
