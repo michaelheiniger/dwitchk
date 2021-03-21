@@ -97,7 +97,7 @@ dependencies {
 
     // Logging
     implementation("io.github.microutils:kotlin-logging-jvm:2.0.2")
-    implementation("org.slf4j:slf4j-android:1.7.21")
+    implementation("org.slf4j:slf4j-android:1.7.30")
 
     // RxJava
     implementation("androidx.lifecycle:lifecycle-reactivestreams:2.3.0")
@@ -152,7 +152,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha03")
     // Integration with observables
     implementation("androidx.compose.runtime:runtime-livedata:1.0.0-beta02")
-    implementation("androidx.compose.runtime:runtime-rxjava2:1.0.0-beta02")
+    implementation("androidx.compose.runtime:runtime-rxjava3:1.0.0-beta02")
     // UI Tests
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.0-beta02")
 }

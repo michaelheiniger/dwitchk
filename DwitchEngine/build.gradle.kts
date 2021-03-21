@@ -9,7 +9,7 @@ dependencies {
 
     // Logging
     implementation("io.github.microutils:kotlin-logging-jvm:2.0.2")
-    implementation("org.slf4j:slf4j-android:1.7.21")
+    implementation("org.slf4j:slf4j-android:1.7.30")
 
     // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc")
