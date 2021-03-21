@@ -51,7 +51,7 @@ dependencies {
 
     // Logging
     implementation("io.github.microutils:kotlin-logging-jvm:2.0.2")
-    implementation("org.slf4j:slf4j-android:1.7.30")
+    implementation("com.github.tony19:logback-android:2.0.0")
 
     // Dagger
     implementation("com.google.dagger:dagger:2.30.1")
@@ -60,7 +60,7 @@ dependencies {
 
     // Logging
     implementation("io.github.microutils:kotlin-logging-jvm:2.0.2")
-    implementation("org.slf4j:slf4j-android:1.7.30")
+    implementation("com.github.tony19:logback-android:2.0.0")
 
     // RxJava
     implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
