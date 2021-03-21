@@ -5,6 +5,8 @@ import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 
 data class AdvertisedGameResponse(val status: Status, val advertisedGames: List<AdvertisedGame>, val error: Throwable?) {
 
+    constructor(status: Status, advertisedGames: List<AdvertisedGame>) : this(status, advertisedGames, null)
+
     companion object {
 
         fun success(games: List<AdvertisedGame>): AdvertisedGameResponse {

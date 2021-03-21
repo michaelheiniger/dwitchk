@@ -14,32 +14,33 @@ class LanGameDiscovery @Inject constructor(
     private val networkAdapter: NetworkAdapter
 ) : GameDiscovery {
 
-    private var isListening = false
+    private var isListening = true
 
-    override fun listenForAdvertisedGame(): Observable<AdvertisedGame> {
+    override fun listenForAdvertisedGames(): Observable<AdvertisedGame> {
 
         logger.info { "Listen for advertised games..." }
 
         val listeningPort = 8888
-        isListening = true
 
-        try {
-            networkAdapter.bind(listeningPort)
-        } catch (e: SocketException) {
-            return Observable.error(e)
+        return Observable.create { observer ->
+            try {
+                networkAdapter.bind(listeningPort)
+            } catch (e: SocketException) {
+                observer.onError(e)
+            }
+
+            observer.setCancellable { networkAdapter.close() }
+
+            while (isListening) {
+                try {
+                    val advertisedGame = buildAdvertisedGame(networkAdapter.receive())
+                    observer.onNext(advertisedGame)
+                } catch (e: SocketException) {
+                    // Socket has been closed
+                    isListening = false
+                }
+            }
         }
-
-        return networkAdapter.receive()
-            .doOnError { e -> logger.error(e) { "Error listening for advertised game" } }
-            .map(this::buildAdvertisedGame)
-            .repeatUntil { !isListening }
-            .toObservable()
-    }
-
-    override fun stopListening() {
-        logger.info { "Stop listening" }
-        isListening = false
-        networkAdapter.close()
     }
 
     private fun buildAdvertisedGame(packet: Packet): AdvertisedGame {

@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitchgame.gamediscovery.network
 
-import io.reactivex.rxjava3.core.Maybe
 import mu.KLogging
 import java.net.DatagramPacket
 import java.net.DatagramSocket
@@ -13,32 +12,26 @@ class UdpNetworkAdapter @Inject constructor() : NetworkAdapter {
 
     @Throws(SocketException::class)
     override fun bind(listeningPort: Int) {
+        logger.debug { "Opening socket..." }
+        logger.isDebugEnabled
         receiveSocket = DatagramSocket(listeningPort)
     }
 
-    override fun receive(): Maybe<Packet> {
+    override fun receive(): Packet {
+        val receiveData = ByteArray(1024)
+        val receivePacket = DatagramPacket(receiveData, receiveData.size)
 
-        return Maybe.fromCallable {
-            val receiveData = ByteArray(1024)
-            val receivePacket = DatagramPacket(receiveData, receiveData.size)
+        receiveSocket.receive(receivePacket) // Blocking call
+        logger.debug { "Packet received: ${receivePacket.data}" }
 
-            try {
-                receiveSocket.receive(receivePacket) // Blocking call
-            } catch (e: SocketException) {
-                logger.debug { "Socket closed" }
-                return@fromCallable null
-            }
-
-            val message = String(receivePacket.data).substring(0, receivePacket.length)
-            val senderIpAddress = receivePacket.address.hostAddress
-            val senderPort = receivePacket.port
-
-            Packet(message, senderIpAddress, senderPort)
-        }
+        val message = String(receivePacket.data).substring(0, receivePacket.length)
+        val senderIpAddress = receivePacket.address.hostAddress
+        val senderPort = receivePacket.port
+        return Packet(message, senderIpAddress, senderPort)
     }
 
     override fun close() {
-//        receiveSocket.disconnect() //TODO: Is that needed ? It makes the app freeze.
+        logger.debug { "Closing socket..." }
         receiveSocket.close()
     }
 

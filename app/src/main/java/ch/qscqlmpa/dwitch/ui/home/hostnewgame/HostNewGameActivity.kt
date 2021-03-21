@@ -15,9 +15,7 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import com.jakewharton.rxbinding.widget.RxTextView
 import rx.subscriptions.CompositeSubscription
 
-class HostNewGameActivity : HomeBaseActivity() {
-
-    private lateinit var viewModel: HostNewGameViewModel
+class HostNewGameActivity : HomeBaseActivity<HostNewGameViewModel>() {
 
     private val subscriptions = CompositeSubscription()
 

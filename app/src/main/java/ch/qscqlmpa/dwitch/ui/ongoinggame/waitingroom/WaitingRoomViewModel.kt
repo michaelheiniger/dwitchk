@@ -10,7 +10,7 @@ import io.reactivex.rxjava3.core.Scheduler
 import mu.KLogging
 import javax.inject.Inject
 
-internal class WaitingRoomViewModel @Inject constructor(
+class WaitingRoomViewModel @Inject constructor(
     private val facade: WaitingRoomFacade,
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {

@@ -35,11 +35,12 @@
     <string name="host_connection_error">Network problem: no bro can join !</string>
     <string name="leave_game_btn">See ya mate !</string>
     <string name="listening_for_guests">Online</string>
-    <string name="ma_advertised_games_error_tv">Having troubles while looking for games, yo !</string>
+    <string name="ma_advertised_games_loading_error_tv">Having troubles while looking for games, yo !</string>
     <string name="ma_create_game_btn">Create game</string>
-    <string name="ma_existing_game_list_tv">Games to resume</string>
-    <string name="ma_existing_games_error_tv">Having troubles while fetching existing games, yo !</string>
-    <string name="ma_game_list_tv">Games</string>
+    <string name="ma_resumable_games_tv">Resumable games</string>
+    <string name="ma_resumable_games_loading_error_tv">Having troubles while fetching existing games, yo !</string>
+    <string name="ma_advertised_games_tv">Games</string>
+    <string name="ma_listening_for_games_tv">Listening for games…</string>
     <string name="ma_resume_game_btn">Resume game</string>
     <string name="neutral_long">Neutral</string>
     <string name="neutral_short">N</string>
@@ -77,4 +78,6 @@
     <string name="wra_player_list">Bros</string>
     <string name="wrhf_cancel_game_tv">Cancel game</string>
     <string name="wrhf_launch_game_tv">Go go !</string>
+    <string name="ma_loading_resumable_games">Loading resumable games</string>
+    <string name="ma_no_resumable_games">No game to resume</string>
 </resources>

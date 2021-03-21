@@ -11,11 +11,7 @@ class StubGameDiscovery : GameDiscovery {
         discoveredGameRelay.accept(game)
     }
 
-    override fun listenForAdvertisedGame(): Observable<AdvertisedGame> {
+    override fun listenForAdvertisedGames(): Observable<AdvertisedGame> {
         return discoveredGameRelay
-    }
-
-    override fun stopListening() {
-        // Nothing to do
     }
 }

@@ -1,7 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.home.main
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitchgame.appevent.AppEvent
@@ -10,7 +9,6 @@ import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
-import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Scheduler
 import mu.KLogging
 import javax.inject.Inject
@@ -23,7 +21,13 @@ constructor(
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val commands = MutableLiveData<MainActivityCommands>()
+    private val _commands = MutableLiveData<MainActivityCommands>()
+    private val _advertisedGames = MutableLiveData<AdvertisedGameResponse>()
+    private val _resumableGames = MutableLiveData<ResumableGameResponse>()
+
+    val advertisedGames get(): LiveData<AdvertisedGameResponse> = _advertisedGames
+    val resumableGames get(): LiveData<ResumableGameResponse> = _resumableGames
+    val commands get(): LiveData<MainActivityCommands> = _commands
 
     init {
         when (appEventRepository.lastEvent()) {
@@ -32,39 +36,21 @@ constructor(
             AppEvent.GameRoomJoinedByGuest -> MainActivityCommands.NavigateToGameRoomAsGuest
             AppEvent.GameRoomJoinedByHost -> MainActivityCommands.NavigateToGameRoomAsHost
             else -> null // Nothing to do
-        }?.also { commands.value = it }
+        }?.also { _commands.value = it }
     }
 
-    fun commands(): LiveData<MainActivityCommands> {
-        return commands
+    override fun onStart() {
+        listenForAdvertisedGames()
+        observeExistingGames()
     }
 
-    fun observeAdvertisedGames(): LiveData<AdvertisedGameResponse> {
-        return LiveDataReactiveStreams.fromPublisher(
-            homeGuestFacade.listenForAdvertisedGames()
-                .observeOn(uiScheduler)
-                .map { games -> AdvertisedGameResponse.success(games) }
-                .onErrorReturn { error -> AdvertisedGameResponse.error(error) }
-                .doOnError { error -> logger.error(error) { "Error while observing advertised games." } }
-                .doFinally { homeGuestFacade.stopListeningForAdvertiseGames() }
-                .toFlowable(BackpressureStrategy.LATEST)
-        )
-    }
-
-    fun observeExistingGames(): LiveData<ExistingGameResponse> {
-        return LiveDataReactiveStreams.fromPublisher(
-            homeHostFacade.resumableGames()
-                .observeOn(uiScheduler)
-                .map { games -> ExistingGameResponse.success(games) }
-                .onErrorReturn { error -> ExistingGameResponse.error(error) }
-                .doOnError { error -> logger.error(error) { "Error while fetching existing games." } }
-                .toFlowable(BackpressureStrategy.LATEST)
-        )
+    override fun onStop() {
+        disposableManager.disposeAndReset()
     }
 
     fun joinGame(game: AdvertisedGame) {
         if (game.isNew) {
-            commands.value = MainActivityCommands.NavigateToNewGameActivityAsGuest(game)
+            _commands.value = MainActivityCommands.NavigateToNewGameActivityAsGuest(game)
         } else {
             disposableManager.add(
                 homeGuestFacade.joinResumedGame(game)
@@ -72,7 +58,7 @@ constructor(
                     .subscribe(
                         {
                             logger.info { "Game resumed successfully." }
-                            commands.value = MainActivityCommands.NavigateToWaitingRoomAsGuest
+                            _commands.value = MainActivityCommands.NavigateToWaitingRoomAsGuest
                         },
                         { error -> logger.error(error) { "Error while resuming game." } }
                     )
@@ -87,10 +73,33 @@ constructor(
                 .subscribe(
                     {
                         logger.info { "Game resumed successfully." }
-                        commands.value = MainActivityCommands.NavigateToWaitingRoomAsHost
+                        _commands.value = MainActivityCommands.NavigateToWaitingRoomAsHost
                     },
                     { error -> logger.error(error) { "Error while resuming game." } }
                 )
+        )
+    }
+
+    private fun listenForAdvertisedGames() {
+        disposableManager.add(
+            homeGuestFacade.listenForAdvertisedGames()
+                .observeOn(uiScheduler)
+                .map { games -> AdvertisedGameResponse.success(games) }
+                .onErrorReturn { error -> AdvertisedGameResponse.error(error) }
+                .doOnError { error -> logger.error(error) { "Error while observing advertised games." } }
+                .subscribe { response -> _advertisedGames.value = response }
+        )
+
+    }
+
+    private fun observeExistingGames() {
+        disposableManager.add(
+            homeHostFacade.resumableGames()
+                .observeOn(uiScheduler)
+                .map { games -> ResumableGameResponse.success(games) }
+                .onErrorReturn { error -> ResumableGameResponse.error(error) }
+                .doOnError { error -> logger.error(error) { "Error while fetching existing games." } }
+                .subscribe { response -> _resumableGames.value = response }
         )
     }
 

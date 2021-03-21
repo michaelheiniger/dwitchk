@@ -3,36 +3,52 @@ package ch.qscqlmpa.dwitch.ui.home.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
+import androidx.activity.compose.setContent
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import ch.qscqlmpa.dwitch.databinding.ActivityMainBinding
 import ch.qscqlmpa.dwitch.ui.common.Status
 import ch.qscqlmpa.dwitch.ui.home.HomeBaseActivity
 import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameActivity
 import ch.qscqlmpa.dwitch.ui.home.joinnewgame.JoinNewGameActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
-import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
-import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import mu.KLogging
 
-class MainActivity :
-    HomeBaseActivity(),
-    AdvertisedGameAdapter.AdvertisedGameClickedListener,
-    ExistingGameAdapter.ExistingGameClickedListener {
+class MainActivity : HomeBaseActivity<MainActivityViewModel>() {
 
-    private lateinit var viewModel: MainActivityViewModel
+    @Composable
+    fun ActivityScreen(viewModel: MainActivityViewModel) {
+        MaterialTheme {
+            Surface(color = Color.White) {
+                val advertisedGameResponse =
+                    viewModel.advertisedGames.observeAsState(AdvertisedGameResponse(Status.LOADING, emptyList()))
+                val resumableGameResponse =
+                    viewModel.resumableGames.observeAsState(initial = ResumableGameResponse(Status.LOADING, emptyList()))
+                HomeScreen(
+                    advertisedGameResponse = advertisedGameResponse.value,
+                    resumableGameResponse = resumableGameResponse.value,
+                    onJoinGameClick = { game -> viewModel.joinGame(game) },
+                    onCreateNewGameClick = { HostNewGameActivity.hostNewGame(this) },
+                    onResumableGameClick = { game -> viewModel.resumeGame(game) }
+                )
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainActivityViewModel::class.java)
 
-        viewModel.commands().observe(
+        setContent {
+            ActivityScreen(viewModel)
+        }
+
+        viewModel.commands.observe(
             this,
             { command ->
                 when (command) {
@@ -44,52 +60,6 @@ class MainActivity :
                 }
             }
         )
-
-        binding.gameListRw.layoutManager = LinearLayoutManager(this)
-        binding.gameListRw.adapter = AdvertisedGameAdapter(this)
-        viewModel.observeAdvertisedGames().observe(
-            this,
-            { response ->
-                when (response.status) {
-                    Status.LOADING -> { // Nothing to do
-                    }
-                    Status.SUCCESS -> (binding.gameListRw.adapter as AdvertisedGameAdapter).setData(response.advertisedGames)
-                    Status.ERROR -> {
-                        binding.gameListErrorTv.visibility = View.VISIBLE
-                        logger.error(response.error) { "Error while observing advertised games." }
-                    }
-                }
-            }
-        )
-
-        binding.existingGameListRw.layoutManager = LinearLayoutManager(this)
-        binding.existingGameListRw.adapter = ExistingGameAdapter(this)
-        viewModel.observeExistingGames().observe(
-            this,
-            { response ->
-                when (response.status) {
-                    Status.LOADING -> { // Nothing to do
-                    }
-                    Status.SUCCESS -> (binding.existingGameListRw.adapter as ExistingGameAdapter).setData(response.resumableGames)
-                    Status.ERROR -> {
-                        binding.existingGameListErrorTv.visibility = View.VISIBLE
-                        logger.error(response.error) { "Error while observing advertised games." }
-                    }
-                }
-            }
-        )
-    }
-
-    override fun onGameClicked(selectedGame: AdvertisedGame) {
-        viewModel.joinGame(selectedGame)
-    }
-
-    override fun onGameClicked(selectedGame: ResumableGameInfo) {
-        viewModel.resumeGame(selectedGame)
-    }
-
-    fun onCreateGameClicked(@Suppress("UNUSED_PARAMETER") view: View) {
-        HostNewGameActivity.hostNewGame(this)
     }
 
     companion object : KLogging() {

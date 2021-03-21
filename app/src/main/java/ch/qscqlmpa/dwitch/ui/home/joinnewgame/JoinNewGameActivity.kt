@@ -17,9 +17,8 @@ import com.jakewharton.rxbinding.widget.RxTextView
 import rx.subscriptions.CompositeSubscription
 import java.util.*
 
-class JoinNewGameActivity : HomeBaseActivity() {
+class JoinNewGameActivity : HomeBaseActivity<JoinNewGameViewModel>() {
 
-    private lateinit var viewModel: JoinNewGameViewModel
     private var game: AdvertisedGame? = null
 
     private val subscriptions = CompositeSubscription()

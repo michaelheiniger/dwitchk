@@ -15,9 +15,7 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host.GameRoomHostFragment
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 
-class GameRoomActivity : OngoingGameBaseActivity() {
-
-    private lateinit var viewModel: GameRoomViewModel
+class GameRoomActivity : OngoingGameBaseActivity<GameRoomViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as App).getGameUiComponent()!!.inject(this)

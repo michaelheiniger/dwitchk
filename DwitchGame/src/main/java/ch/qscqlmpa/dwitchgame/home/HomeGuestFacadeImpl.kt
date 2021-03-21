@@ -18,11 +18,6 @@ internal class HomeGuestFacadeImpl @Inject constructor(
 
     override fun listenForAdvertisedGames(): Observable<List<AdvertisedGame>> {
         return advertisedGameRepository.listenForAdvertisedGames()
-            .subscribeOn(schedulerFactory.io())
-    }
-
-    override fun stopListeningForAdvertiseGames() {
-        advertisedGameRepository.stopListening()
     }
 
     override fun joinGame(advertisedGame: AdvertisedGame, playerName: String): Completable {

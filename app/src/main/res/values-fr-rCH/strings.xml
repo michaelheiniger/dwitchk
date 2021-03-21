@@ -23,11 +23,11 @@
     <string name="host_connection_error">Problème réseau: aucun bro peut te rejoindre !</string>
     <string name="leave_game_btn">Quitter</string>
     <string name="listening_for_guests">En ligne</string>
-    <string name="ma_advertised_games_error_tv">Erreur lors la recherche de parties</string>
+    <string name="ma_advertised_games_loading_error_tv">Erreur lors la recherche de parties</string>
     <string name="ma_create_game_btn">Créer partie</string>
-    <string name="ma_existing_game_list_tv">Parties à reprendre</string>
-    <string name="ma_existing_games_error_tv">Erreur lors de la recherche des parties existantes</string>
-    <string name="ma_game_list_tv">Parties</string>
+    <string name="ma_resumable_games_tv">Parties à reprendre</string>
+    <string name="ma_resumable_games_loading_error_tv">Erreur lors de la recherche des parties existantes</string>
+    <string name="ma_advertised_games_tv">Parties</string>
     <string name="ma_resume_game_btn">Reprendre partie</string>
     <string name="neutral_long">Neutre</string>
     <string name="neutral_short">N</string>
@@ -65,4 +65,7 @@
     <string name="wrhf_cancel_game_tv">Annuler partie</string>
     <string name="wrhf_launch_game_tv">Go go !</string>
     <string name="nga_host_game_btn">Allons y, fidèles compagnons de la Comté !</string>
+    <string name="ma_listening_for_games_tv">A l\'écoute de parties...</string>
+    <string name="ma_loading_resumable_games">Chargement des parties à reprendre</string>
+    <string name="ma_no_resumable_games">Aucune aprtie à reprendre</string>
 </resources>

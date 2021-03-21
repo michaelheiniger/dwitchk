@@ -17,9 +17,7 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host.WaitingRoomHostFragmen
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.playerlist.PlayerWrAdapter
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 
-class WaitingRoomActivity : OngoingGameBaseActivity() {
-
-    private lateinit var viewModel: WaitingRoomViewModel
+class WaitingRoomActivity : OngoingGameBaseActivity<WaitingRoomViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as App).getGameUiComponent()!!.inject(this)
