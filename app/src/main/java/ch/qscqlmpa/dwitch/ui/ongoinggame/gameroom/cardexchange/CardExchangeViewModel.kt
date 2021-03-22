@@ -9,7 +9,7 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardFacade
 import io.reactivex.rxjava3.core.Scheduler
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 class CardExchangeViewModel @Inject constructor(
@@ -50,11 +50,11 @@ class CardExchangeViewModel @Inject constructor(
 
     fun cardInHandClicked(card: Card) {
         if (!selectableCards.contains(card)) {
-            logger.warn { "Card $card cannot be chosen because it has a too low value." }
+            Logger.warn { "Card $card cannot be chosen because it has a too low value." }
             return
         }
         if (cardsChosen.size == cardExchangeEvent.numCardsToChoose) {
-            logger.warn { "No more card can be chosen: already ${cardsChosen.size} chosen." }
+            Logger.warn { "No more card can be chosen: already ${cardsChosen.size} chosen." }
             return
         }
         val removalSuccessful = cardsInHand.remove(card)
@@ -81,16 +81,16 @@ class CardExchangeViewModel @Inject constructor(
     }
 
     fun confirmChoice() {
-        logger.trace { "confirmChoice()" }
+        Logger.trace { "confirmChoice()" }
         disposableManager.add(
             facade.submitCardsForExchange(cardChosenItems.value!!.map(CardItem::card).toSet())
                 .observeOn(uiScheduler)
                 .subscribe(
                     {
-                        logger.info { "Cards for exchange submitted successfully." }
+                        Logger.info { "Cards for exchange submitted successfully." }
                         commands.value = CardExchangeCommand.Close
                     },
-                    { error -> logger.error(error) { "Error while submitting cards for exchange." } }
+                    { error -> Logger.error(error) { "Error while submitting cards for exchange." } }
                 ),
         )
     }
@@ -108,7 +108,7 @@ class CardExchangeViewModel @Inject constructor(
         cardsChosen.forEach { c -> allowedCardValues.remove(c.name) }
         val cardHasAllowedValue = allowedCardValues.contains(card.name)
 
-        logger.trace { "Is card $card selectable ? ${card.value()} is in $allowedCardValues : $cardHasAllowedValue" }
+        Logger.trace { "Is card $card selectable ? ${card.value()} is in $allowedCardValues : $cardHasAllowedValue" }
         return cardHasAllowedValue
     }
 
@@ -118,15 +118,15 @@ class CardExchangeViewModel @Inject constructor(
                 .observeOn(uiScheduler)
                 .subscribe(
                     { cardExchangeInfo ->
-                        logger.debug { "Card exchange info: $cardExchangeInfo" }
+                        Logger.debug { "Card exchange info: " }
                         cardExchangeEvent = cardExchangeInfo.cardExchange
 
-                        logger.debug { "Cards in hand: ${cardExchangeInfo.cardsInHand}" }
+                        Logger.debug { "Cards in hand: ${cardExchangeInfo.cardsInHand}" }
                         cardsInHand = cardExchangeInfo.cardsInHand.toMutableList()
                         selectableCards = cardExchangeInfo.cardsInHand.filter(::isCardSelectable).toSet()
                         updateCardsInHandItems()
                     },
-                    { error -> logger.error(error) { "Error while initializing card exchange." } }
+                    { error -> Logger.error(error) { "Error while initializing card exchange." } }
                 )
         )
     }
@@ -135,6 +135,4 @@ class CardExchangeViewModel @Inject constructor(
         val enabled = cardsChosen.size == cardExchangeEvent.numCardsToChoose
         submitControl.value = UiControlModel(enabled = enabled)
     }
-
-    companion object : KLogging()
 }

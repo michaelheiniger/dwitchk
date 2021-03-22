@@ -9,7 +9,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameRoomGuestFacade
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Scheduler
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 internal class GameRoomGuestViewModel @Inject constructor(
@@ -35,7 +35,7 @@ internal class GameRoomGuestViewModel @Inject constructor(
             facade.observeEvents()
                 .observeOn(uiScheduler)
                 .map(::getCommandForGameEvent)
-                .doOnError { error -> logger.error(error) { "Error while observing game events." } }
+                .doOnError { error -> Logger.error(error) { "Error while observing game events." } }
                 .toFlowable(BackpressureStrategy.LATEST)
         )
     }
@@ -46,6 +46,4 @@ internal class GameRoomGuestViewModel @Inject constructor(
             else -> throw IllegalStateException("Event '$event' is not supposed to occur in GameRoom.")
         }
     }
-
-    companion object : KLogging()
 }

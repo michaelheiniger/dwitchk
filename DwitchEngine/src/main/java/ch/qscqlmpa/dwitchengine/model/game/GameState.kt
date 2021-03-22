@@ -87,7 +87,7 @@ data class GameState(
         // For debug
 //        allCardsInGame
 //            .sortedWith { o1, o2 -> o1.id.value.compareTo(o2.id.value) }
-//            .forEachIndexed { index, c -> println("index: $index, card: $c") }
+//            .forEachIndexed { index, c -> Logger.debug { "index: $index, card: $c" } }
 
         if (allCardsInGame.toSet().size != CardUtil.deckSize) {
             throw IllegalStateException("There must be exactly ${CardUtil.deckSize} cards in the game, actual value: ${allCardsInGame.size}")

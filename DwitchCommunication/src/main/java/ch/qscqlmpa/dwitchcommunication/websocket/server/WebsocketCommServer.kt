@@ -12,8 +12,8 @@ import ch.qscqlmpa.dwitchcommunication.model.Recipient
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
-import mu.KLogging
 import org.java_websocket.WebSocket
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 internal class WebsocketCommServer @Inject constructor(
@@ -73,7 +73,7 @@ internal class WebsocketCommServer @Inject constructor(
 
     override fun closeConnectionWithClient(connectionId: ConnectionId) {
         val address = connectionStore.getAddress(connectionId)
-        logger.info { "Connection with remote $address closed by host." }
+        Logger.info { "Connection with remote $address closed by host." }
         if (address != null) {
             val senderSocket = websocketServer.getConnections().find { webSocket ->
                 webSocket.remoteSocketAddress.address.hostAddress == address.ipAddress &&
@@ -98,7 +98,7 @@ internal class WebsocketCommServer @Inject constructor(
         if (recipientSocket != null) {
             websocketServer.send(recipientSocket, serializedMessage)
         } else {
-            logger.error { "Message sent to $recipientAddress but no socket found" }
+            Logger.error { "Message sent to $recipientAddress but no socket found" }
         }
     }
 
@@ -116,7 +116,7 @@ internal class WebsocketCommServer @Inject constructor(
     }
 
     private fun processStartedEvent(): Observable<ServerCommunicationEvent> {
-        logger.debug { "Server is now listening for connections" }
+        Logger.debug { "Server is now listening for connections" }
         return Observable.just(ServerCommunicationEvent.ListeningForConnections(connectionStore.getHostConnectionId()))
     }
 
@@ -124,20 +124,20 @@ internal class WebsocketCommServer @Inject constructor(
         return Observable.just(clientConnectedEvent)
             .filter { event ->
                 if (event.conn == null) {
-                    logger.debug { "OnOpen event filtered because websocket is null" }
+                    Logger.debug { "OnOpen event filtered because websocket is null" }
                 }
                 event.conn != null
             }
             .map { event ->
                 val senderAddress = buildAddressFromConnection(event.conn!!)!!
                 val localConnectionId = connectionStore.addConnectionId(senderAddress)
-                logger.debug { "Client connected $senderAddress (assign local connection ID $localConnectionId)" }
+                Logger.debug { "Client connected $senderAddress (assign local connection ID $localConnectionId)" }
                 ServerCommunicationEvent.ClientConnected(localConnectionId)
             }
     }
 
     private fun processErrorEvent(event: ServerCommEvent.Error): Observable<ServerCommunicationEvent> {
-        logger.debug { "Communication error: $event" }
+        Logger.debug { "Communication error: $event" }
         connectionStore.clearStore()
         return Observable.just(ServerCommunicationEvent.ErrorListeningForConnections(event.ex))
     }
@@ -146,19 +146,19 @@ internal class WebsocketCommServer @Inject constructor(
         return Observable.just(clientDisconnected)
             .filter { event ->
                 if (event.conn == null) {
-                    logger.debug { "OnClose event filtered because websocket is null" }
+                    Logger.debug { "OnClose event filtered because websocket is null" }
                 }
                 event.conn != null
             }
             .flatMap { event ->
                 val senderAddress = buildAddressFromConnection(event.conn!!)
                 if (senderAddress != null) {
-                    logger.debug { "Client disconnected $senderAddress (details: $event)" }
+                    Logger.debug { "Client disconnected $senderAddress (details: $event)" }
                     val localConnectionId = connectionStore.getConnectionIdForAddress(senderAddress)
                     Observable.just(ServerCommunicationEvent.ClientDisconnected(localConnectionId))
                 } else {
                     val missingConnections = findMissingConnections()
-                    logger.debug { "Client disconnected but no connection info provided. Inferred missing connections: $missingConnections" }
+                    Logger.debug { "Client disconnected but no connection info provided. Inferred missing connections: $missingConnections" }
                     Observable.fromIterable(missingConnections.map(ServerCommunicationEvent::ClientDisconnected))
                 }
             }
@@ -168,10 +168,10 @@ internal class WebsocketCommServer @Inject constructor(
         return Observable.just(serverMessage)
             .filter { messageEvent ->
                 if (messageEvent.conn == null) {
-                    logger.debug { "onMessage event filtered because websocket is null" }
+                    Logger.debug { "onMessage event filtered because websocket is null" }
                 }
                 if (messageEvent.message == null) {
-                    logger.debug { "onMessage event filtered because message is null" }
+                    Logger.debug { "onMessage event filtered because message is null" }
                 }
                 messageEvent.conn != null && messageEvent.message != null
             }
@@ -181,7 +181,7 @@ internal class WebsocketCommServer @Inject constructor(
                 val connectionId = connectionStore.getConnectionIdForAddress(senderAddress)
                     ?: throw IllegalStateException("Message received ${messageEvent.message} from $senderAddress has no connection ID")
 
-                logger.info { "Message received ${messageEvent.message} from $senderAddress (connection ID $connectionId)" }
+                Logger.info { "Message received ${messageEvent.message} from $senderAddress (connection ID $connectionId)" }
                 EnvelopeReceived(connectionId, message)
             }
     }
@@ -206,6 +206,4 @@ internal class WebsocketCommServer @Inject constructor(
         }
         return null
     }
-
-    companion object : KLogging()
 }

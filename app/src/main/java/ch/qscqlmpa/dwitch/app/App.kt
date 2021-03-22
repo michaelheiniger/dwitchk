@@ -23,7 +23,7 @@ import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreModule
 import ch.qscqlmpa.dwitchstore.store.StoreModule
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 open class App : DaggerApplication() {
@@ -69,7 +69,7 @@ open class App : DaggerApplication() {
         hostPort: Int,
         hostIpAddress: String
     ): OngoingGameComponent? {
-        logger.debug { "startOngoingGame()" }
+        Logger.debug { "startOngoingGame()" }
         if (ongoingGameComponent == null) {
             inGameStoreComponent = storeComponent.addInGameStoreComponent(
                 InGameStoreModule(gameLocalId, localPlayerLocalId)
@@ -103,7 +103,7 @@ open class App : DaggerApplication() {
                 )
             )
         } else {
-            logger.warn { "startOngoingGame() called when a game is already on-going." }
+            Logger.warn { "startOngoingGame() called when a game is already on-going." }
         }
         return ongoingGameComponent
     }
@@ -145,6 +145,4 @@ open class App : DaggerApplication() {
             }
         }
     }
-
-    companion object : KLogging()
 }

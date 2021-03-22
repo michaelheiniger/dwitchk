@@ -7,7 +7,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomFacade
 import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Scheduler
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 class WaitingRoomViewModel @Inject constructor(
@@ -19,10 +19,8 @@ class WaitingRoomViewModel @Inject constructor(
         return LiveDataReactiveStreams.fromPublisher(
             facade.observePlayers()
                 .observeOn(uiScheduler)
-                .doOnError { error -> logger.error(error) { "Error while observing connected players." } }
+                .doOnError { error -> Logger.error(error) { "Error while observing connected players." } }
                 .toFlowable(BackpressureStrategy.LATEST)
         )
     }
-
-    companion object : KLogging()
 }

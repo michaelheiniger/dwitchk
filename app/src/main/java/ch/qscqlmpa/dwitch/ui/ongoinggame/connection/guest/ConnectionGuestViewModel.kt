@@ -14,7 +14,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.game.GuestFacade
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Scheduler
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 class ConnectionGuestViewModel @Inject constructor(
@@ -68,9 +68,7 @@ class ConnectionGuestViewModel @Inject constructor(
     private fun currentCommunicationState(): Flowable<GuestCommunicationState> {
         return facade.currentCommunicationState()
             .observeOn(uiScheduler)
-            .doOnError { error -> logger.error(error) { "Error while observing communication state." } }
+            .doOnError { error -> Logger.error(error) { "Error while observing communication state." } }
             .toFlowable(BackpressureStrategy.LATEST)
     }
-
-    companion object : KLogging()
 }

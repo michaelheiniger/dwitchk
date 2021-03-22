@@ -7,7 +7,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMes
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import dagger.Lazy
 import io.reactivex.rxjava3.core.Completable
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 internal class PlayerReadyMessageProcessor @Inject constructor(
@@ -32,9 +32,7 @@ internal class PlayerReadyMessageProcessor @Inject constructor(
         if (numRecordsAffected != 1) {
             throw IllegalStateException("State of player with in-game ID $${message.playerId} could not be updated because not found in store.")
         } else {
-            logger.info { "Player with in-game ID ${message.playerId} changed ready state to ${message.ready}." }
+            Logger.info { "Player with in-game ID ${message.playerId} changed ready state to ${message.ready}." }
         }
     }
-
-    companion object : KLogging()
 }

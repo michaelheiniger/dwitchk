@@ -8,7 +8,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.eventprocessors.Gu
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import io.reactivex.rxjava3.core.Observable
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 
 internal class GuestCommunicatorImpl constructor(
     private val commClient: CommClient,
@@ -32,7 +32,7 @@ internal class GuestCommunicatorImpl constructor(
     }
 
     override fun sendMessageToHost(message: Message) {
-        logger.debug { "Sending message to host: $message" }
+        Logger.debug { "Sending message to host: $message" }
         commClient.sendMessageToServer(message)
     }
 
@@ -56,8 +56,8 @@ internal class GuestCommunicatorImpl constructor(
             commClient.observeCommunicationEvents()
                 .flatMapCompletable { event -> communicationEventDispatcher.dispatch(event).subscribeOn(schedulerFactory.io()) }
                 .subscribe(
-                    { logger.debug { "Communication events stream completed" } },
-                    { error -> logger.error(error) { "Error while observing communication events" } }
+                    { Logger.debug { "Communication events stream completed" } },
+                    { error -> Logger.error(error) { "Error while observing communication events" } }
                 )
         )
     }
@@ -67,11 +67,9 @@ internal class GuestCommunicatorImpl constructor(
             commClient.observeReceivedMessages()
                 .flatMapCompletable { msg -> messageDispatcher.dispatch(msg).subscribeOn(schedulerFactory.io()) }
                 .subscribe(
-                    { logger.debug { "Received messages stream completed !" } },
-                    { error -> logger.error(error) { "Error while observing received messages" } }
+                    { Logger.debug { "Received messages stream completed !" } },
+                    { error -> Logger.error(error) { "Error while observing received messages" } }
                 )
         )
     }
-
-    companion object : KLogging()
 }

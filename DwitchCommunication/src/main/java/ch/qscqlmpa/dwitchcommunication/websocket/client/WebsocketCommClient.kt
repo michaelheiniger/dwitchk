@@ -8,7 +8,7 @@ import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 internal class WebsocketCommClient @Inject constructor(
@@ -43,7 +43,7 @@ internal class WebsocketCommClient @Inject constructor(
 
     override fun stop() {
         if (websocketClient.isClosed()) {
-            logger.error { "Cannot stop because the connection is already closed." }
+            Logger.error { "Cannot stop because the connection is already closed." }
         } else {
             websocketClient.stop()
             disposableManager.disposeAndReset()
@@ -72,17 +72,17 @@ internal class WebsocketCommClient @Inject constructor(
     }
 
     private fun processConnectedEvent(event: ClientCommEvent.Connected): Observable<ClientCommunicationEvent> {
-        logger.info { "Connected to Server ($event)" }
+        Logger.info { "Connected to Server ($event)" }
         return Observable.just(ClientCommunicationEvent.ConnectedToHost)
     }
 
     private fun processDisconnectedEvent(event: ClientCommEvent.Disconnected): Observable<ClientCommunicationEvent> {
-        logger.info { "Disconnected from Server ($event)" }
+        Logger.info { "Disconnected from Server ($event)" }
         return Observable.just(ClientCommunicationEvent.DisconnectedFromHost)
     }
 
     private fun processErrorEvent(event: ClientCommEvent.Error): Observable<ClientCommunicationEvent> {
-        logger.debug { "Communication error: $event" }
+        Logger.debug { "Communication error: $event" }
         return Observable.just(ClientCommunicationEvent.ConnectionError(event.ex?.message))
     }
 
@@ -90,11 +90,11 @@ internal class WebsocketCommClient @Inject constructor(
         return Observable.just(event)
             .filter { envelope ->
                 if (envelope.message == null) {
-                    logger.error { "onMessage event filtered because message is null" }
+                    Logger.error { "onMessage event filtered because message is null" }
                 }
                 envelope.message != null
             }
-            .doOnNext { envelope -> logger.info { "Message received ${envelope.message}" } }
+            .doOnNext { envelope -> Logger.info { "Message received ${envelope.message}" } }
             .map { envelope ->
                 val message = serializerFactory.unserializeMessage(envelope.message!!)
 
@@ -102,6 +102,4 @@ internal class WebsocketCommClient @Inject constructor(
                 EnvelopeReceived(ConnectionId(0), message)
             }
     }
-
-    companion object : KLogging()
 }

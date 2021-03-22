@@ -8,7 +8,7 @@ import ch.qscqlmpa.dwitchgame.appevent.GameCreatedInfo
 import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 
 class HostInGameService : BaseInGameService() {
 
@@ -19,7 +19,7 @@ class HostInGameService : BaseInGameService() {
     override fun actionStartService(intent: Intent) {
         val gameCreatedInfo = intent.getParcelableExtra<GameCreatedInfo>(EXTRA_GAME_CREATED_INFO)!!
 
-        logger.info { "Start service" }
+        Logger.info { "Start service" }
         showNotification(RoomType.WAITING_ROOM)
         (application as App).startOngoingGame(
             playerRole,
@@ -34,7 +34,7 @@ class HostInGameService : BaseInGameService() {
     }
 
     override fun actionChangeRoomToGameRoom() {
-        logger.info { "Go to game room" }
+        Logger.info { "Go to game room" }
         showNotification(RoomType.GAME_ROOM)
         gameAdvertisingDisposable.dispose()
     }
@@ -49,17 +49,17 @@ class HostInGameService : BaseInGameService() {
         gameAdvertisingDisposable.add(
             getOngoingGameComponent().hostFacade.advertiseGame(gameAdvertisingInfo).subscribe(
                 {},
-                { error -> logger.error(error) { "Error while advertising the game." } }
+                { error -> Logger.error(error) { "Error while advertising the game." } }
             )
         )
     }
 
-    companion object : KLogging() {
+    companion object {
 
         private const val EXTRA_GAME_CREATED_INFO = "GameCreatedInfo"
 
         fun startService(context: Context, gameCreatedInfo: GameCreatedInfo) {
-            logger.info { "Starting HostService...()" }
+            Logger.info { "Starting HostService...()" }
             val intent = Intent(context, HostInGameService::class.java)
             intent.action = ACTION_START_SERVICE
             intent.putExtra(EXTRA_GAME_CREATED_INFO, gameCreatedInfo)
@@ -67,14 +67,14 @@ class HostInGameService : BaseInGameService() {
         }
 
         fun changeRoomToGameRoom(context: Context) {
-            logger.info { "Changing room to Game Room..." }
+            Logger.info { "Changing room to Game Room..." }
             val intent = Intent(context, HostInGameService::class.java)
             intent.action = ACTION_CHANGE_ROOM_TO_GAME_ROOM
             context.startService(intent)
         }
 
         fun stopService(context: Context) {
-            logger.info { "Stopping HostService..." }
+            Logger.info { "Stopping HostService..." }
             context.stopService(Intent(context, HostInGameService::class.java))
         }
     }

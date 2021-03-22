@@ -9,7 +9,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.GameLaunchableEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomHostFacade
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Scheduler
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 internal class WaitingRoomHostViewModel @Inject constructor(
@@ -24,7 +24,7 @@ internal class WaitingRoomHostViewModel @Inject constructor(
             facade.observeGameLaunchableEvents()
                 .observeOn(uiScheduler)
                 .map(::processGameLaunchableEvent)
-                .doOnError { error -> logger.error(error) { "Error while observing if game can be launched." } }
+                .doOnError { error -> Logger.error(error) { "Error while observing if game can be launched." } }
                 .toFlowable(BackpressureStrategy.LATEST)
         )
     }
@@ -39,10 +39,10 @@ internal class WaitingRoomHostViewModel @Inject constructor(
                 .observeOn(uiScheduler)
                 .subscribe(
                     {
-                        logger.info { "Game launched" }
+                        Logger.info { "Game launched" }
                         commands.value = WaitingRoomHostCommand.NavigateToGameRoomScreen
                     },
-                    { error -> logger.error(error) { "Error while launching game" } }
+                    { error -> Logger.error(error) { "Error while launching game" } }
                 )
         )
     }
@@ -53,10 +53,10 @@ internal class WaitingRoomHostViewModel @Inject constructor(
                 .observeOn(uiScheduler)
                 .subscribe(
                     {
-                        logger.info { "Game canceled" }
+                        Logger.info { "Game canceled" }
                         commands.value = WaitingRoomHostCommand.NavigateToHomeScreen
                     },
-                    { error -> logger.error(error) { "Error while canceling game" } }
+                    { error -> Logger.error(error) { "Error while canceling game" } }
                 )
         )
     }
@@ -68,6 +68,4 @@ internal class WaitingRoomHostViewModel @Inject constructor(
             GameLaunchableEvent.NotAllPlayersAreReady -> UiControlModel(enabled = false)
         }
     }
-
-    companion object : KLogging()
 }

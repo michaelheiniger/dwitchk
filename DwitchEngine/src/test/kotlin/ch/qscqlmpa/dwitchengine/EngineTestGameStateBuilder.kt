@@ -37,7 +37,7 @@ class EngineTestGameStateBuilder {
             .map { (_, player) -> player.id }
             .toSet()
 
-//        cardsTakenFromDeck.forEach { c -> println(c) }
+//        cardsTakenFromDeck.forEach { c -> Logger.debug { c } }
 
         return GameState(
             gamePhase,

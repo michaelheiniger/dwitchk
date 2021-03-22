@@ -73,7 +73,7 @@ dependencies {
     implementation(project(path = ":DwitchStore"))
 
     // Kotlin
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlinVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlinVersion}")
 
     // Android / UI
     implementation("androidx.appcompat:appcompat:1.2.0")
@@ -96,9 +96,8 @@ dependencies {
     kaptAndroidTest("com.google.dagger:dagger-compiler:2.30.1")
 
     // Logging
-    implementation("io.github.microutils:kotlin-logging-jvm:2.0.2")
-    implementation("com.github.tony19:logback-android:2.0.0")
-
+    implementation("org.tinylog:tinylog-api-kotlin:2.2.1")
+    implementation("org.tinylog:tinylog-impl:2.2.1")
 
     // RxJava
     implementation("androidx.lifecycle:lifecycle-reactivestreams:2.3.0")
@@ -156,4 +155,7 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-rxjava3:1.0.0-beta02")
     // UI Tests
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.0-beta02")
+
+    testImplementation("org.robolectric:robolectric:4.5.1")
+
 }

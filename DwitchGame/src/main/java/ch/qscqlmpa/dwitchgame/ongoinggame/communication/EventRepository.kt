@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication
 
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import java.util.concurrent.atomic.AtomicReference
 
 /**
@@ -24,7 +24,7 @@ internal abstract class EventRepository<T> {
 
     fun consumeLastEvent(): T? {
         val event = lastEvent.get()
-        logger.debug { "Last event consumed: $event" }
+        Logger.debug { "Last event consumed: $event" }
         return event
     }
 
@@ -32,12 +32,10 @@ internal abstract class EventRepository<T> {
         if (relay.hasObservers()) {
             relay.accept(event)
             lastEvent.set(null)
-            logger.info { "New event consumed: $event" }
+            Logger.info { "New event consumed: $event" }
         } else {
-            logger.info { "New event stored (waiting for a consumer): $event" }
+            Logger.info { "New event stored (waiting for a consumer): $event" }
             lastEvent.set(event)
         }
     }
-
-    companion object : KLogging()
 }

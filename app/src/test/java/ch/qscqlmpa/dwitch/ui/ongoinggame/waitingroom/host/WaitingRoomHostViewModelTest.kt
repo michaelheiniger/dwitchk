@@ -19,7 +19,10 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
+@RunWith(RobolectricTestRunner::class) // Needed because of logging
 class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
 
     private val mockFacade = mockk<WaitingRoomHostFacade>(relaxed = true)

@@ -9,7 +9,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMes
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import dagger.Lazy
 import io.reactivex.rxjava3.core.Completable
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 internal class JoinGameMessageProcessor @Inject constructor(
@@ -30,7 +30,7 @@ internal class JoinGameMessageProcessor @Inject constructor(
                 sendMessages(senderConnectionID, newPlayerLocalId)
             } else {
                 // Not supposed to happen since the list of advertised games is filtered to show only relevant games.
-                logger.warn { "A player has tried to join a game to be resumed by joining it instead of rejoining it. Kicking player..." }
+                Logger.warn { "A player has tried to join a game to be resumed by joining it instead of rejoining it. Kicking player..." }
                 closeConnectionWithGuest(senderConnectionID)
             }
         }
@@ -50,6 +50,4 @@ internal class JoinGameMessageProcessor @Inject constructor(
         val newGuestPlayerDwitchId = store.getPlayerDwitchId(newPlayerLocalId)
         connectionStore.pairConnectionWithPlayer(senderConnectionId, newGuestPlayerDwitchId)
     }
-
-    companion object : KLogging()
 }

@@ -7,7 +7,7 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import ch.qscqlmpa.dwitchstore.model.Player
 import io.reactivex.rxjava3.core.Completable
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
@@ -32,10 +32,10 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
         val playersToRemove = playersOld.map(Player::dwitchId).toHashSet()
         playersToRemove.removeAll(playersUpToDate.map(PlayerWr::dwitchId))
         if (playersToRemove.size > 0) {
-            logger.trace { "Players to remove: $playersToRemove" }
+            Logger.trace { "Players to remove: $playersToRemove" }
             store.deletePlayers(getLocalIdOfPlayersToRemove(playersOld, playersToRemove))
         } else {
-            logger.trace { "No player to remove." }
+            Logger.trace { "No player to remove." }
         }
     }
 
@@ -54,7 +54,7 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
         }.map { (upToDatePlayer, playerOld) -> Pair(upToDatePlayer, playerOld!!) }
 
         if (playersToUpdate.isNotEmpty()) {
-            logger.trace { "Players to update: $playersToUpdate" }
+            Logger.trace { "Players to update: $playersToUpdate" }
             playersToUpdate.forEach { (upToDatePlayer, playerOld) ->
                 store.updatePlayerWithConnectionStateAndReady(
                     playerOld.id,
@@ -63,7 +63,7 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
                 )
             }
         } else {
-            logger.trace { "No player to update." }
+            Logger.trace { "No player to update." }
         }
     }
 
@@ -78,7 +78,7 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
         }
 
         if (playersToAdd.isNotEmpty()) {
-            logger.trace { "Players to add: $playersToAdd" }
+            Logger.trace { "Players to add: $playersToAdd" }
             store.insertPlayers(
                 playersToAdd.map { p ->
                     Player(
@@ -93,9 +93,7 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
                 }
             )
         } else {
-            logger.trace { "No player to add." }
+            Logger.trace { "No player to add." }
         }
     }
-
-    companion object : KLogging()
 }

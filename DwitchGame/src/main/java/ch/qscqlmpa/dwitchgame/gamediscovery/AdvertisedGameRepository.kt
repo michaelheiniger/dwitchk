@@ -5,8 +5,8 @@ import ch.qscqlmpa.dwitchgame.di.GameScope
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.store.Store
 import io.reactivex.rxjava3.core.Observable
-import mu.KLogging
 import org.joda.time.LocalTime
+import org.tinylog.kotlin.Logger
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -17,13 +17,14 @@ internal class AdvertisedGameRepository @Inject constructor(
     private val schedulerFactory: SchedulerFactory
 ) {
 
-    companion object : KLogging() {
+    companion object {
         const val GAME_AD_TIMEOUT_SEC = 10
     }
 
     private val advertisedGames = mutableMapOf<IpAddress, AdvertisedGame>() // Local cache surviving unsubscriptions
 
     fun listenForAdvertisedGames(): Observable<List<AdvertisedGame>> {
+        Logger.debug { "Start listening for advertised games..." }
         return Observable.combineLatest(
             resumableGames(),
             advertisedGames(),
@@ -33,8 +34,9 @@ internal class AdvertisedGameRepository @Inject constructor(
             // Filter resumable games
             .filter { (existingGames, adGame) -> adGame.isNew || existingGames.contains(adGame.gameCommonId) }
             .map { (_, adGame) -> adGame }
-            .doOnNext { adGame -> logger.trace { "Game discovered: $adGame" } }
+            .doOnNext { adGame -> Logger.trace { "Game discovered: $adGame" } }
             .doOnNext { adGame -> updateLocalMap(adGame) }
+            .doFinally { Logger.debug { "Stop listening for advertised games" } }
             .map { ArrayList(advertisedGames.values) }
     }
 

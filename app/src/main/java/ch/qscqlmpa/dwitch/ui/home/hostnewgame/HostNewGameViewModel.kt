@@ -6,7 +6,7 @@ import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
 import io.reactivex.rxjava3.core.Scheduler
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 class HostNewGameViewModel @Inject constructor(
@@ -46,7 +46,7 @@ class HostNewGameViewModel @Inject constructor(
                 .observeOn(uiScheduler)
                 .subscribe(
                     { command.setValue(HostNewGameCommand.NavigateToWaitingRoom) },
-                    { error -> logger.error(error) { "Error while start hosting the game" } }
+                    { error -> Logger.error(error) { "Error while start hosting the game" } }
                 )
         )
     }
@@ -54,6 +54,4 @@ class HostNewGameViewModel @Inject constructor(
     private fun updateHostGameControlState() {
         hostGameControlState.value = UiControlModel(enabled = playerName.isNotBlank() && gameName.isNotBlank())
     }
-
-    companion object : KLogging()
 }

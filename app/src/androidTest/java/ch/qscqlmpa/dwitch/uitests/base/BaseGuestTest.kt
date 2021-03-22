@@ -9,8 +9,8 @@ import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchmodel.player.PlayerWr
-import mu.KLogging
 import org.assertj.core.api.Assertions.assertThat
+import org.tinylog.kotlin.Logger
 import java.util.concurrent.TimeUnit
 
 abstract class BaseGuestTest : BaseOnGoingGameTest() {
@@ -44,13 +44,13 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
     }
 
     protected fun waitForNextMessageSentByLocalGuest(): Message {
-        logger.debug { "Waiting for next message sent by local guest..." }
+        Logger.debug { "Waiting for next message sent by local guest..." }
         val messageSerialized = clientTestStub.observeMessagesSent()
             .take(1)
             .timeout(10, TimeUnit.SECONDS)
             .blockingFirst()
         val message = commSerializerFactory.unserializeMessage(messageSerialized)
-        logger.debug { "Message sent to host: $message" }
+        Logger.debug { "Message sent to host: $message" }
         return message
     }
 
@@ -112,6 +112,4 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
         )
         clientTestStub.serverSendsMessageToClient(message, false)
     }
-
-    companion object : KLogging()
 }

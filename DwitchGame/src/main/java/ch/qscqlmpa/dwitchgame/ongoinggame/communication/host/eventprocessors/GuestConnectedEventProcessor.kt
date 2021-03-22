@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.eventprocessors
 
 import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
 import io.reactivex.rxjava3.core.Completable
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 internal class GuestConnectedEventProcessor @Inject constructor() : HostCommunicationEventProcessor {
@@ -11,9 +11,7 @@ internal class GuestConnectedEventProcessor @Inject constructor() : HostCommunic
 
         event as ServerCommunicationEvent.ClientConnected
 
-        logger.info { "Guest connected (connection ID: ${event.connectionId})." }
+        Logger.info { "Guest connected (connection ID: ${event.connectionId})." }
         return Completable.complete()
     }
-
-    companion object : KLogging()
 }

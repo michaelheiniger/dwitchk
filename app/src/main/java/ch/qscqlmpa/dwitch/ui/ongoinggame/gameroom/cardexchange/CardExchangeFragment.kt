@@ -10,7 +10,7 @@ import ch.qscqlmpa.dwitch.databinding.FragmentCardExchangeBinding
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard.CardAdapter
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 
 class CardExchangeFragment : OngoingGameBaseFragment(R.layout.fragment_card_exchange) {
 
@@ -32,7 +32,7 @@ class CardExchangeFragment : OngoingGameBaseFragment(R.layout.fragment_card_exch
         viewModel.commands().observe(
             viewLifecycleOwner,
             { command ->
-                logger.debug { "Command: $command" }
+                Logger.debug { "Command: $command" }
                 when (command) {
                     CardExchangeCommand.Close -> {
                         val supportFragmentManager = requireActivity().supportFragmentManager
@@ -65,7 +65,7 @@ class CardExchangeFragment : OngoingGameBaseFragment(R.layout.fragment_card_exch
         viewModel.cardsInHand().observe(
             viewLifecycleOwner,
             { cardItems ->
-                logger.debug { "cardsInHandAdapter updated: $cardItems" }
+                Logger.debug { "cardsInHandAdapter updated: $cardItems" }
                 cardsInHandAdapter.setData(cardItems)
             }
         )
@@ -83,7 +83,7 @@ class CardExchangeFragment : OngoingGameBaseFragment(R.layout.fragment_card_exch
         }
     }
 
-    companion object : KLogging() {
+    companion object {
         fun create(): CardExchangeFragment {
             return CardExchangeFragment()
         }

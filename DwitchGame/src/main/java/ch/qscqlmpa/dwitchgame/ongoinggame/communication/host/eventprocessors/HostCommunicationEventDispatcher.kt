@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.eventprocessors
 import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
 import io.reactivex.rxjava3.core.Completable
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -14,9 +14,7 @@ internal class HostCommunicationEventDispatcher @Inject constructor(
 ) {
 
     fun dispatch(event: ServerCommunicationEvent): Completable {
-        logger.debug { "Dispatching ServerCommunicationEvent $event (thread: ${Thread.currentThread().name})" }
+        Logger.debug { "Dispatching ServerCommunicationEvent $event (thread: ${Thread.currentThread().name})" }
         return eventProcessors.getValue(event.javaClass).get().process(event)
     }
-
-    companion object : KLogging()
 }

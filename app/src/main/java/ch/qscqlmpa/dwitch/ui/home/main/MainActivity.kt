@@ -16,7 +16,6 @@ import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameActivity
 import ch.qscqlmpa.dwitch.ui.home.joinnewgame.JoinNewGameActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
-import mu.KLogging
 
 class MainActivity : HomeBaseActivity<MainActivityViewModel>() {
 
@@ -25,12 +24,12 @@ class MainActivity : HomeBaseActivity<MainActivityViewModel>() {
         MaterialTheme {
             Surface(color = Color.White) {
                 val advertisedGameResponse =
-                    viewModel.advertisedGames.observeAsState(AdvertisedGameResponse(Status.LOADING, emptyList()))
+                    viewModel.advertisedGames.observeAsState(AdvertisedGamesResponse(Status.LOADING, emptyList()))
                 val resumableGameResponse =
-                    viewModel.resumableGames.observeAsState(initial = ResumableGameResponse(Status.LOADING, emptyList()))
+                    viewModel.resumableGames.observeAsState(initial = ResumableGamesResponse(Status.LOADING, emptyList()))
                 HomeScreen(
-                    advertisedGameResponse = advertisedGameResponse.value,
-                    resumableGameResponse = resumableGameResponse.value,
+                    advertisedGamesResponse = advertisedGameResponse.value,
+                    resumableGamesResponse = resumableGameResponse.value,
                     onJoinGameClick = { game -> viewModel.joinGame(game) },
                     onCreateNewGameClick = { HostNewGameActivity.hostNewGame(this) },
                     onResumableGameClick = { game -> viewModel.resumeGame(game) }
@@ -62,7 +61,7 @@ class MainActivity : HomeBaseActivity<MainActivityViewModel>() {
         )
     }
 
-    companion object : KLogging() {
+    companion object {
 
         fun start(context: Context) {
             val intent = Intent(context, MainActivity::class.java)

@@ -14,3 +14,8 @@ dependencies {
     // Joda time
     implementation("joda-time:joda-time:2.10.1")
 }
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}

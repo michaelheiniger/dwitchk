@@ -4,8 +4,8 @@ import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.LanGameDiscoveryTest.Companion.gameAd1
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.LanGameDiscoveryTest.Companion.gameAd2
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import io.mockk.*
-import io.reactivex.rxjava3.core.Maybe
+import io.mockk.mockk
+import io.mockk.verify
 import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
@@ -26,44 +26,27 @@ class LanGameDiscoveryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `should emit one advertised game and complete`() {
+    fun `should emit advertised games when subscribing to stream`() {
         val gameDiscovery = LanGameDiscovery(serializerFactory, TestNetworkAdapter())
 
-        gameDiscovery.listenForAdvertisedGame()
-            .doOnNext { (_, _, _) -> gameDiscovery.stopListening() }
+        gameDiscovery.listenForAdvertisedGames()
+            .take(1)
             .test()
             .assertValue { advertisedGame ->
                 isDateToday(advertisedGame.discoveryTimeAsString()) &&
-                    advertisedGame.gameName == "Kaamelott" &&
-                    advertisedGame.gameCommonId == GameCommonId(23) &&
-                    advertisedGame.gameIpAddress == "192.168.1.1" &&
-                    advertisedGame.gamePort == 8889
+                        advertisedGame.gameName == "Kaamelott" &&
+                        advertisedGame.gameCommonId == GameCommonId(23) &&
+                        advertisedGame.gameIpAddress == "192.168.1.1" &&
+                        advertisedGame.gamePort == 8889
             }
     }
 
     @Test
-    fun `should emit two advertised games and complete`() {
-        val gameDiscovery = LanGameDiscovery(serializerFactory, TestNetworkAdapter())
-
-        gameDiscovery.listenForAdvertisedGame()
-            .doOnNext { game ->
-                if (game.gameName == "LOTR") {
-                    gameDiscovery.stopListening()
-                }
-            }
-            .test()
-            .assertValueCount(2)
-            .assertComplete()
-    }
-
-    @Test
-    fun `should dispose NetworkAdapter resources`() {
-        val networkAdapter = mockk<NetworkAdapter>()
-        every { networkAdapter.close() } just runs
+    fun `should dispose NetworkAdapter resources when stream is disposed`() {
+        val networkAdapter = mockk<NetworkAdapter>(relaxed = true)
 
         val gameDiscovery = LanGameDiscovery(serializerFactory, networkAdapter)
-
-        gameDiscovery.stopListening()
+        gameDiscovery.listenForAdvertisedGames().test().dispose()
 
         verify { networkAdapter.close() }
     }
@@ -84,14 +67,12 @@ internal class TestNetworkAdapter : NetworkAdapter {
         // Nothing to do
     }
 
-    override fun receive(): Maybe<Packet> {
-        return Maybe.defer {
-            counter++
-            when (counter) {
-                1 -> Maybe.just(Packet(gameAd1, "192.168.1.1", 8890))
-                2 -> Maybe.just(Packet(gameAd2, "192.168.1.2", 8891))
-                else -> Maybe.error(IllegalStateException())
-            }
+    override fun receive(): Packet {
+        counter++
+        return when (counter) {
+            1 -> Packet(gameAd1, "192.168.1.1", 8890)
+            2 -> Packet(gameAd2, "192.168.1.2", 8891)
+            else -> throw IllegalStateException()
         }
     }
 

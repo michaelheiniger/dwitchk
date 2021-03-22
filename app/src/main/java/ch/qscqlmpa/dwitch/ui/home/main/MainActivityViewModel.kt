@@ -10,7 +10,7 @@ import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import io.reactivex.rxjava3.core.Scheduler
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 class MainActivityViewModel @Inject
@@ -22,11 +22,11 @@ constructor(
 ) : BaseViewModel() {
 
     private val _commands = MutableLiveData<MainActivityCommands>()
-    private val _advertisedGames = MutableLiveData<AdvertisedGameResponse>()
-    private val _resumableGames = MutableLiveData<ResumableGameResponse>()
+    private val _advertisedGames = MutableLiveData<AdvertisedGamesResponse>()
+    private val _resumableGames = MutableLiveData<ResumableGamesResponse>()
 
-    val advertisedGames get(): LiveData<AdvertisedGameResponse> = _advertisedGames
-    val resumableGames get(): LiveData<ResumableGameResponse> = _resumableGames
+    val advertisedGames get(): LiveData<AdvertisedGamesResponse> = _advertisedGames
+    val resumableGames get(): LiveData<ResumableGamesResponse> = _resumableGames
     val commands get(): LiveData<MainActivityCommands> = _commands
 
     init {
@@ -41,7 +41,7 @@ constructor(
 
     override fun onStart() {
         listenForAdvertisedGames()
-        observeExistingGames()
+        observeResumableGames()
     }
 
     override fun onStop() {
@@ -57,10 +57,10 @@ constructor(
                     .observeOn(uiScheduler)
                     .subscribe(
                         {
-                            logger.info { "Game resumed successfully." }
+                            Logger.info { "Game resumed successfully." }
                             _commands.value = MainActivityCommands.NavigateToWaitingRoomAsGuest
                         },
-                        { error -> logger.error(error) { "Error while resuming game." } }
+                        { error -> Logger.error(error) { "Error while resuming game." } }
                     )
             )
         }
@@ -72,10 +72,10 @@ constructor(
                 .observeOn(uiScheduler)
                 .subscribe(
                     {
-                        logger.info { "Game resumed successfully." }
+                        Logger.info { "Game resumed successfully." }
                         _commands.value = MainActivityCommands.NavigateToWaitingRoomAsHost
                     },
-                    { error -> logger.error(error) { "Error while resuming game." } }
+                    { error -> Logger.error(error) { "Error while resuming game." } }
                 )
         )
     }
@@ -84,24 +84,22 @@ constructor(
         disposableManager.add(
             homeGuestFacade.listenForAdvertisedGames()
                 .observeOn(uiScheduler)
-                .map { games -> AdvertisedGameResponse.success(games) }
-                .onErrorReturn { error -> AdvertisedGameResponse.error(error) }
-                .doOnError { error -> logger.error(error) { "Error while observing advertised games." } }
+                .map { games -> AdvertisedGamesResponse.success(games) }
+                .onErrorReturn { error -> AdvertisedGamesResponse.error(error) }
+                .doOnError { error -> Logger.error(error) { "Error while observing advertised games." } }
                 .subscribe { response -> _advertisedGames.value = response }
         )
 
     }
 
-    private fun observeExistingGames() {
+    private fun observeResumableGames() {
         disposableManager.add(
             homeHostFacade.resumableGames()
                 .observeOn(uiScheduler)
-                .map { games -> ResumableGameResponse.success(games) }
-                .onErrorReturn { error -> ResumableGameResponse.error(error) }
-                .doOnError { error -> logger.error(error) { "Error while fetching existing games." } }
+                .map { games -> ResumableGamesResponse.success(games) }
+                .onErrorReturn { error -> ResumableGamesResponse.error(error) }
+                .doOnError { error -> Logger.error(error) { "Error while fetching existing games." } }
                 .subscribe { response -> _resumableGames.value = response }
         )
     }
-
-    companion object : KLogging()
 }

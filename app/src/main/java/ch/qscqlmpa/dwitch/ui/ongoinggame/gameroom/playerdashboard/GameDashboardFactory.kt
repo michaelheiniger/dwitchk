@@ -11,7 +11,7 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.info.PlayerInfo
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardInfo
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 
 class GameDashboardFactory(
     gameDashboardInfo: GameDashboardInfo,
@@ -111,13 +111,7 @@ class GameDashboardFactory(
 
     private fun dwitchEvent(): String {
         val dwitchedPlayer = gameInfo.getDwitchedPlayer()
-        logger.info { "Dwitched player: $dwitchedPlayer" }
-        return if (dwitchedPlayer != null) {
-            "${dwitchedPlayer.name} is dwitched !"
-        } else {
-            ""
-        }
+        Logger.info { "Dwitched player: $dwitchedPlayer" }
+        return if (dwitchedPlayer != null) "${dwitchedPlayer.name} is dwitched !" else ""
     }
-
-    companion object : KLogging()
 }

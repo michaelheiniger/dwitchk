@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
 import com.jakewharton.rxrelay3.BehaviorRelay
 import io.reactivex.rxjava3.core.Observable
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 @OngoingGameScope
@@ -17,9 +17,7 @@ internal class GuestCommunicationStateRepository @Inject constructor() {
     }
 
     fun notify(state: GuestCommunicationState) {
-        logger.info { "New communication state: $state" }
+        Logger.info { "New communication state: $state" }
         return relay.accept(state)
     }
-
-    companion object : KLogging()
 }

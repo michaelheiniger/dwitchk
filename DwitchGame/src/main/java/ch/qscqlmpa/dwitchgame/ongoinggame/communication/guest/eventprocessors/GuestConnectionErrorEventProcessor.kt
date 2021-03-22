@@ -4,7 +4,7 @@ import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientCommunicationEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationStateRepository
 import io.reactivex.rxjava3.core.Completable
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 internal class GuestConnectionErrorEventProcessor @Inject constructor(
@@ -12,9 +12,7 @@ internal class GuestConnectionErrorEventProcessor @Inject constructor(
 ) : GuestCommunicationEventProcessor {
 
     override fun process(event: ClientCommunicationEvent): Completable {
-        logger.debug { "Process DisconnectedFromHost" }
+        Logger.debug { "Process DisconnectedFromHost" }
         return Completable.fromAction { commStateRepository.notify(GuestCommunicationState.Error) }
     }
-
-    companion object : KLogging()
 }

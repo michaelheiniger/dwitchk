@@ -14,7 +14,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardInfo
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Scheduler
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 class PlayerDashboardViewModel @Inject constructor(
@@ -30,7 +30,7 @@ class PlayerDashboardViewModel @Inject constructor(
             facade.observeDashboardInfo()
                 .map { dashboard -> GameDashboardFactory(dashboard, textProvider).create() }
                 .observeOn(uiScheduler)
-                .doOnError { error -> logger.error(error) { "Error while observing player dashboard." } }
+                .doOnError { error -> Logger.error(error) { "Error while observing player dashboard." } }
                 .toFlowable(BackpressureStrategy.LATEST),
         )
     }
@@ -68,7 +68,7 @@ class PlayerDashboardViewModel @Inject constructor(
             facade.observeCardExchangeEvents()
                 .map { PlayerDashboardCommand.OpenCardExchange }
                 .observeOn(uiScheduler)
-                .doOnError { error -> logger.error(error) { "Error while observing card exchange." } }
+                .doOnError { error -> Logger.error(error) { "Error while observing card exchange." } }
                 .toFlowable(BackpressureStrategy.LATEST)
         )
     }
@@ -80,7 +80,7 @@ class PlayerDashboardViewModel @Inject constructor(
                 .filter { info -> info.gameInfo.gamePhase == GamePhase.RoundIsOver }
                 .map(::mapEndOfRoundInfo)
                 .observeOn(uiScheduler)
-                .doOnError { error -> logger.error(error) { "Error while observing dashboard info." } }
+                .doOnError { error -> Logger.error(error) { "Error while observing dashboard info." } }
                 .toFlowable(BackpressureStrategy.LATEST)
         )
     }
@@ -101,11 +101,9 @@ class PlayerDashboardViewModel @Inject constructor(
             op()
                 .observeOn(uiScheduler)
                 .subscribe(
-                    { logger.debug { successText } },
-                    { error -> logger.error(error) { failureText } }
+                    { Logger.debug { successText } },
+                    { error -> Logger.error(error) { failureText } }
                 )
         )
     }
-
-    companion object : KLogging()
 }

@@ -10,7 +10,7 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import dagger.Lazy
 import io.reactivex.rxjava3.core.Completable
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 internal class GuestDisconnectedEventProcessor @Inject constructor(
@@ -27,7 +27,7 @@ internal class GuestDisconnectedEventProcessor @Inject constructor(
         if (event.connectionId != null) {
             return handleEventWhenConnectionIdIsKnown(event.connectionId!!)
         }
-        logger.info { "Client disconnected with unknown connection ID." }
+        Logger.info { "Client disconnected with unknown connection ID." }
         return Completable.complete()
     }
 
@@ -35,14 +35,14 @@ internal class GuestDisconnectedEventProcessor @Inject constructor(
         return Completable.fromAction {
             val playerDwitchId = connectionStore.getDwitchId(connectionId)
             connectionStore.removeConnectionIdForDwitchId(connectionId)
-            logger.info { "Client disconnected with connection ID $connectionId and dwitch ID $playerDwitchId" }
+            Logger.info { "Client disconnected with connection ID $connectionId and dwitch ID $playerDwitchId" }
 
             if (playerDwitchId != null) {
                 updatePlayerWithDisconnectedState(playerDwitchId, connectionId)
                 val message = hostMessageFactory.createWaitingRoomStateUpdateMessage()
                 communicatorLazy.get().sendMessage(message)
             } else {
-                logger.info { "ClientDisconnected event: no player in-game ID found for connection ID $connectionId" }
+                Logger.info { "ClientDisconnected event: no player in-game ID found for connection ID $connectionId" }
             }
         }
     }
@@ -54,9 +54,7 @@ internal class GuestDisconnectedEventProcessor @Inject constructor(
         if (numRecordsAffected != 1) {
             throw IllegalStateException("State of player with connection ID $connectionId could not be updated because not found in store.")
         } else {
-            logger.info { "Player with connection ID $connectionId changed state to $newState." }
+            Logger.info { "Player with connection ID $connectionId changed state to $newState." }
         }
     }
-
-    companion object : KLogging()
 }

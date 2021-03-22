@@ -10,7 +10,6 @@ import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
 import ch.qscqlmpa.dwitch.ui.utils.UiUtil.updateView
-import mu.KLogging
 
 class WaitingRoomHostFragment : OngoingGameBaseFragment(R.layout.fragment_waiting_room_host) {
 
@@ -41,6 +40,4 @@ class WaitingRoomHostFragment : OngoingGameBaseFragment(R.layout.fragment_waitin
             }
         )
     }
-
-    companion object : KLogging()
 }

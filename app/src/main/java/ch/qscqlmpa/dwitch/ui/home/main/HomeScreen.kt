@@ -25,7 +25,7 @@ import org.joda.time.DateTime
 @Preview(showBackground = false)
 @Composable
 fun HomeScreenPreview() {
-    val advertisedGameResponse = AdvertisedGameResponse(
+    val advertisedGameResponse = AdvertisedGamesResponse(
         Status.SUCCESS,
         listOf(
             AdvertisedGame(false, "Game 1", GameCommonId(1), "192.168.1.1", 8889),
@@ -35,7 +35,7 @@ fun HomeScreenPreview() {
         null
     )
 
-    val resumableGameResponse = ResumableGameResponse(
+    val resumableGameResponse = ResumableGamesResponse(
         Status.SUCCESS,
         listOf(
             ResumableGameInfo(1, DateTime.parse("2020-07-26T01:20+02:00"), "LOTR", listOf("Aragorn", "Legolas", "Gimli")),
@@ -44,13 +44,13 @@ fun HomeScreenPreview() {
                 DateTime.parse("2021-01-01T01:18+02:00"),
                 "GoT",
                 listOf("Ned Stark", "Arya Stark", "Sandor Clegane")
-            ),
+            )
         ),
         null
     )
     HomeScreen(
-        advertisedGameResponse = advertisedGameResponse,
-        resumableGameResponse = resumableGameResponse,
+        advertisedGamesResponse = advertisedGameResponse,
+        resumableGamesResponse = resumableGameResponse,
         onCreateNewGameClick = {},
         onJoinGameClick = {},
         onResumableGameClick = {}
@@ -59,8 +59,8 @@ fun HomeScreenPreview() {
 
 @Composable
 fun HomeScreen(
-    advertisedGameResponse: AdvertisedGameResponse,
-    resumableGameResponse: ResumableGameResponse,
+    advertisedGamesResponse: AdvertisedGamesResponse,
+    resumableGamesResponse: ResumableGamesResponse,
     onCreateNewGameClick: () -> Unit,
     onJoinGameClick: (AdvertisedGame) -> Unit,
     onResumableGameClick: (ResumableGameInfo) -> Unit
@@ -72,11 +72,11 @@ fun HomeScreen(
             .padding(top = 16.dp, start = 16.dp, end = 16.dp)
 
     ) {
-        AdvertisedGameContainer(advertisedGameResponse, onJoinGameClick)
+        AdvertisedGameContainer(advertisedGamesResponse, onJoinGameClick)
         Spacer(modifier = Modifier.height(16.dp))
         GameCreation(onCreateNewGameClick)
         Spacer(modifier = Modifier.height(16.dp))
-        ResumableGamesContainer(resumableGameResponse, onResumableGameClick)
+        ResumableGamesContainer(resumableGamesResponse, onResumableGameClick)
     }
 }
 
@@ -87,7 +87,7 @@ private fun GameCreation(onCreateNewGameClick: () -> Unit) {
 
 @Composable
 fun ResumableGamesContainer(
-    response: ResumableGameResponse,
+    response: ResumableGamesResponse,
     onResumableGameClick: (ResumableGameInfo) -> Unit
 ) {
     Column(
@@ -132,7 +132,7 @@ private fun ResumableGames(
 
 @Composable
 private fun AdvertisedGameContainer(
-    response: AdvertisedGameResponse,
+    response: AdvertisedGamesResponse,
     onJoinGameClick: (AdvertisedGame) -> Unit
 ) {
     Column(

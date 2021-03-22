@@ -9,7 +9,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.GuestMe
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import ch.qscqlmpa.dwitchstore.model.Player
 import io.reactivex.rxjava3.core.Completable
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 internal class GuestConnectedToHostEventProcessor @Inject constructor(
@@ -20,7 +20,7 @@ internal class GuestConnectedToHostEventProcessor @Inject constructor(
 
     override fun process(event: ClientCommunicationEvent): Completable {
 
-        logger.debug { "Process GuestConnectedToHostEvent" }
+        Logger.debug { "Process GuestConnectedToHostEvent" }
 
         event as ClientCommunicationEvent.ConnectedToHost
 
@@ -29,10 +29,10 @@ internal class GuestConnectedToHostEventProcessor @Inject constructor(
             val localPlayer = store.getLocalPlayer()
 
             val message = if (guestIsAlreadyRegisteredAtHost(localPlayer)) {
-                logger.debug { "Send RejoinGameMessage with in-game ID ${localPlayer.dwitchId}" }
+                Logger.debug { "Send RejoinGameMessage with in-game ID ${localPlayer.dwitchId}" }
                 GuestMessageFactory.createRejoinGameMessage(game.gameCommonId, localPlayer.dwitchId)
             } else {
-                logger.debug { "Send JoinGameMessage" }
+                Logger.debug { "Send JoinGameMessage" }
                 GuestMessageFactory.createJoinGameMessage(localPlayer.name)
             }
 
@@ -44,6 +44,4 @@ internal class GuestConnectedToHostEventProcessor @Inject constructor(
     private fun guestIsAlreadyRegisteredAtHost(localPlayer: Player): Boolean {
         return localPlayer.dwitchId != PlayerDwitchId(0)
     }
-
-    companion object : KLogging()
 }

@@ -8,8 +8,8 @@ import ch.qscqlmpa.dwitchcommunication.websocket.server.test.PlayerHostTest
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.GuestMessageFactory
 import ch.qscqlmpa.dwitchstore.model.Player
 import io.reactivex.rxjava3.core.Observable
-import mu.KLogging
 import org.assertj.core.api.Assertions.assertThat
+import org.tinylog.kotlin.Logger
 import java.util.concurrent.TimeUnit
 
 abstract class BaseHostTest : BaseOnGoingGameTest() {
@@ -87,19 +87,19 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
      * Start observing messages and then perform the action. This is needed for synchronous operations like UI actions
      */
     protected fun waitForNextMessageSentByHost(): Message {
-        logger.debug { "Waiting for next message sent by host..." }
+        Logger.debug { "Waiting for next message sent by host..." }
         val messageSerialized =
             Observable.merge(listOf(serverTestStub.observeMessagesSent(), serverTestStub.observeMessagesBroadcasted()))
                 .take(1)
                 .timeout(10, TimeUnit.SECONDS)
                 .blockingFirst()
         val message = commSerializerFactory.unserializeMessage(messageSerialized)
-        logger.debug { "Message sent to client: $message" }
+        Logger.debug { "Message sent to client: $message" }
         return message
     }
 
     protected fun waitForNextNMessageSentByHost(numMessagesExpected: Long): List<Message> {
-        logger.debug { "Waiting for next $numMessagesExpected messages sent by host..." }
+        Logger.debug { "Waiting for next $numMessagesExpected messages sent by host..." }
         val messagesSerialized =
             Observable.merge(listOf(serverTestStub.observeMessagesSent(), serverTestStub.observeMessagesBroadcasted()))
                 .take(numMessagesExpected)
@@ -107,14 +107,14 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
                 .scan(
                     mutableListOf<String>(),
                     { messages, lastMessage ->
-                        logger.error { "Message sent by host: $lastMessage" }
+                        Logger.error { "Message sent by host: $lastMessage" }
                         messages.add(lastMessage)
                         messages
                     }
                 )
                 .blockingLast()
 
-        logger.debug { "Messages sent to client: $messagesSerialized" }
+        Logger.debug { "Messages sent to client: $messagesSerialized" }
         return messagesSerialized.map(commSerializerFactory::unserializeMessage)
     }
 
@@ -125,6 +125,4 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
             PlayerHostTest.Guest3 -> guest3
         }
     }
-
-    companion object : KLogging()
 }

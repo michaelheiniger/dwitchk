@@ -9,6 +9,7 @@ import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.info.GameInfo
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.PlayerOnboardingInfo
+import org.tinylog.kotlin.Logger
 
 interface DwitchEngine {
     fun getGameInfo(): GameInfo
@@ -21,7 +22,7 @@ interface DwitchEngine {
 
     companion object {
         fun createNewGame(playersInfo: List<PlayerOnboardingInfo>, initialGameSetup: InitialGameSetup): GameState {
-            println("Start new game, players:  $playersInfo, initial game setup: $initialGameSetup")
+            Logger.debug { "Start new game, players:  $playersInfo, initial game setup: $initialGameSetup" }
             return GameBootstrap.createNewGame(playersInfo, initialGameSetup)
         }
     }

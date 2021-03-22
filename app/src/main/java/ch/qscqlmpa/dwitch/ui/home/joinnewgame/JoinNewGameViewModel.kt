@@ -7,7 +7,7 @@ import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
 import io.reactivex.rxjava3.core.Scheduler
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 class JoinNewGameViewModel @Inject constructor(
@@ -40,10 +40,8 @@ class JoinNewGameViewModel @Inject constructor(
                 .observeOn(uiScheduler)
                 .subscribe(
                     { command.setValue(JoinNewGameCommand.NavigateToWaitingRoom) },
-                    { error -> logger.error(error) { "Error while joining the game" } }
+                    { error -> Logger.error(error) { "Error while joining the game" } }
                 )
         )
     }
-
-    companion object : KLogging()
 }

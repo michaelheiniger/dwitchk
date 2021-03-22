@@ -9,7 +9,6 @@ import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.Recipient
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicatorImpl
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.eventprocessors.HostCommunicationEventDispatcher
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
@@ -17,7 +16,7 @@ import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 
 internal class HostCommunicatorImpl constructor(
     private val inGameStore: InGameStore,
@@ -34,14 +33,14 @@ internal class HostCommunicatorImpl constructor(
     private val receivedMessageRelay = PublishRelay.create<EnvelopeReceived>()
 
     override fun startServer() {
-        logger.trace { "Start server" }
+        Logger.trace { "Start server" }
         observeCommunicationEvents()
         observeReceivedMessages()
         commServer.start()
     }
 
     override fun stopServer() {
-        logger.info { "Close all connections" }
+        Logger.info { "Close all connections" }
         commServer.stop()
         disposableManager.disposeAndReset()
     }
@@ -54,7 +53,7 @@ internal class HostCommunicatorImpl constructor(
     }
 
     override fun sendMessageToHost(message: Message) {
-        logger.info { "Send message to host: $message" }
+        Logger.info { "Send message to host: $message" }
         receivedMessageRelay.accept(EnvelopeReceived(hostConnectionId(), message))
     }
 
@@ -80,8 +79,8 @@ internal class HostCommunicatorImpl constructor(
                         .subscribeOn(schedulerFactory.io())
                 }
                 .subscribe(
-                    { logger.debug { "Communication events stream completed" } },
-                    { error -> GuestCommunicatorImpl.logger.error(error) { "Error while observing communication events" } }
+                    { Logger.debug { "Communication events stream completed" } },
+                    { error -> Logger.error(error) { "Error while observing communication events" } }
                 )
         )
     }
@@ -102,8 +101,8 @@ internal class HostCommunicatorImpl constructor(
                     )
                 )
             }.subscribe(
-                { logger.debug { "Received messages stream completed !" } },
-                { error -> GuestCommunicatorImpl.logger.error(error) { "Error while observing received messages" } }
+                { Logger.debug { "Received messages stream completed !" } },
+                { error -> Logger.error(error) { "Error while observing received messages" } }
             )
         )
     }
@@ -115,7 +114,7 @@ internal class HostCommunicatorImpl constructor(
     }
 
     private fun sendMessageToAllGuests(envelopeToSend: EnvelopeToSend) {
-        logger.info { "Send message to all guests: ${envelopeToSend.message}" }
+        Logger.info { "Send message to all guests: ${envelopeToSend.message}" }
         commServer.sendMessage(envelopeToSend.message, envelopeToSend.recipient)
         // TODO: Should messages with recipient "All" be also sent to the host ? It doesn't seem needed since the message
         // is sent by the host.
@@ -125,7 +124,7 @@ internal class HostCommunicatorImpl constructor(
         if (hostConnectionId() == recipient.id) {
             sendMessageToHost(envelopeToSend.message)
         } else {
-            logger.info { "Send message to guest (${envelopeToSend.recipient}): ${envelopeToSend.message}" }
+            Logger.info { "Send message to guest (${envelopeToSend.recipient}): ${envelopeToSend.message}" }
             commServer.sendMessage(envelopeToSend.message, envelopeToSend.recipient)
         }
     }
@@ -138,6 +137,4 @@ internal class HostCommunicatorImpl constructor(
             }
         }.subscribeOn(schedulerFactory.io())
     }
-
-    companion object : KLogging()
 }

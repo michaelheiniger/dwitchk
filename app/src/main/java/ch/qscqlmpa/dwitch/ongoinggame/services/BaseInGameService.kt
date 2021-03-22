@@ -16,7 +16,7 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameComponent
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 
 abstract class BaseInGameService : Service() {
 
@@ -106,12 +106,12 @@ abstract class BaseInGameService : Service() {
     }
 
     private fun actionStopService() {
-        logger.info { "Stop service" }
+        Logger.info { "Stop service" }
         stopSelf()
         cleanUp()
     }
 
-    companion object : KLogging() {
+    companion object {
         private const val NOTIFICATION_ID = 1
 
         const val ACTION_START_SERVICE = "ACTION_START_SERVICE"

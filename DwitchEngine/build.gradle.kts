@@ -8,8 +8,7 @@ plugins {
 dependencies {
 
     // Logging
-    implementation("io.github.microutils:kotlin-logging-jvm:2.0.2")
-    implementation("com.github.tony19:logback-android:2.0.0")
+    implementation("org.tinylog:tinylog-api-kotlin:2.3.0-M2")
 
     // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc")
@@ -22,4 +21,9 @@ dependencies {
 
     // AssertJ
     testImplementation("org.assertj:assertj-core:3.18.1")
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }

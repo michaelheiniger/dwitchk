@@ -12,7 +12,7 @@ import ch.qscqlmpa.dwitch.ui.ImageInfo
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.cardexchange.CardExchangeFragment
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 
 class PlayerDashboardFragment : OngoingGameBaseFragment(R.layout.fragment_player_dashboard), CardAdapter.CardClickedListener {
 
@@ -53,7 +53,7 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(R.layout.fragment_player
         viewModel.playerDashboard().observe(
             viewLifecycleOwner,
             { dashboard ->
-                logger.debug { "Dashboard update event: $dashboard" }
+                Logger.debug { "Dashboard update event: $dashboard" }
 
                 binding.playersInfoTv.text = dashboard.playersInfo
                 binding.gameInfoTv.text = dashboard.gameInfo
@@ -75,7 +75,7 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(R.layout.fragment_player
         viewModel.commands().observe(
             viewLifecycleOwner,
             { command ->
-                logger.debug { "Command: $command" }
+                Logger.debug { "Command: $command" }
                 when (command) {
                     is PlayerDashboardCommand.OpenCardExchange -> openCardExchange()
                     is PlayerDashboardCommand.OpenEndOfRound -> showEndOfRoundDialog(command.playersInfo)
@@ -102,7 +102,7 @@ class PlayerDashboardFragment : OngoingGameBaseFragment(R.layout.fragment_player
         imageView.contentDescription = image.description
     }
 
-    companion object : KLogging() {
+    companion object {
         fun create(): PlayerDashboardFragment {
             return PlayerDashboardFragment()
         }

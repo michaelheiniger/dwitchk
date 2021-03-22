@@ -50,8 +50,7 @@ dependencies {
     implementation(project(path = ":DwitchCommon"))
 
     // Logging
-    implementation("io.github.microutils:kotlin-logging-jvm:2.0.2")
-    implementation("com.github.tony19:logback-android:2.0.0")
+    implementation("org.tinylog:tinylog-api-kotlin:2.3.0-M2")
 
     // Dagger
     implementation("com.google.dagger:dagger:2.30.1")
@@ -59,8 +58,7 @@ dependencies {
     kaptAndroidTest("com.google.dagger:dagger-compiler:2.30.1")
 
     // Logging
-    implementation("io.github.microutils:kotlin-logging-jvm:2.0.2")
-    implementation("com.github.tony19:logback-android:2.0.0")
+    implementation("org.tinylog:tinylog-api-kotlin:2.3.0-M2")
 
     // RxJava
     implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")

@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.gamediscovery.network
 
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.SocketException
@@ -12,8 +12,7 @@ class UdpNetworkAdapter @Inject constructor() : NetworkAdapter {
 
     @Throws(SocketException::class)
     override fun bind(listeningPort: Int) {
-        logger.debug { "Opening socket..." }
-        logger.isDebugEnabled
+        Logger.debug { "Opening socket..." }
         receiveSocket = DatagramSocket(listeningPort)
     }
 
@@ -22,7 +21,7 @@ class UdpNetworkAdapter @Inject constructor() : NetworkAdapter {
         val receivePacket = DatagramPacket(receiveData, receiveData.size)
 
         receiveSocket.receive(receivePacket) // Blocking call
-        logger.debug { "Packet received: ${receivePacket.data}" }
+        Logger.debug { "Packet received: ${receivePacket.data}" }
 
         val message = String(receivePacket.data).substring(0, receivePacket.length)
         val senderIpAddress = receivePacket.address.hostAddress
@@ -31,9 +30,7 @@ class UdpNetworkAdapter @Inject constructor() : NetworkAdapter {
     }
 
     override fun close() {
-        logger.debug { "Closing socket..." }
+        Logger.debug { "Closing socket..." }
         receiveSocket.close()
     }
-
-    companion object : KLogging()
 }

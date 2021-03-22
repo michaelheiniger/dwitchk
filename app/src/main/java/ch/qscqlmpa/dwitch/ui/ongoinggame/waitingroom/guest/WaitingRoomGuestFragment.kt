@@ -13,7 +13,6 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.SimpleDialogFragment
 import ch.qscqlmpa.dwitch.ui.utils.UiUtil.updateCheckbox
-import mu.KLogging
 
 class WaitingRoomGuestFragment : OngoingGameBaseFragment(R.layout.fragment_waiting_room_guest) {
 
@@ -59,7 +58,7 @@ class WaitingRoomGuestFragment : OngoingGameBaseFragment(R.layout.fragment_waiti
         dialog.setFragmentResultListener(SimpleDialogFragment.requestKey) { _, _ -> viewModel.acknowledgeGameCanceledEvent() }
     }
 
-    companion object : KLogging() {
+    companion object {
         fun create(): WaitingRoomGuestFragment {
             return WaitingRoomGuestFragment()
         }

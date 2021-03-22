@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.gamediscovery
 
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.NetworkAdapter
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import java.net.SocketException
 import javax.inject.Inject
 
@@ -12,7 +12,7 @@ internal constructor() : NetworkAdapter {
     private var packet: Packet? = null
 
     fun setPacket(packet: Packet) {
-        logger.info { "Feed network adapter with packet $packet" }
+        Logger.info { "Feed network adapter with packet $packet" }
         this.packet = packet
     }
 
@@ -28,6 +28,4 @@ internal constructor() : NetworkAdapter {
     override fun close() {
         // Nothing to do
     }
-
-    companion object : KLogging()
 }

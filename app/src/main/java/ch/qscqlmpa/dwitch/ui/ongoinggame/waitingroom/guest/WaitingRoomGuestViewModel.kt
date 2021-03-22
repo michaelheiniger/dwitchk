@@ -12,7 +12,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomGuestFacade
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Scheduler
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 class WaitingRoomGuestViewModel @Inject constructor(
@@ -63,10 +63,10 @@ class WaitingRoomGuestViewModel @Inject constructor(
                 .observeOn(uiScheduler)
                 .subscribe(
                     {
-                        logger.info { "Left game successfully" }
+                        Logger.info { "Left game successfully" }
                         commands.value = WaitingRoomGuestCommand.NavigateToHomeScreen
                     },
-                    { error -> logger.error(error) { "Error while leaving game" } }
+                    { error -> Logger.error(error) { "Error while leaving game" } }
                 )
         )
     }
@@ -74,7 +74,7 @@ class WaitingRoomGuestViewModel @Inject constructor(
     private fun currentCommunicationState(): Flowable<GuestCommunicationState> {
         return facade.observeCommunicationState()
             .observeOn(uiScheduler)
-            .doOnError { error -> logger.error(error) { "Error while observing communication state." } }
+            .doOnError { error -> Logger.error(error) { "Error while observing communication state." } }
             .toFlowable(BackpressureStrategy.LATEST)
     }
 
@@ -83,7 +83,7 @@ class WaitingRoomGuestViewModel @Inject constructor(
             facade.observeEvents()
                 .observeOn(uiScheduler)
                 .map(::getCommandForGameEvent)
-                .doOnError { error -> logger.error(error) { "Error while observing game events." } }
+                .doOnError { error -> Logger.error(error) { "Error while observing game events." } }
                 .toFlowable(BackpressureStrategy.LATEST)
         )
     }
@@ -95,6 +95,4 @@ class WaitingRoomGuestViewModel @Inject constructor(
             GuestGameEvent.GameOver -> throw IllegalStateException("Event '$event' is not supposed to occur in WaitingRoom.")
         }
     }
-
-    companion object : KLogging()
 }

@@ -13,8 +13,7 @@ dependencies {
     implementation(project(path = ":DwitchModel"))
 
     // Logging
-    implementation("io.github.microutils:kotlin-logging-jvm:2.0.2")
-    implementation("com.github.tony19:logback-android:2.0.0")
+    implementation("org.tinylog:tinylog-api-kotlin:2.3.0-M2")
 
     // Dagger
     implementation("com.google.dagger:dagger:2.30.1")
@@ -29,4 +28,9 @@ dependencies {
 
     // Java-WebSocket
     implementation("org.java-websocket:Java-WebSocket:1.5.1")
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }

@@ -5,8 +5,8 @@ import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientMessage
 import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClient
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
-import mu.KLogging
 import org.java_websocket.handshake.ServerHandshake
+import org.tinylog.kotlin.Logger
 
 internal class IntTestWebsocketClient constructor(
     @Suppress("UNUSED_PARAMETER") private val destinationAddress: String,
@@ -56,7 +56,7 @@ internal class IntTestWebsocketClient constructor(
     }
 
     override fun send(message: String) {
-        logger.info { "Message sent to server: $message" }
+        Logger.info { "Message sent to server: $message" }
 //        networkHub.sendToHost(guestIdTestHost, message)
     }
 
@@ -91,6 +91,4 @@ internal class IntTestWebsocketClient constructor(
     fun observeMessagesSent(): Observable<String> {
         return messagesSentRelay
     }
-
-    companion object : KLogging()
 }

@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchgame.appevent
 import ch.qscqlmpa.dwitchgame.di.GameScope
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
-import mu.KLogging
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 @GameScope
@@ -14,7 +14,7 @@ class AppEventRepository @Inject constructor() {
     private var lastEvent: AppEvent? = null
 
     fun observeEvents(): Observable<AppEvent> {
-        logger.debug { "Observing app events..." }
+        Logger.debug { "Observing app events..." }
         return eventRelay
     }
 
@@ -23,10 +23,8 @@ class AppEventRepository @Inject constructor() {
     }
 
     fun notify(event: AppEvent) {
-        logger.debug { "Notify of event: $event" }
+        Logger.debug { "Notify of event: $event" }
         lastEvent = event
         eventRelay.accept(event)
     }
-
-    companion object : KLogging()
 }
