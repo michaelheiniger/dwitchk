@@ -15,31 +15,27 @@ class JoinNewGameViewModel @Inject constructor(
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val joinGameControlState = MutableLiveData(UiControlModel(enabled = false))
-    private val command = MutableLiveData<JoinNewGameCommand>()
+    private val _command = MutableLiveData<JoinNewGameCommand>()
+    private val _joinGameControl = MutableLiveData(UiControlModel(enabled = false))
+    private val _playerName = MutableLiveData("")
 
-    private var playerName = ""
-
-    fun observeJoinGameControlState(): LiveData<UiControlModel> {
-        return joinGameControlState
-    }
-
-    fun observeCommands(): LiveData<JoinNewGameCommand> {
-        return command
-    }
+    val commands get(): LiveData<JoinNewGameCommand> = _command
+    val playerName get(): LiveData<String> = _playerName
+    val joinGameControl get(): LiveData<UiControlModel> = _joinGameControl
 
     fun onPlayerNameChange(value: String) {
-        playerName = value
-        joinGameControlState.value = UiControlModel(enabled = playerName.isNotBlank())
+        _playerName.value = value
+        _joinGameControl.value = UiControlModel(enabled = !playerName.value.isNullOrBlank())
     }
 
     fun joinGame(advertisedGame: AdvertisedGame) {
-        require(playerName.isNotBlank()) { "Player name cannot be blank" }
+        val playerName = playerName.value
+        require(!playerName.isNullOrBlank()) { "Player name cannot be blank" }
         disposableManager.add(
             guestFacade.joinGame(advertisedGame, playerName)
                 .observeOn(uiScheduler)
                 .subscribe(
-                    { command.setValue(JoinNewGameCommand.NavigateToWaitingRoom) },
+                    { _command.setValue(JoinNewGameCommand.NavigateToWaitingRoom) },
                     { error -> Logger.error(error) { "Error while joining the game" } }
                 )
         )

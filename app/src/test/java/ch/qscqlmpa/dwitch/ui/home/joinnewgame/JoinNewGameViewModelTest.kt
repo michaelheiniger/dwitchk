@@ -34,19 +34,19 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
 
     @Test
     fun `Join game control is initially disabled`() {
-        assertThat(viewModel.observeJoinGameControlState().value).isEqualTo(UiControlModel(enabled = false))
+        assertThat(viewModel.joinGameControl.value).isEqualTo(UiControlModel(enabled = false))
     }
 
     @Test
     fun `Join game control is enabled when player name is not blank`() {
         viewModel.onPlayerNameChange("Arthur")
-        assertThat(viewModel.observeJoinGameControlState().value).isEqualTo(UiControlModel(enabled = true))
+        assertThat(viewModel.joinGameControl.value).isEqualTo(UiControlModel(enabled = true))
 
         viewModel.onPlayerNameChange("")
-        assertThat(viewModel.observeJoinGameControlState().value).isEqualTo(UiControlModel(enabled = false))
+        assertThat(viewModel.joinGameControl.value).isEqualTo(UiControlModel(enabled = false))
 
         viewModel.onPlayerNameChange("Arthur")
-        assertThat(viewModel.observeJoinGameControlState().value).isEqualTo(UiControlModel(enabled = true))
+        assertThat(viewModel.joinGameControl.value).isEqualTo(UiControlModel(enabled = true))
     }
 
     @Test
@@ -56,7 +56,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
         viewModel.onPlayerNameChange(playerName)
         viewModel.joinGame(advertisedGame)
 
-        assertThat(viewModel.observeCommands().value).isEqualTo(JoinNewGameCommand.NavigateToWaitingRoom)
+        assertThat(viewModel.commands.value).isEqualTo(JoinNewGameCommand.NavigateToWaitingRoom)
         verify { mockGuestFacade.joinGame(advertisedGame, playerName) }
 
         confirmVerified(mockGuestFacade)
@@ -72,7 +72,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
             // Nothing to do
         }
 
-        assertNull(viewModel.observeCommands().value)
+        assertNull(viewModel.commands.value)
         confirmVerified(mockGuestFacade)
     }
 }

@@ -34,26 +34,26 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
 
     @Test
     fun nextControlIsInitiallyDisabled() {
-        assertThat(viewModel.observeHostGameControleState().value).isEqualTo(UiControlModel(enabled = false))
+        assertThat(viewModel.hostGameControl.value).isEqualTo(UiControlModel(enabled = false))
     }
 
     @Test
     fun `Host game control is enabled when player name and game name are not blank`() {
         viewModel.onPlayerNameChange("Arthur")
         viewModel.onGameNameChange("Table Ronde")
-        assertThat(viewModel.observeHostGameControleState().value).isEqualTo(UiControlModel(enabled = true))
+        assertThat(viewModel.hostGameControl.value).isEqualTo(UiControlModel(enabled = true))
 
         viewModel.onPlayerNameChange("Arthur")
         viewModel.onGameNameChange("")
-        assertThat(viewModel.observeHostGameControleState().value).isEqualTo(UiControlModel(enabled = false))
+        assertThat(viewModel.hostGameControl.value).isEqualTo(UiControlModel(enabled = false))
 
         viewModel.onPlayerNameChange("Arthur")
         viewModel.onGameNameChange("Table Ronde")
-        assertThat(viewModel.observeHostGameControleState().value).isEqualTo(UiControlModel(enabled = true))
+        assertThat(viewModel.hostGameControl.value).isEqualTo(UiControlModel(enabled = true))
 
         viewModel.onPlayerNameChange("")
         viewModel.onGameNameChange("Table Ronde")
-        assertThat(viewModel.observeHostGameControleState().value).isEqualTo(UiControlModel(enabled = false))
+        assertThat(viewModel.hostGameControl.value).isEqualTo(UiControlModel(enabled = false))
     }
 
     @Test
@@ -65,7 +65,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
         viewModel.onGameNameChange(gameName)
         viewModel.hostGame()
 
-        assertThat(viewModel.observeCommands().value).isEqualTo(HostNewGameCommand.NavigateToWaitingRoom)
+        assertThat(viewModel.commands.value).isEqualTo(HostNewGameCommand.NavigateToWaitingRoom)
         verify { mockHostFacade.hostGame(gameName, playerName, gamePort) }
         confirmVerified(mockHostFacade)
     }
@@ -82,7 +82,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
             // Nothing to do
         }
 
-        assertNull(viewModel.observeCommands().value)
+        assertNull(viewModel.commands.value)
         confirmVerified(mockHostFacade)
     }
 
@@ -98,7 +98,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
             // Nothing to do    
         }
 
-        assertNull(viewModel.observeCommands().value)
+        assertNull(viewModel.commands.value)
         confirmVerified(mockHostFacade)
     }
 }

@@ -14,44 +14,42 @@ class HostNewGameViewModel @Inject constructor(
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val hostGameControlState = MutableLiveData(UiControlModel(enabled = false))
-    private val command = MutableLiveData<HostNewGameCommand>()
+    private val _command = MutableLiveData<HostNewGameCommand>()
+    private val _hostGameControl = MutableLiveData(UiControlModel(enabled = false))
+    private val _playerName = MutableLiveData("")
+    private val _gameName = MutableLiveData("")
 
-    private var playerName = ""
-    private var gameName = ""
-
-    fun observeHostGameControleState(): LiveData<UiControlModel> {
-        return hostGameControlState
-    }
-
-    fun observeCommands(): LiveData<HostNewGameCommand> {
-        return command
-    }
+    val commands get(): LiveData<HostNewGameCommand> = _command
+    val playerName get(): LiveData<String> = _playerName
+    val gameName get(): LiveData<String> = _gameName
+    val hostGameControl get(): LiveData<UiControlModel> = _hostGameControl
 
     fun onPlayerNameChange(value: String) {
-        playerName = value
-        updateHostGameControlState()
+        _playerName.value = value
+        updateHostGameControl()
     }
 
     fun onGameNameChange(value: String) {
-        gameName = value
-        updateHostGameControlState()
+        _gameName.value = value
+        updateHostGameControl()
     }
 
     fun hostGame() {
-        require(playerName.isNotBlank()) { "Player name cannot be blank" }
-        require(gameName.isNotBlank()) { "Game name cannot be blank" }
+        val playerName = playerName.value
+        val gameName = gameName.value
+        require(!playerName.isNullOrBlank()) { "Player name cannot be blank" }
+        require(!gameName.isNullOrBlank()) { "Game name cannot be blank" }
         disposableManager.add(
             hostFacade.hostGame(gameName, playerName, 8889) // TODO: Take value from sharedPref
                 .observeOn(uiScheduler)
                 .subscribe(
-                    { command.setValue(HostNewGameCommand.NavigateToWaitingRoom) },
+                    { _command.setValue(HostNewGameCommand.NavigateToWaitingRoom) },
                     { error -> Logger.error(error) { "Error while start hosting the game" } }
                 )
         )
     }
 
-    private fun updateHostGameControlState() {
-        hostGameControlState.value = UiControlModel(enabled = playerName.isNotBlank() && gameName.isNotBlank())
+    private fun updateHostGameControl() {
+        _hostGameControl.value = UiControlModel(enabled = !playerName.value.isNullOrBlank() && !gameName.value.isNullOrBlank())
     }
 }

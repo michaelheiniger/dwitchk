@@ -1,75 +1,57 @@
 package ch.qscqlmpa.dwitch.ui.home.joinnewgame
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
+import androidx.activity.compose.setContent
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
-import ch.qscqlmpa.dwitch.databinding.ActivityJoinNewGameBinding
 import ch.qscqlmpa.dwitch.ui.home.HomeBaseActivity
+import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
-import com.jakewharton.rxbinding.widget.RxTextView
-import rx.subscriptions.CompositeSubscription
 import java.util.*
 
 class JoinNewGameActivity : HomeBaseActivity<JoinNewGameViewModel>() {
 
-    private var game: AdvertisedGame? = null
+    private lateinit var game: AdvertisedGame
 
-    private val subscriptions = CompositeSubscription()
+    private val initialPlayerName = if (BuildConfig.DEBUG) "Mébène" else ""
 
-    private lateinit var binding: ActivityJoinNewGameBinding
-
-    fun onJoiNnewGameClick(@Suppress("UNUSED_PARAMETER") view: View) {
-        viewModel.joinGame(game!!)
-    }
-
-    fun onBackClick(@Suppress("UNUSED_PARAMETER") view: View) {
-        finish()
-    }
-
-    @SuppressLint("SetTextI18n")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        binding = ActivityJoinNewGameBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        game = intent.getParcelableExtra(EXTRA_GAME)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(JoinNewGameViewModel::class.java)
-
-        setupPlayerNameEdt()
-
-        observeJoinGameControlState()
-        observeCommands()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        subscriptions.add(
-            RxTextView.textChanges(binding.playerNameEdt).subscribe { value -> viewModel.onPlayerNameChange(value.toString()) }
-        )
-    }
-
-    override fun onStop() {
-        super.onStop()
-        subscriptions.clear()
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun setupPlayerNameEdt() {
-        if (BuildConfig.DEBUG) {
-            binding.playerNameEdt.setText("Mébène")
+    @Composable
+    fun ActivityScreen(viewModel: JoinNewGameViewModel) {
+        val playerName = viewModel.playerName.observeAsState(initialPlayerName).value
+        val joinGameControl = viewModel.joinGameControl.observeAsState(UiControlModel(enabled = false)).value
+        MaterialTheme {
+            Surface(color = Color.White) {
+                JoinNewGameScreen(
+                    playerName = playerName,
+                    joinGameBtnState = joinGameControl,
+                    onPlayerNameChange = { name -> viewModel.onPlayerNameChange(name) },
+                    onJoinGameClick = { viewModel.joinGame(game) },
+                    onBackClick = { finish() }
+                )
+            }
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        game = intent.getParcelableExtra(EXTRA_GAME)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(JoinNewGameViewModel::class.java)
+        setContent { ActivityScreen(viewModel) }
+        observeCommands()
+    }
+
     private fun observeCommands() {
-        viewModel.observeCommands().observe(
+        viewModel.commands.observe(
             this,
             { event ->
                 when (event) {
@@ -79,10 +61,6 @@ class JoinNewGameActivity : HomeBaseActivity<JoinNewGameViewModel>() {
                 }
             }
         )
-    }
-
-    private fun observeJoinGameControlState() {
-        viewModel.observeJoinGameControlState().observe(this, { nextControl -> binding.joinGameBtn.isEnabled = nextControl.enabled })
     }
 
     companion object {
