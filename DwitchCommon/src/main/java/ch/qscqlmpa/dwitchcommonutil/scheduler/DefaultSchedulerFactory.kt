@@ -13,6 +13,10 @@ class DefaultSchedulerFactory : SchedulerFactory {
         return Schedulers.computation()
     }
 
+    override fun single(): Scheduler {
+        return Schedulers.single()
+    }
+
     override fun timeScheduler(): Scheduler {
         return Schedulers.io()
     }

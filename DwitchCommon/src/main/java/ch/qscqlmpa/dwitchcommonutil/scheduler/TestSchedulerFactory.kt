@@ -19,6 +19,10 @@ class TestSchedulerFactory : SchedulerFactory {
         return Schedulers.trampoline()
     }
 
+    override fun single(): Scheduler {
+        return Schedulers.trampoline()
+    }
+
     override fun timeScheduler(): Scheduler {
         return timeScheduler
     }

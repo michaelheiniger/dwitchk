@@ -7,5 +7,7 @@ interface SchedulerFactory {
 
     fun computation(): Scheduler
 
+    fun single(): Scheduler
+
     fun timeScheduler(): Scheduler
 }

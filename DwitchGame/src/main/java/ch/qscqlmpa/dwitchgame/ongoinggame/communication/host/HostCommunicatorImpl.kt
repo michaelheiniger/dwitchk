@@ -76,7 +76,7 @@ internal class HostCommunicatorImpl constructor(
             commServer.observeCommunicationEvents()
                 .flatMapCompletable { event ->
                     communicationEventDispatcher.dispatch(event)
-                        .subscribeOn(schedulerFactory.io())
+                        .subscribeOn(schedulerFactory.single())
                 }
                 .subscribe(
                     { Logger.debug { "Communication events stream completed" } },
@@ -96,7 +96,7 @@ internal class HostCommunicatorImpl constructor(
                 Completable.merge(
                     listOf(
                         messageDispatcher.dispatch(envelopeReceived)
-                            .subscribeOn(schedulerFactory.io()),
+                            .subscribeOn(schedulerFactory.single()),
                         forwardMessageToGuestsIfNeeded(envelopeReceived)
                     )
                 )

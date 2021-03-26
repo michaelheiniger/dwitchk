@@ -54,7 +54,9 @@ internal class GuestCommunicatorImpl constructor(
     private fun observeCommunicationEvents() {
         disposableManager.add(
             commClient.observeCommunicationEvents()
-                .flatMapCompletable { event -> communicationEventDispatcher.dispatch(event).subscribeOn(schedulerFactory.io()) }
+                .flatMapCompletable { event ->
+                    communicationEventDispatcher.dispatch(event).subscribeOn(schedulerFactory.single())
+                }
                 .subscribe(
                     { Logger.debug { "Communication events stream completed" } },
                     { error -> Logger.error(error) { "Error while observing communication events" } }
@@ -65,7 +67,7 @@ internal class GuestCommunicatorImpl constructor(
     private fun observeReceivedMessages() {
         disposableManager.add(
             commClient.observeReceivedMessages()
-                .flatMapCompletable { msg -> messageDispatcher.dispatch(msg).subscribeOn(schedulerFactory.io()) }
+                .flatMapCompletable { msg -> messageDispatcher.dispatch(msg).subscribeOn(schedulerFactory.single()) }
                 .subscribe(
                     { Logger.debug { "Received messages stream completed !" } },
                     { error -> Logger.error(error) { "Error while observing received messages" } }
