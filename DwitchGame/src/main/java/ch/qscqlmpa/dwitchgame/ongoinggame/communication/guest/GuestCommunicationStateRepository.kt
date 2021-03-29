@@ -16,7 +16,7 @@ internal class GuestCommunicationStateRepository @Inject constructor() {
         return relay
     }
 
-    fun notify(state: GuestCommunicationState) {
+    fun updateState(state: GuestCommunicationState) {
         Logger.info { "New communication state: $state" }
         return relay.accept(state)
     }

@@ -32,7 +32,9 @@
     <string name="gameroom_notification_message">In-game</string>
     <string name="grhf_end_game_btn">Interrupt game</string>
     <string name="guest_connection_error">Can\'t connect to brost, sorry mate !</string>
+    <string name="guest_connecting">Connecting…</string>
     <string name="host_connection_error">Network problem: no bro can join !</string>
+    <string name="host_connecting">Connecting…</string>
     <string name="leave_game_btn">See ya mate !</string>
     <string name="listening_for_guests">Online</string>
     <string name="ma_advertised_games_loading_error_tv">Having troubles while looking for games, yo !</string>
@@ -80,4 +82,5 @@
     <string name="wrhf_launch_game_tv">Go go !</string>
     <string name="ma_loading_resumable_games">Loading resumable games</string>
     <string name="ma_no_resumable_games">No game to resume</string>
+    <string name="info_dialog_title">Info</string>
 </resources>

@@ -89,7 +89,6 @@ constructor(
                 .doOnError { error -> Logger.error(error) { "Error while observing advertised games." } }
                 .subscribe { response -> _advertisedGames.value = response }
         )
-
     }
 
     private fun observeResumableGames() {

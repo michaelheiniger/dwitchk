@@ -1,8 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host
 
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.ui.model.UiControlModel
-import ch.qscqlmpa.dwitch.ui.model.Visibility
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.GameLaunchableEvent
@@ -12,7 +10,6 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.schedulers.TestScheduler
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -31,6 +28,8 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
 
     private lateinit var communicatorSubject: PublishSubject<HostCommunicationState>
 
+    private lateinit var canGameBeLaunchedSubject: PublishSubject<GameLaunchableEvent>
+
     @Before
     override fun setup() {
         super.setup()
@@ -41,90 +40,75 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
         viewModel = WaitingRoomHostViewModel(mockFacade, Schedulers.trampoline())
 
         communicatorSubject = PublishSubject.create()
+        canGameBeLaunchedSubject = PublishSubject.create()
         every { mockFacade.observeCommunicationState() } returns communicatorSubject
+        every { mockFacade.observeGameLaunchableEvents() } returns canGameBeLaunchedSubject
+        viewModel.onStart()
     }
 
     @Test
-    fun `Launch game control is enabled because game is ready to be launched`() {
-        setupGameCanBeLaunchedMock(GameLaunchableEvent.GameIsReadyToBeLaunched)
+    fun `Game cannot be launched initially`() {
+        assertThat(viewModel.canGameBeLaunched.value).isFalse
+    }
 
-        val canGameBeLaunched = viewModel.canGameBeLaunched()
-        subscribeToPublishers(canGameBeLaunched)
+    @Test
+    fun `Launch game control is enabled when game is ready to be launched`() {
+        canGameBeLaunchedSubject.onNext(GameLaunchableEvent.GameIsReadyToBeLaunched)
 
-        assertThat(canGameBeLaunched.value).isEqualTo(UiControlModel(enabled = true, visibility = Visibility.Visible))
+        val canGameBeLaunched = viewModel.canGameBeLaunched
+
+        assertThat(canGameBeLaunched.value).isTrue
         verify { mockFacade.observeGameLaunchableEvents() }
         confirmVerified(mockFacade)
     }
 
     @Test
-    fun `Launch game control is disabled because not all players are ready`() {
-        setupGameCanBeLaunchedMock(GameLaunchableEvent.NotAllPlayersAreReady)
+    fun `Launch game control is disabled when not all players are ready`() {
+        canGameBeLaunchedSubject.onNext(GameLaunchableEvent.NotAllPlayersAreReady)
 
-        val canGameBeLaunched = viewModel.canGameBeLaunched()
-        subscribeToPublishers(canGameBeLaunched)
+        val canGameBeLaunched = viewModel.canGameBeLaunched
 
-        assertThat(canGameBeLaunched.value).isEqualTo(UiControlModel(enabled = false, visibility = Visibility.Visible))
+        assertThat(canGameBeLaunched.value).isFalse
         verify { mockFacade.observeGameLaunchableEvents() }
         confirmVerified(mockFacade)
     }
 
     @Test
-    fun `Launch game control is disabled because there is only one player in the room`() {
-        setupGameCanBeLaunchedMock(GameLaunchableEvent.NotEnoughPlayers)
+    fun `Launch game control is disabled when there is only one player in the room`() {
+        canGameBeLaunchedSubject.onNext(GameLaunchableEvent.NotEnoughPlayers)
 
-        val canGameBeLaunched = viewModel.canGameBeLaunched()
-        subscribeToPublishers(canGameBeLaunched)
+        val canGameBeLaunched = viewModel.canGameBeLaunched
 
-        assertThat(canGameBeLaunched.value).isEqualTo(UiControlModel(enabled = false, visibility = Visibility.Visible))
+        assertThat(canGameBeLaunched.value).isFalse
         verify { mockFacade.observeGameLaunchableEvents() }
         confirmVerified(mockFacade)
     }
 
     @Test
-    fun `Launch game`() {
+    fun `Navigate to the GameRoom when the game is successfully launched`() {
+        canGameBeLaunchedSubject.onNext(GameLaunchableEvent.GameIsReadyToBeLaunched)
         every { mockFacade.launchGame() } returns Completable.complete()
 
         viewModel.launchGame()
+
+        assertThat(viewModel.commands.value).isEqualTo(WaitingRoomHostCommand.NavigateToGameRoomScreen)
 
         verify { mockFacade.launchGame() }
+        verify { mockFacade.observeGameLaunchableEvents() }
         confirmVerified(mockFacade)
     }
 
     @Test
-    fun `Publish command to navigate to game room when game is launched`() {
-        every { mockFacade.launchGame() } returns Completable.complete()
-
-        val commands = viewModel.commands()
-        subscribeToPublishers(commands)
-
-        viewModel.launchGame()
-
-        assertThat(commands.value).isEqualTo(WaitingRoomHostCommand.NavigateToGameRoomScreen)
-    }
-
-    @Test
-    fun `Cancel game`() {
+    fun `Navigate Home when the game is canceled`() {
         every { mockFacade.cancelGame() } returns Completable.complete()
 
-        viewModel.cancelGame()
-
-        verify { mockFacade.cancelGame() }
-        confirmVerified(mockFacade)
-    }
-
-    @Test
-    fun `Publish command to navigate to home screen when game is canceled`() {
-        every { mockFacade.cancelGame() } returns Completable.complete()
-
-        val commands = viewModel.commands()
-        subscribeToPublishers(commands)
+        val commands = viewModel.commands
 
         viewModel.cancelGame()
 
         assertThat(commands.value).isEqualTo(WaitingRoomHostCommand.NavigateToHomeScreen)
-    }
-
-    private fun setupGameCanBeLaunchedMock(event: GameLaunchableEvent) {
-        every { mockFacade.observeGameLaunchableEvents() } returns Observable.just(event)
+        verify { mockFacade.cancelGame() }
+        verify { mockFacade.observeGameLaunchableEvents() }
+        confirmVerified(mockFacade)
     }
 }

@@ -35,7 +35,7 @@ abstract class OngoingGameViewModelBindingModule {
     @Binds
     @IntoMap
     @ViewModelKey(WaitingRoomGuestViewModel::class)
-    abstract fun bindWaitingRoomGuestViewModel(viewModel: WaitingRoomGuestViewModel): ViewModel
+    internal abstract fun bindWaitingRoomGuestViewModel(viewModel: WaitingRoomGuestViewModel): ViewModel
 
     @Binds
     @IntoMap

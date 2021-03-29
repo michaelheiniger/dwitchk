@@ -33,31 +33,31 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
     }
 
     @Test
-    fun nextControlIsInitiallyDisabled() {
-        assertThat(viewModel.hostGameControl.value).isEqualTo(UiControlModel(enabled = false))
+    fun `Create game control is initially disabled`() {
+        assertThat(viewModel.createGameControl.value).isEqualTo(UiControlModel(enabled = false))
     }
 
     @Test
-    fun `Host game control is enabled when player name and game name are not blank`() {
+    fun `Create game control is enabled when player name and game name are not blank`() {
         viewModel.onPlayerNameChange("Arthur")
         viewModel.onGameNameChange("Table Ronde")
-        assertThat(viewModel.hostGameControl.value).isEqualTo(UiControlModel(enabled = true))
+        assertThat(viewModel.createGameControl.value).isEqualTo(UiControlModel(enabled = true))
 
         viewModel.onPlayerNameChange("Arthur")
         viewModel.onGameNameChange("")
-        assertThat(viewModel.hostGameControl.value).isEqualTo(UiControlModel(enabled = false))
+        assertThat(viewModel.createGameControl.value).isEqualTo(UiControlModel(enabled = false))
 
         viewModel.onPlayerNameChange("Arthur")
         viewModel.onGameNameChange("Table Ronde")
-        assertThat(viewModel.hostGameControl.value).isEqualTo(UiControlModel(enabled = true))
+        assertThat(viewModel.createGameControl.value).isEqualTo(UiControlModel(enabled = true))
 
         viewModel.onPlayerNameChange("")
         viewModel.onGameNameChange("Table Ronde")
-        assertThat(viewModel.hostGameControl.value).isEqualTo(UiControlModel(enabled = false))
+        assertThat(viewModel.createGameControl.value).isEqualTo(UiControlModel(enabled = false))
     }
 
     @Test
-    fun `Host game succesfully`() {
+    fun `Navigate to the WaitingRoom when game is successfully created`() {
         val playerName = "Arthur"
         val gameName = "Table Ronde"
 
@@ -75,6 +75,8 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
         viewModel.onPlayerNameChange("")
         viewModel.onGameNameChange("Table Ronde")
 
+        // The "create game" control is supposed to be disabled as long as required data is not provided
+        // Hence the user should not be able to launch the game creation
         try {
             viewModel.hostGame()
             fail("Must throw error when the player name is not set")
@@ -91,6 +93,8 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
         viewModel.onPlayerNameChange("Arthur")
         viewModel.onGameNameChange("")
 
+        // The "create game" control is supposed to be disabled as long as required data is not provided
+        // Hence the user should not be able to launch the game creation
         try {
             viewModel.hostGame()
             fail("Must throw error when the game name is not set")

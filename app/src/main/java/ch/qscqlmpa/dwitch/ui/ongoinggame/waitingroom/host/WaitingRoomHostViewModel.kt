@@ -1,13 +1,10 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.GameLaunchableEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomHostFacade
-import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
@@ -17,20 +14,20 @@ internal class WaitingRoomHostViewModel @Inject constructor(
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val commands = MutableLiveData<WaitingRoomHostCommand>()
+    private val _commands = MutableLiveData<WaitingRoomHostCommand>()
+    private val _canGameBeLaunched = MutableLiveData(false)
 
-    fun canGameBeLaunched(): LiveData<UiControlModel> {
-        return LiveDataReactiveStreams.fromPublisher(
-            facade.observeGameLaunchableEvents()
-                .observeOn(uiScheduler)
-                .map(::processGameLaunchableEvent)
-                .doOnError { error -> Logger.error(error) { "Error while observing if game can be launched." } }
-                .toFlowable(BackpressureStrategy.LATEST)
-        )
+    val commands get(): LiveData<WaitingRoomHostCommand> = _commands
+    val canGameBeLaunched get(): LiveData<Boolean> = _canGameBeLaunched
+
+    override fun onStart() {
+        super.onStart()
+        canGameBeLaunched()
     }
 
-    fun commands(): LiveData<WaitingRoomHostCommand> {
-        return commands
+    override fun onStop() {
+        super.onStop()
+        disposableManager.disposeAndReset()
     }
 
     fun launchGame() {
@@ -40,7 +37,7 @@ internal class WaitingRoomHostViewModel @Inject constructor(
                 .subscribe(
                     {
                         Logger.info { "Game launched" }
-                        commands.value = WaitingRoomHostCommand.NavigateToGameRoomScreen
+                        _commands.value = WaitingRoomHostCommand.NavigateToGameRoomScreen
                     },
                     { error -> Logger.error(error) { "Error while launching game" } }
                 )
@@ -54,18 +51,28 @@ internal class WaitingRoomHostViewModel @Inject constructor(
                 .subscribe(
                     {
                         Logger.info { "Game canceled" }
-                        commands.value = WaitingRoomHostCommand.NavigateToHomeScreen
+                        _commands.value = WaitingRoomHostCommand.NavigateToHomeScreen
                     },
                     { error -> Logger.error(error) { "Error while canceling game" } }
                 )
         )
     }
 
-    private fun processGameLaunchableEvent(event: GameLaunchableEvent): UiControlModel {
+    private fun canGameBeLaunched() {
+        disposableManager.add(
+            facade.observeGameLaunchableEvents()
+                .observeOn(uiScheduler)
+                .map(::processGameLaunchableEvent)
+                .doOnError { error -> Logger.error(error) { "Error while observing if game can be launched." } }
+                .subscribe { value -> _canGameBeLaunched.value = value }
+        )
+    }
+
+    private fun processGameLaunchableEvent(event: GameLaunchableEvent): Boolean {
         return when (event) {
-            GameLaunchableEvent.GameIsReadyToBeLaunched -> UiControlModel(enabled = true)
-            GameLaunchableEvent.NotEnoughPlayers -> UiControlModel(enabled = false)
-            GameLaunchableEvent.NotAllPlayersAreReady -> UiControlModel(enabled = false)
+            GameLaunchableEvent.GameIsReadyToBeLaunched -> true
+            GameLaunchableEvent.NotEnoughPlayers,
+            GameLaunchableEvent.NotAllPlayersAreReady -> false
         }
     }
 }

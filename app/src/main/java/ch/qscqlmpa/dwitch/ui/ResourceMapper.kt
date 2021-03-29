@@ -12,6 +12,7 @@ object ResourceMapper {
     fun getResource(state: GuestCommunicationState): Resource {
         return Resource(
             when (state) {
+                GuestCommunicationState.Connecting -> R.string.guest_connecting
                 GuestCommunicationState.Connected -> R.string.connected_to_host
                 GuestCommunicationState.Disconnected -> R.string.disconnected_from_host
                 GuestCommunicationState.Error -> R.string.guest_connection_error
@@ -22,6 +23,7 @@ object ResourceMapper {
     fun getResource(state: HostCommunicationState): Resource {
         return Resource(
             when (state) {
+                HostCommunicationState.Opening -> R.string.host_connecting
                 HostCommunicationState.Open -> R.string.listening_for_guests
                 HostCommunicationState.Closed -> R.string.not_listening_for_guests
                 HostCommunicationState.Error -> R.string.host_connection_error

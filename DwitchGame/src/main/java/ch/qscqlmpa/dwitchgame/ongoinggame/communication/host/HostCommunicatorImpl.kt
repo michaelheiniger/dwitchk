@@ -34,6 +34,7 @@ internal class HostCommunicatorImpl constructor(
 
     override fun startServer() {
         Logger.trace { "Start server" }
+        communicationStateRepository.updateState(HostCommunicationState.Opening)
         observeCommunicationEvents()
         observeReceivedMessages()
         commServer.start()
@@ -65,6 +66,7 @@ internal class HostCommunicatorImpl constructor(
         return communicationStateRepository.currentState().map { state ->
             when (state) {
                 HostCommunicationState.Open -> PlayerConnectionState.CONNECTED
+                HostCommunicationState.Opening,
                 HostCommunicationState.Closed,
                 HostCommunicationState.Error -> PlayerConnectionState.DISCONNECTED
             }

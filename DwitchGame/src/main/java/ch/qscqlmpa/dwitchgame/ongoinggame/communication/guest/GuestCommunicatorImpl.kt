@@ -21,6 +21,7 @@ internal class GuestCommunicatorImpl constructor(
     private val disposableManager = DisposableManager()
 
     override fun connect() {
+        communicationStateRepository.updateState(GuestCommunicationState.Connecting)
         observeCommunicationEvents()
         observeReceivedMessages()
         commClient.start()
@@ -45,6 +46,7 @@ internal class GuestCommunicatorImpl constructor(
         return communicationStateRepository.observeEvents().map { state ->
             when (state) {
                 GuestCommunicationState.Connected -> PlayerConnectionState.CONNECTED
+                GuestCommunicationState.Connecting,
                 GuestCommunicationState.Disconnected,
                 GuestCommunicationState.Error -> PlayerConnectionState.DISCONNECTED
             }

@@ -21,7 +21,6 @@ internal class LeaveGameUsecase @Inject constructor(
                 communicator.sendMessageToHost(message)
                 store.deleteGame()
             }
-            communicator.disconnect()
             appEventRepository.notify(AppEvent.GameLeft)
         }
     }

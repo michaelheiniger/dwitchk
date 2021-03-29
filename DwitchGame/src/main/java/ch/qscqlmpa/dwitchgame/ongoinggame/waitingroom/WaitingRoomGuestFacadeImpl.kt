@@ -41,11 +41,12 @@ internal class WaitingRoomGuestFacadeImpl @Inject constructor(
     }
 
     override fun observeLocalPlayerReadyState(): Observable<Boolean> {
-        return wrPlayerRepository.observeLocalPlayer().map(PlayerWr::ready)
+        return wrPlayerRepository.observeLocalPlayer()
+            .map(PlayerWr::ready)
             .subscribeOn(schedulerFactory.io())
     }
 
-    override fun observeEvents(): Observable<GuestGameEvent> {
+    override fun observeGameEvents(): Observable<GuestGameEvent> {
         return gameEventRepository.observeEvents()
             .subscribeOn(schedulerFactory.io())
     }

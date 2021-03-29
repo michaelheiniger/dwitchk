@@ -11,5 +11,5 @@ interface WaitingRoomGuestFacade {
     fun leaveGame(): Completable
     fun observeCommunicationState(): Observable<GuestCommunicationState>
     fun observeLocalPlayerReadyState(): Observable<Boolean>
-    fun observeEvents(): Observable<GuestGameEvent>
+    fun observeGameEvents(): Observable<GuestGameEvent>
 }

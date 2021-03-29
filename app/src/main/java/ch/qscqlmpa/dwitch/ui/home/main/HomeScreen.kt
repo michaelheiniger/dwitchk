@@ -22,7 +22,7 @@ import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import org.joda.time.DateTime
 
-@Preview(showBackground = false)
+@Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
     val advertisedGameResponse = AdvertisedGamesResponse(
@@ -98,7 +98,7 @@ fun ResumableGamesContainer(
     ) {
         Text(
             stringResource(id = R.string.ma_resumable_games_tv),
-            fontSize = 30.sp,
+            fontSize = 32.sp,
             color = MaterialTheme.colors.primary
         )
         when (response.status) {

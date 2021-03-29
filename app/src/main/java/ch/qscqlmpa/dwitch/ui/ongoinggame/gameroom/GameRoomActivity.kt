@@ -15,7 +15,9 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestFragment
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host.GameRoomHostFragment
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 
-class GameRoomActivity : OngoingGameBaseActivity<GameRoomViewModel>() {
+class GameRoomActivity : OngoingGameBaseActivity() {
+
+    private lateinit var wrViewModel: GameRoomViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as App).getGameUiComponent()!!.inject(this)
@@ -27,7 +29,7 @@ class GameRoomActivity : OngoingGameBaseActivity<GameRoomViewModel>() {
         val binding = ActivityGameRoomBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this, viewModelFactory).get(GameRoomViewModel::class.java)
+        wrViewModel = ViewModelProvider(this, viewModelFactory).get(GameRoomViewModel::class.java)
     }
 
     private fun setFragmentForRole(playerRole: PlayerRole) {
@@ -38,6 +40,16 @@ class GameRoomActivity : OngoingGameBaseActivity<GameRoomViewModel>() {
                 PlayerRole.HOST -> add<GameRoomHostFragment>(R.id.gra_host_or_guest_fragment_container)
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        wrViewModel.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        wrViewModel.onStop()
     }
 
     companion object {

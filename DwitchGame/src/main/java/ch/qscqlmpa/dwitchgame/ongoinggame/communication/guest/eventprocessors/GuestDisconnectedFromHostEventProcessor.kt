@@ -22,7 +22,7 @@ internal class GuestDisconnectedFromHostEventProcessor @Inject constructor(
     override fun process(event: ClientCommunicationEvent): Completable {
         Logger.info { "Process GuestDisconnectedFromHostEvent" }
         return Completable.fromAction {
-            commStateRepository.notify(GuestCommunicationState.Disconnected)
+            commStateRepository.updateState(GuestCommunicationState.Disconnected)
             communicator.disconnect()
             store.setAllPlayersToDisconnected()
         }

@@ -50,7 +50,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
     }
 
     @Test
-    fun `Join game successfully`() {
+    fun `Navigate to the WaitingRoom when game is successfully created`() {
         val playerName = "Arthur"
 
         viewModel.onPlayerNameChange(playerName)
@@ -58,13 +58,15 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
 
         assertThat(viewModel.commands.value).isEqualTo(JoinNewGameCommand.NavigateToWaitingRoom)
         verify { mockGuestFacade.joinGame(advertisedGame, playerName) }
-
         confirmVerified(mockGuestFacade)
     }
 
     @Test
     fun `An error is thrown if the player name is not set when joining the game`() {
         viewModel.onPlayerNameChange("")
+
+        // The "create game" control is supposed to be disabled as long as required data is not provided
+        // Hence the user should not be able to launch the game creation
         try {
             viewModel.joinGame(advertisedGame)
             fail("Must throw error when player name is not set")

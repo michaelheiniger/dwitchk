@@ -37,7 +37,7 @@ internal class GuestConnectedToHostEventProcessor @Inject constructor(
             }
 
             communicator.sendMessageToHost(message)
-            commStateRepository.notify(GuestCommunicationState.Connected)
+            commStateRepository.updateState(GuestCommunicationState.Connected)
         }
     }
 

@@ -2,7 +2,6 @@ package ch.qscqlmpa.dwitch.ui.home
 
 import android.os.Bundle
 import ch.qscqlmpa.dwitch.ui.base.BaseActivity
-import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -11,7 +10,7 @@ import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Named
 
-abstract class HomeBaseActivity<T : BaseViewModel> : BaseActivity<T>(), HasAndroidInjector {
+abstract class HomeBaseActivity : BaseActivity(), HasAndroidInjector {
 
     @Named("home")
     @Inject

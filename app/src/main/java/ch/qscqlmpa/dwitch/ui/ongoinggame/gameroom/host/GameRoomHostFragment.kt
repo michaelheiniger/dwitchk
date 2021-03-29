@@ -8,7 +8,6 @@ import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.databinding.FragmentGameRoomHostBinding
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseFragment
-import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.host.ConnectionHostFragment
 
 class GameRoomHostFragment : OngoingGameBaseFragment(R.layout.fragment_game_room_host) {
 
@@ -16,9 +15,9 @@ class GameRoomHostFragment : OngoingGameBaseFragment(R.layout.fragment_game_room
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        parentFragmentManager.beginTransaction()
-            .add(R.id.connection_fragment_container, ConnectionHostFragment.create())
-            .commit()
+//        parentFragmentManager.beginTransaction()
+//            .add(R.id.connection_fragment_container, ConnectionHostFragment.create())
+//            .commit()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

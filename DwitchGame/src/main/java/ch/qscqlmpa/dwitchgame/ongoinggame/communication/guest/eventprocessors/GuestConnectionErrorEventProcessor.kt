@@ -13,6 +13,6 @@ internal class GuestConnectionErrorEventProcessor @Inject constructor(
 
     override fun process(event: ClientCommunicationEvent): Completable {
         Logger.debug { "Process DisconnectedFromHost" }
-        return Completable.fromAction { commStateRepository.notify(GuestCommunicationState.Error) }
+        return Completable.fromAction { commStateRepository.updateState(GuestCommunicationState.Error) }
     }
 }

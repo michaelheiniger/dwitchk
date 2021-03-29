@@ -60,7 +60,7 @@ internal class ProdWebsocketClient constructor(
 
     companion object {
 
-        private const val HEART_BEAT_INTERVAL_SEC = 5
+        private const val HEART_BEAT_INTERVAL_SEC = 10
 
         private fun buildServerUri(destinationAddress: String, destinationPort: Int): URI {
             return URI.create(String.format(Locale.getDefault(), "ws://%s:%d", destinationAddress, destinationPort))

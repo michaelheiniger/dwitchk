@@ -15,14 +15,14 @@ class HostNewGameViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _command = MutableLiveData<HostNewGameCommand>()
-    private val _hostGameControl = MutableLiveData(UiControlModel(enabled = false))
+    private val _createGameControl = MutableLiveData(UiControlModel(enabled = false))
     private val _playerName = MutableLiveData("")
     private val _gameName = MutableLiveData("")
 
     val commands get(): LiveData<HostNewGameCommand> = _command
     val playerName get(): LiveData<String> = _playerName
     val gameName get(): LiveData<String> = _gameName
-    val hostGameControl get(): LiveData<UiControlModel> = _hostGameControl
+    val createGameControl get(): LiveData<UiControlModel> = _createGameControl
 
     fun onPlayerNameChange(value: String) {
         _playerName.value = value
@@ -50,6 +50,6 @@ class HostNewGameViewModel @Inject constructor(
     }
 
     private fun updateHostGameControl() {
-        _hostGameControl.value = UiControlModel(enabled = !playerName.value.isNullOrBlank() && !gameName.value.isNullOrBlank())
+        _createGameControl.value = UiControlModel(enabled = !playerName.value.isNullOrBlank() && !gameName.value.isNullOrBlank())
     }
 }

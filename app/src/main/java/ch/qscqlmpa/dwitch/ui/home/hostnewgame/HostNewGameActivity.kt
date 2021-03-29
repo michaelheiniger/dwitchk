@@ -17,8 +17,9 @@ import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 
-class HostNewGameActivity : HomeBaseActivity<HostNewGameViewModel>() {
+class HostNewGameActivity : HomeBaseActivity() {
 
+    private lateinit var wrViewModel: HostNewGameViewModel
     private val initialPlayerName = if (BuildConfig.DEBUG) "Mirlick" else ""
     private val initialGameName = if (BuildConfig.DEBUG) "Dwiiitch !" else ""
 
@@ -26,7 +27,7 @@ class HostNewGameActivity : HomeBaseActivity<HostNewGameViewModel>() {
     fun ActivityScreen(viewModel: HostNewGameViewModel) {
         val playerName = viewModel.playerName.observeAsState(initialPlayerName).value
         val gameName = viewModel.gameName.observeAsState(initialGameName).value
-        val hostGameControl = viewModel.hostGameControl.observeAsState(UiControlModel(enabled = false)).value
+        val hostGameControl = viewModel.createGameControl.observeAsState(UiControlModel(enabled = false)).value
         MaterialTheme {
             Surface(color = Color.White) {
                 HostNewGameScreen(
@@ -44,13 +45,13 @@ class HostNewGameActivity : HomeBaseActivity<HostNewGameViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(HostNewGameViewModel::class.java)
-        setContent { ActivityScreen(viewModel) }
+        wrViewModel = ViewModelProvider(this, viewModelFactory).get(HostNewGameViewModel::class.java)
+        setContent { ActivityScreen(wrViewModel) }
         observeCommands()
     }
 
     private fun observeCommands() {
-        viewModel.commands.observe(
+        wrViewModel.commands.observe(
             this,
             { event ->
                 when (event) {
@@ -58,8 +59,19 @@ class HostNewGameActivity : HomeBaseActivity<HostNewGameViewModel>() {
                     else -> {
                     } // Nothing to do
                 }
+                finish()
             }
         )
+    }
+
+    override fun onStart() {
+        super.onStart()
+        wrViewModel.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        wrViewModel.onStop()
     }
 
     companion object {

@@ -43,7 +43,6 @@ internal class LeaveGameUsecaseTest : BaseUnitTest() {
         testObserver.assertValue(AppEvent.GameLeft)
 
         verify { mockCommunicator.sendMessageToHost(GuestMessageFactory.createLeaveGameMessage(playerDwitchId)) }
-        verify { mockCommunicator.disconnect() }
         confirmVerified(mockCommunicator)
 
         verify { mockInGameStore.gameIsNew() }
@@ -62,7 +61,6 @@ internal class LeaveGameUsecaseTest : BaseUnitTest() {
 
         testObserver.assertValue(AppEvent.GameLeft)
 
-        verify { mockCommunicator.disconnect() }
         confirmVerified(mockCommunicator)
 
         verify { mockInGameStore.gameIsNew() }

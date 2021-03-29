@@ -69,6 +69,6 @@ internal class ProdWebsocketServer constructor(
     }
 
     companion object {
-        private const val HEART_BEAT_INTERVAL_SEC = 5
+        private const val HEART_BEAT_INTERVAL_SEC = 10
     }
 }

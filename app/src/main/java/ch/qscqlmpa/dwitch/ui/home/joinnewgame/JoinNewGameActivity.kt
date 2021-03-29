@@ -19,8 +19,9 @@ import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import java.util.*
 
-class JoinNewGameActivity : HomeBaseActivity<JoinNewGameViewModel>() {
+class JoinNewGameActivity : HomeBaseActivity() {
 
+    private lateinit var wrViewModel: JoinNewGameViewModel
     private lateinit var game: AdvertisedGame
 
     private val initialPlayerName = if (BuildConfig.DEBUG) "Mébène" else ""
@@ -45,13 +46,13 @@ class JoinNewGameActivity : HomeBaseActivity<JoinNewGameViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         game = intent.getParcelableExtra(EXTRA_GAME)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(JoinNewGameViewModel::class.java)
-        setContent { ActivityScreen(viewModel) }
+        wrViewModel = ViewModelProvider(this, viewModelFactory).get(JoinNewGameViewModel::class.java)
+        setContent { ActivityScreen(wrViewModel) }
         observeCommands()
     }
 
     private fun observeCommands() {
-        viewModel.commands.observe(
+        wrViewModel.commands.observe(
             this,
             { event ->
                 when (event) {
@@ -59,8 +60,19 @@ class JoinNewGameActivity : HomeBaseActivity<JoinNewGameViewModel>() {
                     else -> {
                     } // Nothing to do
                 }
+                finish()
             }
         )
+    }
+
+    override fun onStart() {
+        super.onStart()
+        wrViewModel.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        wrViewModel.onStop()
     }
 
     companion object {

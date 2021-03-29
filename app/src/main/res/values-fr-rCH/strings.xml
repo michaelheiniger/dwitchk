@@ -65,7 +65,10 @@
     <string name="wrhf_cancel_game_tv">Annuler partie</string>
     <string name="wrhf_launch_game_tv">Go go !</string>
     <string name="nga_host_game_btn">Allons y, fidèles compagnons de la Comté !</string>
-    <string name="ma_listening_for_games_tv">A l\'écoute de parties...</string>
+    <string name="ma_listening_for_games_tv">A l\'écoute de parties…</string>
     <string name="ma_loading_resumable_games">Chargement des parties à reprendre</string>
-    <string name="ma_no_resumable_games">Aucune aprtie à reprendre</string>
+    <string name="ma_no_resumable_games">Aucune partie à reprendre</string>
+    <string name="guest_connecting">Connection…</string>
+    <string name="host_connecting">Connection…</string>
+    <string name="info_dialog_title">Info</string>
 </resources>
