@@ -4,10 +4,16 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
+import ch.qscqlmpa.dwitchengine.model.info.CardItem
 import ch.qscqlmpa.dwitchengine.model.info.GameInfo
 import ch.qscqlmpa.dwitchengine.model.info.PlayerInfo
 
 class PlayerDashboardFactory(val gameState: GameState) {
+
+    private val minimumCardValueAllowed: CardName by lazy {
+        val lastCardOnTable = gameState.lastCardOnTable()
+        lastCardOnTable?.name ?: CardName.Blank
+    }
 
     fun create(): GameInfo {
         return GameInfo(
@@ -33,14 +39,18 @@ class PlayerDashboardFactory(val gameState: GameState) {
             player.rank,
             player.status,
             player.dwitched,
-            player.cardsInHand,
+            player.cardsInHand.map { card -> CardItem(card, isCardPlayable(card)) },
             canPass(player),
             canPickACard(player),
             canPlay(player),
-            canStartNewRound(),
-            minimumCardValueAllowed()
+            canStartNewRound()
         )
     }
+
+    private fun isCardPlayable(card: Card) = cardHasValueHighEnough(card) || cardIsJoker(card)
+
+    private fun cardHasValueHighEnough(card: Card) =
+        card.value() >= minimumCardValueAllowed.value || cardIsJoker(card)
 
     private fun canPlay(player: Player): Boolean {
         return gameState.phaseIsPlayable && player.isTheOnePlaying
@@ -58,10 +68,7 @@ class PlayerDashboardFactory(val gameState: GameState) {
         return roundIsOver()
     }
 
-    private fun minimumCardValueAllowed(): CardName {
-        val lastCardOnTable = gameState.lastCardOnTable()
-        return lastCardOnTable?.name ?: CardName.Blank
-    }
+    private fun cardIsJoker(card: Card) = card.name == gameState.joker
 
     private fun roundIsOver(): Boolean {
         return gameState.phase == GamePhase.RoundIsOver

@@ -71,4 +71,9 @@
     <string name="guest_connecting">Connection…</string>
     <string name="host_connecting">Connection…</string>
     <string name="info_dialog_title">Info</string>
+    <string name="end_of_round_screen_title">Résultats</string>
+    <string name="player_status_done">Done</string>
+    <string name="player_status_playing">Joue</string>
+    <string name="player_status_turnPassed">Passé</string>
+    <string name="player_status_waiting">En attente</string>
 </resources>

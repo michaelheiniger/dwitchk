@@ -16,6 +16,8 @@ data class GameInfo(
     val cardsOnTable: List<Card>,
     val gameEvent: GameEvent?
 ) {
+    val playerInfosList: List<PlayerInfo> by lazy { playerInfos.values.toList() }
+
     fun getCurrentPlayer(): PlayerInfo {
         return playerInfos.getValue(currentPlayerId)
     }

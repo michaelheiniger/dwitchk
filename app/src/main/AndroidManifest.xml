@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ch.qscqlmpa.dwitch">
 
@@ -12,7 +13,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
-
         <activity android:name=".ui.home.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,6 +23,8 @@
         <activity android:name=".ui.home.joinnewgame.JoinNewGameActivity" />
         <activity android:name=".ui.ongoinggame.waitingroom.WaitingRoomActivity" />
         <activity android:name=".ui.ongoinggame.gameroom.GameRoomActivity" />
+        <activity android:name=".ui.ongoinggame.endofround.EndOfRoundActivity" />
+        <activity android:name=".ui.ongoinggame.cardexchange.CardExchangeActivity" />
 
         <service
             android:name=".ongoinggame.services.HostInGameService"

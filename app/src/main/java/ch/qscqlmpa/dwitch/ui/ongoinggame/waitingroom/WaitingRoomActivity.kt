@@ -81,8 +81,6 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
                     onReconnectClick = connectionViewModel::reconnect
                 )
                 when (command) {
-                    WaitingRoomGuestCommand.NavigateToGameRoomScreen -> MainActivity.start(this)
-                    WaitingRoomGuestCommand.NavigateToHomeScreen -> GameRoomActivity.startForGuest(this)
                     WaitingRoomGuestCommand.NotifyUserGameCanceled -> {
                         InfoDialog(
                             title = R.string.info_dialog_title,
@@ -90,7 +88,7 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
                             onOkClick = { wrGuestViewModel.acknowledgeGameCanceledEvent() }
                         )
                     }
-                    null -> {
+                    else -> { // Nothing to do
                     }
                 }
             }

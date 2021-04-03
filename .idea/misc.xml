@@ -23,11 +23,33 @@
         <entry key="../../../../../../layout/compose-model-1616791128393.xml" value="0.5142857142857143" />
         <entry key="../../../../../../layout/compose-model-1616831993211.xml" value="0.1" />
         <entry key="../../../../../../layout/compose-model-1616832352449.xml" value="0.5714285714285714" />
+        <entry key="../../../../../../layout/compose-model-1617093172969.xml" value="0.1" />
+        <entry key="../../../../../../layout/compose-model-1617095366665.xml" value="0.1" />
+        <entry key="../../../../../../layout/compose-model-1617107337438.xml" value="0.3828571428571429" />
+        <entry key="../../../../../../layout/compose-model-1617107452445.xml" value="0.3828571428571429" />
+        <entry key="../../../../../../layout/compose-model-1617112021184.xml" value="0.5714285714285714" />
+        <entry key="../../../../../../layout/compose-model-1617129346313.xml" value="0.1" />
+        <entry key="../../../../../../layout/compose-model-1617138700277.xml" value="0.1" />
+        <entry key="../../../../../../layout/compose-model-1617215368768.xml" value="1.1428571428571428" />
+        <entry key="../../../../../../layout/compose-model-1617223010969.xml" value="0.6285714285714287" />
+        <entry key="../../../../../../layout/compose-model-1617299953661.xml" value="0.5714285714285714" />
+        <entry key="../../../../../../layout/compose-model-1617308215732.xml" value="0.1" />
+        <entry key="../../../../../../layout/compose-model-1617374649390.xml" value="0.7142857142857143" />
+        <entry key="../../../../../../layout/compose-model-1617391436581.xml" value="0.1" />
+        <entry key="../../../../../../layout/compose-model-1617391436755.xml" value="0.2161210111893908" />
+        <entry key="../../../../../../layout/compose-model-1617395473901.xml" value="0.5714285714285714" />
+        <entry key="../../../../../../layout/compose-model-1617395674305.xml" value="0.7142857142857143" />
+        <entry key="../../../../../../layout/compose-model-1617474308154.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_host_new_game.xml" value="0.13496376811594202" />
         <entry key="app/src/main/res/layout/activity_join_new_game.xml" value="0.2368659420289855" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.4053442028985507" />
         <entry key="app/src/main/res/layout/activity_waiting_room.xml" value="0.20742753623188406" />
+        <entry key="app/src/main/res/layout/fragment_card_exchange.xml" value="0.4322916666666667" />
         <entry key="app/src/main/res/layout/fragment_connection_host.xml" value="0.42857142857142855" />
+        <entry key="app/src/main/res/layout/fragment_end_of_round_dialog.xml" value="0.4322916666666667" />
+        <entry key="app/src/main/res/layout/fragment_game_room_guest.xml" value="0.3770833333333333" />
+        <entry key="app/src/main/res/layout/fragment_game_room_host.xml" value="0.3770833333333333" />
+        <entry key="app/src/main/res/layout/fragment_player_dashboard.xml" value="0.42857142857142855" />
         <entry key="app/src/main/res/layout/fragment_waiting_room_guest.xml" value="0.10833333333333334" />
       </map>
     </option>

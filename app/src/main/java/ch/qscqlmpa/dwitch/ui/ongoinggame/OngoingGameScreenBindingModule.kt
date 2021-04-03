@@ -1,8 +1,8 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame
 
-import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestFragment
-import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host.GameRoomHostFragment
-import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard.PlayerDashboardFragment
+import ch.qscqlmpa.dwitch.ui.ongoinggame.cardexchange.CardExchangeActivity
+import ch.qscqlmpa.dwitch.ui.ongoinggame.endofround.EndOfRoundActivity
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -14,11 +14,11 @@ abstract class OngoingGameScreenBindingModule {
     abstract fun contributeWaitingRoomActivity(): WaitingRoomActivity
 
     @ContributesAndroidInjector
-    abstract fun contributeGameRoomGuestFragment(): GameRoomGuestFragment
+    abstract fun contributeGameRoomActivity(): GameRoomActivity
 
     @ContributesAndroidInjector
-    abstract fun contributeGameRoomHostFragment(): GameRoomHostFragment
+    abstract fun contributeEndOfRoundActivity(): EndOfRoundActivity
 
     @ContributesAndroidInjector
-    abstract fun contributePlayerDashboardFragment(): PlayerDashboardFragment
+    abstract fun contributeCardExchangeActivity(): CardExchangeActivity
 }

@@ -3,68 +3,192 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.add
-import androidx.fragment.app.commit
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModelProvider
-import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
-import ch.qscqlmpa.dwitch.databinding.ActivityGameRoomBinding
+import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseActivity
-import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestFragment
-import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host.GameRoomHostFragment
+import ch.qscqlmpa.dwitch.ui.ongoinggame.cardexchange.CardExchangeActivity
+import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest.ConnectionGuestViewModel
+import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.host.ConnectionHostViewModel
+import ch.qscqlmpa.dwitch.ui.ongoinggame.endofround.EndOfRoundActivity
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestCommand
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestScreen
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestViewModel
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host.GameRoomHostCommand
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host.GameRoomHostScreen
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host.GameRoomHostViewModel
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard.PlayerDashboardCommand
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard.PlayerDashboardViewModel
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 
 class GameRoomActivity : OngoingGameBaseActivity() {
 
-    private lateinit var wrViewModel: GameRoomViewModel
+    private lateinit var viewModel: GameRoomViewModel
+    private lateinit var hostViewModel: GameRoomHostViewModel
+    private lateinit var guestViewModel: GameRoomGuestViewModel
+    private lateinit var connectionHostViewModel: ConnectionHostViewModel
+    private lateinit var connectionGuestViewModel: ConnectionGuestViewModel
+    private lateinit var dashboardViewModel: PlayerDashboardViewModel
+    private lateinit var playerRole: PlayerRole
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        (application as App).getGameUiComponent()!!.inject(this)
-        super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) {
-            setFragmentForRole(PlayerRole.valueOf(intent.getStringExtra(EXTRA_PLAYER_ROLE)!!))
-        }
-
-        val binding = ActivityGameRoomBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        wrViewModel = ViewModelProvider(this, viewModelFactory).get(GameRoomViewModel::class.java)
+    private val hostViewModels: List<BaseViewModel> by lazy {
+        listOf(viewModel, hostViewModel, connectionHostViewModel, dashboardViewModel)
     }
 
-    private fun setFragmentForRole(playerRole: PlayerRole) {
-        supportFragmentManager.commit {
-            setReorderingAllowed(true)
-            when (playerRole) {
-                PlayerRole.GUEST -> add<GameRoomGuestFragment>(R.id.gra_host_or_guest_fragment_container)
-                PlayerRole.HOST -> add<GameRoomHostFragment>(R.id.gra_host_or_guest_fragment_container)
+    private val guestViewModels: List<BaseViewModel> by lazy {
+        listOf(viewModel, guestViewModel, connectionGuestViewModel, dashboardViewModel)
+    }
+
+    private val relevantViewModels: List<BaseViewModel> by lazy {
+        when (playerRole) {
+            PlayerRole.HOST -> {
+                hostViewModels
+            }
+            PlayerRole.GUEST -> {
+                guestViewModels
             }
         }
     }
 
+    @ExperimentalFoundationApi
+    @Composable
+    private fun ActivityScreenForHost() {
+        val dashboardInfo = dashboardViewModel.gameDashboardInfo.observeAsState().value
+        val connectionStatus = connectionHostViewModel.connectionStatus.observeAsState().value
+        MaterialTheme {
+            Surface(color = Color.White) {
+                GameRoomHostScreen(
+                    dashboardInfo = dashboardInfo,
+                    onCardClick = dashboardViewModel::playCard,
+                    onPickClick = dashboardViewModel::pickCard,
+                    onPassClick = dashboardViewModel::passTurn,
+                    connectionStatus = connectionStatus,
+                    onEndGameClick = hostViewModel::endGame,
+                    onReconnectClick = connectionHostViewModel::reconnect
+                )
+            }
+        }
+    }
+
+    @ExperimentalFoundationApi
+    @Composable
+    private fun ActivityScreenForGuest() {
+        val connectionStatus = connectionGuestViewModel.communicationState.observeAsState().value
+        val dashboardInfo = dashboardViewModel.gameDashboardInfo.observeAsState().value
+        MaterialTheme {
+            Surface(color = Color.White) {
+                GameRoomGuestScreen(
+                    dashboardInfo = dashboardInfo,
+                    onCardClick = dashboardViewModel::playCard,
+                    onPickClick = dashboardViewModel::pickCard,
+                    onPassClick = dashboardViewModel::passTurn,
+                    connectionStatus = connectionStatus,
+                    onReconnectClick = connectionGuestViewModel::reconnect
+                )
+            }
+        }
+    }
+
+    @ExperimentalFoundationApi
+    override fun onCreate(savedInstanceState: Bundle?) {
+        (application as App).getGameUiComponent()!!.inject(this)
+        super.onCreate(savedInstanceState)
+
+        playerRole = PlayerRole.valueOf(intent.getStringExtra(EXTRA_PLAYER_ROLE)!!)
+
+        val viewModelProvider = ViewModelProvider(this, viewModelFactory)
+        viewModel = viewModelProvider.get(GameRoomViewModel::class.java)
+        dashboardViewModel = viewModelProvider.get(PlayerDashboardViewModel::class.java)
+
+        setupDashboardCommands()
+
+        when (playerRole) {
+            PlayerRole.HOST -> {
+                hostViewModel = viewModelProvider.get(GameRoomHostViewModel::class.java)
+                connectionHostViewModel = viewModelProvider.get(ConnectionHostViewModel::class.java)
+                setupHostCommands()
+                setContent { ActivityScreenForHost() }
+            }
+            PlayerRole.GUEST -> {
+                guestViewModel = viewModelProvider.get(GameRoomGuestViewModel::class.java)
+                connectionGuestViewModel = viewModelProvider.get(ConnectionGuestViewModel::class.java)
+                setupGuestCommands()
+                setContent { ActivityScreenForGuest() }
+            }
+        }
+    }
+
+    private fun setupDashboardCommands() {
+        dashboardViewModel.commands.observe(this) { command ->
+            when (command) {
+                PlayerDashboardCommand.OpenCardExchange -> CardExchangeActivity.startActivity(this)
+                PlayerDashboardCommand.OpenEndOfRoundInfo -> {
+                    when (playerRole) {
+                        PlayerRole.HOST -> EndOfRoundActivity.startForHost(this)
+                        PlayerRole.GUEST -> EndOfRoundActivity.startForGuest(this)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupHostCommands() {
+        hostViewModel.commands.observe(
+            this,
+            { command ->
+                when (command) {
+                    GameRoomHostCommand.NavigateToHomeScreen -> MainActivity.start(this)
+                    else -> { // Nothing to do
+                    }
+                }
+            }
+        )
+    }
+
+    private fun setupGuestCommands() {
+        guestViewModel.commands.observe(
+            this,
+            { command ->
+                when (command) {
+                    GameRoomGuestCommand.NavigateToHomeScreen -> MainActivity.start(this)
+                    else -> { // Nothing to do
+                    }
+                }
+            }
+        )
+    }
+
     override fun onStart() {
         super.onStart()
-        wrViewModel.onStart()
+        relevantViewModels.forEach { vm -> vm.onStart() }
     }
 
     override fun onStop() {
         super.onStop()
-        wrViewModel.onStop()
+        relevantViewModels.forEach { vm -> vm.onStop() }
     }
 
     companion object {
         fun startForHost(context: Context) {
-            start(context, PlayerRole.HOST)
+            startActivity(context, PlayerRole.HOST)
         }
 
         fun startForGuest(context: Context) {
-            start(context, PlayerRole.GUEST)
+            startActivity(context, PlayerRole.GUEST)
         }
 
-        private fun start(context: Context, playerRole: PlayerRole) {
+        private fun startActivity(context: Context, playerRole: PlayerRole) {
             val intent = Intent(context, GameRoomActivity::class.java)
             intent.putExtra(EXTRA_PLAYER_ROLE, playerRole.name)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK) // Finishes all Activities in the backstack
             context.startActivity(intent)
         }
     }

@@ -12,7 +12,9 @@ interface GameDashboardFacade {
     fun pickCard(): Completable
     fun passTurn(): Completable
     fun startNewRound(): Completable
-    fun observeDashboardInfo(): Observable<GameDashboardInfo>
+    fun observeDashboard(): Observable<GameDashboardInfo>
+    fun observeEndOfRound(): Observable<EndOfRoundInfo>
+    fun getEndOfRoundInfo(): Single<EndOfRoundInfo>
     fun getCardExchangeInfo(): Single<CardExchangeInfo>
     fun observeCardExchangeEvents(): Observable<CardExchange>
     fun submitCardsForExchange(cards: Set<Card>): Completable

@@ -15,7 +15,10 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    backgroundColor = 0xFFFFFFFF
+)
 @Composable
 fun HostNewGameScreenPreview() {
     HostNewGameScreen("Aragorn", "LOTR", UiControlModel(), {}, {}, {}, {})

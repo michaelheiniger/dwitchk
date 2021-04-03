@@ -60,7 +60,12 @@ internal class GameDashboardInfoTest : BaseUnitTest() {
         assertThat(gameInfo.playerInfos.getValue(localPlayerId).canStartNewRound).isTrue
 
         val localPlayerIsHost = false
-        val dashboard = GameDashboardInfo(gameInfo, localPlayerId, localPlayerIsHost, PlayerConnectionState.CONNECTED)
+        val dashboard = ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardFactory(
+            gameInfo,
+            localPlayerId,
+            localPlayerIsHost,
+            PlayerConnectionState.CONNECTED
+        )
 
         // Finally set to false because the player is not the host
         assertThat(dashboard.localPlayerInfo.canStartNewRound).isFalse

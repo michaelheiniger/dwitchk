@@ -14,11 +14,9 @@ constructor(
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val commands = MutableLiveData<GameRoomHostCommand>()
+    private val _commands = MutableLiveData<GameRoomHostCommand>()
 
-    fun commands(): LiveData<GameRoomHostCommand> {
-        return commands
-    }
+    val commands get(): LiveData<GameRoomHostCommand> = _commands
 
     fun endGame() {
         disposableManager.add(
@@ -27,7 +25,7 @@ constructor(
                 .subscribe(
                     {
                         Logger.debug { "Game ended successfully." }
-                        commands.value = GameRoomHostCommand.NavigateToHomeScreen
+                        _commands.value = GameRoomHostCommand.NavigateToHomeScreen
                     },
                     { error -> Logger.error(error) { "Error while ending game." } }
                 )

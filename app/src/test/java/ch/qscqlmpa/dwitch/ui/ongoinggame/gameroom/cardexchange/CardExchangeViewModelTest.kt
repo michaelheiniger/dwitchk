@@ -1,10 +1,12 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.cardexchange
 
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard.CardItem
+import ch.qscqlmpa.dwitch.ui.ongoinggame.cardexchange.CardExchangeCommand
+import ch.qscqlmpa.dwitch.ui.ongoinggame.cardexchange.CardExchangeViewModel
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.CardExchange
+import ch.qscqlmpa.dwitchengine.model.info.CardItem
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardFacade
 import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeInfo
@@ -41,22 +43,25 @@ class CardExchangeViewModelTest : BaseViewModelUnitTest() {
             listOf(Card.Clubs2, Card.HeartsKing, Card.Spades3, Card.Diamonds4)
         )
 
-        val cardsInHand = viewModel.cardsInHand()
-        val cardsChosen = viewModel.cardsChosen()
-        subscribeToPublishers(cardsInHand)
-        subscribeToPublishers(cardsChosen)
-        assertThat(cardsInHand.value!!.map(CardItem::card)).containsExactlyInAnyOrder(Card.Clubs2, Card.HeartsKing, Card.Spades3, Card.Diamonds4)
+        val cardsInHand = viewModel.cardsInHandItems
+        val cardsChosen = viewModel.cardsToExchangeItems
+        assertThat(cardsInHand.value!!.map(CardItem::card)).containsExactlyInAnyOrder(
+            Card.Clubs2,
+            Card.HeartsKing,
+            Card.Spades3,
+            Card.Diamonds4
+        )
         assertThat(cardsChosen.value!!).isEmpty()
 
-        viewModel.cardInHandClicked(Card.HeartsKing)
+        viewModel.addCardToExchange(Card.HeartsKing)
         assertThat(cardsInHand.value!!.map(CardItem::card)).containsExactlyInAnyOrder(Card.Clubs2, Card.Spades3, Card.Diamonds4)
         assertThat(cardsChosen.value!!.map(CardItem::card)).containsExactlyInAnyOrder(Card.HeartsKing)
 
-        viewModel.cardInHandClicked(Card.Clubs2)
+        viewModel.addCardToExchange(Card.Clubs2)
         assertThat(cardsInHand.value!!.map(CardItem::card)).containsExactlyInAnyOrder(Card.Spades3, Card.Diamonds4)
         assertThat(cardsChosen.value!!.map(CardItem::card)).containsExactlyInAnyOrder(Card.HeartsKing, Card.Clubs2)
 
-        viewModel.cardChosenClicked(Card.Clubs2)
+        viewModel.removeCardFromExchange(Card.Clubs2)
         assertThat(cardsInHand.value!!.map(CardItem::card)).containsExactlyInAnyOrder(Card.Clubs2, Card.Spades3, Card.Diamonds4)
         assertThat(cardsChosen.value!!.map(CardItem::card)).containsExactlyInAnyOrder(Card.HeartsKing)
     }
@@ -68,19 +73,27 @@ class CardExchangeViewModelTest : BaseViewModelUnitTest() {
             listOf(Card.Clubs2, Card.HeartsKing, Card.Spades3, Card.Diamonds4)
         )
 
-        val cardsInHand = viewModel.cardsInHand()
-        val cardsChosen = viewModel.cardsChosen()
-        subscribeToPublishers(cardsInHand)
-        subscribeToPublishers(cardsChosen)
+        val cardsInHand = viewModel.cardsInHandItems
+        val cardsChosen = viewModel.cardsToExchangeItems
 
         // No effect
-        viewModel.cardInHandClicked(Card.Spades3)
-        assertThat(cardsInHand.value!!.map(CardItem::card)).containsExactlyInAnyOrder(Card.Clubs2, Card.HeartsKing, Card.Spades3, Card.Diamonds4)
+        viewModel.addCardToExchange(Card.Spades3)
+        assertThat(cardsInHand.value!!.map(CardItem::card)).containsExactlyInAnyOrder(
+            Card.Clubs2,
+            Card.HeartsKing,
+            Card.Spades3,
+            Card.Diamonds4
+        )
         assertThat(cardsChosen.value!!).isEmpty()
 
         // No effect
-        viewModel.cardInHandClicked(Card.Diamonds4)
-        assertThat(cardsInHand.value!!.map(CardItem::card)).containsExactlyInAnyOrder(Card.Clubs2, Card.HeartsKing, Card.Spades3, Card.Diamonds4)
+        viewModel.addCardToExchange(Card.Diamonds4)
+        assertThat(cardsInHand.value!!.map(CardItem::card)).containsExactlyInAnyOrder(
+            Card.Clubs2,
+            Card.HeartsKing,
+            Card.Spades3,
+            Card.Diamonds4
+        )
         assertThat(cardsChosen.value!!).isEmpty()
     }
 
@@ -91,13 +104,11 @@ class CardExchangeViewModelTest : BaseViewModelUnitTest() {
             listOf(Card.Clubs2, Card.HeartsKing, Card.Spades3, Card.Diamonds4)
         )
 
-        val cardsInHand = viewModel.cardsInHand()
-        val cardsChosen = viewModel.cardsChosen()
-        subscribeToPublishers(cardsInHand)
-        subscribeToPublishers(cardsChosen)
+        val cardsInHand = viewModel.cardsInHandItems
+        val cardsChosen = viewModel.cardsToExchangeItems
 
         try {
-            viewModel.cardChosenClicked(Card.Hearts2) // Not in the hand
+            viewModel.removeCardFromExchange(Card.Hearts2) // Not in the hand
             fail("Card not in the hand cannot be selected")
         } catch (e: IllegalArgumentException) {
             assertThat(e.message).contains("is not in the chosen card")
@@ -111,15 +122,14 @@ class CardExchangeViewModelTest : BaseViewModelUnitTest() {
             listOf(Card.Clubs2, Card.HeartsKing, Card.Spades3, Card.Diamonds4)
         )
 
-        val submitButton = viewModel.submitControl()
-        subscribeToPublishers(submitButton)
-        assertThat(submitButton.value!!.enabled).isFalse
+        val exchangeControlEnabled = viewModel.exchangeControlEnabled
+        assertThat(exchangeControlEnabled.value).isFalse
 
-        viewModel.cardInHandClicked(Card.HeartsKing)
-        assertThat(submitButton.value!!.enabled).isTrue
+        viewModel.addCardToExchange(Card.HeartsKing)
+        assertThat(exchangeControlEnabled.value).isTrue
 
-        viewModel.cardChosenClicked(Card.HeartsKing)
-        assertThat(submitButton.value!!.enabled).isFalse
+        viewModel.removeCardFromExchange(Card.HeartsKing)
+        assertThat(exchangeControlEnabled.value).isFalse
     }
 
     @Test
@@ -129,18 +139,17 @@ class CardExchangeViewModelTest : BaseViewModelUnitTest() {
             listOf(Card.Clubs2, Card.HeartsKing, Card.Spades3, Card.Diamonds4)
         )
 
-        val submitButton = viewModel.submitControl()
-        subscribeToPublishers(submitButton)
-        assertThat(submitButton.value!!.enabled).isFalse
+        val exchangeControlEnabled = viewModel.exchangeControlEnabled
+        assertThat(exchangeControlEnabled.value).isFalse
 
-        viewModel.cardInHandClicked(Card.HeartsKing)
-        assertThat(submitButton.value!!.enabled).isFalse
+        viewModel.addCardToExchange(Card.HeartsKing)
+        assertThat(exchangeControlEnabled.value).isFalse
 
-        viewModel.cardInHandClicked(Card.Clubs2)
-        assertThat(submitButton.value!!.enabled).isTrue
+        viewModel.addCardToExchange(Card.Clubs2)
+        assertThat(exchangeControlEnabled.value).isTrue
 
-        viewModel.cardChosenClicked(Card.Clubs2)
-        assertThat(submitButton.value!!.enabled).isFalse
+        viewModel.removeCardFromExchange(Card.Clubs2)
+        assertThat(exchangeControlEnabled.value).isFalse
     }
 
     @Test
@@ -150,9 +159,9 @@ class CardExchangeViewModelTest : BaseViewModelUnitTest() {
             listOf(Card.Clubs2, Card.HeartsKing, Card.Spades3, Card.Diamonds4)
         )
 
-        viewModel.cardInHandClicked(Card.HeartsKing)
-        viewModel.cardInHandClicked(Card.Clubs2)
-        viewModel.confirmChoice()
+        viewModel.addCardToExchange(Card.HeartsKing)
+        viewModel.addCardToExchange(Card.Clubs2)
+        viewModel.confirmExchange()
 
         verify { mockFacade.submitCardsForExchange(setOf(Card.HeartsKing, Card.Clubs2)) }
     }
@@ -164,12 +173,11 @@ class CardExchangeViewModelTest : BaseViewModelUnitTest() {
             listOf(Card.Clubs2, Card.HeartsKing, Card.Spades3, Card.Diamonds4)
         )
 
-        val commands = viewModel.commands()
-        subscribeToPublishers(commands)
+        val commands = viewModel.commands
 
-        viewModel.cardInHandClicked(Card.HeartsKing)
-        viewModel.cardInHandClicked(Card.Clubs2)
-        viewModel.confirmChoice()
+        viewModel.addCardToExchange(Card.HeartsKing)
+        viewModel.addCardToExchange(Card.Clubs2)
+        viewModel.confirmExchange()
 
         assertThat(commands.value!!).isEqualTo(CardExchangeCommand.Close)
     }

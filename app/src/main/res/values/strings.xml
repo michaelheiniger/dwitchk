@@ -83,4 +83,9 @@
     <string name="ma_loading_resumable_games">Loading resumable games</string>
     <string name="ma_no_resumable_games">No game to resume</string>
     <string name="info_dialog_title">Info</string>
+    <string name="end_of_round_screen_title">Round is over !</string>
+    <string name="player_status_done">Done</string>
+    <string name="player_status_playing">Playing</string>
+    <string name="player_status_turnPassed">Passed</string>
+    <string name="player_status_waiting">Waiting</string>
 </resources>

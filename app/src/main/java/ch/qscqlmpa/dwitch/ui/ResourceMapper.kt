@@ -3,6 +3,7 @@ package ch.qscqlmpa.dwitch.ui
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.common.Resource
 import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
@@ -48,6 +49,15 @@ object ResourceMapper {
             Rank.Neutral -> R.string.neutral_long
             Rank.ViceAsshole -> R.string.vice_asshole_long
             Rank.Asshole -> R.string.asshole_long
+        }
+    }
+
+    fun getResource(status: PlayerStatus): Int {
+        return when (status) {
+            PlayerStatus.Done -> R.string.player_status_done
+            PlayerStatus.Playing -> R.string.player_status_playing
+            PlayerStatus.TurnPassed -> R.string.player_status_turnPassed
+            PlayerStatus.Waiting -> R.string.player_status_waiting
         }
     }
 

@@ -6,6 +6,7 @@ import ch.qscqlmpa.dwitchengine.DwitchEngineFactory
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.CardExchange
+import ch.qscqlmpa.dwitchengine.model.game.GamePhase
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.GameCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.dwitchevent.DwitchEventRepository
@@ -19,12 +20,12 @@ import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 internal class GameDashboardFacadeImpl @Inject constructor(
-    private val gameCommunicator: GameCommunicator,
     private val gameRepository: GameRepository,
+    private val dwitchEventRepository: DwitchEventRepository,
+    private val gameCommunicator: GameCommunicator,
     private val gameUpdatedUsecase: GameUpdatedUsecase,
     private val cardForExchangeSubmitUsecase: CardForExchangeChosenUsecase,
     private val cardDealerFactory: CardDealerFactory,
-    private val dwitchEventRepository: DwitchEventRepository,
     private val dwitchEngineFactory: DwitchEngineFactory,
     private val schedulerFactory: SchedulerFactory
 ) : GameDashboardFacade, GameCommunicator by gameCommunicator {
@@ -45,19 +46,41 @@ internal class GameDashboardFacadeImpl @Inject constructor(
         return handleGameStateUpdated { engine -> engine.startNewRound(cardDealerFactory) }.ignoreElement()
     }
 
-    override fun observeDashboardInfo(): Observable<GameDashboardInfo> {
+    override fun observeDashboard(): Observable<GameDashboardInfo> {
         return Observable.combineLatest(
             gameRepository.observeGameInfo(),
             gameCommunicator.observePlayerConnectionState(),
             { gameInfo, localPlayerConnectionState ->
-                GameDashboardInfo(
+                GameDashboardFactory.createGameDashboardInfo(
                     dwitchEngineFactory.create(gameInfo.gameState).getGameInfo(),
                     gameInfo.localPlayerId,
-                    gameInfo.localPlayerIsHost,
                     localPlayerConnectionState
                 )
             }
         ).subscribeOn(schedulerFactory.io())
+    }
+
+    override fun observeEndOfRound(): Observable<EndOfRoundInfo> {
+        return gameRepository.observeGameInfo()
+            .filter { gameInfo -> gameInfo.gameState.phase == GamePhase.RoundIsOver }
+            .map { gameInfo ->
+                val playerInfos = dwitchEngineFactory.create(gameInfo.gameState).getGameInfo().playerInfosList
+                GameDashboardFactory.createEndOfGameInfo(playerInfos, gameInfo.localPlayerIsHost)
+            }
+            .subscribeOn(schedulerFactory.io())
+    }
+
+    //TODO: put logic somewhere else...
+    override fun getEndOfRoundInfo(): Single<EndOfRoundInfo> {
+        return gameRepository.getGameInfo()
+            .map { gameInfo ->
+                val playerInfos = dwitchEngineFactory.create(gameInfo.gameState).getGameInfo().playerInfos.values.toList()
+                GameDashboardFactory.createEndOfGameInfo(
+                    playerInfos.sortedWith { p1, p2 -> -p1.rank.value.compareTo(p2.rank.value) },
+                    gameInfo.localPlayerIsHost
+                )
+            }
+            .subscribeOn(schedulerFactory.io())
     }
 
     override fun submitCardsForExchange(cards: Set<Card>): Completable {

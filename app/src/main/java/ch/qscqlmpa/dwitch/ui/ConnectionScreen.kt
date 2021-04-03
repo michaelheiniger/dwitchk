@@ -17,13 +17,19 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    backgroundColor = 0xFFFFFFFF
+)
 @Composable
 private fun CommunicationHostScreenPreview() {
     CommunicationHostScreen(HostCommunicationState.Error) {}
 }
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    backgroundColor = 0xFFFFFFFF
+)
 @Composable
 private fun CommunicationGuestScreenPreview() {
     CommunicationGuestScreen(GuestCommunicationState.Error) {}
