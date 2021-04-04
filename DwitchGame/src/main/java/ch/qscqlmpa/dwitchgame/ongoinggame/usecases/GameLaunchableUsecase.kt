@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
+import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomPlayerRepository
-import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
@@ -23,7 +23,7 @@ internal class GameLaunchableUsecase @Inject constructor(
             }
     }
 
-    private fun playersAreAllReady(playerList: List<PlayerWr>): Boolean {
+    private fun playersAreAllReady(playerList: List<PlayerWrUi>): Boolean {
         return playerList.size > 1 && playerList.fold(true, { acc, player -> acc && player.ready })
     }
 }

@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.CommunicationHostScreen
+import ch.qscqlmpa.dwitch.ui.ConnectionHostScreen
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardInfo
@@ -38,14 +38,14 @@ fun GameRoomHostScreen(
             onPassClick = onPassClick
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
 
         OutlinedButton(
             onClick = onEndGameClick,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(stringResource(R.string.grhf_end_game_btn))
+            Text(stringResource(R.string.end_game))
         }
-        CommunicationHostScreen(connectionStatus) { onReconnectClick() }
+        ConnectionHostScreen(connectionStatus) { onReconnectClick() }
     }
 }

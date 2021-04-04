@@ -59,7 +59,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc")
 
     // JUnit4 (For ViewModel unit tests and instrumented tests)
-    testImplementation("junit:junit:4.13")
+    testImplementation("junit:junit:4.13.2")
 
     // MockK
     testImplementation("io.mockk:mockk:1.9.3")
@@ -75,7 +75,7 @@ dependencies {
     androidTestImplementation("androidx.test:runner:1.3.0")
     androidTestImplementation("androidx.test:rules:1.3.0")
     androidTestImplementation("androidx.test.ext:junit-ktx:1.1.2")
-    androidTestUtil("androidx.test:orchestrator:1.4.0-alpha04")
+    androidTestUtil("androidx.test:orchestrator:1.4.0-alpha05")
     testImplementation("android.arch.core:core-testing:1.1.1")
 
     // Joda time

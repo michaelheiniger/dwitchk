@@ -1,8 +1,8 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom
 
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
+import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomFacade
-import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -16,28 +16,28 @@ class WaitingRoomViewModelTest : BaseViewModelUnitTest() {
 
     private lateinit var viewModel: WaitingRoomViewModel
 
-    private lateinit var playersSubject: PublishSubject<List<PlayerWr>>
+    private lateinit var playersSubject: PublishSubject<List<PlayerWrUi>>
 
     @Test
     fun `Observe players in the WaitingRoom after onStart has been called and before onStop is called`() {
         createViewModel()
 
-        assertThat(viewModel.players.value).isEqualTo(emptyList<List<PlayerWr>>())
+        assertThat(viewModel.players.value).isEqualTo(emptyList<List<PlayerWrUi>>())
 
         viewModel.onStart()
-        val players1 = mockk<List<PlayerWr>>()
+        val players1 = mockk<List<PlayerWrUi>>()
         playersSubject.onNext(players1)
 
         assertThat(viewModel.players.value).isEqualTo(players1)
 
-        val players2 = mockk<List<PlayerWr>>()
+        val players2 = mockk<List<PlayerWrUi>>()
         playersSubject.onNext(players2)
         assertThat(viewModel.players.value).isEqualTo(players2)
 
         viewModel.onStop()
 
         // The stream is no longer active so the players aren't updated
-        val players3 = mockk<List<PlayerWr>>()
+        val players3 = mockk<List<PlayerWrUi>>()
         playersSubject.onNext(players3)
         assertThat(viewModel.players.value).isEqualTo(players2)
     }

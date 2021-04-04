@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModelProvider
-import ch.qscqlmpa.dwitch.ui.common.Status
+import ch.qscqlmpa.dwitch.ui.common.LoadedData
 import ch.qscqlmpa.dwitch.ui.home.HomeBaseActivity
 import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameActivity
 import ch.qscqlmpa.dwitch.ui.home.joinnewgame.JoinNewGameActivity
@@ -26,12 +26,12 @@ class MainActivity : HomeBaseActivity() {
         MaterialTheme {
             Surface(color = Color.White) {
                 val advertisedGameResponse =
-                    viewModel.advertisedGames.observeAsState(AdvertisedGamesResponse(Status.LOADING, emptyList()))
+                    viewModel.advertisedGames.observeAsState(LoadedData.Loading)
                 val resumableGameResponse =
-                    viewModel.resumableGames.observeAsState(initial = ResumableGamesResponse(Status.LOADING, emptyList()))
+                    viewModel.resumableGames.observeAsState(LoadedData.Loading)
                 HomeScreen(
-                    advertisedGamesResponse = advertisedGameResponse.value,
-                    resumableGamesResponse = resumableGameResponse.value,
+                    advertisedGames = advertisedGameResponse.value,
+                    resumableGames = resumableGameResponse.value,
                     onJoinGameClick = { game -> viewModel.joinGame(game) },
                     onCreateNewGameClick = { HostNewGameActivity.hostNewGame(this) },
                     onResumableGameClick = { game -> viewModel.resumeGame(game) }

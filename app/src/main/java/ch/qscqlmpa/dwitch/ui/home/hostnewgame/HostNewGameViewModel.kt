@@ -3,7 +3,6 @@ package ch.qscqlmpa.dwitch.ui.home.hostnewgame
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
 import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
@@ -15,14 +14,14 @@ class HostNewGameViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _command = MutableLiveData<HostNewGameCommand>()
-    private val _createGameControl = MutableLiveData(UiControlModel(enabled = false))
+    private val _createGameControl = MutableLiveData(false)
     private val _playerName = MutableLiveData("")
     private val _gameName = MutableLiveData("")
 
     val commands get(): LiveData<HostNewGameCommand> = _command
     val playerName get(): LiveData<String> = _playerName
     val gameName get(): LiveData<String> = _gameName
-    val createGameControl get(): LiveData<UiControlModel> = _createGameControl
+    val createGameControl get(): LiveData<Boolean> = _createGameControl
 
     fun onPlayerNameChange(value: String) {
         _playerName.value = value
@@ -50,6 +49,6 @@ class HostNewGameViewModel @Inject constructor(
     }
 
     private fun updateHostGameControl() {
-        _createGameControl.value = UiControlModel(enabled = !playerName.value.isNullOrBlank() && !gameName.value.isNullOrBlank())
+        _createGameControl.value = !playerName.value.isNullOrBlank() && !gameName.value.isNullOrBlank()
     }
 }

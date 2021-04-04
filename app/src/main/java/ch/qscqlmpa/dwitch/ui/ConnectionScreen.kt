@@ -23,7 +23,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationSt
 )
 @Composable
 private fun CommunicationHostScreenPreview() {
-    CommunicationHostScreen(HostCommunicationState.Error) {}
+    ConnectionHostScreen(HostCommunicationState.Error) {}
 }
 
 @Preview(
@@ -32,11 +32,11 @@ private fun CommunicationHostScreenPreview() {
 )
 @Composable
 private fun CommunicationGuestScreenPreview() {
-    CommunicationGuestScreen(GuestCommunicationState.Error) {}
+    ConnectionGuestScreen(GuestCommunicationState.Error) {}
 }
 
 @Composable
-fun CommunicationHostScreen(
+fun ConnectionHostScreen(
     status: HostCommunicationState?,
     onReconnectClick: () -> Unit
 ) {
@@ -62,7 +62,7 @@ fun CommunicationHostScreen(
 }
 
 @Composable
-fun CommunicationGuestScreen(
+fun ConnectionGuestScreen(
     status: GuestCommunicationState?,
     onReconnectClick: () -> Unit
 ) {
@@ -90,7 +90,7 @@ fun CommunicationGuestScreen(
 @Composable
 private fun Status(statusResource: Int) {
     Text(
-        text = stringResource(id = statusResource),
+        text = stringResource(statusResource),
         color = MaterialTheme.colors.secondary
     )
 }
@@ -112,7 +112,7 @@ private fun ReconnectionControls(
                     bottom = 0.dp
                 )
             ) {
-                Text(text = stringResource(id = R.string.reconnect_btn))
+                Text(text = stringResource(R.string.reconnect))
             }
             if (connectionOnGoing) {
                 CircularProgressIndicator(

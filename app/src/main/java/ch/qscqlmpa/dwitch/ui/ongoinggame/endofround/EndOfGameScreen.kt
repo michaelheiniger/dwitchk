@@ -77,7 +77,7 @@ fun EndOfRoundScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(Modifier.height(8.dp))
 
             LazyColumn(
                 Modifier
@@ -89,7 +89,7 @@ fun EndOfRoundScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
 
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
@@ -99,16 +99,16 @@ fun EndOfRoundScreen(
             ) {
                 if (endOfRoundInfo.canStartNewRound) {
                     Button(onClick = onStartNewRoundClick) {
-                        Text(stringResource(id = R.string.pdf_start_new_round))
+                        Text(stringResource(R.string.start_new_round))
                     }
                 }
                 if (endOfRoundInfo.canEndGame) {
                     Button(onClick = onGameOverClick) {
-                        Text(stringResource(id = R.string.grhf_end_game_btn))
+                        Text(stringResource(R.string.end_game))
                     }
                 } else {
                     Button(onClick = onLeaveGameClick) {
-                        Text(stringResource(id = R.string.leave_game_btn))
+                        Text(stringResource(R.string.leave_game_btn))
                     }
                 }
             }

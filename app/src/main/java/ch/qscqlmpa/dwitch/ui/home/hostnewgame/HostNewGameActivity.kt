@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
 import ch.qscqlmpa.dwitch.ui.home.HomeBaseActivity
-import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 
@@ -27,13 +26,13 @@ class HostNewGameActivity : HomeBaseActivity() {
     fun ActivityScreen(viewModel: HostNewGameViewModel) {
         val playerName = viewModel.playerName.observeAsState(initialPlayerName).value
         val gameName = viewModel.gameName.observeAsState(initialGameName).value
-        val hostGameControl = viewModel.createGameControl.observeAsState(UiControlModel(enabled = false)).value
+        val hostGameControl = viewModel.createGameControl.observeAsState(false).value
         MaterialTheme {
             Surface(color = Color.White) {
                 HostNewGameScreen(
                     playerName = playerName,
                     gameName = gameName,
-                    hostGameBtnState = hostGameControl,
+                    hostGameControlEnabled = hostGameControl,
                     onPlayerNameChange = { name -> viewModel.onPlayerNameChange(name) },
                     onGameNameChange = { name -> viewModel.onGameNameChange(name) },
                     onCreateGameClick = { viewModel.hostGame() },

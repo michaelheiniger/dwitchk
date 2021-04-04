@@ -9,32 +9,30 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
-import ch.qscqlmpa.dwitchmodel.player.PlayerRole
-import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 
-@Preview
+@Preview(
+    showBackground = true,
+    backgroundColor = 0xFFFFFFFF
+)
 @Composable
 private fun WaitingRoomPlayersScreenPreview() {
     WaitingRoomPlayersScreen(
         players = listOf(
-            PlayerWr(
-                dwitchId = PlayerDwitchId(1),
+            PlayerWrUi(
                 name = "Mirlick",
-                playerRole = PlayerRole.HOST,
                 connectionState = PlayerConnectionState.CONNECTED,
                 ready = true
             ),
-            PlayerWr(
-                dwitchId = PlayerDwitchId(2),
+            PlayerWrUi(
                 name = "Mébène",
-                playerRole = PlayerRole.GUEST,
                 connectionState = PlayerConnectionState.DISCONNECTED,
                 ready = false
             )
@@ -43,22 +41,21 @@ private fun WaitingRoomPlayersScreenPreview() {
 }
 
 @Composable
-fun WaitingRoomPlayersScreen(players: List<PlayerWr>) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+fun WaitingRoomPlayersScreen(players: List<PlayerWrUi>) {
+    Column(Modifier.fillMaxWidth()) {
         Text(
-            stringResource(id = R.string.wra_player_list),
+            stringResource(R.string.players_in_waitingroom),
             fontSize = 32.sp,
             color = MaterialTheme.colors.primary
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(Modifier.height(8.dp))
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(players) { player ->
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = player.name,
-                        fontSize = 24.sp,
-                        color = MaterialTheme.colors.secondary
-                    )
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .testTag(player.name)) {
+                    PlayerName(player.name)
                     PlayerStateDetails(player)
                 }
             }
@@ -67,10 +64,17 @@ fun WaitingRoomPlayersScreen(players: List<PlayerWr>) {
 }
 
 @Composable
-private fun PlayerStateDetails(player: PlayerWr) {
-    Row(
-        modifier = Modifier.fillMaxWidth()
-    ) {
+private fun PlayerName(name: String) {
+    Text(
+        text = name,
+        fontSize = 24.sp,
+        color = MaterialTheme.colors.secondary
+    )
+}
+
+@Composable
+private fun PlayerStateDetails(player: PlayerWrUi) {
+    Row(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -80,7 +84,8 @@ private fun PlayerStateDetails(player: PlayerWr) {
             Checkbox(
                 checked = player.ready,
                 enabled = false,
-                onCheckedChange = {}
+                onCheckedChange = {},
+                modifier = Modifier.testTag("readyCheckbox")
             )
             val readyLabel = if (player.ready) R.string.ready else R.string.not_ready
             Text(stringResource(readyLabel))

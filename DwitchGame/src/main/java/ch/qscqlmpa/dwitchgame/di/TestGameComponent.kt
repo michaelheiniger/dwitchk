@@ -5,6 +5,8 @@ import ch.qscqlmpa.dwitchgame.di.modules.SchedulersModule
 import ch.qscqlmpa.dwitchgame.di.modules.SerializationModule
 import ch.qscqlmpa.dwitchgame.di.modules.StoreModule
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.NetworkAdapter
+import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
+import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.TestOngoingGameComponent
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.modules.OngoingGameModule
 import dagger.Component
@@ -22,6 +24,9 @@ import dagger.Component
 interface TestGameComponent : GameComponent {
 
     val networkListener: NetworkAdapter
+
+    val guestFacade: HomeGuestFacade
+    val hostFacade: HomeHostFacade
 
     fun addTestOngoingGameComponent(module: OngoingGameModule): TestOngoingGameComponent
 

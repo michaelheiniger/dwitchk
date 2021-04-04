@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.home
 
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.ui.common.Status
+import ch.qscqlmpa.dwitch.ui.common.LoadedData
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivityViewModel
 import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
@@ -53,35 +53,34 @@ class MainActivityViewModelTest : BaseViewModelUnitTest() {
     }
 
     @Test
-    fun shouldEmitAdvertisedGamesResponse_success() {
+    fun shouldEmitAdvertisedGamesSucceed() {
         viewModel.onStart()
-        val response = viewModel.advertisedGames
+        val data = viewModel.advertisedGames
 
         val list = listOf(AdvertisedGame(true, "Kaamelott", GameCommonId(1), "192.168.1.1", 8890, LocalTime.now()))
         advertisedGamesSubject.onNext(list)
 
-        assertThat(response.value!!.status).isEqualTo(Status.SUCCESS)
-        assertThat(response.value!!.advertisedGames).isEqualTo(list)
+        assertThat(data.value!!).isInstanceOf(LoadedData.Success::class.java)
+        assertThat((data.value!! as LoadedData.Success).data).isEqualTo(list)
 
         verify { mockHomeGuestFacade.listenForAdvertisedGames() }
     }
 
     @Test
-    fun shouldEmitAdvertisedGamesResponse_error() {
+    fun shouldEmitLoadingAdvertisedGamesFailed() {
         viewModel.onStart()
         advertisedGamesSubject.onError(Exception())
         val response = viewModel.advertisedGames
 
-        assertThat(response.value!!.status).isEqualTo(Status.ERROR)
-        assertThat(response.value!!.advertisedGames).isEqualTo(emptyList<AdvertisedGame>())
+        assertThat(response.value!!).isInstanceOf(LoadedData.Failed::class.java)
 
         verify { mockHomeGuestFacade.listenForAdvertisedGames() }
     }
 
     @Test
-    fun shouldEmitResumableGamesResponse_success() {
+    fun shouldEmitLoadingResumableGamesSucceed() {
         viewModel.onStart()
-        val response = viewModel.resumableGames
+        val data = viewModel.resumableGames
 
         val list = listOf(
             ResumableGameInfo(
@@ -99,20 +98,19 @@ class MainActivityViewModelTest : BaseViewModelUnitTest() {
         )
         resumableGamesSubject.onNext(list)
 
-        assertThat(response.value!!.status).isEqualTo(Status.SUCCESS)
-        assertThat(response.value!!.resumableGames).isEqualTo(list)
+        assertThat(data.value!!).isInstanceOf(LoadedData.Success::class.java)
+        assertThat((data.value!! as LoadedData.Success).data).isEqualTo(list)
 
         verify { mockHomeGuestFacade.listenForAdvertisedGames() }
     }
 
     @Test
-    fun shouldEmitResumableGamesResponse_error() {
+    fun shouldEmitLoadingResumableGamesFailed() {
         viewModel.onStart()
         resumableGamesSubject.onError(Exception())
         val response = viewModel.resumableGames
 
-        assertThat(response.value!!.status).isEqualTo(Status.ERROR)
-        assertThat(response.value!!.resumableGames).isEqualTo(emptyList<ResumableGameInfo>())
+        assertThat(response.value!!).isInstanceOf(LoadedData.Failed::class.java)
 
         verify { mockHomeHostFacade.resumableGames() }
     }

@@ -25,15 +25,14 @@ object GameDashboardFactory {
                     p.rank,
                     p.status,
                     p.dwitched,
-                    p.id == localPlayerId
+                    localPlayer = p.id == localPlayerId
                 )
             },
             LocalPlayerDashboard(
-                dashboardEnabled,
-                localPlayerInfo.cardsInHand,
-                localPlayerInfo.canPass,
-                localPlayerInfo.canPickACard,
-                localPlayerInfo.canPlay
+                adjustCardItemSelectability(localPlayerInfo.cardsInHand, dashboardEnabled),
+                canPass = dashboardEnabled && localPlayerInfo.canPass,
+                canPickACard = dashboardEnabled && localPlayerInfo.canPickACard,
+                canPlay = dashboardEnabled && localPlayerInfo.canPlay
             ),
             gameInfo.lastCardPlayed
         )
@@ -46,6 +45,10 @@ object GameDashboardFactory {
             canEndGame = localPlayerIsHost,
             playersInfo = playersInfo.map { p -> PlayerEndOfRoundInfo(p.name, p.rank) }
         )
+    }
+
+    private fun adjustCardItemSelectability(cardItems: List<CardItem>, dashboardEnabled: Boolean): List<CardItem> {
+        return cardItems.map { c -> c.copy(selectable = c.selectable && dashboardEnabled) }
     }
 }
 
@@ -73,7 +76,6 @@ data class PlayerInfo2(
 )
 
 data class LocalPlayerDashboard(
-    val dashboardEnabled: Boolean,
     val cardsInHand: List<CardItem>,
     val canPass: Boolean,
     val canPickACard: Boolean,

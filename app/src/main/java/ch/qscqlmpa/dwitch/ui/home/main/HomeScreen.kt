@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.common.Status
+import ch.qscqlmpa.dwitch.ui.common.LoadedData
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
@@ -28,18 +28,15 @@ import org.joda.time.DateTime
 )
 @Composable
 fun HomeScreenPreview() {
-    val advertisedGameResponse = AdvertisedGamesResponse(
-        Status.SUCCESS,
+    val advertisedGame = LoadedData.Success(
         listOf(
             AdvertisedGame(false, "Game 1", GameCommonId(1), "192.168.1.1", 8889),
             AdvertisedGame(false, "Game 2", GameCommonId(2), "192.168.1.2", 8889),
             AdvertisedGame(false, "Game 3", GameCommonId(3), "192.168.1.3", 8889)
-        ),
-        null
+        )
     )
 
-    val resumableGameResponse = ResumableGamesResponse(
-        Status.SUCCESS,
+    val resumableGameResponse = LoadedData.Success(
         listOf(
             ResumableGameInfo(1, DateTime.parse("2020-07-26T01:20+02:00"), "LOTR", listOf("Aragorn", "Legolas", "Gimli")),
             ResumableGameInfo(
@@ -48,12 +45,11 @@ fun HomeScreenPreview() {
                 "GoT",
                 listOf("Ned Stark", "Arya Stark", "Sandor Clegane")
             )
-        ),
-        null
+        )
     )
     HomeScreen(
-        advertisedGamesResponse = advertisedGameResponse,
-        resumableGamesResponse = resumableGameResponse,
+        advertisedGames = advertisedGame,
+        resumableGames = resumableGameResponse,
         onCreateNewGameClick = {},
         onJoinGameClick = {},
         onResumableGameClick = {}
@@ -62,8 +58,8 @@ fun HomeScreenPreview() {
 
 @Composable
 fun HomeScreen(
-    advertisedGamesResponse: AdvertisedGamesResponse,
-    resumableGamesResponse: ResumableGamesResponse,
+    advertisedGames: LoadedData<List<AdvertisedGame>>,
+    resumableGames: LoadedData<List<ResumableGameInfo>>,
     onCreateNewGameClick: () -> Unit,
     onJoinGameClick: (AdvertisedGame) -> Unit,
     onResumableGameClick: (ResumableGameInfo) -> Unit
@@ -75,84 +71,41 @@ fun HomeScreen(
             .padding(top = 16.dp, start = 16.dp, end = 16.dp)
 
     ) {
-        AdvertisedGameContainer(advertisedGamesResponse, onJoinGameClick)
-        Spacer(modifier = Modifier.height(16.dp))
+        AdvertisedGameContainer(advertisedGames, onJoinGameClick)
+        Spacer(Modifier.height(16.dp))
         GameCreation(onCreateNewGameClick)
-        Spacer(modifier = Modifier.height(16.dp))
-        ResumableGamesContainer(resumableGamesResponse, onResumableGameClick)
+        Spacer(Modifier.height(16.dp))
+        ResumableGamesContainer(resumableGames, onResumableGameClick)
     }
 }
 
 @Composable
 private fun GameCreation(onCreateNewGameClick: () -> Unit) {
-    Button(onClick = onCreateNewGameClick) { Text(stringResource(id = R.string.ma_create_game_btn)) }
-}
-
-@Composable
-fun ResumableGamesContainer(
-    response: ResumableGamesResponse,
-    onResumableGameClick: (ResumableGameInfo) -> Unit
-) {
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .animateContentSize()
-
-    ) {
-        Text(
-            stringResource(id = R.string.ma_resumable_games_tv),
-            fontSize = 32.sp,
-            color = MaterialTheme.colors.primary
-        )
-        when (response.status) {
-            Status.LOADING -> Text(stringResource(id = R.string.ma_loading_resumable_games))
-            Status.SUCCESS -> ResumableGames(response.resumableGames, onResumableGameClick)
-            Status.ERROR -> Text(stringResource(id = R.string.ma_resumable_games_loading_error_tv), color = Color.Red)
-        }
-    }
-}
-
-@Composable
-private fun ResumableGames(
-    resumableGames: List<ResumableGameInfo>,
-    onResumableGameclick: (ResumableGameInfo) -> Unit
-) {
-    if (resumableGames.isEmpty()) {
-        Text(stringResource(id = R.string.ma_no_resumable_games))
-    } else {
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-        ) {
-            items(resumableGames) { game ->
-                Text(
-                    text = "${game.name} (${game.playersName.joinToString(", ")})",
-                    Modifier.clickable { onResumableGameclick(game) }
-                )
-            }
-        }
-    }
+    Button(
+        onClick = onCreateNewGameClick,
+        modifier = Modifier.fillMaxWidth()
+    ) { Text(stringResource(R.string.create_game)) }
 }
 
 @Composable
 private fun AdvertisedGameContainer(
-    response: AdvertisedGamesResponse,
+    advertisedGames: LoadedData<List<AdvertisedGame>>,
     onJoinGameClick: (AdvertisedGame) -> Unit
 ) {
     Column(
         Modifier
             .fillMaxWidth()
             .animateContentSize()
-
     ) {
         Text(
-            stringResource(id = R.string.ma_advertised_games_tv),
+            text = stringResource(R.string.advertised_games),
             fontSize = 30.sp,
             color = MaterialTheme.colors.primary
         )
-        when (response.status) {
-            Status.LOADING -> ListeningForAdvertisedGames()
-            Status.SUCCESS -> AdvertisedGames(response.advertisedGames, onJoinGameClick)
-            Status.ERROR -> Text(stringResource(id = R.string.ma_advertised_games_loading_error_tv), color = Color.Red)
+        when (advertisedGames) {
+            LoadedData.Loading -> ListeningForAdvertisedGames()
+            is LoadedData.Success -> AdvertisedGames(advertisedGames.data, onJoinGameClick)
+            is LoadedData.Failed -> Text(stringResource(R.string.listening_advertised_games_failed), color = Color.Red)
         }
     }
 }
@@ -180,5 +133,50 @@ private fun AdvertisedGames(
 
 @Composable
 private fun ListeningForAdvertisedGames() {
-    Text(stringResource(id = R.string.ma_listening_for_games_tv))
+    Text(stringResource(R.string.listening_for_advertised_games))
+}
+
+@Composable
+fun ResumableGamesContainer(
+    resumableGames: LoadedData<List<ResumableGameInfo>>,
+    onResumableGameClick: (ResumableGameInfo) -> Unit
+) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .animateContentSize()
+
+    ) {
+        Text(
+            stringResource(R.string.resumable_games),
+            fontSize = 32.sp,
+            color = MaterialTheme.colors.primary
+        )
+        when (resumableGames) {
+            LoadedData.Loading -> Text(stringResource(R.string.loading_resumable_games))
+            is LoadedData.Success -> ResumableGames(resumableGames.data, onResumableGameClick)
+            is LoadedData.Failed -> Text(stringResource(R.string.loading_resumable_games_failed), color = Color.Red)
+        }
+    }
+}
+
+@Composable
+private fun ResumableGames(
+    resumableGames: List<ResumableGameInfo>,
+    onResumableGameclick: (ResumableGameInfo) -> Unit
+) {
+    if (resumableGames.isEmpty()) {
+        Text(stringResource(R.string.no_resumable_games))
+    } else {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            items(resumableGames) { game ->
+                Text(
+                    text = "${game.name} (${game.playersName.joinToString(", ")})",
+                    Modifier.clickable { onResumableGameclick(game) }
+                )
+            }
+        }
+    }
 }

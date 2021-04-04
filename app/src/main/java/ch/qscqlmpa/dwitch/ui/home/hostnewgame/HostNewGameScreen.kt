@@ -12,7 +12,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 
 
 @Preview(
@@ -21,14 +20,14 @@ import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 )
 @Composable
 fun HostNewGameScreenPreview() {
-    HostNewGameScreen("Aragorn", "LOTR", UiControlModel(), {}, {}, {}, {})
+    HostNewGameScreen("Aragorn", "LOTR", true, {}, {}, {}, {})
 }
 
 @Composable
 fun HostNewGameScreen(
     playerName: String,
     gameName: String,
-    hostGameBtnState: UiControlModel,
+    hostGameControlEnabled: Boolean,
     onPlayerNameChange: (String) -> Unit,
     onGameNameChange: (String) -> Unit,
     onCreateGameClick: () -> Unit,
@@ -42,26 +41,26 @@ fun HostNewGameScreen(
     ) {
         OutlinedTextField(
             value = playerName,
-            label = { Text(stringResource(id = R.string.nga_player_name_tv)) },
+            label = { Text(stringResource(R.string.player_name)) },
             onValueChange = onPlayerNameChange,
             modifier = Modifier.fillMaxWidth()
         )
         OutlinedTextField(
             value = gameName,
-            label = { Text(stringResource(id = R.string.nga_game_name_tv)) },
+            label = { Text(stringResource(R.string.nga_game_name_tv)) },
             onValueChange = onGameNameChange,
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
         Button(
             onClick = onCreateGameClick,
-            enabled = hostGameBtnState.enabled,
+            enabled = hostGameControlEnabled,
             modifier = Modifier.fillMaxWidth()
-        ) { Text(stringResource(id = R.string.nga_host_game_btn)) }
-        Spacer(modifier = Modifier.height(16.dp))
+        ) { Text(stringResource(R.string.host_game)) }
+        Spacer(Modifier.height(16.dp))
         OutlinedButton(
             onClick = onBackClick,
             Modifier.fillMaxWidth()
-        ) { Text(stringResource(id = R.string.nga_back_btn)) }
+        ) { Text(stringResource(R.string.back_to_home_screen)) }
     }
 }

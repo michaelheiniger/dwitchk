@@ -3,7 +3,6 @@ package ch.qscqlmpa.dwitch.ui.home.hostjoinnewgame
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameCommand
 import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameViewModel
-import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -34,26 +33,26 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
 
     @Test
     fun `Create game control is initially disabled`() {
-        assertThat(viewModel.createGameControl.value).isEqualTo(UiControlModel(enabled = false))
+        assertThat(viewModel.createGameControl.value).isEqualTo(false)
     }
 
     @Test
     fun `Create game control is enabled when player name and game name are not blank`() {
         viewModel.onPlayerNameChange("Arthur")
         viewModel.onGameNameChange("Table Ronde")
-        assertThat(viewModel.createGameControl.value).isEqualTo(UiControlModel(enabled = true))
+        assertThat(viewModel.createGameControl.value).isEqualTo(true)
 
         viewModel.onPlayerNameChange("Arthur")
         viewModel.onGameNameChange("")
-        assertThat(viewModel.createGameControl.value).isEqualTo(UiControlModel(enabled = false))
+        assertThat(viewModel.createGameControl.value).isEqualTo(false)
 
         viewModel.onPlayerNameChange("Arthur")
         viewModel.onGameNameChange("Table Ronde")
-        assertThat(viewModel.createGameControl.value).isEqualTo(UiControlModel(enabled = true))
+        assertThat(viewModel.createGameControl.value).isEqualTo(true)
 
         viewModel.onPlayerNameChange("")
         viewModel.onGameNameChange("Table Ronde")
-        assertThat(viewModel.createGameControl.value).isEqualTo(UiControlModel(enabled = false))
+        assertThat(viewModel.createGameControl.value).isEqualTo(false)
     }
 
     @Test

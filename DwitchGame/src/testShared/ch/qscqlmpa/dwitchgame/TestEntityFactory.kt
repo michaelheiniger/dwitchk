@@ -4,6 +4,7 @@ import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.initialgamesetup.random.RandomInitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.game.GameState
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
@@ -21,6 +22,14 @@ object TestEntityFactory {
 
     fun createPlayerWr2(): PlayerWr {
         return PlayerWr(PlayerDwitchId(2), "Obi-Wan", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true)
+    }
+
+    fun createPlayerWrUi1(): PlayerWrUi {
+        return PlayerWrUi(name = "Sheev", PlayerConnectionState.CONNECTED, ready = true)
+    }
+
+    fun createPlayerWrUi2(): PlayerWrUi {
+        return PlayerWrUi(name = "Obi-Wan", PlayerConnectionState.CONNECTED, ready = true)
     }
 
     fun createHostPlayer(

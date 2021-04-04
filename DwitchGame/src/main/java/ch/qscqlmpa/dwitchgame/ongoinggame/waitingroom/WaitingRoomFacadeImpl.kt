@@ -1,7 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom
 
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
-import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
@@ -10,7 +9,7 @@ internal class WaitingRoomFacadeImpl @Inject constructor(
     private val schedulerFactory: SchedulerFactory
 ) : WaitingRoomFacade {
 
-    override fun observePlayers(): Observable<List<PlayerWr>> {
+    override fun observePlayers(): Observable<List<PlayerWrUi>> {
         return waitingRoomPlayerRepository.observePlayers()
             .subscribeOn(schedulerFactory.io())
     }

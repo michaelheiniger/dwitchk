@@ -1,12 +1,14 @@
 package ch.qscqlmpa.dwitch.uitests.base
 
 import android.content.res.Resources
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithText
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.TestRule
+import ch.qscqlmpa.dwitch.app.TestApp
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
-import ch.qscqlmpa.dwitch.uitests.utils.UiUtil
 import ch.qscqlmpa.dwitchcommunication.di.TestCommunicationComponent
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.client.test.ClientTestStub
@@ -35,7 +37,7 @@ import java.util.concurrent.TimeUnit
 abstract class BaseUiTest {
 
     @get:Rule
-    var testRule = TestRule(MainActivity::class.java)
+    val testRule = createAndroidComposeRule<MainActivity>()
 
     protected val gameName = "LOTR"
 
@@ -59,17 +61,20 @@ abstract class BaseUiTest {
     protected lateinit var serverTestStub: ServerTestStub
     protected lateinit var clientTestStub: ClientTestStub
 
+    lateinit var app: TestApp
+
     @Before
     fun setup() {
+        app = ApplicationProvider.getApplicationContext()
         res = InstrumentationRegistry.getInstrumentation().targetContext.resources
-        testRule.init()
+//        testRule.init()
     }
 
     protected fun launch() {
-        testRule.launchActivity(null)
-
-        gameComponent = testRule.app.testGameComponent
-        storeComponent = testRule.app.testStoreComponent as TestStoreComponent
+//        testRule.launchActivity(null)
+//
+        gameComponent = app.testGameComponent
+        storeComponent = app.testStoreComponent
 
         store = storeComponent.store
         networkAdapter = gameComponent.networkListener as TestNetworkAdapter
@@ -88,9 +93,9 @@ abstract class BaseUiTest {
     }
 
     private fun hookOngoingGameDependenciesCommon() {
-        ongoingGameComponent = testRule.app.ongoingGameComponent as TestOngoingGameComponent
-        inGameStore = testRule.app.inGameStoreComponent!!.inGameStore
-        communicationComponent = testRule.app.communicationComponent as TestCommunicationComponent
+        ongoingGameComponent = app.ongoingGameComponent as TestOngoingGameComponent
+        inGameStore = app.inGameStoreComponent!!.inGameStore
+        communicationComponent = app.communicationComponent as TestCommunicationComponent
     }
 
     protected fun initializeInitialGameSetup(cardsForPlayer: Map<Int, List<Card>>, rankForPlayer: Map<Int, Rank>) {
@@ -116,8 +121,9 @@ abstract class BaseUiTest {
     }
 
     protected fun assertCurrentScreenIsHomeSreen() {
-        UiUtil.elementIsDisplayed(R.id.gameListTv)
-        UiUtil.assertControlTextContent(R.id.gameListTv, R.string.ma_game_list_tv)
+        testRule.onNodeWithText(getString(R.string.advertised_games)).assertExists()
+        testRule.onNodeWithText(getString(R.string.resumable_games)).assertExists()
+        testRule.onNodeWithText(getString(R.string.create_game)).assertExists()
     }
 
     protected fun buildSerializedAdvertisedGame(
@@ -127,5 +133,9 @@ abstract class BaseUiTest {
         gamePort: Int
     ): String {
         return "{\"isNew\": $isNew, \"gameCommonId\":{\"value\":${gameCommonId.value}},\"gameName\":\"$gameName\",\"gamePort\":$gamePort}"
+    }
+
+    protected fun getString(resource: Int): String {
+        return res.getString(resource)
     }
 }

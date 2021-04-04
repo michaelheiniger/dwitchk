@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
 import ch.qscqlmpa.dwitch.ui.home.HomeBaseActivity
-import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
@@ -29,12 +28,12 @@ class JoinNewGameActivity : HomeBaseActivity() {
     @Composable
     fun ActivityScreen(viewModel: JoinNewGameViewModel) {
         val playerName = viewModel.playerName.observeAsState(initialPlayerName).value
-        val joinGameControl = viewModel.joinGameControl.observeAsState(UiControlModel(enabled = false)).value
+        val joinGameControl = viewModel.joinGameControl.observeAsState(false).value
         MaterialTheme {
             Surface(color = Color.White) {
                 JoinNewGameScreen(
                     playerName = playerName,
-                    joinGameBtnState = joinGameControl,
+                    joinGameControlEnabled = joinGameControl,
                     onPlayerNameChange = { name -> viewModel.onPlayerNameChange(name) },
                     onJoinGameClick = { viewModel.joinGame(game) },
                     onBackClick = { finish() }

@@ -103,7 +103,7 @@ private fun CardsToExchange(
                 enabled = exchangeControlEnabled,
                 onClick = onExchangeClick
             ) {
-                Text(text = stringResource(R.string.cef_exchange))
+                Text(text = stringResource(R.string.confirm_cards_to_exchange))
             }
         }
 

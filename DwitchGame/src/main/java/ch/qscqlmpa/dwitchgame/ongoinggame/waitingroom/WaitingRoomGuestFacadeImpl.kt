@@ -7,7 +7,6 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.LeaveGameUsecase
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.PlayerReadyUsecase
-import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
@@ -42,7 +41,7 @@ internal class WaitingRoomGuestFacadeImpl @Inject constructor(
 
     override fun observeLocalPlayerReadyState(): Observable<Boolean> {
         return wrPlayerRepository.observeLocalPlayer()
-            .map(PlayerWr::ready)
+            .map(PlayerWrUi::ready)
             .subscribeOn(schedulerFactory.io())
     }
 

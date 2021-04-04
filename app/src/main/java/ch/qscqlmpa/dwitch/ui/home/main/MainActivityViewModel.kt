@@ -3,6 +3,7 @@ package ch.qscqlmpa.dwitch.ui.home.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitch.ui.common.LoadedData
 import ch.qscqlmpa.dwitchgame.appevent.AppEvent
 import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
@@ -22,11 +23,11 @@ constructor(
 ) : BaseViewModel() {
 
     private val _commands = MutableLiveData<MainActivityCommands>()
-    private val _advertisedGames = MutableLiveData<AdvertisedGamesResponse>()
-    private val _resumableGames = MutableLiveData<ResumableGamesResponse>()
+    private val _advertisedGames = MutableLiveData<LoadedData<List<AdvertisedGame>>>()
+    private val _resumableGames = MutableLiveData<LoadedData<List<ResumableGameInfo>>>()
 
-    val advertisedGames get(): LiveData<AdvertisedGamesResponse> = _advertisedGames
-    val resumableGames get(): LiveData<ResumableGamesResponse> = _resumableGames
+    val advertisedGames get(): LiveData<LoadedData<List<AdvertisedGame>>> = _advertisedGames
+    val resumableGames get(): LiveData<LoadedData<List<ResumableGameInfo>>> = _resumableGames
     val commands get(): LiveData<MainActivityCommands> = _commands
 
     init {
@@ -84,9 +85,9 @@ constructor(
         disposableManager.add(
             homeGuestFacade.listenForAdvertisedGames()
                 .observeOn(uiScheduler)
-                .map { games -> AdvertisedGamesResponse.success(games) }
-                .onErrorReturn { error -> AdvertisedGamesResponse.error(error) }
+                .map { games -> LoadedData.Success(games) as LoadedData<List<AdvertisedGame>> }
                 .doOnError { error -> Logger.error(error) { "Error while observing advertised games." } }
+                .onErrorReturn { LoadedData.Failed }
                 .subscribe { response -> _advertisedGames.value = response }
         )
     }
@@ -95,9 +96,9 @@ constructor(
         disposableManager.add(
             homeHostFacade.resumableGames()
                 .observeOn(uiScheduler)
-                .map { games -> ResumableGamesResponse.success(games) }
-                .onErrorReturn { error -> ResumableGamesResponse.error(error) }
+                .map { games -> LoadedData.Success(games) as LoadedData<List<ResumableGameInfo>> }
                 .doOnError { error -> Logger.error(error) { "Error while fetching existing games." } }
+                .onErrorReturn { LoadedData.Failed }
                 .subscribe { response -> _resumableGames.value = response }
         )
     }

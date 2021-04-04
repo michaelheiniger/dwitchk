@@ -12,7 +12,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 
 
 @Preview(
@@ -21,13 +20,13 @@ import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 )
 @Composable
 fun HostNewGameScreenPreview() {
-    JoinNewGameScreen("Aragorn", UiControlModel(), {}, {}, {})
+    JoinNewGameScreen("Aragorn", true, {}, {}, {})
 }
 
 @Composable
 fun JoinNewGameScreen(
     playerName: String,
-    joinGameBtnState: UiControlModel,
+    joinGameControlEnabled: Boolean,
     onPlayerNameChange: (String) -> Unit,
     onJoinGameClick: () -> Unit,
     onBackClick: () -> Unit
@@ -40,20 +39,20 @@ fun JoinNewGameScreen(
     ) {
         OutlinedTextField(
             value = playerName,
-            label = { Text(stringResource(id = R.string.nga_player_name_tv)) },
+            label = { Text(stringResource(R.string.player_name)) },
             onValueChange = onPlayerNameChange,
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
         Button(
             onClick = onJoinGameClick,
-            enabled = joinGameBtnState.enabled,
+            enabled = joinGameControlEnabled,
             modifier = Modifier.fillMaxWidth()
-        ) { Text(stringResource(id = R.string.nga_join_game_btn)) }
-        Spacer(modifier = Modifier.height(16.dp))
+        ) { Text(stringResource(R.string.join_game)) }
+        Spacer(Modifier.height(16.dp))
         OutlinedButton(
             onClick = onBackClick,
             Modifier.fillMaxWidth()
-        ) { Text(stringResource(id = R.string.nga_back_btn)) }
+        ) { Text(stringResource(R.string.back_to_home_screen)) }
     }
 }

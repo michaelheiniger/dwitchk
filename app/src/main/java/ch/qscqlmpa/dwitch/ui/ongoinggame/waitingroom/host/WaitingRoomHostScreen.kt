@@ -13,13 +13,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.CommunicationHostScreen
+import ch.qscqlmpa.dwitch.ui.ConnectionHostScreen
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomPlayersScreen
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
+import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
-import ch.qscqlmpa.dwitchmodel.player.PlayerRole
-import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 
 @Preview(
     showBackground = true,
@@ -29,9 +27,9 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 private fun WaitingRoomHostScreenPreview() {
     WaitingRoomHostScreen(
         players = listOf(
-            PlayerWr(PlayerDwitchId(1), "Aragorn", PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
-            PlayerWr(PlayerDwitchId(2), "Boromir", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
-            PlayerWr(PlayerDwitchId(3), "Gimli", PlayerRole.GUEST, PlayerConnectionState.DISCONNECTED, false)
+            PlayerWrUi("Aragorn", PlayerConnectionState.CONNECTED, true),
+            PlayerWrUi("Boromir", PlayerConnectionState.CONNECTED, false),
+            PlayerWrUi("Gimli", PlayerConnectionState.DISCONNECTED, false)
         ),
         launchGameEnabled = false,
         connectionStatus = HostCommunicationState.Error,
@@ -43,7 +41,7 @@ private fun WaitingRoomHostScreenPreview() {
 
 @Composable
 fun WaitingRoomHostScreen(
-    players: List<PlayerWr>,
+    players: List<PlayerWrUi>,
     launchGameEnabled: Boolean,
     connectionStatus: HostCommunicationState?,
     onLaunchGameClick: () -> Unit,
@@ -59,7 +57,7 @@ fun WaitingRoomHostScreen(
 
         WaitingRoomPlayersScreen(players = players)
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
 
         HostControlScreen(
             launchGameEnabled = launchGameEnabled,
@@ -67,9 +65,9 @@ fun WaitingRoomHostScreen(
             onCancelGameClick = onCancelGameClick
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
 
-        CommunicationHostScreen(connectionStatus) { onReconnectClick() }
+        ConnectionHostScreen(connectionStatus) { onReconnectClick() }
     }
 }
 
@@ -86,17 +84,17 @@ private fun HostControlScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                stringResource(id = R.string.wrhf_launch_game_tv),
+                stringResource(R.string.launch_game),
                 color = Color.White
             )
         }
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
         OutlinedButton(
             onClick = onCancelGameClick,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                stringResource(id = R.string.wrhf_cancel_game_tv),
+                stringResource(R.string.cancel_game),
                 color = MaterialTheme.colors.primary
             )
         }

@@ -3,6 +3,7 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     id("kotlin-parcelize")
+    id("kotlin-android")
 }
 
 android {
@@ -61,6 +62,11 @@ android {
         kotlinCompilerExtensionVersion = "1.0.0-beta01"
     }
 
+    // To prevent the error message (AndroidTest): " 2 files found with path 'META-INF/AL2.0' from inputs: ..."
+    packagingOptions {
+        resources.excludes.add("META-INF/AL2.0")
+        resources.excludes.add("META-INF/LGPL2.1")
+    }
 }
 
 dependencies {
@@ -77,15 +83,11 @@ dependencies {
 
     // Android / UI
     implementation("androidx.appcompat:appcompat:1.2.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.0-alpha2")
     implementation("androidx.core:core-ktx:1.3.2")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0")
-    implementation("androidx.recyclerview:recyclerview:1.2.0-beta01")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
     implementation("com.google.android.material:material:1.3.0")
-    implementation("com.jakewharton.rxbinding:rxbinding-kotlin:0.4.0")
-    implementation("androidx.fragment:fragment-ktx:1.3.0")
 
     // Dagger
     implementation("com.google.dagger:dagger-android-support:2.30.1")
@@ -100,7 +102,6 @@ dependencies {
     implementation("org.tinylog:tinylog-impl:2.2.1")
 
     // RxJava
-    implementation("androidx.lifecycle:lifecycle-reactivestreams:2.3.0")
     implementation("com.jakewharton.rxrelay3:rxrelay:3.0.0")
     implementation("io.reactivex.rxjava3:rxandroid:3.0.0")
     implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
@@ -109,7 +110,7 @@ dependencies {
     implementation("joda-time:joda-time:2.10.1")
 
     // JUnit4 (For ViewModel unit tests and instrumented tests)
-    testImplementation("junit:junit:4.13")
+    testImplementation("junit:junit:4.13.2")
 
     // Android testing stuff
     androidTestImplementation("androidx.test.ext:junit-ktx:1.1.2")
@@ -117,7 +118,7 @@ dependencies {
     androidTestImplementation("androidx.test:core:1.3.0")
     androidTestImplementation("androidx.test:rules:1.3.0")
     androidTestImplementation("androidx.test:runner:1.3.0")
-    androidTestUtil("androidx.test:orchestrator:1.4.0-alpha04")
+    androidTestUtil("androidx.test:orchestrator:1.4.0-alpha05")
 
     // Espresso
     androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
@@ -125,7 +126,7 @@ dependencies {
 
     // To use androidx.arch.core.executor.testing.InstantTaskExecutorRule in ViewModel unit tests
     testImplementation("android.arch.core:core-testing:1.1.1")
-    testImplementation("androidx.room:room-testing:2.3.0-beta01")
+    testImplementation("androidx.room:room-testing:2.3.0-rc01")
 
     // MockK
     testImplementation("io.mockk:mockk:1.9.3")
@@ -136,26 +137,21 @@ dependencies {
     androidTestImplementation("org.assertj:assertj-core:3.18.1")
 
     // ####### Jetpack Compose #######
-    implementation("androidx.compose.ui:ui:1.0.0-beta02")
-    // Tooling support (Previews, etc.)
-    implementation("androidx.compose.ui:ui-tooling:1.0.0-beta02")
-    // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
-    implementation("androidx.compose.foundation:foundation:1.0.0-beta02")
-    // Material Design
-    implementation("androidx.compose.material:material:1.0.0-beta02")
-    // Material design icons
-    implementation("androidx.compose.material:material-icons-core:1.0.0-beta02")
-    implementation("androidx.compose.material:material-icons-extended:1.0.0-beta02")
-    // Integration with activities
-    implementation("androidx.activity:activity-compose:1.3.0-alpha04")
-    // Integration with ViewModels
+    val composeVersion = "1.0.0-beta03"
+    implementation("androidx.compose.ui:ui:$composeVersion")
+    implementation("androidx.compose.ui:ui-tooling:$composeVersion")
+    implementation("androidx.compose.foundation:foundation:$composeVersion")
+    implementation("androidx.compose.material:material:$composeVersion")
+    implementation("androidx.compose.material:material-icons-core:$composeVersion")
+    implementation("androidx.compose.material:material-icons-extended:$composeVersion")
+    implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
+    implementation("androidx.compose.runtime:runtime-rxjava3:$composeVersion")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.0-beta03")
+    androidTestImplementation("androidx.compose.ui:ui-test:$composeVersion")
+
+    implementation("androidx.activity:activity-compose:1.3.0-alpha05")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha03")
-    // Integration with observables
-    implementation("androidx.compose.runtime:runtime-livedata:1.0.0-beta02")
-    implementation("androidx.compose.runtime:runtime-rxjava3:1.0.0-beta02")
-    // UI Tests
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.0-beta02")
 
+    // Robolectric (for unit tests that log stuff)
     testImplementation("org.robolectric:robolectric:4.5.1")
-
 }

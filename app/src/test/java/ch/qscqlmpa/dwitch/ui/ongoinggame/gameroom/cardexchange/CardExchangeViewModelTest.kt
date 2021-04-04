@@ -104,9 +104,6 @@ class CardExchangeViewModelTest : BaseViewModelUnitTest() {
             listOf(Card.Clubs2, Card.HeartsKing, Card.Spades3, Card.Diamonds4)
         )
 
-        val cardsInHand = viewModel.cardsInHandItems
-        val cardsChosen = viewModel.cardsToExchangeItems
-
         try {
             viewModel.removeCardFromExchange(Card.Hearts2) // Not in the hand
             fail("Card not in the hand cannot be selected")

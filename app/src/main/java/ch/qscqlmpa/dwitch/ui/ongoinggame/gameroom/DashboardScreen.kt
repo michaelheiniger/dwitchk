@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -87,7 +88,6 @@ private fun DashboardScreenPreview() {
     val players = listOf(donePlayer, turnPassedPlayer, playingPlayer, waitingPlayer, waitingAndDwitchedPlayer)
 
     val localPlayerDashboard = LocalPlayerDashboard(
-        dashboardEnabled = true,
         cardsInHand = listOf(
             CardItem(Card.Clubs2, true),
             CardItem(Card.Hearts5, false),
@@ -124,15 +124,6 @@ private fun DashboardScreenPreview() {
     )
 }
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
-@Composable
-private fun DashboardLoadingScreenPreview() {
-    DashboardScreen(null, {}, {}, {})
-}
-
 @Composable
 fun DashboardScreen(
     dashboardInfo: GameDashboardInfo?,
@@ -151,11 +142,11 @@ fun DashboardScreen(
 
             PlayersInfo(dashboardInfo.playersInfo)
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
 
             Table(dashboardInfo.lastCardPlayed)
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
 
             Controls(
                 localPlayerDashboard,
@@ -163,7 +154,7 @@ fun DashboardScreen(
                 onPassClick = onPassClick
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
 
             Hand(localPlayerDashboard, onCardClick = onCardClick)
         }
@@ -198,7 +189,7 @@ private fun PlayersInfo(playersInfo: List<PlayerInfo2>) {
                 PlayerStatus.TurnPassed -> PlayerTurnPassed(player)
                 PlayerStatus.Waiting -> PlayerWaiting(player)
             }
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(Modifier.height(4.dp))
         }
     }
 }
@@ -212,7 +203,9 @@ private fun Table(lastCardPlayed: Card) {
         Image(
             painter = painterResource(ResourceMapper.getResource(lastCardPlayed)),
             contentDescription = lastCardPlayed.toString(),
-            modifier = Modifier.size(150.dp)
+            modifier = Modifier
+                .size(150.dp)
+                .testTag("lastCardPlayed")
         )
     }
 }
@@ -228,16 +221,18 @@ private fun Controls(
         modifier = Modifier.fillMaxWidth()
     ) {
         Button(
-            enabled = localPlayerDashboard.dashboardEnabled && localPlayerDashboard.canPickACard,
-            onClick = onPickClick
+            enabled = localPlayerDashboard.canPickACard,
+            onClick = onPickClick,
+            modifier = Modifier.testTag("pickACardControl")
         ) {
-            Text(stringResource(id = ch.qscqlmpa.dwitch.R.string.pdf_pick_a_card))
+            Text(stringResource(ch.qscqlmpa.dwitch.R.string.pick_a_card))
         }
         Button(
-            enabled = localPlayerDashboard.dashboardEnabled && localPlayerDashboard.canPass,
-            onClick = onPassClick
+            enabled = localPlayerDashboard.canPass,
+            onClick = onPassClick,
+            modifier = Modifier.testTag("passControl")
         ) {
-            Text(stringResource(id = ch.qscqlmpa.dwitch.R.string.pdf_pass))
+            Text(stringResource(ch.qscqlmpa.dwitch.R.string.pass_turn))
         }
     }
 }
@@ -255,7 +250,7 @@ private fun Hand(
             .animateContentSize(),
     ) {
         items(localPlayerDashboard.cardsInHand) { card ->
-            CardItemDisplay(card, localPlayerDashboard.dashboardEnabled, onCardClick = onCardClick)
+            CardItemDisplay(card, onCardClick = onCardClick)
         }
     }
 }
@@ -263,10 +258,9 @@ private fun Hand(
 @Composable
 private fun CardItemDisplay(
     cardItem: CardItem,
-    dashboardEnabled: Boolean,
     onCardClick: (Card) -> Unit
 ) {
-    val surfaceColor = if (dashboardEnabled && cardItem.selectable) Color.Transparent else Color(
+    val surfaceColor = if (cardItem.selectable) Color.Transparent else Color(
         red = 0.3f,
         green = 0.3f,
         blue = 0.3f,
@@ -278,11 +272,11 @@ private fun CardItemDisplay(
         colorFilter = ColorFilter.tint(surfaceColor, BlendMode.Overlay),
         contentScale = ContentScale.Fit,
         modifier = Modifier
-            .clickable {
-                if (dashboardEnabled && cardItem.selectable) {
-                    onCardClick(cardItem.card)
-                }
-            }
+            .clickable(
+                enabled = cardItem.selectable,
+                onClick = { onCardClick(cardItem.card) }
+            )
+            .testTag(cardItem.card.toString())
 //            .border(
 //                width = Dp.Hairline,
 //                brush = Brush.linearGradient(listOf(Color.Black, Color.Black)),

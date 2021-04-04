@@ -38,8 +38,8 @@ fun InfoDialog(
     if (openDialog.value) {
         AlertDialog(
             onDismissRequest = {},
-            title = { Text(text = stringResource(id = title), color = Color.Black) },
-            text = { Text(text = stringResource(id = text), color = Color.Black) },
+            title = { Text(text = stringResource(title), color = Color.Black) },
+            text = { Text(text = stringResource(text), color = Color.Black) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -47,7 +47,7 @@ fun InfoDialog(
                         openDialog.value = false
                     }
                 ) {
-                    Text(text = stringResource(id = R.string.ok), color = Color.Black)
+                    Text(text = stringResource(R.string.ok), color = Color.Black)
                 }
             },
             backgroundColor = Color.White,

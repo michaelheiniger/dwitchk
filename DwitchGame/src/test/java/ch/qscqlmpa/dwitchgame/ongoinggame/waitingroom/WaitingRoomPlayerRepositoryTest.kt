@@ -4,8 +4,6 @@ import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
-import ch.qscqlmpa.dwitchmodel.player.PlayerRole
-import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import io.mockk.every
 import io.reactivex.rxjava3.core.Flowable
 import org.junit.jupiter.api.BeforeEach
@@ -39,26 +37,20 @@ class WaitingRoomPlayerRepositoryTest : BaseUnitTest() {
 
             repository.observePlayers().test().assertValue(
                 listOf(
-                    PlayerWr(
-                        PlayerDwitchId(1),
+                    PlayerWrUi(
                         hostPlayer.name,
-                        PlayerRole.HOST,
                         PlayerConnectionState.CONNECTED,
-                        true
+                        ready = true
                     ),
-                    PlayerWr(
-                        PlayerDwitchId(2),
+                    PlayerWrUi(
                         playerGuest1.name,
-                        PlayerRole.GUEST,
                         PlayerConnectionState.CONNECTED,
-                        false
+                        ready = false
                     ),
-                    PlayerWr(
-                        PlayerDwitchId(3),
+                    PlayerWrUi(
                         playerGuest2.name,
-                        PlayerRole.GUEST,
                         PlayerConnectionState.CONNECTED,
-                        true
+                        ready = true
                     )
                 )
             )

@@ -1,7 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.home.joinnewgame
 
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
@@ -34,19 +33,19 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
 
     @Test
     fun `Join game control is initially disabled`() {
-        assertThat(viewModel.joinGameControl.value).isEqualTo(UiControlModel(enabled = false))
+        assertThat(viewModel.joinGameControl.value).isEqualTo(false)
     }
 
     @Test
     fun `Join game control is enabled when player name is not blank`() {
         viewModel.onPlayerNameChange("Arthur")
-        assertThat(viewModel.joinGameControl.value).isEqualTo(UiControlModel(enabled = true))
+        assertThat(viewModel.joinGameControl.value).isEqualTo(true)
 
         viewModel.onPlayerNameChange("")
-        assertThat(viewModel.joinGameControl.value).isEqualTo(UiControlModel(enabled = false))
+        assertThat(viewModel.joinGameControl.value).isEqualTo(false)
 
         viewModel.onPlayerNameChange("Arthur")
-        assertThat(viewModel.joinGameControl.value).isEqualTo(UiControlModel(enabled = true))
+        assertThat(viewModel.joinGameControl.value).isEqualTo(true)
     }
 
     @Test

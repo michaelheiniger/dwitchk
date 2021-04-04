@@ -85,7 +85,7 @@ dependencies {
     androidTestImplementation("org.assertj:assertj-core:3.18.1")
 
     // JUnit4 (For instrumented tests)
-    testImplementation("junit:junit:4.13")
+    testImplementation("junit:junit:4.13.2")
 
     // AndroidJUnitRunner and JUnit Rules
     androidTestImplementation("androidx.test.ext:junit-ktx:1.1.2")
@@ -93,6 +93,6 @@ dependencies {
     androidTestImplementation("androidx.test:core:1.3.0")
     androidTestImplementation("androidx.test:rules:1.3.0")
     androidTestImplementation("androidx.test:runner:1.3.0")
-    androidTestUtil("androidx.test:orchestrator:1.4.0-alpha04")
+    androidTestUtil("androidx.test:orchestrator:1.4.0-alpha05")
     testImplementation("android.arch.core:core-testing:1.1.1")
 }

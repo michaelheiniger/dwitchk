@@ -3,8 +3,8 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomFacade
-import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
@@ -14,9 +14,8 @@ class WaitingRoomViewModel @Inject constructor(
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val _players = MutableLiveData<List<PlayerWr>>(emptyList())
-
-    val players get(): LiveData<List<PlayerWr>> = _players
+    private val _players = MutableLiveData<List<PlayerWrUi>>(emptyList())
+    val players get(): LiveData<List<PlayerWrUi>> = _players
 
     override fun onStart() {
         playersInWaitingRoom()

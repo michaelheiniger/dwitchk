@@ -3,7 +3,6 @@ package ch.qscqlmpa.dwitch.ui.home.joinnewgame
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitch.ui.model.UiControlModel
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
 import io.reactivex.rxjava3.core.Scheduler
@@ -16,16 +15,16 @@ class JoinNewGameViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _command = MutableLiveData<JoinNewGameCommand>()
-    private val _joinGameControl = MutableLiveData(UiControlModel(enabled = false))
+    private val _joinGameControl = MutableLiveData(false)
     private val _playerName = MutableLiveData("")
 
     val commands get(): LiveData<JoinNewGameCommand> = _command
     val playerName get(): LiveData<String> = _playerName
-    val joinGameControl get(): LiveData<UiControlModel> = _joinGameControl
+    val joinGameControl get(): LiveData<Boolean> = _joinGameControl
 
     fun onPlayerNameChange(value: String) {
         _playerName.value = value
-        _joinGameControl.value = UiControlModel(enabled = !playerName.value.isNullOrBlank())
+        _joinGameControl.value = !playerName.value.isNullOrBlank()
     }
 
     fun joinGame(advertisedGame: AdvertisedGame) {

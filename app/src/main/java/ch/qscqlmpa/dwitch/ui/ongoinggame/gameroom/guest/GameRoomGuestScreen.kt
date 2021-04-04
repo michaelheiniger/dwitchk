@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ch.qscqlmpa.dwitch.ui.CommunicationGuestScreen
+import ch.qscqlmpa.dwitch.ui.ConnectionGuestScreen
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardInfo
@@ -33,9 +33,9 @@ fun GameRoomGuestScreen(
             onPassClick = onPassClick
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
 
-        CommunicationGuestScreen(connectionStatus) { onReconnectClick() }
+        ConnectionGuestScreen(connectionStatus) { onReconnectClick() }
     }
 }
 

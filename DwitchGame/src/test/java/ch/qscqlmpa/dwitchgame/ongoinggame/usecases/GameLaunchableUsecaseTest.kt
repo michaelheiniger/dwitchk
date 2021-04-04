@@ -2,8 +2,8 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
+import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomPlayerRepository
-import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
@@ -30,7 +30,7 @@ internal class GameLaunchableUsecaseTest : BaseUnitTest() {
 
         @Test
         fun `Send GameIsReadyToBeLaunched when all players are ready`() {
-            val players = listOf(TestEntityFactory.createPlayerWr1(), TestEntityFactory.createPlayerWr2())
+            val players = listOf(TestEntityFactory.createPlayerWrUi1(), TestEntityFactory.createPlayerWrUi2())
             setupPlayerWrListMock(players)
 
             gameLaunchableUsecase.gameCanBeLaunched().test().assertValue(GameLaunchableEvent.GameIsReadyToBeLaunched)
@@ -40,7 +40,7 @@ internal class GameLaunchableUsecaseTest : BaseUnitTest() {
 
         @Test
         fun `Send NotAllPlayersAreReady when not all players are ready`() {
-            val players = listOf(TestEntityFactory.createPlayerWr1(), TestEntityFactory.createPlayerWr2().copy(ready = false))
+            val players = listOf(TestEntityFactory.createPlayerWrUi1(), TestEntityFactory.createPlayerWrUi2().copy(ready = false))
             setupPlayerWrListMock(players)
 
             gameLaunchableUsecase.gameCanBeLaunched().test().assertValue(GameLaunchableEvent.NotAllPlayersAreReady)
@@ -50,7 +50,7 @@ internal class GameLaunchableUsecaseTest : BaseUnitTest() {
 
         @Test
         fun `Send NotEnoughPlayers when not enough players in game`() {
-            val players = listOf(TestEntityFactory.createPlayerWr1())
+            val players = listOf(TestEntityFactory.createPlayerWrUi1())
             setupPlayerWrListMock(players)
 
             gameLaunchableUsecase.gameCanBeLaunched().test().assertValue(GameLaunchableEvent.NotEnoughPlayers)
@@ -63,7 +63,7 @@ internal class GameLaunchableUsecaseTest : BaseUnitTest() {
             confirmVerified(mockPlayerWrRepository)
         }
 
-        private fun setupPlayerWrListMock(listToReturn: List<PlayerWr>) {
+        private fun setupPlayerWrListMock(listToReturn: List<PlayerWrUi>) {
             every { mockPlayerWrRepository.observePlayers() } returns Observable.just(listToReturn)
         }
     }
