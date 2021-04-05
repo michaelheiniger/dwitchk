@@ -35,8 +35,7 @@ class LanGameDiscovery @Inject constructor(
                 try {
                     val advertisedGame = buildAdvertisedGame(networkAdapter.receive())
                     observer.onNext(advertisedGame)
-                } catch (e: SocketException) {
-                    // Socket has been closed
+                } catch (e: SocketClosedException) {
                     isListening = false
                 }
             }

@@ -20,8 +20,12 @@ class UdpNetworkAdapter @Inject constructor() : NetworkAdapter {
         val receiveData = ByteArray(1024)
         val receivePacket = DatagramPacket(receiveData, receiveData.size)
 
-        receiveSocket.receive(receivePacket) // Blocking call
-        Logger.debug { "Packet received: ${receivePacket.data}" }
+        try {
+            receiveSocket.receive(receivePacket) // Blocking call
+            Logger.debug { "Packet received: ${receivePacket.data}" }
+        } catch (e: SocketException) {
+            throw SocketClosedException()
+        }
 
         val message = String(receivePacket.data).substring(0, receivePacket.length)
         val senderIpAddress = receivePacket.address.hostAddress

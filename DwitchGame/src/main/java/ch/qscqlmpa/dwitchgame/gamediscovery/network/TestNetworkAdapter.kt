@@ -1,7 +1,5 @@
-package ch.qscqlmpa.dwitchgame.gamediscovery
+package ch.qscqlmpa.dwitchgame.gamediscovery.network
 
-import ch.qscqlmpa.dwitchgame.gamediscovery.network.NetworkAdapter
-import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
 import org.tinylog.kotlin.Logger
 import java.net.SocketException
 import java.util.concurrent.LinkedBlockingQueue
@@ -28,7 +26,11 @@ internal constructor() : NetworkAdapter {
 
     override fun receive(): Packet {
         Logger.info("receive...")
-        return blockingQueue.poll(50, TimeUnit.SECONDS)
+        try {
+            return blockingQueue.poll(5, TimeUnit.SECONDS)
+        } catch (e: InterruptedException) {
+            throw SocketClosedException()
+        }
     }
 
     override fun close() {
