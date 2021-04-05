@@ -6,17 +6,13 @@ import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class TestNetworkAdapter @Inject
-internal constructor() : NetworkAdapter {
+class TestNetworkAdapter @Inject internal constructor() : NetworkAdapter {
 
     private val blockingQueue = LinkedBlockingQueue<Packet>(10)
-
-//    private var packet: Packet? = null
 
     fun setPacket(packet: Packet) {
         Logger.info { "Feed network adapter with packet $packet" }
         blockingQueue.offer(packet, 5, TimeUnit.SECONDS)
-//        this.packet = packet
     }
 
     @Throws(SocketException::class)

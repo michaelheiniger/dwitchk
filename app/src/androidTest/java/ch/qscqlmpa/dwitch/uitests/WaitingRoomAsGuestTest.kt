@@ -1,23 +1,23 @@
 package ch.qscqlmpa.dwitch.uitests
 
+import ch.qscqlmpa.dwitch.PlayerGuestTest
 import ch.qscqlmpa.dwitch.uitests.base.BaseGuestTest
-import org.junit.Ignore
+import ch.qscqlmpa.dwitch.uitests.utils.WaitingRoomUtil.PLAYER_CONNECTED
+import ch.qscqlmpa.dwitch.uitests.utils.WaitingRoomUtil.assertPlayerInWr
+import org.junit.Test
 
-@Ignore
 class WaitingRoomAsGuestTest : BaseGuestTest() {
 
-//    @Test
-//    fun goToWaitingRoomScreen() {
-//        launch()
-//
-//        goToWaitingRoom()
-//
-//        assertPlayerInWr(0, PlayerGuestTest.Host.name, PLAYER_CONNECTED)
-//        assertPlayerInWr(1, PlayerGuestTest.LocalGuest.name, PLAYER_CONNECTED)
-//        assertPlayerInWr(2, PlayerGuestTest.Guest2.name, PLAYER_CONNECTED)
-//        assertPlayerInWr(3, PlayerGuestTest.Guest3.name, PLAYER_CONNECTED)
-//    }
-//
+    @Test
+    fun goToWaitingRoomScreen() {
+        goToWaitingRoom()
+
+        testRule.assertPlayerInWr(PlayerGuestTest.Host.name, getString(PLAYER_CONNECTED))
+        testRule.assertPlayerInWr(PlayerGuestTest.LocalGuest.name, getString(PLAYER_CONNECTED))
+        testRule.assertPlayerInWr(PlayerGuestTest.Guest2.name, getString(PLAYER_CONNECTED))
+        testRule.assertPlayerInWr(PlayerGuestTest.Guest3.name, getString(PLAYER_CONNECTED))
+    }
+
 //    @Test
 //    fun playerBecomesReady() {
 //        launch()

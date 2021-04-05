@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
 import ch.qscqlmpa.dwitch.ui.home.HomeBaseActivity
+import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
@@ -36,7 +37,10 @@ class JoinNewGameActivity : HomeBaseActivity() {
                     joinGameControlEnabled = joinGameControl,
                     onPlayerNameChange = { name -> viewModel.onPlayerNameChange(name) },
                     onJoinGameClick = { viewModel.joinGame(game) },
-                    onBackClick = { finish() }
+                    onBackClick = {
+                        MainActivity.start(this)
+                        finish()
+                    }
                 )
             }
         }

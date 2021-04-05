@@ -20,7 +20,7 @@ import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInit
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import ch.qscqlmpa.dwitchgame.di.TestGameComponent
-import ch.qscqlmpa.dwitchgame.gamediscovery.TestNetworkAdapter
+import ch.qscqlmpa.dwitchgame.gamediscovery.network.TestNetworkAdapter
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.TestOngoingGameComponent
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.TestStoreComponent
@@ -67,12 +67,10 @@ abstract class BaseUiTest {
     fun setup() {
         app = ApplicationProvider.getApplicationContext()
         res = InstrumentationRegistry.getInstrumentation().targetContext.resources
-//        testRule.init()
+        launch()
     }
 
-    protected fun launch() {
-//        testRule.launchActivity(null)
-//
+    protected fun launch() { //TODO: Rename when all tests have been adapted and set to private
         gameComponent = app.testGameComponent
         storeComponent = app.testStoreComponent
 

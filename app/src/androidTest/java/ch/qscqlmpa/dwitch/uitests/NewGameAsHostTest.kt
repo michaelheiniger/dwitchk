@@ -1,45 +1,33 @@
 package ch.qscqlmpa.dwitch.uitests
 
+import androidx.compose.ui.test.*
+import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
 import ch.qscqlmpa.dwitch.uitests.base.BaseUiTest
-import org.junit.Ignore
+import org.junit.Test
 
-@Ignore
 class NewGameAsHostTest : BaseUiTest() {
 
-//    @Test
-//    fun inputValidation() {
-//        launch()
-//
-//        UiUtil.clickOnButton(R.id.createGameBtn)
-//
-//        UiUtil.setControlText(R.id.playerNameEdt, "")
-//        UiUtil.setControlText(R.id.gameNameEdt, "")
-//        UiUtil.assertControlEnabled(R.id.hostGameBtn, enabled = false)
-//
-//        // Player name is missing
-//        UiUtil.setControlText(R.id.playerNameEdt, "")
-//        UiUtil.setControlText(R.id.gameNameEdt, "Les Bronzés font du ski")
-//        UiUtil.assertControlEnabled(R.id.hostGameBtn, enabled = false)
-//
-//        // Game name is missing
-//        UiUtil.setControlText(R.id.playerNameEdt, "Jean-Claude Duss")
-//        UiUtil.setControlText(R.id.gameNameEdt, "")
-//        UiUtil.assertControlEnabled(R.id.hostGameBtn, enabled = false)
-//
-//        UiUtil.setControlText(R.id.playerNameEdt, "Jean-Claude Duss")
-//        UiUtil.setControlText(R.id.gameNameEdt, "Les Bronzés font du ski")
-//        UiUtil.assertControlEnabled(R.id.hostGameBtn, enabled = true)
-//    }
-//
-//    @Test
-//    fun abortCreateGame() {
-//        launch()
-//
-//        UiUtil.clickOnButton(R.id.createGameBtn)
-//        UiUtil.assertTextInputLayoutHint(R.id.playerNameTil, R.string.nga_player_name_tv)
-//        UiUtil.assertTextInputLayoutHint(R.id.gameNameTil, R.string.nga_game_name_tv)
-//
-//        UiUtil.clickOnButton(R.id.backBtn)
-//        UiUtil.assertControlTextContent(R.id.gameListTv, R.string.ma_game_list_tv)
-//    }
+    @Test
+    fun hostMustProvideAPlayerNameAndAGameNameToCreateAGame() {
+        testRule.onNodeWithText(getString(R.string.create_game)).performClick()
+        testRule.assertTextIsDisplayedOnce(getString(R.string.host_game))
+
+        testRule.onNodeWithTag("playerName").assertTextEquals("")
+        testRule.onNodeWithTag("gameName").assertTextEquals("")
+        testRule.onNodeWithText(getString(R.string.host_game)).assertIsNotEnabled()
+
+        testRule.onNodeWithTag("playerName").performTextInput("Mirlick")
+        testRule.onNodeWithTag("gameName").performTextInput("Dwiiitch !")
+        testRule.onNodeWithText(getString(R.string.host_game)).assertIsEnabled()
+    }
+
+    @Test
+    fun hostCanAbortAndGoBackToHomeScreen() {
+        testRule.onNodeWithText(getString(R.string.create_game)).performClick()
+        testRule.assertTextIsDisplayedOnce(getString(R.string.host_game))
+
+        testRule.onNodeWithText(getString(R.string.back_to_home_screen)).performClick()
+        assertCurrentScreenIsHomeSreen()
+    }
 }

@@ -9,6 +9,7 @@ import ch.qscqlmpa.dwitch.ongoinggame.TestOngoingGameUiComponent
 import ch.qscqlmpa.dwitch.service.ServiceManagerModule
 import ch.qscqlmpa.dwitch.ui.home.HomeActivityBindingModule
 import ch.qscqlmpa.dwitch.ui.home.HomeViewModelBindingModule
+import ch.qscqlmpa.dwitch.ui.home.main.MainActivityViewModel
 import ch.qscqlmpa.dwitchgame.di.GameComponent
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -26,6 +27,8 @@ import dagger.android.AndroidInjectionModule
     ]
 )
 interface TestAppComponent : AppComponent {
+
+    val mainActivityViewModel: MainActivityViewModel
 
     override fun addOngoingGameUiComponent(module: OnGoingGameUiModule): TestOngoingGameUiComponent
 }

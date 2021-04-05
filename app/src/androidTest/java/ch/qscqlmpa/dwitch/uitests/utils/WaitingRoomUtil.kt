@@ -1,23 +1,30 @@
 package ch.qscqlmpa.dwitch.uitests.utils
 
+import androidx.compose.ui.test.*
+import androidx.compose.ui.test.junit4.ComposeContentTestRule
+import ch.qscqlmpa.dwitch.R
+
 object WaitingRoomUtil {
 
-//    const val PLAYER_CONNECTED = R.string.player_connected
-//    const val PLAYER_DISCONNECTED = R.string.player_disconnected
-//
-//    fun assertPlayerInWr(position: Int, name: String) {
-//        assertRecyclerViewElementText(R.id.playerListRw, R.id.playerNameTv, position, name)
-//    }
-//
-//    fun assertPlayerInWr(position: Int, name: String, ready: Boolean) {
-//        assertPlayerInWr(position, name)
-//        assertPlayerReady(position, ready)
-//    }
-//
-//    fun assertPlayerInWr(position: Int, name: String, connectionStateResourceId: Int) {
-//        assertPlayerInWr(position, name)
-//        assertPlayerConnected(position, connectionStateResourceId)
-//    }
+    const val PLAYER_CONNECTED = R.string.player_connected
+    const val PLAYER_DISCONNECTED = R.string.player_disconnected
+
+    //
+    fun ComposeContentTestRule.assertPlayerInWr(name: String): SemanticsNodeInteraction {
+        return onNode(hasTestTag(name))
+    }
+
+    fun ComposeContentTestRule.assertPlayerInWr(name: String, ready: Boolean): SemanticsNodeInteraction {
+        val sni = assertPlayerInWr(name)
+        val checkboxSni = sni.onChildren().filterToOne(hasTestTag("readyCheckbox"))
+        if (ready) checkboxSni.assertIsOn() else checkboxSni.assertIsOff()
+        return sni
+    }
+
+    fun ComposeContentTestRule.assertPlayerInWr(name: String, connectionState: String) {
+        val sni = assertPlayerInWr(name)
+        sni.onChildren().filterToOne(hasText(connectionState)).assertIsDisplayed()
+    }
 //
 //    fun assertPlayerInWr(position: Int, name: String, ready: Boolean, connectionState: Int) {
 //        assertPlayerInWr(position, name)

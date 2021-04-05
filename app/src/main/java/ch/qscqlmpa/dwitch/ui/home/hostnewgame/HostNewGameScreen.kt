@@ -8,6 +8,7 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,13 +44,17 @@ fun HostNewGameScreen(
             value = playerName,
             label = { Text(stringResource(R.string.player_name)) },
             onValueChange = onPlayerNameChange,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("playerName")
         )
         OutlinedTextField(
             value = gameName,
             label = { Text(stringResource(R.string.nga_game_name_tv)) },
             onValueChange = onGameNameChange,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("gameName")
         )
         Spacer(Modifier.height(16.dp))
         Button(

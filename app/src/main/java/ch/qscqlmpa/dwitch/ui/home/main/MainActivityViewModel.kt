@@ -14,8 +14,7 @@ import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
-class MainActivityViewModel @Inject
-constructor(
+class MainActivityViewModel @Inject constructor(
     private val homeGuestFacade: HomeGuestFacade,
     private val homeHostFacade: HomeHostFacade,
     appEventRepository: AppEventRepository,

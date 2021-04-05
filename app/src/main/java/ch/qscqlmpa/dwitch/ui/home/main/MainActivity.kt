@@ -25,13 +25,11 @@ class MainActivity : HomeBaseActivity() {
     fun ActivityScreen(viewModel: MainActivityViewModel) {
         MaterialTheme {
             Surface(color = Color.White) {
-                val advertisedGameResponse =
-                    viewModel.advertisedGames.observeAsState(LoadedData.Loading)
-                val resumableGameResponse =
-                    viewModel.resumableGames.observeAsState(LoadedData.Loading)
+                val advertisedGames = viewModel.advertisedGames.observeAsState(LoadedData.Loading)
+                val resumableGames = viewModel.resumableGames.observeAsState(LoadedData.Loading)
                 HomeScreen(
-                    advertisedGames = advertisedGameResponse.value,
-                    resumableGames = resumableGameResponse.value,
+                    advertisedGames = advertisedGames.value,
+                    resumableGames = resumableGames.value,
                     onJoinGameClick = { game -> viewModel.joinGame(game) },
                     onCreateNewGameClick = { HostNewGameActivity.hostNewGame(this) },
                     onResumableGameClick = { game -> viewModel.resumeGame(game) }
@@ -75,11 +73,8 @@ class MainActivity : HomeBaseActivity() {
     }
 
     companion object {
-
         fun start(context: Context) {
-            val intent = Intent(context, MainActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK) // Finishes all Activities in the backstack
-            context.startActivity(intent)
+            context.startActivity(Intent(context, MainActivity::class.java))
         }
     }
 }

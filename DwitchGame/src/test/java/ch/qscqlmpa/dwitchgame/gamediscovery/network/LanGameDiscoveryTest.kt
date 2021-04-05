@@ -1,8 +1,6 @@
 package ch.qscqlmpa.dwitchgame.gamediscovery.network
 
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
-import ch.qscqlmpa.dwitchgame.gamediscovery.network.LanGameDiscoveryTest.Companion.gameAd1
-import ch.qscqlmpa.dwitchgame.gamediscovery.network.LanGameDiscoveryTest.Companion.gameAd2
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.mockk.mockk
 import io.mockk.verify
@@ -56,27 +54,28 @@ class LanGameDiscoveryTest : BaseUnitTest() {
         val fmt: DateTimeFormatter = DateTimeFormat.forPattern("HH:mm")
         return date.startsWith(fmt.print(now))
     }
-}
 
-internal class TestNetworkAdapter : NetworkAdapter {
+    internal class TestNetworkAdapter : NetworkAdapter {
 
-    private var counter = 0
+        private var counter = 0
 
-    @Throws(SocketException::class)
-    override fun bind(listeningPort: Int) {
-        // Nothing to do
-    }
+        @Throws(SocketException::class)
+        override fun bind(listeningPort: Int) {
+            // Nothing to do
+        }
 
-    override fun receive(): Packet {
-        counter++
-        return when (counter) {
-            1 -> Packet(gameAd1, "192.168.1.1", 8890)
-            2 -> Packet(gameAd2, "192.168.1.2", 8891)
-            else -> throw IllegalStateException()
+        override fun receive(): Packet {
+            counter++
+            return when (counter) {
+                1 -> Packet(gameAd1, "192.168.1.1", 8890)
+                2 -> Packet(gameAd2, "192.168.1.2", 8891)
+                else -> throw IllegalStateException()
+            }
+        }
+
+        override fun close() {
+            // Nothing to do
         }
     }
 
-    override fun close() {
-        // Nothing to do
-    }
 }

@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
 import ch.qscqlmpa.dwitch.ui.home.HomeBaseActivity
+import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 
@@ -36,7 +37,10 @@ class HostNewGameActivity : HomeBaseActivity() {
                     onPlayerNameChange = { name -> viewModel.onPlayerNameChange(name) },
                     onGameNameChange = { name -> viewModel.onGameNameChange(name) },
                     onCreateGameClick = { viewModel.hostGame() },
-                    onBackClick = { finish() }
+                    onBackClick = {
+                        MainActivity.start(this)
+                        finish()
+                    }
                 )
             }
         }
