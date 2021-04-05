@@ -189,7 +189,8 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
                         GameRoomActivity.startForGuest(this)
                         finish()
                     }
-                    WaitingRoomGuestCommand.NotifyUserGameCanceled -> {
+                    else -> {
+                        // Nothing to do
                     }
                 }
             }

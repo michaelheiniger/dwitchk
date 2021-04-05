@@ -15,8 +15,8 @@ class JoinNewGameViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _command = MutableLiveData<JoinNewGameCommand>()
-    private val _joinGameControl = MutableLiveData(false)
-    private val _playerName = MutableLiveData("")
+    private val _joinGameControl = MutableLiveData(true) //TODO: undo
+    private val _playerName = MutableLiveData("Mébène") //TODO: undo
 
     val commands get(): LiveData<JoinNewGameCommand> = _command
     val playerName get(): LiveData<String> = _playerName

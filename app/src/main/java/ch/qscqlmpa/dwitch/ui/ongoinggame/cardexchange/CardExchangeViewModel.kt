@@ -69,7 +69,7 @@ class CardExchangeViewModel @Inject constructor(
     }
 
     fun confirmExchange() {
-        Logger.trace { "confirmChoice()" }
+        Logger.trace { "confirmExchange()" }
         disposableManager.add(
             facade.submitCardsForExchange(_cardsToExchangeItems.value!!.map(CardItem::card).toSet())
                 .observeOn(uiScheduler)

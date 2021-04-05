@@ -12,11 +12,17 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.app.App
+import ch.qscqlmpa.dwitch.common.CommonExtraConstants
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseActivity
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
+import ch.qscqlmpa.dwitchmodel.player.PlayerRole
+import org.tinylog.kotlin.Logger
 
 class CardExchangeActivity : OngoingGameBaseActivity() {
 
     private lateinit var viewModel: CardExchangeViewModel
+
+    private lateinit var playerRole: PlayerRole
 
     @ExperimentalFoundationApi
     @Composable
@@ -30,8 +36,8 @@ class CardExchangeActivity : OngoingGameBaseActivity() {
                     cardsToExchange = cardsToExchangeItems,
                     cardsInHand = cardsInHandItems,
                     exchangeControlEnabled = exchangeControlEnabled,
-                    onCardToExchangeClick = viewModel::addCardToExchange,
-                    onCardInHandClick = viewModel::removeCardFromExchange,
+                    onCardToExchangeClick = viewModel::removeCardFromExchange,
+                    onCardInHandClick = viewModel::addCardToExchange,
                     onExchangeClick = viewModel::confirmExchange
                 )
             }
@@ -43,22 +49,27 @@ class CardExchangeActivity : OngoingGameBaseActivity() {
         (application as App).getGameUiComponent()!!.inject(this)
         super.onCreate(savedInstanceState)
 
+        playerRole = PlayerRole.valueOf(intent.getStringExtra(CommonExtraConstants.EXTRA_PLAYER_ROLE)!!)
+
         viewModel = ViewModelProvider(this, viewModelFactory).get(CardExchangeViewModel::class.java)
 
         viewModel.commands.observe(this) { command ->
             when (command) {
-                CardExchangeCommand.Close -> finish()
+                CardExchangeCommand.Close -> {
+                    GameRoomActivity.startActivity(this, playerRole)
+                    finish()
+                }
             }
         }
-
-        setContent {
-            ActivityScreen()
-        }
+        setContent { ActivityScreen() }
     }
 
     companion object {
-        fun startActivity(context: Context) {
-            context.startActivity(Intent(context, CardExchangeActivity::class.java))
+        fun startActivity(context: Context, playerRole: PlayerRole) {
+            Logger.debug("Opening CardExchangeActivity...")
+            val intent = Intent(context, CardExchangeActivity::class.java)
+            intent.putExtra(CommonExtraConstants.EXTRA_PLAYER_ROLE, playerRole.name)
+            context.startActivity(intent)
         }
     }
 }

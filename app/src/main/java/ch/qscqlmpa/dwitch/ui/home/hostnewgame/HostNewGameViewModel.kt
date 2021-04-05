@@ -14,9 +14,9 @@ class HostNewGameViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _command = MutableLiveData<HostNewGameCommand>()
-    private val _createGameControl = MutableLiveData(false)
-    private val _playerName = MutableLiveData("")
-    private val _gameName = MutableLiveData("")
+    private val _createGameControl = MutableLiveData(true) //TODO: undo
+    private val _playerName = MutableLiveData("Mirlick") //TODO: undo
+    private val _gameName = MutableLiveData("Dwiiitch") //TODO: undo
 
     val commands get(): LiveData<HostNewGameCommand> = _command
     val playerName get(): LiveData<String> = _playerName

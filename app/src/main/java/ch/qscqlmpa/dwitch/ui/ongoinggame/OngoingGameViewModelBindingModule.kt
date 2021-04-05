@@ -5,9 +5,6 @@ import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameUiScope
 import ch.qscqlmpa.dwitch.ui.ongoinggame.cardexchange.CardExchangeViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest.ConnectionGuestViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.host.ConnectionHostViewModel
-import ch.qscqlmpa.dwitch.ui.ongoinggame.endofround.EndOfRoundGuestViewModel
-import ch.qscqlmpa.dwitch.ui.ongoinggame.endofround.EndOfRoundHostViewModel
-import ch.qscqlmpa.dwitch.ui.ongoinggame.endofround.EndOfRoundViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host.GameRoomHostViewModel
@@ -64,21 +61,6 @@ abstract class OngoingGameViewModelBindingModule {
     @IntoMap
     @ViewModelKey(PlayerDashboardViewModel::class)
     abstract fun bindPlayerDashboardViewModel(viewModel: PlayerDashboardViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(EndOfRoundViewModel::class)
-    abstract fun bindEndOfRoundViewModel(viewModel: EndOfRoundViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(EndOfRoundHostViewModel::class)
-    abstract fun bindEndOfRoundHostViewModel(viewModel: EndOfRoundHostViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(EndOfRoundGuestViewModel::class)
-    abstract fun bindEndOfRoundGuestViewModel(viewModel: EndOfRoundGuestViewModel): ViewModel
 
     @Binds
     @IntoMap

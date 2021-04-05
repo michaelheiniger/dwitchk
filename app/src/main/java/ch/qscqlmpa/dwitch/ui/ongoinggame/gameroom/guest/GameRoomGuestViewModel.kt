@@ -14,12 +14,11 @@ internal class GameRoomGuestViewModel @Inject constructor(
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val _commands = MutableLiveData<GameRoomGuestCommand>()
+    private val _gameOver = MutableLiveData<Boolean>()
+    val gameOver get(): LiveData<Boolean> = _gameOver
 
-    val commands get(): LiveData<GameRoomGuestCommand> = _commands
-
-    fun acknowledgeGameOverEvent() {
-        _commands.value = GameRoomGuestCommand.NavigateToHomeScreen
+    fun acknowledgeGameOver() {
+        _gameOver.value = false
     }
 
     override fun onStart() {
@@ -36,16 +35,10 @@ internal class GameRoomGuestViewModel @Inject constructor(
         disposableManager.add(
             facade.observeEvents()
                 .observeOn(uiScheduler)
-                .map(::mapCommandToGameEvent)
+                .doOnNext { event -> Logger.debug("Game event received: $event") }
+                .filter { event -> event is GuestGameEvent.GameOver }
                 .doOnError { error -> Logger.error(error) { "Error while observing game events." } }
-                .subscribe { command -> _commands.value = command }
+                .subscribe { _gameOver.value = true }
         )
-    }
-
-    private fun mapCommandToGameEvent(event: GuestGameEvent): GameRoomGuestCommand {
-        return when (event) {
-            GuestGameEvent.GameOver -> GameRoomGuestCommand.ShowGameOverInfo
-            else -> throw IllegalStateException("Event '$event' is not supposed to occur in GameRoom.")
-        }
     }
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchgame.ongoinggame.game.EndOfRoundInfo
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardFacade
 import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardInfo
 import io.reactivex.rxjava3.core.Completable
@@ -18,9 +19,10 @@ class PlayerDashboardViewModel @Inject constructor(
 
     private val _commands = MutableLiveData<PlayerDashboardCommand>()
     private val _gameDashboardInfo = MutableLiveData<GameDashboardInfo>()
-
+    private val _endOfRoundInfo = MutableLiveData<EndOfRoundInfo>()
     val commands get(): LiveData<PlayerDashboardCommand> = _commands
     val gameDashboardInfo get(): LiveData<GameDashboardInfo> = _gameDashboardInfo
+    val endOfRoundInfo get(): LiveData<EndOfRoundInfo> = _endOfRoundInfo
 
     fun playCard(cardPlayed: Card) {
         performOperation("Card $cardPlayed played successfully.", "Error while playing card $cardPlayed.") {
@@ -52,6 +54,7 @@ class PlayerDashboardViewModel @Inject constructor(
         disposableManager.add(
             facade.observeDashboard()
                 .observeOn(uiScheduler)
+                .doOnNext { dashboard -> Logger.debug("New dashboard state: $dashboard") }
                 .doOnError { error -> Logger.error(error) { "Error while observing player dashboard." } }
                 .subscribe { dashboard -> _gameDashboardInfo.value = dashboard }
         )
@@ -62,7 +65,7 @@ class PlayerDashboardViewModel @Inject constructor(
             facade.observeEndOfRound()
                 .observeOn(uiScheduler)
                 .doOnError { error -> Logger.error(error) { "Error while observing end of round events." } }
-                .subscribe { _commands.value = PlayerDashboardCommand.OpenEndOfRoundInfo }
+                .subscribe { value -> _endOfRoundInfo.value = value }
         )
     }
 
