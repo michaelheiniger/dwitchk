@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
@@ -42,7 +43,11 @@ fun ConnectionHostScreen(
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         when (status) {
-            HostCommunicationState.Open -> Status(R.string.listening_for_guests)
+            HostCommunicationState.Open -> {
+                if (BuildConfig.DEBUG) {
+                    Status(R.string.listening_for_guests)
+                }
+            }
             HostCommunicationState.Closed -> {
                 Status(R.string.not_listening_for_guests)
                 ReconnectionControls { onReconnectClick() }
@@ -68,7 +73,11 @@ fun ConnectionGuestScreen(
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         when (status) {
-            GuestCommunicationState.Connected -> Status(R.string.connected_to_host)
+            GuestCommunicationState.Connected -> {
+                if (BuildConfig.DEBUG) {
+                    Status(R.string.connected_to_host)
+                }
+            }
             GuestCommunicationState.Disconnected -> {
                 Status(R.string.disconnected_from_host)
                 ReconnectionControls { onReconnectClick() }
