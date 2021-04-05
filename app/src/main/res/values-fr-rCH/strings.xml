@@ -65,15 +65,15 @@
     <string name="cancel_game">Annuler partie</string>
     <string name="launch_game">Go go !</string>
     <string name="host_game">Allons y, fidèles compagnons de la Comté !</string>
-    <string name="listening_for_advertised_games">A l\'écoute de parties…</string>
+    <string name="listening_for_advertised_games">En attente de parties…</string>
     <string name="loading_resumable_games">Chargement des parties à reprendre</string>
     <string name="no_resumable_games">Aucune partie à reprendre</string>
     <string name="guest_connecting">Connection…</string>
     <string name="host_connecting">Connection…</string>
     <string name="info_dialog_title">Info</string>
     <string name="end_of_round_screen_title">Résultats</string>
-    <string name="player_status_done">Done</string>
-    <string name="player_status_playing">Joue</string>
-    <string name="player_status_turnPassed">Passé</string>
+    <string name="player_status_done">Terminé</string>
+    <string name="player_status_playing">Joueur actuel</string>
+    <string name="player_status_turnPassed">Tour passé</string>
     <string name="player_status_waiting">En attente</string>
 </resources>
