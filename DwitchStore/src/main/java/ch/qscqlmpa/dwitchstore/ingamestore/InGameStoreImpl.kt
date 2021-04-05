@@ -134,7 +134,6 @@ internal class InGameStoreImpl constructor(
 
     override fun observeLocalPlayer(): Observable<Player> {
         return playerDao.observePlayer(localPlayerLocalId)
-            .doOnNext { player -> println("-->local player: $player") }
     }
 
     override fun getLocalPlayerDwitchId(): PlayerDwitchId {
