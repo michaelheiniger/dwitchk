@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
+import ch.qscqlmpa.dwitch.ui.common.toStringEuFormat
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
@@ -168,12 +169,10 @@ private fun ResumableGames(
     if (resumableGames.isEmpty()) {
         Text(stringResource(R.string.no_resumable_games))
     } else {
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-        ) {
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             items(resumableGames) { game ->
                 Text(
-                    text = "${game.name} (${game.playersName.joinToString(", ")})",
+                    text = "${game.name} (${game.creationDate.toStringEuFormat()} - ${game.playersName.joinToString(", ")})",
                     Modifier.clickable { onResumableGameclick(game) }
                 )
             }
