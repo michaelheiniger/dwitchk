@@ -3,6 +3,7 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.guest
 import androidx.compose.ui.test.*
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.base.BaseUiUnitTest
+import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
@@ -11,9 +12,6 @@ import org.junit.Before
 import org.junit.Test
 
 class WaitingRoomGuestScreenTest : BaseUiUnitTest() {
-
-    private val localPlayerReadyCheckboxTag = "localPlayerReadyCheckbox"
-    private val localPlayerReadyTextTag = "localPlayerReadyText"
 
     private lateinit var players: List<PlayerWrUi>
     private lateinit var ready: UiCheckboxModel
@@ -37,12 +35,12 @@ class WaitingRoomGuestScreenTest : BaseUiUnitTest() {
 
         launchTest()
 
-        composeTestRule.onNode(hasTestTag(localPlayerReadyCheckboxTag))
+        composeTestRule.onNode(hasTestTag(UiTags.localPlayerReadyCheckbox))
             .assertIsEnabled()
             .assertIsDisplayed()
             .assertIsOn()
 
-        composeTestRule.onNode(hasTestTag(localPlayerReadyTextTag))
+        composeTestRule.onNode(hasTestTag(UiTags.localPlayerReadyText))
             .assertTextContains(getString(R.string.ready))
             .assertIsDisplayed()
     }
@@ -54,12 +52,12 @@ class WaitingRoomGuestScreenTest : BaseUiUnitTest() {
 
         launchTest()
 
-        composeTestRule.onNode(hasTestTag(localPlayerReadyCheckboxTag))
+        composeTestRule.onNodeWithTag(UiTags.localPlayerReadyCheckbox)
             .assertIsEnabled()
             .assertIsDisplayed()
             .assertIsOff()
 
-        composeTestRule.onNode(hasTestTag(localPlayerReadyTextTag))
+        composeTestRule.onNodeWithTag(UiTags.localPlayerReadyText)
             .assertTextContains(getString(R.string.not_ready))
             .assertIsDisplayed()
     }

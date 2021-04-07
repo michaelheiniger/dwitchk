@@ -3,8 +3,8 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.messageprocessors
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.CancelGameMessageProcessor
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEventRepository
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEvent
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEventRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

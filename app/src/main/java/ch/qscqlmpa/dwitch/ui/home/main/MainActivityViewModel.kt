@@ -84,7 +84,7 @@ class MainActivityViewModel @Inject constructor(
         disposableManager.add(
             homeGuestFacade.listenForAdvertisedGames()
                 .observeOn(uiScheduler)
-                .map { games -> LoadedData.Success(games) as LoadedData<List<AdvertisedGame>> }
+                .map { games -> LoadedData.Success(games) as LoadedData<List<AdvertisedGame>> } // Cast is needed to satisfy the compiler
                 .doOnError { error -> Logger.error(error) { "Error while observing advertised games." } }
                 .onErrorReturn { LoadedData.Failed }
                 .subscribe { response -> _advertisedGames.value = response }
@@ -95,7 +95,7 @@ class MainActivityViewModel @Inject constructor(
         disposableManager.add(
             homeHostFacade.resumableGames()
                 .observeOn(uiScheduler)
-                .map { games -> LoadedData.Success(games) as LoadedData<List<ResumableGameInfo>> }
+                .map { games -> LoadedData.Success(games) as LoadedData<List<ResumableGameInfo>> } // Cast is needed to satisfy the compiler
                 .doOnError { error -> Logger.error(error) { "Error while fetching existing games." } }
                 .onErrorReturn { LoadedData.Failed }
                 .subscribe { response -> _resumableGames.value = response }

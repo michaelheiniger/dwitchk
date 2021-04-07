@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.ui.common.UiTags
 
 
 @Preview(
@@ -44,7 +45,7 @@ fun JoinNewGameScreen(
             onValueChange = onPlayerNameChange,
             modifier = Modifier
                 .fillMaxWidth()
-                .testTag("playerName")
+                .testTag(UiTags.playerName)
         )
         Spacer(Modifier.height(16.dp))
         Button(
@@ -52,7 +53,7 @@ fun JoinNewGameScreen(
             enabled = joinGameControlEnabled,
             modifier = Modifier.fillMaxWidth()
         ) { Text(stringResource(R.string.join_game)) }
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(8.dp))
         OutlinedButton(
             onClick = onBackClick,
             Modifier.fillMaxWidth()

@@ -31,6 +31,8 @@ data class Player(
     val ready: Boolean
 ) {
 
+    val isHost: Boolean get() = playerRole == PlayerRole.HOST
+
     fun toPlayerInfo(): PlayerOnboardingInfo {
         return PlayerOnboardingInfo(dwitchId, name)
     }

@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.gameroom
 
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEventRepository
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEvent
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.EndGameUsecase
 import io.reactivex.rxjava3.core.Completable
 import javax.inject.Inject

@@ -16,7 +16,7 @@ internal class CardExchangeChooserTest : EngineTestBase() {
     @BeforeEach
     fun setupInitialGameState() {
         gameStateBuilder
-            .setGamePhase(GamePhase.RoundIsBeginningWithCardExchange)
+            .setGamePhase(GamePhase.CardExchange)
             .setCardsdOnTable(Card.Clubs4)
             .setLocalPlayer(player1Id)
             .setCurrentPlayer(player1Id)

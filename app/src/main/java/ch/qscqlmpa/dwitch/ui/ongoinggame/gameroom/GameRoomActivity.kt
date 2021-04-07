@@ -16,7 +16,6 @@ import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseActivity
-import ch.qscqlmpa.dwitch.ui.ongoinggame.cardexchange.CardExchangeActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest.ConnectionGuestViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.host.ConnectionHostViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestScreen
@@ -24,7 +23,6 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host.GameRoomHostCommand
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host.GameRoomHostScreen
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host.GameRoomHostViewModel
-import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard.PlayerDashboardCommand
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard.PlayerDashboardViewModel
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 
@@ -56,17 +54,18 @@ class GameRoomActivity : OngoingGameBaseActivity() {
     @ExperimentalFoundationApi
     @Composable
     private fun ActivityScreenForHost() {
-        val dashboardInfo = dashboardViewModel.gameDashboardInfo.observeAsState().value
+        val screen = dashboardViewModel.screen.observeAsState().value
         val connectionStatus = connectionHostViewModel.connectionStatus.observeAsState().value
-        val endOfRoundInfo = dashboardViewModel.endOfRoundInfo.observeAsState().value
         MaterialTheme {
             Surface(color = Color.White) {
                 GameRoomHostScreen(
-                    dashboardInfo = dashboardInfo,
-                    endOfRoundInfo = endOfRoundInfo,
+                    screen = screen,
                     onCardClick = dashboardViewModel::playCard,
                     onPickClick = dashboardViewModel::pickCard,
                     onPassClick = dashboardViewModel::passTurn,
+                    onAddCardToExchange = dashboardViewModel::addCardToExchange,
+                    onRemoveCardFromExchange = dashboardViewModel::removeCardFromExchange,
+                    onConfirmExchange = dashboardViewModel::confirmExchange,
                     onStartNewRoundClick = hostViewModel::startNewRound,
                     connectionStatus = connectionStatus,
                     onEndGameClick = hostViewModel::endGame,
@@ -80,18 +79,19 @@ class GameRoomActivity : OngoingGameBaseActivity() {
     @Composable
     private fun ActivityScreenForGuest() {
         val communicationState = connectionGuestViewModel.communicationState.observeAsState().value
-        val dashboardInfo = dashboardViewModel.gameDashboardInfo.observeAsState().value
-        val endOfRoundInfo = dashboardViewModel.endOfRoundInfo.observeAsState().value
+        val screen = dashboardViewModel.screen.observeAsState().value
         val gameOver = guestViewModel.gameOver.observeAsState(false).value
         MaterialTheme {
             Surface(color = Color.White) {
                 GameRoomGuestScreen(
-                    dashboardInfo = dashboardInfo,
-                    endOfRoundInfo = endOfRoundInfo,
+                    screen = screen,
                     showGameOver = gameOver,
                     onCardClick = dashboardViewModel::playCard,
                     onPickClick = dashboardViewModel::pickCard,
                     onPassClick = dashboardViewModel::passTurn,
+                    onAddCardToExchange = dashboardViewModel::addCardToExchange,
+                    onRemoveCardFromExchange = dashboardViewModel::removeCardFromExchange,
+                    onConfirmExchange = dashboardViewModel::confirmExchange,
                     connectionStatus = communicationState,
                     onReconnectClick = connectionGuestViewModel::reconnect,
                     onGameOverAcknowledge = { onGameOverAcknowledge() }
@@ -111,8 +111,6 @@ class GameRoomActivity : OngoingGameBaseActivity() {
         viewModel = viewModelProvider.get(GameRoomViewModel::class.java)
         dashboardViewModel = viewModelProvider.get(PlayerDashboardViewModel::class.java)
 
-        setupDashboardCommands()
-
         when (playerRole) {
             PlayerRole.HOST -> {
                 hostViewModel = viewModelProvider.get(GameRoomHostViewModel::class.java)
@@ -124,17 +122,6 @@ class GameRoomActivity : OngoingGameBaseActivity() {
                 guestViewModel = viewModelProvider.get(GameRoomGuestViewModel::class.java)
                 connectionGuestViewModel = viewModelProvider.get(ConnectionGuestViewModel::class.java)
                 setContent { ActivityScreenForGuest() }
-            }
-        }
-    }
-
-    private fun setupDashboardCommands() {
-        dashboardViewModel.commands.observe(this) { command ->
-            when (command) {
-                PlayerDashboardCommand.OpenCardExchange -> {
-                    CardExchangeActivity.startActivity(this, playerRole)
-                    finish()
-                }
             }
         }
     }

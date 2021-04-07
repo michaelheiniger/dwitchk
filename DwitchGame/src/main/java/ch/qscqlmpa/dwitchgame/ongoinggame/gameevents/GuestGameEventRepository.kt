@@ -1,6 +1,6 @@
-package ch.qscqlmpa.dwitchgame.ongoinggame.game.events
+package ch.qscqlmpa.dwitchgame.ongoinggame.gameevents
 
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.EventRepository
+import ch.qscqlmpa.dwitchgame.ongoinggame.common.EventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
 import javax.inject.Inject
 

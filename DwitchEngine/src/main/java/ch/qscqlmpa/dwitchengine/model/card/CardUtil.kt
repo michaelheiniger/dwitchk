@@ -122,4 +122,5 @@ object CardUtil {
         Card.DiamondsAce.id to Card.DiamondsAce,
         Card.Blank.id to Card.Blank
     )
+
 }

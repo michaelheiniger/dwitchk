@@ -9,7 +9,7 @@ sealed class GamePhase {
     object RoundIsBeginning : GamePhase()
 
     @Serializable
-    object RoundIsBeginningWithCardExchange : GamePhase()
+    object CardExchange : GamePhase()
 
     @Serializable
     object RoundIsOnGoing : GamePhase()

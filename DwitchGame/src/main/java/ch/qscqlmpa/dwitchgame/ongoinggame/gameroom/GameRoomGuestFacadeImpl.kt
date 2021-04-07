@@ -1,8 +1,8 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.gameroom
 
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEventRepository
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEvent
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEventRepository
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 

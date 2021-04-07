@@ -4,8 +4,8 @@ import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.appevent.AppEvent
 import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEventRepository
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEvent
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEventRepository
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import io.reactivex.rxjava3.core.Completable
 import javax.inject.Inject

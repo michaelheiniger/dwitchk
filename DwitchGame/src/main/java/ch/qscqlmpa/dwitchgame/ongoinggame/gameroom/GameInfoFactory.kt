@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitchgame.ongoinggame.game
+package ch.qscqlmpa.dwitchgame.ongoinggame.gameroom
 
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.info.CardItem
@@ -9,7 +9,7 @@ import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.Rank
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 
-object GameDashboardFactory {
+object GameInfoFactory {
 
     fun createGameDashboardInfo(
         gameInfo: GameInfo,
@@ -18,9 +18,10 @@ object GameDashboardFactory {
     ): GameDashboardInfo {
         val localPlayerInfo = gameInfo.playerInfos.getValue(localPlayerId)
         val dashboardEnabled = localPlayerConnectionState == PlayerConnectionState.CONNECTED
+        val localPlayerIsCurrentPlayer = gameInfo.currentPlayerId == localPlayerId
         return GameDashboardInfo(
             gameInfo.playerInfos.values.map { p ->
-                PlayerInfo2(
+                PlayerInfo(
                     p.name,
                     p.rank,
                     p.status,
@@ -29,12 +30,12 @@ object GameDashboardFactory {
                 )
             },
             LocalPlayerDashboard(
-                adjustCardItemSelectability(localPlayerInfo.cardsInHand, dashboardEnabled),
-                canPass = dashboardEnabled && localPlayerInfo.canPass,
-                canPickACard = dashboardEnabled && localPlayerInfo.canPickACard,
-                canPlay = dashboardEnabled && localPlayerInfo.canPlay
+                adjustCardItemSelectability(localPlayerInfo.cardsInHand, dashboardEnabled, localPlayerIsCurrentPlayer),
+                canPass = localPlayerIsCurrentPlayer && dashboardEnabled && localPlayerInfo.canPass,
+                canPickACard = localPlayerIsCurrentPlayer && dashboardEnabled && localPlayerInfo.canPickACard,
+                canPlay = localPlayerIsCurrentPlayer && dashboardEnabled && localPlayerInfo.canPlay
             ),
-            gameInfo.lastCardPlayed
+            lastCardPlayed = gameInfo.lastCardPlayed
         )
     }
 
@@ -47,8 +48,12 @@ object GameDashboardFactory {
         )
     }
 
-    private fun adjustCardItemSelectability(cardItems: List<CardItem>, dashboardEnabled: Boolean): List<CardItem> {
-        return cardItems.map { c -> c.copy(selectable = c.selectable && dashboardEnabled) }
+    private fun adjustCardItemSelectability(
+        cardItems: List<CardItem>,
+        dashboardEnabled: Boolean,
+        localPlayerIsCurrentPlayer: Boolean
+    ): List<CardItem> {
+        return cardItems.map { c -> c.copy(selectable = dashboardEnabled && localPlayerIsCurrentPlayer && c.selectable) }
     }
 }
 
@@ -57,7 +62,7 @@ data class GameDashboardInfo(
     /**
      * Also defines the order of the players
      */
-    val playersInfo: List<PlayerInfo2>,
+    val playersInfo: List<ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.PlayerInfo>,
     val localPlayerDashboard: LocalPlayerDashboard,
 
     /**
@@ -66,8 +71,7 @@ data class GameDashboardInfo(
     val lastCardPlayed: Card
 )
 
-//TODO: Find proper class name
-data class PlayerInfo2(
+data class PlayerInfo(
     val name: String,
     val rank: Rank,
     val status: PlayerStatus,

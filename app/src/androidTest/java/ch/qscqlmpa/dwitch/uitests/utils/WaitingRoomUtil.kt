@@ -25,6 +25,7 @@ object WaitingRoomUtil {
         val sni = assertPlayerInWr(name)
         sni.onChildren().filterToOne(hasText(connectionState)).assertIsDisplayed()
     }
+
 //
 //    fun assertPlayerInWr(position: Int, name: String, ready: Boolean, connectionState: Int) {
 //        assertPlayerInWr(position, name)

@@ -5,6 +5,10 @@ import ch.qscqlmpa.dwitchcommunication.CommServer
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationComponent
 import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertising
+import ch.qscqlmpa.dwitchgame.ongoinggame.common.GuestFacade
+import ch.qscqlmpa.dwitchgame.ongoinggame.common.GuestFacadeImpl
+import ch.qscqlmpa.dwitchgame.ongoinggame.common.HostFacade
+import ch.qscqlmpa.dwitchgame.ongoinggame.common.HostFacadeImpl
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.GameCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationStateRepository
@@ -15,10 +19,6 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.di.OnGoingGameQualifiers.HOST_IP_ADDRE
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OnGoingGameQualifiers.HOST_PORT
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OnGoingGameQualifiers.LOCAL_PLAYER_LOCAL_ID
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.GuestFacade
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.GuestFacadeImpl
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.HostFacade
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.HostFacadeImpl
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore

@@ -24,7 +24,8 @@
     <string name="card_suit_spades">Spades</string>
     <string name="cards_in_hand">Cards in hand</string>
     <string name="confirm_cards_to_exchange">Exchange</string>
-    <string name="choose_cards_to_exchange">Cards to exchange</string>
+    <string name="choose_one_card_to_exchange">Choose one card to exchange</string>
+    <string name="choose_two_cards_to_exchange">Choose two cards to exchange</string>
     <string name="connected_to_host">Connected to the brost, yay !</string>
     <string name="disconnected_from_host">Disconnected from the brost, damn !</string>
     <string name="game_canceled_by_host">Game canceled by brost</string>

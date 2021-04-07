@@ -17,8 +17,7 @@ import dagger.Subcomponent
         HostCommunicationEventProcessorModule::class,
         GuestCommunicationModule::class,
         HostCommunicationModule::class,
-        GameAdvertisingModule::class,
-        DwitchEventRepositoryModule::class
+        GameAdvertisingModule::class
     ]
 )
 interface TestOngoingGameComponent : OngoingGameComponent {

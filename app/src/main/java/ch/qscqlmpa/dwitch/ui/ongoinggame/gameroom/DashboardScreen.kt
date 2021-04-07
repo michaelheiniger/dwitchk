@@ -1,24 +1,20 @@
+
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -29,13 +25,15 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.ui.ResourceMapper
+import ch.qscqlmpa.dwitch.ui.common.UiTags
+import ch.qscqlmpa.dwitch.ui.ongoinggame.CardItemDisplay
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.info.CardItem
 import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.Rank
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardInfo
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.LocalPlayerDashboard
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.PlayerInfo2
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameDashboardInfo
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.LocalPlayerDashboard
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.PlayerInfo
 
 @Preview(
     showBackground = true,
@@ -43,7 +41,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.game.PlayerInfo2
 )
 @Composable
 private fun DashboardScreenPreview() {
-    val donePlayer = PlayerInfo2(
+    val donePlayer = PlayerInfo(
         name = "Aragorn",
         rank = Rank.VicePresident,
         status = PlayerStatus.Done,
@@ -51,7 +49,7 @@ private fun DashboardScreenPreview() {
         localPlayer = false
     )
 
-    val turnPassedPlayer = PlayerInfo2(
+    val turnPassedPlayer = PlayerInfo(
         name = "Gimli",
         rank = Rank.ViceAsshole,
         status = PlayerStatus.TurnPassed,
@@ -60,7 +58,7 @@ private fun DashboardScreenPreview() {
     )
 
     // Also the local player
-    val playingPlayer = PlayerInfo2(
+    val playingPlayer = PlayerInfo(
         name = "Legolas",
         rank = Rank.Asshole,
         status = PlayerStatus.Playing,
@@ -69,7 +67,7 @@ private fun DashboardScreenPreview() {
     )
 
     // Waiting
-    val waitingPlayer = PlayerInfo2(
+    val waitingPlayer = PlayerInfo(
         name = "Elrond",
         rank = Rank.President,
         status = PlayerStatus.Waiting,
@@ -77,7 +75,7 @@ private fun DashboardScreenPreview() {
         localPlayer = false
     )
 
-    val waitingAndDwitchedPlayer = PlayerInfo2(
+    val waitingAndDwitchedPlayer = PlayerInfo(
         name = "Galadriel",
         rank = Rank.Neutral,
         status = PlayerStatus.Waiting,
@@ -126,58 +124,36 @@ private fun DashboardScreenPreview() {
 
 @Composable
 fun DashboardScreen(
-    dashboardInfo: GameDashboardInfo?,
+    dashboardInfo: GameDashboardInfo,
     onCardClick: (Card) -> Unit,
     onPickClick: () -> Unit,
     onPassClick: () -> Unit
 ) {
-    if (dashboardInfo != null) {
-        Column(
-            Modifier
-                .fillMaxWidth()
-                .animateContentSize()
-                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
-        ) {
-            val localPlayerDashboard = dashboardInfo.localPlayerDashboard
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .animateContentSize()
+    ) {
+        val localPlayerDashboard = dashboardInfo.localPlayerDashboard
+        PlayersInfo(dashboardInfo.playersInfo)
+        Spacer(Modifier.height(16.dp))
 
-            PlayersInfo(dashboardInfo.playersInfo)
+        Table(dashboardInfo.lastCardPlayed)
+        Spacer(Modifier.height(16.dp))
 
-            Spacer(Modifier.height(16.dp))
+        Controls(
+            localPlayerDashboard,
+            onPickClick = onPickClick,
+            onPassClick = onPassClick
+        )
+        Spacer(Modifier.height(16.dp))
 
-            Table(dashboardInfo.lastCardPlayed)
-
-            Spacer(Modifier.height(16.dp))
-
-            Controls(
-                localPlayerDashboard,
-                onPickClick = onPickClick,
-                onPassClick = onPassClick
-            )
-
-            Spacer(Modifier.height(16.dp))
-
-            Hand(localPlayerDashboard, onCardClick = onCardClick)
-        }
-    } else {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .animateContentSize()
-                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
-
-        ) {
-            CircularProgressIndicator(
-                color = MaterialTheme.colors.secondary
-            )
-        }
+        Hand(localPlayerDashboard, onCardClick = onCardClick)
     }
 }
 
 @Composable
-private fun PlayersInfo(playersInfo: List<PlayerInfo2>) {
+private fun PlayersInfo(playersInfo: List<PlayerInfo>) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -205,7 +181,7 @@ private fun Table(lastCardPlayed: Card) {
             contentDescription = lastCardPlayed.toString(),
             modifier = Modifier
                 .size(150.dp)
-                .testTag("lastCardPlayed")
+                .testTag(UiTags.lastCardPlayer)
         )
     }
 }
@@ -223,14 +199,14 @@ private fun Controls(
         Button(
             enabled = localPlayerDashboard.canPickACard,
             onClick = onPickClick,
-            modifier = Modifier.testTag("pickACardControl")
+            modifier = Modifier.testTag(UiTags.pickACardControl)
         ) {
             Text(stringResource(ch.qscqlmpa.dwitch.R.string.pick_a_card))
         }
         Button(
             enabled = localPlayerDashboard.canPass,
             onClick = onPassClick,
-            modifier = Modifier.testTag("passControl")
+            modifier = Modifier.testTag(UiTags.passControl)
         ) {
             Text(stringResource(ch.qscqlmpa.dwitch.R.string.pass_turn))
         }
@@ -249,44 +225,12 @@ private fun Hand(
             .fillMaxWidth()
             .animateContentSize(),
     ) {
-        items(localPlayerDashboard.cardsInHand) { card ->
-            CardItemDisplay(card, onCardClick = onCardClick)
-        }
+        items(localPlayerDashboard.cardsInHand) { card -> CardItemDisplay(card, onCardClick) }
     }
 }
 
 @Composable
-private fun CardItemDisplay(
-    cardItem: CardItem,
-    onCardClick: (Card) -> Unit
-) {
-    val surfaceColor = if (cardItem.selectable) Color.Transparent else Color(
-        red = 0.3f,
-        green = 0.3f,
-        blue = 0.3f,
-        alpha = 0.2f
-    )
-    Image(
-        painter = painterResource(ResourceMapper.getResource(cardItem.card)),
-        contentDescription = cardItem.toString(),
-        colorFilter = ColorFilter.tint(surfaceColor, BlendMode.Overlay),
-        contentScale = ContentScale.Fit,
-        modifier = Modifier
-            .clickable(
-                enabled = cardItem.selectable,
-                onClick = { onCardClick(cardItem.card) }
-            )
-            .testTag(cardItem.card.toString())
-//            .border(
-//                width = Dp.Hairline,
-//                brush = Brush.linearGradient(listOf(Color.Black, Color.Black)),
-//                shape = RoundedCornerShape(10.dp, 10.dp, 10.dp, 10.dp)
-//            )
-    )
-}
-
-@Composable
-private fun PlayerDone(player: PlayerInfo2) {
+private fun PlayerDone(player: PlayerInfo) {
     val text = with(AnnotatedString.Builder()) {
         pushStyle(SpanStyle(textDecoration = TextDecoration.LineThrough))
         append(player.name)
@@ -302,7 +246,7 @@ private fun PlayerDone(player: PlayerInfo2) {
 }
 
 @Composable
-private fun PlayerPlaying(player: PlayerInfo2) {
+private fun PlayerPlaying(player: PlayerInfo) {
     val rank = stringResource(ResourceMapper.getResource(player.status))
     val text = "${player.name} ($rank)"
     PlayerInfoDisplay(MaterialTheme.colors.primary) {
@@ -311,7 +255,7 @@ private fun PlayerPlaying(player: PlayerInfo2) {
 }
 
 @Composable
-private fun PlayerTurnPassed(player: PlayerInfo2) {
+private fun PlayerTurnPassed(player: PlayerInfo) {
     val text = with(AnnotatedString.Builder()) {
         pushStyle(SpanStyle(fontWeight = FontWeight.Light))
         append(player.name)
@@ -327,7 +271,7 @@ private fun PlayerTurnPassed(player: PlayerInfo2) {
 }
 
 @Composable
-private fun PlayerWaiting(player: PlayerInfo2) {
+private fun PlayerWaiting(player: PlayerInfo) {
     val text = with(AnnotatedString.Builder()) {
         append(player.name)
         append(" (")
@@ -354,10 +298,7 @@ private fun PlayerInfoDisplay(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(
-                color = backgroundColor,
-                shape = componentShape
-            ),
+            .background(color = backgroundColor, shape = componentShape),
         horizontalArrangement = Arrangement.Center,
 
         ) {

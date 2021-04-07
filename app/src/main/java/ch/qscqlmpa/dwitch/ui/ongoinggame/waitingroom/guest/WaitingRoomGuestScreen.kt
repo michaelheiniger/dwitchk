@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ConnectionGuestScreen
+import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomPlayersScreen
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
@@ -87,14 +88,14 @@ private fun GuestControlScreen(
                 checked = ready.checked,
                 enabled = true,
                 onCheckedChange = onReadyClick,
-                modifier = Modifier.testTag("localPlayerReadyCheckbox")
+                modifier = Modifier.testTag(UiTags.localPlayerReadyCheckbox)
             )
             val label = if (ready.checked) R.string.ready else R.string.not_ready
             Text(
                 text = stringResource(label),
                 modifier = Modifier
                     .clickable { onReadyClick(!ready.checked) }
-                    .testTag("localPlayerReadyText")
+                    .testTag(UiTags.localPlayerReadyText)
             )
         }
 

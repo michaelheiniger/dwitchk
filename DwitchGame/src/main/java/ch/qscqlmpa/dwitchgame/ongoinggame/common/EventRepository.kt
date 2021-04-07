@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitchgame.ongoinggame.communication
+package ch.qscqlmpa.dwitchgame.ongoinggame.common
 
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable

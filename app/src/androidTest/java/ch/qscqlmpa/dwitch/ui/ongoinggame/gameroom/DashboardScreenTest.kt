@@ -11,9 +11,9 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.info.CardItem
 import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.Rank
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardInfo
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.LocalPlayerDashboard
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.PlayerInfo2
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameDashboardInfo
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.LocalPlayerDashboard
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.PlayerInfo
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -30,11 +30,11 @@ class DashboardScreenTest : BaseUiUnitTest() {
     fun setup() {
         dashboardInfo = GameDashboardInfo(
             listOf(
-                PlayerInfo2("Aragorn", Rank.President, PlayerStatus.Playing, dwitched = false, localPlayer = true),
-                PlayerInfo2("Boromir", Rank.VicePresident, PlayerStatus.Done, dwitched = false, localPlayer = false),
-                PlayerInfo2("Gimli", Rank.Neutral, PlayerStatus.Waiting, dwitched = false, localPlayer = false),
-                PlayerInfo2("Legolas", Rank.Asshole, PlayerStatus.TurnPassed, dwitched = false, localPlayer = false),
-                PlayerInfo2("Galadriel", Rank.ViceAsshole, PlayerStatus.Waiting, dwitched = true, localPlayer = false)
+                PlayerInfo("Aragorn", Rank.President, PlayerStatus.Playing, dwitched = false, localPlayer = true),
+                PlayerInfo("Boromir", Rank.VicePresident, PlayerStatus.Done, dwitched = false, localPlayer = false),
+                PlayerInfo("Gimli", Rank.Neutral, PlayerStatus.Waiting, dwitched = false, localPlayer = false),
+                PlayerInfo("Legolas", Rank.Asshole, PlayerStatus.TurnPassed, dwitched = false, localPlayer = false),
+                PlayerInfo("Galadriel", Rank.ViceAsshole, PlayerStatus.Waiting, dwitched = true, localPlayer = false)
             ),
             LocalPlayerDashboard(
                 cardsInHand = listOf(

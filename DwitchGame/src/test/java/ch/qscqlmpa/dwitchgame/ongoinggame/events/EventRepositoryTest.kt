@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.events
 
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.EventRepository
+import ch.qscqlmpa.dwitchgame.ongoinggame.common.EventRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

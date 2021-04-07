@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host
 
 import DashboardScreen
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.OutlinedButton
@@ -12,19 +13,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ConnectionHostScreen
+import ch.qscqlmpa.dwitch.ui.ongoinggame.LoadingSpinner
+import ch.qscqlmpa.dwitch.ui.ongoinggame.cardexchange.CardExchangeOnGoing
+import ch.qscqlmpa.dwitch.ui.ongoinggame.cardexchange.CardExchangeScreen
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.endofround.EndOfRoundScreen
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomScreen
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.EndOfRoundInfo
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardInfo
 
+@ExperimentalFoundationApi
 @Composable
 fun GameRoomHostScreen(
-    dashboardInfo: GameDashboardInfo?,
-    endOfRoundInfo: EndOfRoundInfo?,
+    screen: GameRoomScreen?,
     onCardClick: (Card) -> Unit,
     onPickClick: () -> Unit,
     onPassClick: () -> Unit,
+    onAddCardToExchange: (card: Card) -> Unit,
+    onRemoveCardFromExchange: (card: Card) -> Unit,
+    onConfirmExchange: () -> Unit,
     onStartNewRoundClick: () -> Unit,
     connectionStatus: HostCommunicationState?,
     onEndGameClick: () -> Unit,
@@ -36,29 +42,42 @@ fun GameRoomHostScreen(
             .animateContentSize()
             .padding(top = 16.dp, start = 16.dp, end = 16.dp)
     ) {
-        if (endOfRoundInfo != null) {
-            EndOfRoundScreen(endOfRoundInfo = endOfRoundInfo)
-        } else {
-            DashboardScreen(
-                dashboardInfo = dashboardInfo,
-                onCardClick = onCardClick,
-                onPickClick = onPickClick,
-                onPassClick = onPassClick
-            )
-        }
-
-        Spacer(Modifier.height(16.dp))
-
-        if (endOfRoundInfo != null) {
-            Button(
-                onClick = onStartNewRoundClick,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(stringResource(R.string.start_new_round))
+        when (screen) {
+            is GameRoomScreen.Dashboard -> {
+                DashboardScreen(
+                    dashboardInfo = screen.dashboardInfo,
+                    onCardClick = onCardClick,
+                    onPickClick = onPickClick,
+                    onPassClick = onPassClick
+                )
             }
-            Spacer(Modifier.height(8.dp))
+            is GameRoomScreen.EndOfRound -> {
+                EndOfRoundScreen(screen.endOfRoundInfo)
+                Spacer(Modifier.height(16.dp))
+                Button(
+                    onClick = onStartNewRoundClick,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(R.string.start_new_round))
+                }
+            }
+            is GameRoomScreen.CardExchange -> {
+                CardExchangeScreen(
+                    numCardsToChoose = screen.cardExchangeState.numCardsToChoose,
+                    cardsToExchange = screen.cardExchangeState.cardsToExchange,
+                    cardsInHand = screen.cardExchangeState.cardsInHand,
+                    exchangeControlEnabled = screen.cardExchangeState.canPerformExchange,
+                    onCardToExchangeClick = onRemoveCardFromExchange,
+                    onCardInHandClick = onAddCardToExchange,
+                    onConfirmExchangeClick = onConfirmExchange
+                )
+            }
+            is GameRoomScreen.CardExchangeOnGoing -> CardExchangeOnGoing()
+            null -> {
+                LoadingSpinner()
+            }
         }
-
+        Spacer(Modifier.height(8.dp))
         OutlinedButton(
             onClick = onEndGameClick,
             modifier = Modifier.fillMaxWidth()

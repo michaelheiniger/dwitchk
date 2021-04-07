@@ -6,8 +6,8 @@ import ch.qscqlmpa.dwitchcommunication.model.Recipient
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEventRepository
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEvent
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEventRepository
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk

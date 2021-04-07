@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitch.ui.home.joinnewgame
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
@@ -15,8 +16,15 @@ class JoinNewGameViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _command = MutableLiveData<JoinNewGameCommand>()
-    private val _joinGameControl = MutableLiveData(true) //TODO: undo
-    private val _playerName = MutableLiveData("Mébène") //TODO: undo
+    private val _joinGameControl = MutableLiveData(true)
+    private val _playerName = MutableLiveData("Mébène")
+
+    init {
+        if (BuildConfig.DEBUG) {
+            _joinGameControl.value = true
+            _playerName.value = "Mébène"
+        }
+    }
 
     val commands get(): LiveData<JoinNewGameCommand> = _command
     val playerName get(): LiveData<String> = _playerName

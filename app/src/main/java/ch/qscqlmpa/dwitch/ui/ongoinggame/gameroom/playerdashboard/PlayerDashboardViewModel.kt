@@ -3,26 +3,28 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitch.ui.ongoinggame.cardexchange.CardExchangeStateEngine
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomScreen
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.EndOfRoundInfo
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardFacade
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardInfo
+import ch.qscqlmpa.dwitchengine.model.info.CardItem
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.DwitchState
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.EndOfRoundInfo
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameFacade
+import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeInfo
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 class PlayerDashboardViewModel @Inject constructor(
-    private val facade: GameDashboardFacade,
+    private val facade: GameFacade,
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val _commands = MutableLiveData<PlayerDashboardCommand>()
-    private val _gameDashboardInfo = MutableLiveData<GameDashboardInfo>()
-    private val _endOfRoundInfo = MutableLiveData<EndOfRoundInfo>()
-    val commands get(): LiveData<PlayerDashboardCommand> = _commands
-    val gameDashboardInfo get(): LiveData<GameDashboardInfo> = _gameDashboardInfo
-    val endOfRoundInfo get(): LiveData<EndOfRoundInfo> = _endOfRoundInfo
+    private var cardExchangeStateEngine: CardExchangeStateEngine? = null
+
+    private val _screen = MutableLiveData<GameRoomScreen>()
+    val screen get(): LiveData<GameRoomScreen> = _screen
 
     fun playCard(cardPlayed: Card) {
         performOperation("Card $cardPlayed played successfully.", "Error while playing card $cardPlayed.") {
@@ -38,11 +40,35 @@ class PlayerDashboardViewModel @Inject constructor(
         performOperation("Turn passed successfully.", "Error while passing turn.") { facade.passTurn() }
     }
 
+    fun addCardToExchange(card: Card) {
+        cardExchangeStateEngine!!.addCardToExchange(card)
+        _screen.value = GameRoomScreen.CardExchange(cardExchangeStateEngine!!.getCardExchangeState())
+    }
+
+    fun removeCardFromExchange(card: Card) {
+        cardExchangeStateEngine!!.removeCardFromExchange(card)
+        _screen.value = GameRoomScreen.CardExchange(cardExchangeStateEngine!!.getCardExchangeState())
+    }
+
+    fun confirmExchange() {
+        Logger.trace { "confirmExchange()" }
+        val cardsToExchange = cardExchangeStateEngine!!.getCardExchangeState().cardsToExchange.map(CardItem::card)
+        disposableManager.add(
+            facade.submitCardsForExchange(cardsToExchange.toSet())
+                .observeOn(uiScheduler)
+                .subscribe(
+                    {
+                        Logger.info { "Cards for exchange submitted successfully." }
+                        cardExchangeStateEngine = null
+                    },
+                    { error -> Logger.error(error) { "Error while submitting cards for exchange." } }
+                )
+        )
+    }
+
     override fun onStart() {
         super.onStart()
-        observePlayerDashboard()
-        observeEndOfRoundEvents()
-        observeCardExchange()
+        observeGameState()
     }
 
     override fun onStop() {
@@ -50,32 +76,32 @@ class PlayerDashboardViewModel @Inject constructor(
         disposableManager.disposeAndReset()
     }
 
-    private fun observePlayerDashboard() {
+    private fun observeGameState() {
         disposableManager.add(
-            facade.observeDashboard()
+            facade.observeGameData()
+                .doOnNext { data -> Logger.info { "Game data changed: $data" } }
+                .map { data ->
+                    when (data) {
+                        is DwitchState.RoundIsBeginning -> GameRoomScreen.Dashboard(data.info)
+                        is DwitchState.RoundIsOngoing -> GameRoomScreen.Dashboard(data.info)
+                        is DwitchState.CardExchange -> initializeCardExchangeScreenState(data.info)
+                        DwitchState.CardExchangeOnGoing -> GameRoomScreen.CardExchangeOnGoing
+                        is DwitchState.EndOfRound -> GameRoomScreen.EndOfRound(adaptEndOfRoundInfo(data.info))
+                    }
+                }
                 .observeOn(uiScheduler)
-                .doOnNext { dashboard -> Logger.debug("New dashboard state: $dashboard") }
-                .doOnError { error -> Logger.error(error) { "Error while observing player dashboard." } }
-                .subscribe { dashboard -> _gameDashboardInfo.value = dashboard }
+                .subscribe { screen -> _screen.value = screen }
         )
     }
 
-    private fun observeEndOfRoundEvents() {
-        disposableManager.add(
-            facade.observeEndOfRound()
-                .observeOn(uiScheduler)
-                .doOnError { error -> Logger.error(error) { "Error while observing end of round events." } }
-                .subscribe { value -> _endOfRoundInfo.value = value }
-        )
+    private fun initializeCardExchangeScreenState(cardExchangeInfo: CardExchangeInfo): GameRoomScreen {
+        cardExchangeStateEngine = CardExchangeStateEngine(cardExchangeInfo)
+        return GameRoomScreen.CardExchange(cardExchangeStateEngine!!.getCardExchangeState())
     }
 
-    private fun observeCardExchange() {
-        disposableManager.add(
-            facade.observeCardExchangeEvents()
-                .observeOn(uiScheduler)
-                .doOnError { error -> Logger.error(error) { "Error while observing card exchange events." } }
-                .subscribe { _commands.value = PlayerDashboardCommand.OpenCardExchange }
-        )
+    private fun adaptEndOfRoundInfo(endOfRoundInfo: EndOfRoundInfo): EndOfRoundInfo {
+        val playersSortedByRankASc = endOfRoundInfo.playersInfo.sortedWith { p1, p2 -> -p1.rank.value.compareTo(p2.rank.value) }
+        return endOfRoundInfo.copy(playersInfo = playersSortedByRankASc)
     }
 
     private fun performOperation(successText: String, failureText: String, op: () -> Completable) {

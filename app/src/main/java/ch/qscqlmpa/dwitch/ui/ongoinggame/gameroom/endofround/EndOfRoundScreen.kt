@@ -14,8 +14,8 @@ import androidx.compose.ui.unit.sp
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ResourceMapper
 import ch.qscqlmpa.dwitchengine.model.player.Rank
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.EndOfRoundInfo
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.PlayerEndOfRoundInfo
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.EndOfRoundInfo
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.PlayerEndOfRoundInfo
 
 @Preview(
     showBackground = true,
@@ -43,7 +43,6 @@ fun EndOfRoundScreen(endOfRoundInfo: EndOfRoundInfo) {
         Modifier
             .fillMaxWidth()
             .animateContentSize()
-            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
     ) {
         Row(
             horizontalArrangement = Arrangement.Center,

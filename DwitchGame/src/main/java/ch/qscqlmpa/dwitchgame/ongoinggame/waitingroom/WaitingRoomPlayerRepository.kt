@@ -1,8 +1,8 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom
 
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.EntityMapper
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
+import ch.qscqlmpa.dwitchstore.model.Player
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
@@ -11,12 +11,16 @@ internal class WaitingRoomPlayerRepository @Inject constructor(private val store
 
     fun observePlayers(): Observable<List<PlayerWrUi>> {
         return store.observePlayersInWaitingRoom()
-            .map { players -> players.map(EntityMapper::toPlayerWrUi) }
+            .map { players -> players.map(::toPlayerWrUi) }
             .onBackpressureLatest()
             .toObservable()
     }
 
     fun observeLocalPlayer(): Observable<PlayerWrUi> {
-        return store.observeLocalPlayer().map(EntityMapper::toPlayerWrUi)
+        return store.observeLocalPlayer().map(::toPlayerWrUi)
+    }
+
+    private fun toPlayerWrUi(player: Player): PlayerWrUi {
+        return PlayerWrUi(player.name, player.connectionState, player.ready)
     }
 }

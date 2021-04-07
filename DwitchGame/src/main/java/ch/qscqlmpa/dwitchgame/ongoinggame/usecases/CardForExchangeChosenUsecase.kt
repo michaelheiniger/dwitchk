@@ -17,10 +17,12 @@ internal class CardForExchangeChosenUsecase @Inject constructor(
     fun chooseCardForExchange(cards: Set<Card>): Completable {
         return Completable.fromAction {
             val localPlayerId = store.getLocalPlayerDwitchId()
-            val message = MessageFactory.createCardsForExchangeChosenMessage(localPlayerId, cards)
-            communicator.sendMessageToHost(message)
+
             val gameStateUpdated = dwitchEngineFactory.create(store.getGameState()).chooseCardsForExchange(localPlayerId, cards)
             store.updateGameState(gameStateUpdated)
+
+            val message = MessageFactory.createCardsForExchangeChosenMessage(localPlayerId, cards)
+            communicator.sendMessageToHost(message)
         }
     }
 }

@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.game
 
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 
-internal class GameDashboardFactoryTest : BaseUnitTest() {
+internal class GameInfoFactoryTest : BaseUnitTest() {
 
 //    @Test
 //    fun `Set canStartNewRound to false for local player when it is a guest`() {

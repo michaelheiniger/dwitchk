@@ -3,6 +3,7 @@ package ch.qscqlmpa.dwitch.uitests
 import androidx.compose.ui.test.*
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
+import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitch.uitests.base.BaseUiTest
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
@@ -22,10 +23,11 @@ class NewGameAsGuestTest : BaseUiTest() {
 
         testRule.onNodeWithText("Les Bronzés", substring = true).performClick()
 
-        testRule.onNodeWithTag("playerName").assertTextEquals("")
+        testRule.onNodeWithTag(UiTags.playerName).performTextInput("")
+        testRule.onNodeWithTag(UiTags.playerName).assertTextEquals("")
         testRule.onNodeWithText(getString(R.string.join_game)).assertIsNotEnabled()
 
-        testRule.onNodeWithTag("playerName").performTextInput("Mébène")
+        testRule.onNodeWithTag(UiTags.playerName).performTextInput("Mébène")
         testRule.onNodeWithText(getString(R.string.join_game)).assertIsEnabled()
     }
 

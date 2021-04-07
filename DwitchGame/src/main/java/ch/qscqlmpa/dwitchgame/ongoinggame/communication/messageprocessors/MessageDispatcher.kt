@@ -16,7 +16,8 @@ class MessageDispatcher @Inject constructor(
     fun dispatch(envelope: EnvelopeReceived): Completable {
         val message = envelope.message
         val sender = envelope.senderId
-        Logger.debug { "Dispatch message: $message" }
-        return messageProcessors.getValue(message.javaClass).get().process(message, sender)
+        val processor = messageProcessors.getValue(message.javaClass).get()
+        Logger.debug { "Dispatch message: $message to $processor" }
+        return processor.process(message, sender)
     }
 }

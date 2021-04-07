@@ -97,9 +97,7 @@ internal data class GameStateMutable(
 
     fun addCardsForExchange(playerId: PlayerDwitchId, cards: Set<Card>) {
         player(playerId).removeCardsFromHand(cards)
-        val cardsForExchange = player(playerId).cardsForExchange
-        cardsForExchange.clear()
-        cardsForExchange.addAll(cards)
+        player(playerId).cardsForExchange.addAll(cards)
     }
 
     fun toGameState(): GameState {

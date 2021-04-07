@@ -79,7 +79,7 @@ class TestApp : App() {
                     ongoingGameComponent!!.waitingRoomGuestFacade,
                     ongoingGameComponent!!.gameRoomHostFacade,
                     ongoingGameComponent!!.gameRoomGuestFacade,
-                    ongoingGameComponent!!.gameDashboardFacade
+                    ongoingGameComponent!!.gameFacade
                 )
             )
         } else {

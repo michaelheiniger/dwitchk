@@ -7,7 +7,7 @@ interface ClientTestStub {
 
     fun connectClientToServer(enableThreadBreak: Boolean)
 
-    fun serverSendsMessageToClient(message: Message, enableThreadBreak: Boolean)
+    fun serverSendsMessageToClient(message: Message, enableThreadBreak: Boolean = false)
 
     fun breakConnectionWithHost()
 

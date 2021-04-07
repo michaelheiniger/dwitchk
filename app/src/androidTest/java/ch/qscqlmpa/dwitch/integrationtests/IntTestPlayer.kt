@@ -2,16 +2,17 @@ package ch.qscqlmpa.dwitch.integrationtests
 
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchgame.gameadvertising.SerializerFactory
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.GameDashboardFacade
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameFacade
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 
 abstract class IntTestPlayer {
 
 //    protected val appComponent: IntTestAppComponent = DaggerIntTestAppComponent.builder().build()
     protected var gameLocalId: Long? = null
-//    protected lateinit var ongoingGameComponent: IntTestOngoingGameComponent
+
+    //    protected lateinit var ongoingGameComponent: IntTestOngoingGameComponent
     private lateinit var inGameStore: InGameStore
-    private lateinit var playerDashboardFacade: GameDashboardFacade
+    private lateinit var playerFacade: GameFacade
     protected lateinit var serializerFactory: SerializerFactory
 
 //    private val serviceManager = appComponent.serviceManager as IntTestServiceManager
@@ -28,15 +29,15 @@ abstract class IntTestPlayer {
     }
 
     fun playCard(card: Card) {
-        playerDashboardFacade.playCard(card).blockingSubscribe()
+        playerFacade.playCard(card).blockingSubscribe()
     }
 
     fun pickCard() {
-        playerDashboardFacade.pickCard().blockingSubscribe()
+        playerFacade.pickCard().blockingSubscribe()
     }
 
     fun passTurn() {
-        playerDashboardFacade.passTurn().blockingSubscribe()
+        playerFacade.passTurn().blockingSubscribe()
     }
 
     fun startNewRound() {
@@ -50,7 +51,7 @@ abstract class IntTestPlayer {
 //                )
 //            )
 //        )
-        playerDashboardFacade.startNewRound().blockingSubscribe()
+        playerFacade.startNewRound().blockingSubscribe()
     }
 
 //    fun assertDashboard(): PlayerDashboardRobot {

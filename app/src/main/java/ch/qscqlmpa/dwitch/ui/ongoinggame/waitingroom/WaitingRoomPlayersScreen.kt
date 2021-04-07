@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 
@@ -85,7 +86,7 @@ private fun PlayerStateDetails(player: PlayerWrUi) {
                 checked = player.ready,
                 enabled = false,
                 onCheckedChange = {},
-                modifier = Modifier.testTag("readyCheckbox")
+                modifier = Modifier.testTag(UiTags.playerReadyCheckbox)
             )
             val readyLabel = if (player.ready) R.string.ready else R.string.not_ready
             Text(stringResource(readyLabel))

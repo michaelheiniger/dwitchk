@@ -45,7 +45,7 @@ class StartNewRoundTest : EngineTestBase() {
 
         launchStartNewRoundTest()
         GameStateRobot(gameStateUpdated)
-            .assertGamePhase(GamePhase.RoundIsBeginningWithCardExchange)
+            .assertGamePhase(GamePhase.CardExchange)
             .assertCardsOnTableContainsExactly(Card.Clubs8)
             .assertNumCardsInDeck(CardUtil.deckSize - 7)
             .assertPlayingOrder(listOf(player1Id, player2Id))
@@ -87,7 +87,7 @@ class StartNewRoundTest : EngineTestBase() {
 
         launchStartNewRoundTest()
         GameStateRobot(gameStateUpdated)
-            .assertGamePhase(GamePhase.RoundIsBeginningWithCardExchange)
+            .assertGamePhase(GamePhase.CardExchange)
             .assertCardsOnTableContainsExactly(Card.Clubs6)
             .assertNumCardsInDeck(CardUtil.deckSize - 16)
             .assertPlayingOrder(listOf(player5Id, player4Id, player1Id, player3Id, player2Id))
@@ -147,7 +147,7 @@ class StartNewRoundTest : EngineTestBase() {
 
         launchStartNewRoundTest()
         GameStateRobot(gameStateUpdated)
-            .assertGamePhase(GamePhase.RoundIsBeginningWithCardExchange)
+            .assertGamePhase(GamePhase.CardExchange)
             .assertCardsOnTableContainsExactly(Card.Clubs8)
             .assertNumCardsInGraveyard(0)
             .assertPlayersDoneForRoundIsEmpty()

@@ -3,8 +3,8 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.connection.host
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitchgame.ongoinggame.common.HostFacade
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.HostFacade
 import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject

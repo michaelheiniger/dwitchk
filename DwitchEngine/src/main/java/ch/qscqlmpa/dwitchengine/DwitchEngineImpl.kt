@@ -97,9 +97,9 @@ internal class DwitchEngineImpl(private val currentGameState: GameState) : Dwitc
         return gameStateUpdated
     }
 
-    override fun getCardsExchange(playerId: PlayerDwitchId): CardExchange? {
-        if (currentGameState.phase != GamePhase.RoundIsBeginningWithCardExchange) {
-            throw IllegalStateException("No card exchange is supposed to happen now.")
+    override fun getCardExchangeIfRequired(playerId: PlayerDwitchId): CardExchange? {
+        if (currentGameState.phase != GamePhase.CardExchange) {
+            return null
         }
         val player = currentGameState.player(playerId)
 

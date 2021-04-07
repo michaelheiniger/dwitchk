@@ -8,7 +8,8 @@ plugins {
 dependencies {
 
     // Logging
-    implementation("org.tinylog:tinylog-api-kotlin:2.3.0-M2")
+    implementation("org.tinylog:tinylog-api-kotlin:2.2.1")
+    implementation("org.tinylog:tinylog-impl:2.2.1")
 
     // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc")

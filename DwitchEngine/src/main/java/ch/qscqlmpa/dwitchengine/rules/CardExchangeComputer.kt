@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitchengine.rules
 
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
+import ch.qscqlmpa.dwitchengine.model.card.CardNameValueDescComparator
 import ch.qscqlmpa.dwitchengine.model.game.CardExchange
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.model.player.Rank
@@ -36,23 +37,4 @@ internal object CardExchangeComputer {
     }
 
     private fun getAllValuesWithoutRestriction(cards: Set<Card>): List<CardName> = cards.map(Card::name) // Want to keep duplicated "names"
-
-    private class CardNameValueDescComparator : Comparator<CardName> {
-
-        override fun compare(cardName1: CardName, cardName2: CardName): Int {
-
-            // Joker has highest value
-            if (cardName1 == INITIAL_JOKER) {
-                return -1
-            }
-
-            // Joker has highest value
-            if (cardName2 == INITIAL_JOKER) {
-                return 1
-            }
-
-            // Desc
-            return -cardName1.value.compareTo(cardName2.value)
-        }
-    }
 }

@@ -16,7 +16,7 @@ internal class StartNewRound constructor(
 ) {
 
     fun getUpdatedGameState(): GameState {
-        gameUpdater.setGamePhase(GamePhase.RoundIsBeginningWithCardExchange)
+        gameUpdater.setGamePhase(GamePhase.CardExchange)
         gameUpdater.clearDonePlayersInFinishingOrder()
         gameUpdater.joker(CardName.Two)
         gameUpdater.undwitchAllPlayers()

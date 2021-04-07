@@ -2,25 +2,24 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.cardexchange
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.ResourceMapper
+import ch.qscqlmpa.dwitch.ui.ongoinggame.CardItemDisplay
+import ch.qscqlmpa.dwitch.ui.ongoinggame.LoadingSpinner
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.info.CardItem
 
@@ -36,60 +35,82 @@ private fun CardExchangeScreenPreview() {
         CardItem(Card.Clubs2, true),
     )
     val cardsInHand = listOf(
-        CardItem(Card.HeartsQueen, false),
+        CardItem(Card.HeartsQueen, true),
         CardItem(Card.Clubs3, false),
         CardItem(Card.Clubs4, false),
-        CardItem(Card.Diamonds10, false),
+        CardItem(Card.Diamonds10, true),
         CardItem(Card.Spades5, false),
         CardItem(Card.Spades7, false)
     )
 
     CardExchangeScreen(
+        numCardsToChoose = NumCardForExchange.Two,
         cardsToExchange = cardsToExchange,
         cardsInHand = cardsInHand,
         exchangeControlEnabled = true,
         onCardToExchangeClick = {},
         onCardInHandClick = {},
-        onExchangeClick = {}
+        onConfirmExchangeClick = {}
     )
 }
+
 
 @ExperimentalFoundationApi
 @Composable
 fun CardExchangeScreen(
+    numCardsToChoose: NumCardForExchange,
     cardsToExchange: List<CardItem>,
     cardsInHand: List<CardItem>,
     exchangeControlEnabled: Boolean,
     onCardToExchangeClick: (Card) -> Unit,
     onCardInHandClick: (Card) -> Unit,
-    onExchangeClick: () -> Unit
+    onConfirmExchangeClick: () -> Unit
 ) {
     Column(
         Modifier
             .fillMaxWidth()
             .animateContentSize()
-            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
-
     ) {
         CardsToExchange(
+            numCardsToChoose = numCardsToChoose,
             cards = cardsToExchange,
-            exchangeControlEnabled = exchangeControlEnabled,
-            onExchangeClick = onExchangeClick,
             onCardClick = onCardToExchangeClick
         )
+        Spacer(Modifier.height(16.dp))
+
         CardsInHand(
             cards = cardsInHand,
             onCardClick = onCardInHandClick
         )
+        Spacer(Modifier.height(16.dp))
+        Button(
+            enabled = exchangeControlEnabled,
+            onClick = onConfirmExchangeClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = stringResource(R.string.confirm_cards_to_exchange))
+        }
+    }
+}
+
+@Composable
+fun CardExchangeOnGoing() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Card exchange is ongoing ...")
+        LoadingSpinner()
     }
 }
 
 @ExperimentalFoundationApi
 @Composable
 private fun CardsToExchange(
+    numCardsToChoose: NumCardForExchange,
     cards: List<CardItem>,
-    exchangeControlEnabled: Boolean,
-    onExchangeClick: () -> Unit,
     onCardClick: (Card) -> Unit
 ) {
     Column(
@@ -97,28 +118,18 @@ private fun CardsToExchange(
             .fillMaxWidth()
             .animateContentSize()
     ) {
-        Row(Modifier.fillMaxWidth()) {
-            Text(text = stringResource(R.string.choose_cards_to_exchange))
-            Button(
-                enabled = exchangeControlEnabled,
-                onClick = onExchangeClick
-            ) {
-                Text(text = stringResource(R.string.confirm_cards_to_exchange))
-            }
+        val chooseCardLabel = when (numCardsToChoose) {
+            NumCardForExchange.One -> R.string.choose_one_card_to_exchange
+            NumCardForExchange.Two -> R.string.choose_two_cards_to_exchange
         }
-
+        Text(stringResource(chooseCardLabel))
         LazyVerticalGrid(
             cells = GridCells.Fixed(4),
             Modifier
                 .fillMaxWidth()
                 .animateContentSize()
         ) {
-            items(cards) { card ->
-                CardItemDisplay(
-                    cardItem = card,
-                    onCardClick = onCardClick
-                )
-            }
+            items(cards) { card -> CardItemDisplay(card, onCardClick) }
         }
     }
 }
@@ -134,31 +145,14 @@ private fun CardsInHand(
             .fillMaxWidth()
             .animateContentSize()
     ) {
-        Text(text = stringResource(R.string.cards_in_hand))
+        Text(stringResource(R.string.cards_in_hand))
         LazyVerticalGrid(
             cells = GridCells.Fixed(4),
             Modifier
                 .fillMaxWidth()
                 .animateContentSize()
         ) {
-            items(cards) { card ->
-                CardItemDisplay(
-                    cardItem = card,
-                    onCardClick = onCardClick
-                )
-            }
+            items(cards) { card -> CardItemDisplay(cardItem = card, onCardClick = onCardClick) }
         }
     }
-}
-
-@Composable
-private fun CardItemDisplay(
-    cardItem: CardItem,
-    onCardClick: (Card) -> Unit
-) {
-    Image(
-        painter = painterResource(ResourceMapper.getResource(cardItem.card)),
-        contentDescription = cardItem.toString(),
-        Modifier.clickable { onCardClick(cardItem.card) }
-    )
 }

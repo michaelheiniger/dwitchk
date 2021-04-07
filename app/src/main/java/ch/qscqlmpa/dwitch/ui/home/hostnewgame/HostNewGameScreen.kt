@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.ui.common.UiTags
 
 
 @Preview(
@@ -46,7 +47,7 @@ fun HostNewGameScreen(
             onValueChange = onPlayerNameChange,
             modifier = Modifier
                 .fillMaxWidth()
-                .testTag("playerName")
+                .testTag(UiTags.playerName)
         )
         OutlinedTextField(
             value = gameName,
@@ -54,7 +55,7 @@ fun HostNewGameScreen(
             onValueChange = onGameNameChange,
             modifier = Modifier
                 .fillMaxWidth()
-                .testTag("gameName")
+                .testTag(UiTags.gameName)
         )
         Spacer(Modifier.height(16.dp))
         Button(

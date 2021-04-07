@@ -7,12 +7,15 @@ import androidx.compose.ui.test.performTextInput
 import ch.qscqlmpa.dwitch.PlayerGuestTest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
+import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchmodel.player.PlayerWr
+import org.assertj.core.api.Assertions.assertThat
+import org.tinylog.kotlin.Logger
 
 abstract class BaseGuestTest : BaseOnGoingGameTest() {
 
@@ -25,39 +28,27 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
         testRule.onNodeWithTag("playerName").performTextInput(PlayerGuestTest.LocalGuest.name)
         testRule.onNodeWithText(getString(R.string.join_game)).performClick()
 
-//        dudeWaitAMillisSec()
-
-        /*
-        * Note: It also allows to wait for the waiting room to be displayed: otherwise, the messages sent by clients could be
-        * missed because the server is not ready yet.
-        */
-//        UiUtil.assertControlTextContent(R.id.playerListTv, R.string.wra_player_list)
+        dudeWaitASec() // Wait for Game to be created
 
         hookOngoingGameDependenciesForGuest()
 
         connectGuestToHost()
-
         hostSendsJoinGameAck()
         hostSendsInitialWaitingRoomUpdate()
 
-//        dudeWaitAMillisSec()
         // Assert that the guest is indeed in the WaitingRoom
         testRule.assertTextIsDisplayedOnce(getString(R.string.players_in_waitingroom))
         testRule.assertTextIsDisplayedOnce(getString(R.string.leave_game_btn))
-
     }
 
-    //    protected fun waitForNextMessageSentByLocalGuest(): Message {
-//        Logger.debug { "Waiting for next message sent by local guest..." }
-//        val messageSerialized = clientTestStub.observeMessagesSent()
-//            .take(1)
-//            .timeout(10, TimeUnit.SECONDS)
-//            .blockingFirst()
-//        val message = commSerializerFactory.unserializeMessage(messageSerialized)
-//        Logger.debug { "Message sent to host: $message" }
-//        return message
-//    }
-//
+    protected fun waitForNextMessageSentByLocalGuest(): Message {
+        Logger.debug { "Waiting for next message sent by local guest..." }
+        val messageSerialized = clientTestStub.observeMessagesSent().take(1).blockingFirst()
+        val message = commSerializerFactory.unserializeMessage(messageSerialized)
+        Logger.debug { "Message sent to host: $message" }
+        return message
+    }
+
     protected fun advertiseGame() {
         val hostIpAddress = "192.168.1.1"
         val gameAd = buildSerializedAdvertisedGame(true, gameName, gameCommonId, 8889)
@@ -66,8 +57,8 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
 
     private fun connectGuestToHost() {
         clientTestStub.connectClientToServer(true)
-//        val message = waitForNextMessageSentByLocalGuest()
-//        assertThat(message).isInstanceOf(Message.JoinGameMessage::class.java)
+        val message = waitForNextMessageSentByLocalGuest()
+        assertThat(message).isInstanceOf(Message.JoinGameMessage::class.java)
     }
 
     protected fun hostSendsJoinGameAck() {
@@ -75,12 +66,12 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
         clientTestStub.serverSendsMessageToClient(message, false)
     }
 
-    //    protected fun localPlayerToggleReadyCheckbox() {
-//        UiUtil.clickOnButton(R.id.localPlayerReadyCkb)
-//        val playerReadyMessage = waitForNextMessageSentByLocalGuest()
-//        assertThat(playerReadyMessage).isInstanceOf(Message.PlayerReadyMessage::class.java)
-//    }
-//
+    protected fun localPlayerToggleReadyCheckbox() {
+        testRule.onNodeWithTag(UiTags.localPlayerReadyCheckbox).performClick()
+        val playerReadyMessage = waitForNextMessageSentByLocalGuest()
+        assertThat(playerReadyMessage).isInstanceOf(Message.PlayerReadyMessage::class.java)
+    }
+
     private fun hostSendsInitialWaitingRoomUpdate() {
         val message = Message.WaitingRoomStateUpdateMessage(
             listOf(

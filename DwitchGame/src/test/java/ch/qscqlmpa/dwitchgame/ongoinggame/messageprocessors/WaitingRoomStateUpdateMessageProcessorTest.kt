@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.messageprocessors
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.EntityMapper
+import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.WaitingRoomStateUpdateMessageProcessor
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerWr
@@ -41,7 +41,8 @@ internal class WaitingRoomStateUpdateMessageProcessorTest : BaseMessageProcessor
             guest3Player
         )
 
-        val upToDatePlayerList = listOf(EntityMapper.toPlayerWr(hostPlayer), EntityMapper.toPlayerWr(localGuestPlayer))
+        val upToDatePlayerList =
+            listOf(HostMessageFactory.toPlayerWr(hostPlayer), HostMessageFactory.toPlayerWr(localGuestPlayer))
 
         launchTest(upToDatePlayerList).test().assertComplete()
 
@@ -61,10 +62,10 @@ internal class WaitingRoomStateUpdateMessageProcessorTest : BaseMessageProcessor
         )
 
         val upToDatePlayerList = listOf(
-            EntityMapper.toPlayerWr(hostPlayer),
-            EntityMapper.toPlayerWr(localGuestPlayer),
-            EntityMapper.toPlayerWr(guest2Player).copy(ready = false),
-            EntityMapper.toPlayerWr(guest3Player).copy(connectionState = PlayerConnectionState.DISCONNECTED)
+            HostMessageFactory.toPlayerWr(hostPlayer),
+            HostMessageFactory.toPlayerWr(localGuestPlayer),
+            HostMessageFactory.toPlayerWr(guest2Player).copy(ready = false),
+            HostMessageFactory.toPlayerWr(guest3Player).copy(connectionState = PlayerConnectionState.DISCONNECTED)
         )
 
         launchTest(upToDatePlayerList).test().assertComplete()
@@ -93,10 +94,10 @@ internal class WaitingRoomStateUpdateMessageProcessorTest : BaseMessageProcessor
         every { mockInGameStore.getPlayersInWaitingRoom() } returns listOf(hostPlayer, localGuestPlayer)
 
         val upToDatePlayerList = listOf(
-            EntityMapper.toPlayerWr(hostPlayer),
-            EntityMapper.toPlayerWr(localGuestPlayer),
-            EntityMapper.toPlayerWr(guest2Player),
-            EntityMapper.toPlayerWr(guest3Player)
+            HostMessageFactory.toPlayerWr(hostPlayer),
+            HostMessageFactory.toPlayerWr(localGuestPlayer),
+            HostMessageFactory.toPlayerWr(guest2Player),
+            HostMessageFactory.toPlayerWr(guest3Player)
         )
 
         launchTest(upToDatePlayerList).test().assertComplete()

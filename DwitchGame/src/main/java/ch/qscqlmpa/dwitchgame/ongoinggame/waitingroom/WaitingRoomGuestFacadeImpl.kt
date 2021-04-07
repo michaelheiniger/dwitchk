@@ -3,8 +3,8 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEvent
-import ch.qscqlmpa.dwitchgame.ongoinggame.game.events.GuestGameEventRepository
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEvent
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.LeaveGameUsecase
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.PlayerReadyUsecase
 import io.reactivex.rxjava3.core.Completable
