@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchstore
 
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.model.Player
@@ -8,7 +8,7 @@ import org.assertj.core.api.Assertions.assertThat
 
 class PlayerRobot(val player: Player) {
 
-    fun assertDwitchId(expectedValue: PlayerDwitchId): PlayerRobot {
+    fun assertDwitchId(expectedValue: DwitchPlayerId): PlayerRobot {
         assertThat(player.dwitchId).isEqualTo(expectedValue)
         return this
     }

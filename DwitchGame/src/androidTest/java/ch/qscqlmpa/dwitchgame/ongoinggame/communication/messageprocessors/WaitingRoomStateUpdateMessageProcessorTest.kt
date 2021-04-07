@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.base.BaseInstrumentedTest
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
@@ -22,7 +22,7 @@ class WaitingRoomStateUpdateMessageProcessorTest : BaseInstrumentedTest() {
     @Before
     fun setupProcessor() {
         processor = WaitingRoomStateUpdateMessageProcessor(inGameStore)
-        inGameStore.updateLocalPlayerWithDwitchId(PlayerDwitchId(2))
+        inGameStore.updateLocalPlayerWithDwitchId(DwitchPlayerId(2))
     }
 
     @Test
@@ -34,8 +34,8 @@ class WaitingRoomStateUpdateMessageProcessorTest : BaseInstrumentedTest() {
         processor.process(
             Message.WaitingRoomStateUpdateMessage(
                 listOf(
-                    PlayerWr(PlayerDwitchId(1), hostName, PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
-                    PlayerWr(PlayerDwitchId(2), localPlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
+                    PlayerWr(DwitchPlayerId(1), hostName, PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
+                    PlayerWr(DwitchPlayerId(2), localPlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
                 )
             ),
             ConnectionId(0)
@@ -52,8 +52,8 @@ class WaitingRoomStateUpdateMessageProcessorTest : BaseInstrumentedTest() {
         processor.process(
             Message.WaitingRoomStateUpdateMessage(
                 listOf(
-                    PlayerWr(PlayerDwitchId(1), hostName, PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
-                    PlayerWr(PlayerDwitchId(2), localPlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
+                    PlayerWr(DwitchPlayerId(1), hostName, PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
+                    PlayerWr(DwitchPlayerId(2), localPlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
                 )
             ),
             ConnectionId(0)
@@ -62,10 +62,10 @@ class WaitingRoomStateUpdateMessageProcessorTest : BaseInstrumentedTest() {
         processor.process(
             Message.WaitingRoomStateUpdateMessage(
                 listOf(
-                    PlayerWr(PlayerDwitchId(1), hostName, PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
-                    PlayerWr(PlayerDwitchId(2), localPlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
-                    PlayerWr(PlayerDwitchId(3), guest2PlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
-                    PlayerWr(PlayerDwitchId(4), guest3PlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true),
+                    PlayerWr(DwitchPlayerId(1), hostName, PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
+                    PlayerWr(DwitchPlayerId(2), localPlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
+                    PlayerWr(DwitchPlayerId(3), guest2PlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
+                    PlayerWr(DwitchPlayerId(4), guest3PlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true),
                 )
             ),
             ConnectionId(0)
@@ -84,10 +84,10 @@ class WaitingRoomStateUpdateMessageProcessorTest : BaseInstrumentedTest() {
         processor.process(
             Message.WaitingRoomStateUpdateMessage(
                 listOf(
-                    PlayerWr(PlayerDwitchId(1), hostName, PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
-                    PlayerWr(PlayerDwitchId(2), localPlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
-                    PlayerWr(PlayerDwitchId(3), guest2PlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
-                    PlayerWr(PlayerDwitchId(4), guest3PlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true),
+                    PlayerWr(DwitchPlayerId(1), hostName, PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
+                    PlayerWr(DwitchPlayerId(2), localPlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
+                    PlayerWr(DwitchPlayerId(3), guest2PlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
+                    PlayerWr(DwitchPlayerId(4), guest3PlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true),
                 )
             ),
             ConnectionId(0)
@@ -99,8 +99,8 @@ class WaitingRoomStateUpdateMessageProcessorTest : BaseInstrumentedTest() {
         processor.process(
             Message.WaitingRoomStateUpdateMessage(
                 listOf(
-                    PlayerWr(PlayerDwitchId(1), hostName, PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
-                    PlayerWr(PlayerDwitchId(2), localPlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false)
+                    PlayerWr(DwitchPlayerId(1), hostName, PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
+                    PlayerWr(DwitchPlayerId(2), localPlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false)
                 )
             ),
             ConnectionId(0)
@@ -117,10 +117,10 @@ class WaitingRoomStateUpdateMessageProcessorTest : BaseInstrumentedTest() {
         processor.process(
             Message.WaitingRoomStateUpdateMessage(
                 listOf(
-                    PlayerWr(PlayerDwitchId(1), hostName, PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
-                    PlayerWr(PlayerDwitchId(2), localPlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
-                    PlayerWr(PlayerDwitchId(3), guest2PlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
-                    PlayerWr(PlayerDwitchId(4), guest3PlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true),
+                    PlayerWr(DwitchPlayerId(1), hostName, PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
+                    PlayerWr(DwitchPlayerId(2), localPlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
+                    PlayerWr(DwitchPlayerId(3), guest2PlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
+                    PlayerWr(DwitchPlayerId(4), guest3PlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true),
                 )
             ),
             ConnectionId(0)
@@ -129,10 +129,10 @@ class WaitingRoomStateUpdateMessageProcessorTest : BaseInstrumentedTest() {
         processor.process(
             Message.WaitingRoomStateUpdateMessage(
                 listOf(
-                    PlayerWr(PlayerDwitchId(1), hostName, PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
-                    PlayerWr(PlayerDwitchId(2), localPlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
-                    PlayerWr(PlayerDwitchId(3), guest2PlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true),
-                    PlayerWr(PlayerDwitchId(4), guest3PlayerName, PlayerRole.GUEST, PlayerConnectionState.DISCONNECTED, true),
+                    PlayerWr(DwitchPlayerId(1), hostName, PlayerRole.HOST, PlayerConnectionState.CONNECTED, true),
+                    PlayerWr(DwitchPlayerId(2), localPlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
+                    PlayerWr(DwitchPlayerId(3), guest2PlayerName, PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true),
+                    PlayerWr(DwitchPlayerId(4), guest3PlayerName, PlayerRole.GUEST, PlayerConnectionState.DISCONNECTED, true),
                 )
             ),
             ConnectionId(0)

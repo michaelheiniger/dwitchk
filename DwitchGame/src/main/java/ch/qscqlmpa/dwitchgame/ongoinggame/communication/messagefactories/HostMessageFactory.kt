@@ -5,8 +5,8 @@ import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.Recipient
 import ch.qscqlmpa.dwitchcommunication.model.RejoinInfo
-import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import ch.qscqlmpa.dwitchstore.model.Player
@@ -20,10 +20,10 @@ class HostMessageFactory @Inject constructor(private val store: InGameStore) {
 
     fun createJoinAckMessage(
         recipientId: ConnectionId,
-        playerDwitchId: PlayerDwitchId
+        dwitchPlayerId: DwitchPlayerId
     ): EnvelopeToSend {
         val gameCommonId = store.getGameCommonId()
-        val message = Message.JoinGameAckMessage(gameCommonId, playerDwitchId)
+        val message = Message.JoinGameAckMessage(gameCommonId, dwitchPlayerId)
         return EnvelopeToSend(Recipient.Single(recipientId), message)
     }
 
@@ -33,7 +33,7 @@ class HostMessageFactory @Inject constructor(private val store: InGameStore) {
             return EnvelopeToSend(Recipient.All, Message.CancelGameMessage)
         }
 
-        fun createLaunchGameMessage(gameState: GameState): EnvelopeToSend {
+        fun createLaunchGameMessage(gameState: DwitchGameState): EnvelopeToSend {
             return EnvelopeToSend(Recipient.All, Message.LaunchGameMessage(gameState))
         }
 
@@ -46,7 +46,7 @@ class HostMessageFactory @Inject constructor(private val store: InGameStore) {
             return EnvelopeToSend(Recipient.All, Message.GameOverMessage)
         }
 
-        fun createGameStateUpdatedMessage(gameState: GameState): EnvelopeToSend {
+        fun createGameStateUpdatedMessage(gameState: DwitchGameState): EnvelopeToSend {
             return EnvelopeToSend(Recipient.All, Message.GameStateUpdatedMessage(gameState))
         }
 

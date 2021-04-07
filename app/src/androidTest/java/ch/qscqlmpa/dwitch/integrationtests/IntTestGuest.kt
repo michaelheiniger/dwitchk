@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameRoomGuestFacade
 import org.assertj.core.api.Assertions
@@ -12,8 +12,8 @@ class IntTestGuest(
 
     private lateinit var gameRoomGuestFacade: GameRoomGuestFacade
 
-//    private val guestLocalId: Long
-    lateinit var playerId: PlayerDwitchId
+    //    private val guestLocalId: Long
+    lateinit var playerId: DwitchPlayerId
 
     init {
 //        appComponent.newGameUsecase.joinGame(advertisedGame, guest.name).blockingGet()

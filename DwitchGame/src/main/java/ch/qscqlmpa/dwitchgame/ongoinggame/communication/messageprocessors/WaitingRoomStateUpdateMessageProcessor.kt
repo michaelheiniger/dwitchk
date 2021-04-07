@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import ch.qscqlmpa.dwitchstore.model.Player
@@ -39,7 +39,7 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
         }
     }
 
-    private fun getLocalIdOfPlayersToRemove(playersOld: List<Player>, playersToRemove: Set<PlayerDwitchId>): List<Long> {
+    private fun getLocalIdOfPlayersToRemove(playersOld: List<Player>, playersToRemove: Set<DwitchPlayerId>): List<Long> {
         return playersOld.filter { p -> playersToRemove.contains(p.dwitchId) }.map { p -> p.id }
     }
 

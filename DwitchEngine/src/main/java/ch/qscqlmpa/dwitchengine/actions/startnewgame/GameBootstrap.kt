@@ -3,20 +3,20 @@ package ch.qscqlmpa.dwitchengine.actions.startnewgame
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
-import ch.qscqlmpa.dwitchengine.model.game.GamePhase
-import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.Player
-import ch.qscqlmpa.dwitchengine.model.player.PlayerOnboardingInfo
-import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
-import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayer
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerOnboardingInfo
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
+import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchengine.rules.PlayingOrder
 
 internal object GameBootstrap {
 
-    fun createNewGame(playersInfo: List<PlayerOnboardingInfo>, initialGameSetup: InitialGameSetup): GameState {
+    fun createNewGame(playersInfo: List<DwitchPlayerOnboardingInfo>, initialGameSetup: InitialGameSetup): DwitchGameState {
         val players = playersInfo.mapIndexed { index, p ->
             val rank = initialGameSetup.getRankForPlayer(index)
-            Player(
+            DwitchPlayer(
                 p.id,
                 p.name,
                 initialGameSetup.getCardsForPlayer(index),
@@ -27,16 +27,16 @@ internal object GameBootstrap {
             )
         }
 
-        val currentPlayer = players.find { p -> p.status == PlayerStatus.Playing }!!
+        val currentPlayer = players.find { p -> p.status == DwitchPlayerStatus.Playing }!!
         val cardsInDeck = initialGameSetup.getRemainingCards().toMutableList()
         val firstCardOnTable = cardsInDeck.removeAt(0)
-        val activePlayers = players.map(Player::id).toSet()
+        val activePlayers = players.map(DwitchPlayer::id).toSet()
         val joker = CardName.Two
         val cardsOnTable = listOf(firstCardOnTable)
         val cardGraveyard = emptyList<Card>()
 
-        return GameState(
-            GamePhase.RoundIsBeginning,
+        return DwitchGameState(
+            DwitchGamePhase.RoundIsBeginning,
             players.map { p -> p.id to p }.toMap(),
             PlayingOrder.getPlayingOrder(players),
             currentPlayer.id,
@@ -51,10 +51,10 @@ internal object GameBootstrap {
         )
     }
 
-    private fun getPlayerState(rank: Rank): PlayerStatus {
+    private fun getPlayerState(rank: DwitchRank): DwitchPlayerStatus {
         return when (rank) {
-            is Rank.President, is Rank.VicePresident, is Rank.Neutral, is Rank.ViceAsshole -> PlayerStatus.Waiting
-            is Rank.Asshole -> PlayerStatus.Playing
+            is DwitchRank.President, is DwitchRank.VicePresident, is DwitchRank.Neutral, is DwitchRank.ViceAsshole -> DwitchPlayerStatus.Waiting
+            is DwitchRank.Asshole -> DwitchPlayerStatus.Playing
         }
     }
 }

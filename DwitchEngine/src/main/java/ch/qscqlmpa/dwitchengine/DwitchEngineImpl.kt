@@ -15,12 +15,12 @@ import ch.qscqlmpa.dwitchengine.actions.startnewround.StartNewRoundGameUpdater
 import ch.qscqlmpa.dwitchengine.actions.startnewround.StartNewRoundState
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.game.CardExchange
-import ch.qscqlmpa.dwitchengine.model.game.GamePhase
-import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.info.GameInfo
+import ch.qscqlmpa.dwitchengine.model.game.DwitchCardExchange
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.info.DwitchGameInfo
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboardFactory
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
 import ch.qscqlmpa.dwitchengine.rules.CardExchangeComputer
 import org.tinylog.kotlin.Logger
 
@@ -32,15 +32,15 @@ the table stack is removed and the player can play any card.
 /**
  * The Engine is executed by the current player. Hence the assumption is that the current player is the local player.
  */
-internal class DwitchEngineImpl(private val currentGameState: GameState) : DwitchEngine {
+internal class DwitchEngineImpl(private val currentGameState: DwitchGameState) : DwitchEngine {
 
     private val currentPlayerId = currentGameState.currentPlayerId
 
-    override fun getGameInfo(): GameInfo {
+    override fun getGameInfo(): DwitchGameInfo {
         return PlayerDashboardFactory(currentGameState).create()
     }
 
-    override fun playCard(cardPlayed: Card): GameState {
+    override fun playCard(cardPlayed: Card): DwitchGameState {
         Logger.debug { "Player $currentPlayerId plays card $cardPlayed, current game state: $currentGameState" }
         return PlayCard(
             PlayCardState(currentGameState, cardPlayed),
@@ -49,7 +49,7 @@ internal class DwitchEngineImpl(private val currentGameState: GameState) : Dwitc
             .also(this::logUpdatedGameState)
     }
 
-    override fun pickCard(): GameState {
+    override fun pickCard(): DwitchGameState {
         Logger.debug { "Player $currentPlayerId picks a card, current game state: $currentGameState" }
         return PickCard(
             PickCardState(currentGameState),
@@ -58,7 +58,7 @@ internal class DwitchEngineImpl(private val currentGameState: GameState) : Dwitc
             .also(this::logUpdatedGameState)
     }
 
-    override fun passTurn(): GameState {
+    override fun passTurn(): DwitchGameState {
         Logger.debug { "Player $currentPlayerId passes its turn, current game state: $currentGameState" }
         return PassTurn(
             PassTurnState(currentGameState),
@@ -67,7 +67,7 @@ internal class DwitchEngineImpl(private val currentGameState: GameState) : Dwitc
             .also(this::logUpdatedGameState)
     }
 
-    override fun startNewRound(cardDealerFactory: CardDealerFactory): GameState {
+    override fun startNewRound(cardDealerFactory: CardDealerFactory): DwitchGameState {
         Logger.debug { "Player $currentPlayerId starts a new round, current game state: $currentGameState" }
         return StartNewRound(
             StartNewRoundState(currentGameState),
@@ -77,7 +77,7 @@ internal class DwitchEngineImpl(private val currentGameState: GameState) : Dwitc
             .also(this::logUpdatedGameState)
     }
 
-    override fun chooseCardsForExchange(playerId: PlayerDwitchId, cards: Set<Card>): GameState {
+    override fun chooseCardsForExchange(playerId: DwitchPlayerId, cards: Set<Card>): DwitchGameState {
         Logger.debug { "Choose exchange cards $cards for Player $currentPlayerId, current game state: $currentGameState" }
         val gameStateUpdated = CardExchangeChooser(
             CardExchangeChooserState(currentGameState, playerId, cards),
@@ -97,8 +97,8 @@ internal class DwitchEngineImpl(private val currentGameState: GameState) : Dwitc
         return gameStateUpdated
     }
 
-    override fun getCardExchangeIfRequired(playerId: PlayerDwitchId): CardExchange? {
-        if (currentGameState.phase != GamePhase.CardExchange) {
+    override fun getCardExchangeIfRequired(playerId: DwitchPlayerId): DwitchCardExchange? {
+        if (currentGameState.phase != DwitchGamePhase.CardExchange) {
             return null
         }
         val player = currentGameState.player(playerId)
@@ -109,7 +109,7 @@ internal class DwitchEngineImpl(private val currentGameState: GameState) : Dwitc
         return null // Cards already chosen
     }
 
-    private fun logUpdatedGameState(gameState: GameState) {
+    private fun logUpdatedGameState(gameState: DwitchGameState) {
         Logger.debug { "Updated game state: $gameState" }
     }
 }

@@ -1,13 +1,13 @@
 package ch.qscqlmpa.dwitchengine.actions.passturn
 
-import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 
 internal class PassTurn(private val passTurnState: PassTurnState, private val gameUpdater: PassTurnGameUpdater) {
 
     private val localPlayerId = passTurnState.currentPlayerId()
 
-    fun getUpdatedGameState(): GameState {
+    fun getUpdatedGameState(): DwitchGameState {
         passTurnState.checkState()
 
         gameUpdater.undwitchAllPlayers()
@@ -20,9 +20,9 @@ internal class PassTurn(private val passTurnState: PassTurnState, private val ga
         if (passTurnState.onlyOneOtherPlayerCanPlay()) {
             gameUpdater.clearTable()
             gameUpdater.setPlayersWhoPassedTheirTurnedToWaiting()
-            gameUpdater.setPlayerState(localPlayerId, PlayerStatus.Waiting)
+            gameUpdater.setPlayerState(localPlayerId, DwitchPlayerStatus.Waiting)
         } else {
-            gameUpdater.setPlayerState(localPlayerId, PlayerStatus.TurnPassed)
+            gameUpdater.setPlayerState(localPlayerId, DwitchPlayerStatus.TurnPassed)
         }
 
         gameUpdater.resetPlayerHasPickedCard(localPlayerId)

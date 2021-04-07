@@ -6,7 +6,7 @@ import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.cardexchange.CardExchangeStateEngine
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomScreen
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.info.CardItem
+import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.DwitchState
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.EndOfRoundInfo
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameFacade
@@ -52,7 +52,7 @@ class PlayerDashboardViewModel @Inject constructor(
 
     fun confirmExchange() {
         Logger.trace { "confirmExchange()" }
-        val cardsToExchange = cardExchangeStateEngine!!.getCardExchangeState().cardsToExchange.map(CardItem::card)
+        val cardsToExchange = cardExchangeStateEngine!!.getCardExchangeState().cardsToExchange.map(DwitchCardInfo::card)
         disposableManager.add(
             facade.submitCardsForExchange(cardsToExchange.toSet())
                 .observeOn(uiScheduler)

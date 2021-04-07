@@ -2,12 +2,12 @@ package ch.qscqlmpa.dwitchengine
 
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
-import ch.qscqlmpa.dwitchengine.model.info.PlayerInfo
-import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
-import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.info.DwitchPlayerInfo
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
+import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import org.assertj.core.api.Assertions.assertThat
 
-class PlayerInfoRobot(private val info: PlayerInfo) {
+class PlayerInfoRobot(private val info: DwitchPlayerInfo) {
 
     fun assertCanPlay(canPlay: Boolean): PlayerInfoRobot {
         assertThat(info.canPlay).isEqualTo(canPlay)
@@ -34,12 +34,12 @@ class PlayerInfoRobot(private val info: PlayerInfo) {
         return this
     }
 
-    fun assertPlayerStatus(status: PlayerStatus): PlayerInfoRobot {
+    fun assertPlayerStatus(status: DwitchPlayerStatus): PlayerInfoRobot {
         assertThat(info.status).isEqualTo(status)
         return this
     }
 
-    fun assertPlayerRank(rank: Rank): PlayerInfoRobot {
+    fun assertPlayerRank(rank: DwitchRank): PlayerInfoRobot {
         assertThat(info.rank).isEqualTo(rank)
         return this
     }

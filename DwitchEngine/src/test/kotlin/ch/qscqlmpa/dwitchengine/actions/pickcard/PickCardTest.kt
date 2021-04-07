@@ -5,9 +5,9 @@ import ch.qscqlmpa.dwitchengine.EngineTestBase
 import ch.qscqlmpa.dwitchengine.GameStateRobot
 import ch.qscqlmpa.dwitchengine.PlayerRobot
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.game.GamePhase
-import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
-import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
+import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import org.junit.jupiter.api.Test
 
 class PickCardTest : EngineTestBase() {
@@ -15,9 +15,9 @@ class PickCardTest : EngineTestBase() {
     @Test
     fun `Player picks a card`() {
         initialGameState = gameStateBuilder
-            .setGamePhase(GamePhase.RoundIsOnGoing)
-            .addPlayerToGame(player1, PlayerStatus.Playing, Rank.Asshole, listOf(Card.Clubs3))
-            .addPlayerToGame(player2, PlayerStatus.Waiting, Rank.President, listOf(Card.Clubs2))
+            .setGamePhase(DwitchGamePhase.RoundIsOnGoing)
+            .addPlayerToGame(player1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(Card.Clubs3))
+            .addPlayerToGame(player2, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.Clubs2))
             .setCardsdOnTable(Card.Clubs4)
             .setLocalPlayer(player1Id)
             .setCurrentPlayer(player1Id)
@@ -39,11 +39,11 @@ class PickCardTest : EngineTestBase() {
             .assertNumCardsInHand(2) // One more card: the card picked
             .assertCardsInHandContains(Card.Clubs5)
             .assertPlayerHasPickedCard()
-            .assertPlayerState(PlayerStatus.Playing)
+            .assertPlayerState(DwitchPlayerStatus.Playing)
 
         PlayerRobot(gameStateUpdated, player2Id)
             .assertPlayerHasNotPickedCard()
-            .assertPlayerState(PlayerStatus.Waiting)
+            .assertPlayerState(DwitchPlayerStatus.Waiting)
     }
 
     private fun launchPickCardTest() {

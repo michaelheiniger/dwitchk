@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchengine.rules
 
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
-import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchengine.model.player.SpecialRuleBreaker
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
@@ -14,12 +14,12 @@ internal class RankComputerTest {
     @DisplayName("computePlayersRank")
     inner class ComputePlayersRank {
 
-        private val player1Id = PlayerDwitchId(1)
-        private val player2Id = PlayerDwitchId(2)
-        private val player3Id = PlayerDwitchId(3)
-        private val player4Id = PlayerDwitchId(4)
-        private val player5Id = PlayerDwitchId(5)
-        private val player6Id = PlayerDwitchId(6)
+        private val player1Id = DwitchPlayerId(1)
+        private val player2Id = DwitchPlayerId(2)
+        private val player3Id = DwitchPlayerId(3)
+        private val player4Id = DwitchPlayerId(4)
+        private val player5Id = DwitchPlayerId(5)
+        private val player6Id = DwitchPlayerId(6)
 
         @Test
         fun `Two players`() {
@@ -28,20 +28,21 @@ internal class RankComputerTest {
             val ranks = launchTest(list)
 
             assertThat(ranks.size).isEqualTo(2)
-            assertThat(ranks[player1Id]).isEqualTo(Rank.President)
-            assertThat(ranks[player2Id]).isEqualTo(Rank.Asshole)
+            assertThat(ranks[player1Id]).isEqualTo(DwitchRank.President)
+            assertThat(ranks[player2Id]).isEqualTo(DwitchRank.Asshole)
         }
 
         @Test
         fun `Two players, one played on first jack`() {
             val list = listOf(player1Id, player2Id) // Player1 finished first ...
-            val specialRuleBreakers = listOf(SpecialRuleBreaker.PlayedOnFirstJack(player1Id)) // but played on first Jack of the round
+            val specialRuleBreakers =
+                listOf(SpecialRuleBreaker.PlayedOnFirstJack(player1Id)) // but played on first Jack of the round
 
             val ranks = launchTest(list, specialRuleBreakers)
 
             assertThat(ranks.size).isEqualTo(2)
-            assertThat(ranks[player1Id]).isEqualTo(Rank.Asshole)
-            assertThat(ranks[player2Id]).isEqualTo(Rank.President)
+            assertThat(ranks[player1Id]).isEqualTo(DwitchRank.Asshole)
+            assertThat(ranks[player2Id]).isEqualTo(DwitchRank.President)
         }
 
         @Test
@@ -52,8 +53,8 @@ internal class RankComputerTest {
             val ranks = launchTest(list, specialRuleBreakers)
 
             assertThat(ranks.size).isEqualTo(2)
-            assertThat(ranks[player1Id]).isEqualTo(Rank.Asshole)
-            assertThat(ranks[player2Id]).isEqualTo(Rank.President)
+            assertThat(ranks[player1Id]).isEqualTo(DwitchRank.Asshole)
+            assertThat(ranks[player2Id]).isEqualTo(DwitchRank.President)
         }
 
         @Test
@@ -63,9 +64,9 @@ internal class RankComputerTest {
             val ranks = launchTest(list)
 
             assertThat(ranks.size).isEqualTo(3)
-            assertThat(ranks[player1Id]).isEqualTo(Rank.President)
-            assertThat(ranks[player2Id]).isEqualTo(Rank.Neutral)
-            assertThat(ranks[player3Id]).isEqualTo(Rank.Asshole)
+            assertThat(ranks[player1Id]).isEqualTo(DwitchRank.President)
+            assertThat(ranks[player2Id]).isEqualTo(DwitchRank.Neutral)
+            assertThat(ranks[player3Id]).isEqualTo(DwitchRank.Asshole)
         }
 
         @Test
@@ -76,9 +77,9 @@ internal class RankComputerTest {
             val ranks = launchTest(list, specialRuleBreakers)
 
             assertThat(ranks.size).isEqualTo(3)
-            assertThat(ranks[player1Id]).isEqualTo(Rank.Asshole)
-            assertThat(ranks[player2Id]).isEqualTo(Rank.President)
-            assertThat(ranks[player3Id]).isEqualTo(Rank.Neutral)
+            assertThat(ranks[player1Id]).isEqualTo(DwitchRank.Asshole)
+            assertThat(ranks[player2Id]).isEqualTo(DwitchRank.President)
+            assertThat(ranks[player3Id]).isEqualTo(DwitchRank.Neutral)
         }
 
         @Test
@@ -89,9 +90,9 @@ internal class RankComputerTest {
             val ranks = launchTest(list, specialRuleBreakers)
 
             assertThat(ranks.size).isEqualTo(3)
-            assertThat(ranks[player1Id]).isEqualTo(Rank.Asshole)
-            assertThat(ranks[player2Id]).isEqualTo(Rank.President)
-            assertThat(ranks[player3Id]).isEqualTo(Rank.Neutral)
+            assertThat(ranks[player1Id]).isEqualTo(DwitchRank.Asshole)
+            assertThat(ranks[player2Id]).isEqualTo(DwitchRank.President)
+            assertThat(ranks[player3Id]).isEqualTo(DwitchRank.Neutral)
         }
 
         @Test
@@ -105,9 +106,9 @@ internal class RankComputerTest {
             val ranks = launchTest(list, specialRuleBreakers)
 
             assertThat(ranks.size).isEqualTo(3)
-            assertThat(ranks[player1Id]).isEqualTo(Rank.Neutral)
-            assertThat(ranks[player2Id]).isEqualTo(Rank.Asshole)
-            assertThat(ranks[player3Id]).isEqualTo(Rank.President)
+            assertThat(ranks[player1Id]).isEqualTo(DwitchRank.Neutral)
+            assertThat(ranks[player2Id]).isEqualTo(DwitchRank.Asshole)
+            assertThat(ranks[player3Id]).isEqualTo(DwitchRank.President)
         }
 
         @Test
@@ -121,9 +122,9 @@ internal class RankComputerTest {
             val ranks = launchTest(list, specialRuleBreakers)
 
             assertThat(ranks.size).isEqualTo(3)
-            assertThat(ranks[player1Id]).isEqualTo(Rank.Asshole)
-            assertThat(ranks[player2Id]).isEqualTo(Rank.Neutral)
-            assertThat(ranks[player3Id]).isEqualTo(Rank.President)
+            assertThat(ranks[player1Id]).isEqualTo(DwitchRank.Asshole)
+            assertThat(ranks[player2Id]).isEqualTo(DwitchRank.Neutral)
+            assertThat(ranks[player3Id]).isEqualTo(DwitchRank.President)
         }
 
         @Test
@@ -133,10 +134,10 @@ internal class RankComputerTest {
             val ranks = launchTest(list)
 
             assertThat(ranks.size).isEqualTo(4)
-            assertThat(ranks[player1Id]).isEqualTo(Rank.President)
-            assertThat(ranks[player2Id]).isEqualTo(Rank.VicePresident)
-            assertThat(ranks[player3Id]).isEqualTo(Rank.ViceAsshole)
-            assertThat(ranks[player4Id]).isEqualTo(Rank.Asshole)
+            assertThat(ranks[player1Id]).isEqualTo(DwitchRank.President)
+            assertThat(ranks[player2Id]).isEqualTo(DwitchRank.VicePresident)
+            assertThat(ranks[player3Id]).isEqualTo(DwitchRank.ViceAsshole)
+            assertThat(ranks[player4Id]).isEqualTo(DwitchRank.Asshole)
         }
 
         @Test
@@ -147,10 +148,10 @@ internal class RankComputerTest {
             val ranks = launchTest(list, specialRuleBreakers)
 
             assertThat(ranks.size).isEqualTo(4)
-            assertThat(ranks[player1Id]).isEqualTo(Rank.Asshole)
-            assertThat(ranks[player2Id]).isEqualTo(Rank.President)
-            assertThat(ranks[player3Id]).isEqualTo(Rank.VicePresident)
-            assertThat(ranks[player4Id]).isEqualTo(Rank.ViceAsshole)
+            assertThat(ranks[player1Id]).isEqualTo(DwitchRank.Asshole)
+            assertThat(ranks[player2Id]).isEqualTo(DwitchRank.President)
+            assertThat(ranks[player3Id]).isEqualTo(DwitchRank.VicePresident)
+            assertThat(ranks[player4Id]).isEqualTo(DwitchRank.ViceAsshole)
         }
 
         @Test
@@ -164,10 +165,10 @@ internal class RankComputerTest {
             val ranks = launchTest(list, specialRuleBreakers)
 
             assertThat(ranks.size).isEqualTo(4)
-            assertThat(ranks[player1Id]).isEqualTo(Rank.ViceAsshole)
-            assertThat(ranks[player2Id]).isEqualTo(Rank.President)
-            assertThat(ranks[player3Id]).isEqualTo(Rank.Asshole)
-            assertThat(ranks[player4Id]).isEqualTo(Rank.VicePresident)
+            assertThat(ranks[player1Id]).isEqualTo(DwitchRank.ViceAsshole)
+            assertThat(ranks[player2Id]).isEqualTo(DwitchRank.President)
+            assertThat(ranks[player3Id]).isEqualTo(DwitchRank.Asshole)
+            assertThat(ranks[player4Id]).isEqualTo(DwitchRank.VicePresident)
         }
 
         @Test
@@ -182,10 +183,10 @@ internal class RankComputerTest {
             val ranks = launchTest(list, specialRuleBreakers)
 
             assertThat(ranks.size).isEqualTo(4)
-            assertThat(ranks[player1Id]).isEqualTo(Rank.VicePresident)
-            assertThat(ranks[player2Id]).isEqualTo(Rank.ViceAsshole)
-            assertThat(ranks[player3Id]).isEqualTo(Rank.Asshole)
-            assertThat(ranks[player4Id]).isEqualTo(Rank.President)
+            assertThat(ranks[player1Id]).isEqualTo(DwitchRank.VicePresident)
+            assertThat(ranks[player2Id]).isEqualTo(DwitchRank.ViceAsshole)
+            assertThat(ranks[player3Id]).isEqualTo(DwitchRank.Asshole)
+            assertThat(ranks[player4Id]).isEqualTo(DwitchRank.President)
         }
 
         @Test
@@ -199,10 +200,10 @@ internal class RankComputerTest {
             val ranks = launchTest(list, specialRuleBreakers)
 
             assertThat(ranks.size).isEqualTo(4)
-            assertThat(ranks[player1Id]).isEqualTo(Rank.President)
-            assertThat(ranks[player2Id]).isEqualTo(Rank.ViceAsshole)
-            assertThat(ranks[player3Id]).isEqualTo(Rank.Asshole)
-            assertThat(ranks[player4Id]).isEqualTo(Rank.VicePresident)
+            assertThat(ranks[player1Id]).isEqualTo(DwitchRank.President)
+            assertThat(ranks[player2Id]).isEqualTo(DwitchRank.ViceAsshole)
+            assertThat(ranks[player3Id]).isEqualTo(DwitchRank.Asshole)
+            assertThat(ranks[player4Id]).isEqualTo(DwitchRank.VicePresident)
         }
 
         @Test
@@ -216,10 +217,10 @@ internal class RankComputerTest {
             val ranks = launchTest(list, specialRuleBreakers)
 
             assertThat(ranks.size).isEqualTo(4)
-            assertThat(ranks[player1Id]).isEqualTo(Rank.President)
-            assertThat(ranks[player2Id]).isEqualTo(Rank.Asshole)
-            assertThat(ranks[player3Id]).isEqualTo(Rank.ViceAsshole)
-            assertThat(ranks[player4Id]).isEqualTo(Rank.VicePresident)
+            assertThat(ranks[player1Id]).isEqualTo(DwitchRank.President)
+            assertThat(ranks[player2Id]).isEqualTo(DwitchRank.Asshole)
+            assertThat(ranks[player3Id]).isEqualTo(DwitchRank.ViceAsshole)
+            assertThat(ranks[player4Id]).isEqualTo(DwitchRank.VicePresident)
         }
 
         @Test
@@ -229,11 +230,11 @@ internal class RankComputerTest {
             val ranks = launchTest(list)
 
             assertThat(ranks.size).isEqualTo(5)
-            assertThat(ranks[player1Id]).isEqualTo(Rank.President)
-            assertThat(ranks[player2Id]).isEqualTo(Rank.VicePresident)
-            assertThat(ranks[player3Id]).isEqualTo(Rank.Neutral)
-            assertThat(ranks[player4Id]).isEqualTo(Rank.ViceAsshole)
-            assertThat(ranks[player5Id]).isEqualTo(Rank.Asshole)
+            assertThat(ranks[player1Id]).isEqualTo(DwitchRank.President)
+            assertThat(ranks[player2Id]).isEqualTo(DwitchRank.VicePresident)
+            assertThat(ranks[player3Id]).isEqualTo(DwitchRank.Neutral)
+            assertThat(ranks[player4Id]).isEqualTo(DwitchRank.ViceAsshole)
+            assertThat(ranks[player5Id]).isEqualTo(DwitchRank.Asshole)
         }
 
         @Test
@@ -244,11 +245,11 @@ internal class RankComputerTest {
             val ranks = launchTest(list, specialRuleBreakers)
 
             assertThat(ranks.size).isEqualTo(5)
-            assertThat(ranks[player1Id]).isEqualTo(Rank.Asshole)
-            assertThat(ranks[player2Id]).isEqualTo(Rank.President)
-            assertThat(ranks[player3Id]).isEqualTo(Rank.VicePresident)
-            assertThat(ranks[player4Id]).isEqualTo(Rank.Neutral)
-            assertThat(ranks[player5Id]).isEqualTo(Rank.ViceAsshole)
+            assertThat(ranks[player1Id]).isEqualTo(DwitchRank.Asshole)
+            assertThat(ranks[player2Id]).isEqualTo(DwitchRank.President)
+            assertThat(ranks[player3Id]).isEqualTo(DwitchRank.VicePresident)
+            assertThat(ranks[player4Id]).isEqualTo(DwitchRank.Neutral)
+            assertThat(ranks[player5Id]).isEqualTo(DwitchRank.ViceAsshole)
         }
 
         @Test
@@ -262,11 +263,11 @@ internal class RankComputerTest {
             val ranks = launchTest(list, specialRuleBreakers)
 
             assertThat(ranks.size).isEqualTo(5)
-            assertThat(ranks[player1Id]).isEqualTo(Rank.ViceAsshole)
-            assertThat(ranks[player2Id]).isEqualTo(Rank.President)
-            assertThat(ranks[player3Id]).isEqualTo(Rank.VicePresident)
-            assertThat(ranks[player4Id]).isEqualTo(Rank.Asshole)
-            assertThat(ranks[player5Id]).isEqualTo(Rank.Neutral)
+            assertThat(ranks[player1Id]).isEqualTo(DwitchRank.ViceAsshole)
+            assertThat(ranks[player2Id]).isEqualTo(DwitchRank.President)
+            assertThat(ranks[player3Id]).isEqualTo(DwitchRank.VicePresident)
+            assertThat(ranks[player4Id]).isEqualTo(DwitchRank.Asshole)
+            assertThat(ranks[player5Id]).isEqualTo(DwitchRank.Neutral)
         }
 
         @Test
@@ -281,11 +282,11 @@ internal class RankComputerTest {
             val ranks = launchTest(list, specialRuleBreakers)
 
             assertThat(ranks.size).isEqualTo(5)
-            assertThat(ranks[player1Id]).isEqualTo(Rank.Neutral)
-            assertThat(ranks[player2Id]).isEqualTo(Rank.ViceAsshole)
-            assertThat(ranks[player3Id]).isEqualTo(Rank.President)
-            assertThat(ranks[player4Id]).isEqualTo(Rank.Asshole)
-            assertThat(ranks[player5Id]).isEqualTo(Rank.VicePresident)
+            assertThat(ranks[player1Id]).isEqualTo(DwitchRank.Neutral)
+            assertThat(ranks[player2Id]).isEqualTo(DwitchRank.ViceAsshole)
+            assertThat(ranks[player3Id]).isEqualTo(DwitchRank.President)
+            assertThat(ranks[player4Id]).isEqualTo(DwitchRank.Asshole)
+            assertThat(ranks[player5Id]).isEqualTo(DwitchRank.VicePresident)
         }
 
         @Test
@@ -301,11 +302,11 @@ internal class RankComputerTest {
             val ranks = launchTest(list, specialRuleBreakers)
 
             assertThat(ranks.size).isEqualTo(5)
-            assertThat(ranks[player1Id]).isEqualTo(Rank.VicePresident)
-            assertThat(ranks[player2Id]).isEqualTo(Rank.Neutral)
-            assertThat(ranks[player3Id]).isEqualTo(Rank.ViceAsshole)
-            assertThat(ranks[player4Id]).isEqualTo(Rank.Asshole)
-            assertThat(ranks[player5Id]).isEqualTo(Rank.President)
+            assertThat(ranks[player1Id]).isEqualTo(DwitchRank.VicePresident)
+            assertThat(ranks[player2Id]).isEqualTo(DwitchRank.Neutral)
+            assertThat(ranks[player3Id]).isEqualTo(DwitchRank.ViceAsshole)
+            assertThat(ranks[player4Id]).isEqualTo(DwitchRank.Asshole)
+            assertThat(ranks[player5Id]).isEqualTo(DwitchRank.President)
         }
 
         @Test
@@ -315,12 +316,12 @@ internal class RankComputerTest {
             val ranks = launchTest(list)
 
             assertThat(ranks.size).isEqualTo(6)
-            assertThat(ranks[player1Id]).isEqualTo(Rank.President)
-            assertThat(ranks[player2Id]).isEqualTo(Rank.VicePresident)
-            assertThat(ranks[player3Id]).isEqualTo(Rank.Neutral)
-            assertThat(ranks[player4Id]).isEqualTo(Rank.Neutral)
-            assertThat(ranks[player5Id]).isEqualTo(Rank.ViceAsshole)
-            assertThat(ranks[player6Id]).isEqualTo(Rank.Asshole)
+            assertThat(ranks[player1Id]).isEqualTo(DwitchRank.President)
+            assertThat(ranks[player2Id]).isEqualTo(DwitchRank.VicePresident)
+            assertThat(ranks[player3Id]).isEqualTo(DwitchRank.Neutral)
+            assertThat(ranks[player4Id]).isEqualTo(DwitchRank.Neutral)
+            assertThat(ranks[player5Id]).isEqualTo(DwitchRank.ViceAsshole)
+            assertThat(ranks[player6Id]).isEqualTo(DwitchRank.Asshole)
         }
 
         @Test
@@ -335,16 +336,19 @@ internal class RankComputerTest {
             val ranks = launchTest(list, specialRuleBreakers)
 
             assertThat(ranks.size).isEqualTo(6)
-            assertThat(ranks[player1Id]).isEqualTo(Rank.Asshole)
-            assertThat(ranks[player2Id]).isEqualTo(Rank.ViceAsshole)
-            assertThat(ranks[player3Id]).isEqualTo(Rank.President)
-            assertThat(ranks[player4Id]).isEqualTo(Rank.VicePresident)
-            assertThat(ranks[player5Id]).isEqualTo(Rank.Neutral)
-            assertThat(ranks[player6Id]).isEqualTo(Rank.Neutral)
+            assertThat(ranks[player1Id]).isEqualTo(DwitchRank.Asshole)
+            assertThat(ranks[player2Id]).isEqualTo(DwitchRank.ViceAsshole)
+            assertThat(ranks[player3Id]).isEqualTo(DwitchRank.President)
+            assertThat(ranks[player4Id]).isEqualTo(DwitchRank.VicePresident)
+            assertThat(ranks[player5Id]).isEqualTo(DwitchRank.Neutral)
+            assertThat(ranks[player6Id]).isEqualTo(DwitchRank.Neutral)
         }
     }
 
-    private fun launchTest(list: List<PlayerDwitchId>, specialRuleBreakers: List<SpecialRuleBreaker> = emptyList()): Map<PlayerDwitchId, Rank> {
+    private fun launchTest(
+        list: List<DwitchPlayerId>,
+        specialRuleBreakers: List<SpecialRuleBreaker> = emptyList()
+    ): Map<DwitchPlayerId, DwitchRank> {
         return RankComputer.computePlayersRank(list, specialRuleBreakers)
     }
 }

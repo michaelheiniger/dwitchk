@@ -3,9 +3,9 @@ package ch.qscqlmpa.dwitchengine.actions.startnewgame
 import ch.qscqlmpa.dwitchengine.GameStateRobot
 import ch.qscqlmpa.dwitchengine.TestEntityFactory
 import ch.qscqlmpa.dwitchengine.initialgamesetup.random.RandomInitialGameSetup
-import ch.qscqlmpa.dwitchengine.model.game.GamePhase
-import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
-import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
+import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -25,7 +25,7 @@ internal class GameBootstrapTest {
 
         val gameState = GameBootstrap.createNewGame(playersInfo, initialGameSetup)
 
-        GameStateRobot(gameState).assertGamePhase(GamePhase.RoundIsBeginning)
+        GameStateRobot(gameState).assertGamePhase(DwitchGamePhase.RoundIsBeginning)
     }
 
     @Test
@@ -42,19 +42,19 @@ internal class GameBootstrapTest {
 
         val gameState = GameBootstrap.createNewGame(playersInfo, initialGameSetup)
 
-        val asshole = gameState.players.values.find { p -> p.rank == Rank.Asshole }
+        val asshole = gameState.players.values.find { p -> p.rank == DwitchRank.Asshole }
         assertThat(gameState.playingOrder[0]).isEqualTo(asshole!!.id)
 
-        val viceAsshole = gameState.players.values.find { p -> p.rank == Rank.ViceAsshole }
+        val viceAsshole = gameState.players.values.find { p -> p.rank == DwitchRank.ViceAsshole }
         assertThat(gameState.playingOrder[1]).isEqualTo(viceAsshole!!.id)
 
-        val neutrals = gameState.players.values.filter { p -> p.rank == Rank.Neutral }
+        val neutrals = gameState.players.values.filter { p -> p.rank == DwitchRank.Neutral }
         assertThat(gameState.playingOrder[2]).isEqualTo(neutrals[0].id)
 
-        val vicePresident = gameState.players.values.find { p -> p.rank == Rank.VicePresident }
+        val vicePresident = gameState.players.values.find { p -> p.rank == DwitchRank.VicePresident }
         assertThat(gameState.playingOrder[3]).isEqualTo(vicePresident!!.id)
 
-        val president = gameState.players.values.find { p -> p.rank == Rank.President }
+        val president = gameState.players.values.find { p -> p.rank == DwitchRank.President }
         assertThat(gameState.playingOrder[4]).isEqualTo(president!!.id)
     }
 
@@ -72,20 +72,20 @@ internal class GameBootstrapTest {
 
         val gameState = GameBootstrap.createNewGame(playersInfo, initialGameSetup)
 
-        val asshole = gameState.players.values.find { p -> p.rank == Rank.Asshole }
-        assertThat(asshole!!.status).isEqualTo(PlayerStatus.Playing)
+        val asshole = gameState.players.values.find { p -> p.rank == DwitchRank.Asshole }
+        assertThat(asshole!!.status).isEqualTo(DwitchPlayerStatus.Playing)
 
-        val viceAsshole = gameState.players.values.find { p -> p.rank == Rank.ViceAsshole }
-        assertThat(viceAsshole!!.status).isEqualTo(PlayerStatus.Waiting)
+        val viceAsshole = gameState.players.values.find { p -> p.rank == DwitchRank.ViceAsshole }
+        assertThat(viceAsshole!!.status).isEqualTo(DwitchPlayerStatus.Waiting)
 
-        val neutrals = gameState.players.values.filter { p -> p.rank == Rank.Neutral }
-        neutrals.forEach { p -> assertThat(p.status).isEqualTo(PlayerStatus.Waiting) }
+        val neutrals = gameState.players.values.filter { p -> p.rank == DwitchRank.Neutral }
+        neutrals.forEach { p -> assertThat(p.status).isEqualTo(DwitchPlayerStatus.Waiting) }
 
-        val vicePresident = gameState.players.values.find { p -> p.rank == Rank.VicePresident }
-        assertThat(vicePresident!!.status).isEqualTo(PlayerStatus.Waiting)
+        val vicePresident = gameState.players.values.find { p -> p.rank == DwitchRank.VicePresident }
+        assertThat(vicePresident!!.status).isEqualTo(DwitchPlayerStatus.Waiting)
 
-        val president = gameState.players.values.find { p -> p.rank == Rank.President }
-        assertThat(president!!.status).isEqualTo(PlayerStatus.Waiting)
+        val president = gameState.players.values.find { p -> p.rank == DwitchRank.President }
+        assertThat(president!!.status).isEqualTo(DwitchPlayerStatus.Waiting)
     }
 
     @Test
@@ -102,7 +102,7 @@ internal class GameBootstrapTest {
 
         val gameState = GameBootstrap.createNewGame(playersInfo, initialGameSetup)
 
-        val asshole = gameState.players.values.find { p -> p.rank == Rank.Asshole }
+        val asshole = gameState.players.values.find { p -> p.rank == DwitchRank.Asshole }
         assertThat(asshole!!.id).isEqualTo(gameState.currentPlayerId)
     }
 

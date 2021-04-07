@@ -2,9 +2,9 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.cardexchange
 
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
-import ch.qscqlmpa.dwitchengine.model.game.CardExchange
-import ch.qscqlmpa.dwitchengine.model.info.CardItem
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.game.DwitchCardExchange
+import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeInfo
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -25,11 +25,11 @@ class CardExchangeStateEngineTest {
 
         assertThat(cardExchangeStateEngine.getCardExchangeState().canPerformExchange).isFalse
         assertThat(cardExchangeStateEngine.getCardExchangeState().cardsInHand).containsExactlyInAnyOrder(
-            CardItem(Card.Clubs2, true),
-            CardItem(Card.DiamondsAce, false),
-            CardItem(Card.Hearts5, true),
-            CardItem(Card.Hearts4, false),
-            CardItem(Card.Spades5, true)
+            DwitchCardInfo(Card.Clubs2, true),
+            DwitchCardInfo(Card.DiamondsAce, false),
+            DwitchCardInfo(Card.Hearts5, true),
+            DwitchCardInfo(Card.Hearts4, false),
+            DwitchCardInfo(Card.Spades5, true)
         )
         assertThat(cardExchangeStateEngine.getCardExchangeState().cardsToExchange).isEmpty()
     }
@@ -44,23 +44,23 @@ class CardExchangeStateEngineTest {
         cardExchangeStateEngine.addCardToExchange(Card.Clubs2)
         assertThat(cardExchangeStateEngine.getCardExchangeState().canPerformExchange).isFalse
         assertThat(cardExchangeStateEngine.getCardExchangeState().cardsInHand).containsExactlyInAnyOrder(
-            CardItem(Card.DiamondsAce, false),
-            CardItem(Card.Hearts5, true),
-            CardItem(Card.Hearts4, false),
-            CardItem(Card.Spades5, true)
+            DwitchCardInfo(Card.DiamondsAce, false),
+            DwitchCardInfo(Card.Hearts5, true),
+            DwitchCardInfo(Card.Hearts4, false),
+            DwitchCardInfo(Card.Spades5, true)
         )
-        assertThat(cardExchangeStateEngine.getCardExchangeState().cardsToExchange).containsExactlyInAnyOrder(CardItem(Card.Clubs2))
+        assertThat(cardExchangeStateEngine.getCardExchangeState().cardsToExchange).containsExactlyInAnyOrder(DwitchCardInfo(Card.Clubs2))
 
         cardExchangeStateEngine.addCardToExchange(Card.Hearts5)
         assertThat(cardExchangeStateEngine.getCardExchangeState().canPerformExchange).isTrue
         assertThat(cardExchangeStateEngine.getCardExchangeState().cardsInHand).containsExactlyInAnyOrder(
-            CardItem(Card.DiamondsAce, false),
-            CardItem(Card.Hearts4, false),
-            CardItem(Card.Spades5, false) // false because only one card with CardName.Five can be selected
+            DwitchCardInfo(Card.DiamondsAce, false),
+            DwitchCardInfo(Card.Hearts4, false),
+            DwitchCardInfo(Card.Spades5, false) // false because only one card with CardName.Five can be selected
         )
         assertThat(cardExchangeStateEngine.getCardExchangeState().cardsToExchange).containsExactlyInAnyOrder(
-            CardItem(Card.Clubs2),
-            CardItem(Card.Hearts5)
+            DwitchCardInfo(Card.Clubs2),
+            DwitchCardInfo(Card.Hearts5)
         )
     }
 
@@ -75,33 +75,33 @@ class CardExchangeStateEngineTest {
         cardExchangeStateEngine.addCardToExchange(Card.Clubs2)
         assertThat(cardExchangeStateEngine.getCardExchangeState().canPerformExchange).isTrue
         assertThat(cardExchangeStateEngine.getCardExchangeState().cardsInHand).containsExactlyInAnyOrder(
-            CardItem(Card.DiamondsAce, false),
-            CardItem(Card.Hearts4, false),
-            CardItem(Card.Spades5, false) // false because only one card with CardName.Five can be selected
+            DwitchCardInfo(Card.DiamondsAce, false),
+            DwitchCardInfo(Card.Hearts4, false),
+            DwitchCardInfo(Card.Spades5, false) // false because only one card with CardName.Five can be selected
         )
         assertThat(cardExchangeStateEngine.getCardExchangeState().cardsToExchange).containsExactlyInAnyOrder(
-            CardItem(Card.Clubs2),
-            CardItem(Card.Hearts5)
+            DwitchCardInfo(Card.Clubs2),
+            DwitchCardInfo(Card.Hearts5)
         )
 
         cardExchangeStateEngine.removeCardFromExchange(Card.Hearts5)
         assertThat(cardExchangeStateEngine.getCardExchangeState().canPerformExchange).isFalse
         assertThat(cardExchangeStateEngine.getCardExchangeState().cardsInHand).containsExactlyInAnyOrder(
-            CardItem(Card.DiamondsAce, false),
-            CardItem(Card.Hearts4, false),
-            CardItem(Card.Hearts5, true),
-            CardItem(Card.Spades5, true)
+            DwitchCardInfo(Card.DiamondsAce, false),
+            DwitchCardInfo(Card.Hearts4, false),
+            DwitchCardInfo(Card.Hearts5, true),
+            DwitchCardInfo(Card.Spades5, true)
         )
         assertThat(cardExchangeStateEngine.getCardExchangeState().cardsToExchange).containsExactlyInAnyOrder(
-            CardItem(Card.Clubs2)
+            DwitchCardInfo(Card.Clubs2)
         )
     }
 
     private fun setupTest() {
         cardExchangeStateEngine = CardExchangeStateEngine(
             CardExchangeInfo(
-                CardExchange(
-                    PlayerDwitchId(1),
+                DwitchCardExchange(
+                    DwitchPlayerId(1),
                     numCardsToChoose = numCardsToChoose!!,
                     allowedCardValues = allowedCardValues
                 ),

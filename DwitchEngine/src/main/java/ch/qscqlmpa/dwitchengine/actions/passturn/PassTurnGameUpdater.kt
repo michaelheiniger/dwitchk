@@ -1,13 +1,13 @@
 package ch.qscqlmpa.dwitchengine.actions.passturn
 
 import ch.qscqlmpa.dwitchengine.actions.GameUpdaterBase
-import ch.qscqlmpa.dwitchengine.model.game.GameEvent
-import ch.qscqlmpa.dwitchengine.model.game.GameState
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameEvent
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 
-internal class PassTurnGameUpdater(currentGameState: GameState) : GameUpdaterBase(currentGameState) {
+internal class PassTurnGameUpdater(currentGameState: DwitchGameState) : GameUpdaterBase(currentGameState) {
 
     fun clearTable() {
         gameStateMutable.moveCardsFromTableToGraveyard()
-        gameStateMutable.gameEvent = GameEvent.TableHasBeenClearedTurnPassed
+        gameStateMutable.dwitchGameEvent = DwitchGameEvent.TableHasBeenClearedTurnPassed
     }
 }

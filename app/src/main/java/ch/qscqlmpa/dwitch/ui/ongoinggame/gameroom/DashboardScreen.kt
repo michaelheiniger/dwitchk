@@ -28,9 +28,9 @@ import ch.qscqlmpa.dwitch.ui.ResourceMapper
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitch.ui.ongoinggame.CardItemDisplay
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.info.CardItem
-import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
-import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
+import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameDashboardInfo
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.LocalPlayerDashboard
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.PlayerInfo
@@ -43,16 +43,16 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.PlayerInfo
 private fun DashboardScreenPreview() {
     val donePlayer = PlayerInfo(
         name = "Aragorn",
-        rank = Rank.VicePresident,
-        status = PlayerStatus.Done,
+        rank = DwitchRank.VicePresident,
+        status = DwitchPlayerStatus.Done,
         dwitched = false,
         localPlayer = false
     )
 
     val turnPassedPlayer = PlayerInfo(
         name = "Gimli",
-        rank = Rank.ViceAsshole,
-        status = PlayerStatus.TurnPassed,
+        rank = DwitchRank.ViceAsshole,
+        status = DwitchPlayerStatus.TurnPassed,
         dwitched = false,
         localPlayer = false
     )
@@ -60,8 +60,8 @@ private fun DashboardScreenPreview() {
     // Also the local player
     val playingPlayer = PlayerInfo(
         name = "Legolas",
-        rank = Rank.Asshole,
-        status = PlayerStatus.Playing,
+        rank = DwitchRank.Asshole,
+        status = DwitchPlayerStatus.Playing,
         dwitched = false,
         localPlayer = true
     )
@@ -69,16 +69,16 @@ private fun DashboardScreenPreview() {
     // Waiting
     val waitingPlayer = PlayerInfo(
         name = "Elrond",
-        rank = Rank.President,
-        status = PlayerStatus.Waiting,
+        rank = DwitchRank.President,
+        status = DwitchPlayerStatus.Waiting,
         dwitched = false,
         localPlayer = false
     )
 
     val waitingAndDwitchedPlayer = PlayerInfo(
         name = "Galadriel",
-        rank = Rank.Neutral,
-        status = PlayerStatus.Waiting,
+        rank = DwitchRank.Neutral,
+        status = DwitchPlayerStatus.Waiting,
         dwitched = true,
         localPlayer = false
     )
@@ -87,20 +87,20 @@ private fun DashboardScreenPreview() {
 
     val localPlayerDashboard = LocalPlayerDashboard(
         cardsInHand = listOf(
-            CardItem(Card.Clubs2, true),
-            CardItem(Card.Hearts5, false),
-            CardItem(Card.Diamonds8, true),
-            CardItem(Card.SpadesJack, true),
-            CardItem(Card.Clubs10, true),
-            CardItem(Card.Hearts4, false),
-            CardItem(Card.Hearts6, false),
-            CardItem(Card.Diamonds9, true),
-            CardItem(Card.SpadesAce, true),
-            CardItem(Card.ClubsJack, true),
-            CardItem(Card.Hearts7, false),
-            CardItem(Card.Spades3, false),
-            CardItem(Card.Clubs4, false),
-            CardItem(Card.Hearts8, true)
+            DwitchCardInfo(Card.Clubs2, true),
+            DwitchCardInfo(Card.Hearts5, false),
+            DwitchCardInfo(Card.Diamonds8, true),
+            DwitchCardInfo(Card.SpadesJack, true),
+            DwitchCardInfo(Card.Clubs10, true),
+            DwitchCardInfo(Card.Hearts4, false),
+            DwitchCardInfo(Card.Hearts6, false),
+            DwitchCardInfo(Card.Diamonds9, true),
+            DwitchCardInfo(Card.SpadesAce, true),
+            DwitchCardInfo(Card.ClubsJack, true),
+            DwitchCardInfo(Card.Hearts7, false),
+            DwitchCardInfo(Card.Spades3, false),
+            DwitchCardInfo(Card.Clubs4, false),
+            DwitchCardInfo(Card.Hearts8, true)
 
         ),
         canPass = false,
@@ -160,10 +160,10 @@ private fun PlayersInfo(playersInfo: List<PlayerInfo>) {
     ) {
         for (player in playersInfo) {
             when (player.status) {
-                PlayerStatus.Done -> PlayerDone(player)
-                PlayerStatus.Playing -> PlayerPlaying(player)
-                PlayerStatus.TurnPassed -> PlayerTurnPassed(player)
-                PlayerStatus.Waiting -> PlayerWaiting(player)
+                DwitchPlayerStatus.Done -> PlayerDone(player)
+                DwitchPlayerStatus.Playing -> PlayerPlaying(player)
+                DwitchPlayerStatus.TurnPassed -> PlayerTurnPassed(player)
+                DwitchPlayerStatus.Waiting -> PlayerWaiting(player)
             }
             Spacer(Modifier.height(4.dp))
         }

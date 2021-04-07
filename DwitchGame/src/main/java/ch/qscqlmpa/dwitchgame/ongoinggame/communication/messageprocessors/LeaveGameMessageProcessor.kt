@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
@@ -24,17 +24,17 @@ internal class LeaveGameMessageProcessor @Inject constructor(
         val communicator = communicatorLazy.get()
 
         return Completable.fromAction {
-            deletePlayerFromStore(msg.playerDwitchId)
+            deletePlayerFromStore(msg.dwitchPlayerId)
             communicator.sendMessage(hostMessageFactory.createWaitingRoomStateUpdateMessage())
         }
     }
 
-    private fun deletePlayerFromStore(playerDwitchId: PlayerDwitchId) {
-        val numRecordsAffected = store.deletePlayer(playerDwitchId)
+    private fun deletePlayerFromStore(dwitchPlayerId: DwitchPlayerId) {
+        val numRecordsAffected = store.deletePlayer(dwitchPlayerId)
         if (numRecordsAffected != 1) {
-            throw IllegalStateException("Player with in-game ID $playerDwitchId is leaving game but is not found in store.")
+            throw IllegalStateException("Player with in-game ID $dwitchPlayerId is leaving game but is not found in store.")
         } else {
-            Logger.info { "Player with in-game ID $playerDwitchId was deleted because it is leaving the game." }
+            Logger.info { "Player with in-game ID $dwitchPlayerId was deleted because it is leaving the game." }
         }
     }
 }

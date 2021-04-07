@@ -3,31 +3,31 @@ package ch.qscqlmpa.dwitchengine
 import ch.qscqlmpa.dwitchengine.actions.startnewgame.GameBootstrap
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.game.GameEvent
-import ch.qscqlmpa.dwitchengine.model.game.GamePhase
-import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
-import ch.qscqlmpa.dwitchengine.model.player.PlayerOnboardingInfo
-import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
-import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameEvent
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerOnboardingInfo
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
+import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class DwitchEngineTest {
 
-    private lateinit var hostPlayer: PlayerOnboardingInfo
-    private lateinit var guestPlayer1: PlayerOnboardingInfo
-    private lateinit var guestPlayer2: PlayerOnboardingInfo
-    private lateinit var guestPlayer3: PlayerOnboardingInfo
-    private lateinit var guestPlayer4: PlayerOnboardingInfo
+    private lateinit var hostPlayer: DwitchPlayerOnboardingInfo
+    private lateinit var guestPlayer1: DwitchPlayerOnboardingInfo
+    private lateinit var guestPlayer2: DwitchPlayerOnboardingInfo
+    private lateinit var guestPlayer3: DwitchPlayerOnboardingInfo
+    private lateinit var guestPlayer4: DwitchPlayerOnboardingInfo
 
-    private lateinit var hostPlayerId: PlayerDwitchId
-    private lateinit var guestPlayer1Id: PlayerDwitchId
-    private lateinit var guestPlayer2Id: PlayerDwitchId
-    private lateinit var guestPlayer3Id: PlayerDwitchId
-    private lateinit var guestPlayer4Id: PlayerDwitchId
+    private lateinit var hostPlayerId: DwitchPlayerId
+    private lateinit var guestPlayer1Id: DwitchPlayerId
+    private lateinit var guestPlayer2Id: DwitchPlayerId
+    private lateinit var guestPlayer3Id: DwitchPlayerId
+    private lateinit var guestPlayer4Id: DwitchPlayerId
 
-    private lateinit var gameState: GameState
+    private lateinit var gameState: DwitchGameState
 
     @BeforeEach
     fun setup() {
@@ -71,11 +71,11 @@ internal class DwitchEngineTest {
                 4 to guest4Cards
             ),
             mapOf(
-                0 to Rank.Asshole,
-                1 to Rank.ViceAsshole,
-                2 to Rank.Neutral,
-                3 to Rank.VicePresident,
-                4 to Rank.President
+                0 to DwitchRank.Asshole,
+                1 to DwitchRank.ViceAsshole,
+                2 to DwitchRank.Neutral,
+                3 to DwitchRank.VicePresident,
+                4 to DwitchRank.President
             )
         )
 
@@ -87,7 +87,7 @@ internal class DwitchEngineTest {
         // Playing order is host, guest1, guest2, guest3, guest4
         createGameInfoRobot()
             .assertCardsOnTable(listOf(Card.Clubs5))
-            .assertGamePhase(GamePhase.RoundIsBeginning)
+            .assertGamePhase(DwitchGamePhase.RoundIsBeginning)
             .assertPlayingOrder(hostPlayerId, guestPlayer1Id, guestPlayer2Id, guestPlayer3Id, guestPlayer4Id)
         createPlayerInfoRobot(hostPlayerId)
             .assertCanPlay(true)
@@ -100,7 +100,7 @@ internal class DwitchEngineTest {
 
         createGameInfoRobot()
             .assertCardsOnTable(listOf(Card.Clubs5, Card.Diamonds5))
-            .assertGamePhase(GamePhase.RoundIsOnGoing)
+            .assertGamePhase(DwitchGamePhase.RoundIsOnGoing)
         createPlayerInfoRobot(guestPlayer1Id).assertDwitched()
         createPlayerInfoRobot(guestPlayer2Id)
             .assertCanPlay(true)
@@ -151,7 +151,7 @@ internal class DwitchEngineTest {
             .assertCanPlay(true)
             .assertCanPass(false)
             .assertCanPickACard(true)
-        createPlayerInfoRobot(guestPlayer2Id).assertPlayerStatus(PlayerStatus.Done)
+        createPlayerInfoRobot(guestPlayer2Id).assertPlayerStatus(DwitchPlayerStatus.Done)
 
         // Guest3 plays a joker
         playCard(Card.Spades2)
@@ -166,7 +166,7 @@ internal class DwitchEngineTest {
         playCard(Card.Spades4)
 
         createGameInfoRobot().assertCardsOnTable(listOf(Card.Spades4))
-        createPlayerInfoRobot(guestPlayer3Id).assertPlayerStatus(PlayerStatus.Done)
+        createPlayerInfoRobot(guestPlayer3Id).assertPlayerStatus(DwitchPlayerStatus.Done)
         createPlayerInfoRobot(guestPlayer4Id)
             .assertCanPlay(true)
             .assertCanPass(false)
@@ -185,7 +185,7 @@ internal class DwitchEngineTest {
         playCard(Card.Diamonds2)
 
         createGameInfoRobot().assertCardsOnTable(emptyList())
-        createPlayerInfoRobot(hostPlayerId).assertPlayerStatus(PlayerStatus.Done)
+        createPlayerInfoRobot(hostPlayerId).assertPlayerStatus(DwitchPlayerStatus.Done)
         createPlayerInfoRobot(guestPlayer1Id)
             .assertCanPlay(true)
             .assertCanPass(false)
@@ -252,8 +252,8 @@ internal class DwitchEngineTest {
 
         createGameInfoRobot()
             .assertCardsOnTable(emptyList())
-            .assertGameEvent(GameEvent.TableHasBeenClearedTurnPassed)
-            .assertGamePhase(GamePhase.RoundIsOnGoing)
+            .assertGameEvent(DwitchGameEvent.TableHasBeenClearedTurnPassed)
+            .assertGamePhase(DwitchGamePhase.RoundIsOnGoing)
         createPlayerInfoRobot(guestPlayer4Id)
             .assertCanPlay(true)
             .assertCanPass(false)
@@ -265,24 +265,24 @@ internal class DwitchEngineTest {
         createGameInfoRobot()
             .assertCardsOnTable(listOf(Card.SpadesAce))
             .assertGameEvent(null)
-            .assertGamePhase(GamePhase.RoundIsOver)
+            .assertGamePhase(DwitchGamePhase.RoundIsOver)
 
         createPlayerInfoRobot(guestPlayer1Id)
-            .assertPlayerStatus(PlayerStatus.Done)
-            .assertPlayerRank(Rank.ViceAsshole)
+            .assertPlayerStatus(DwitchPlayerStatus.Done)
+            .assertPlayerRank(DwitchRank.ViceAsshole)
         createPlayerInfoRobot(guestPlayer2Id)
-            .assertPlayerRank(Rank.President)
+            .assertPlayerRank(DwitchRank.President)
         createPlayerInfoRobot(guestPlayer3Id)
-            .assertPlayerRank(Rank.VicePresident)
+            .assertPlayerRank(DwitchRank.VicePresident)
         createPlayerInfoRobot(hostPlayerId)
-            .assertPlayerRank(Rank.Asshole) // Finished with a Joker
+            .assertPlayerRank(DwitchRank.Asshole) // Finished with a Joker
 
         createPlayerInfoRobot(guestPlayer4Id)
             .assertCanPlay(false)
             .assertCanPass(false)
             .assertCanPickACard(false)
-            .assertPlayerStatus(PlayerStatus.Done)
-            .assertPlayerRank(Rank.Neutral)
+            .assertPlayerStatus(DwitchPlayerStatus.Done)
+            .assertPlayerRank(DwitchRank.Neutral)
             .assertCanStartNewRound(true)
     }
 
@@ -303,9 +303,9 @@ internal class DwitchEngineTest {
                 2 to guest2Cards
             ),
             mapOf(
-                0 to Rank.Asshole,
-                1 to Rank.Neutral,
-                2 to Rank.President
+                0 to DwitchRank.Asshole,
+                1 to DwitchRank.Neutral,
+                2 to DwitchRank.President
             )
         )
 
@@ -315,63 +315,63 @@ internal class DwitchEngineTest {
         )
 
         createPlayerInfoRobot(hostPlayerId)
-            .assertPlayerStatus(PlayerStatus.Playing)
+            .assertPlayerStatus(DwitchPlayerStatus.Playing)
 
         // Host plays a card
         playCard(Card.Diamonds6)
 
         createPlayerInfoRobot(guestPlayer1Id)
-            .assertPlayerStatus(PlayerStatus.Playing)
+            .assertPlayerStatus(DwitchPlayerStatus.Playing)
 
         // Guest1 plays the first Jack of the round
         playCard(Card.ClubsJack)
 
         createPlayerInfoRobot(guestPlayer2Id)
-            .assertPlayerStatus(PlayerStatus.Playing)
+            .assertPlayerStatus(DwitchPlayerStatus.Playing)
 
         // Guest2 plays a card on top of the first Jack of the round --> will become the asshole unless another player breaks
         // another special rule before the end of the round
         playCard(Card.HeartsQueen)
 
         createPlayerInfoRobot(hostPlayerId)
-            .assertPlayerStatus(PlayerStatus.Playing)
+            .assertPlayerStatus(DwitchPlayerStatus.Playing)
 
         // Host picks a card and pass
         pickCard()
         passTurn()
 
         createPlayerInfoRobot(guestPlayer1Id)
-            .assertPlayerStatus(PlayerStatus.Playing)
+            .assertPlayerStatus(DwitchPlayerStatus.Playing)
 
         // Guest1 picks a card and pass
         pickCard()
         passTurn()
 
         createPlayerInfoRobot(guestPlayer2Id)
-            .assertPlayerStatus(PlayerStatus.Playing)
+            .assertPlayerStatus(DwitchPlayerStatus.Playing)
 
         // Guest2 plays its last card and finishes the round
         playCard(Card.Hearts3)
 
         createPlayerInfoRobot(hostPlayerId)
-            .assertPlayerStatus(PlayerStatus.Playing)
+            .assertPlayerStatus(DwitchPlayerStatus.Playing)
 
         // Host plays its last cards and finishes the round
         playCard(Card.Diamonds3)
         playCard(Card.Clubs3)
 
-        createGameInfoRobot().assertGamePhase(GamePhase.RoundIsOver)
+        createGameInfoRobot().assertGamePhase(DwitchGamePhase.RoundIsOver)
 
         // It would the president if it hadn't broken the special rule under test
         createPlayerInfoRobot(guestPlayer2Id)
-            .assertPlayerRank(Rank.Asshole)
+            .assertPlayerRank(DwitchRank.Asshole)
 
         // It would normally be Neutral but is President because Guest2 broke the rule under test
         createPlayerInfoRobot(hostPlayerId)
-            .assertPlayerRank(Rank.President)
+            .assertPlayerRank(DwitchRank.President)
 
         createPlayerInfoRobot(guestPlayer1Id)
-            .assertPlayerRank(Rank.Neutral)
+            .assertPlayerRank(DwitchRank.Neutral)
     }
 
     @Test
@@ -387,9 +387,9 @@ internal class DwitchEngineTest {
                 2 to guest2Cards
             ),
             mapOf(
-                0 to Rank.Asshole,
-                1 to Rank.Neutral,
-                2 to Rank.President
+                0 to DwitchRank.Asshole,
+                1 to DwitchRank.Neutral,
+                2 to DwitchRank.President
             )
         )
 
@@ -399,33 +399,33 @@ internal class DwitchEngineTest {
         )
 
         createPlayerInfoRobot(hostPlayerId)
-            .assertPlayerStatus(PlayerStatus.Playing)
+            .assertPlayerStatus(DwitchPlayerStatus.Playing)
 
         // Host plays the first Jack of the round
         playCard(Card.ClubsJack)
 
         createPlayerInfoRobot(guestPlayer1Id)
-            .assertPlayerStatus(PlayerStatus.Playing)
+            .assertPlayerStatus(DwitchPlayerStatus.Playing)
 
         // Guest1 picks a card and passes
         pickCard()
         passTurn()
 
         createPlayerInfoRobot(guestPlayer2Id)
-            .assertPlayerStatus(PlayerStatus.Playing)
+            .assertPlayerStatus(DwitchPlayerStatus.Playing)
 
         // Guest2 picks a card and passes
         pickCard()
         passTurn()
 
         createPlayerInfoRobot(hostPlayerId)
-            .assertPlayerStatus(PlayerStatus.Playing)
+            .assertPlayerStatus(DwitchPlayerStatus.Playing)
 
         // Host plays its last card
         playCard(Card.Diamonds6)
 
         createPlayerInfoRobot(guestPlayer1Id)
-            .assertPlayerStatus(PlayerStatus.Playing)
+            .assertPlayerStatus(DwitchPlayerStatus.Playing)
 
         // Guest1 plays a card and dwitches Guest2
         playCard(Card.Clubs6)
@@ -436,16 +436,16 @@ internal class DwitchEngineTest {
         // Guest1 plays its last card
         playCard(Card.Clubs4)
 
-        createGameInfoRobot().assertGamePhase(GamePhase.RoundIsOver)
+        createGameInfoRobot().assertGamePhase(DwitchGamePhase.RoundIsOver)
 
         createPlayerInfoRobot(hostPlayerId)
-            .assertPlayerRank(Rank.President)
+            .assertPlayerRank(DwitchRank.President)
 
         createPlayerInfoRobot(guestPlayer1Id)
-            .assertPlayerRank(Rank.Neutral)
+            .assertPlayerRank(DwitchRank.Neutral)
 
         createPlayerInfoRobot(guestPlayer2Id)
-            .assertPlayerRank(Rank.Asshole)
+            .assertPlayerRank(DwitchRank.Asshole)
     }
 
     private fun playCard(card: Card) {
@@ -460,7 +460,7 @@ internal class DwitchEngineTest {
         gameState = DwitchEngineImpl(gameState).passTurn()
     }
 
-    private fun createPlayerInfoRobot(playerId: PlayerDwitchId): PlayerInfoRobot {
+    private fun createPlayerInfoRobot(playerId: DwitchPlayerId): PlayerInfoRobot {
         return PlayerInfoRobot(DwitchEngineImpl(gameState).getGameInfo().playerInfos.getValue(playerId))
     }
 

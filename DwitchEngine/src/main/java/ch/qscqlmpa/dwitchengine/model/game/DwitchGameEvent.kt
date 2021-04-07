@@ -6,11 +6,11 @@ import kotlinx.serialization.Serializable
 // TODO: Actually use this information
 // TODO: rename class ? Use a different way to convey this data than an attribute in GameState ?
 @Serializable
-sealed class GameEvent {
+sealed class DwitchGameEvent {
 
     @Serializable
-    data class TableHasBeenCleared(val lastCardPlayed: Card) : GameEvent()
+    data class TableHasBeenCleared(val lastCardPlayed: Card) : DwitchGameEvent()
 
     @Serializable
-    object TableHasBeenClearedTurnPassed : GameEvent()
+    object TableHasBeenClearedTurnPassed : DwitchGameEvent()
 }

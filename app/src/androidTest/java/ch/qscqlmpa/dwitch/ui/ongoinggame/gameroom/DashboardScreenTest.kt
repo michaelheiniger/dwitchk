@@ -8,9 +8,9 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
 import ch.qscqlmpa.dwitch.base.BaseUiUnitTest
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.info.CardItem
-import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
-import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
+import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameDashboardInfo
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.LocalPlayerDashboard
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.PlayerInfo
@@ -30,24 +30,24 @@ class DashboardScreenTest : BaseUiUnitTest() {
     fun setup() {
         dashboardInfo = GameDashboardInfo(
             listOf(
-                PlayerInfo("Aragorn", Rank.President, PlayerStatus.Playing, dwitched = false, localPlayer = true),
-                PlayerInfo("Boromir", Rank.VicePresident, PlayerStatus.Done, dwitched = false, localPlayer = false),
-                PlayerInfo("Gimli", Rank.Neutral, PlayerStatus.Waiting, dwitched = false, localPlayer = false),
-                PlayerInfo("Legolas", Rank.Asshole, PlayerStatus.TurnPassed, dwitched = false, localPlayer = false),
-                PlayerInfo("Galadriel", Rank.ViceAsshole, PlayerStatus.Waiting, dwitched = true, localPlayer = false)
+                PlayerInfo("Aragorn", DwitchRank.President, DwitchPlayerStatus.Playing, dwitched = false, localPlayer = true),
+                PlayerInfo("Boromir", DwitchRank.VicePresident, DwitchPlayerStatus.Done, dwitched = false, localPlayer = false),
+                PlayerInfo("Gimli", DwitchRank.Neutral, DwitchPlayerStatus.Waiting, dwitched = false, localPlayer = false),
+                PlayerInfo("Legolas", DwitchRank.Asshole, DwitchPlayerStatus.TurnPassed, dwitched = false, localPlayer = false),
+                PlayerInfo("Galadriel", DwitchRank.ViceAsshole, DwitchPlayerStatus.Waiting, dwitched = true, localPlayer = false)
             ),
             LocalPlayerDashboard(
                 cardsInHand = listOf(
-                    CardItem(Card.Clubs2, true),
-                    CardItem(Card.Clubs3, false),
-                    CardItem(Card.Clubs4, false),
-                    CardItem(Card.Clubs5, false),
-                    CardItem(Card.Clubs6, false),
-                    CardItem(Card.Clubs7, false),
-                    CardItem(Card.Clubs8, true),
-                    CardItem(Card.Clubs9, true),
-                    CardItem(Card.Clubs10, true),
-                    CardItem(Card.ClubsJack, true),
+                    DwitchCardInfo(Card.Clubs2, true),
+                    DwitchCardInfo(Card.Clubs3, false),
+                    DwitchCardInfo(Card.Clubs4, false),
+                    DwitchCardInfo(Card.Clubs5, false),
+                    DwitchCardInfo(Card.Clubs6, false),
+                    DwitchCardInfo(Card.Clubs7, false),
+                    DwitchCardInfo(Card.Clubs8, true),
+                    DwitchCardInfo(Card.Clubs9, true),
+                    DwitchCardInfo(Card.Clubs10, true),
+                    DwitchCardInfo(Card.ClubsJack, true),
                 ),
                 canPass = false,
                 canPickACard = true,

@@ -3,9 +3,9 @@ package ch.qscqlmpa.dwitchengine.rules
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.card.CardNameValueDescComparator
-import ch.qscqlmpa.dwitchengine.model.game.CardExchange
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
-import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.game.DwitchCardExchange
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 
 internal object CardExchangeComputer {
 
@@ -13,28 +13,32 @@ internal object CardExchangeComputer {
      * Compute the CardExchange for the player with the given rank and cards in hand.
      * Card exchange always occurs at the beginning of a new round when the joker is always set to CardName.TWO.
      */
-    fun getCardExchange(playerId: PlayerDwitchId, rank: Rank, cardsInHand: Set<Card>): CardExchange? {
+    fun getCardExchange(playerId: DwitchPlayerId, rank: DwitchRank, cardsInHand: Set<Card>): DwitchCardExchange? {
         checkNumCardsInHand(rank, cardsInHand)
 
         return when (rank) {
-            Rank.President -> CardExchange(playerId, 2, getAllValuesWithoutRestriction(cardsInHand))
-            Rank.VicePresident -> CardExchange(playerId, 1, getAllValuesWithoutRestriction(cardsInHand))
-            Rank.Neutral -> null
-            Rank.ViceAsshole -> CardExchange(playerId, 1, getValueOfNCardsWithHighestValue(cardsInHand, 1))
-            Rank.Asshole -> CardExchange(playerId, 2, getValueOfNCardsWithHighestValue(cardsInHand, 2))
+            DwitchRank.President -> DwitchCardExchange(playerId, 2, getAllValuesWithoutRestriction(cardsInHand))
+            DwitchRank.VicePresident -> DwitchCardExchange(playerId, 1, getAllValuesWithoutRestriction(cardsInHand))
+            DwitchRank.Neutral -> null
+            DwitchRank.ViceAsshole -> DwitchCardExchange(playerId, 1, getValueOfNCardsWithHighestValue(cardsInHand, 1))
+            DwitchRank.Asshole -> DwitchCardExchange(playerId, 2, getValueOfNCardsWithHighestValue(cardsInHand, 2))
         }
     }
 
-    fun getValueOfNCardsWithHighestValue(cards: Set<Card>, numberOfCards: Int): List<CardName> { // Want to keep duplicated "names"
+    fun getValueOfNCardsWithHighestValue(
+        cards: Set<Card>,
+        numberOfCards: Int
+    ): List<CardName> { // Want to keep duplicated "names"
         return cards.map(Card::name).sortedWith(CardNameValueDescComparator()).take(numberOfCards)
     }
 
-    private fun checkNumCardsInHand(rank: Rank, cardsInHand: Set<Card>) = when (rank) {
-        Rank.President, Rank.Asshole -> require(cardsInHand.size >= 2)
-        Rank.VicePresident, Rank.ViceAsshole -> require(cardsInHand.isNotEmpty())
+    private fun checkNumCardsInHand(rank: DwitchRank, cardsInHand: Set<Card>) = when (rank) {
+        DwitchRank.President, DwitchRank.Asshole -> require(cardsInHand.size >= 2)
+        DwitchRank.VicePresident, DwitchRank.ViceAsshole -> require(cardsInHand.isNotEmpty())
         else -> {
         } // Nothing to do
     }
 
-    private fun getAllValuesWithoutRestriction(cards: Set<Card>): List<CardName> = cards.map(Card::name) // Want to keep duplicated "names"
+    private fun getAllValuesWithoutRestriction(cards: Set<Card>): List<CardName> =
+        cards.map(Card::name) // Want to keep duplicated "names"
 }

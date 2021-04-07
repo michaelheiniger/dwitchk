@@ -2,14 +2,14 @@ package ch.qscqlmpa.dwitchengine
 
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
-import ch.qscqlmpa.dwitchengine.model.game.GameEvent
-import ch.qscqlmpa.dwitchengine.model.game.GamePhase
-import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameEvent
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.SpecialRuleBreaker
 import org.assertj.core.api.Assertions.assertThat
 
-class GameStateRobot(private val gameState: GameState) {
+class GameStateRobot(private val gameState: DwitchGameState) {
 
     fun assertNumCardsOnTable(expectedValue: Int): GameStateRobot {
         assertThat(gameState.cardsOnTable.size).isEqualTo(expectedValue)
@@ -36,12 +36,12 @@ class GameStateRobot(private val gameState: GameState) {
         return this
     }
 
-    fun assertActivePlayers(vararg playersId: PlayerDwitchId): GameStateRobot {
+    fun assertActivePlayers(vararg playersId: DwitchPlayerId): GameStateRobot {
         assertThat(gameState.activePlayers).containsExactly(*playersId)
         return this
     }
 
-    fun assertCurrentPlayerId(expectedPlayerId: PlayerDwitchId): GameStateRobot {
+    fun assertCurrentPlayerId(expectedPlayerId: DwitchPlayerId): GameStateRobot {
         assertThat(gameState.currentPlayerId).isEqualTo(expectedPlayerId)
         return this
     }
@@ -51,27 +51,27 @@ class GameStateRobot(private val gameState: GameState) {
         return this
     }
 
-    fun assertPlayerIsDoneForRound(playerId: PlayerDwitchId): GameStateRobot {
+    fun assertPlayerIsDoneForRound(playerId: DwitchPlayerId): GameStateRobot {
         assertThat(gameState.playersDoneForRound).contains(playerId)
         return this
     }
 
-    fun assertPlayerHasFinishedWithJoker(playerId: PlayerDwitchId): GameStateRobot {
+    fun assertPlayerHasFinishedWithJoker(playerId: DwitchPlayerId): GameStateRobot {
         assertThat(gameState.playersWhoBrokeASpecialRule).contains(SpecialRuleBreaker.FinishWithJoker(playerId))
         return this
     }
 
-    fun assertPlayerHasNotFinishedWithJoker(playerId: PlayerDwitchId): GameStateRobot {
+    fun assertPlayerHasNotFinishedWithJoker(playerId: DwitchPlayerId): GameStateRobot {
         assertThat(gameState.playersWhoBrokeASpecialRule).noneMatch { p -> p == SpecialRuleBreaker.FinishWithJoker(playerId) }
         return this
     }
 
-    fun assertPlayerHasBrokenFirstJackPlayedRule(playerId: PlayerDwitchId): GameStateRobot {
+    fun assertPlayerHasBrokenFirstJackPlayedRule(playerId: DwitchPlayerId): GameStateRobot {
         assertThat(gameState.playersWhoBrokeASpecialRule).contains(SpecialRuleBreaker.PlayedOnFirstJack(playerId))
         return this
     }
 
-    fun assertPlayerHasNotBrokenFirstJackPlayedRule(playerId: PlayerDwitchId): GameStateRobot {
+    fun assertPlayerHasNotBrokenFirstJackPlayedRule(playerId: DwitchPlayerId): GameStateRobot {
         assertThat(gameState.playersWhoBrokeASpecialRule).noneMatch { p -> p == SpecialRuleBreaker.PlayedOnFirstJack(playerId) }
         return this
     }
@@ -87,26 +87,26 @@ class GameStateRobot(private val gameState: GameState) {
     }
 
     fun assertRoundIsOver(): GameStateRobot {
-        assertThat(gameState.phase).isEqualTo(GamePhase.RoundIsOver)
+        assertThat(gameState.phase).isEqualTo(DwitchGamePhase.RoundIsOver)
         return this
     }
 
     fun assertRoundIsNotOver(): GameStateRobot {
-        assertThat(gameState.phase).isNotEqualTo(GamePhase.RoundIsOver)
+        assertThat(gameState.phase).isNotEqualTo(DwitchGamePhase.RoundIsOver)
         return this
     }
 
-    fun assertGameEvent(gameEvent: GameEvent?): GameStateRobot {
-        assertThat(gameState.gameEvent).isEqualTo(gameEvent)
+    fun assertGameEvent(dwitchGameEvent: DwitchGameEvent?): GameStateRobot {
+        assertThat(gameState.dwitchGameEvent).isEqualTo(dwitchGameEvent)
         return this
     }
 
-    fun assertGamePhase(phase: GamePhase): GameStateRobot {
+    fun assertGamePhase(phase: DwitchGamePhase): GameStateRobot {
         assertThat(gameState.phase).isEqualTo(phase)
         return this
     }
 
-    fun assertPlayingOrder(playingOrder: List<PlayerDwitchId>): GameStateRobot {
+    fun assertPlayingOrder(playingOrder: List<DwitchPlayerId>): GameStateRobot {
         assertThat(gameState.playingOrder).isEqualTo(playingOrder)
         return this
     }

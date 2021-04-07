@@ -1,18 +1,18 @@
 package ch.qscqlmpa.dwitchengine.rules
 
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
-import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchengine.model.player.SpecialRuleBreaker
 
 internal object RankComputer {
 
     fun computePlayersRank(
-        playersFinishOrder: List<PlayerDwitchId>,
+        playersFinishOrder: List<DwitchPlayerId>,
         specialRuleBreakers: List<SpecialRuleBreaker>
-    ): Map<PlayerDwitchId, Rank> {
+    ): Map<DwitchPlayerId, DwitchRank> {
 
         val numPlayers = playersFinishOrder.size
-        val rankMap = mutableMapOf<PlayerDwitchId, Rank>()
+        val rankMap = mutableMapOf<DwitchPlayerId, DwitchRank>()
 
         specialRuleBreakers
             .map { ruleBreaker -> ruleBreaker.playerId }
@@ -45,88 +45,91 @@ internal object RankComputer {
         return rankMap.toMap()
     }
 
-    private fun assignPunitiveRankWhenTwoPlayersForPosition(position: Int, playerId: PlayerDwitchId): Pair<PlayerDwitchId, Rank> {
+    private fun assignPunitiveRankWhenTwoPlayersForPosition(
+        position: Int,
+        playerId: DwitchPlayerId
+    ): Pair<DwitchPlayerId, DwitchRank> {
         return when (position) {
-            1 -> playerId to Rank.Asshole
+            1 -> playerId to DwitchRank.Asshole
             else -> throw IllegalStateException("At most one player can finish with joker when number players is two")
         }
     }
 
     private fun assignPunitiveRankWhenThreePlayersForPosition(
         position: Int,
-        playerId: PlayerDwitchId
-    ): Pair<PlayerDwitchId, Rank> {
+        playerId: DwitchPlayerId
+    ): Pair<DwitchPlayerId, DwitchRank> {
         return when (position) {
-            1 -> playerId to Rank.Asshole
-            2 -> playerId to Rank.Neutral
+            1 -> playerId to DwitchRank.Asshole
+            2 -> playerId to DwitchRank.Neutral
             else -> throw IllegalStateException("At most two players can finish with joker when number players is three")
         }
     }
 
     private fun assignPunitiveRankWhenFourPlayersForPosition(
         position: Int,
-        playerId: PlayerDwitchId
-    ): Pair<PlayerDwitchId, Rank> {
+        playerId: DwitchPlayerId
+    ): Pair<DwitchPlayerId, DwitchRank> {
         return when (position) {
-            1 -> playerId to Rank.Asshole
-            2 -> playerId to Rank.ViceAsshole
-            3 -> playerId to Rank.VicePresident
+            1 -> playerId to DwitchRank.Asshole
+            2 -> playerId to DwitchRank.ViceAsshole
+            3 -> playerId to DwitchRank.VicePresident
             else -> throw IllegalStateException("At most three players can finish with joker when number players is four")
         }
     }
 
     private fun assignPunitiveRankWhenMoreThanFourPlayersForPosition(
         position: Int,
-        playerId: PlayerDwitchId,
+        playerId: DwitchPlayerId,
         numPlayers: Int
-    ): Pair<PlayerDwitchId, Rank> {
+    ): Pair<DwitchPlayerId, DwitchRank> {
         return when (position) {
-            1 -> playerId to Rank.Asshole
-            2 -> playerId to Rank.ViceAsshole
-            in 3 until (numPlayers - 1) -> playerId to Rank.Neutral
-            numPlayers - 1 -> playerId to Rank.VicePresident
+            1 -> playerId to DwitchRank.Asshole
+            2 -> playerId to DwitchRank.ViceAsshole
+            in 3 until (numPlayers - 1) -> playerId to DwitchRank.Neutral
+            numPlayers - 1 -> playerId to DwitchRank.VicePresident
             else -> throw IllegalStateException("At most ${numPlayers - 1} players can finish with a joker")
         }
     }
 
-    private fun assignRankWhenTwoPlayersForPosition(position: Int, playerId: PlayerDwitchId): Pair<PlayerDwitchId, Rank> {
+    private fun assignRankWhenTwoPlayersForPosition(position: Int, playerId: DwitchPlayerId): Pair<DwitchPlayerId, DwitchRank> {
         return when (position) {
-            1 -> playerId to Rank.President
-            2 -> playerId to Rank.Asshole
+            1 -> playerId to DwitchRank.President
+            2 -> playerId to DwitchRank.Asshole
             else -> throw IllegalStateException("There are only two ranks to assign when number of players is two")
         }
     }
 
-    private fun assignRankWhenThreePlayersForPosition(position: Int, playerId: PlayerDwitchId): Pair<PlayerDwitchId, Rank> {
+    private fun assignRankWhenThreePlayersForPosition(position: Int, playerId: DwitchPlayerId): Pair<DwitchPlayerId, DwitchRank> {
         return when (position) {
-            1 -> playerId to Rank.President
-            2 -> playerId to Rank.Neutral
-            3 -> playerId to Rank.Asshole
+            1 -> playerId to DwitchRank.President
+            2 -> playerId to DwitchRank.Neutral
+            3 -> playerId to DwitchRank.Asshole
             else -> throw IllegalStateException("There are only three ranks to assign when number of players is three")
         }
     }
 
-    private fun assignRankWhenFourPlayersForPosition(position: Int, playerId: PlayerDwitchId): Pair<PlayerDwitchId, Rank> {
+    private fun assignRankWhenFourPlayersForPosition(position: Int, playerId: DwitchPlayerId): Pair<DwitchPlayerId, DwitchRank> {
         return when (position) {
-            1 -> playerId to Rank.President
-            2 -> playerId to Rank.VicePresident
-            3 -> playerId to Rank.ViceAsshole
-            4 -> playerId to Rank.Asshole
+            1 -> playerId to DwitchRank.President
+            2 -> playerId to DwitchRank.VicePresident
+            3 -> playerId to DwitchRank.ViceAsshole
+            4 -> playerId to DwitchRank.Asshole
             else -> throw IllegalStateException("There are only four ranks to assign when number of players is four")
         }
     }
 
     private fun assignRankWhenMoreThanFourPlayersForPosition(
         position: Int,
-        playerId: PlayerDwitchId,
+        playerId: DwitchPlayerId,
         numPlayers: Int
-    ): Pair<PlayerDwitchId, Rank> {
+    ): Pair<DwitchPlayerId, DwitchRank> {
         return when (position) {
-            1 -> playerId to Rank.President
-            2 -> playerId to Rank.VicePresident
-            in 3 until numPlayers - 1 -> playerId to Rank.Neutral
-            numPlayers - 1 -> playerId to Rank.ViceAsshole
-            numPlayers -> playerId to Rank.Asshole
+            1 -> playerId to DwitchRank.President
+            2 -> playerId to DwitchRank.VicePresident
+            in 3 until numPlayers - 1 -> playerId to DwitchRank.Neutral
+            numPlayers - 1 -> playerId to DwitchRank.ViceAsshole
+            numPlayers -> playerId to DwitchRank.Asshole
             else -> throw IllegalStateException("There are only $numPlayers ranks to assign when number of players is $numPlayers")
         }
     }

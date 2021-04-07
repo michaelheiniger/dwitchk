@@ -3,24 +3,24 @@ package ch.qscqlmpa.dwitchengine.model.game
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.card.CardUtil
-import ch.qscqlmpa.dwitchengine.model.player.Player
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
-import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayer
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.SpecialRuleBreaker
 import ch.qscqlmpa.dwitchengine.utils.ListUtil.shiftRightByN
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GameState(
-    val phase: GamePhase,
-    val players: Map<PlayerDwitchId, Player>,
-    val playingOrder: List<PlayerDwitchId>,
-    val currentPlayerId: PlayerDwitchId,
-    val activePlayers: Set<PlayerDwitchId>,
-    val playersDoneForRound: List<PlayerDwitchId>,
+data class DwitchGameState(
+    val phase: DwitchGamePhase,
+    val players: Map<DwitchPlayerId, DwitchPlayer>,
+    val playingOrder: List<DwitchPlayerId>,
+    val currentPlayerId: DwitchPlayerId,
+    val activePlayers: Set<DwitchPlayerId>,
+    val playersDoneForRound: List<DwitchPlayerId>,
     val playersWhoBrokeASpecialRule: List<SpecialRuleBreaker>,
     val joker: CardName,
-    val gameEvent: GameEvent?,
+    val dwitchGameEvent: DwitchGameEvent?,
     val cardsOnTable: List<Card>,
     val cardsInDeck: List<Card>,
     val cardsInGraveyard: List<Card>
@@ -32,18 +32,18 @@ data class GameState(
 
     val phaseIsPlayable
         get(): Boolean {
-            return phase.isOneOf(GamePhase.RoundIsBeginning, GamePhase.RoundIsOnGoing)
+            return phase.isOneOf(DwitchGamePhase.RoundIsBeginning, DwitchGamePhase.RoundIsOnGoing)
         }
 
     fun lastCardOnTable(): Card? {
         return cardsOnTable.lastOrNull()
     }
 
-    fun player(dwitchId: PlayerDwitchId): Player {
+    fun player(dwitchId: DwitchPlayerId): DwitchPlayer {
         return players.getValue(dwitchId)
     }
 
-    fun currentPlayer(): Player {
+    fun currentPlayer(): DwitchPlayer {
         return player(currentPlayerId)
     }
 
@@ -51,16 +51,16 @@ data class GameState(
         return activePlayers.size
     }
 
-    fun waitingPlayerInOrderAfterLocalPlayer(): List<Player> {
+    fun waitingPlayerInOrderAfterLocalPlayer(): List<DwitchPlayer> {
         return activePlayersInPlayingOrderAfterLocalPlayer()
-            .filter { player -> player.status == PlayerStatus.Waiting }
+            .filter { player -> player.status == DwitchPlayerStatus.Waiting }
     }
 
-    fun nextWaitingPlayer(): Player? {
+    fun nextWaitingPlayer(): DwitchPlayer? {
         return waitingPlayerInOrderAfterLocalPlayer().firstOrNull()
     }
 
-    fun activePlayersInPlayingOrderAfterLocalPlayer(): List<Player> {
+    fun activePlayersInPlayingOrderAfterLocalPlayer(): List<DwitchPlayer> {
         val localPlayerIndex = playingOrder.indexOf(currentPlayerId)
         return playingOrder.shiftRightByN(-localPlayerIndex)
             .filter { id -> activePlayers.contains(id) }
@@ -72,7 +72,7 @@ data class GameState(
             if (activePlayers.contains(id)) {
                 throw IllegalStateException("A player in the 'players done' list cannot be an active player at the same time.")
             }
-            if (players.getValue(id).status != PlayerStatus.Done) {
+            if (players.getValue(id).status != DwitchPlayerStatus.Done) {
                 throw IllegalStateException("A player in the 'players done' list cannot have a state different than Done")
             }
         }

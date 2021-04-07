@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchstore
 
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
@@ -59,7 +59,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
 
         val playerRef = Player(
             insertGameResult.localPlayerLocalId,
-            PlayerDwitchId(insertGameResult.localPlayerLocalId),
+            DwitchPlayerId(insertGameResult.localPlayerLocalId),
             insertGameResult.gameLocalId,
             playerName,
             PlayerRole.HOST,
@@ -114,7 +114,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
 
         val playerRef = Player(
             0,
-            PlayerDwitchId(0),
+            DwitchPlayerId(0),
             insertGameResult.gameLocalId,
             playerName,
             PlayerRole.GUEST,
@@ -138,7 +138,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
                 )
                 val player1 = Player(
                     0,
-                    PlayerDwitchId(0),
+                    DwitchPlayerId(0),
                     gameId,
                     "",
                     PlayerRole.HOST,
@@ -147,7 +147,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
                 )
                 val player2 = Player(
                     0,
-                    PlayerDwitchId(0),
+                    DwitchPlayerId(0),
                     gameId,
                     "",
                     PlayerRole.GUEST,

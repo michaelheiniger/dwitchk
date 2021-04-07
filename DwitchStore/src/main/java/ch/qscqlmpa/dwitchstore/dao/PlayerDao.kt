@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchstore.dao
 
 import androidx.room.*
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.model.Player
@@ -21,7 +21,7 @@ internal interface PlayerDao {
     fun insertNewGuestPlayer(gameLocalId: Long, name: String): Long {
         val player = Player(
             0,
-            PlayerDwitchId(0),
+            DwitchPlayerId(0),
             gameLocalId,
             name,
             PlayerRole.GUEST,
@@ -29,15 +29,15 @@ internal interface PlayerDao {
             false
         )
         val playerLocalId = insertPlayer(player)
-        updatePlayer(player.copy(id = playerLocalId, dwitchId = PlayerDwitchId(playerLocalId)))
+        updatePlayer(player.copy(id = playerLocalId, dwitchId = DwitchPlayerId(playerLocalId)))
         return playerLocalId
     }
 
     @Update
     fun updatePlayer(player: Player)
 
-    @Query("UPDATE Player SET ready = :ready WHERE dwitch_id = :playerDwitchId")
-    fun updatePlayerWithReady(playerDwitchId: PlayerDwitchId, ready: Boolean): Int
+    @Query("UPDATE Player SET ready = :ready WHERE dwitch_id = :dwitchPlayerId")
+    fun updatePlayerWithReady(dwitchPlayerId: DwitchPlayerId, ready: Boolean): Int
 
     @Query("UPDATE Player SET ready = :ready WHERE id = :playerLocalId")
     fun updatePlayerWithReady(playerLocalId: Long, ready: Boolean): Int
@@ -46,13 +46,13 @@ internal interface PlayerDao {
         """
             UPDATE Player 
             SET connectionState = :state, ready = :ready
-            WHERE dwitch_id = :playerDwitchId
+            WHERE dwitch_id = :dwitchPlayerId
             """
     )
-    fun updatePlayer(playerDwitchId: PlayerDwitchId, state: PlayerConnectionState, ready: Boolean): Int
+    fun updatePlayer(dwitchPlayerId: DwitchPlayerId, state: PlayerConnectionState, ready: Boolean): Int
 
-    @Query("UPDATE Player SET connectionState = :state, ready = :ready WHERE dwitch_id = :playerDwitchId")
-    fun updatePlayerWithStateAndReady(playerDwitchId: PlayerDwitchId, state: PlayerConnectionState, ready: Boolean): Int
+    @Query("UPDATE Player SET connectionState = :state, ready = :ready WHERE dwitch_id = :dwitchPlayerId")
+    fun updatePlayerWithStateAndReady(dwitchPlayerId: DwitchPlayerId, state: PlayerConnectionState, ready: Boolean): Int
 
     @Query("UPDATE Player SET connectionState = :state, ready = :ready WHERE id = :playerLocalId")
     fun updatePlayerWithConnectionStateAndReady(playerLocalId: Long, state: PlayerConnectionState, ready: Boolean): Int
@@ -81,10 +81,10 @@ internal interface PlayerDao {
         """
         DELETE FROM Player
         WHERE game_local_id = :gameLocalId
-        AND dwitch_id = :playerDwitchId
+        AND dwitch_id = :dwitchPlayerId
         """
     )
-    fun deletePlayer(gameLocalId: Long, playerDwitchId: PlayerDwitchId): Int
+    fun deletePlayer(gameLocalId: Long, dwitchPlayerId: DwitchPlayerId): Int
 
     @Query(
         """
@@ -104,10 +104,10 @@ internal interface PlayerDao {
         """
         SELECT * FROM Player
         WHERE game_local_id = :gameLocalId
-        AND dwitch_id = :playerDwitchId
+        AND dwitch_id = :dwitchPlayerId
             """
     )
-    fun getPlayer(gameLocalId: Long, playerDwitchId: PlayerDwitchId): Player
+    fun getPlayer(gameLocalId: Long, dwitchPlayerId: DwitchPlayerId): Player
 
     @Query(
         """
@@ -123,7 +123,7 @@ internal interface PlayerDao {
         WHERE id = :playerLocalId
         """
     )
-    fun getPlayerDwitchId(playerLocalId: Long): PlayerDwitchId
+    fun getPlayerDwitchId(playerLocalId: Long): DwitchPlayerId
 
     // For test purpose only
     @Query(
@@ -158,11 +158,11 @@ internal interface PlayerDao {
     @Query(
         """
         UPDATE Player
-        SET dwitch_id = :playerDwitchId
+        SET dwitch_id = :dwitchPlayerId
         WHERE id = :playerLocalId
         """
     )
-    fun updatePlayerWithDwitchId(playerLocalId: Long, playerDwitchId: PlayerDwitchId): Int
+    fun updatePlayerWithDwitchId(playerLocalId: Long, dwitchPlayerId: DwitchPlayerId): Int
 
     @Query(
         """
@@ -198,5 +198,5 @@ internal interface PlayerDao {
             AND game_local_id = :gameLocalId            
         """
     )
-    fun getPlayerLocalId(gameLocalId: Long, dwitchId: PlayerDwitchId): Long?
+    fun getPlayerLocalId(gameLocalId: Long, dwitchId: DwitchPlayerId): Long?
 }

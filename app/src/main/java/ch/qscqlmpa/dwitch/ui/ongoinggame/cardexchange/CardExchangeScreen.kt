@@ -21,7 +21,7 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ongoinggame.CardItemDisplay
 import ch.qscqlmpa.dwitch.ui.ongoinggame.LoadingSpinner
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.info.CardItem
+import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
 
 @ExperimentalFoundationApi
 @Preview(
@@ -31,16 +31,16 @@ import ch.qscqlmpa.dwitchengine.model.info.CardItem
 @Composable
 private fun CardExchangeScreenPreview() {
     val cardsToExchange = listOf(
-        CardItem(Card.HeartsAce, true),
-        CardItem(Card.Clubs2, true),
+        DwitchCardInfo(Card.HeartsAce, true),
+        DwitchCardInfo(Card.Clubs2, true),
     )
     val cardsInHand = listOf(
-        CardItem(Card.HeartsQueen, true),
-        CardItem(Card.Clubs3, false),
-        CardItem(Card.Clubs4, false),
-        CardItem(Card.Diamonds10, true),
-        CardItem(Card.Spades5, false),
-        CardItem(Card.Spades7, false)
+        DwitchCardInfo(Card.HeartsQueen, true),
+        DwitchCardInfo(Card.Clubs3, false),
+        DwitchCardInfo(Card.Clubs4, false),
+        DwitchCardInfo(Card.Diamonds10, true),
+        DwitchCardInfo(Card.Spades5, false),
+        DwitchCardInfo(Card.Spades7, false)
     )
 
     CardExchangeScreen(
@@ -59,8 +59,8 @@ private fun CardExchangeScreenPreview() {
 @Composable
 fun CardExchangeScreen(
     numCardsToChoose: NumCardForExchange,
-    cardsToExchange: List<CardItem>,
-    cardsInHand: List<CardItem>,
+    cardsToExchange: List<DwitchCardInfo>,
+    cardsInHand: List<DwitchCardInfo>,
     exchangeControlEnabled: Boolean,
     onCardToExchangeClick: (Card) -> Unit,
     onCardInHandClick: (Card) -> Unit,
@@ -110,7 +110,7 @@ fun CardExchangeOnGoing() {
 @Composable
 private fun CardsToExchange(
     numCardsToChoose: NumCardForExchange,
-    cards: List<CardItem>,
+    cards: List<DwitchCardInfo>,
     onCardClick: (Card) -> Unit
 ) {
     Column(
@@ -137,7 +137,7 @@ private fun CardsToExchange(
 @ExperimentalFoundationApi
 @Composable
 private fun CardsInHand(
-    cards: List<CardItem>,
+    cards: List<DwitchCardInfo>,
     onCardClick: (Card) -> Unit
 ) {
     Column(

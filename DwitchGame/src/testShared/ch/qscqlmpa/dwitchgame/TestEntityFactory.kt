@@ -2,8 +2,9 @@ package ch.qscqlmpa.dwitchgame
 
 import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.initialgamesetup.random.RandomInitialGameSetup
-import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerOnboardingInfo
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
@@ -17,11 +18,11 @@ import org.joda.time.DateTime
 object TestEntityFactory {
 
     fun createPlayerWr1(): PlayerWr {
-        return PlayerWr(PlayerDwitchId(1), "Sheev", PlayerRole.HOST, PlayerConnectionState.CONNECTED, true)
+        return PlayerWr(DwitchPlayerId(1), "Sheev", PlayerRole.HOST, PlayerConnectionState.CONNECTED, true)
     }
 
     fun createPlayerWr2(): PlayerWr {
-        return PlayerWr(PlayerDwitchId(2), "Obi-Wan", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true)
+        return PlayerWr(DwitchPlayerId(2), "Obi-Wan", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true)
     }
 
     fun createPlayerWrUi1(): PlayerWrUi {
@@ -34,7 +35,7 @@ object TestEntityFactory {
 
     fun createHostPlayer(
         localId: Long = 10L,
-        dwitchId: PlayerDwitchId = PlayerDwitchId(100),
+        dwitchId: DwitchPlayerId = DwitchPlayerId(100),
         connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
         ready: Boolean = true
     ): Player {
@@ -51,7 +52,7 @@ object TestEntityFactory {
 
     fun createGuestPlayer1(
         localId: Long = 11L,
-        dwitchId: PlayerDwitchId = PlayerDwitchId(101),
+        dwitchId: DwitchPlayerId = DwitchPlayerId(101),
         connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
         ready: Boolean = true
     ): Player {
@@ -68,7 +69,7 @@ object TestEntityFactory {
 
     fun createGuestPlayer2(
         localId: Long = 12L,
-        dwitchId: PlayerDwitchId = PlayerDwitchId(102),
+        dwitchId: DwitchPlayerId = DwitchPlayerId(102),
         connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
         ready: Boolean = true
     ): Player {
@@ -85,7 +86,7 @@ object TestEntityFactory {
 
     fun createGuestPlayer3(
         localId: Long = 13L,
-        dwitchId: PlayerDwitchId = PlayerDwitchId(103),
+        dwitchId: DwitchPlayerId = DwitchPlayerId(103),
         connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
         ready: Boolean = true
     ): Player {
@@ -112,11 +113,11 @@ object TestEntityFactory {
         )
     }
 
-    fun createGameState(): GameState {
+    fun createGameState(): DwitchGameState {
         val hostPlayer = createHostPlayer()
         val players = listOf(hostPlayer, createGuestPlayer1())
         return DwitchEngine.createNewGame(
-            players.map(Player::toPlayerInfo),
+            players.map { p -> DwitchPlayerOnboardingInfo(p.dwitchId, p.name) },
             RandomInitialGameSetup(players.size)
         )
     }

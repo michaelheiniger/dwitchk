@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchstore
 
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.model.Player
@@ -58,10 +58,10 @@ internal class PlayerDaoTest : BaseInstrumentedTest() {
     fun observePlayersInWaitingRoom() {
         bootstrapDb(
             listOf(
-                Player(0, PlayerDwitchId(2), 0, "Saruman", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true),
-                Player(0, PlayerDwitchId(3), 0, "Gimli", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
-                Player(0, PlayerDwitchId(4), 0, "Boromir", PlayerRole.GUEST, PlayerConnectionState.DISCONNECTED, true),
-                Player(0, PlayerDwitchId(5), 0, "Legolas", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true)
+                Player(0, DwitchPlayerId(2), 0, "Saruman", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true),
+                Player(0, DwitchPlayerId(3), 0, "Gimli", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
+                Player(0, DwitchPlayerId(4), 0, "Boromir", PlayerRole.GUEST, PlayerConnectionState.DISCONNECTED, true),
+                Player(0, DwitchPlayerId(5), 0, "Legolas", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true)
             )
         )
 

@@ -1,14 +1,14 @@
 package ch.qscqlmpa.dwitchengine.actions
 
-import ch.qscqlmpa.dwitchengine.model.game.GamePhase
-import ch.qscqlmpa.dwitchengine.model.game.GameState
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 import ch.qscqlmpa.dwitchengine.model.game.GameStateMutable
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
-import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
-import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
+import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchengine.model.player.SpecialRuleBreaker
 
-internal abstract class GameUpdaterBase(currentGameState: GameState) {
+internal abstract class GameUpdaterBase(currentGameState: DwitchGameState) {
 
     protected val gameStateMutable = GameStateMutable.fromGameState(currentGameState)
 
@@ -17,48 +17,48 @@ internal abstract class GameUpdaterBase(currentGameState: GameState) {
     }
 
     fun resetGameEvent() {
-        gameStateMutable.gameEvent = null
+        gameStateMutable.dwitchGameEvent = null
     }
 
-    fun setGamePhase(phase: GamePhase) {
+    fun setGamePhase(phase: DwitchGamePhase) {
         gameStateMutable.phase = phase
     }
 
-    fun roundIsOver(newRanks: Map<PlayerDwitchId, Rank>) {
-        gameStateMutable.phase = GamePhase.RoundIsOver
+    fun roundIsOver(newRanks: Map<DwitchPlayerId, DwitchRank>) {
+        gameStateMutable.phase = DwitchGamePhase.RoundIsOver
         newRanks.forEach { (id, rank) -> gameStateMutable.setPlayerRank(id, rank) }
     }
 
-    fun setPlayerState(playerId: PlayerDwitchId, state: PlayerStatus) {
+    fun setPlayerState(playerId: DwitchPlayerId, state: DwitchPlayerStatus) {
         gameStateMutable.setPlayerState(playerId, state)
     }
 
-    fun playerIsDone(playerId: PlayerDwitchId, playerDoneWithJoker: Boolean) {
+    fun playerIsDone(playerId: DwitchPlayerId, playerDoneWithJoker: Boolean) {
         gameStateMutable.removePlayerFromActivePlayers(playerId)
         gameStateMutable.addDonePlayer(playerId, playerDoneWithJoker)
-        gameStateMutable.setPlayerState(playerId, PlayerStatus.Done)
+        gameStateMutable.setPlayerState(playerId, DwitchPlayerStatus.Done)
     }
 
     fun setPlayersWhoPassedTheirTurnedToWaiting() {
         gameStateMutable.allPlayers()
-            .filter { player -> player.state == PlayerStatus.TurnPassed }
-            .forEach { player -> player.state = PlayerStatus.Waiting }
+            .filter { player -> player.state == DwitchPlayerStatus.TurnPassed }
+            .forEach { player -> player.state = DwitchPlayerStatus.Waiting }
     }
 
-    fun updateCurrentPlayer(playerId: PlayerDwitchId) {
+    fun updateCurrentPlayer(playerId: DwitchPlayerId) {
         gameStateMutable.currentPlayerId = playerId
-        gameStateMutable.setPlayerState(playerId, PlayerStatus.Playing)
+        gameStateMutable.setPlayerState(playerId, DwitchPlayerStatus.Playing)
     }
 
-    fun buildUpdatedGameState(): GameState {
+    fun buildUpdatedGameState(): DwitchGameState {
         return gameStateMutable.toGameState()
     }
 
-    fun resetPlayerHasPickedCard(playerId: PlayerDwitchId) {
+    fun resetPlayerHasPickedCard(playerId: DwitchPlayerId) {
         gameStateMutable.players.getValue(playerId).hasPickedCard = false
     }
 
-    fun playerPlayedOnTheFirstJokerPlayedOfTheRound(playerId: PlayerDwitchId) {
+    fun playerPlayedOnTheFirstJokerPlayedOfTheRound(playerId: DwitchPlayerId) {
         gameStateMutable.playersWhoBrokeASpecialRule.add(SpecialRuleBreaker.PlayedOnFirstJack(playerId))
     }
 }

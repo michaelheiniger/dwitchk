@@ -2,15 +2,15 @@ package ch.qscqlmpa.dwitchengine.actions.cardexchange
 
 import ch.qscqlmpa.dwitchengine.actions.GameStateBase
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.game.CardExchange
-import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
-import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.game.DwitchCardExchange
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchengine.rules.CardExchangeComputer
 
 internal class CardExchangeChooserState(
-    currentGameState: GameState,
-    private val playerId: PlayerDwitchId,
+    currentGameState: DwitchGameState,
+    private val playerId: DwitchPlayerId,
     private val cardsChosen: Set<Card>
 ) : GameStateBase(currentGameState) {
 
@@ -22,7 +22,7 @@ internal class CardExchangeChooserState(
         checkCardExchange()
     }
 
-    fun playerId(): PlayerDwitchId {
+    fun playerId(): DwitchPlayerId {
         return playerId
     }
 
@@ -30,7 +30,7 @@ internal class CardExchangeChooserState(
         return cardsChosen
     }
 
-    fun cardExchange(): CardExchange {
+    fun cardExchange(): DwitchCardExchange {
         return cardExchange!!
     }
 
@@ -42,7 +42,7 @@ internal class CardExchangeChooserState(
             "Player $playerId must exchange ${cardExchange.numCardsToChoose}, not ${cardsChosen.size}"
         }
 
-        if (player.rank == Rank.Asshole || player.rank == Rank.ViceAsshole) {
+        if (player.rank == DwitchRank.Asshole || player.rank == DwitchRank.ViceAsshole) {
             checkCardsChosenIsAllowed(cardsChosen, player.cardsInHand)
         }
     }

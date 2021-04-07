@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
@@ -41,7 +41,7 @@ internal class JoinGameMessageProcessor @Inject constructor(
         newPlayerLocalId: Long
     ) = sendMessages(
         listOf(
-            hostMessageFactory.createJoinAckMessage(senderConnectionId, PlayerDwitchId(newPlayerLocalId)),
+            hostMessageFactory.createJoinAckMessage(senderConnectionId, DwitchPlayerId(newPlayerLocalId)),
             hostMessageFactory.createWaitingRoomStateUpdateMessage()
         )
     )

@@ -3,28 +3,28 @@ package ch.qscqlmpa.dwitchengine
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.card.CardUtil
-import ch.qscqlmpa.dwitchengine.model.game.GameEvent
-import ch.qscqlmpa.dwitchengine.model.game.GamePhase
-import ch.qscqlmpa.dwitchengine.model.game.GameState
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameEvent
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 import ch.qscqlmpa.dwitchengine.model.player.*
 
 class EngineTestGameStateBuilder {
 
-    private val playersMap = mutableMapOf<PlayerDwitchId, Player>()
+    private val playersMap = mutableMapOf<DwitchPlayerId, DwitchPlayer>()
 
     private var cardsOnTable: List<Card> = emptyList()
     private var cardsInGraveyard: List<Card> = emptyList()
 
-    private var gameEvent: GameEvent? = null
+    private var dwitchGameEvent: DwitchGameEvent? = null
     private var joker: CardName = CardName.Two
-    private lateinit var gamePhase: GamePhase
-    private lateinit var localPlayer: PlayerDwitchId
-    private lateinit var currentPlayer: PlayerDwitchId
-    private var playersDoneForRound: List<PlayerDwitchId> = emptyList()
+    private lateinit var gamePhase: DwitchGamePhase
+    private lateinit var localPlayer: DwitchPlayerId
+    private lateinit var currentPlayer: DwitchPlayerId
+    private var playersDoneForRound: List<DwitchPlayerId> = emptyList()
 
-    private val playingOrder: MutableList<PlayerDwitchId> = mutableListOf()
+    private val playingOrder: MutableList<DwitchPlayerId> = mutableListOf()
 
-    fun build(): GameState {
+    fun build(): DwitchGameState {
         val cardsTakenFromDeck = playersMap
             .map { (_, player) -> player.cardsInHand }
             .flatten()
@@ -33,13 +33,13 @@ class EngineTestGameStateBuilder {
         cardsTakenFromDeck.addAll(cardsInGraveyard)
 
         val activePlayers = playersMap
-            .filter { (_, player) -> player.status != PlayerStatus.Done }
+            .filter { (_, player) -> player.status != DwitchPlayerStatus.Done }
             .map { (_, player) -> player.id }
             .toSet()
 
 //        cardsTakenFromDeck.forEach { c -> Logger.debug { c } }
 
-        return GameState(
+        return DwitchGameState(
             gamePhase,
             playersMap,
             playingOrder,
@@ -48,20 +48,20 @@ class EngineTestGameStateBuilder {
             playersDoneForRound,
             emptyList(),
             joker,
-            gameEvent,
+            dwitchGameEvent,
             cardsOnTable,
             CardUtil.getAllCardsExcept(cardsTakenFromDeck),
             cardsInGraveyard
         )
     }
 
-    fun setGamePhase(gamePhase: GamePhase): EngineTestGameStateBuilder {
+    fun setGamePhase(gamePhase: DwitchGamePhase): EngineTestGameStateBuilder {
         this.gamePhase = gamePhase
         return this
     }
 
-    fun setGameEvent(gameEvent: GameEvent): EngineTestGameStateBuilder {
-        this.gameEvent = gameEvent
+    fun setGameEvent(dwitchGameEvent: DwitchGameEvent): EngineTestGameStateBuilder {
+        this.dwitchGameEvent = dwitchGameEvent
         return this
     }
 
@@ -80,33 +80,33 @@ class EngineTestGameStateBuilder {
         return this
     }
 
-    fun setLocalPlayer(id: PlayerDwitchId): EngineTestGameStateBuilder {
+    fun setLocalPlayer(id: DwitchPlayerId): EngineTestGameStateBuilder {
         this.localPlayer = id
         return this
     }
 
-    fun setCurrentPlayer(id: PlayerDwitchId): EngineTestGameStateBuilder {
+    fun setCurrentPlayer(id: DwitchPlayerId): EngineTestGameStateBuilder {
         this.currentPlayer = id
         return this
     }
 
-    fun setPlayersDoneForRound(list: List<PlayerDwitchId>) {
+    fun setPlayersDoneForRound(list: List<DwitchPlayerId>) {
         playersDoneForRound = list
     }
 
-    fun setPlayerCards(id: PlayerDwitchId, cards: List<Card>) {
+    fun setPlayerCards(id: DwitchPlayerId, cards: List<Card>) {
         playersMap[id] = playersMap.getValue(id).copy(cardsInHand = cards)
     }
 
     fun addPlayerToGame(
-        player: PlayerOnboardingInfo,
-        state: PlayerStatus,
-        rank: Rank,
+        player: DwitchPlayerOnboardingInfo,
+        state: DwitchPlayerStatus,
+        rank: DwitchRank,
         cardsInHand: List<Card> = emptyList(),
         dwitched: Boolean = false,
         hasPickedCard: Boolean = false
     ): EngineTestGameStateBuilder {
-        playersMap[player.id] = Player(
+        playersMap[player.id] = DwitchPlayer(
             player.id,
             player.name,
             cardsInHand,

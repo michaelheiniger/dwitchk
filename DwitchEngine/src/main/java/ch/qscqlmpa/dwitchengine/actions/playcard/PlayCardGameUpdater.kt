@@ -2,25 +2,25 @@ package ch.qscqlmpa.dwitchengine.actions.playcard
 
 import ch.qscqlmpa.dwitchengine.actions.GameUpdaterBase
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.game.GameEvent
-import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameEvent
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 
 internal class PlayCardGameUpdater(
-    currentGameState: GameState
+    currentGameState: DwitchGameState
 ) : GameUpdaterBase(currentGameState) {
 
     fun clearTable(cardPlayed: Card) {
         gameStateMutable.moveCardsFromTableToGraveyard()
-        gameStateMutable.gameEvent = GameEvent.TableHasBeenCleared(cardPlayed)
+        gameStateMutable.dwitchGameEvent = DwitchGameEvent.TableHasBeenCleared(cardPlayed)
     }
 
-    fun takeCardFromHandAndPutOnTable(playerId: PlayerDwitchId, cardPlayed: Card) {
+    fun takeCardFromHandAndPutOnTable(playerId: DwitchPlayerId, cardPlayed: Card) {
         gameStateMutable.removeCardFromHand(playerId, cardPlayed)
         gameStateMutable.addCardToTable(cardPlayed)
     }
 
-    fun dwitchPlayer(playerId: PlayerDwitchId) {
+    fun dwitchPlayer(playerId: DwitchPlayerId) {
         gameStateMutable.dwitchPlayer(playerId)
     }
 }

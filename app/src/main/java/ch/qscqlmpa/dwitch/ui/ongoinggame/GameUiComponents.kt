@@ -20,7 +20,7 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ResourceMapper
 import ch.qscqlmpa.dwitch.ui.common.InfoDialog
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.info.CardItem
+import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
 
 @Composable
 fun GameOverDialog(onGameOverAcknowledge: () -> Unit) {
@@ -47,7 +47,7 @@ fun LoadingSpinner() {
 
 @Composable
 fun CardItemDisplay(
-    cardItem: CardItem,
+    cardItem: DwitchCardInfo,
     onCardClick: (Card) -> Unit
 ) {
     val surfaceColor = if (cardItem.selectable) Color.Transparent else Color(

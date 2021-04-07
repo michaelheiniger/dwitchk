@@ -1,13 +1,13 @@
 package ch.qscqlmpa.dwitchengine
 
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
-import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
-import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
+import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import org.assertj.core.api.Assertions.assertThat
 
-class PlayerRobot(private val gameState: GameState, private val playerId: PlayerDwitchId) {
+class PlayerRobot(private val gameState: DwitchGameState, private val playerId: DwitchPlayerId) {
 
     fun assertNumCardsInHand(expectedValue: Int): PlayerRobot {
         assertThat(gameState.players.getValue(playerId).cardsInHand.size).isEqualTo(expectedValue)
@@ -29,7 +29,7 @@ class PlayerRobot(private val gameState: GameState, private val playerId: Player
         return this
     }
 
-    fun assertPlayerState(expectedStatus: PlayerStatus): PlayerRobot {
+    fun assertPlayerState(expectedStatus: DwitchPlayerStatus): PlayerRobot {
         assertThat(gameState.players.getValue(playerId).status).isEqualTo(expectedStatus)
         return this
     }
@@ -44,7 +44,7 @@ class PlayerRobot(private val gameState: GameState, private val playerId: Player
         return this
     }
 
-    fun assertRank(rank: Rank): PlayerRobot {
+    fun assertRank(rank: DwitchRank): PlayerRobot {
         assertThat(gameState.player(playerId).rank).isEqualTo(rank)
         return this
     }

@@ -42,7 +42,7 @@ internal class RejoinGameMessageProcessor @Inject constructor(
             val rejoinInfo = getRejoiningInfoIfPossible(currentGameCommonId, msg, senderConnectionID)
             if (rejoinInfo != null) {
                 updatePlayer(rejoinInfo.playerLocalId, currentRoom)
-                connectionStore.pairConnectionWithPlayer(senderConnectionID, rejoinInfo.playerDwitchId)
+                connectionStore.pairConnectionWithPlayer(senderConnectionID, rejoinInfo.dwitchPlayerId)
                 sendMessage(HostMessageFactory.createRejoinAckMessage(rejoinInfo))
             } else {
                 Logger.error { "Re-joining player not found: closing connection with client." }
@@ -58,9 +58,9 @@ internal class RejoinGameMessageProcessor @Inject constructor(
         msg: Message.RejoinGameMessage,
         senderConnectionID: ConnectionId
     ): RejoinInfo? {
-        val playerRejoiningId = store.getPlayerLocalId(msg.playerDwitchId)
+        val playerRejoiningId = store.getPlayerLocalId(msg.dwitchPlayerId)
         if (playerRejoiningId != null) {
-            return RejoinInfo(currentGameCommonId, playerRejoiningId, msg.playerDwitchId, senderConnectionID)
+            return RejoinInfo(currentGameCommonId, playerRejoiningId, msg.dwitchPlayerId, senderConnectionID)
         }
         return null
     }

@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchengine.model.game.GameState
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.GameStateUpdatedMessageProcessor
 import ch.qscqlmpa.dwitchstore.model.Player
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 
 internal class GameStateUpdatedMessageProcessorTest : BaseMessageProcessorTest() {
 
-    private val gameState: GameState = TestEntityFactory.createGameState()
+    private val gameState: DwitchGameState = TestEntityFactory.createGameState()
 
     private lateinit var localPlayer: Player
 

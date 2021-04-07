@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchstore.ingamestore
 
-import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
@@ -17,37 +17,37 @@ interface InGameStore {
     fun getGame(): Game
     fun getGameCommonId(): GameCommonId
     fun getCurrentRoom(): RoomType
-    fun getGameState(): GameState
+    fun getGameState(): DwitchGameState
     fun gameIsNew(): Boolean
-    fun observeGameState(): Observable<GameState>
+    fun observeGameState(): Observable<DwitchGameState>
     fun getGameCommonIdAndCurrentRoom(): GameCommonIdAndCurrentRoom
-    fun getPlayerLocalId(dwitchId: PlayerDwitchId): Long?
+    fun getPlayerLocalId(dwitchId: DwitchPlayerId): Long?
 
     fun updateGameWithCommonId(gameCommonId: GameCommonId)
     fun deleteGame()
     fun updateGameRoom(gameRoom: RoomType)
-    fun updateGameState(gameState: GameState)
+    fun updateGameState(gameState: DwitchGameState)
 
     // Player
     fun insertNewGuestPlayer(name: String): Long
     fun insertPlayers(players: List<Player>): List<Long>
 
-    fun updateLocalPlayerWithDwitchId(playerDwitchId: PlayerDwitchId): Int
+    fun updateLocalPlayerWithDwitchId(dwitchPlayerId: DwitchPlayerId): Int
     fun updateLocalPlayerWithReady(ready: Boolean): Int
-    fun updatePlayerWithReady(playerDwitchId: PlayerDwitchId, ready: Boolean): Int
-    fun updatePlayer(playerDwitchId: PlayerDwitchId, state: PlayerConnectionState, ready: Boolean): Int
+    fun updatePlayerWithReady(dwitchPlayerId: DwitchPlayerId, ready: Boolean): Int
+    fun updatePlayer(dwitchPlayerId: DwitchPlayerId, state: PlayerConnectionState, ready: Boolean): Int
     fun updatePlayerWithConnectionStateAndReady(playerLocalId: Long, state: PlayerConnectionState, ready: Boolean): Int
     fun updatePlayerWithConnectionState(playerLocalId: Long, state: PlayerConnectionState): Int
     fun setAllPlayersToDisconnected(): Int
 
     fun deletePlayers(playersLocalId: List<Long>): Int
-    fun deletePlayer(playerDwitchId: PlayerDwitchId): Int
+    fun deletePlayer(dwitchPlayerId: DwitchPlayerId): Int
 
     fun getLocalPlayer(): Player
     fun observeLocalPlayer(): Observable<Player>
-    fun getLocalPlayerDwitchId(): PlayerDwitchId
-    fun getPlayerDwitchId(playerLocalId: Long): PlayerDwitchId
-    fun getPlayer(playerDwitchId: PlayerDwitchId): Player?
+    fun getLocalPlayerDwitchId(): DwitchPlayerId
+    fun getPlayerDwitchId(playerLocalId: Long): DwitchPlayerId
+    fun getPlayer(dwitchPlayerId: DwitchPlayerId): Player?
     fun getPlayer(playerLocalId: Long): Player
     fun getPlayer(name: String): Player?
 

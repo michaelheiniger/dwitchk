@@ -9,21 +9,21 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(with = PlayerDwitchIdSerializer::class)
-data class PlayerDwitchId(val value: Long) : Comparable<PlayerDwitchId> {
+data class DwitchPlayerId(val value: Long) : Comparable<DwitchPlayerId> {
 
-    override fun compareTo(other: PlayerDwitchId): Int {
+    override fun compareTo(other: DwitchPlayerId): Int {
         return value.compareTo(other.value)
     }
 }
 
-object PlayerDwitchIdSerializer : KSerializer<PlayerDwitchId> {
+object PlayerDwitchIdSerializer : KSerializer<DwitchPlayerId> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("PlayerDwitchId", PrimitiveKind.LONG)
 
-    override fun serialize(encoder: Encoder, value: PlayerDwitchId) {
+    override fun serialize(encoder: Encoder, value: DwitchPlayerId) {
         encoder.encodeLong(value.value)
     }
 
-    override fun deserialize(decoder: Decoder): PlayerDwitchId {
-        return PlayerDwitchId(decoder.decodeLong())
+    override fun deserialize(decoder: Decoder): DwitchPlayerId {
+        return DwitchPlayerId(decoder.decodeLong())
     }
 }

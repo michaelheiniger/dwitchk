@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.appevent.AppEvent
 import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test
 
 internal class LeaveGameUsecaseTest : BaseUnitTest() {
 
-    private val playerDwitchId = PlayerDwitchId(23)
+    private val playerDwitchId = DwitchPlayerId(23)
 
     private lateinit var appEventRepository: AppEventRepository
 

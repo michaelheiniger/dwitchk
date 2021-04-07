@@ -2,14 +2,14 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.cardexchange
 
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardValueDescComparator
-import ch.qscqlmpa.dwitchengine.model.info.CardItem
+import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
 import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeInfo
 import org.tinylog.kotlin.Logger
 
 data class CardExchangeState(
     val numCardsToChoose: NumCardForExchange,
-    val cardsInHand: List<CardItem>,
-    val cardsToExchange: List<CardItem>,
+    val cardsInHand: List<DwitchCardInfo>,
+    val cardsToExchange: List<DwitchCardInfo>,
     val canPerformExchange: Boolean
 )
 
@@ -61,8 +61,8 @@ class CardExchangeStateEngine(cardExchangeInfo: CardExchangeInfo) {
 
         return CardExchangeState(
             numCardForExchange,
-            cardsInHand.sortedWith(cardComparator).map { c -> CardItem(c, isCardSelectable(c)) },
-            cardsToExchange.map { c -> CardItem(c, true) },
+            cardsInHand.sortedWith(cardComparator).map { c -> DwitchCardInfo(c, isCardSelectable(c)) },
+            cardsToExchange.map { c -> DwitchCardInfo(c, true) },
             canPerformExchange = cardsToExchange.size == numCardsToChoose
         )
     }

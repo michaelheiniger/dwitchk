@@ -1,10 +1,10 @@
 package ch.qscqlmpa.dwitchengine.actions.passturn
 
 import ch.qscqlmpa.dwitchengine.actions.GameStateBase
-import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.Player
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayer
 
-internal class PassTurnState(private val currentGameState: GameState) : GameStateBase(currentGameState) {
+internal class PassTurnState(private val currentGameState: DwitchGameState) : GameStateBase(currentGameState) {
 
     override fun checkState() {
         super.checkState()
@@ -12,7 +12,7 @@ internal class PassTurnState(private val currentGameState: GameState) : GameStat
         checkPlayerHasPickedACard(currentGameState)
     }
 
-    fun nextWaitingPlayer(): Player {
+    fun nextWaitingPlayer(): DwitchPlayer {
         // There must be at least one Waiting player, otherwise the current player would not need to pass turn
         return currentGameState.nextWaitingPlayer()!!
     }
@@ -21,7 +21,7 @@ internal class PassTurnState(private val currentGameState: GameState) : GameStat
         return currentGameState.waitingPlayerInOrderAfterLocalPlayer().size == 1
     }
 
-    private fun checkPlayerHasPickedACard(currentGameState: GameState) {
+    private fun checkPlayerHasPickedACard(currentGameState: DwitchGameState) {
         if (!currentGameState.currentPlayer().hasPickedACard) {
             throw IllegalStateException("The player must first pick a card and then is allowed to pass its turn.")
         }

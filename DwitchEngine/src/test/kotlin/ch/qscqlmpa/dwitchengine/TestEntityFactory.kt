@@ -3,44 +3,44 @@ package ch.qscqlmpa.dwitchengine
 import ch.qscqlmpa.dwitchengine.actions.startnewgame.GameBootstrap
 import ch.qscqlmpa.dwitchengine.initialgamesetup.random.RandomInitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.game.GameState
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 import ch.qscqlmpa.dwitchengine.model.player.*
 
 internal object TestEntityFactory {
 
-    fun createHostPlayerInfo(): PlayerOnboardingInfo {
+    fun createHostPlayerInfo(): DwitchPlayerOnboardingInfo {
         return createHostPlayer().toPlayerOnboardingInfo()
     }
 
-    fun createGuestPlayer1Info(): PlayerOnboardingInfo {
+    fun createGuestPlayer1Info(): DwitchPlayerOnboardingInfo {
         return createGuestPlayer1().toPlayerOnboardingInfo()
     }
 
-    fun createGuestPlayer2Info(): PlayerOnboardingInfo {
+    fun createGuestPlayer2Info(): DwitchPlayerOnboardingInfo {
         return createGuestPlayer2().toPlayerOnboardingInfo()
     }
 
-    fun createGuestPlayer3Info(): PlayerOnboardingInfo {
+    fun createGuestPlayer3Info(): DwitchPlayerOnboardingInfo {
         return createGuestPlayer3().toPlayerOnboardingInfo()
     }
 
-    fun createGuestPlayer4Info(): PlayerOnboardingInfo {
+    fun createGuestPlayer4Info(): DwitchPlayerOnboardingInfo {
         return createGuestPlayer4().toPlayerOnboardingInfo()
     }
 
-    fun createGuestPlayer5Info(): PlayerOnboardingInfo {
+    fun createGuestPlayer5Info(): DwitchPlayerOnboardingInfo {
         return createGuestPlayer5().toPlayerOnboardingInfo()
     }
 
     fun createHostPlayer(
         cardsInHand: List<Card> = emptyList(),
-        rank: Rank = Rank.Asshole,
-        state: PlayerStatus = PlayerStatus.Playing,
+        rank: DwitchRank = DwitchRank.Asshole,
+        state: DwitchPlayerStatus = DwitchPlayerStatus.Playing,
         dwitched: Boolean = false,
         hasPickedCard: Boolean = false
-    ): Player {
-        return Player(
-            id = PlayerDwitchId(100),
+    ): DwitchPlayer {
+        return DwitchPlayer(
+            id = DwitchPlayerId(100),
             name = "Aragorn",
             cardsInHand = cardsInHand,
             rank = rank,
@@ -52,13 +52,13 @@ internal object TestEntityFactory {
 
     fun createGuestPlayer1(
         cardsInHand: List<Card> = emptyList(),
-        rank: Rank = Rank.ViceAsshole,
-        state: PlayerStatus = PlayerStatus.Waiting,
+        rank: DwitchRank = DwitchRank.ViceAsshole,
+        state: DwitchPlayerStatus = DwitchPlayerStatus.Waiting,
         dwitched: Boolean = false,
         hasPickedCard: Boolean = false
-    ): Player {
-        return Player(
-            id = PlayerDwitchId(101),
+    ): DwitchPlayer {
+        return DwitchPlayer(
+            id = DwitchPlayerId(101),
             name = "Boromir",
             cardsInHand = cardsInHand,
             rank = rank,
@@ -70,13 +70,13 @@ internal object TestEntityFactory {
 
     fun createGuestPlayer2(
         cardsInHand: List<Card> = emptyList(),
-        rank: Rank = Rank.Neutral,
-        state: PlayerStatus = PlayerStatus.Waiting,
+        rank: DwitchRank = DwitchRank.Neutral,
+        state: DwitchPlayerStatus = DwitchPlayerStatus.Waiting,
         dwitched: Boolean = false,
         hasPickedCard: Boolean = false
-    ): Player {
-        return Player(
-            id = PlayerDwitchId(102),
+    ): DwitchPlayer {
+        return DwitchPlayer(
+            id = DwitchPlayerId(102),
             name = "Celeborn",
             cardsInHand = cardsInHand,
             rank = rank,
@@ -88,13 +88,13 @@ internal object TestEntityFactory {
 
     fun createGuestPlayer3(
         cardsInHand: List<Card> = emptyList(),
-        rank: Rank = Rank.Neutral,
-        state: PlayerStatus = PlayerStatus.Waiting,
+        rank: DwitchRank = DwitchRank.Neutral,
+        state: DwitchPlayerStatus = DwitchPlayerStatus.Waiting,
         dwitched: Boolean = false,
         hasPickedCard: Boolean = false
-    ): Player {
-        return Player(
-            id = PlayerDwitchId(103),
+    ): DwitchPlayer {
+        return DwitchPlayer(
+            id = DwitchPlayerId(103),
             name = "Denethor",
             cardsInHand = cardsInHand,
             rank = rank,
@@ -106,13 +106,13 @@ internal object TestEntityFactory {
 
     fun createGuestPlayer4(
         cardsInHand: List<Card> = emptyList(),
-        rank: Rank = Rank.VicePresident,
-        state: PlayerStatus = PlayerStatus.Waiting,
+        rank: DwitchRank = DwitchRank.VicePresident,
+        state: DwitchPlayerStatus = DwitchPlayerStatus.Waiting,
         dwitched: Boolean = false,
         hasPickedCard: Boolean = false
-    ): Player {
-        return Player(
-            id = PlayerDwitchId(104),
+    ): DwitchPlayer {
+        return DwitchPlayer(
+            id = DwitchPlayerId(104),
             name = "Eowin",
             cardsInHand = cardsInHand,
             rank = rank,
@@ -124,13 +124,13 @@ internal object TestEntityFactory {
 
     fun createGuestPlayer5(
         cardsInHand: List<Card> = emptyList(),
-        rank: Rank = Rank.President,
-        state: PlayerStatus = PlayerStatus.Waiting,
+        rank: DwitchRank = DwitchRank.President,
+        state: DwitchPlayerStatus = DwitchPlayerStatus.Waiting,
         dwitched: Boolean = false,
         hasPickedCard: Boolean = false
-    ): Player {
-        return Player(
-            id = PlayerDwitchId(105),
+    ): DwitchPlayer {
+        return DwitchPlayer(
+            id = DwitchPlayerId(105),
             name = "Faramir",
             cardsInHand = cardsInHand,
             rank = rank,
@@ -140,7 +140,7 @@ internal object TestEntityFactory {
         )
     }
 
-    fun createGameState(): GameState {
+    fun createGameState(): DwitchGameState {
         val players = listOf(createHostPlayerInfo(), createGuestPlayer1Info(), createGuestPlayer2Info())
         return GameBootstrap.createNewGame(players, RandomInitialGameSetup(players.size))
     }

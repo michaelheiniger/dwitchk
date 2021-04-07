@@ -3,8 +3,8 @@ package ch.qscqlmpa.dwitch.ui
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.common.Resource
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
-import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
+import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
 
@@ -32,32 +32,32 @@ object ResourceMapper {
         )
     }
 
-    fun getResourceShort(rank: Rank): Int {
+    fun getResourceShort(rank: DwitchRank): Int {
         return when (rank) {
-            Rank.President -> R.string.president_short
-            Rank.VicePresident -> R.string.vice_president_short
-            Rank.Neutral -> R.string.neutral_short
-            Rank.ViceAsshole -> R.string.vice_asshole_short
-            Rank.Asshole -> R.string.asshole_short
+            DwitchRank.President -> R.string.president_short
+            DwitchRank.VicePresident -> R.string.vice_president_short
+            DwitchRank.Neutral -> R.string.neutral_short
+            DwitchRank.ViceAsshole -> R.string.vice_asshole_short
+            DwitchRank.Asshole -> R.string.asshole_short
         }
     }
 
-    fun getResourceLong(rank: Rank): Int {
+    fun getResourceLong(rank: DwitchRank): Int {
         return when (rank) {
-            Rank.President -> R.string.president_long
-            Rank.VicePresident -> R.string.vice_president_long
-            Rank.Neutral -> R.string.neutral_long
-            Rank.ViceAsshole -> R.string.vice_asshole_long
-            Rank.Asshole -> R.string.asshole_long
+            DwitchRank.President -> R.string.president_long
+            DwitchRank.VicePresident -> R.string.vice_president_long
+            DwitchRank.Neutral -> R.string.neutral_long
+            DwitchRank.ViceAsshole -> R.string.vice_asshole_long
+            DwitchRank.Asshole -> R.string.asshole_long
         }
     }
 
-    fun getResource(status: PlayerStatus): Int {
+    fun getResource(status: DwitchPlayerStatus): Int {
         return when (status) {
-            PlayerStatus.Done -> R.string.player_status_done
-            PlayerStatus.Playing -> R.string.player_status_playing
-            PlayerStatus.TurnPassed -> R.string.player_status_turnPassed
-            PlayerStatus.Waiting -> R.string.player_status_waiting
+            DwitchPlayerStatus.Done -> R.string.player_status_done
+            DwitchPlayerStatus.Playing -> R.string.player_status_playing
+            DwitchPlayerStatus.TurnPassed -> R.string.player_status_turnPassed
+            DwitchPlayerStatus.Waiting -> R.string.player_status_waiting
         }
     }
 

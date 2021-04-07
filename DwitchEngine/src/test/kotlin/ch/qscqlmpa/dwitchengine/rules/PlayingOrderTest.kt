@@ -1,9 +1,9 @@
 package ch.qscqlmpa.dwitchengine.rules
 
 import ch.qscqlmpa.dwitchengine.TestEntityFactory
-import ch.qscqlmpa.dwitchengine.model.player.Player
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
-import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayer
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -15,17 +15,17 @@ internal class PlayingOrderTest {
     @DisplayName("getPlayingOrder")
     inner class GetPlayingOrder {
 
-        private lateinit var host: Player
-        private lateinit var guest1: Player
-        private lateinit var guest2: Player
-        private lateinit var guest3: Player
-        private lateinit var guest4: Player
-        private lateinit var guest5: Player
+        private lateinit var host: DwitchPlayer
+        private lateinit var guest1: DwitchPlayer
+        private lateinit var guest2: DwitchPlayer
+        private lateinit var guest3: DwitchPlayer
+        private lateinit var guest4: DwitchPlayer
+        private lateinit var guest5: DwitchPlayer
 
         @Test
         fun `Two players`() {
-            host = TestEntityFactory.createHostPlayer(rank = Rank.President)
-            guest1 = TestEntityFactory.createGuestPlayer1(rank = Rank.Asshole)
+            host = TestEntityFactory.createHostPlayer(rank = DwitchRank.President)
+            guest1 = TestEntityFactory.createGuestPlayer1(rank = DwitchRank.Asshole)
 
             val order = launchTest(host, guest1)
 
@@ -36,9 +36,9 @@ internal class PlayingOrderTest {
 
         @Test
         fun `Three players`() {
-            host = TestEntityFactory.createHostPlayer(rank = Rank.Neutral)
-            guest1 = TestEntityFactory.createGuestPlayer1(rank = Rank.Asshole)
-            guest2 = TestEntityFactory.createGuestPlayer2(rank = Rank.President)
+            host = TestEntityFactory.createHostPlayer(rank = DwitchRank.Neutral)
+            guest1 = TestEntityFactory.createGuestPlayer1(rank = DwitchRank.Asshole)
+            guest2 = TestEntityFactory.createGuestPlayer2(rank = DwitchRank.President)
 
             val order = launchTest(host, guest1, guest2)
 
@@ -50,10 +50,10 @@ internal class PlayingOrderTest {
 
         @Test
         fun `Four players`() {
-            host = TestEntityFactory.createHostPlayer(rank = Rank.President)
-            guest1 = TestEntityFactory.createGuestPlayer1(rank = Rank.VicePresident)
-            guest2 = TestEntityFactory.createGuestPlayer2(rank = Rank.Asshole)
-            guest3 = TestEntityFactory.createGuestPlayer3(rank = Rank.ViceAsshole)
+            host = TestEntityFactory.createHostPlayer(rank = DwitchRank.President)
+            guest1 = TestEntityFactory.createGuestPlayer1(rank = DwitchRank.VicePresident)
+            guest2 = TestEntityFactory.createGuestPlayer2(rank = DwitchRank.Asshole)
+            guest3 = TestEntityFactory.createGuestPlayer3(rank = DwitchRank.ViceAsshole)
 
             val order = launchTest(host, guest1, guest2, guest3)
 
@@ -66,11 +66,11 @@ internal class PlayingOrderTest {
 
         @Test
         fun `Five players`() {
-            host = TestEntityFactory.createHostPlayer(rank = Rank.Neutral)
-            guest1 = TestEntityFactory.createGuestPlayer1(rank = Rank.President)
-            guest2 = TestEntityFactory.createGuestPlayer2(rank = Rank.VicePresident)
-            guest3 = TestEntityFactory.createGuestPlayer3(rank = Rank.Asshole)
-            guest4 = TestEntityFactory.createGuestPlayer4(rank = Rank.ViceAsshole)
+            host = TestEntityFactory.createHostPlayer(rank = DwitchRank.Neutral)
+            guest1 = TestEntityFactory.createGuestPlayer1(rank = DwitchRank.President)
+            guest2 = TestEntityFactory.createGuestPlayer2(rank = DwitchRank.VicePresident)
+            guest3 = TestEntityFactory.createGuestPlayer3(rank = DwitchRank.Asshole)
+            guest4 = TestEntityFactory.createGuestPlayer4(rank = DwitchRank.ViceAsshole)
 
             val order = launchTest(host, guest1, guest2, guest3, guest4)
 
@@ -84,12 +84,12 @@ internal class PlayingOrderTest {
 
         @Test
         fun `Six players`() {
-            host = TestEntityFactory.createHostPlayer(rank = Rank.Neutral)
-            guest1 = TestEntityFactory.createGuestPlayer1(rank = Rank.Neutral)
-            guest2 = TestEntityFactory.createGuestPlayer2(rank = Rank.President)
-            guest3 = TestEntityFactory.createGuestPlayer3(rank = Rank.VicePresident)
-            guest4 = TestEntityFactory.createGuestPlayer4(rank = Rank.Asshole)
-            guest5 = TestEntityFactory.createGuestPlayer5(rank = Rank.ViceAsshole)
+            host = TestEntityFactory.createHostPlayer(rank = DwitchRank.Neutral)
+            guest1 = TestEntityFactory.createGuestPlayer1(rank = DwitchRank.Neutral)
+            guest2 = TestEntityFactory.createGuestPlayer2(rank = DwitchRank.President)
+            guest3 = TestEntityFactory.createGuestPlayer3(rank = DwitchRank.VicePresident)
+            guest4 = TestEntityFactory.createGuestPlayer4(rank = DwitchRank.Asshole)
+            guest5 = TestEntityFactory.createGuestPlayer5(rank = DwitchRank.ViceAsshole)
 
             val order = launchTest(host, guest1, guest2, guest3, guest4, guest5)
 
@@ -105,7 +105,7 @@ internal class PlayingOrderTest {
             assertThat(order[5]).isEqualTo(guest2.id)
         }
 
-        private fun launchTest(vararg players: Player): List<PlayerDwitchId> {
+        private fun launchTest(vararg players: DwitchPlayer): List<DwitchPlayerId> {
             return PlayingOrder.getPlayingOrder(players.toList())
         }
     }

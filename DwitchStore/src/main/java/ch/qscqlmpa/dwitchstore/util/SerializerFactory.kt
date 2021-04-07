@@ -4,12 +4,12 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardId
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.card.CardSuit
-import ch.qscqlmpa.dwitchengine.model.game.GameEvent
-import ch.qscqlmpa.dwitchengine.model.game.GamePhase
-import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.Player
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
-import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameEvent
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayer
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreScope
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
@@ -24,8 +24,8 @@ class SerializerFactory @Inject constructor(private val json: Json) {
         return json.encodeToString(Card.serializer(), card)
     }
 
-    fun serialize(gamePhase: GamePhase): String {
-        return json.encodeToString(GamePhase.serializer(), gamePhase)
+    fun serialize(gamePhase: DwitchGamePhase): String {
+        return json.encodeToString(DwitchGamePhase.serializer(), gamePhase)
     }
 
     fun serialize(cardId: CardId): String {
@@ -40,24 +40,24 @@ class SerializerFactory @Inject constructor(private val json: Json) {
         return json.encodeToString(CardSuit.serializer(), cardSuit)
     }
 
-    fun serialize(rank: Rank): String {
-        return json.encodeToString(Rank.serializer(), rank)
+    fun serialize(rank: DwitchRank): String {
+        return json.encodeToString(DwitchRank.serializer(), rank)
     }
 
-    fun serialize(gameState: GameState): String {
-        return json.encodeToString(GameState.serializer(), gameState)
+    fun serialize(gameState: DwitchGameState): String {
+        return json.encodeToString(DwitchGameState.serializer(), gameState)
     }
 
-    fun serialize(player: Player): String {
-        return json.encodeToString(Player.serializer(), player)
+    fun serialize(player: DwitchPlayer): String {
+        return json.encodeToString(DwitchPlayer.serializer(), player)
     }
 
-    fun serialize(gameEvent: GameEvent): String {
-        return json.encodeToString(GameEvent.serializer(), gameEvent)
+    fun serialize(dwitchGameEvent: DwitchGameEvent): String {
+        return json.encodeToString(DwitchGameEvent.serializer(), dwitchGameEvent)
     }
 
-    fun serialize(playerDwitchId: PlayerDwitchId): String {
-        return json.encodeToString(PlayerDwitchId.serializer(), playerDwitchId)
+    fun serialize(dwitchPlayerId: DwitchPlayerId): String {
+        return json.encodeToString(DwitchPlayerId.serializer(), dwitchPlayerId)
     }
 
     fun serialize(cards: List<Card>): String {
@@ -78,24 +78,24 @@ class SerializerFactory @Inject constructor(private val json: Json) {
         return json.decodeFromString(CardSuit.serializer(), cardSuit)
     }
 
-    fun unserializeRank(rank: String): Rank {
-        return json.decodeFromString(Rank.serializer(), rank)
+    fun unserializeRank(rank: String): DwitchRank {
+        return json.decodeFromString(DwitchRank.serializer(), rank)
     }
 
-    fun unserializeGameState(gameState: String): GameState {
-        return json.decodeFromString(GameState.serializer(), gameState)
+    fun unserializeGameState(gameState: String): DwitchGameState {
+        return json.decodeFromString(DwitchGameState.serializer(), gameState)
     }
 
-    fun unserializePlayer(player: String): Player {
-        return json.decodeFromString(Player.serializer(), player)
+    fun unserializePlayer(player: String): DwitchPlayer {
+        return json.decodeFromString(DwitchPlayer.serializer(), player)
     }
 
-    fun unserializeGameEvent(gameEvent: String): GameEvent {
-        return json.decodeFromString(GameEvent.serializer(), gameEvent)
+    fun unserializeGameEvent(gameEvent: String): DwitchGameEvent {
+        return json.decodeFromString(DwitchGameEvent.serializer(), gameEvent)
     }
 
-    fun unserializePlayerDwitchId(playerDwitchId: String): PlayerDwitchId {
-        return json.decodeFromString(PlayerDwitchId.serializer(), playerDwitchId)
+    fun unserializePlayerDwitchId(playerDwitchId: String): DwitchPlayerId {
+        return json.decodeFromString(DwitchPlayerId.serializer(), playerDwitchId)
     }
 
     fun unserializeCards(cards: String): List<Card> {

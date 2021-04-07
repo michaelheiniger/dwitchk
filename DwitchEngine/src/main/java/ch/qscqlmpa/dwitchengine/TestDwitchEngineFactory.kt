@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchengine
 
-import ch.qscqlmpa.dwitchengine.model.game.GameState
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 
 class TestDwitchEngineFactory : DwitchEngineFactory {
 
@@ -10,7 +10,7 @@ class TestDwitchEngineFactory : DwitchEngineFactory {
         dwitchEngine = instance
     }
 
-    override fun create(gameState: GameState): DwitchEngine {
+    override fun create(gameState: DwitchGameState): DwitchEngine {
         return dwitchEngine
             ?: throw IllegalStateException("An DwitchEngine instance must be provided")
     }

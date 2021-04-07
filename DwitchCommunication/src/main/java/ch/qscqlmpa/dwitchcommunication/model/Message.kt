@@ -1,8 +1,8 @@
 package ch.qscqlmpa.dwitchcommunication.model
 
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import kotlinx.serialization.Serializable
@@ -13,11 +13,11 @@ sealed class Message {
      * Messages sent by Host
      *****************************************************************************************************************/
     @Serializable
-    data class JoinGameAckMessage(val gameCommonId: GameCommonId, val playerId: PlayerDwitchId) : Message()
+    data class JoinGameAckMessage(val gameCommonId: GameCommonId, val playerId: DwitchPlayerId) : Message()
 
     @Serializable
-    data class RejoinGameAckMessage(val gameCommonId: GameCommonId, val playerDwitchId: PlayerDwitchId) : Message() {
-        constructor(rejoinInfo: RejoinInfo) : this(rejoinInfo.gameCommonId, rejoinInfo.playerDwitchId)
+    data class RejoinGameAckMessage(val gameCommonId: GameCommonId, val dwitchPlayerId: DwitchPlayerId) : Message() {
+        constructor(rejoinInfo: RejoinInfo) : this(rejoinInfo.gameCommonId, rejoinInfo.dwitchPlayerId)
     }
 
     @Serializable
@@ -27,7 +27,7 @@ sealed class Message {
     object CancelGameMessage : Message()
 
     @Serializable
-    data class LaunchGameMessage(val gameState: GameState) : Message()
+    data class LaunchGameMessage(val gameState: DwitchGameState) : Message()
 
     @Serializable
     object GameOverMessage : Message()
@@ -39,20 +39,20 @@ sealed class Message {
     data class JoinGameMessage(val playerName: String) : Message()
 
     @Serializable
-    data class RejoinGameMessage(val gameCommonId: GameCommonId, val playerDwitchId: PlayerDwitchId) : Message()
+    data class RejoinGameMessage(val gameCommonId: GameCommonId, val dwitchPlayerId: DwitchPlayerId) : Message()
 
     @Serializable
-    data class LeaveGameMessage(val playerDwitchId: PlayerDwitchId) : Message()
+    data class LeaveGameMessage(val dwitchPlayerId: DwitchPlayerId) : Message()
 
     @Serializable
-    data class PlayerReadyMessage(val playerId: PlayerDwitchId, val ready: Boolean) : Message()
+    data class PlayerReadyMessage(val playerId: DwitchPlayerId, val ready: Boolean) : Message()
 
     /*****************************************************************************************************************
      * Messages sent by both Host and Guests
      *****************************************************************************************************************/
     @Serializable
-    data class GameStateUpdatedMessage(val gameState: GameState) : Message()
+    data class GameStateUpdatedMessage(val gameState: DwitchGameState) : Message()
 
     @Serializable
-    data class CardsForExchangeMessage(val playerId: PlayerDwitchId, val cards: Set<Card>) : Message()
+    data class CardsForExchangeMessage(val playerId: DwitchPlayerId, val cards: Set<Card>) : Message()
 }

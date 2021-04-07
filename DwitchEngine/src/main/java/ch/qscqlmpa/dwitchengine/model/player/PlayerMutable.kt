@@ -3,11 +3,11 @@ package ch.qscqlmpa.dwitchengine.model.player
 import ch.qscqlmpa.dwitchengine.model.card.Card
 
 internal data class PlayerMutable(
-    val dwitchId: PlayerDwitchId,
+    val dwitchId: DwitchPlayerId,
     private val name: String,
     private val cardsInHand: MutableList<Card>,
-    var rank: Rank,
-    var state: PlayerStatus,
+    var rank: DwitchRank,
+    var state: DwitchPlayerStatus,
     var dwitched: Boolean,
     var hasPickedCard: Boolean,
     val cardsForExchange: MutableSet<Card>
@@ -45,8 +45,8 @@ internal data class PlayerMutable(
         cardsForExchange.clear()
     }
 
-    fun toPlayer(): Player {
-        return Player(
+    fun toPlayer(): DwitchPlayer {
+        return DwitchPlayer(
             dwitchId,
             name,
             cardsInHand,
@@ -60,7 +60,7 @@ internal data class PlayerMutable(
 
     companion object {
 
-        fun fromPlayer(player: Player): PlayerMutable {
+        fun fromPlayer(player: DwitchPlayer): PlayerMutable {
             return PlayerMutable(
                 player.id,
                 player.name,

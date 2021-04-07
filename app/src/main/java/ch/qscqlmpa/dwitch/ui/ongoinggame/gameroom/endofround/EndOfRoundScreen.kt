@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ResourceMapper
-import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.EndOfRoundInfo
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.PlayerEndOfRoundInfo
 
@@ -25,11 +25,11 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.PlayerEndOfRoundInfo
 private fun EndOfRoundInfoDialogPreview() {
     val endOfRoundInfo = EndOfRoundInfo(
         listOf(
-            PlayerEndOfRoundInfo("Legolas", Rank.President),
-            PlayerEndOfRoundInfo("Gimli", Rank.VicePresident),
-            PlayerEndOfRoundInfo("Gollum", Rank.Neutral),
-            PlayerEndOfRoundInfo("Merry", Rank.ViceAsshole),
-            PlayerEndOfRoundInfo("Pipin", Rank.Asshole),
+            PlayerEndOfRoundInfo("Legolas", DwitchRank.President),
+            PlayerEndOfRoundInfo("Gimli", DwitchRank.VicePresident),
+            PlayerEndOfRoundInfo("Gollum", DwitchRank.Neutral),
+            PlayerEndOfRoundInfo("Merry", DwitchRank.ViceAsshole),
+            PlayerEndOfRoundInfo("Pipin", DwitchRank.Asshole),
         ),
         canStartNewRound = true,
         canEndGame = true

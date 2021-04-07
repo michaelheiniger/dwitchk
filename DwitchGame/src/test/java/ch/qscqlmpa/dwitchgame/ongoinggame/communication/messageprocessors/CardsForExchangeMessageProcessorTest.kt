@@ -7,8 +7,8 @@ import ch.qscqlmpa.dwitchcommunication.model.Recipient
 import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.TestDwitchEngineFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.TestUtil
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.messageprocessors.BaseMessageProcessorTest
@@ -34,11 +34,11 @@ internal class CardsForExchangeMessageProcessorTest : BaseMessageProcessorTest()
     @Test
     fun `Update game state with card exchange info from message`() {
         val mockEngine = mockk<DwitchEngine>()
-        val mockUpdatedGameState = mockk<GameState>(); // No point in testing the content since it comes from a mock
+        val mockUpdatedGameState = mockk<DwitchGameState>(); // No point in testing the content since it comes from a mock
         every { mockEngine.chooseCardsForExchange(any(), any()) } returns mockUpdatedGameState
         dwitchEngineFactory.setInstance(mockEngine)
 
-        val message = Message.CardsForExchangeMessage(PlayerDwitchId(324), setOf(Card.Clubs2, Card.Clubs3))
+        val message = Message.CardsForExchangeMessage(DwitchPlayerId(324), setOf(Card.Clubs2, Card.Clubs3))
         processor.process(message, ConnectionId(45)).test().assertComplete()
 
         verify { mockInGameStore.updateGameState(mockUpdatedGameState) }

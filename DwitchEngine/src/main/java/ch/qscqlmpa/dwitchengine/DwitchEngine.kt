@@ -4,26 +4,26 @@ import ch.qscqlmpa.dwitchengine.actions.startnewgame.GameBootstrap
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.game.CardExchange
-import ch.qscqlmpa.dwitchengine.model.game.GameState
-import ch.qscqlmpa.dwitchengine.model.info.GameInfo
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
-import ch.qscqlmpa.dwitchengine.model.player.PlayerOnboardingInfo
+import ch.qscqlmpa.dwitchengine.model.game.DwitchCardExchange
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.info.DwitchGameInfo
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerOnboardingInfo
 import org.tinylog.kotlin.Logger
 
 interface DwitchEngine {
-    fun getGameInfo(): GameInfo
-    fun playCard(cardPlayed: Card): GameState
-    fun pickCard(): GameState
-    fun passTurn(): GameState
-    fun startNewRound(cardDealerFactory: CardDealerFactory): GameState
-    fun getCardExchangeIfRequired(playerId: PlayerDwitchId): CardExchange?
-    fun chooseCardsForExchange(playerId: PlayerDwitchId, cards: Set<Card>): GameState
+    fun getGameInfo(): DwitchGameInfo
+    fun playCard(cardPlayed: Card): DwitchGameState
+    fun pickCard(): DwitchGameState
+    fun passTurn(): DwitchGameState
+    fun startNewRound(cardDealerFactory: CardDealerFactory): DwitchGameState
+    fun getCardExchangeIfRequired(playerId: DwitchPlayerId): DwitchCardExchange?
+    fun chooseCardsForExchange(playerId: DwitchPlayerId, cards: Set<Card>): DwitchGameState
 
     companion object {
-        fun createNewGame(playersInfo: List<PlayerOnboardingInfo>, initialGameSetup: InitialGameSetup): GameState {
-            Logger.debug { "Start new game, players:  $playersInfo, initial game setup: $initialGameSetup" }
-            return GameBootstrap.createNewGame(playersInfo, initialGameSetup)
+        fun createNewGame(players: List<DwitchPlayerOnboardingInfo>, initialGameSetup: InitialGameSetup): DwitchGameState {
+            Logger.debug { "Start new game, players:  $players, initial game setup: $initialGameSetup" }
+            return GameBootstrap.createNewGame(players, initialGameSetup)
         }
     }
 }

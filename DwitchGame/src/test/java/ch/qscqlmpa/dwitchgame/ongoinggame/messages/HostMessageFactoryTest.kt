@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.messages
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.Recipient
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
@@ -40,13 +40,13 @@ class HostMessageFactoryTest : BaseUnitTest() {
         val message = (envelope.message as Message.WaitingRoomStateUpdateMessage)
 
         assertThat(envelope.recipient).isEqualTo(Recipient.All)
-        assertThat(message.playerList[0].dwitchId).isEqualTo(PlayerDwitchId(100))
+        assertThat(message.playerList[0].dwitchId).isEqualTo(DwitchPlayerId(100))
         assertThat(message.playerList[0].name).isEqualTo("Aragorn")
         assertThat(message.playerList[0].playerRole).isEqualTo(PlayerRole.HOST)
         assertThat(message.playerList[0].connectionState).isEqualTo(PlayerConnectionState.CONNECTED)
         assertThat(message.playerList[0].ready).isTrue
 
-        assertThat(message.playerList[1].dwitchId).isEqualTo(PlayerDwitchId(101))
+        assertThat(message.playerList[1].dwitchId).isEqualTo(DwitchPlayerId(101))
         assertThat(message.playerList[1].name).isEqualTo("Boromir")
         assertThat(message.playerList[1].playerRole).isEqualTo(PlayerRole.GUEST)
         assertThat(message.playerList[1].connectionState).isEqualTo(PlayerConnectionState.DISCONNECTED)
@@ -57,7 +57,7 @@ class HostMessageFactoryTest : BaseUnitTest() {
     fun createJoinAckMessage() {
         val gameCommonId = GameCommonId(123L)
         val localConnectionId = ConnectionId(3)
-        val playerDwitchId = PlayerDwitchId(2)
+        val playerDwitchId = DwitchPlayerId(2)
 
         every { mockInGameStore.getGameCommonId() } returns gameCommonId
 

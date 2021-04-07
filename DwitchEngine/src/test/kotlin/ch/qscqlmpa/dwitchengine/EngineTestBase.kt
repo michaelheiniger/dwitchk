@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchengine
 
-import ch.qscqlmpa.dwitchengine.model.game.GameState
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 import org.junit.jupiter.api.BeforeEach
 
 abstract class EngineTestBase {
@@ -17,8 +17,8 @@ abstract class EngineTestBase {
     protected val player5Id = player5.id
 
     protected lateinit var gameStateBuilder: EngineTestGameStateBuilder
-    protected lateinit var initialGameState: GameState
-    protected lateinit var gameStateUpdated: GameState
+    protected lateinit var initialGameState: DwitchGameState
+    protected lateinit var gameStateUpdated: DwitchGameState
 
     @BeforeEach
     open fun setup() {

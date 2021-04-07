@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitch.integrationtests
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
@@ -218,9 +218,9 @@ class DwitchNoUiTest {
                 2 to listOf(Card.Diamonds7, Card.Spades3) // Guest2
             ),
             mapOf(
-                0 to Rank.Asshole,
-                1 to Rank.Neutral,
-                2 to Rank.President
+                0 to DwitchRank.Asshole,
+                1 to DwitchRank.Neutral,
+                2 to DwitchRank.President
             )
         )
     }

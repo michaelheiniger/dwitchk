@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchengine.actions.cardexchange
 
-import ch.qscqlmpa.dwitchengine.model.game.GamePhase
-import ch.qscqlmpa.dwitchengine.model.game.GameState
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 
 internal class CardExchangePerformer(
     private val state: CardExchangePerformerState,
@@ -23,7 +23,7 @@ internal class CardExchangePerformer(
         }
     }
 
-    fun getUpdatedGameState(): GameState {
+    fun getUpdatedGameState(): DwitchGameState {
         gameUpdater.performCardExchange(
             state.presidentId(),
             state.assholeId(),
@@ -40,7 +40,7 @@ internal class CardExchangePerformer(
             )
         }
 
-        gameUpdater.setGamePhase(GamePhase.RoundIsBeginning)
+        gameUpdater.setGamePhase(DwitchGamePhase.RoundIsBeginning)
         return gameUpdater.buildUpdatedGameState()
     }
 }

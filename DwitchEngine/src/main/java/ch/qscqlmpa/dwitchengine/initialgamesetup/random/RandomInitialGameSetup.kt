@@ -3,12 +3,12 @@ package ch.qscqlmpa.dwitchengine.initialgamesetup.random
 import ch.qscqlmpa.dwitchengine.carddealer.random.RandomCardDealer
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 
 class RandomInitialGameSetup(private val numPlayers: Int) : InitialGameSetup(numPlayers) {
 
     private val cardDealer = RandomCardDealer(numPlayers)
-    private val ranks: List<Rank> = computeInitialRanks().shuffled()
+    private val ranks: List<DwitchRank> = computeInitialRanks().shuffled()
 
     override fun getCardsForPlayer(index: Int): List<Card> {
         checkIndex(index)
@@ -19,19 +19,19 @@ class RandomInitialGameSetup(private val numPlayers: Int) : InitialGameSetup(num
         return cardDealer.getRemainingCards()
     }
 
-    override fun getRankForPlayer(index: Int): Rank {
+    override fun getRankForPlayer(index: Int): DwitchRank {
         checkIndex(index)
         return ranks[index]
     }
 
-    private fun computeInitialRanks(): List<Rank> {
+    private fun computeInitialRanks(): List<DwitchRank> {
         return when (numPlayers) {
-            2 -> listOf(Rank.President, Rank.Asshole)
-            3 -> listOf(Rank.President, Rank.Neutral, Rank.Asshole)
-            4 -> listOf(Rank.President, Rank.VicePresident, Rank.ViceAsshole, Rank.Asshole)
+            2 -> listOf(DwitchRank.President, DwitchRank.Asshole)
+            3 -> listOf(DwitchRank.President, DwitchRank.Neutral, DwitchRank.Asshole)
+            4 -> listOf(DwitchRank.President, DwitchRank.VicePresident, DwitchRank.ViceAsshole, DwitchRank.Asshole)
             else -> {
-                val ranks = MutableList<Rank>(numPlayers - 4) { Rank.Neutral }
-                ranks.addAll(listOf(Rank.President, Rank.VicePresident, Rank.ViceAsshole, Rank.Asshole))
+                val ranks = MutableList<DwitchRank>(numPlayers - 4) { DwitchRank.Neutral }
+                ranks.addAll(listOf(DwitchRank.President, DwitchRank.VicePresident, DwitchRank.ViceAsshole, DwitchRank.Asshole))
                 return ranks
             }
         }

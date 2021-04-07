@@ -5,11 +5,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class SpecialRuleBreaker {
 
-    abstract val playerId: PlayerDwitchId
+    abstract val playerId: DwitchPlayerId
 
     @Serializable
-    data class FinishWithJoker(override val playerId: PlayerDwitchId) : SpecialRuleBreaker()
+    data class FinishWithJoker(override val playerId: DwitchPlayerId) : SpecialRuleBreaker()
 
     @Serializable
-    data class PlayedOnFirstJack(override val playerId: PlayerDwitchId) : SpecialRuleBreaker()
+    data class PlayedOnFirstJack(override val playerId: DwitchPlayerId) : SpecialRuleBreaker()
 }

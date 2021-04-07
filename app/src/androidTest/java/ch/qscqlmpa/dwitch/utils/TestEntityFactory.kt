@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.utils
 
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.model.Player
@@ -9,7 +9,7 @@ object TestEntityFactory {
 
     fun createHostPlayer(
         localId: Long = 10L,
-        dwitchId: PlayerDwitchId = PlayerDwitchId(100),
+        dwitchId: DwitchPlayerId = DwitchPlayerId(100),
         connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
         ready: Boolean = true
     ): Player {
@@ -26,7 +26,7 @@ object TestEntityFactory {
 
     fun createGuestPlayer1(
         localId: Long = 11L,
-        dwitchId: PlayerDwitchId = PlayerDwitchId(101),
+        dwitchId: DwitchPlayerId = DwitchPlayerId(101),
         connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
         ready: Boolean = true
     ): Player {
@@ -43,7 +43,7 @@ object TestEntityFactory {
 
     fun createGuestPlayer2(
         localId: Long = 12L,
-        dwitchId: PlayerDwitchId = PlayerDwitchId(102),
+        dwitchId: DwitchPlayerId = DwitchPlayerId(102),
         connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
         ready: Boolean = true
     ): Player {
@@ -60,7 +60,7 @@ object TestEntityFactory {
 
     fun createGuestPlayer3(
         localId: Long = 13L,
-        dwitchId: PlayerDwitchId = PlayerDwitchId(103),
+        dwitchId: DwitchPlayerId = DwitchPlayerId(103),
         connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
         ready: Boolean = true
     ): Player {

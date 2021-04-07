@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
 import io.mockk.every
@@ -16,7 +16,7 @@ class PlayerReadyUsecaseTest : BaseUnitTest() {
 
     private lateinit var usecase: PlayerReadyUsecase
 
-    private val localPlayerDwitchId = PlayerDwitchId(23)
+    private val localPlayerDwitchId = DwitchPlayerId(23)
 
     @BeforeEach
     override fun setup() {

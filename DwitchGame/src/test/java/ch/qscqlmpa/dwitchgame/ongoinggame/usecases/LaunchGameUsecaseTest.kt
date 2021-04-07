@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchengine.model.game.GameState
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.services.ChangeCurrentRoomService
@@ -22,8 +22,8 @@ internal class LaunchGameUsecaseTest : BaseUnitTest() {
 
     private lateinit var launchGameUsecase: LaunchGameUsecase
 
-    private val mockNewGameState = mockk<GameState>()
-    private val mockExistingGameState = mockk<GameState>()
+    private val mockNewGameState = mockk<DwitchGameState>()
+    private val mockExistingGameState = mockk<DwitchGameState>()
 
     @BeforeEach
     override fun setup() {

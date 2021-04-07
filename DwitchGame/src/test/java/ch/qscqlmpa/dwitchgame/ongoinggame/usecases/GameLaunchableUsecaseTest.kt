@@ -26,7 +26,7 @@ internal class GameLaunchableUsecaseTest : BaseUnitTest() {
     }
 
     @Nested
-    inner class ObserveGameEvent {
+    inner class ObserveDwitchGameEvent {
 
         @Test
         fun `Send GameIsReadyToBeLaunched when all players are ready`() {

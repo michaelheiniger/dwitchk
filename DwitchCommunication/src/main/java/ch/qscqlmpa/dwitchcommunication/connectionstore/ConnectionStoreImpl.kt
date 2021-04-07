@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchcommunication.connectionstore
 
 import ch.qscqlmpa.dwitchcommunication.Address
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import java.util.concurrent.atomic.AtomicLong
 
 internal class ConnectionStoreImpl : ConnectionStore, ConnectionStoreInternal {
@@ -12,8 +12,8 @@ internal class ConnectionStoreImpl : ConnectionStore, ConnectionStoreInternal {
 
     private val addressMap: MutableMap<ConnectionId, Address> = HashMap()
     private val addressReverseMap: MutableMap<Address, ConnectionId> = HashMap()
-    private val playerDwitchIdMap: MutableMap<ConnectionId, PlayerDwitchId> = HashMap()
-    private val playerDwitchIdReverseeMap: MutableMap<PlayerDwitchId, ConnectionId> = HashMap()
+    private val playerDwitchIdMap: MutableMap<ConnectionId, DwitchPlayerId> = HashMap()
+    private val playerDwitchIdReverseeMap: MutableMap<DwitchPlayerId, ConnectionId> = HashMap()
 
     override fun addConnectionId(address: Address): ConnectionId {
         val localConnectionId = getNextLocalConnectionId()
@@ -34,9 +34,9 @@ internal class ConnectionStoreImpl : ConnectionStore, ConnectionStoreInternal {
         }
     }
 
-    override fun pairConnectionWithPlayer(connectionId: ConnectionId, playerDwitchId: PlayerDwitchId) {
-        playerDwitchIdMap[connectionId] = playerDwitchId
-        playerDwitchIdReverseeMap[playerDwitchId] = connectionId
+    override fun pairConnectionWithPlayer(connectionId: ConnectionId, dwitchPlayerId: DwitchPlayerId) {
+        playerDwitchIdMap[connectionId] = dwitchPlayerId
+        playerDwitchIdReverseeMap[dwitchPlayerId] = connectionId
     }
 
     override fun getHostConnectionId(): ConnectionId {
@@ -51,12 +51,12 @@ internal class ConnectionStoreImpl : ConnectionStore, ConnectionStoreInternal {
         return addressMap[id]
     }
 
-    override fun getDwitchId(connectionId: ConnectionId): PlayerDwitchId? {
+    override fun getDwitchId(connectionId: ConnectionId): DwitchPlayerId? {
         return playerDwitchIdMap[connectionId]
     }
 
-    override fun getConnectionId(playerDwitchId: PlayerDwitchId): ConnectionId? {
-        return playerDwitchIdReverseeMap[playerDwitchId]
+    override fun getConnectionId(dwitchPlayerId: DwitchPlayerId): ConnectionId? {
+        return playerDwitchIdReverseeMap[dwitchPlayerId]
     }
 
     override fun findMissingConnections(currentConnections: List<Address>): List<ConnectionId> {

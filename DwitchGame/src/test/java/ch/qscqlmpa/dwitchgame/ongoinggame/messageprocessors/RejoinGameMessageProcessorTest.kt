@@ -6,7 +6,7 @@ import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreFactory
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.RejoinInfo
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.TestUtil
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.RejoinGameMessageProcessor
@@ -28,7 +28,7 @@ internal class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
     private lateinit var processor: RejoinGameMessageProcessor
 
     private val guestPlayerLocalId = 10102L
-    private val guestPlayerDwitchId = PlayerDwitchId(32434)
+    private val guestPlayerDwitchId = DwitchPlayerId(32434)
 
     private val senderLocalConnectionId = ConnectionId(124)
 

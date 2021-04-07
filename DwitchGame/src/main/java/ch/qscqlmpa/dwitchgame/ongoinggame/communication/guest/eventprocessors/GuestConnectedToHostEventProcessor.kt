@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.eventprocessors
 
 import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientCommunicationEvent
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
@@ -42,6 +42,6 @@ internal class GuestConnectedToHostEventProcessor @Inject constructor(
     }
 
     private fun guestIsAlreadyRegisteredAtHost(localPlayer: Player): Boolean {
-        return localPlayer.dwitchId != PlayerDwitchId(0)
+        return localPlayer.dwitchId != DwitchPlayerId(0)
     }
 }

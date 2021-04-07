@@ -1,19 +1,19 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.gameroom
 
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.info.CardItem
-import ch.qscqlmpa.dwitchengine.model.info.GameInfo
-import ch.qscqlmpa.dwitchengine.model.info.PlayerInfo
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
-import ch.qscqlmpa.dwitchengine.model.player.PlayerStatus
-import ch.qscqlmpa.dwitchengine.model.player.Rank
+import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
+import ch.qscqlmpa.dwitchengine.model.info.DwitchGameInfo
+import ch.qscqlmpa.dwitchengine.model.info.DwitchPlayerInfo
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
+import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 
 object GameInfoFactory {
 
     fun createGameDashboardInfo(
-        gameInfo: GameInfo,
-        localPlayerId: PlayerDwitchId,
+        gameInfo: DwitchGameInfo,
+        localPlayerId: DwitchPlayerId,
         localPlayerConnectionState: PlayerConnectionState
     ): GameDashboardInfo {
         val localPlayerInfo = gameInfo.playerInfos.getValue(localPlayerId)
@@ -39,7 +39,7 @@ object GameInfoFactory {
         )
     }
 
-    fun createEndOfGameInfo(playersInfo: List<PlayerInfo>, localPlayerIsHost: Boolean): EndOfRoundInfo {
+    fun createEndOfGameInfo(playersInfo: List<DwitchPlayerInfo>, localPlayerIsHost: Boolean): EndOfRoundInfo {
         // Special case: "start new round" and "end game" should only be performed by the host for technical reasons.
         return EndOfRoundInfo(
             canStartNewRound = localPlayerIsHost,
@@ -49,10 +49,10 @@ object GameInfoFactory {
     }
 
     private fun adjustCardItemSelectability(
-        cardItems: List<CardItem>,
+        cardItems: List<DwitchCardInfo>,
         dashboardEnabled: Boolean,
         localPlayerIsCurrentPlayer: Boolean
-    ): List<CardItem> {
+    ): List<DwitchCardInfo> {
         return cardItems.map { c -> c.copy(selectable = dashboardEnabled && localPlayerIsCurrentPlayer && c.selectable) }
     }
 }
@@ -73,14 +73,14 @@ data class GameDashboardInfo(
 
 data class PlayerInfo(
     val name: String,
-    val rank: Rank,
-    val status: PlayerStatus,
+    val rank: DwitchRank,
+    val status: DwitchPlayerStatus,
     val dwitched: Boolean,
     val localPlayer: Boolean
 )
 
 data class LocalPlayerDashboard(
-    val cardsInHand: List<CardItem>,
+    val cardsInHand: List<DwitchCardInfo>,
     val canPass: Boolean,
     val canPickACard: Boolean,
     val canPlay: Boolean
@@ -88,7 +88,7 @@ data class LocalPlayerDashboard(
 
 data class PlayerEndOfRoundInfo(
     val name: String,
-    val rank: Rank
+    val rank: DwitchRank
 )
 
 data class EndOfRoundInfo(

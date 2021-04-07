@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitchcommunication.CommClient
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientCommunicationEvent
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.eventprocessors.GuestCommunicationEventDispatcher
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.MessageDispatcher
@@ -131,7 +131,7 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
 
         @Test
         fun `Send message to host`() {
-            val messageToSend = Message.PlayerReadyMessage(PlayerDwitchId(2), true)
+            val messageToSend = Message.PlayerReadyMessage(DwitchPlayerId(2), true)
 
             guestCommunicator.sendMessageToHost(messageToSend)
 

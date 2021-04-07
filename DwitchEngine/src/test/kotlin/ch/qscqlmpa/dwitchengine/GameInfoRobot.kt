@@ -2,20 +2,20 @@ package ch.qscqlmpa.dwitchengine
 
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
-import ch.qscqlmpa.dwitchengine.model.game.GameEvent
-import ch.qscqlmpa.dwitchengine.model.game.GamePhase
-import ch.qscqlmpa.dwitchengine.model.info.GameInfo
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDwitchId
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGameEvent
+import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
+import ch.qscqlmpa.dwitchengine.model.info.DwitchGameInfo
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import org.assertj.core.api.Assertions.assertThat
 
-class GameInfoRobot(private val info: GameInfo) {
+class GameInfoRobot(private val info: DwitchGameInfo) {
 
-    fun assertGameEvent(gameEvent: GameEvent?): GameInfoRobot {
-        assertThat(info.gameEvent).isEqualTo(gameEvent)
+    fun assertGameEvent(dwitchGameEvent: DwitchGameEvent?): GameInfoRobot {
+        assertThat(info.dwitchGameEvent).isEqualTo(dwitchGameEvent)
         return this
     }
 
-    fun assertGamePhase(gamePhase: GamePhase): GameInfoRobot {
+    fun assertGamePhase(gamePhase: DwitchGamePhase): GameInfoRobot {
         assertThat(info.gamePhase).isEqualTo(gamePhase)
         return this
     }
@@ -35,7 +35,7 @@ class GameInfoRobot(private val info: GameInfo) {
         return this
     }
 
-    fun assertPlayingOrder(vararg playerIds: PlayerDwitchId): GameInfoRobot {
+    fun assertPlayingOrder(vararg playerIds: DwitchPlayerId): GameInfoRobot {
         assertThat(info.playingOrder).containsExactly(*playerIds)
         return this
     }
