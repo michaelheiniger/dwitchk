@@ -24,7 +24,6 @@ android {
     }
 
     buildFeatures {
-        viewBinding = true
         compose = true // Enables Jetpack Compose for this module
     }
 
