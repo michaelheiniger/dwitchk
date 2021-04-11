@@ -1,7 +1,5 @@
 package ch.qscqlmpa.dwitchengine
 
-import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.info.DwitchPlayerInfo
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
@@ -21,16 +19,6 @@ class PlayerInfoRobot(private val info: DwitchPlayerInfo) {
 
     fun assertCanPass(canPass: Boolean): PlayerInfoRobot {
         assertThat(info.canPass).isEqualTo(canPass)
-        return this
-    }
-
-    fun assertCardsInHandInAnyOrder(vararg cards: Card): PlayerInfoRobot {
-        assertThat(info.cardsInHand).containsExactlyInAnyOrder(*cards)
-        return this
-    }
-
-    fun assertMinimumCardValueAllowed(value: CardName): PlayerInfoRobot {
-        assertThat(info.minimumPlayingCardValueAllowed).isEqualTo(value)
         return this
     }
 
