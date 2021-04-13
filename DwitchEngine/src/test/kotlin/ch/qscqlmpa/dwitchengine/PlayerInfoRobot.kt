@@ -1,11 +1,18 @@
 package ch.qscqlmpa.dwitchengine
 
+import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
 import ch.qscqlmpa.dwitchengine.model.info.DwitchPlayerInfo
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import org.assertj.core.api.Assertions.assertThat
 
 class PlayerInfoRobot(private val info: DwitchPlayerInfo) {
+
+    fun assertHand(vararg cards: Card): PlayerInfoRobot {
+        assertThat(info.cardsInHand.map(DwitchCardInfo::card)).containsExactlyInAnyOrder(*cards)
+        return this
+    }
 
     fun assertCanPlay(canPlay: Boolean): PlayerInfoRobot {
         assertThat(info.canPlay).isEqualTo(canPlay)
