@@ -11,8 +11,6 @@ data class DwitchPlayerInfo(
     val status: DwitchPlayerStatus,
     val dwitched: Boolean,
     val cardsInHand: List<DwitchCardInfo>,
-    val canPass: Boolean,
-    val canPickACard: Boolean,
     val canPlay: Boolean,
     val canStartNewRound: Boolean
 )

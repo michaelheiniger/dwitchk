@@ -24,10 +24,6 @@ internal class GameInteractor @Inject constructor(
         return handleGameStateUpdated { engine -> engine.playCard(cardPlayed) }
     }
 
-    fun pickCard(): Completable {
-        return handleGameStateUpdated { engine -> engine.pickCard() }
-    }
-
     fun passTurn(): Completable {
         return handleGameStateUpdated { engine -> engine.passTurn() }
     }

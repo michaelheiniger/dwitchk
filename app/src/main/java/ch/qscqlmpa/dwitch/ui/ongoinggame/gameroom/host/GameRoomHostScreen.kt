@@ -26,7 +26,6 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationSt
 fun GameRoomHostScreen(
     screen: GameRoomScreen?,
     onCardClick: (Card) -> Unit,
-    onPickClick: () -> Unit,
     onPassClick: () -> Unit,
     onAddCardToExchange: (card: Card) -> Unit,
     onRemoveCardFromExchange: (card: Card) -> Unit,
@@ -47,7 +46,6 @@ fun GameRoomHostScreen(
                 DashboardScreen(
                     dashboardInfo = screen.dashboardInfo,
                     onCardClick = onCardClick,
-                    onPickClick = onPickClick,
                     onPassClick = onPassClick
                 )
             }

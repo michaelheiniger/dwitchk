@@ -58,7 +58,6 @@
     <string name="ok">Whatever, mate</string>
     <string name="last_card_played">Last card played</string>
     <string name="pass_turn">Pass</string>
-    <string name="pick_a_card">Pick</string>
     <string name="play_card">Play</string>
     <string name="start_new_round">New Round</string>
     <string name="player_connected">Connected, yay !</string>

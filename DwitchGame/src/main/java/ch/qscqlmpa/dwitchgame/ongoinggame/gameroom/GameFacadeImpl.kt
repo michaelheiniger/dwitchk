@@ -21,11 +21,6 @@ internal class GameFacadeImpl @Inject constructor(
             .subscribeOn(schedulerFactory.io())
     }
 
-    override fun pickCard(): Completable {
-        return gameInteractor.pickCard()
-            .subscribeOn(schedulerFactory.io())
-    }
-
     override fun passTurn(): Completable {
         return gameInteractor.passTurn()
             .subscribeOn(schedulerFactory.io())

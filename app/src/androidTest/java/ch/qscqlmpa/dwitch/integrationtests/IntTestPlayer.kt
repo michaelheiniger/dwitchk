@@ -32,10 +32,6 @@ abstract class IntTestPlayer {
         playerFacade.playCard(card).blockingSubscribe()
     }
 
-    fun pickCard() {
-        playerFacade.pickCard().blockingSubscribe()
-    }
-
     fun passTurn() {
         playerFacade.passTurn().blockingSubscribe()
     }

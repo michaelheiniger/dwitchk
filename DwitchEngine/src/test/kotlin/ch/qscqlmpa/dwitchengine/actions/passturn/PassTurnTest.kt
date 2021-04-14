@@ -16,7 +16,7 @@ class PassTurnTest : EngineTestBase() {
     fun `Player passes its turn`() {
         initialGameState = gameStateBuilder
             .setGamePhase(DwitchGamePhase.RoundIsOnGoing)
-            .addPlayerToGame(player1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(Card.Clubs3), hasPickedCard = true)
+            .addPlayerToGame(player1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(Card.Clubs3))
             .addPlayerToGame(player2, DwitchPlayerStatus.Waiting, DwitchRank.Neutral, listOf(Card.Clubs2))
             .addPlayerToGame(player3, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.Clubs4))
             .setCardsdOnTable(Card.Clubs4)
@@ -44,7 +44,7 @@ class PassTurnTest : EngineTestBase() {
     fun `When only one Waiting player, table is cleared and waiting player becomes Playing`() {
         initialGameState = gameStateBuilder
             .setGamePhase(DwitchGamePhase.RoundIsOnGoing)
-            .addPlayerToGame(player1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(Card.Clubs3), hasPickedCard = true)
+            .addPlayerToGame(player1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(Card.Clubs3))
             .addPlayerToGame(player2, DwitchPlayerStatus.TurnPassed, DwitchRank.ViceAsshole, listOf(Card.Clubs4))
             .addPlayerToGame(player3, DwitchPlayerStatus.Waiting, DwitchRank.VicePresident, listOf(Card.Clubs5))
             .addPlayerToGame(player4, DwitchPlayerStatus.TurnPassed, DwitchRank.President, listOf(Card.Clubs6))

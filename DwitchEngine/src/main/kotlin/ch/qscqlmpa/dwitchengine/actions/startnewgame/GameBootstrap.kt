@@ -22,8 +22,7 @@ internal object GameBootstrap {
                 initialGameSetup.getCardsForPlayer(index),
                 rank,
                 getPlayerState(rank),
-                dwitched = false,
-                hasPickedACard = false
+                dwitched = false
             )
         }
 

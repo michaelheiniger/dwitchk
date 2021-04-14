@@ -45,11 +45,6 @@ internal class PlayCard(
             if (playCardState.currentPlayerHasNoMoreCards()) {
                 gameUpdater.playerIsDone(localPlayerId, playCardState.cardPlayedIsJoker())
             }
-
-            // Prevents from picking more than one card while no one else has played in-between
-            if (newCurrentPlayer.id != localPlayerId) {
-                gameUpdater.resetPlayerHasPickedCard(localPlayerId)
-            }
         }
 
         return gameUpdater.buildUpdatedGameState()

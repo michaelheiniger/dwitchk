@@ -8,7 +8,6 @@ import io.reactivex.rxjava3.core.Observable
 interface GameFacade {
     fun observeGameData(): Observable<DwitchState>
     fun playCard(cardPlayed: Card): Completable
-    fun pickCard(): Completable
     fun passTurn(): Completable
     fun startNewRound(): Completable
     fun submitCardsForExchange(cards: Set<Card>): Completable

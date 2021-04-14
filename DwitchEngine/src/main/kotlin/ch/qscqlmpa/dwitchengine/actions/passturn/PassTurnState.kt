@@ -9,7 +9,6 @@ internal class PassTurnState(private val currentGameState: DwitchGameState) : Ga
     override fun checkState() {
         super.checkState()
         checkCurrentPlayerStateIsPlaying()
-        checkPlayerHasPickedACard(currentGameState)
     }
 
     fun nextWaitingPlayer(): DwitchPlayer {
@@ -19,11 +18,5 @@ internal class PassTurnState(private val currentGameState: DwitchGameState) : Ga
 
     fun onlyOneOtherPlayerCanPlay(): Boolean {
         return currentGameState.waitingPlayerInOrderAfterLocalPlayer().size == 1
-    }
-
-    private fun checkPlayerHasPickedACard(currentGameState: DwitchGameState) {
-        if (!currentGameState.currentPlayer().hasPickedACard) {
-            throw IllegalStateException("The player must first pick a card and then is allowed to pass its turn.")
-        }
     }
 }

@@ -36,8 +36,7 @@ internal object TestEntityFactory {
         cardsInHand: List<Card> = emptyList(),
         rank: DwitchRank = DwitchRank.Asshole,
         state: DwitchPlayerStatus = DwitchPlayerStatus.Playing,
-        dwitched: Boolean = false,
-        hasPickedCard: Boolean = false
+        dwitched: Boolean = false
     ): DwitchPlayer {
         return DwitchPlayer(
             id = DwitchPlayerId(100),
@@ -46,7 +45,6 @@ internal object TestEntityFactory {
             rank = rank,
             status = state,
             dwitched = dwitched,
-            hasPickedACard = hasPickedCard
         )
     }
 
@@ -54,8 +52,7 @@ internal object TestEntityFactory {
         cardsInHand: List<Card> = emptyList(),
         rank: DwitchRank = DwitchRank.ViceAsshole,
         state: DwitchPlayerStatus = DwitchPlayerStatus.Waiting,
-        dwitched: Boolean = false,
-        hasPickedCard: Boolean = false
+        dwitched: Boolean = false
     ): DwitchPlayer {
         return DwitchPlayer(
             id = DwitchPlayerId(101),
@@ -63,8 +60,7 @@ internal object TestEntityFactory {
             cardsInHand = cardsInHand,
             rank = rank,
             status = state,
-            dwitched = dwitched,
-            hasPickedACard = hasPickedCard
+            dwitched = dwitched
         )
     }
 
@@ -72,8 +68,7 @@ internal object TestEntityFactory {
         cardsInHand: List<Card> = emptyList(),
         rank: DwitchRank = DwitchRank.Neutral,
         state: DwitchPlayerStatus = DwitchPlayerStatus.Waiting,
-        dwitched: Boolean = false,
-        hasPickedCard: Boolean = false
+        dwitched: Boolean = false
     ): DwitchPlayer {
         return DwitchPlayer(
             id = DwitchPlayerId(102),
@@ -81,8 +76,7 @@ internal object TestEntityFactory {
             cardsInHand = cardsInHand,
             rank = rank,
             status = state,
-            dwitched = dwitched,
-            hasPickedACard = hasPickedCard
+            dwitched = dwitched
         )
     }
 
@@ -90,8 +84,7 @@ internal object TestEntityFactory {
         cardsInHand: List<Card> = emptyList(),
         rank: DwitchRank = DwitchRank.Neutral,
         state: DwitchPlayerStatus = DwitchPlayerStatus.Waiting,
-        dwitched: Boolean = false,
-        hasPickedCard: Boolean = false
+        dwitched: Boolean = false
     ): DwitchPlayer {
         return DwitchPlayer(
             id = DwitchPlayerId(103),
@@ -99,8 +92,7 @@ internal object TestEntityFactory {
             cardsInHand = cardsInHand,
             rank = rank,
             status = state,
-            dwitched = dwitched,
-            hasPickedACard = hasPickedCard
+            dwitched = dwitched
         )
     }
 
@@ -108,8 +100,7 @@ internal object TestEntityFactory {
         cardsInHand: List<Card> = emptyList(),
         rank: DwitchRank = DwitchRank.VicePresident,
         state: DwitchPlayerStatus = DwitchPlayerStatus.Waiting,
-        dwitched: Boolean = false,
-        hasPickedCard: Boolean = false
+        dwitched: Boolean = false
     ): DwitchPlayer {
         return DwitchPlayer(
             id = DwitchPlayerId(104),
@@ -117,8 +108,7 @@ internal object TestEntityFactory {
             cardsInHand = cardsInHand,
             rank = rank,
             status = state,
-            dwitched = dwitched,
-            hasPickedACard = hasPickedCard
+            dwitched = dwitched
         )
     }
 
@@ -126,8 +116,7 @@ internal object TestEntityFactory {
         cardsInHand: List<Card> = emptyList(),
         rank: DwitchRank = DwitchRank.President,
         state: DwitchPlayerStatus = DwitchPlayerStatus.Waiting,
-        dwitched: Boolean = false,
-        hasPickedCard: Boolean = false
+        dwitched: Boolean = false
     ): DwitchPlayer {
         return DwitchPlayer(
             id = DwitchPlayerId(105),
@@ -135,8 +124,7 @@ internal object TestEntityFactory {
             cardsInHand = cardsInHand,
             rank = rank,
             status = state,
-            dwitched = dwitched,
-            hasPickedACard = hasPickedCard
+            dwitched = dwitched
         )
     }
 

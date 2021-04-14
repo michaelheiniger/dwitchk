@@ -25,8 +25,6 @@ internal class PassTurn(private val passTurnState: PassTurnState, private val ga
             gameUpdater.setPlayerState(localPlayerId, DwitchPlayerStatus.TurnPassed)
         }
 
-        gameUpdater.resetPlayerHasPickedCard(localPlayerId)
-
         return gameUpdater.buildUpdatedGameState()
     }
 }

@@ -56,13 +56,11 @@ class StartNewRoundTest : EngineTestBase() {
             .assertCardsInHandContainsExactly(Card.Clubs2, Card.Clubs3, Card.Clubs4)
             .assertPlayerState(DwitchPlayerStatus.Playing) // Since Asshole
             .assertPlayerIsNotDwitched()
-            .assertPlayerHasNotPickedCard()
 
         PlayerRobot(gameStateUpdated, player2Id)
             .assertCardsInHandContainsExactly(Card.Clubs5, Card.Clubs6, Card.Clubs7)
             .assertPlayerState(DwitchPlayerStatus.Waiting)
             .assertPlayerIsNotDwitched()
-            .assertPlayerHasNotPickedCard()
     }
 
     @Test
@@ -98,31 +96,26 @@ class StartNewRoundTest : EngineTestBase() {
             .assertCardsInHandContainsExactly(Card.Clubs2, Card.Clubs3, Card.Clubs4)
             .assertPlayerState(DwitchPlayerStatus.Waiting)
             .assertPlayerIsNotDwitched()
-            .assertPlayerHasNotPickedCard()
 
         PlayerRobot(gameStateUpdated, player2Id)
             .assertCardsInHandContainsExactly(Card.Hearts2, Card.Hearts3, Card.Hearts4)
             .assertPlayerState(DwitchPlayerStatus.Waiting)
             .assertPlayerIsNotDwitched()
-            .assertPlayerHasNotPickedCard()
 
         PlayerRobot(gameStateUpdated, player3Id)
             .assertCardsInHandContainsExactly(Card.Spades2, Card.Spades3, Card.Spades4)
             .assertPlayerState(DwitchPlayerStatus.Waiting)
             .assertPlayerIsNotDwitched()
-            .assertPlayerHasNotPickedCard()
 
         PlayerRobot(gameStateUpdated, player4Id)
             .assertCardsInHandContainsExactly(Card.Diamonds2, Card.Diamonds3, Card.Diamonds4)
             .assertPlayerState(DwitchPlayerStatus.Waiting)
             .assertPlayerIsNotDwitched()
-            .assertPlayerHasNotPickedCard()
 
         PlayerRobot(gameStateUpdated, player5Id)
             .assertCardsInHandContainsExactly(Card.Clubs5, Card.Hearts5, Card.Spades5)
             .assertPlayerState(DwitchPlayerStatus.Playing) // Since Asshole
             .assertPlayerIsNotDwitched()
-            .assertPlayerHasNotPickedCard()
     }
 
     @Test

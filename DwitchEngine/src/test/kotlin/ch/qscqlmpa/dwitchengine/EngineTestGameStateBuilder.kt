@@ -103,8 +103,7 @@ class EngineTestGameStateBuilder {
         state: DwitchPlayerStatus,
         rank: DwitchRank,
         cardsInHand: List<Card> = emptyList(),
-        dwitched: Boolean = false,
-        hasPickedCard: Boolean = false
+        dwitched: Boolean = false
     ): EngineTestGameStateBuilder {
         playersMap[player.id] = DwitchPlayer(
             player.id,
@@ -112,9 +111,7 @@ class EngineTestGameStateBuilder {
             cardsInHand,
             rank,
             state,
-            dwitched,
-            hasPickedCard
-
+            dwitched
         )
         playingOrder.add(player.id)
         return this

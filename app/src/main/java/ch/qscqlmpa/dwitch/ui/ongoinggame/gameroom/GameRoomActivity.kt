@@ -61,7 +61,6 @@ class GameRoomActivity : OngoingGameBaseActivity() {
                 GameRoomHostScreen(
                     screen = screen,
                     onCardClick = dashboardViewModel::playCard,
-                    onPickClick = dashboardViewModel::pickCard,
                     onPassClick = dashboardViewModel::passTurn,
                     onAddCardToExchange = dashboardViewModel::addCardToExchange,
                     onRemoveCardFromExchange = dashboardViewModel::removeCardFromExchange,
@@ -87,7 +86,6 @@ class GameRoomActivity : OngoingGameBaseActivity() {
                     screen = screen,
                     showGameOver = gameOver,
                     onCardClick = dashboardViewModel::playCard,
-                    onPickClick = dashboardViewModel::pickCard,
                     onPassClick = dashboardViewModel::passTurn,
                     onAddCardToExchange = dashboardViewModel::addCardToExchange,
                     onRemoveCardFromExchange = dashboardViewModel::removeCardFromExchange,

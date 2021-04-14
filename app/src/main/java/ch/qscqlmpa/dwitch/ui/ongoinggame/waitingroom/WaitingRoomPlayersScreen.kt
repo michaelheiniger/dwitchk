@@ -3,7 +3,6 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Checkbox
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -15,7 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 
@@ -82,12 +80,6 @@ private fun PlayerStateDetails(player: PlayerWrUi) {
                 .weight(1f)
                 .wrapContentWidth(Alignment.Start)
         ) {
-            Checkbox(
-                checked = player.ready,
-                enabled = false,
-                onCheckedChange = {},
-                modifier = Modifier.testTag(UiTags.playerReadyCheckbox)
-            )
             val readyLabel = if (player.ready) R.string.ready else R.string.not_ready
             Text(stringResource(readyLabel))
         }

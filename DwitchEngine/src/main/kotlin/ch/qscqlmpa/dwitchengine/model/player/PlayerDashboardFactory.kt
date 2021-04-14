@@ -40,8 +40,6 @@ internal class PlayerDashboardFactory(val gameState: DwitchGameState) {
             player.status,
             player.dwitched,
             player.cardsInHand.map { card -> DwitchCardInfo(card, isCardPlayable(card)) },
-            canPass(player),
-            canPickACard(player),
             canPlay(player),
             canStartNewRound()
         )
@@ -54,14 +52,6 @@ internal class PlayerDashboardFactory(val gameState: DwitchGameState) {
 
     private fun canPlay(player: DwitchPlayer): Boolean {
         return gameState.phaseIsPlayable && player.isTheOnePlaying
-    }
-
-    private fun canPickACard(player: DwitchPlayer): Boolean {
-        return gameState.phaseIsPlayable && player.isTheOnePlaying && player.hasNotPickedACard
-    }
-
-    private fun canPass(player: DwitchPlayer): Boolean {
-        return gameState.phaseIsPlayable && player.isTheOnePlaying && player.hasPickedACard
     }
 
     private fun canStartNewRound(): Boolean {

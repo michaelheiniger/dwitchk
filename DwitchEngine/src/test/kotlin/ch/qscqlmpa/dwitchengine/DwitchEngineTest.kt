@@ -91,8 +91,6 @@ internal class DwitchEngineTest {
             .assertPlayingOrder(hostPlayerId, guestPlayer1Id, guestPlayer2Id, guestPlayer3Id, guestPlayer4Id)
         createPlayerInfoRobot(hostPlayerId)
             .assertCanPlay(true)
-            .assertCanPass(false)
-            .assertCanPickACard(true)
             .assertCanStartNewRound(false)
 
         // Host plays a card and dwitches guest1
@@ -104,8 +102,6 @@ internal class DwitchEngineTest {
         createPlayerInfoRobot(guestPlayer1Id).assertDwitched()
         createPlayerInfoRobot(guestPlayer2Id)
             .assertCanPlay(true)
-            .assertCanPass(false)
-            .assertCanPickACard(true)
 
         // Guest2 plays a joker
         playCard(Card.Hearts2)
@@ -113,8 +109,6 @@ internal class DwitchEngineTest {
         createGameInfoRobot().assertCardsOnTable(emptyList())
         createPlayerInfoRobot(guestPlayer2Id)
             .assertCanPlay(true)
-            .assertCanPass(false)
-            .assertCanPickACard(true)
 
         // Guest2 plays a card
         playCard(Card.Hearts3)
@@ -122,8 +116,6 @@ internal class DwitchEngineTest {
         createGameInfoRobot().assertCardsOnTable(listOf(Card.Hearts3))
         createPlayerInfoRobot(guestPlayer3Id)
             .assertCanPlay(true)
-            .assertCanPass(false)
-            .assertCanPickACard(true)
 
         // Guest3 plays a card
         playCard(Card.Spades3)
@@ -131,8 +123,6 @@ internal class DwitchEngineTest {
         createGameInfoRobot().assertCardsOnTable(listOf(Card.Hearts3, Card.Spades3))
         createPlayerInfoRobot(hostPlayerId)
             .assertCanPlay(true)
-            .assertCanPass(false)
-            .assertCanPickACard(true)
 
         // Host plays a card
         playCard(Card.Diamonds3)
@@ -140,8 +130,6 @@ internal class DwitchEngineTest {
         createGameInfoRobot().assertCardsOnTable(listOf(Card.Hearts3, Card.Spades3, Card.Diamonds3))
         createPlayerInfoRobot(guestPlayer2Id)
             .assertCanPlay(true)
-            .assertCanPass(false)
-            .assertCanPickACard(true)
 
         // Guest2 plays its last card
         playCard(Card.Hearts4)
@@ -149,8 +137,6 @@ internal class DwitchEngineTest {
         createGameInfoRobot().assertCardsOnTable(listOf(Card.Hearts3, Card.Spades3, Card.Diamonds3, Card.Hearts4))
         createPlayerInfoRobot(guestPlayer3Id)
             .assertCanPlay(true)
-            .assertCanPass(false)
-            .assertCanPickACard(true)
         createPlayerInfoRobot(guestPlayer2Id).assertPlayerStatus(DwitchPlayerStatus.Done)
 
         // Guest3 plays a joker
@@ -159,8 +145,6 @@ internal class DwitchEngineTest {
         createGameInfoRobot().assertCardsOnTable(emptyList())
         createPlayerInfoRobot(guestPlayer3Id)
             .assertCanPlay(true)
-            .assertCanPass(false)
-            .assertCanPickACard(true)
 
         // Guest3 plays its last card
         playCard(Card.Spades4)
@@ -169,8 +153,6 @@ internal class DwitchEngineTest {
         createPlayerInfoRobot(guestPlayer3Id).assertPlayerStatus(DwitchPlayerStatus.Done)
         createPlayerInfoRobot(guestPlayer4Id)
             .assertCanPlay(true)
-            .assertCanPass(false)
-            .assertCanPickACard(true)
 
         // Guest4 plays a card
         playCard(Card.DiamondsJack)
@@ -178,8 +160,6 @@ internal class DwitchEngineTest {
         createGameInfoRobot().assertCardsOnTable(listOf(Card.Spades4, Card.DiamondsJack))
         createPlayerInfoRobot(hostPlayerId)
             .assertCanPlay(true)
-            .assertCanPass(false)
-            .assertCanPickACard(true)
 
         // Host plays its last card
         playCard(Card.Diamonds2)
@@ -188,8 +168,6 @@ internal class DwitchEngineTest {
         createPlayerInfoRobot(hostPlayerId).assertPlayerStatus(DwitchPlayerStatus.Done)
         createPlayerInfoRobot(guestPlayer1Id)
             .assertCanPlay(true)
-            .assertCanPass(false)
-            .assertCanPickACard(true)
 
         // Play a card
         playCard(Card.Clubs3)
@@ -197,8 +175,6 @@ internal class DwitchEngineTest {
         createGameInfoRobot().assertCardsOnTable(listOf(Card.Clubs3))
         createPlayerInfoRobot(guestPlayer4Id)
             .assertCanPlay(true)
-            .assertCanPass(false)
-            .assertCanPickACard(true)
 
         // Play a card
         playCard(Card.ClubsQueen)
@@ -206,8 +182,6 @@ internal class DwitchEngineTest {
         createGameInfoRobot().assertCardsOnTable(listOf(Card.Clubs3, Card.ClubsQueen))
         createPlayerInfoRobot(guestPlayer1Id)
             .assertCanPlay(true)
-            .assertCanPass(false)
-            .assertCanPickACard(true)
 
         // Play a card
         playCard(Card.Clubs2)
@@ -215,8 +189,6 @@ internal class DwitchEngineTest {
         createGameInfoRobot().assertCardsOnTable(emptyList())
         createPlayerInfoRobot(guestPlayer1Id)
             .assertCanPlay(true)
-            .assertCanPass(false)
-            .assertCanPickACard(true)
 
         // Play a card
         playCard(Card.Clubs6)
@@ -224,8 +196,6 @@ internal class DwitchEngineTest {
         createGameInfoRobot().assertCardsOnTable(listOf(Card.Clubs6))
         createPlayerInfoRobot(guestPlayer4Id)
             .assertCanPlay(true)
-            .assertCanPass(false)
-            .assertCanPickACard(true)
 
         // Play a card
         playCard(Card.HeartsKing)
@@ -233,19 +203,15 @@ internal class DwitchEngineTest {
         createGameInfoRobot().assertCardsOnTable(listOf(Card.Clubs6, Card.HeartsKing))
         createPlayerInfoRobot(guestPlayer1Id)
             .assertCanPlay(true)
-            .assertCanPass(false)
-            .assertCanPickACard(true)
 
         // Pick a card
-        pickCard()
+//        pickCard()
 
         createGameInfoRobot()
             .assertCardsOnTable(listOf(Card.Clubs6, Card.HeartsKing))
             .assertGameEvent(null)
         createPlayerInfoRobot(guestPlayer1Id)
             .assertCanPlay(true)
-            .assertCanPass(true)
-            .assertCanPickACard(false)
 
         // Pass turn
         passTurn()
@@ -256,8 +222,6 @@ internal class DwitchEngineTest {
             .assertGamePhase(DwitchGamePhase.RoundIsOnGoing)
         createPlayerInfoRobot(guestPlayer4Id)
             .assertCanPlay(true)
-            .assertCanPass(false)
-            .assertCanPickACard(true)
 
         // Play a card
         playCard(Card.SpadesAce)
@@ -279,8 +243,6 @@ internal class DwitchEngineTest {
 
         createPlayerInfoRobot(guestPlayer4Id)
             .assertCanPlay(false)
-            .assertCanPass(false)
-            .assertCanPickACard(false)
             .assertPlayerStatus(DwitchPlayerStatus.Done)
             .assertPlayerRank(DwitchRank.Neutral)
             .assertCanStartNewRound(true)
@@ -337,14 +299,14 @@ internal class DwitchEngineTest {
             .assertPlayerStatus(DwitchPlayerStatus.Playing)
 
         // Host picks a card and pass
-        pickCard()
+//        pickCard()
         passTurn()
 
         createPlayerInfoRobot(guestPlayer1Id)
             .assertPlayerStatus(DwitchPlayerStatus.Playing)
 
         // Guest1 picks a card and pass
-        pickCard()
+//        pickCard()
         passTurn()
 
         createPlayerInfoRobot(guestPlayer2Id)
@@ -408,14 +370,14 @@ internal class DwitchEngineTest {
             .assertPlayerStatus(DwitchPlayerStatus.Playing)
 
         // Guest1 picks a card and passes
-        pickCard()
+//        pickCard()
         passTurn()
 
         createPlayerInfoRobot(guestPlayer2Id)
             .assertPlayerStatus(DwitchPlayerStatus.Playing)
 
         // Guest2 picks a card and passes
-        pickCard()
+//        pickCard()
         passTurn()
 
         createPlayerInfoRobot(hostPlayerId)
@@ -450,10 +412,6 @@ internal class DwitchEngineTest {
 
     private fun playCard(card: Card) {
         gameState = DwitchEngineImpl(gameState).playCard(card)
-    }
-
-    private fun pickCard() {
-        gameState = DwitchEngineImpl(gameState).pickCard()
     }
 
     private fun passTurn() {

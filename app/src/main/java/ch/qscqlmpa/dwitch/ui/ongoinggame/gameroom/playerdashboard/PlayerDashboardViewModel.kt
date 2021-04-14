@@ -32,10 +32,6 @@ class PlayerDashboardViewModel @Inject constructor(
         }
     }
 
-    fun pickCard() {
-        performOperation("Card picked successfully.", "Error while picking card.") { facade.pickCard() }
-    }
-
     fun passTurn() {
         performOperation("Turn passed successfully.", "Error while passing turn.") { facade.passTurn() }
     }

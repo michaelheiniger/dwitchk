@@ -11,11 +11,8 @@ data class DwitchPlayer(
     val rank: DwitchRank,
     val status: DwitchPlayerStatus,
     val dwitched: Boolean, // Only used to convey the fact that the player is dwitched to the UI, not used by the engine.
-    val hasPickedACard: Boolean,
     val cardsForExchange: Set<Card> = emptySet()
 ) {
-    val hasNotPickedACard get() = !hasPickedACard
-
     val isTheOnePlaying get() = status == DwitchPlayerStatus.Playing
 
     fun toPlayerOnboardingInfo(): DwitchPlayerOnboardingInfo {

@@ -4,9 +4,6 @@ import ch.qscqlmpa.dwitchengine.actions.cardexchange.*
 import ch.qscqlmpa.dwitchengine.actions.passturn.PassTurn
 import ch.qscqlmpa.dwitchengine.actions.passturn.PassTurnGameUpdater
 import ch.qscqlmpa.dwitchengine.actions.passturn.PassTurnState
-import ch.qscqlmpa.dwitchengine.actions.pickcard.PickCard
-import ch.qscqlmpa.dwitchengine.actions.pickcard.PickCardGameUpdater
-import ch.qscqlmpa.dwitchengine.actions.pickcard.PickCardState
 import ch.qscqlmpa.dwitchengine.actions.playcard.PlayCard
 import ch.qscqlmpa.dwitchengine.actions.playcard.PlayCardGameUpdater
 import ch.qscqlmpa.dwitchengine.actions.playcard.PlayCardState
@@ -45,15 +42,6 @@ internal class DwitchEngineImpl(private val currentGameState: DwitchGameState) :
         return PlayCard(
             PlayCardState(currentGameState, cardPlayed),
             PlayCardGameUpdater(currentGameState)
-        ).getUpdatedGameState()
-            .also(this::logUpdatedGameState)
-    }
-
-    override fun pickCard(): DwitchGameState {
-        Logger.debug { "Player $currentPlayerId picks a card, current game state: $currentGameState" }
-        return PickCard(
-            PickCardState(currentGameState),
-            PickCardGameUpdater(currentGameState)
         ).getUpdatedGameState()
             .also(this::logUpdatedGameState)
     }

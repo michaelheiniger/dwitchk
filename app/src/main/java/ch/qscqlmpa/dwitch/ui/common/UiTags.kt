@@ -7,7 +7,5 @@ object UiTags {
     const val playerName = "playerName"
     const val gameName = "gameName"
     const val lastCardPlayer = "lastCardPlayed"
-    const val playerReadyCheckbox = "playerReadyCheckbox"
-    const val pickACardControl = "pickACardControl"
     const val passControl = "passControl"
 }

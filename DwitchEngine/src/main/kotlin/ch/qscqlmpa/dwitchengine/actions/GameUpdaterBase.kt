@@ -54,10 +54,6 @@ internal abstract class GameUpdaterBase(currentGameState: DwitchGameState) {
         return gameStateMutable.toGameState()
     }
 
-    fun resetPlayerHasPickedCard(playerId: DwitchPlayerId) {
-        gameStateMutable.players.getValue(playerId).hasPickedCard = false
-    }
-
     fun playerPlayedOnTheFirstJokerPlayedOfTheRound(playerId: DwitchPlayerId) {
         gameStateMutable.playersWhoBrokeASpecialRule.add(SpecialRuleBreaker.PlayedOnFirstJack(playerId))
     }

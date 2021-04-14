@@ -35,27 +35,17 @@ class PlayerRobot(private val gameState: DwitchGameState, private val playerId: 
     }
 
     fun assertPlayerIsDwitched(): PlayerRobot {
-        assertThat(gameState.players.getValue(playerId).dwitched).isTrue()
+        assertThat(gameState.players.getValue(playerId).dwitched).isTrue
         return this
     }
 
     fun assertPlayerIsNotDwitched(): PlayerRobot {
-        assertThat(gameState.players.getValue(playerId).dwitched).isFalse()
+        assertThat(gameState.players.getValue(playerId).dwitched).isFalse
         return this
     }
 
     fun assertRank(rank: DwitchRank): PlayerRobot {
         assertThat(gameState.player(playerId).rank).isEqualTo(rank)
-        return this
-    }
-
-    fun assertPlayerHasPickedCard(): PlayerRobot {
-        assertThat(gameState.player(playerId).hasPickedACard).isTrue()
-        return this
-    }
-
-    fun assertPlayerHasNotPickedCard(): PlayerRobot {
-        assertThat(gameState.player(playerId).hasPickedACard).isFalse()
         return this
     }
 }

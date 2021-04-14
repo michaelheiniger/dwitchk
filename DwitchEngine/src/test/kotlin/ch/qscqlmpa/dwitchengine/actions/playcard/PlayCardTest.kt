@@ -76,7 +76,7 @@ class PlayCardTest : EngineTestBase() {
     }
 
     @Test
-    fun `Player plays its last card and becomes "done"`() {
+    fun `Player plays its last card and is done`() {
         val cardPlayed = Card.Clubs4
         initialGameState = gameStateBuilder
             .addPlayerToGame(player1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(cardPlayed))
@@ -382,51 +382,7 @@ class PlayCardTest : EngineTestBase() {
     }
 
     @Test
-    fun `Player has picked a card and can still play afterwards hence cannot pick another card`() {
-        val cardPlayed = Card.Clubs3
-        initialGameState = gameStateBuilder
-            .addPlayerToGame(
-                player1,
-                DwitchPlayerStatus.Playing,
-                DwitchRank.Asshole,
-                listOf(cardPlayed, Card.Diamonds5),
-                hasPickedCard = true
-            )
-            .addPlayerToGame(player2, DwitchPlayerStatus.TurnPassed, DwitchRank.ViceAsshole, listOf(Card.Diamonds4))
-            .setCardsdOnTable(Card.Spades3)
-            .build()
-
-        launchPlayCardTest(cardPlayed)
-
-        PlayerRobot(gameStateUpdated, player1Id)
-            .assertPlayerState(DwitchPlayerStatus.Playing)
-            .assertPlayerHasPickedCard() // Has not been reset since player1 can still play
-
-        PlayerRobot(gameStateUpdated, player2Id)
-            .assertPlayerState(DwitchPlayerStatus.Waiting)
-    }
-
-    @Test
-    fun `Player has picked a card and cannot play another card so it will be able to pick a card next time it can play`() {
-        val cardPlayed = Card.Clubs3
-        initialGameState = gameStateBuilder
-            .addPlayerToGame(player1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(cardPlayed, Card.Diamonds5))
-            .addPlayerToGame(player2, DwitchPlayerStatus.TurnPassed, DwitchRank.ViceAsshole, listOf(Card.Diamonds4))
-            .setCardsdOnTable(Card.Spades3)
-            .build()
-
-        launchPlayCardTest(cardPlayed)
-
-        PlayerRobot(gameStateUpdated, player1Id)
-            .assertPlayerState(DwitchPlayerStatus.Playing)
-            .assertPlayerHasNotPickedCard() // Has been reset since player1 is no longer Playing
-
-        PlayerRobot(gameStateUpdated, player2Id)
-            .assertPlayerState(DwitchPlayerStatus.Waiting)
-    }
-
-    @Test
-    fun `Player plays after first Jack played of the round and breaks special rule by not picking a card and then passing`() {
+    fun `Player plays after first Jack played of the round and breaks special rule by not passing`() {
         val cardPlayed = Card.ClubsAce
         initialGameState = gameStateBuilder
             .addPlayerToGame(player1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(cardPlayed, Card.Diamonds5))

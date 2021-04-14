@@ -9,7 +9,6 @@ internal data class PlayerMutable(
     var rank: DwitchRank,
     var state: DwitchPlayerStatus,
     var dwitched: Boolean,
-    var hasPickedCard: Boolean,
     val cardsForExchange: MutableSet<Card>
 ) {
 
@@ -53,7 +52,6 @@ internal data class PlayerMutable(
             rank,
             state,
             dwitched,
-            hasPickedCard,
             cardsForExchange
         )
     }
@@ -68,7 +66,6 @@ internal data class PlayerMutable(
                 player.rank,
                 player.status,
                 player.dwitched,
-                player.hasPickedACard,
                 player.cardsForExchange.toMutableSet()
             )
         }

@@ -14,7 +14,6 @@ import org.tinylog.kotlin.Logger
 interface DwitchEngine {
     fun getGameInfo(): DwitchGameInfo
     fun playCard(cardPlayed: Card): DwitchGameState
-    fun pickCard(): DwitchGameState
     fun passTurn(): DwitchGameState
     fun startNewRound(cardDealerFactory: CardDealerFactory): DwitchGameState
     fun getCardExchangeIfRequired(playerId: DwitchPlayerId): DwitchCardExchange?

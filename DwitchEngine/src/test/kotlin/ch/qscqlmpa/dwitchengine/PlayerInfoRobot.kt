@@ -19,16 +19,6 @@ class PlayerInfoRobot(private val info: DwitchPlayerInfo) {
         return this
     }
 
-    fun assertCanPickACard(canPickACard: Boolean): PlayerInfoRobot {
-        assertThat(info.canPickACard).isEqualTo(canPickACard)
-        return this
-    }
-
-    fun assertCanPass(canPass: Boolean): PlayerInfoRobot {
-        assertThat(info.canPass).isEqualTo(canPass)
-        return this
-    }
-
     fun assertPlayerStatus(status: DwitchPlayerStatus): PlayerInfoRobot {
         assertThat(info.status).isEqualTo(status)
         return this

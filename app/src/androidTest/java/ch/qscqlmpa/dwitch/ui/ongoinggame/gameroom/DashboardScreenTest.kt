@@ -2,11 +2,12 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom
 
 import DashboardScreen
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
 import ch.qscqlmpa.dwitch.base.BaseUiUnitTest
+import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
@@ -23,7 +24,6 @@ class DashboardScreenTest : BaseUiUnitTest() {
     private lateinit var dashboardInfo: GameDashboardInfo
 
     private var anyCardClicked = false
-    private var pickCardClicked = false
     private var passClicked = false
 
     @Before
@@ -50,13 +50,11 @@ class DashboardScreenTest : BaseUiUnitTest() {
                     DwitchCardInfo(Card.ClubsJack, true),
                 ),
                 canPass = false,
-                canPickACard = true,
                 canPlay = true
             ),
             lastCardPlayed = Card.Hearts8
         )
         anyCardClicked = false
-        pickCardClicked = false
         passClicked = false
     }
 
@@ -94,23 +92,23 @@ class DashboardScreenTest : BaseUiUnitTest() {
     fun lastCardPlayedIsDisplayed() {
         launchTest()
 
-        composeTestRule.onNode(hasTestTag("lastCardPlayed")).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(UiTags.lastCardPlayer).assertIsDisplayed()
     }
 
     @Test
     fun cardsInHandAreDisplayed() {
         launchTest()
 
-        composeTestRule.onNode(hasTestTag(Card.Clubs2.toString())).assertIsDisplayed()
-        composeTestRule.onNode(hasTestTag(Card.Clubs3.toString())).assertIsDisplayed()
-        composeTestRule.onNode(hasTestTag(Card.Clubs4.toString())).assertIsDisplayed()
-        composeTestRule.onNode(hasTestTag(Card.Clubs5.toString())).assertIsDisplayed()
-        composeTestRule.onNode(hasTestTag(Card.Clubs6.toString())).assertIsDisplayed()
-        composeTestRule.onNode(hasTestTag(Card.Clubs7.toString())).assertIsDisplayed()
-        composeTestRule.onNode(hasTestTag(Card.Clubs8.toString())).assertIsDisplayed()
-        composeTestRule.onNode(hasTestTag(Card.Clubs9.toString())).assertIsDisplayed()
-        composeTestRule.onNode(hasTestTag(Card.Clubs10.toString())).assertIsDisplayed()
-        composeTestRule.onNode(hasTestTag(Card.ClubsJack.toString())).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(Card.Clubs2.toString()).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(Card.Clubs3.toString()).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(Card.Clubs4.toString()).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(Card.Clubs5.toString()).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(Card.Clubs6.toString()).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(Card.Clubs7.toString()).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(Card.Clubs8.toString()).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(Card.Clubs9.toString()).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(Card.Clubs10.toString()).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(Card.ClubsJack.toString()).assertIsDisplayed()
 
         assertThat(anyCardClicked).isFalse
     }
@@ -119,11 +117,11 @@ class DashboardScreenTest : BaseUiUnitTest() {
     fun cardsNotSelectableCannotBeClicked() {
         launchTest()
 
-        composeTestRule.onNode(hasTestTag(Card.Clubs3.toString())).assertIsDisplayed().performClick()
-        composeTestRule.onNode(hasTestTag(Card.Clubs4.toString())).assertIsDisplayed().performClick()
-        composeTestRule.onNode(hasTestTag(Card.Clubs5.toString())).assertIsDisplayed().performClick()
-        composeTestRule.onNode(hasTestTag(Card.Clubs6.toString())).assertIsDisplayed().performClick()
-        composeTestRule.onNode(hasTestTag(Card.Clubs7.toString())).assertIsDisplayed().performClick()
+        composeTestRule.onNodeWithTag(Card.Clubs3.toString()).assertIsDisplayed().performClick()
+        composeTestRule.onNodeWithTag(Card.Clubs4.toString()).assertIsDisplayed().performClick()
+        composeTestRule.onNodeWithTag(Card.Clubs5.toString()).assertIsDisplayed().performClick()
+        composeTestRule.onNodeWithTag(Card.Clubs6.toString()).assertIsDisplayed().performClick()
+        composeTestRule.onNodeWithTag(Card.Clubs7.toString()).assertIsDisplayed().performClick()
 
         assertThat(anyCardClicked).isFalse
     }
@@ -133,38 +131,34 @@ class DashboardScreenTest : BaseUiUnitTest() {
         launchTest()
 
         anyCardClicked = false
-        composeTestRule.onNode(hasTestTag(Card.Clubs2.toString())).assertIsDisplayed().performClick()
+        composeTestRule.onNodeWithTag(Card.Clubs2.toString()).assertIsDisplayed().performClick()
         assertThat(anyCardClicked).isTrue
 
         anyCardClicked = false
-        composeTestRule.onNode(hasTestTag(Card.Clubs8.toString())).assertIsDisplayed().performClick()
+        composeTestRule.onNodeWithTag(Card.Clubs8.toString()).assertIsDisplayed().performClick()
         assertThat(anyCardClicked).isTrue
 
         anyCardClicked = false
-        composeTestRule.onNode(hasTestTag(Card.Clubs9.toString())).assertIsDisplayed().performClick()
+        composeTestRule.onNodeWithTag(Card.Clubs9.toString()).assertIsDisplayed().performClick()
         assertThat(anyCardClicked).isTrue
 
         anyCardClicked = false
-        composeTestRule.onNode(hasTestTag(Card.Clubs10.toString())).assertIsDisplayed().performClick()
+        composeTestRule.onNodeWithTag(Card.Clubs10.toString()).assertIsDisplayed().performClick()
         assertThat(anyCardClicked).isTrue
 
         anyCardClicked = false
-        composeTestRule.onNode(hasTestTag(Card.ClubsJack.toString())).assertIsDisplayed().performClick()
+        composeTestRule.onNodeWithTag(Card.ClubsJack.toString()).assertIsDisplayed().performClick()
         assertThat(anyCardClicked).isTrue
     }
 
     @Test
     fun cannotPickACardOrPassWhenControlsAreDisabled() {
-        dashboardInfo = dashboardInfo.copy(
-            localPlayerDashboard = dashboardInfo.localPlayerDashboard.copy(canPickACard = false, canPass = false)
-        )
+        dashboardInfo = dashboardInfo.copy(localPlayerDashboard = dashboardInfo.localPlayerDashboard.copy(canPass = false))
 
         launchTest()
 
-        composeTestRule.onNode(hasTestTag("pickACardControl")).assertIsDisplayed().performClick()
-        composeTestRule.onNode(hasTestTag("passControl")).assertIsDisplayed().performClick()
+        composeTestRule.onNodeWithTag(UiTags.passControl).assertIsDisplayed().performClick()
 
-        assertThat(pickCardClicked).isFalse
         assertThat(passClicked).isFalse
     }
 
@@ -173,7 +167,6 @@ class DashboardScreenTest : BaseUiUnitTest() {
             DashboardScreen(
                 dashboardInfo,
                 onCardClick = { anyCardClicked = true },
-                onPickClick = { pickCardClicked = true },
                 onPassClick = { passClicked = true }
             )
         }

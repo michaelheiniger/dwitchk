@@ -104,7 +104,6 @@ private fun DashboardScreenPreview() {
 
         ),
         canPass = false,
-        canPickACard = true,
         canPlay = true
     )
 
@@ -117,7 +116,6 @@ private fun DashboardScreenPreview() {
     DashboardScreen(
         dashboardInfo = gameDashboardInfo,
         onCardClick = {},
-        onPickClick = {},
         onPassClick = {}
     )
 }
@@ -126,7 +124,6 @@ private fun DashboardScreenPreview() {
 fun DashboardScreen(
     dashboardInfo: GameDashboardInfo,
     onCardClick: (Card) -> Unit,
-    onPickClick: () -> Unit,
     onPassClick: () -> Unit
 ) {
     Column(
@@ -143,7 +140,6 @@ fun DashboardScreen(
 
         Controls(
             localPlayerDashboard,
-            onPickClick = onPickClick,
             onPassClick = onPassClick
         )
         Spacer(Modifier.height(16.dp))
@@ -189,27 +185,16 @@ private fun Table(lastCardPlayed: Card) {
 @Composable
 private fun Controls(
     localPlayerDashboard: LocalPlayerDashboard,
-    onPickClick: () -> Unit,
     onPassClick: () -> Unit
 ) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        modifier = Modifier.fillMaxWidth()
+    Button(
+        enabled = localPlayerDashboard.canPass,
+        onClick = onPassClick,
+        modifier = Modifier
+            .testTag(UiTags.passControl)
+            .fillMaxWidth()
     ) {
-        Button(
-            enabled = localPlayerDashboard.canPickACard,
-            onClick = onPickClick,
-            modifier = Modifier.testTag(UiTags.pickACardControl)
-        ) {
-            Text(stringResource(ch.qscqlmpa.dwitch.R.string.pick_a_card))
-        }
-        Button(
-            enabled = localPlayerDashboard.canPass,
-            onClick = onPassClick,
-            modifier = Modifier.testTag(UiTags.passControl)
-        ) {
-            Text(stringResource(ch.qscqlmpa.dwitch.R.string.pass_turn))
-        }
+        Text(stringResource(ch.qscqlmpa.dwitch.R.string.pass_turn))
     }
 }
 

@@ -31,6 +31,7 @@ internal class CardsForExchangeMessageProcessorTest : BaseMessageProcessorTest()
         processor = CardsForExchangeMessageProcessor(mockInGameStore, dwitchEngineFactory, TestUtil.lazyOf(mockHostCommunicator))
     }
 
+    //FIXME
     @Test
     fun `Update game state with card exchange info from message`() {
         val mockEngine = mockk<DwitchEngine>()

@@ -1,6 +1,9 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom
 
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.filterToOne
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.onChildren
+import androidx.compose.ui.test.onNodeWithTag
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
 import ch.qscqlmpa.dwitch.base.BaseUiUnitTest
@@ -14,7 +17,7 @@ class WaitingRoomPlayersScreenTest : BaseUiUnitTest() {
     private val legolas = PlayerWrUi(name = "Legolas", connectionState = PlayerConnectionState.CONNECTED, ready = false)
     private val gimli = PlayerWrUi(name = "Gimli", connectionState = PlayerConnectionState.DISCONNECTED, ready = false)
     private val galadriel = PlayerWrUi(name = "Galadriel", connectionState = PlayerConnectionState.DISCONNECTED, ready = false)
-    private val theoden = PlayerWrUi(name = "Theoden", connectionState = PlayerConnectionState.CONNECTED, ready = false)
+    private val theoden = PlayerWrUi(name = "Theoden", connectionState = PlayerConnectionState.CONNECTED, ready = true)
 
     @Test
     fun playersAreDisplayed() {
@@ -30,23 +33,17 @@ class WaitingRoomPlayersScreenTest : BaseUiUnitTest() {
     }
 
     private fun assertPlayer(player: PlayerWrUi) {
-        val aragornChildNodes = composeTestRule.onNode(hasTestTag(player.name)).onChildren()
-        aragornChildNodes.filterToOne(hasText(player.name))
-        aragornChildNodes.filterToOne(hasText(getString(R.string.ready)))
+        val childNodes = composeTestRule.onNodeWithTag(player.name).onChildren()
 
-        val readyCheckboxTag = "readyCheckbox"
-        aragornChildNodes.filterToOne(hasTestTag(readyCheckboxTag))
-            .assertIsNotEnabled()
-            .assertIsDisplayed()
         if (player.ready) {
-            aragornChildNodes.filterToOne(hasTestTag(readyCheckboxTag)).assertIsOn()
+            childNodes.filterToOne(hasText(getString(R.string.ready)))
         } else {
-            aragornChildNodes.filterToOne(hasTestTag(readyCheckboxTag)).assertIsOff()
+            childNodes.filterToOne(hasText(getString(R.string.not_ready)))
         }
 
         when (player.connectionState) {
-            PlayerConnectionState.CONNECTED -> aragornChildNodes.filterToOne(hasText(getString(R.string.connected_to_host)))
-            PlayerConnectionState.DISCONNECTED -> aragornChildNodes.filterToOne(hasText(getString(R.string.disconnected_from_host)))
+            PlayerConnectionState.CONNECTED -> childNodes.filterToOne(hasText(getString(R.string.connected_to_host)))
+            PlayerConnectionState.DISCONNECTED -> childNodes.filterToOne(hasText(getString(R.string.disconnected_from_host)))
         }
     }
 

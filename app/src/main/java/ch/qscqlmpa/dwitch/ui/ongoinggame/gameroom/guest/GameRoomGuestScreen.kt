@@ -23,7 +23,6 @@ fun GameRoomGuestScreen(
     showGameOver: Boolean,
     onGameOverAcknowledge: () -> Unit,
     onCardClick: (Card) -> Unit,
-    onPickClick: () -> Unit,
     onPassClick: () -> Unit,
     onAddCardToExchange: (card: Card) -> Unit,
     onRemoveCardFromExchange: (card: Card) -> Unit,
@@ -45,7 +44,6 @@ fun GameRoomGuestScreen(
             is GameRoomScreen.Dashboard -> DashboardScreen(
                 dashboardInfo = screen.dashboardInfo,
                 onCardClick = onCardClick,
-                onPickClick = onPickClick,
                 onPassClick = onPassClick
             )
             is GameRoomScreen.EndOfRound -> EndOfRoundScreen(screen.endOfRoundInfo)

@@ -3,9 +3,9 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.guest
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Checkbox
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
+import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -84,7 +84,7 @@ private fun GuestControlScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End
         ) {
-            Checkbox(
+            Switch(
                 checked = ready.checked,
                 enabled = true,
                 onCheckedChange = onReadyClick,
