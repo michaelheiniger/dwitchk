@@ -1,16 +1,15 @@
 package ch.qscqlmpa.dwitchengine.utils
 
-import ch.qscqlmpa.dwitchengine.utils.ListUtil.shiftRightByN
+import ch.qscqlmpa.dwitchengine.utils.CollectionUtil.mergeWith
+import ch.qscqlmpa.dwitchengine.utils.CollectionUtil.shiftRightByN
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-internal class ListUtilTest {
+internal class CollectionUtilTest {
 
     @Nested
-    @DisplayName("shiftRightByN")
-    inner class Process {
+    inner class ShiftRightByN {
 
         @Test
         fun `Size does not change`() {
@@ -97,6 +96,30 @@ internal class ListUtilTest {
             assertThat(shiftedList[2]).isEqualTo(2)
             assertThat(shiftedList[3]).isEqualTo(3)
             assertThat(shiftedList[4]).isEqualTo(4)
+        }
+    }
+
+    @Nested
+    inner class MergeWith {
+
+        @Test
+        fun `Returns union of both sets`() {
+            val set1 = setOf(1, 2, 3, 4)
+            val set2 = setOf(2, 3, 4, 5, 6)
+
+            assertThat(set1.mergeWith(set2)).containsExactlyInAnyOrder(1, 2, 3, 4, 5, 6)
+            assertThat(set2.mergeWith(set1)).containsExactlyInAnyOrder(1, 2, 3, 4, 5, 6)
+        }
+
+        @Test
+        fun `Returns union of all sets`() {
+            val set1 = setOf(1, 2, 3, 4, 9)
+            val set2 = setOf(2, 3, 4, 5, 6)
+            val set3 = setOf(3, 7, 8, 9)
+
+            assertThat(set1.mergeWith(set2, set3)).containsExactlyInAnyOrder(1, 2, 3, 4, 5, 6, 7, 8, 9)
+            assertThat(set2.mergeWith(set1, set3)).containsExactlyInAnyOrder(1, 2, 3, 4, 5, 6, 7, 8, 9)
+            assertThat(set3.mergeWith(set1, set2)).containsExactlyInAnyOrder(1, 2, 3, 4, 5, 6, 7, 8, 9)
         }
     }
 }
