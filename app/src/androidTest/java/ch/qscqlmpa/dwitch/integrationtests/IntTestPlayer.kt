@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
-import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchgame.gameadvertising.SerializerFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameFacade
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
@@ -28,13 +27,13 @@ abstract class IntTestPlayer {
 //        serializerFactory = ongoingGameComponent.serializerFactory
     }
 
-    fun playCard(card: Card) {
-        playerFacade.playCard(card).blockingSubscribe()
-    }
+//    fun playCard(card: Card) {
+//        playerFacade.playCard(card).blockingSubscribe()
+//    }
 
-    fun passTurn() {
-        playerFacade.passTurn().blockingSubscribe()
-    }
+//    fun passTurn() {
+//        playerFacade.passTurn().blockingSubscribe()
+//    }
 
     fun startNewRound() {
         // Order is according to players' rank
@@ -47,7 +46,7 @@ abstract class IntTestPlayer {
 //                )
 //            )
 //        )
-        playerFacade.startNewRound().blockingSubscribe()
+//        playerFacade.startNewRound().blockingSubscribe()
     }
 
 //    fun assertDashboard(): PlayerDashboardRobot {

@@ -18,6 +18,7 @@ import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealer
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetupFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchgame.di.TestGameComponent
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.TestNetworkAdapter
@@ -96,12 +97,15 @@ abstract class BaseUiTest {
         communicationComponent = app.communicationComponent as TestCommunicationComponent
     }
 
-    protected fun initializeInitialGameSetup(cardsForPlayer: Map<Int, List<Card>>, rankForPlayer: Map<Int, DwitchRank>) {
+    protected fun initializeInitialGameSetup(
+        cardsForPlayer: Map<DwitchPlayerId, Set<Card>>,
+        rankForPlayer: Map<DwitchPlayerId, DwitchRank>
+    ) {
         (ongoingGameComponent.initialGameSetupFactory as DeterministicInitialGameSetupFactory)
             .setInstance(DeterministicInitialGameSetup(cardsForPlayer, rankForPlayer))
     }
 
-    protected fun initializeNewRoundCardDealer(cardsForPlayer: Map<Int, List<Card>>) {
+    protected fun initializeNewRoundCardDealer(cardsForPlayer: Map<DwitchPlayerId, Set<Card>>) {
         (ongoingGameComponent.cardDealerFactory as DeterministicCardDealerFactory)
             .setInstance(DeterministicCardDealer(cardsForPlayer))
     }

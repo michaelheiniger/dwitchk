@@ -7,10 +7,14 @@ import io.reactivex.rxjava3.core.Observable
 
 interface GameFacade {
     fun observeGameData(): Observable<DwitchState>
-    fun playCard(cardPlayed: Card): Completable
-    fun passTurn(): Completable
-    fun startNewRound(): Completable
-    fun submitCardsForExchange(cards: Set<Card>): Completable
+    fun performAction(action: GameAction): Completable
+}
+
+sealed class GameAction {
+    data class PlayCard(val cardPlayed: Card) : GameAction()
+    object PassTurn : GameAction()
+    object StartNewRound : GameAction()
+    data class SubmitCardsForExchange(val cards: Set<Card>) : GameAction()
 }
 
 sealed class DwitchState {

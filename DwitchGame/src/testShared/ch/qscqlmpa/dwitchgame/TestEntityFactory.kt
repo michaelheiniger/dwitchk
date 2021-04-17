@@ -118,7 +118,7 @@ object TestEntityFactory {
         val players = listOf(hostPlayer, createGuestPlayer1())
         return DwitchEngine.createNewGame(
             players.map { p -> DwitchPlayerOnboardingInfo(p.dwitchId, p.name) },
-            RandomInitialGameSetup(players.size)
+            RandomInitialGameSetup(players.map { p -> p.dwitchId }.toSet())
         )
     }
 }

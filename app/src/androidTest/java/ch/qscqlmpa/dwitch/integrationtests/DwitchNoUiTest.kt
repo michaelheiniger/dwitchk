@@ -2,8 +2,6 @@ package ch.qscqlmpa.dwitch.integrationtests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
-import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
@@ -211,17 +209,18 @@ class DwitchNoUiTest {
     }
 
     private fun buildInitialGameSetup(): DeterministicInitialGameSetup {
-        return DeterministicInitialGameSetup(
-            mapOf(
-                0 to listOf(Card.Clubs2, Card.Clubs3), // Host
-                1 to listOf(Card.Diamonds6, Card.Hearts4), // Guest1
-                2 to listOf(Card.Diamonds7, Card.Spades3) // Guest2
-            ),
-            mapOf(
-                0 to DwitchRank.Asshole,
-                1 to DwitchRank.Neutral,
-                2 to DwitchRank.President
-            )
-        )
+        TODO()
+//        return DeterministicInitialGameSetup(
+//            mapOf(
+//                0 to listOf(Card.Clubs2, Card.Clubs3), // Host
+//                1 to listOf(Card.Diamonds6, Card.Hearts4), // Guest1
+//                2 to listOf(Card.Diamonds7, Card.Spades3) // Guest2
+//            ),
+//            mapOf(
+//                0 to DwitchRank.Asshole,
+//                1 to DwitchRank.Neutral,
+//                2 to DwitchRank.President
+//            )
+//        )
     }
 }

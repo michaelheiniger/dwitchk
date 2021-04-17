@@ -14,7 +14,7 @@ internal class GameInitializerService @Inject constructor(
 
     fun initializeGameState(): DwitchGameState {
         val players = store.getPlayersInWaitingRoom().map { p -> DwitchPlayerOnboardingInfo(p.dwitchId, p.name) }
-        val initialGameSetup = initialGameSetupFactory.getInitialGameSetup(players.size)
+        val initialGameSetup = initialGameSetupFactory.getInitialGameSetup(players.map { p -> p.id }.toSet())
         val gameState = DwitchEngine.createNewGame(players, initialGameSetup)
         store.updateGameState(gameState)
         return gameState

@@ -31,7 +31,8 @@ object GameInfoFactory {
             },
             LocalPlayerDashboard(
                 adjustCardItemSelectability(localPlayerInfo.cardsInHand, dashboardEnabled, localPlayerIsCurrentPlayer),
-                canPlay = localPlayerIsCurrentPlayer && dashboardEnabled && localPlayerInfo.canPlay
+                canPlay = localPlayerIsCurrentPlayer && dashboardEnabled && localPlayerInfo.canPlay,
+                canPass = localPlayerIsCurrentPlayer && dashboardEnabled
             ),
             lastCardPlayed = gameInfo.lastCardPlayed
         )
@@ -79,7 +80,8 @@ data class PlayerInfo(
 
 data class LocalPlayerDashboard(
     val cardsInHand: List<DwitchCardInfo>,
-    val canPlay: Boolean
+    val canPlay: Boolean,
+    val canPass: Boolean
 )
 
 data class PlayerEndOfRoundInfo(

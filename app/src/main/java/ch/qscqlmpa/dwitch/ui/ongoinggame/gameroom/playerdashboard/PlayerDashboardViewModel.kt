@@ -8,10 +8,7 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomScreen
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.DwitchCardInfoValueDescComparator
 import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
-import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.DwitchState
-import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.EndOfRoundInfo
-import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameDashboardInfo
-import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameFacade
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.*
 import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeInfo
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Scheduler
@@ -30,12 +27,12 @@ class PlayerDashboardViewModel @Inject constructor(
 
     fun playCard(cardPlayed: Card) {
         performOperation("Card $cardPlayed played successfully.", "Error while playing card $cardPlayed.") {
-            facade.playCard(cardPlayed)
+            facade.performAction(GameAction.PlayCard(cardPlayed))
         }
     }
 
     fun passTurn() {
-        performOperation("Turn passed successfully.", "Error while passing turn.") { facade.passTurn() }
+        performOperation("Turn passed successfully.", "Error while passing turn.") { facade.performAction(GameAction.PassTurn) }
     }
 
     fun addCardToExchange(card: Card) {
@@ -52,7 +49,7 @@ class PlayerDashboardViewModel @Inject constructor(
         Logger.trace { "confirmExchange()" }
         val cardsToExchange = cardExchangeStateEngine!!.getCardExchangeState().cardsToExchange.map(DwitchCardInfo::card)
         disposableManager.add(
-            facade.submitCardsForExchange(cardsToExchange.toSet())
+            facade.performAction(GameAction.SubmitCardsForExchange(cardsToExchange.toSet()))
                 .observeOn(uiScheduler)
                 .subscribe(
                     {

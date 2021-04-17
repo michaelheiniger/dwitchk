@@ -3,9 +3,9 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.gameroom
 import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.DwitchEngineFactory
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
-import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
+import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.CardForExchangeChosenUsecase
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.GameUpdatedUsecase
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import io.reactivex.rxjava3.core.Completable
@@ -19,17 +19,15 @@ internal class GameInteractor @Inject constructor(
     private val gameUpdatedUsecase: GameUpdatedUsecase,
     private val dwitchEngineFactory: DwitchEngineFactory,
     private val cardDealerFactory: CardDealerFactory,
+    private val cardForExchangeSubmitUsecase: CardForExchangeChosenUsecase
 ) {
-    fun playCard(cardPlayed: Card): Completable {
-        return handleGameStateUpdated { engine -> engine.playCard(cardPlayed) }
-    }
-
-    fun passTurn(): Completable {
-        return handleGameStateUpdated { engine -> engine.passTurn() }
-    }
-
-    fun startNewRound(): Completable {
-        return handleGameStateUpdated { engine -> engine.startNewRound(cardDealerFactory) }
+    fun performAction(action: GameAction): Completable {
+        return when (action) {
+            GameAction.PassTurn -> handleGameStateUpdated { engine -> engine.passTurn() }
+            is GameAction.PlayCard -> handleGameStateUpdated { engine -> engine.playCard(action.cardPlayed) }
+            GameAction.StartNewRound -> handleGameStateUpdated { engine -> engine.startNewRound(cardDealerFactory) }
+            is GameAction.SubmitCardsForExchange -> cardForExchangeSubmitUsecase.chooseCardForExchange(action.cards)
+        }
     }
 
     private fun handleGameStateUpdated(updateGameState: (engine: DwitchEngine) -> DwitchGameState): Completable {

@@ -3,6 +3,7 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameAction
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameFacade
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameRoomHostFacade
 import io.reactivex.rxjava3.core.Scheduler
@@ -21,7 +22,7 @@ internal class GameRoomHostViewModel @Inject constructor(
 
     fun startNewRound() {
         disposableManager.add(
-            dashboardFacade.startNewRound()
+            dashboardFacade.performAction(GameAction.StartNewRound)
                 .observeOn(uiScheduler)
                 .subscribe(
                     { Logger.debug { "Start new round successfully." } },
