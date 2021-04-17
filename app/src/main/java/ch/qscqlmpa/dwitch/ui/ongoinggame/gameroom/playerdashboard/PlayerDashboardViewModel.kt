@@ -6,9 +6,11 @@ import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.cardexchange.CardExchangeStateEngine
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomScreen
 import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchengine.model.card.DwitchCardInfoValueDescComparator
 import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.DwitchState
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.EndOfRoundInfo
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameDashboardInfo
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameFacade
 import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeInfo
 import io.reactivex.rxjava3.core.Completable
@@ -78,8 +80,8 @@ class PlayerDashboardViewModel @Inject constructor(
                 .doOnNext { data -> Logger.info { "Game data changed: $data" } }
                 .map { data ->
                     when (data) {
-                        is DwitchState.RoundIsBeginning -> GameRoomScreen.Dashboard(data.info)
-                        is DwitchState.RoundIsOngoing -> GameRoomScreen.Dashboard(data.info)
+                        is DwitchState.RoundIsBeginning -> GameRoomScreen.Dashboard(adaptDashboardInfo(data.info))
+                        is DwitchState.RoundIsOngoing -> GameRoomScreen.Dashboard(adaptDashboardInfo(data.info))
                         is DwitchState.CardExchange -> initializeCardExchangeScreenState(data.info)
                         DwitchState.CardExchangeOnGoing -> GameRoomScreen.CardExchangeOnGoing
                         is DwitchState.EndOfRound -> GameRoomScreen.EndOfRound(adaptEndOfRoundInfo(data.info))
@@ -98,6 +100,12 @@ class PlayerDashboardViewModel @Inject constructor(
     private fun adaptEndOfRoundInfo(endOfRoundInfo: EndOfRoundInfo): EndOfRoundInfo {
         val playersSortedByRankASc = endOfRoundInfo.playersInfo.sortedWith { p1, p2 -> -p1.rank.value.compareTo(p2.rank.value) }
         return endOfRoundInfo.copy(playersInfo = playersSortedByRankASc)
+    }
+
+    private fun adaptDashboardInfo(dashboardInfo: GameDashboardInfo): GameDashboardInfo {
+        val sortedCardsInHand = dashboardInfo.localPlayerDashboard.cardsInHand.sortedWith(DwitchCardInfoValueDescComparator())
+        val updatedLocalPlayerDashboard = dashboardInfo.localPlayerDashboard.copy(cardsInHand = sortedCardsInHand)
+        return dashboardInfo.copy(localPlayerDashboard = updatedLocalPlayerDashboard)
     }
 
     private fun performOperation(successText: String, failureText: String, op: () -> Completable) {

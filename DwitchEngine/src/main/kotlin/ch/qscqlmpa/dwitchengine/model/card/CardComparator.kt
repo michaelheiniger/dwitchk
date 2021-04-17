@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitchengine.model.card
 
+import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
 import ch.qscqlmpa.dwitchengine.rules.INITIAL_JOKER
 
 class CardNameValueDescComparator : Comparator<CardName> {
@@ -22,20 +23,13 @@ class CardNameValueDescComparator : Comparator<CardName> {
 }
 
 class CardValueDescComparator : Comparator<Card> {
-
     override fun compare(card1: Card, card2: Card): Int {
+        return CardNameValueDescComparator().compare(card1.name, card2.name)
+    }
+}
 
-        // Joker has highest value
-        if (card1.value() == INITIAL_JOKER.value) {
-            return -1
-        }
-
-        // Joker has highest value
-        if (card2.value() == INITIAL_JOKER.value) {
-            return 1
-        }
-
-        // Desc
-        return -card1.value().compareTo(card2.value())
+class DwitchCardInfoValueDescComparator : Comparator<DwitchCardInfo> {
+    override fun compare(cardInfo1: DwitchCardInfo, cardInfo2: DwitchCardInfo): Int {
+        return CardValueDescComparator().compare(cardInfo1.card, cardInfo2.card)
     }
 }
