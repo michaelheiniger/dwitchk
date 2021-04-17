@@ -66,4 +66,3 @@ fun GameRoomGuestScreen(
         ConnectionGuestScreen(connectionStatus) { onReconnectClick() }
     }
 }
-

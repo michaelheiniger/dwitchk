@@ -53,7 +53,8 @@ fun WaitingRoomPlayersScreen(players: List<PlayerWrUi>) {
                 Column(
                     Modifier
                         .fillMaxWidth()
-                        .testTag(player.name)) {
+                        .testTag(player.name)
+                ) {
                     PlayerName(player.name)
                     PlayerStateDetails(player)
                 }

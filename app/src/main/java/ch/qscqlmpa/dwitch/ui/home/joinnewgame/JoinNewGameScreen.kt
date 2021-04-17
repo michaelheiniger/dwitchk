@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 
-
 @Preview(
     showBackground = true,
     backgroundColor = 0xFFFFFFFF

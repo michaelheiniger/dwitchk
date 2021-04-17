@@ -54,7 +54,6 @@ private fun CardExchangeScreenPreview() {
     )
 }
 
-
 @ExperimentalFoundationApi
 @Composable
 fun CardExchangeScreen(

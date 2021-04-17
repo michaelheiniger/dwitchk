@@ -33,7 +33,7 @@ class RandomCardDealerTest {
     @Test
     fun `All cards one 3 are equally split among players when there are 3 players`() {
         val cardDealer = RandomCardDealer(setOf(player1, player2, player3))
-        val cardsPerPlayer = (52 - 1) / 3 //17
+        val cardsPerPlayer = (52 - 1) / 3 // 17
 
         val cardsPlayer1 = cardDealer.getCardsForPlayer(player1)
         val cardsPlayer2 = cardDealer.getCardsForPlayer(player2)
@@ -50,7 +50,7 @@ class RandomCardDealerTest {
     @Test
     fun `All cards are equally split among players when there are 4 players`() {
         val cardDealer = RandomCardDealer(setOf(player1, player2, player3, player4))
-        val cardsPerPlayer = 52 / 4 //13
+        val cardsPerPlayer = 52 / 4 // 13
 
         val cardsPlayer1 = cardDealer.getCardsForPlayer(player1)
         val cardsPlayer2 = cardDealer.getCardsForPlayer(player2)
@@ -68,7 +68,7 @@ class RandomCardDealerTest {
     @Test
     fun `All cards except two 3s are equally split among players when there are 5 players`() {
         val cardDealer = RandomCardDealer(setOf(player1, player2, player3, player4, player5))
-        val cardsPerPlayer = (52 - 2) / 5 //10
+        val cardsPerPlayer = (52 - 2) / 5 // 10
 
         val cardsPlayer1 = cardDealer.getCardsForPlayer(player1)
         val cardsPlayer2 = cardDealer.getCardsForPlayer(player2)
@@ -89,7 +89,7 @@ class RandomCardDealerTest {
     @Test
     fun `All cards except all 3s are equally split among players when there are 6 players`() {
         val cardDealer = RandomCardDealer(setOf(player1, player2, player3, player4, player5, player6))
-        val cardsPerPlayer = (52 - 4) / 6 //8
+        val cardsPerPlayer = (52 - 4) / 6 // 8
 
         val cardsPlayer1 = cardDealer.getCardsForPlayer(player1)
         val cardsPlayer2 = cardDealer.getCardsForPlayer(player2)
@@ -114,7 +114,7 @@ class RandomCardDealerTest {
     @Test
     fun `All cards three 3s are equally split among players when there are 7 players`() {
         val cardDealer = RandomCardDealer(setOf(player1, player2, player3, player4, player5, player6, player7))
-        val cardsPerPlayer = (52 - 3) / 7 //6
+        val cardsPerPlayer = (52 - 3) / 7 // 6
 
         val cardsPlayer1 = cardDealer.getCardsForPlayer(player1)
         val cardsPlayer2 = cardDealer.getCardsForPlayer(player2)
@@ -141,7 +141,7 @@ class RandomCardDealerTest {
     @Test
     fun `All cards except all 3s are equally split among players when there are 8 players`() {
         val cardDealer = RandomCardDealer(setOf(player1, player2, player3, player4, player5, player6, player7, player8))
-        val cardsPerPlayer = (52 - 4) / 8 //12
+        val cardsPerPlayer = (52 - 4) / 8 // 12
 
         val cardsPlayer1 = cardDealer.getCardsForPlayer(player1)
         val cardsPlayer2 = cardDealer.getCardsForPlayer(player2)

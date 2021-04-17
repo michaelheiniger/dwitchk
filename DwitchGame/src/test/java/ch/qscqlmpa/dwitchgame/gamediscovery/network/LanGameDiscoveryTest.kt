@@ -77,5 +77,4 @@ class LanGameDiscoveryTest : BaseUnitTest() {
             // Nothing to do
         }
     }
-
 }

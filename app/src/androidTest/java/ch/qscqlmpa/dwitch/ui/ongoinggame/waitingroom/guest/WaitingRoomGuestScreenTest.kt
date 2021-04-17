@@ -62,7 +62,6 @@ class WaitingRoomGuestScreenTest : BaseUiUnitTest() {
             .assertIsDisplayed()
     }
 
-
     private fun launchTest() {
         launchTestWithContent {
             WaitingRoomGuestScreen(

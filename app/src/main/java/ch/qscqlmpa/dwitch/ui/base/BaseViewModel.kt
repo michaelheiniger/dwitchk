@@ -13,10 +13,8 @@ abstract class BaseViewModel : ViewModel() {
     }
 
     open fun onStart() {
-
     }
 
     open fun onStop() {
-
     }
 }

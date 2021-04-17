@@ -71,7 +71,7 @@ abstract class BaseUiTest {
         launch()
     }
 
-    protected fun launch() { //TODO: Rename when all tests have been adapted and set to private
+    protected fun launch() { // TODO: Rename when all tests have been adapted and set to private
         gameComponent = app.testGameComponent
         storeComponent = app.testStoreComponent
 
