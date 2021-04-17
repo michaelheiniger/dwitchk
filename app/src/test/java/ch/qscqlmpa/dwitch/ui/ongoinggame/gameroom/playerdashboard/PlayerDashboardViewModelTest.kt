@@ -45,7 +45,8 @@ class PlayerDashboardViewModelTest : BaseViewModelUnitTest() {
                         DwitchCardInfo(Card.Spades2, selectable = true),
                         DwitchCardInfo(Card.DiamondsJack, selectable = true),
                     ),
-                    canPlay = true
+                    canPlay = true,
+                    canPass = true
                 ),
                 lastCardPlayed = Card.Clubs4
             )
