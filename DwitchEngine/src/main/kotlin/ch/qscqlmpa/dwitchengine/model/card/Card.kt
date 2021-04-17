@@ -172,6 +172,6 @@ sealed class Card(val id: CardId, val name: CardName, val suit: CardSuit) {
     }
 
     override fun toString(): String {
-        return "${name.value} of ${suit.name} (id: ${id.value})"
+        return "${name.name} of ${suit.name} (id: ${id.value})"
     }
 }
