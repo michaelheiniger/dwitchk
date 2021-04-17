@@ -21,21 +21,21 @@ internal class CardsForExchangeMessageProcessor @Inject constructor(
         val msg = message as Message.CardsForExchangeMessage
 
         return Completable.fromAction {
-            val dwitchEngine = dwitchEngineFactory.create(store.getGameState())
+            val currentGameState = store.getGameState()
+            val dwitchEngine = dwitchEngineFactory.create(currentGameState)
 
             /**
              * In case of
              * - duplicate message
              * - or when the host performs an exchange (since the update is already performed locally)
-             * then we don't want need to update the game state again
+             * then we don't need to update the game state again
              */
-            //TODO: Add test
             if (dwitchEngine.getCardExchangeIfRequired(msg.playerId) != null) {
                 val updatedGameState = dwitchEngine.chooseCardsForExchange(msg.playerId, msg.cards)
                 store.updateGameState(updatedGameState)
                 sendMessage(HostMessageFactory.createGameStateUpdatedMessage(updatedGameState))
             } else {
-                sendMessage(HostMessageFactory.createGameStateUpdatedMessage(store.getGameState()))
+                sendMessage(HostMessageFactory.createGameStateUpdatedMessage(currentGameState))
             }
         }
     }

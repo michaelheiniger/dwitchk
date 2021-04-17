@@ -24,19 +24,22 @@ internal class CardsForExchangeMessageProcessorTest : BaseMessageProcessorTest()
 
     private lateinit var processor: CardsForExchangeMessageProcessor
 
+    private val mockEngine = mockk<DwitchEngine>(relaxed = true)
+    private val mockCurrentGameState = mockk<DwitchGameState>(relaxed = true)
+
     @BeforeEach
     override fun setup() {
         super.setup()
         dwitchEngineFactory = TestDwitchEngineFactory()
         processor = CardsForExchangeMessageProcessor(mockInGameStore, dwitchEngineFactory, TestUtil.lazyOf(mockHostCommunicator))
+        every { mockInGameStore.getGameState() } returns mockCurrentGameState
     }
 
-    //FIXME
     @Test
-    fun `Update game state with card exchange info from message`() {
-        val mockEngine = mockk<DwitchEngine>()
-        val mockUpdatedGameState = mockk<DwitchGameState>(); // No point in testing the content since it comes from a mock
+    fun `Update game state with card exchange info from message and send updated game state`() {
+        val mockUpdatedGameState = mockk<DwitchGameState>() // No point in testing the content since it comes from a mock
         every { mockEngine.chooseCardsForExchange(any(), any()) } returns mockUpdatedGameState
+        every { mockEngine.getCardExchangeIfRequired(any()) } returns mockk()
         dwitchEngineFactory.setInstance(mockEngine)
 
         val message = Message.CardsForExchangeMessage(DwitchPlayerId(324), setOf(Card.Clubs2, Card.Clubs3))
@@ -48,6 +51,25 @@ internal class CardsForExchangeMessageProcessorTest : BaseMessageProcessorTest()
                 EnvelopeToSend(
                     Recipient.All,
                     MessageFactory.createGameStateUpdatedMessage(mockUpdatedGameState)
+                )
+            )
+        }
+    }
+
+    @Test
+    fun `Ignore message because exchange is not required and send current game state`() {
+        every { mockEngine.getCardExchangeIfRequired(any()) } returns null
+        dwitchEngineFactory.setInstance(mockEngine)
+
+        val message = Message.CardsForExchangeMessage(DwitchPlayerId(324), setOf(Card.Clubs2, Card.Clubs3))
+        processor.process(message, ConnectionId(45)).test().assertComplete()
+
+        verify(exactly = 0) { mockInGameStore.updateGameState(any()) }
+        verify {
+            mockHostCommunicator.sendMessage(
+                EnvelopeToSend(
+                    Recipient.All,
+                    MessageFactory.createGameStateUpdatedMessage(mockCurrentGameState)
                 )
             )
         }
