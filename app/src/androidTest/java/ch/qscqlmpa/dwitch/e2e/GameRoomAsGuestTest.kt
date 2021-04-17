@@ -1,6 +1,6 @@
-package ch.qscqlmpa.dwitch.uitests
+package ch.qscqlmpa.dwitch.e2e
 
-import ch.qscqlmpa.dwitch.uitests.base.BaseGuestTest
+import ch.qscqlmpa.dwitch.e2e.base.BaseGuestTest
 import org.junit.Ignore
 
 @Ignore

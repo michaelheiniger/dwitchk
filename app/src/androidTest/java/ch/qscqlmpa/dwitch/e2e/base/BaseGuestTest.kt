@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.uitests.base
+package ch.qscqlmpa.dwitch.e2e.base
 
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText

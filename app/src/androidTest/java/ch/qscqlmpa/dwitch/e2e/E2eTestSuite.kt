@@ -1,6 +1,5 @@
-package ch.qscqlmpa.dwitch
+package ch.qscqlmpa.dwitch.e2e
 
-import ch.qscqlmpa.dwitch.uitests.*
 import org.junit.runner.RunWith
 import org.junit.runners.Suite
 
@@ -14,4 +13,4 @@ import org.junit.runners.Suite
     GameRoomAsGuestTest::class,
     GameRoomAsHostTest::class
 )
-class UiTestSuite
+class E2eTestSuite

@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.uitests.utils
+package ch.qscqlmpa.dwitch.e2e.utils
 
 import android.view.View
 import androidx.test.espresso.Espresso.onView

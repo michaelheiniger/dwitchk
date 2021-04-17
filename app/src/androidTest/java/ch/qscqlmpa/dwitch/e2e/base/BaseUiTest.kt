@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.uitests.base
+package ch.qscqlmpa.dwitch.e2e.base
 
 import android.content.res.Resources
 import androidx.compose.ui.test.junit4.createAndroidComposeRule

@@ -1,15 +1,15 @@
-package ch.qscqlmpa.dwitch.uitests
+package ch.qscqlmpa.dwitch.e2e
 
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import ch.qscqlmpa.dwitch.PlayerGuestTest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertCheckboxChecked
+import ch.qscqlmpa.dwitch.e2e.base.BaseGuestTest
+import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.PLAYER_CONNECTED
+import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.PLAYER_DISCONNECTED
+import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.assertPlayerInWr
 import ch.qscqlmpa.dwitch.ui.common.UiTags
-import ch.qscqlmpa.dwitch.uitests.base.BaseGuestTest
-import ch.qscqlmpa.dwitch.uitests.utils.WaitingRoomUtil.PLAYER_CONNECTED
-import ch.qscqlmpa.dwitch.uitests.utils.WaitingRoomUtil.PLAYER_DISCONNECTED
-import ch.qscqlmpa.dwitch.uitests.utils.WaitingRoomUtil.assertPlayerInWr
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import org.junit.Test
 

@@ -1,10 +1,10 @@
-package ch.qscqlmpa.dwitch.uitests
+package ch.qscqlmpa.dwitch.e2e
 
 import androidx.compose.ui.test.*
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
+import ch.qscqlmpa.dwitch.e2e.base.BaseUiTest
 import ch.qscqlmpa.dwitch.ui.common.UiTags
-import ch.qscqlmpa.dwitch.uitests.base.BaseUiTest
 import org.junit.Test
 
 class NewGameAsHostTest : BaseUiTest() {

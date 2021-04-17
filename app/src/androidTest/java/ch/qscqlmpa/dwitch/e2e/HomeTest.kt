@@ -1,7 +1,7 @@
-package ch.qscqlmpa.dwitch.uitests
+package ch.qscqlmpa.dwitch.e2e
 
 import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
-import ch.qscqlmpa.dwitch.uitests.base.BaseUiTest
+import ch.qscqlmpa.dwitch.e2e.base.BaseUiTest
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import org.junit.Test

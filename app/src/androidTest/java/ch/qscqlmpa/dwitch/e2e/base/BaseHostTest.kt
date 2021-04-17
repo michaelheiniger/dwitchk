@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.uitests.base
+package ch.qscqlmpa.dwitch.e2e.base
 
 abstract class BaseHostTest : BaseOnGoingGameTest() {
 
