@@ -12,15 +12,15 @@ import javax.net.ssl.SSLSession
 internal class TestWebSocket(private val remoteAddress: String, private val remotePort: Int) : WebSocket {
 
     override fun sendFragmentedFrame(op: Opcode?, buffer: ByteBuffer?, fin: Boolean) {
-        TODO("Not yet implemented")
+        throw NotImplementedError()
     }
 
     override fun hasSSLSupport(): Boolean {
-        TODO("Not yet implemented")
+        throw NotImplementedError()
     }
 
     override fun getSSLSession(): SSLSession {
-        TODO("Not yet implemented")
+        throw NotImplementedError()
     }
 
     override fun closeConnection(code: Int, message: String?) {

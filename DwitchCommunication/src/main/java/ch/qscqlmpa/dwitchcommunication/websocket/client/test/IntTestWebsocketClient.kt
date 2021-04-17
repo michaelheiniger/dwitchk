@@ -32,11 +32,11 @@ internal class IntTestWebsocketClient constructor(
     private var isClosed: Boolean = false
 
     override fun observeEvents(): Observable<ClientCommEvent> {
-        TODO("Not yet implemented")
+        throw NotImplementedError()
     }
 
     override fun observeMessages(): Observable<ClientMessage> {
-        TODO("Not yet implemented")
+        throw NotImplementedError()
     }
 
     override fun start() {
@@ -61,7 +61,7 @@ internal class IntTestWebsocketClient constructor(
     }
 
     fun onOpen(@Suppress("UNUSED_PARAMETER") handshake: ServerHandshake?) {
-        TODO("Not yet implemented")
+        throw NotImplementedError()
 //        onOpenRelay.accept(OnOpen(handshake))
 //        isOpen = true
 //        isClosed = false
@@ -72,19 +72,19 @@ internal class IntTestWebsocketClient constructor(
         @Suppress("UNUSED_PARAMETER") reason: String?,
         @Suppress("UNUSED_PARAMETER") remote: Boolean
     ) {
-        TODO("Not yet implemented")
+        throw NotImplementedError()
 //        onCloseRelay.accept(OnClose(code, reason, remote))
 //        isOpen = false
 //        isClosed = true
     }
 
     fun onMessage(@Suppress("UNUSED_PARAMETER") message: String) {
-        TODO("Not yet implemented")
+        throw NotImplementedError()
 //        onMessageRelay.accept(OnMessage(destinationAddress, destinationPort, message))
     }
 
     fun onError(@Suppress("UNUSED_PARAMETER") ex: Exception?) {
-        TODO("Not yet implemented")
+        throw NotImplementedError()
 //        onErrorRelay.accept(OnError(ex))
     }
 

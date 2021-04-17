@@ -118,7 +118,7 @@ internal class HostCommunicatorImpl constructor(
     private fun sendMessageToAllGuests(envelopeToSend: EnvelopeToSend) {
         Logger.info { "Send message to all guests: ${envelopeToSend.message}" }
         commServer.sendMessage(envelopeToSend.message, envelopeToSend.recipient)
-        // TODO: Should messages with recipient "All" be also sent to the host ? It doesn't seem needed since the message
+        // Should messages with recipient "All" be also sent to the host ? It doesn't seem needed since the message
         // is sent by the host.
     }
 
