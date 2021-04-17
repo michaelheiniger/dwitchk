@@ -6,8 +6,9 @@ import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 
 internal class PassTurnGameUpdater(currentGameState: DwitchGameState) : GameUpdaterBase(currentGameState) {
 
-    fun clearTable() {
+    fun clearTable(): PassTurnGameUpdater {
         gameStateMutable.moveCardsFromTableToGraveyard()
         gameStateMutable.dwitchGameEvent = DwitchGameEvent.TableHasBeenClearedTurnPassed
+        return this
     }
 }

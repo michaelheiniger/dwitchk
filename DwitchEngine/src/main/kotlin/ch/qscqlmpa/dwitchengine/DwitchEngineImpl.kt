@@ -21,13 +21,18 @@ import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboardFactory
 import ch.qscqlmpa.dwitchengine.rules.CardExchangeComputer
 import org.tinylog.kotlin.Logger
 
-/* Important rule: As soon as the last player to have played a card has to play again
-(i.e. a table round has happened but no one could play a card, regardless of the reason: dwitched, pass, ...),
-the table stack is removed and the player can play any card.
- */
-
 /**
- * The Engine is executed by the current player. Hence the assumption is that the current player is the local player.
+ * Players can play a card if it is either a joker or its value is equal or higher than the last card on the table (no last
+ * card on the table means that any card can be played).
+ *
+ * When a joker is played or when at most one player can play (i.e. a player with status either [DwitchPlayerStatus.Playing] or
+ * [DwitchPlayerStatus.Waiting]):
+ * - the table is cleared
+ * - all active players ([DwitchGameState.activePlayers]) are set to status 'Waiting' except one that is 'Playing'.
+ *
+ * Invariants when a game is in phase [DwitchGamePhase.RoundIsBeginning] or [DwitchGamePhase.RoundIsOnGoing]:
+ * - There must always be exactly one player 'Playing' at all times.
+ * - There must always be at least one other player 'Waiting' at all times.
  */
 internal class DwitchEngineImpl(private val currentGameState: DwitchGameState) : DwitchEngine {
 

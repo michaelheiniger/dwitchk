@@ -42,16 +42,11 @@ internal class StartNewRound constructor(
     private fun dealCards() {
         gameUpdater.clearTable()
         gameUpdater.clearGraveyard()
-        val cardDealer = cardDealerFactory.getCardDealer(gameState.numPlayersTotal())
+        val cardDealer = cardDealerFactory.getCardDealer(gameState.getAllPlayers().map(DwitchPlayer::id).toSet())
         gameState.getAllPlayers()
             .sortedWith(PlayingOrderRankComparator())
             .map(DwitchPlayer::id)
-            .forEachIndexed { index, id ->
-                gameUpdater.cardsInHandOfPlayer(id, cardDealer.getCardsForPlayer(index))
-            }
-
-        val remainingCards = cardDealer.getRemainingCards().toMutableList()
-        gameUpdater.setFirstCardOnTable(remainingCards.removeAt(0))
-        gameUpdater.cardsInDeck(remainingCards)
+            .forEach { id -> gameUpdater.cardsInHandOfPlayer(id, cardDealer.getCardsForPlayer(id)) }
+        gameUpdater.cardsInDeck(cardDealer.getRemainingCards())
     }
 }

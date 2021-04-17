@@ -35,7 +35,10 @@ internal class PlayCard(
 
             setLocalPlayerWaitingIfCannotPlay(newCurrentPlayer)
 
-            if (playCardState.cardPlayedIsJoker() || playCardState.noOtherPlayerCanPlay()) {
+            if (playCardState.cardPlayedIsJoker() ||
+                newCurrentPlayer.id == playCardState.currentPlayerId() ||
+                (playCardState.currentPlayerIsDone() && playCardState.exactlyOneOtherPlayerCanPlay())
+            ) {
                 gameUpdater.clearTable(cardPlayed)
                 gameUpdater.setPlayersWhoPassedTheirTurnedToWaiting()
             }

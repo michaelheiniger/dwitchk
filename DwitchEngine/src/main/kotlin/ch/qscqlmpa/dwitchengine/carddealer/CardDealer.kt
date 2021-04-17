@@ -1,16 +1,21 @@
 package ch.qscqlmpa.dwitchengine.carddealer
 
 import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 
-abstract class CardDealer(private val numPlayers: Int) {
+abstract class CardDealer(private val playersId: Set<DwitchPlayerId>) {
 
-    abstract fun getCardsForPlayer(index: Int): List<Card>
+    val numPlayers = playersId.size
 
-    abstract fun getRemainingCards(): List<Card>
+    init {
+        require(numPlayers in 2..8) // Each player has at least 52/8 == 12 cards
+    }
 
-    protected fun checkIndex(index: Int) {
-        if (index < 0 || index >= numPlayers) {
-            throw IllegalArgumentException("Argument index $index must be in {0, 1, ..., ${numPlayers - 1}}")
-        }
+    abstract fun getCardsForPlayer(id: DwitchPlayerId): Set<Card>
+
+    abstract fun getRemainingCards(): Set<Card>
+
+    protected fun checkId(id: DwitchPlayerId) {
+        if (!playersId.contains(id)) throw IllegalArgumentException("Argument id $id must be in $playersId")
     }
 }

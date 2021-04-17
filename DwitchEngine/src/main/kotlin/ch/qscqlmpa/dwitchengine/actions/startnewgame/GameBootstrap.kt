@@ -14,12 +14,12 @@ import ch.qscqlmpa.dwitchengine.rules.PlayingOrder
 internal object GameBootstrap {
 
     fun createNewGame(playersInfo: List<DwitchPlayerOnboardingInfo>, initialGameSetup: InitialGameSetup): DwitchGameState {
-        val players = playersInfo.mapIndexed { index, p ->
-            val rank = initialGameSetup.getRankForPlayer(index)
+        val players = playersInfo.map { p ->
+            val rank = initialGameSetup.getRankForPlayer(p.id)
             DwitchPlayer(
                 p.id,
                 p.name,
-                initialGameSetup.getCardsForPlayer(index),
+                initialGameSetup.getCardsForPlayer(p.id).toList(),
                 rank,
                 getPlayerState(rank),
                 dwitched = false
@@ -27,11 +27,9 @@ internal object GameBootstrap {
         }
 
         val currentPlayer = players.find { p -> p.status == DwitchPlayerStatus.Playing }!!
-        val cardsInDeck = initialGameSetup.getRemainingCards().toMutableList()
-        val firstCardOnTable = cardsInDeck.removeAt(0)
+        val cardsInDeck = initialGameSetup.getRemainingCards()
         val activePlayers = players.map(DwitchPlayer::id).toSet()
         val joker = CardName.Two
-        val cardsOnTable = listOf(firstCardOnTable)
         val cardGraveyard = emptyList<Card>()
 
         return DwitchGameState(
@@ -44,8 +42,8 @@ internal object GameBootstrap {
             emptyList(),
             joker,
             null,
-            cardsOnTable,
-            cardsInDeck.toList(),
+            emptyList(),
+            cardsInDeck,
             cardGraveyard,
         )
     }

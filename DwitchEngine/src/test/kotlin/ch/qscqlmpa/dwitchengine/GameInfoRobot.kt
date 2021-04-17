@@ -25,12 +25,12 @@ class GameInfoRobot(private val info: DwitchGameInfo) {
         return this
     }
 
-    fun assertCardsOnTable(cards: List<Card>): GameInfoRobot {
-        assertThat(info.cardsOnTable).isEqualTo(cards)
+    fun assertCardsOnTable(vararg cards: Card): GameInfoRobot {
+        assertThat(info.cardsOnTable).containsExactly(*cards)
         return this
     }
 
-    fun assertTableEmpty(): GameInfoRobot {
+    fun assertTableIsEmpty(): GameInfoRobot {
         assertThat(info.cardsOnTable).isEmpty()
         return this
     }

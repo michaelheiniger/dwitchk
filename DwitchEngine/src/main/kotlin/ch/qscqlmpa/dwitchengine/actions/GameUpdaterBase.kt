@@ -12,8 +12,9 @@ internal abstract class GameUpdaterBase(currentGameState: DwitchGameState) {
 
     protected val gameStateMutable = GameStateMutable.fromGameState(currentGameState)
 
-    fun undwitchAllPlayers() {
+    fun undwitchAllPlayers(): GameUpdaterBase {
         gameStateMutable.undwitchAllPlayers()
+        return this
     }
 
     fun resetGameEvent() {
@@ -39,15 +40,17 @@ internal abstract class GameUpdaterBase(currentGameState: DwitchGameState) {
         gameStateMutable.setPlayerState(playerId, DwitchPlayerStatus.Done)
     }
 
-    fun setPlayersWhoPassedTheirTurnedToWaiting() {
+    fun setPlayersWhoPassedTheirTurnedToWaiting(): GameStateMutable {
         gameStateMutable.allPlayers()
             .filter { player -> player.state == DwitchPlayerStatus.TurnPassed }
             .forEach { player -> player.state = DwitchPlayerStatus.Waiting }
+        return gameStateMutable
     }
 
-    fun updateCurrentPlayer(playerId: DwitchPlayerId) {
+    fun updateCurrentPlayer(playerId: DwitchPlayerId): GameUpdaterBase {
         gameStateMutable.currentPlayerId = playerId
         gameStateMutable.setPlayerState(playerId, DwitchPlayerStatus.Playing)
+        return this
     }
 
     fun buildUpdatedGameState(): DwitchGameState {

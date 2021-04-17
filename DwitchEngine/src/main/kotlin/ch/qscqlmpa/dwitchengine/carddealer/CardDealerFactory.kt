@@ -1,6 +1,8 @@
 package ch.qscqlmpa.dwitchengine.carddealer
 
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
+
 interface CardDealerFactory {
 
-    fun getCardDealer(numPlayers: Int): CardDealer
+    fun getCardDealer(playersId: Set<DwitchPlayerId>): CardDealer
 }

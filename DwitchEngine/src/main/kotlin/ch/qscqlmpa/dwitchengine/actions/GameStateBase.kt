@@ -21,7 +21,7 @@ internal abstract class GameStateBase(private val currentGameState: DwitchGameSt
     protected fun checkCurrentPlayerStateIsPlaying() {
         val playerState = currentGameState.currentPlayer().status
         if (DwitchPlayerStatus.Playing != playerState) {
-            throw IllegalStateException("Player is not in state $playerState")
+            throw IllegalStateException("Player must be in state ${DwitchPlayerStatus.Playing} (actual state: $playerState)")
         }
     }
 

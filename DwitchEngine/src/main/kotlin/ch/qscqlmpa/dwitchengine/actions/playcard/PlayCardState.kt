@@ -52,6 +52,17 @@ internal class PlayCardState(
         return nextNonDwitchedWaitingPlayer() == null
     }
 
+    fun activePlayersInPlayingOrderAfterLocalPlayer(): List<DwitchPlayer> {
+        return currentGameState.activePlayersInPlayingOrderAfterCurrentPlayer()
+    }
+
+    fun atMostOneOtherPlayerCanPlay(): Boolean {
+        if (noOtherPlayerCanPlay()) {
+            return false
+        }
+        return currentGameState.waitingPlayersInOrder().size <= 1
+    }
+
     fun nextWaitingPlayerIsDwitched(): Boolean {
         val lastCardOnTable = currentGameState.lastCardOnTable()
         return lastCardOnTable != null && lastCardOnTable.value() == cardPlayed.value()
@@ -88,21 +99,16 @@ internal class PlayCardState(
     }
 
     private fun nextNonDwitchedWaitingPlayer(): DwitchPlayer? {
-        val nextWaitingPlayer = nextWaitingPlayer()
-        return if (nextWaitingPlayer != null) {
-            waitingPlayerInOrderAfterLocalPlayer()
-                .firstOrNull { player -> if (nextWaitingPlayerIsDwitched()) player != nextWaitingPlayer else true }
+        return if (nextWaitingPlayer() != null) {
+            currentGameState.waitingPlayersInOrder()
+                .firstOrNull { player -> if (nextWaitingPlayerIsDwitched()) player != nextWaitingPlayer() else true }
         } else {
             null
         }
     }
 
-    private fun waitingPlayerInOrderAfterLocalPlayer(): List<DwitchPlayer> {
-        return currentGameState.waitingPlayerInOrderAfterLocalPlayer()
-    }
-
     private fun turnPassedPlayerInOrderAfterLocalPlayer(): List<DwitchPlayer> {
-        return currentGameState.activePlayersInPlayingOrderAfterLocalPlayer()
+        return currentGameState.activePlayersInPlayingOrderAfterCurrentPlayer()
             .filter { player -> player.status == DwitchPlayerStatus.TurnPassed }
     }
 
@@ -111,5 +117,14 @@ internal class PlayCardState(
         if (!PlayerMove.cardPlayedIsAValidMove(lastCardOnTable, cardPlayed, currentGameState.joker)) {
             throw IllegalArgumentException("The card '$cardPlayed' may not be played on top of card '$lastCardOnTable'")
         }
+    }
+
+    fun currentPlayerIsDone(): Boolean {
+        // A player with exactly one card that plays a card is done for the round.
+        return currentGameState.currentPlayer().cardsInHand.size == 1
+    }
+
+    fun exactlyOneOtherPlayerCanPlay(): Boolean {
+        return currentGameState.waitingPlayersInOrder().size == 1
     }
 }

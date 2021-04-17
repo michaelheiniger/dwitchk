@@ -8,68 +8,99 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class PassTurnTest : EngineTestBase() {
 
-    @Test
-    fun `Player passes its turn`() {
-        initialGameState = gameStateBuilder
-            .setGamePhase(DwitchGamePhase.RoundIsOnGoing)
-            .addPlayerToGame(player1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(Card.Clubs3))
-            .addPlayerToGame(player2, DwitchPlayerStatus.Waiting, DwitchRank.Neutral, listOf(Card.Clubs2))
-            .addPlayerToGame(player3, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.Clubs4))
-            .setCardsdOnTable(Card.Clubs4)
-            .setLocalPlayer(player1Id)
-            .setCurrentPlayer(player1Id)
-            .build()
+    @Nested
+    @DisplayName("When passing, the next 'Waiting' player (in order) becomes 'Playing'")
+    inner class NextWaitingPlayerBecomesPlaying {
 
-        launchPassTurnTest()
+        @Test
+        fun `When exactly one player is 'Waiting', the table is cleared and all 'TurnPassed' players are reset to 'Waiting'`() {
+            initialGameState = gameStateBuilder
+                .setGamePhase(DwitchGamePhase.RoundIsOnGoing)
+                .addPlayerToGame(p1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(Card.Clubs3))
+                .addPlayerToGame(p2, DwitchPlayerStatus.TurnPassed, DwitchRank.ViceAsshole, listOf(Card.Clubs4))
+                .addPlayerToGame(p3, DwitchPlayerStatus.Waiting, DwitchRank.VicePresident, listOf(Card.Clubs5))
+                .addPlayerToGame(p4, DwitchPlayerStatus.TurnPassed, DwitchRank.President, listOf(Card.Clubs6))
+                .setCardsdOnTable(Card.Clubs7)
+                .setLocalPlayer(p1Id)
+                .setCurrentPlayer(p1Id)
+                .build()
 
-        GameStateRobot(gameStateUpdated)
-            .assertCurrentPlayerId(player2Id)
+            launchPassTurnTest()
 
-        PlayerRobot(gameStateUpdated, player1Id)
-            .assertNumCardsInHand(1) // Hasn't changed
-            .assertPlayerState(DwitchPlayerStatus.TurnPassed)
+            GameStateRobot(gameStateUpdated)
+                .assertCurrentPlayerId(p3Id)
+                .assertTableIsEmpty()
 
-        PlayerRobot(gameStateUpdated, player2Id)
-            .assertPlayerState(DwitchPlayerStatus.Playing)
+            PlayerRobot(gameStateUpdated, p1Id)
+                .assertPlayerState(DwitchPlayerStatus.Waiting)
+                .assertNumCardsInHand(1) // Hasn't changed
 
-        PlayerRobot(gameStateUpdated, player3Id)
-            .assertPlayerState(DwitchPlayerStatus.Waiting)
-    }
+            PlayerRobot(gameStateUpdated, p2Id)
+                .assertPlayerState(DwitchPlayerStatus.Waiting)
 
-    @Test
-    fun `When only one Waiting player, table is cleared and waiting player becomes Playing`() {
-        initialGameState = gameStateBuilder
-            .setGamePhase(DwitchGamePhase.RoundIsOnGoing)
-            .addPlayerToGame(player1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(Card.Clubs3))
-            .addPlayerToGame(player2, DwitchPlayerStatus.TurnPassed, DwitchRank.ViceAsshole, listOf(Card.Clubs4))
-            .addPlayerToGame(player3, DwitchPlayerStatus.Waiting, DwitchRank.VicePresident, listOf(Card.Clubs5))
-            .addPlayerToGame(player4, DwitchPlayerStatus.TurnPassed, DwitchRank.President, listOf(Card.Clubs6))
-            .setCardsdOnTable(Card.Clubs7)
-            .setLocalPlayer(player1Id)
-            .setCurrentPlayer(player1Id)
-            .build()
+            PlayerRobot(gameStateUpdated, p3Id)
+                .assertPlayerState(DwitchPlayerStatus.Playing)
 
-        launchPassTurnTest()
+            PlayerRobot(gameStateUpdated, p4Id)
+                .assertPlayerState(DwitchPlayerStatus.Waiting)
+        }
 
-        GameStateRobot(gameStateUpdated)
-            .assertCurrentPlayerId(player3Id)
-            .assertTableIsCleared()
+        @Test
+        fun `When exactly one player is 'Waiting' - 2 players`() {
+            initialGameState = gameStateBuilder
+                .setGamePhase(DwitchGamePhase.RoundIsOnGoing)
+                .addPlayerToGame(p1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(Card.Clubs3))
+                .addPlayerToGame(p2, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.Clubs4))
+                .addPlayerToGame(p3, DwitchPlayerStatus.Done, DwitchRank.Neutral, listOf(Card.Clubs5))
+                .setCardsdOnTable(Card.Clubs7)
+                .setLocalPlayer(p1Id)
+                .setCurrentPlayer(p1Id)
+                .build()
 
-        PlayerRobot(gameStateUpdated, player1Id)
-            .assertPlayerState(DwitchPlayerStatus.Waiting)
+            launchPassTurnTest()
 
-        PlayerRobot(gameStateUpdated, player2Id)
-            .assertPlayerState(DwitchPlayerStatus.Waiting)
+            GameStateRobot(gameStateUpdated)
+                .assertCurrentPlayerId(p2Id)
+                .assertTableIsEmpty()
 
-        PlayerRobot(gameStateUpdated, player3Id)
-            .assertPlayerState(DwitchPlayerStatus.Playing)
+            PlayerRobot(gameStateUpdated, p1Id)
+                .assertPlayerState(DwitchPlayerStatus.Waiting)
+                .assertNumCardsInHand(1) // Hasn't changed
+            PlayerRobot(gameStateUpdated, p2Id).assertPlayerState(DwitchPlayerStatus.Playing)
+        }
 
-        PlayerRobot(gameStateUpdated, player4Id)
-            .assertPlayerState(DwitchPlayerStatus.Waiting)
+        @Test
+        fun `When more than one player is 'Waiting', the table is not cleared and current player becomes 'TurnPassed'`() {
+            initialGameState = gameStateBuilder
+                .setGamePhase(DwitchGamePhase.RoundIsOnGoing)
+                .addPlayerToGame(p1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(Card.Clubs3))
+                .addPlayerToGame(p2, DwitchPlayerStatus.TurnPassed, DwitchRank.ViceAsshole, listOf(Card.Clubs4))
+                .addPlayerToGame(p3, DwitchPlayerStatus.Waiting, DwitchRank.VicePresident, listOf(Card.Clubs5))
+                .addPlayerToGame(p4, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.Clubs6))
+                .setCardsdOnTable(Card.Clubs7)
+                .setLocalPlayer(p1Id)
+                .setCurrentPlayer(p1Id)
+                .build()
+
+            launchPassTurnTest()
+
+            GameStateRobot(gameStateUpdated)
+                .assertCurrentPlayerId(p3Id)
+                .assertTableContains(Card.Clubs7)
+
+            PlayerRobot(gameStateUpdated, p1Id)
+                .assertPlayerState(DwitchPlayerStatus.TurnPassed)
+                .assertNumCardsInHand(1) // Hasn't changed
+            PlayerRobot(gameStateUpdated, p2Id).assertPlayerState(DwitchPlayerStatus.TurnPassed)
+            PlayerRobot(gameStateUpdated, p3Id).assertPlayerState(DwitchPlayerStatus.Playing)
+            PlayerRobot(gameStateUpdated, p4Id).assertPlayerState(DwitchPlayerStatus.Waiting)
+        }
     }
 
     private fun launchPassTurnTest() {

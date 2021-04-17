@@ -15,7 +15,7 @@ internal data class GameStateMutable(
     var joker: CardName,
     var dwitchGameEvent: DwitchGameEvent?,
     val cardsOnTable: MutableList<Card>,
-    val cardsInDeck: MutableList<Card>,
+    val cardsInDeck: MutableSet<Card>,
     val cardGraveyard: MutableList<Card>
 ) {
 
@@ -33,10 +33,6 @@ internal data class GameStateMutable(
 
     fun removeAllCardsForCardExchange(playerId: DwitchPlayerId) {
         player(playerId).removeAllCardsForExchange()
-    }
-
-    fun removeTopCardFromDeck(): Card {
-        return cardsInDeck.removeAt(0)
     }
 
     fun dwitchPlayer(playerId: DwitchPlayerId) {
@@ -142,7 +138,7 @@ internal data class GameStateMutable(
                 gameState.joker,
                 gameState.dwitchGameEvent,
                 gameState.cardsOnTable.toMutableList(),
-                gameState.cardsInDeck.toMutableList(),
+                gameState.cardsInDeck.toMutableSet(),
                 gameState.cardsInGraveyard.toMutableList()
             )
         }

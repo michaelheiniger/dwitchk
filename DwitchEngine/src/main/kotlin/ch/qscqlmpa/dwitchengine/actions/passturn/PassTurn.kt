@@ -5,25 +5,24 @@ import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 
 internal class PassTurn(private val passTurnState: PassTurnState, private val gameUpdater: PassTurnGameUpdater) {
 
-    private val localPlayerId = passTurnState.currentPlayerId()
+    private val currentPlayerId = passTurnState.currentPlayerId()
 
     fun getUpdatedGameState(): DwitchGameState {
         passTurnState.checkState()
 
         gameUpdater.undwitchAllPlayers()
-        gameUpdater.resetGameEvent()
+            .resetGameEvent()
 
-        gameUpdater.updateCurrentPlayer(passTurnState.nextWaitingPlayer().id)
-
-        // The localplayer could not pass its turn if there is only one other waiting player that is dwitched
-        // --> the table would be cleared and so localplayer would be Playing (and not CardPicked which is necessary to pass the turn)
         if (passTurnState.onlyOneOtherPlayerCanPlay()) {
             gameUpdater.clearTable()
-            gameUpdater.setPlayersWhoPassedTheirTurnedToWaiting()
-            gameUpdater.setPlayerState(localPlayerId, DwitchPlayerStatus.Waiting)
+                // All active players becomes 'Waiting' except the new current player that is 'Playing'.
+                .setPlayersWhoPassedTheirTurnedToWaiting()
+                .setPlayerState(currentPlayerId, DwitchPlayerStatus.Waiting)
         } else {
-            gameUpdater.setPlayerState(localPlayerId, DwitchPlayerStatus.TurnPassed)
+            gameUpdater.setPlayerState(currentPlayerId, DwitchPlayerStatus.TurnPassed)
         }
+
+        gameUpdater.updateCurrentPlayer(passTurnState.nextWaitingPlayer().id)
 
         return gameUpdater.buildUpdatedGameState()
     }

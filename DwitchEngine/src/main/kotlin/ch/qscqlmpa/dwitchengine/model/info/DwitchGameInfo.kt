@@ -15,14 +15,4 @@ data class DwitchGameInfo(
     val lastCardPlayed: Card,
     val cardsOnTable: List<Card>,
     val dwitchGameEvent: DwitchGameEvent?
-) {
-    val playerInfosList: List<DwitchPlayerInfo> by lazy { playerInfos.values.toList() }
-
-    fun getCurrentPlayer(): DwitchPlayerInfo {
-        return playerInfos.getValue(currentPlayerId)
-    }
-
-    fun getDwitchedPlayer(): DwitchPlayerInfo? {
-        return playerInfos.values.find { p -> p.dwitched }
-    }
-}
+)

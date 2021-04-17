@@ -24,7 +24,7 @@ internal data class PlayerMutable(
         cardsInHand.add(card)
     }
 
-    fun cardsInHand(cards: List<Card>) {
+    fun cardsInHand(cards: Set<Card>) {
         cardsInHand.clear()
         cardsInHand.addAll(cards)
     }

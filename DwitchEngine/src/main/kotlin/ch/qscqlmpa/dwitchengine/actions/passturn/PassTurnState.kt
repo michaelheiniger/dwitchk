@@ -12,11 +12,10 @@ internal class PassTurnState(private val currentGameState: DwitchGameState) : Ga
     }
 
     fun nextWaitingPlayer(): DwitchPlayer {
-        // There must be at least one Waiting player, otherwise the current player would not need to pass turn
         return currentGameState.nextWaitingPlayer()!!
     }
 
     fun onlyOneOtherPlayerCanPlay(): Boolean {
-        return currentGameState.waitingPlayerInOrderAfterLocalPlayer().size == 1
+        return currentGameState.waitingPlayersInOrder().size == 1
     }
 }

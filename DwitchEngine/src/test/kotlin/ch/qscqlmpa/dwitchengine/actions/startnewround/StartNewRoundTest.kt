@@ -11,6 +11,7 @@ import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.card.CardUtil
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameEvent
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import org.junit.jupiter.api.BeforeEach
@@ -25,39 +26,40 @@ class StartNewRoundTest : EngineTestBase() {
         super.setup()
         gameStateBuilder
             .setGamePhase(DwitchGamePhase.RoundIsOver)
-            .setLocalPlayer(player2Id)
-            .setCurrentPlayer(player2Id)
+            .setLocalPlayer(p2Id)
+            .setCurrentPlayer(p2Id)
     }
 
     @Test
     fun `Start a new round for 2 players`() {
         initialGameState = gameStateBuilder
-            .addPlayerToGame(player1, DwitchPlayerStatus.Done, DwitchRank.Asshole, emptyList())
-            .addPlayerToGame(player2, DwitchPlayerStatus.Done, DwitchRank.President, emptyList())
+            .addPlayerToGame(p1, DwitchPlayerStatus.Done, DwitchRank.Asshole, emptyList())
+            .addPlayerToGame(p2, DwitchPlayerStatus.Done, DwitchRank.President, emptyList())
             .build()
 
-        setupCardDealer(
-            mapOf(
-                0 to listOf(Card.Clubs2, Card.Clubs3, Card.Clubs4),
-                1 to listOf(Card.Clubs5, Card.Clubs6, Card.Clubs7)
-            )
+        val playersCards = mapOf(
+            p1Id to setOf(Card.Clubs2, Card.Clubs3, Card.Clubs4),
+            p2Id to setOf(Card.Clubs5, Card.Clubs6, Card.Clubs7)
         )
+        val numCardsDealt = playersCards.values.map { p -> p.size }.sum()
+
+        setupCardDealer(playersCards)
 
         launchStartNewRoundTest()
         GameStateRobot(gameStateUpdated)
             .assertGamePhase(DwitchGamePhase.CardExchange)
-            .assertCardsOnTableContainsExactly(Card.Clubs8)
-            .assertNumCardsInDeck(CardUtil.deckSize - 7)
-            .assertPlayingOrder(listOf(player1Id, player2Id))
-            .assertActivePlayers(player1Id, player2Id)
-            .assertCurrentPlayerId(player1Id)
+            .assertTableIsEmpty()
+            .assertNumCardsInDeck(CardUtil.deckSize - numCardsDealt)
+            .assertPlayingOrder(listOf(p1Id, p2Id))
+            .assertActivePlayers(p1Id, p2Id)
+            .assertCurrentPlayerId(p1Id)
 
-        PlayerRobot(gameStateUpdated, player1Id)
+        PlayerRobot(gameStateUpdated, p1Id)
             .assertCardsInHandContainsExactly(Card.Clubs2, Card.Clubs3, Card.Clubs4)
             .assertPlayerState(DwitchPlayerStatus.Playing) // Since Asshole
             .assertPlayerIsNotDwitched()
 
-        PlayerRobot(gameStateUpdated, player2Id)
+        PlayerRobot(gameStateUpdated, p2Id)
             .assertCardsInHandContainsExactly(Card.Clubs5, Card.Clubs6, Card.Clubs7)
             .assertPlayerState(DwitchPlayerStatus.Waiting)
             .assertPlayerIsNotDwitched()
@@ -66,54 +68,55 @@ class StartNewRoundTest : EngineTestBase() {
     @Test
     fun `Start a new round for 5 players`() {
         initialGameState = gameStateBuilder
-            .addPlayerToGame(player1, DwitchPlayerStatus.Done, DwitchRank.Neutral, emptyList())
-            .addPlayerToGame(player2, DwitchPlayerStatus.Done, DwitchRank.President, emptyList())
-            .addPlayerToGame(player3, DwitchPlayerStatus.Done, DwitchRank.VicePresident, emptyList())
-            .addPlayerToGame(player4, DwitchPlayerStatus.Done, DwitchRank.ViceAsshole, emptyList())
-            .addPlayerToGame(player5, DwitchPlayerStatus.Done, DwitchRank.Asshole, emptyList())
+            .addPlayerToGame(p1, DwitchPlayerStatus.Done, DwitchRank.Neutral, emptyList())
+            .addPlayerToGame(p2, DwitchPlayerStatus.Done, DwitchRank.President, emptyList())
+            .addPlayerToGame(p3, DwitchPlayerStatus.Done, DwitchRank.VicePresident, emptyList())
+            .addPlayerToGame(p4, DwitchPlayerStatus.Done, DwitchRank.ViceAsshole, emptyList())
+            .addPlayerToGame(p5, DwitchPlayerStatus.Done, DwitchRank.Asshole, emptyList())
             .build()
 
-        setupCardDealer(
-            mapOf(
-                0 to listOf(Card.Clubs5, Card.Hearts5, Card.Spades5),
-                1 to listOf(Card.Diamonds2, Card.Diamonds3, Card.Diamonds4),
-                2 to listOf(Card.Clubs2, Card.Clubs3, Card.Clubs4),
-                3 to listOf(Card.Spades2, Card.Spades3, Card.Spades4),
-                4 to listOf(Card.Hearts2, Card.Hearts3, Card.Hearts4),
-            )
+        val playersCards = mapOf(
+            p1Id to setOf(Card.Clubs5, Card.Hearts5, Card.Spades5),
+            p2Id to setOf(Card.Diamonds2, Card.Diamonds3, Card.Diamonds4),
+            p3Id to setOf(Card.Clubs2, Card.Clubs3, Card.Clubs4),
+            p4Id to setOf(Card.Spades2, Card.Spades3, Card.Spades4),
+            p5Id to setOf(Card.Hearts2, Card.Hearts3, Card.Hearts4),
         )
+        val numCardsDealt = playersCards.values.map { p -> p.size }.sum()
+
+        setupCardDealer(playersCards)
 
         launchStartNewRoundTest()
         GameStateRobot(gameStateUpdated)
             .assertGamePhase(DwitchGamePhase.CardExchange)
-            .assertCardsOnTableContainsExactly(Card.Clubs6)
-            .assertNumCardsInDeck(CardUtil.deckSize - 16)
-            .assertPlayingOrder(listOf(player5Id, player4Id, player1Id, player3Id, player2Id))
-            .assertActivePlayers(player1Id, player2Id, player3Id, player4Id, player5Id)
-            .assertCurrentPlayerId(player5Id)
+            .assertTableIsEmpty()
+            .assertNumCardsInDeck(CardUtil.deckSize - numCardsDealt)
+            .assertPlayingOrder(listOf(p5Id, p4Id, p1Id, p3Id, p2Id))
+            .assertActivePlayers(p1Id, p2Id, p3Id, p4Id, p5Id)
+            .assertCurrentPlayerId(p5Id)
 
-        PlayerRobot(gameStateUpdated, player1Id)
-            .assertCardsInHandContainsExactly(Card.Clubs2, Card.Clubs3, Card.Clubs4)
+        PlayerRobot(gameStateUpdated, p1Id)
+            .assertCardsInHandContainsExactly(Card.Clubs5, Card.Hearts5, Card.Spades5)
             .assertPlayerState(DwitchPlayerStatus.Waiting)
             .assertPlayerIsNotDwitched()
 
-        PlayerRobot(gameStateUpdated, player2Id)
-            .assertCardsInHandContainsExactly(Card.Hearts2, Card.Hearts3, Card.Hearts4)
-            .assertPlayerState(DwitchPlayerStatus.Waiting)
-            .assertPlayerIsNotDwitched()
-
-        PlayerRobot(gameStateUpdated, player3Id)
-            .assertCardsInHandContainsExactly(Card.Spades2, Card.Spades3, Card.Spades4)
-            .assertPlayerState(DwitchPlayerStatus.Waiting)
-            .assertPlayerIsNotDwitched()
-
-        PlayerRobot(gameStateUpdated, player4Id)
+        PlayerRobot(gameStateUpdated, p2Id)
             .assertCardsInHandContainsExactly(Card.Diamonds2, Card.Diamonds3, Card.Diamonds4)
             .assertPlayerState(DwitchPlayerStatus.Waiting)
             .assertPlayerIsNotDwitched()
 
-        PlayerRobot(gameStateUpdated, player5Id)
-            .assertCardsInHandContainsExactly(Card.Clubs5, Card.Hearts5, Card.Spades5)
+        PlayerRobot(gameStateUpdated, p3Id)
+            .assertCardsInHandContainsExactly(Card.Clubs2, Card.Clubs3, Card.Clubs4)
+            .assertPlayerState(DwitchPlayerStatus.Waiting)
+            .assertPlayerIsNotDwitched()
+
+        PlayerRobot(gameStateUpdated, p4Id)
+            .assertCardsInHandContainsExactly(Card.Spades2, Card.Spades3, Card.Spades4)
+            .assertPlayerState(DwitchPlayerStatus.Waiting)
+            .assertPlayerIsNotDwitched()
+
+        PlayerRobot(gameStateUpdated, p5Id)
+            .assertCardsInHandContainsExactly(Card.Hearts2, Card.Hearts3, Card.Hearts4)
             .assertPlayerState(DwitchPlayerStatus.Playing) // Since Asshole
             .assertPlayerIsNotDwitched()
     }
@@ -121,34 +124,33 @@ class StartNewRoundTest : EngineTestBase() {
     @Test
     fun `Game is properly updated for new round`() {
         initialGameState = gameStateBuilder
-            .addPlayerToGame(player1, DwitchPlayerStatus.Done, DwitchRank.Asshole, emptyList())
-            .addPlayerToGame(player2, DwitchPlayerStatus.Done, DwitchRank.President, emptyList())
+            .addPlayerToGame(p1, DwitchPlayerStatus.Done, DwitchRank.Asshole, emptyList())
+            .addPlayerToGame(p2, DwitchPlayerStatus.Done, DwitchRank.President, emptyList())
 
             // These two statements are mutually exclusive but the goal is to check the reset of their values.
             .setGameEvent(DwitchGameEvent.TableHasBeenCleared(Card.Hearts2))
             .setCardsdOnTable(Card.Hearts5, Card.Diamonds7, Card.Hearts2)
-
             .setJoker(CardName.Ace)
             .build()
 
-        setupCardDealer(
-            mapOf(
-                0 to listOf(Card.Clubs2, Card.Clubs3, Card.Clubs4),
-                1 to listOf(Card.Clubs5, Card.Clubs6, Card.Clubs7)
-            )
+        val playersCards = mapOf(
+            p1Id to setOf(Card.Clubs2, Card.Clubs3, Card.Clubs4),
+            p2Id to setOf(Card.Clubs5, Card.Clubs6, Card.Clubs7)
         )
+
+        setupCardDealer(playersCards)
 
         launchStartNewRoundTest()
         GameStateRobot(gameStateUpdated)
             .assertGamePhase(DwitchGamePhase.CardExchange)
-            .assertCardsOnTableContainsExactly(Card.Clubs8)
+            .assertTableIsEmpty()
             .assertNumCardsInGraveyard(0)
             .assertPlayersDoneForRoundIsEmpty()
             .assertJoker(CardName.Two)
             .assertGameEvent(null)
     }
 
-    private fun setupCardDealer(cardsForPlayer: Map<Int, List<Card>>) {
+    private fun setupCardDealer(cardsForPlayer: Map<DwitchPlayerId, Set<Card>>) {
         cardDealerFactory = DeterministicCardDealerFactory(DeterministicCardDealer(cardsForPlayer))
     }
 

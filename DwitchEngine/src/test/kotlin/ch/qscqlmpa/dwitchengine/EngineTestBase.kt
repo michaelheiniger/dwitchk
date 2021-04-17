@@ -5,16 +5,16 @@ import org.junit.jupiter.api.BeforeEach
 
 abstract class EngineTestBase {
 
-    protected val player1 = TestEntityFactory.createGuestPlayer1Info()
-    protected val player2 = TestEntityFactory.createGuestPlayer2Info()
-    protected val player3 = TestEntityFactory.createGuestPlayer3Info()
-    protected val player4 = TestEntityFactory.createGuestPlayer4Info()
-    protected val player5 = TestEntityFactory.createGuestPlayer5Info()
-    protected val player1Id = player1.id
-    protected val player2Id = player2.id
-    protected val player3Id = player3.id
-    protected val player4Id = player4.id
-    protected val player5Id = player5.id
+    protected val p1 = TestEntityFactory.createGuestPlayer1Info()
+    protected val p2 = TestEntityFactory.createGuestPlayer2Info()
+    protected val p3 = TestEntityFactory.createGuestPlayer3Info()
+    protected val p4 = TestEntityFactory.createGuestPlayer4Info()
+    protected val p5 = TestEntityFactory.createGuestPlayer5Info()
+    protected val p1Id = p1.id
+    protected val p2Id = p2.id
+    protected val p3Id = p3.id
+    protected val p4Id = p4.id
+    protected val p5Id = p5.id
 
     protected lateinit var gameStateBuilder: EngineTestGameStateBuilder
     protected lateinit var initialGameState: DwitchGameState

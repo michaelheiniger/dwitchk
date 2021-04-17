@@ -10,6 +10,10 @@ object CardUtil {
         return deck.filter { card -> !cardsToOmit.contains(card) }
     }
 
+    fun getAllCardsExcept(cardsToOmit: Set<Card>): Set<Card> {
+        return deck.filter { card -> !cardsToOmit.contains(card) }.toSet()
+    }
+
     val deck = listOf(
         Card.Clubs2,
         Card.Clubs3,

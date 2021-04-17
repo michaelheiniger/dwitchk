@@ -11,17 +11,22 @@ import org.junit.jupiter.api.Test
 
 internal class GameBootstrapTest {
 
-    @Test
-    fun `Game phase is RoundIsBeginning`() {
-        val initialGameSetup = RandomInitialGameSetup(5)
+    private val host = TestEntityFactory.createHostPlayerInfo()
+    private val guest1 = TestEntityFactory.createGuestPlayer1Info()
+    private val guest2 = TestEntityFactory.createGuestPlayer2Info()
+    private val guest3 = TestEntityFactory.createGuestPlayer3Info()
+    private val guest4 = TestEntityFactory.createGuestPlayer4Info()
 
-        val playersInfo = listOf(
-            TestEntityFactory.createHostPlayerInfo(),
-            TestEntityFactory.createGuestPlayer1Info(),
-            TestEntityFactory.createGuestPlayer2Info(),
-            TestEntityFactory.createGuestPlayer3Info(),
-            TestEntityFactory.createGuestPlayer4Info()
-        )
+    private val hostId = host.id
+    private val guest1Id = guest1.id
+    private val guest2Id = guest2.id
+    private val guest3Id = guest3.id
+    private val guest4Id = guest4.id
+
+    @Test
+    fun `The game starts with phase RoundIsBeginning`() {
+        val initialGameSetup = RandomInitialGameSetup(setOf(hostId, guest1Id, guest2Id, guest3Id, guest4Id))
+        val playersInfo = listOf(host, guest1, guest2, guest3, guest4)
 
         val gameState = GameBootstrap.createNewGame(playersInfo, initialGameSetup)
 
@@ -30,15 +35,8 @@ internal class GameBootstrapTest {
 
     @Test
     fun `Asshole is first to play followed by vice-asshole then neutrals then vice-president and finally president`() {
-        val initialGameSetup = RandomInitialGameSetup(5)
-
-        val playersInfo = listOf(
-            TestEntityFactory.createHostPlayerInfo(),
-            TestEntityFactory.createGuestPlayer1Info(),
-            TestEntityFactory.createGuestPlayer2Info(),
-            TestEntityFactory.createGuestPlayer3Info(),
-            TestEntityFactory.createGuestPlayer4Info()
-        )
+        val initialGameSetup = RandomInitialGameSetup(setOf(hostId, guest1Id, guest2Id, guest3Id, guest4Id))
+        val playersInfo = listOf(host, guest1, guest2, guest3, guest4)
 
         val gameState = GameBootstrap.createNewGame(playersInfo, initialGameSetup)
 
@@ -59,16 +57,9 @@ internal class GameBootstrapTest {
     }
 
     @Test
-    fun `Asshole is Playing while the others are Waiting`() {
-        val initialGameSetup = RandomInitialGameSetup(5)
-
-        val playersInfo = listOf(
-            TestEntityFactory.createHostPlayerInfo(),
-            TestEntityFactory.createGuestPlayer1Info(),
-            TestEntityFactory.createGuestPlayer2Info(),
-            TestEntityFactory.createGuestPlayer3Info(),
-            TestEntityFactory.createGuestPlayer4Info()
-        )
+    fun `Initially, the asshole is Playing while the others are Waiting`() {
+        val initialGameSetup = RandomInitialGameSetup(setOf(hostId, guest1Id, guest2Id, guest3Id, guest4Id))
+        val playersInfo = listOf(host, guest1, guest2, guest3, guest4)
 
         val gameState = GameBootstrap.createNewGame(playersInfo, initialGameSetup)
 
@@ -89,16 +80,9 @@ internal class GameBootstrapTest {
     }
 
     @Test
-    fun `Current player is Asshole`() {
-        val initialGameSetup = RandomInitialGameSetup(5)
-
-        val playersInfo = listOf(
-            TestEntityFactory.createHostPlayerInfo(),
-            TestEntityFactory.createGuestPlayer1Info(),
-            TestEntityFactory.createGuestPlayer2Info(),
-            TestEntityFactory.createGuestPlayer3Info(),
-            TestEntityFactory.createGuestPlayer4Info()
-        )
+    fun `The initial current player is the asshole`() {
+        val initialGameSetup = RandomInitialGameSetup(setOf(hostId, guest1Id, guest2Id, guest3Id, guest4Id))
+        val playersInfo = listOf(host, guest1, guest2, guest3, guest4)
 
         val gameState = GameBootstrap.createNewGame(playersInfo, initialGameSetup)
 
@@ -107,30 +91,17 @@ internal class GameBootstrapTest {
     }
 
     @Test
-    fun `Active players contain all players`() {
-        val initialGameSetup = RandomInitialGameSetup(5)
-
-        val host = TestEntityFactory.createHostPlayerInfo()
-        val guest1 = TestEntityFactory.createGuestPlayer1Info()
-        val guest2 = TestEntityFactory.createGuestPlayer2Info()
-        val guest3 = TestEntityFactory.createGuestPlayer3Info()
-        val guest4 = TestEntityFactory.createGuestPlayer4Info()
-
-        val playersInfo = listOf(
-            TestEntityFactory.createHostPlayerInfo(),
-            TestEntityFactory.createGuestPlayer1Info(),
-            TestEntityFactory.createGuestPlayer2Info(),
-            TestEntityFactory.createGuestPlayer3Info(),
-            TestEntityFactory.createGuestPlayer4Info()
-        )
+    fun `Initially, all players are in the active player list`() {
+        val initialGameSetup = RandomInitialGameSetup(setOf(hostId, guest1Id, guest2Id, guest3Id, guest4Id))
+        val playersInfo = listOf(host, guest1, guest2, guest3, guest4)
 
         val gameState = GameBootstrap.createNewGame(playersInfo, initialGameSetup)
 
-        assertThat(gameState.activePlayers).contains(host.id)
-        assertThat(gameState.activePlayers).contains(guest1.id)
-        assertThat(gameState.activePlayers).contains(guest2.id)
-        assertThat(gameState.activePlayers).contains(guest3.id)
-        assertThat(gameState.activePlayers).contains(guest4.id)
+        assertThat(gameState.activePlayers).contains(hostId)
+        assertThat(gameState.activePlayers).contains(guest1Id)
+        assertThat(gameState.activePlayers).contains(guest2Id)
+        assertThat(gameState.activePlayers).contains(guest3Id)
+        assertThat(gameState.activePlayers).contains(guest4Id)
         assertThat(gameState.activePlayers.size).isEqualTo(5)
     }
 }

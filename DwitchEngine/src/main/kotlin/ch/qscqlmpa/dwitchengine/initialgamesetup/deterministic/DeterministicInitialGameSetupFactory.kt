@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic
 
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetup
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetupFactory
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 
 class DeterministicInitialGameSetupFactory : InitialGameSetupFactory {
 
@@ -11,7 +12,7 @@ class DeterministicInitialGameSetupFactory : InitialGameSetupFactory {
         instance = initialGameSetup
     }
 
-    override fun getInitialGameSetup(numPlayers: Int): InitialGameSetup {
+    override fun getInitialGameSetup(playersId: Set<DwitchPlayerId>): InitialGameSetup {
         val instanceToReturn = instance
         instance = null
         return instanceToReturn

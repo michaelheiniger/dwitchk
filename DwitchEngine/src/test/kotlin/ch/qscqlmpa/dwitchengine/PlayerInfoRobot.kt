@@ -14,6 +14,11 @@ class PlayerInfoRobot(private val info: DwitchPlayerInfo) {
         return this
     }
 
+    fun assertHandIsEmpty(): PlayerInfoRobot {
+        assertThat(info.cardsInHand).isEmpty()
+        return this
+    }
+
     fun assertCanPlay(canPlay: Boolean): PlayerInfoRobot {
         assertThat(info.canPlay).isEqualTo(canPlay)
         return this
@@ -34,8 +39,13 @@ class PlayerInfoRobot(private val info: DwitchPlayerInfo) {
         return this
     }
 
-    fun assertDwitched(): PlayerInfoRobot {
+    fun assertIsDwitched(): PlayerInfoRobot {
         assertThat(info.dwitched).isTrue
+        return this
+    }
+
+    fun assertIsNotDwitched(): PlayerInfoRobot {
+        assertThat(info.dwitched).isFalse
         return this
     }
 }

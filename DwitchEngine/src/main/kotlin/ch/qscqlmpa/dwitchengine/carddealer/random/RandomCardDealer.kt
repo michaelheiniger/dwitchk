@@ -1,34 +1,40 @@
 package ch.qscqlmpa.dwitchengine.carddealer.random
 
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealer
-import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardUtil
-import kotlin.math.floor
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 
-class RandomCardDealer(private val numPlayers: Int) : CardDealer(numPlayers) {
+class RandomCardDealer(private val playersId: Set<DwitchPlayerId>) : CardDealer(playersId) {
 
-    private val cards: List<Card> = CardUtil.deck.shuffled()
-    private val numCardsPerPlayer: Int = computeNumCardsPerPlayer()
+    private val cardsToDeal = selectCardsToDeal()
+    private val cardsAssignment: Map<DwitchPlayerId, Set<Card>> = assignCardsRandomly()
+    private val _remainingCards: Set<Card> by lazy { CardUtil.getAllCardsExcept(cardsToDeal) }
 
-    override fun getCardsForPlayer(index: Int): List<Card> {
-        checkIndex(index)
-        val start = 0 + (index * numCardsPerPlayer)
-        val end = (index + 1) * numCardsPerPlayer
-        return cards.slice(start until end)
+    override fun getCardsForPlayer(id: DwitchPlayerId): Set<Card> {
+        checkId(id)
+        return cardsAssignment.getValue(id)
     }
 
-    override fun getRemainingCards(): List<Card> {
-        val start = numCardsPerPlayer * numPlayers
-        val end = cards.size
-        return cards.slice(start until end)
-    }
+    override fun getRemainingCards(): Set<Card> = _remainingCards
 
-    private fun computeNumCardsPerPlayer(): Int {
-        return if (cards.size / numPlayers >= InitialGameSetup.MAX_NUM_CARDS_PER_PLAYER) {
-            InitialGameSetup.MAX_NUM_CARDS_PER_PLAYER
-        } else {
-            floor(cards.size.toDouble() / numPlayers).toInt()
+    private fun selectCardsToDeal(): Set<Card> {
+        val cardsToDeal = CardUtil.deck.toMutableList()
+        cardsToDeal.shuffle()
+
+        when (numPlayers) {
+            3 -> cardsToDeal.remove(Card.Clubs3)
+            5 -> cardsToDeal.removeAll(listOf(Card.Clubs3, Card.Spades3))
+            6 -> cardsToDeal.removeAll(listOf(Card.Clubs3, Card.Spades3, Card.Hearts3, Card.Diamonds3))
+            7 -> cardsToDeal.removeAll(listOf(Card.Clubs3, Card.Spades3, Card.Hearts3))
+            8 -> cardsToDeal.removeAll(listOf(Card.Clubs3, Card.Spades3, Card.Hearts3, Card.Diamonds3))
         }
+        return cardsToDeal.toSet()
+    }
+
+    private fun assignCardsRandomly(): Map<DwitchPlayerId, Set<Card>> {
+        val numCardsPerPlayer = cardsToDeal.size / numPlayers
+        val cardsStacks = cardsToDeal.chunked(numCardsPerPlayer)
+        return playersId.mapIndexed { index, playerId -> playerId to cardsStacks[index].toSet() }.toMap()
     }
 }

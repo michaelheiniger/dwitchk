@@ -50,7 +50,7 @@ class EngineTestGameStateBuilder {
             joker,
             dwitchGameEvent,
             cardsOnTable,
-            CardUtil.getAllCardsExcept(cardsTakenFromDeck),
+            CardUtil.getAllCardsExcept(cardsTakenFromDeck).toSet(),
             cardsInGraveyard
         )
     }

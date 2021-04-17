@@ -130,6 +130,6 @@ internal object TestEntityFactory {
 
     fun createGameState(): DwitchGameState {
         val players = listOf(createHostPlayerInfo(), createGuestPlayer1Info(), createGuestPlayer2Info())
-        return GameBootstrap.createNewGame(players, RandomInitialGameSetup(players.size))
+        return GameBootstrap.createNewGame(players, RandomInitialGameSetup(players.map { p -> p.id }.toSet()))
     }
 }

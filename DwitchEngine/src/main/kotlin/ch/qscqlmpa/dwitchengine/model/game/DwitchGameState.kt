@@ -7,7 +7,7 @@ import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayer
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.SpecialRuleBreaker
-import ch.qscqlmpa.dwitchengine.utils.ListUtil.shiftRightByN
+import ch.qscqlmpa.dwitchengine.utils.CollectionUtil.shiftRightByN
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -22,7 +22,7 @@ data class DwitchGameState(
     val joker: CardName,
     val dwitchGameEvent: DwitchGameEvent?,
     val cardsOnTable: List<Card>,
-    val cardsInDeck: List<Card>,
+    val cardsInDeck: Set<Card>,
     val cardsInGraveyard: List<Card>
 ) {
 
@@ -51,16 +51,23 @@ data class DwitchGameState(
         return activePlayers.size
     }
 
-    fun waitingPlayerInOrderAfterLocalPlayer(): List<DwitchPlayer> {
-        return activePlayersInPlayingOrderAfterLocalPlayer()
+    /**
+     * Returns a list of all players 'Waiting' in playing order, starting with the player following the current player.
+     * Note: The current player is never returned since it cannot be 'Waiting' (it can only be 'Playing' when playing).
+     */
+    fun waitingPlayersInOrder(): List<DwitchPlayer> {
+        return activePlayersInPlayingOrderAfterCurrentPlayer()
             .filter { player -> player.status == DwitchPlayerStatus.Waiting }
     }
 
     fun nextWaitingPlayer(): DwitchPlayer? {
-        return waitingPlayerInOrderAfterLocalPlayer().firstOrNull()
+        return waitingPlayersInOrder().firstOrNull()
     }
 
-    fun activePlayersInPlayingOrderAfterLocalPlayer(): List<DwitchPlayer> {
+    /**
+     * Returns a list of all active players (i.e. 'Waiting', 'TurnPassed' or 'Playing'), starting with the current player.
+     */
+    fun activePlayersInPlayingOrderAfterCurrentPlayer(): List<DwitchPlayer> {
         val localPlayerIndex = playingOrder.indexOf(currentPlayerId)
         return playingOrder.shiftRightByN(-localPlayerIndex)
             .filter { id -> activePlayers.contains(id) }

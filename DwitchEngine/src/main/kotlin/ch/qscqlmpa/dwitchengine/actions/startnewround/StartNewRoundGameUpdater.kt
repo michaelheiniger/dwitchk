@@ -20,12 +20,12 @@ internal class StartNewRoundGameUpdater(currentGameState: DwitchGameState) : Gam
         gameStateMutable.joker = cardName
     }
 
-    fun cardsInDeck(cards: List<Card>) {
+    fun cardsInDeck(cards: Set<Card>) {
         gameStateMutable.cardsInDeck.clear()
         gameStateMutable.cardsInDeck.addAll(cards)
     }
 
-    fun cardsInHandOfPlayer(playerId: DwitchPlayerId, cards: List<Card>) {
+    fun cardsInHandOfPlayer(playerId: DwitchPlayerId, cards: Set<Card>) {
         gameStateMutable.players.getValue(playerId).cardsInHand(cards)
     }
 

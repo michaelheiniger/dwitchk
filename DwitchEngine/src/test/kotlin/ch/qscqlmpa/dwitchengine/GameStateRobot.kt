@@ -21,7 +21,7 @@ class GameStateRobot(private val gameState: DwitchGameState) {
         return this
     }
 
-    fun assertCardsOnTableContainsExactly(vararg expectedCards: Card): GameStateRobot {
+    fun assertCardsOnTable(vararg expectedCards: Card): GameStateRobot {
         assertThat(gameState.cardsOnTable).containsExactly(*expectedCards)
         return this
     }
@@ -76,8 +76,8 @@ class GameStateRobot(private val gameState: DwitchGameState) {
         return this
     }
 
-    fun assertTableIsCleared(): GameStateRobot {
-        assertThat(gameState.cardsOnTable).isEqualTo(emptyList<Card>())
+    fun assertTableIsEmpty(): GameStateRobot {
+        assertThat(gameState.cardsOnTable).isEmpty()
         return this
     }
 

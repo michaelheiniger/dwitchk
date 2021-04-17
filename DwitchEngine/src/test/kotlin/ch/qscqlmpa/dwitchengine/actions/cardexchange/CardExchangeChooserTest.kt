@@ -18,21 +18,21 @@ internal class CardExchangeChooserTest : EngineTestBase() {
         gameStateBuilder
             .setGamePhase(DwitchGamePhase.CardExchange)
             .setCardsdOnTable(Card.Clubs4)
-            .setLocalPlayer(player1Id)
-            .setCurrentPlayer(player1Id)
+            .setLocalPlayer(p1Id)
+            .setCurrentPlayer(p1Id)
     }
 
     @Test
     fun `Cards are taken from hands and put in cards for exchange`() {
         gameStateBuilder
             .addPlayerToGame(
-                player1,
+                p1,
                 DwitchPlayerStatus.Playing,
                 DwitchRank.Asshole,
                 listOf(Card.Clubs3, Card.Diamonds4, Card.HeartsAce)
             )
             .addPlayerToGame(
-                player2,
+                p2,
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.President,
                 listOf(Card.Clubs2, Card.Spades6, Card.Clubs10)
@@ -40,7 +40,7 @@ internal class CardExchangeChooserTest : EngineTestBase() {
 
         launchTestForPlayer1(Card.Diamonds4, Card.HeartsAce)
 
-        PlayerRobot(gameStateUpdated, player1Id)
+        PlayerRobot(gameStateUpdated, p1Id)
             .assertCardsInHandContainsExactly(Card.Clubs3)
             .assertCardsForExchangeContainsExactly(Card.Diamonds4, Card.HeartsAce)
     }
@@ -49,13 +49,13 @@ internal class CardExchangeChooserTest : EngineTestBase() {
     fun `Rule that President can choose any 2 cards`() {
         gameStateBuilder
             .addPlayerToGame(
-                player1,
+                p1,
                 DwitchPlayerStatus.Playing,
                 DwitchRank.President,
                 listOf(Card.Clubs3, Card.Diamonds4, Card.HeartsAce)
             )
             .addPlayerToGame(
-                player2,
+                p2,
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.Asshole,
                 listOf(Card.Clubs2, Card.Spades6, Card.Clubs10)
@@ -68,25 +68,25 @@ internal class CardExchangeChooserTest : EngineTestBase() {
     fun `Rule that Vice-President can choose any 1 card`() {
         gameStateBuilder
             .addPlayerToGame(
-                player1,
+                p1,
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.VicePresident,
                 listOf(Card.Clubs3, Card.Diamonds4, Card.HeartsAce)
             )
             .addPlayerToGame(
-                player2,
+                p2,
                 DwitchPlayerStatus.Playing,
                 DwitchRank.Asshole,
                 listOf(Card.Clubs4, Card.Diamonds5, Card.HeartsKing)
             )
             .addPlayerToGame(
-                player3,
+                p3,
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.ViceAsshole,
                 listOf(Card.Clubs5, Card.Diamonds6, Card.HeartsQueen)
             )
             .addPlayerToGame(
-                player4,
+                p4,
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.President,
                 listOf(Card.Clubs6, Card.Diamonds7, Card.HeartsJack)
@@ -99,13 +99,13 @@ internal class CardExchangeChooserTest : EngineTestBase() {
     fun `Rule that Asshole must choose its 2 cards with highest value is enforced - success`() {
         gameStateBuilder
             .addPlayerToGame(
-                player1,
+                p1,
                 DwitchPlayerStatus.Playing,
                 DwitchRank.Asshole,
                 listOf(Card.Clubs3, Card.Diamonds4, Card.HeartsAce)
             )
             .addPlayerToGame(
-                player2,
+                p2,
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.President,
                 listOf(Card.Clubs2, Card.Spades6, Card.Clubs10)
@@ -118,13 +118,13 @@ internal class CardExchangeChooserTest : EngineTestBase() {
     fun `Rule that Asshole must choose its 2 cards with highest value is enforced - failure`() {
         gameStateBuilder
             .addPlayerToGame(
-                player1,
+                p1,
                 DwitchPlayerStatus.Playing,
                 DwitchRank.Asshole,
                 listOf(Card.Clubs3, Card.Diamonds4, Card.HeartsAce)
             )
             .addPlayerToGame(
-                player2,
+                p2,
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.President,
                 listOf(Card.Clubs2, Card.Spades6, Card.Clubs10)
@@ -137,25 +137,25 @@ internal class CardExchangeChooserTest : EngineTestBase() {
     fun `Rule that Vice-Asshole must choose its 1 card with highest value is enforced - success`() {
         gameStateBuilder
             .addPlayerToGame(
-                player1,
+                p1,
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.ViceAsshole,
                 listOf(Card.Clubs3, Card.Diamonds4, Card.HeartsAce)
             )
             .addPlayerToGame(
-                player2,
+                p2,
                 DwitchPlayerStatus.Playing,
                 DwitchRank.Asshole,
                 listOf(Card.Clubs4, Card.Diamonds5, Card.HeartsKing)
             )
             .addPlayerToGame(
-                player3,
+                p3,
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.VicePresident,
                 listOf(Card.Clubs5, Card.Diamonds6, Card.HeartsQueen)
             )
             .addPlayerToGame(
-                player4,
+                p4,
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.President,
                 listOf(Card.Clubs6, Card.Diamonds7, Card.HeartsJack)
@@ -168,25 +168,25 @@ internal class CardExchangeChooserTest : EngineTestBase() {
     fun `Rule that Vice-Asshole must choose its 1 card with highest value is enforced - failure`() {
         gameStateBuilder
             .addPlayerToGame(
-                player1,
+                p1,
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.ViceAsshole,
                 listOf(Card.Clubs3, Card.Diamonds4, Card.HeartsAce)
             )
             .addPlayerToGame(
-                player2,
+                p2,
                 DwitchPlayerStatus.Playing,
                 DwitchRank.Asshole,
                 listOf(Card.Clubs4, Card.Diamonds5, Card.HeartsKing)
             )
             .addPlayerToGame(
-                player3,
+                p3,
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.VicePresident,
                 listOf(Card.Clubs5, Card.Diamonds6, Card.HeartsQueen)
             )
             .addPlayerToGame(
-                player4,
+                p4,
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.President,
                 listOf(Card.Clubs6, Card.Diamonds7, Card.HeartsJack)
@@ -199,31 +199,31 @@ internal class CardExchangeChooserTest : EngineTestBase() {
     fun `Rule that Neutral players are not supposed to exchange any cards`() {
         gameStateBuilder
             .addPlayerToGame(
-                player1,
+                p1,
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.Neutral,
                 listOf(Card.Clubs3, Card.Diamonds4, Card.HeartsAce)
             )
             .addPlayerToGame(
-                player2,
+                p2,
                 DwitchPlayerStatus.Playing,
                 DwitchRank.Asshole,
                 listOf(Card.Clubs4, Card.Diamonds5, Card.HeartsKing)
             )
             .addPlayerToGame(
-                player3,
+                p3,
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.VicePresident,
                 listOf(Card.Clubs5, Card.Diamonds6, Card.HeartsQueen)
             )
             .addPlayerToGame(
-                player4,
+                p4,
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.President,
                 listOf(Card.Clubs6, Card.Diamonds7, Card.HeartsJack)
             )
             .addPlayerToGame(
-                player5,
+                p5,
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.ViceAsshole,
                 listOf(Card.Clubs7, Card.Diamonds8, Card.Hearts10)
@@ -234,6 +234,6 @@ internal class CardExchangeChooserTest : EngineTestBase() {
 
     private fun launchTestForPlayer1(vararg cardsForExchange: Card) {
         initialGameState = gameStateBuilder.build()
-        gameStateUpdated = DwitchEngineImpl(initialGameState).chooseCardsForExchange(player1.id, setOf(*cardsForExchange))
+        gameStateUpdated = DwitchEngineImpl(initialGameState).chooseCardsForExchange(p1.id, setOf(*cardsForExchange))
     }
 }
