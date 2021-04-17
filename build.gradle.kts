@@ -7,6 +7,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath("com.android.tools.build:gradle:7.0.0-alpha14")
@@ -24,6 +25,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        jcenter()
     }
     apply(plugin = ("org.jlleitschuh.gradle.ktlint"))
 }
