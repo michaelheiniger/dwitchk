@@ -16,7 +16,7 @@ internal class GameOverMessageProcessor @Inject constructor(
 
     override fun process(message: Message, senderConnectionID: ConnectionId): Completable {
         return Completable.fromAction {
-            appEventRepository.notify(AppEvent.GameLeft)
+            appEventRepository.notify(AppEvent.GameOverGuest)
             gameEventRepository.notify(GuestGameEvent.GameOver)
         }
     }

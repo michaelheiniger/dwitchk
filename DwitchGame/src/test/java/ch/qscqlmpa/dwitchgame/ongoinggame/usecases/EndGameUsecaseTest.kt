@@ -40,7 +40,7 @@ internal class EndGameUsecaseTest : BaseUnitTest() {
     fun `Stop service`() {
         launchTest()
 
-        verify { mockAppEventRepository.notify(AppEvent.GameOver) }
+        verify { mockAppEventRepository.notify(AppEvent.GameOverHost) }
     }
 
     private fun launchTest() {

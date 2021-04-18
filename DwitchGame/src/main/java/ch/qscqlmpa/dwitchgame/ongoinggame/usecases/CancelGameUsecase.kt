@@ -23,7 +23,7 @@ internal class CancelGameUsecase @Inject constructor(
                 store.deleteGame()
             }
             sendCancelGameMessage()
-            appEventRepository.notify(AppEvent.GameOver)
+            appEventRepository.notify(AppEvent.GameOverHost)
             gameEventRepository.notify(GuestGameEvent.GameCanceled)
         }
     }
