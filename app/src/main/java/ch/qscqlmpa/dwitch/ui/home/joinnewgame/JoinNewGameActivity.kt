@@ -25,11 +25,12 @@ class JoinNewGameActivity : HomeBaseActivity() {
     private lateinit var game: AdvertisedGame
 
     private val initialPlayerName = if (BuildConfig.DEBUG) "Mébène" else ""
+    private val initialJoinGameControl = BuildConfig.DEBUG
 
     @Composable
     fun ActivityScreen(viewModel: JoinNewGameViewModel) {
         val playerName = viewModel.playerName.observeAsState(initialPlayerName).value
-        val joinGameControl = viewModel.joinGameControl.observeAsState(false).value
+        val joinGameControl = viewModel.joinGameControl.observeAsState(initialJoinGameControl).value
         MaterialTheme {
             Surface(color = Color.White) {
                 JoinNewGameScreen(

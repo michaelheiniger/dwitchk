@@ -22,12 +22,13 @@ class HostNewGameActivity : HomeBaseActivity() {
     private lateinit var wrViewModel: HostNewGameViewModel
     private val initialPlayerName = if (BuildConfig.DEBUG) "Mirlick" else ""
     private val initialGameName = if (BuildConfig.DEBUG) "Dwiiitch !" else ""
+    private val initialHostGameControl = BuildConfig.DEBUG
 
     @Composable
     fun ActivityScreen(viewModel: HostNewGameViewModel) {
         val playerName = viewModel.playerName.observeAsState(initialPlayerName).value
         val gameName = viewModel.gameName.observeAsState(initialGameName).value
-        val hostGameControl = viewModel.createGameControl.observeAsState(false).value
+        val hostGameControl = viewModel.createGameControl.observeAsState(initialHostGameControl).value
         MaterialTheme {
             Surface(color = Color.White) {
                 HostNewGameScreen(
