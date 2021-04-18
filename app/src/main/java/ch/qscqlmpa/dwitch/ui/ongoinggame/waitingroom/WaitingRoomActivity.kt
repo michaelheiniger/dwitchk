@@ -95,6 +95,13 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
         }
     }
 
+    override fun onBackPressed() { // TODO: Show confirmation dialog ?
+        when (playerRole) {
+            PlayerRole.GUEST -> wrGuestViewModel.leaveGame()
+            PlayerRole.HOST -> wrHostViewModel.cancelGame()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as App).getGameUiComponent()!!.inject(this)
         super.onCreate(savedInstanceState)
