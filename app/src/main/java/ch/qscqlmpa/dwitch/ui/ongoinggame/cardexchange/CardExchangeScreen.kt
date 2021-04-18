@@ -76,12 +76,6 @@ fun CardExchangeScreen(
             onCardClick = onCardToExchangeClick
         )
         Spacer(Modifier.height(16.dp))
-
-        CardsInHand(
-            cards = cardsInHand,
-            onCardClick = onCardInHandClick
-        )
-        Spacer(Modifier.height(16.dp))
         Button(
             enabled = exchangeControlEnabled,
             onClick = onConfirmExchangeClick,
@@ -89,6 +83,11 @@ fun CardExchangeScreen(
         ) {
             Text(text = stringResource(R.string.confirm_cards_to_exchange))
         }
+        Spacer(Modifier.height(16.dp))
+        CardsInHand(
+            cards = cardsInHand,
+            onCardClick = onCardInHandClick
+        )
     }
 }
 
