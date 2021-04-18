@@ -6,5 +6,7 @@ sealed class AppEvent {
     object GameRoomJoinedByHost : AppEvent()
     object GameRoomJoinedByGuest : AppEvent()
     object GameLeft : AppEvent()
-    object GameOver : AppEvent()
+    object GameOverGuest : AppEvent()
+    object GameOverHost : AppEvent()
+    object GameCanceled : AppEvent()
 }

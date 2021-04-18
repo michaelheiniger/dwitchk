@@ -87,7 +87,8 @@ open class App : DaggerApplication() {
                     hostPort,
                     hostIpAddress,
                     inGameStoreComponent!!.inGameStore,
-                    communicationComponent!!
+                    communicationComponent!!,
+                    appComponent.idlingResource
                 ),
             )
             ongoingGameUiComponent = appComponent.addOngoingGameUiComponent(
@@ -140,8 +141,8 @@ open class App : DaggerApplication() {
                 is AppEvent.GameJoined -> serviceManager.startGuestService(event.gameInfo)
                 AppEvent.GameRoomJoinedByHost -> serviceManager.goToHostGameRoom()
                 AppEvent.GameRoomJoinedByGuest -> serviceManager.goToGuestGameRoom()
-                AppEvent.GameOver -> serviceManager.stopHostService()
-                AppEvent.GameLeft -> serviceManager.stopGuestService()
+                AppEvent.GameOverHost -> serviceManager.stopHostService()
+                AppEvent.GameLeft, AppEvent.GameCanceled, AppEvent.GameOverGuest -> serviceManager.stopGuestService()
             }
         }
     }

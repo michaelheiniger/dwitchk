@@ -5,6 +5,7 @@ import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import org.tinylog.kotlin.Logger
 
 internal class WebsocketClientTestStub(
     private val client: TestWebsocketClient,
@@ -18,6 +19,7 @@ internal class WebsocketClientTestStub(
     }
 
     override fun serverSendsMessageToClient(message: Message, enableThreadBreak: Boolean) {
+        Logger.debug("Server sends message to client: $message")
         val messageSerialized = serializerFactory.serialize(message)
         Completable.fromAction { client.onMessage(messageSerialized, enableThreadBreak) }
             .subscribeOn(Schedulers.io())

@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitch.e2e.base
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performTextReplacement
 import ch.qscqlmpa.dwitch.PlayerGuestTest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
@@ -25,12 +25,15 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
         advertiseGame()
 
         testRule.onNodeWithText(gameName, substring = true).performClick()
-        testRule.onNodeWithTag("playerName").performTextInput(PlayerGuestTest.LocalGuest.name)
+        testRule.onNodeWithTag(UiTags.playerName).performTextReplacement(PlayerGuestTest.LocalGuest.name)
         testRule.onNodeWithText(getString(R.string.join_game)).performClick()
 
         dudeWaitASec() // Wait for Game to be created
 
         hookOngoingGameDependenciesForGuest()
+
+        idlingResourceIncrement() // JoinGameAckMessage
+        idlingResourceIncrement() // WaitingRoomStateUpdateMessage
 
         connectGuestToHost()
         hostSendsJoinGameAck()

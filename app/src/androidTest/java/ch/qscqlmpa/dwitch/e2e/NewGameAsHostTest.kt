@@ -14,8 +14,8 @@ class NewGameAsHostTest : BaseUiTest() {
         testRule.onNodeWithText(getString(R.string.create_game)).performClick()
         testRule.assertTextIsDisplayedOnce(getString(R.string.host_game))
 
-        testRule.onNodeWithTag(UiTags.playerName).performTextInput("")
-        testRule.onNodeWithTag(UiTags.gameName).performTextInput("")
+        testRule.onNodeWithTag(UiTags.playerName).performTextClearance()
+        testRule.onNodeWithTag(UiTags.gameName).performTextClearance()
         testRule.onNodeWithTag(UiTags.playerName).assertTextEquals("")
         testRule.onNodeWithTag(UiTags.gameName).assertTextEquals("")
         testRule.onNodeWithText(getString(R.string.host_game)).assertIsNotEnabled()

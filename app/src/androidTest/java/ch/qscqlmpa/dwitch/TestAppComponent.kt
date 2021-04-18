@@ -24,6 +24,7 @@ import dagger.android.AndroidInjectionModule
         HomeViewModelBindingModule::class,
         ServiceManagerModule::class,
         SchedulersModule::class,
+        TestIdlingResourceModule::class
     ]
 )
 interface TestAppComponent : AppComponent {

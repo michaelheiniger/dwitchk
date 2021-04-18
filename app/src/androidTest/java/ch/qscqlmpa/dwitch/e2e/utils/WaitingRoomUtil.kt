@@ -16,14 +16,15 @@ object WaitingRoomUtil {
 
     fun ComposeContentTestRule.assertPlayerInWr(name: String, ready: Boolean): SemanticsNodeInteraction {
         val sni = assertPlayerInWr(name)
-        val checkboxSni = sni.onChildren().filterToOne(hasTestTag("readyCheckbox"))
-        if (ready) checkboxSni.assertIsOn() else checkboxSni.assertIsOff()
+        if (ready) sni.onChildren().filterToOne(hasText("Ready")) else sni.onChildren()
+            .filterToOne(hasText("Not ready")) //TODO: i18n proof
         return sni
     }
 
-    fun ComposeContentTestRule.assertPlayerInWr(name: String, connectionState: String) {
+    fun ComposeContentTestRule.assertPlayerInWr(name: String, connectionState: String): SemanticsNodeInteraction {
         val sni = assertPlayerInWr(name)
         sni.onChildren().filterToOne(hasText(connectionState)).assertIsDisplayed()
+        return sni
     }
 
 //

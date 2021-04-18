@@ -23,7 +23,7 @@ class NewGameAsGuestTest : BaseUiTest() {
 
         testRule.onNodeWithText("Les Bronzés", substring = true).performClick()
 
-        testRule.onNodeWithTag(UiTags.playerName).performTextInput("")
+        testRule.onNodeWithTag(UiTags.playerName).performTextClearance()
         testRule.onNodeWithTag(UiTags.playerName).assertTextEquals("")
         testRule.onNodeWithText(getString(R.string.join_game)).assertIsNotEnabled()
 

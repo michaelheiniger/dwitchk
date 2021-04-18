@@ -67,7 +67,8 @@ class TestApp : App() {
                     hostPort,
                     hostIpAddress,
                     inGameStoreComponent!!.inGameStore,
-                    communicationComponent!!
+                    communicationComponent!!,
+                    testAppComponent.idlingResource
                 ),
             )
             ongoingGameUiComponent = testAppComponent.addOngoingGameUiComponent(

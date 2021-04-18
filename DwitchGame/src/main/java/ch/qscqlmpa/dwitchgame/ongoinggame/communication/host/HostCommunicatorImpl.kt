@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.host
 
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
+import ch.qscqlmpa.dwitchcommonutil.MyIdlingResource
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchcommunication.CommServer
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
@@ -25,7 +26,8 @@ internal class HostCommunicatorImpl constructor(
     private val communicationEventDispatcher: HostCommunicationEventDispatcher,
     private val communicationStateRepository: HostCommunicationStateRepository,
     private val connectionStore: ConnectionStore,
-    private val schedulerFactory: SchedulerFactory
+    private val schedulerFactory: SchedulerFactory,
+    private val idlingResource: MyIdlingResource
 ) : HostCommunicator {
 
     private val disposableManager = DisposableManager()
@@ -98,7 +100,11 @@ internal class HostCommunicatorImpl constructor(
                 Completable.merge(
                     listOf(
                         messageDispatcher.dispatch(envelopeReceived)
-                            .subscribeOn(schedulerFactory.single()),
+                            .subscribeOn(schedulerFactory.single())
+                            .doOnComplete {
+                                Logger.debug("Decrement idling resource counter")
+                                idlingResource.decrement()
+                            },
                         forwardMessageToGuestsIfNeeded(envelopeReceived)
                     )
                 )

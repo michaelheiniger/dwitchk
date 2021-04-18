@@ -57,7 +57,7 @@ abstract class MessageProcessorModule {
     @Binds
     @IntoMap
     @MessageProcessorKey(Message.CancelGameMessage::class)
-    internal abstract fun bindCancelGameMessageProcessor(messageProcessor: CancelGameMessageProcessor): MessageProcessor
+    internal abstract fun bindCancelGameMessageProcessor(messageProcessor: GameCanceledMessageProcessor): MessageProcessor
 
     @OngoingGameScope
     @Binds

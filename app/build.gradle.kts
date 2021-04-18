@@ -136,7 +136,7 @@ dependencies {
     androidTestImplementation("org.assertj:assertj-core:3.18.1")
 
     // ####### Jetpack Compose #######
-    val composeVersion = "1.0.0-beta03"
+    val composeVersion = "1.0.0-beta04"
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
     implementation("androidx.compose.foundation:foundation:$composeVersion")

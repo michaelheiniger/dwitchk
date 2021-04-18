@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitch.e2e.base
 
 import android.content.res.Resources
+import androidx.compose.ui.test.IdlingResource
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.core.app.ApplicationProvider
@@ -9,6 +10,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.TestApp
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
+import ch.qscqlmpa.dwitchcommonutil.MyIdlingResource
 import ch.qscqlmpa.dwitchcommunication.di.TestCommunicationComponent
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.client.test.ClientTestStub
@@ -64,14 +66,18 @@ abstract class BaseUiTest {
 
     lateinit var app: TestApp
 
+    private lateinit var idlingResource: MyIdlingResource
+
     @Before
     fun setup() {
         app = ApplicationProvider.getApplicationContext()
         res = InstrumentationRegistry.getInstrumentation().targetContext.resources
+        testRule.registerIdlingResource(IdlingResourceAdapter(app.testAppComponent.idlingResource))
         launch()
     }
 
     protected fun launch() { // TODO: Rename when all tests have been adapted and set to private
+        idlingResource = app.testAppComponent.idlingResource
         gameComponent = app.testGameComponent
         storeComponent = app.testStoreComponent
 
@@ -140,4 +146,14 @@ abstract class BaseUiTest {
     protected fun getString(resource: Int): String {
         return res.getString(resource)
     }
+
+    protected fun idlingResourceIncrement() {
+        idlingResource.increment()
+    }
+}
+
+class IdlingResourceAdapter(private val myIdlingResource: MyIdlingResource) : IdlingResource {
+    override val isIdleNow: Boolean
+        get() = myIdlingResource.isIdleNow()
+
 }

@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest
 
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
+import ch.qscqlmpa.dwitchcommonutil.MyIdlingResource
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchcommunication.CommClient
 import ch.qscqlmpa.dwitchcommunication.model.Message
@@ -15,7 +16,8 @@ internal class GuestCommunicatorImpl constructor(
     private val messageDispatcher: MessageDispatcher,
     private val communicationEventDispatcher: GuestCommunicationEventDispatcher,
     private val communicationStateRepository: GuestCommunicationStateRepository,
-    private val schedulerFactory: SchedulerFactory
+    private val schedulerFactory: SchedulerFactory,
+    private val idlingResource: MyIdlingResource
 ) : GuestCommunicator {
 
     private val disposableManager = DisposableManager()
@@ -69,7 +71,14 @@ internal class GuestCommunicatorImpl constructor(
     private fun observeReceivedMessages() {
         disposableManager.add(
             commClient.observeReceivedMessages()
-                .flatMapCompletable { msg -> messageDispatcher.dispatch(msg).subscribeOn(schedulerFactory.single()) }
+                .flatMapCompletable { msg ->
+                    messageDispatcher.dispatch(msg)
+                        .subscribeOn(schedulerFactory.single())
+                        .doOnComplete {
+                            Logger.debug("Decrement idling resource counter")
+                            idlingResource.decrement()
+                        }
+                }
                 .subscribe(
                     { Logger.debug { "Received messages stream completed !" } },
                     { error -> Logger.error(error) { "Error while observing received messages" } }

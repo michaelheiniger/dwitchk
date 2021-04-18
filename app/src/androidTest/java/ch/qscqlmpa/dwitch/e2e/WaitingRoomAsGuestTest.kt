@@ -61,12 +61,10 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
     fun gameCanceled() {
         goToWaitingRoom()
 
-//        dudeWaitAMillisSec(5000)
+        idlingResourceIncrement()
         clientTestStub.serverSendsMessageToClient(Message.CancelGameMessage)
-        dudeWaitAMillisSec()
 
         testRule.onNodeWithText(getString(R.string.ok)).performClick()
-        dudeWaitAMillisSec()
 
         assertCurrentScreenIsHomeSreen()
     }
