@@ -8,13 +8,13 @@ plugins {
 
 android {
     compileSdkVersion(Versions.compileSdkVersion)
-    buildToolsVersion("30.0.2")
+    buildToolsVersion(Versions.buildToolsVersion)
     defaultConfig {
         applicationId = "ch.qscqlmpa.dwitch"
         minSdkVersion(Versions.minSdkVersion)
         targetSdkVersion(Versions.targetSdkVersion)
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.0.0-beta"
 
         testInstrumentationRunner = "ch.qscqlmpa.dwitch.app.CustomTestRunner"
 
