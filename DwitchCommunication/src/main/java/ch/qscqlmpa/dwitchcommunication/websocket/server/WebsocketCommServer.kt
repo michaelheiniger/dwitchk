@@ -34,13 +34,13 @@ internal class WebsocketCommServer @Inject constructor(
 
         disposableManager.add(
             websocketServer.observeEvents()
-                .flatMap(::processServerCommEvent)
+                .concatMap(::processServerCommEvent)
                 .subscribe(communicationEventRelay)
         )
 
         disposableManager.add(
             websocketServer.observeMessages()
-                .flatMap(::processMessageEvents)
+                .concatMap(::processMessageEvents)
                 .subscribe(messageRelay)
         )
 
