@@ -31,9 +31,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
     private lateinit var gameEventSubject: PublishSubject<GuestGameEvent>
 
     @Before
-    override fun setup() {
-        super.setup()
-
+    fun setup() {
         viewModel = WaitingRoomGuestViewModel(mockFacade, Schedulers.trampoline())
 
         communicationStateSubject = PublishSubject.create()

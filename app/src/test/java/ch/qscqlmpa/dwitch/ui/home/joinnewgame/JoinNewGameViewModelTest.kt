@@ -25,8 +25,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
     private val advertisedGame = AdvertisedGame(true, "Table Ronde", GameCommonId(1), "192.168.1.1", 8889)
 
     @Before
-    override fun setup() {
-        super.setup()
+    fun setup() {
         viewModel = JoinNewGameViewModel(mockGuestFacade, Schedulers.trampoline())
         every { mockGuestFacade.joinGame(any(), any()) } returns Completable.complete()
     }

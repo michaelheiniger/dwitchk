@@ -25,34 +25,33 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
     private val gamePort = 8889
 
     @Before
-    override fun setup() {
-        super.setup()
+    fun setup() {
         viewModel = HostNewGameViewModel(mockHostFacade, Schedulers.trampoline())
         every { mockHostFacade.hostGame(any(), any(), any()) } returns Completable.complete()
     }
 
     @Test
     fun `Create game control is initially disabled`() {
-        assertThat(viewModel.createGameControl.value).isEqualTo(false)
+        assertThat(viewModel.createGameControl.value).isFalse
     }
 
     @Test
     fun `Create game control is enabled when player name and game name are not blank`() {
         viewModel.onPlayerNameChange("Arthur")
         viewModel.onGameNameChange("Table Ronde")
-        assertThat(viewModel.createGameControl.value).isEqualTo(true)
+        assertThat(viewModel.createGameControl.value).isTrue
 
         viewModel.onPlayerNameChange("Arthur")
         viewModel.onGameNameChange("")
-        assertThat(viewModel.createGameControl.value).isEqualTo(false)
+        assertThat(viewModel.createGameControl.value).isFalse
 
         viewModel.onPlayerNameChange("Arthur")
         viewModel.onGameNameChange("Table Ronde")
-        assertThat(viewModel.createGameControl.value).isEqualTo(true)
+        assertThat(viewModel.createGameControl.value).isTrue
 
         viewModel.onPlayerNameChange("")
         viewModel.onGameNameChange("Table Ronde")
-        assertThat(viewModel.createGameControl.value).isEqualTo(false)
+        assertThat(viewModel.createGameControl.value).isFalse
     }
 
     @Test

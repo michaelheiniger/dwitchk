@@ -31,9 +31,7 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
     private lateinit var canGameBeLaunchedSubject: PublishSubject<GameLaunchableEvent>
 
     @Before
-    override fun setup() {
-        super.setup()
-
+    fun setup() {
         val schedulerFactory = TestSchedulerFactory()
         schedulerFactory.setTimeScheduler(TestScheduler())
 

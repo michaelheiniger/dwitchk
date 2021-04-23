@@ -13,6 +13,7 @@ import io.mockk.mockk
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -24,9 +25,8 @@ class PlayerDashboardViewModelTest : BaseViewModelUnitTest() {
 
     private lateinit var viewModel: PlayerDashboardViewModel
 
-    override fun setup() {
-        super.setup()
-
+    @Before
+    fun setup() {
         viewModel = PlayerDashboardViewModel(mockGameFacade, Schedulers.trampoline())
     }
 
@@ -53,6 +53,8 @@ class PlayerDashboardViewModelTest : BaseViewModelUnitTest() {
         )
 
         every { mockGameFacade.observeGameData() } returns Observable.just(dwitchState)
+
+        viewModel.onStart()
 
         val cardsInHand = (viewModel.screen.value as GameRoomScreen.Dashboard).dashboardInfo.localPlayerDashboard.cardsInHand
         assertThat(cardsInHand.size).isEqualTo(6)

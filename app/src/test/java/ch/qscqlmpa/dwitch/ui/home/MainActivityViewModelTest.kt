@@ -35,9 +35,7 @@ class MainActivityViewModelTest : BaseViewModelUnitTest() {
     private lateinit var resumableGamesSubject: PublishSubject<List<ResumableGameInfo>>
 
     @Before
-    override fun setup() {
-        super.setup()
-
+    fun setup() {
         viewModel = MainActivityViewModel(
             mockHomeGuestFacade,
             mockHomeHostFacade,
