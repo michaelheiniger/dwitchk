@@ -61,6 +61,10 @@ android {
         kotlinCompilerExtensionVersion = "1.0.0-beta01"
     }
 
+    lint {
+        isAbortOnError = false
+    }
+
     // To prevent the error message (AndroidTest): " 2 files found with path 'META-INF/AL2.0' from inputs: ..."
     packagingOptions {
         resources.excludes.add("META-INF/AL2.0")
