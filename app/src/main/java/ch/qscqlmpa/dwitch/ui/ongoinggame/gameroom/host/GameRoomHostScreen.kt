@@ -76,7 +76,6 @@ fun GameRoomHostScreen(
             }
             is GameRoomScreen.CardExchangeOnGoing -> CardExchangeOnGoing()
             null -> LoadingSpinner()
-
         }
         Spacer(Modifier.height(8.dp))
         OutlinedButton(
