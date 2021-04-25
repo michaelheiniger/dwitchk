@@ -83,7 +83,6 @@ dependencies {
     // Android / UI
     implementation("androidx.appcompat:appcompat:1.2.0")
     implementation("androidx.core:core-ktx:1.3.2")
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
     implementation("com.google.android.material:material:1.3.0")
@@ -124,11 +123,9 @@ dependencies {
 
     // To use androidx.arch.core.executor.testing.InstantTaskExecutorRule in ViewModel unit tests
     testImplementation("android.arch.core:core-testing:1.1.1")
-    testImplementation("androidx.room:room-testing:2.3.0-rc01")
 
     // MockK
     testImplementation("io.mockk:mockk:1.9.3")
-    androidTestImplementation("io.mockk:mockk-android:1.9.3")
 
     // AssertJ
     testImplementation("org.assertj:assertj-core:3.18.1")
