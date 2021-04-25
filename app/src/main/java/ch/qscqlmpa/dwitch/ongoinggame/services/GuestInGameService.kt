@@ -2,7 +2,6 @@ package ch.qscqlmpa.dwitch.ongoinggame.services
 
 import android.content.Context
 import android.content.Intent
-import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitchgame.appevent.GameJoinedInfo
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
@@ -17,7 +16,7 @@ class GuestInGameService : BaseInGameService() {
 
         Logger.info { "Start service" }
         showNotification(RoomType.WAITING_ROOM)
-        (application as App).startOngoingGame(
+        app.startOngoingGame(
             playerRole,
             RoomType.WAITING_ROOM,
             gameJoinedInfo.gameLocalId,
@@ -25,7 +24,9 @@ class GuestInGameService : BaseInGameService() {
             gameJoinedInfo.gamePort,
             gameJoinedInfo.gameIpAddress
         )
-        getOngoingGameComponent().guestFacade.connect()
+        app.guestFacade().connect()
+        Logger.info { "Service started" }
+        notifyServiceStarted()
     }
 
     override fun actionChangeRoomToGameRoom() {
@@ -34,8 +35,8 @@ class GuestInGameService : BaseInGameService() {
     }
 
     override fun cleanUp() {
-        getOngoingGameComponent().guestFacade.disconnect()
-        (application as App).stopOngoingGame()
+        app.guestFacade().disconnect()
+        app.stopOngoingGame()
     }
 
     companion object {

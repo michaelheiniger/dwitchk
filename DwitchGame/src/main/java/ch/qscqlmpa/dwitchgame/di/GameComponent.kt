@@ -11,6 +11,7 @@ import dagger.Component
 @GameScope
 @Component(
     modules = [
+        DwitchGameModule::class,
         StoreModule::class,
         HomeModule::class,
         GameDiscoveryModule::class,
@@ -27,6 +28,6 @@ interface GameComponent {
 
     @Component.Factory
     interface Factory {
-        fun create(module: StoreModule): GameComponent
+        fun create(dwitchGameModule: DwitchGameModule, storeModule: StoreModule): GameComponent
     }
 }

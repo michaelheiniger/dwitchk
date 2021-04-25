@@ -2,6 +2,8 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchgame.appevent.AppEvent
+import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.GameCanceledMessageProcessor
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEventRepository
@@ -13,6 +15,8 @@ import org.junit.jupiter.api.Test
 
 internal class CancelGameMessageProcessorTest : BaseMessageProcessorTest() {
 
+    private val mockAppEventRepository = mockk<AppEventRepository>(relaxed = true)
+
     private val mockGameEventRepository = mockk<GuestGameEventRepository>(relaxed = true)
 
     private lateinit var processor: GameCanceledMessageProcessor
@@ -20,7 +24,7 @@ internal class CancelGameMessageProcessorTest : BaseMessageProcessorTest() {
     @BeforeEach
     override fun setup() {
         super.setup()
-        processor = GameCanceledMessageProcessor(mockInGameStore, mockGameEventRepository)
+        processor = GameCanceledMessageProcessor(mockInGameStore, mockAppEventRepository, mockGameEventRepository)
     }
 
     @Test
@@ -30,6 +34,7 @@ internal class CancelGameMessageProcessorTest : BaseMessageProcessorTest() {
 
         verify { mockInGameStore.deleteGame() }
         verify { mockGameEventRepository.notify(GuestGameEvent.GameCanceled) }
+        verify { mockAppEventRepository.notify(AppEvent.GameLeft) }
     }
 
     @Test
@@ -38,5 +43,6 @@ internal class CancelGameMessageProcessorTest : BaseMessageProcessorTest() {
         processor.process(Message.CancelGameMessage, ConnectionId(0)).test().assertComplete()
 
         verify { mockGameEventRepository.notify(GuestGameEvent.GameCanceled) }
+        verify { mockAppEventRepository.notify(AppEvent.GameLeft) }
     }
 }

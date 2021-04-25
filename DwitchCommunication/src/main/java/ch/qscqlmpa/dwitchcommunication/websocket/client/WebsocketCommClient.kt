@@ -43,11 +43,11 @@ internal class WebsocketCommClient @Inject constructor(
 
     override fun stop() {
         if (websocketClient.isClosed()) {
-            Logger.error { "Cannot stop because the connection is already closed." }
+            Logger.warn { "Cannot stop because the connection is already closed." }
         } else {
             websocketClient.stop()
-            disposableManager.disposeAndReset()
         }
+        disposableManager.disposeAndReset()
     }
 
     override fun observeCommunicationEvents(): Observable<ClientCommunicationEvent> {

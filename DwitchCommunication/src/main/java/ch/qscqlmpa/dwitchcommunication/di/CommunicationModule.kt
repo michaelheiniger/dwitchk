@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitchcommunication.di
 
+import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommunication.CommClient
 import ch.qscqlmpa.dwitchcommunication.CommServer
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
@@ -20,7 +21,8 @@ import javax.inject.Named
 @Module
 class CommunicationModule(
     private val hostIpAddress: String,
-    private val hostPort: Int
+    private val hostPort: Int,
+    private val idlingResource: DwitchIdlingResource
 ) {
 
     @Named(HOST_IP_ADDRESS)
@@ -76,5 +78,11 @@ class CommunicationModule(
     @Provides
     internal fun provideConnectionStore(connectionStore: ConnectionStoreImpl): ConnectionStore {
         return connectionStore
+    }
+
+    @CommunicationScope
+    @Provides
+    fun providesIdlingResource(): DwitchIdlingResource {
+        return idlingResource
     }
 }

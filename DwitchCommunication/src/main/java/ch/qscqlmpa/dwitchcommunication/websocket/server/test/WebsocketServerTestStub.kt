@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitchcommunication.websocket.server.test
 
+import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
 import io.reactivex.rxjava3.core.Completable
@@ -9,7 +10,8 @@ import org.java_websocket.WebSocket
 
 internal class WebsocketServerTestStub(
     private val server: TestWebsocketServer,
-    private val serializerFactory: SerializerFactory
+    private val serializerFactory: SerializerFactory,
+    private val idlingResource: DwitchIdlingResource
 ) : ServerTestStub {
 
     private val guest1Socket = TestWebSocket("192.168.1.1", 1025)
@@ -17,14 +19,16 @@ internal class WebsocketServerTestStub(
     private val guest3Socket = TestWebSocket("192.168.1.3", 1027)
 
     override fun connectClientToServer(connectionInitiator: PlayerHostTest) {
-        Completable.fromAction { server.onOpen(getSocketForGuest(connectionInitiator), null) }
+        idlingResource.increment()
+        Completable.fromAction { server.onOpen(getSocketForGuest(connectionInitiator), handshake = null) }
             .subscribeOn(Schedulers.io())
             .subscribe()
     }
 
-    override fun guestSendsMessageToServer(sender: PlayerHostTest, message: Message, enableThreadBreak: Boolean) {
+    override fun guestSendsMessageToServer(sender: PlayerHostTest, message: Message) {
+        idlingResource.increment()
         val messageSerialized = serializerFactory.serialize(message)
-        Completable.fromAction { server.onMessage(getSocketForGuest(sender), messageSerialized, enableThreadBreak) }
+        Completable.fromAction { server.onMessage(getSocketForGuest(sender), messageSerialized) }
             .subscribeOn(Schedulers.io())
             .subscribe()
     }
@@ -37,10 +41,9 @@ internal class WebsocketServerTestStub(
         return server.observeMessagesBroadcasted()
     }
 
-    override fun disconnectFromServer(guestIdentifier: PlayerHostTest, enableThreadBreak: Boolean) {
-        Completable.fromAction {
-            server.onClose(getSocketForGuest(guestIdentifier), 1, "reason", true, enableThreadBreak)
-        }
+    override fun disconnectFromServer(guestIdentifier: PlayerHostTest) {
+        idlingResource.increment()
+        Completable.fromAction { server.onClose(getSocketForGuest(guestIdentifier), 1, "reason", remote = true) }
             .subscribeOn(Schedulers.io())
             .subscribe()
     }

@@ -119,8 +119,7 @@ dependencies {
     androidTestImplementation("androidx.test:runner:1.3.0")
     androidTestUtil("androidx.test:orchestrator:1.4.0-alpha05")
 
-    // Espresso
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
+    // Espresso (needed for CounterIdlingResource)
     androidTestImplementation("androidx.test.espresso:espresso-contrib:3.3.0")
 
     // To use androidx.arch.core.executor.testing.InstantTaskExecutorRule in ViewModel unit tests

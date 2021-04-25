@@ -9,4 +9,5 @@ sealed class AppEvent {
     object GameOverGuest : AppEvent()
     object GameOverHost : AppEvent()
     object GameCanceled : AppEvent()
+    object GameSetupDone : AppEvent()
 }

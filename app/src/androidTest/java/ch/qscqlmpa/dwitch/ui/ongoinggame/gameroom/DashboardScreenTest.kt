@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom
 
-import DashboardScreen
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
@@ -92,7 +91,7 @@ class DashboardScreenTest : BaseUiUnitTest() {
     fun lastCardPlayedIsDisplayed() {
         launchTest()
 
-        composeTestRule.onNodeWithTag(UiTags.lastCardPlayer).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(UiTags.lastCardPlayed).assertIsDisplayed()
     }
 
     @Test
@@ -157,7 +156,7 @@ class DashboardScreenTest : BaseUiUnitTest() {
 
         launchTest()
 
-        composeTestRule.onNodeWithTag(UiTags.passControl).assertIsDisplayed().performClick()
+        composeTestRule.onNodeWithTag(UiTags.passTurnControl).assertIsDisplayed().performClick()
 
         assertThat(passClicked).isFalse
     }

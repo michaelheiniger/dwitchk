@@ -48,19 +48,8 @@ internal class PlayCardState(
         }
     }
 
-    fun noOtherPlayerCanPlay(): Boolean {
-        return nextNonDwitchedWaitingPlayer() == null
-    }
-
     fun activePlayersInPlayingOrderAfterLocalPlayer(): List<DwitchPlayer> {
         return currentGameState.activePlayersInPlayingOrderAfterCurrentPlayer()
-    }
-
-    fun atMostOneOtherPlayerCanPlay(): Boolean {
-        if (noOtherPlayerCanPlay()) {
-            return false
-        }
-        return currentGameState.waitingPlayersInOrder().size <= 1
     }
 
     fun nextWaitingPlayerIsDwitched(): Boolean {
@@ -82,21 +71,33 @@ internal class PlayCardState(
     fun computeRanks(penultimatePlayerId: DwitchPlayerId, lastPlayerId: DwitchPlayerId): Map<DwitchPlayerId, DwitchRank> {
         val donePlayersInFinishingOrder = currentGameState.playersDoneForRound.toMutableList()
         donePlayersInFinishingOrder.add(penultimatePlayerId)
-        val playerWhoBrokeASpecialRule = if (cardPlayedIsJoker()) {
-            val tmp = currentGameState.playersWhoBrokeASpecialRule.toMutableList()
-            tmp.add(SpecialRuleBreaker.FinishWithJoker(penultimatePlayerId))
-            tmp
-        } else {
-            currentGameState.playersWhoBrokeASpecialRule
-        }
+        val playersWhoBrokeASpecialRule = playersWhoBrokeASpecialRule(penultimatePlayerId)
         donePlayersInFinishingOrder.add(lastPlayerId)
-        return RankComputer.computePlayersRank(donePlayersInFinishingOrder.toList(), playerWhoBrokeASpecialRule)
+        return RankComputer.computePlayersRank(donePlayersInFinishingOrder, playersWhoBrokeASpecialRule)
     }
 
     fun isLastCardPlayedTheFirstJokerPlayedOfTheRound(): Boolean {
         val lastCard = currentGameState.cardsOnTable.lastOrNull()
         return lastCard != null && lastCard.name == CardName.Jack && currentGameState.cardsInGraveyard.none { c -> c.name == CardName.Jack }
     }
+
+    fun currentPlayerIsDone(): Boolean {
+        // A player with exactly one card that plays a card is done for the round.
+        return currentGameState.currentPlayer().cardsInHand.size == 1
+    }
+
+    fun exactlyOneOtherPlayerCanPlay(): Boolean {
+        return currentGameState.waitingPlayersInOrder().size == 1
+    }
+
+    private fun playersWhoBrokeASpecialRule(penultimatePlayerId: DwitchPlayerId) =
+        if (cardPlayedIsJoker()) {
+            val tmp = currentGameState.playersWhoBrokeASpecialRule.toMutableList()
+            tmp.add(SpecialRuleBreaker.FinishWithJoker(penultimatePlayerId))
+            tmp
+        } else {
+            currentGameState.playersWhoBrokeASpecialRule
+        }
 
     private fun nextNonDwitchedWaitingPlayer(): DwitchPlayer? {
         return if (nextWaitingPlayer() != null) {
@@ -117,14 +118,5 @@ internal class PlayCardState(
         if (!PlayerMove.cardPlayedIsAValidMove(lastCardOnTable, cardPlayed, currentGameState.joker)) {
             throw IllegalArgumentException("The card '$cardPlayed' may not be played on top of card '$lastCardOnTable'")
         }
-    }
-
-    fun currentPlayerIsDone(): Boolean {
-        // A player with exactly one card that plays a card is done for the round.
-        return currentGameState.currentPlayer().cardsInHand.size == 1
-    }
-
-    fun exactlyOneOtherPlayerCanPlay(): Boolean {
-        return currentGameState.waitingPlayersInOrder().size == 1
     }
 }

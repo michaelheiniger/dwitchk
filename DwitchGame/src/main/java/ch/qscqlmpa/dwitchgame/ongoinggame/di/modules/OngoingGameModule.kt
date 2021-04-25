@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.di.modules
 
-import ch.qscqlmpa.dwitchcommonutil.MyIdlingResource
 import ch.qscqlmpa.dwitchcommunication.CommClient
 import ch.qscqlmpa.dwitchcommunication.CommServer
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
@@ -36,8 +35,7 @@ class OngoingGameModule(
     private val hostPort: Int,
     private val hostIpAddress: String,
     private val inGameStore: InGameStore,
-    private val commComponent: CommunicationComponent,
-    private val idlingResource: MyIdlingResource
+    private val commComponent: CommunicationComponent
 ) {
 
     @OngoingGameScope
@@ -132,11 +130,5 @@ class OngoingGameModule(
     @Provides
     internal fun provideGuestFacade(communicator: GuestCommunicator): GuestFacade {
         return GuestFacadeImpl(communicator)
-    }
-
-    @OngoingGameScope
-    @Provides
-    internal fun provideIdlingResource(): MyIdlingResource {
-        return idlingResource
     }
 }

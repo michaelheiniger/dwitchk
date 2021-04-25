@@ -1,238 +1,197 @@
 package ch.qscqlmpa.dwitch.e2e
 
+import ch.qscqlmpa.dwitch.PlayerGuestTest
+import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.e2e.base.BaseHostTest
-import org.junit.Ignore
+import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertCardExchangeControlIsDisabled
+import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertCardExchangeControlIsEnabled
+import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertCardOnTable
+import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertCardsInHand
+import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertEndOfRoundResult
+import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertGameRoomIsDisplayed
+import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertPlayerCanPassTurn
+import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertPlayerCannotPassTurn
+import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.chooseCardForExchange
+import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.confirmCardExchange
+import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.endGame
+import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.passTurn
+import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.playCard
+import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.startNewRound
+import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.assertLaunchGameControlIsEnabled
+import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.launchGame
+import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchcommunication.websocket.server.test.PlayerHostTest
+import ch.qscqlmpa.dwitchengine.ProdDwitchEngineFactory
+import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
+import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
+import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Test
 
-@Ignore
 class GameRoomAsHostTest : BaseHostTest() {
 
-//    private var rankForPlayer: Map<Int, Rank> = mapOf(
-//        0 to Rank.Asshole,
-//        1 to Rank.President
-//    )
-//    private var cardsForPlayer: Map<Int, List<Card>> = mapOf(
-//        0 to listOf(Card.Hearts5, Card.Clubs3),
-//        1 to listOf(Card.Spades6, Card.Spades4)
-//    )
-//
-//    @Test
-//    fun goToGameRoomScreen() {
-//        launch()
-//
-//        goToGameRoom()
-//    }
-//
-//    @Test
-//    fun playACard() {
-//        launch()
-//
-//        goToGameRoom()
-//
-//        GameRoomUiUtil.assertCardInHand(0, Card.Hearts5)
-//        GameRoomUiUtil.assertCardInHand(1, Card.Clubs3)
-//        GameRoomUiUtil.assertCardOnTable(Card.Clubs2)
-//
-//        GameRoomUiUtil.playCard(0)
-//
-//        assertGameStateUpdatedMessageSent()
-//
-//        GameRoomUiUtil.assertCardInHand(0, Card.Clubs3)
-//        GameRoomUiUtil.assertCardOnTable(Card.Hearts5)
-//
-//        GameRoomUiUtil.assertCanPickACard(false)
-//        GameRoomUiUtil.assertCanPassTurn(false)
-//    }
-//
-//    @Test
-//    fun pickACardAndPassTurn() {
-//        launch()
-//
-//        goToGameRoom()
-//
-//        GameRoomUiUtil.assertCardInHand(0, Card.Hearts5)
-//        GameRoomUiUtil.assertCardInHand(1, Card.Clubs3)
-//        GameRoomUiUtil.assertCardOnTable(Card.Clubs2)
-//
-//        GameRoomUiUtil.assertCanPickACard(true)
-//        GameRoomUiUtil.assertCanPassTurn(false)
-//
-//        GameRoomUiUtil.pickACard()
-//        assertGameStateUpdatedMessageSent()
-//
-//        GameRoomUiUtil.assertCardInHand(0, Card.Hearts5)
-//        GameRoomUiUtil.assertCardInHand(1, Card.Clubs3)
-//        GameRoomUiUtil.assertCardInHand(2, Card.Clubs4)
-//        GameRoomUiUtil.assertCardOnTable(Card.Clubs2)
-//
-//        GameRoomUiUtil.assertCanPickACard(false)
-//        GameRoomUiUtil.assertCanPassTurn(true)
-//
-//        GameRoomUiUtil.passTurn()
-//        assertGameStateUpdatedMessageSent()
-//
-//        GameRoomUiUtil.assertCanPickACard(false)
-//        GameRoomUiUtil.assertCanPassTurn(false)
-//    }
-//
-//    @Test
-//    fun playAWholeRound() {
-//        launch()
-//
-//        goToGameRoom()
-//
-//        UiUtil.assertControlTextContent(R.id.gameInfoTv, R.string.round_is_beginning)
-//
-//        GameRoomUiUtil.assertCardInHand(0, Card.Hearts5)
-//        GameRoomUiUtil.assertCardInHand(1, Card.Clubs3)
-//        GameRoomUiUtil.assertCardOnTable(Card.Clubs2)
-//
-//        GameRoomUiUtil.playCard(1) // Local player plays Clubs3
-//        assertGameStateUpdatedMessageSent()
-//
-//        GameRoomUiUtil.assertCardInHand(0, Card.Hearts5)
-//        GameRoomUiUtil.assertCardOnTable(Card.Clubs3)
-//
-//        otherPlayerPlaysCard(PlayerHostTest.Guest1, Card.Spades4)
-//        dudeWaitASec()
-//        GameRoomUiUtil.assertCardOnTable(Card.Spades4)
-//
-//        GameRoomUiUtil.playCard(0) // Local player plays Hearts5 and is done
-//        assertGameStateUpdatedMessageSent()
-//
-//        closeEndOfRoundDialog()
-//
-//        GameRoomUiUtil.assertCardOnTable(Card.Hearts5)
-//
-//        UiUtil.clickOnButton(R.id.endGameBtn)
-//
-//        dudeWaitASec()
-//
-//        assertCurrentScreenIsHomeSreen()
-//    }
-//
-//    @Test
-//    fun showEndOfRoundResults() {
-//        launch()
-//
-//        cardsForPlayer = mapOf(
-//            0 to listOf(Card.Hearts3), // Host
-//            1 to listOf(Card.Spades6) // Guest
-//        )
-//
-//        goToGameRoom()
-//
-//        UiUtil.assertControlTextContent(R.id.gameInfoTv, R.string.round_is_beginning)
-//
-//        GameRoomUiUtil.assertCardInHand(0, Card.Hearts3)
-//        GameRoomUiUtil.assertCardOnTable(Card.Clubs2)
-//
-//        GameRoomUiUtil.playCard(0) // Local player plays Hearts3
-//        assertGameStateUpdatedMessageSent()
-//
-//        UiUtil.assertControlTextContent(R.id.mainTextTv, Matchers.containsString("$hostName: President"))
-//        UiUtil.assertControlTextContent(R.id.mainTextTv, Matchers.containsString("Boromir: Asshole"))
-//
-//        closeEndOfRoundDialog()
-//
-//        dudeWaitASec()
-//
-//        GameRoomUiUtil.assertGameRoomIsDisplayed()
-//    }
-//
-//    @Test
-//    fun cardExchange() {
-//        launch()
-//
-//        cardsForPlayer = mapOf(
-//            0 to listOf(Card.Hearts3), // Host
-//            1 to listOf(Card.Spades6) // Guest
-//        )
-//
-//        goToGameRoom()
-//
-//        UiUtil.assertControlTextContent(R.id.gameInfoTv, R.string.round_is_beginning)
-//
-//        GameRoomUiUtil.assertCardInHand(0, Card.Hearts3)
-//        GameRoomUiUtil.assertCardOnTable(Card.Clubs2)
-//
-//        GameRoomUiUtil.playCard(0) // Local player plays Hearts3
-//        assertGameStateUpdatedMessageSent()
-//
-//        closeEndOfRoundDialog()
-//
-//        initializeNewRoundCardDealer(
-//            mapOf(
-//                0 to listOf(Card.Hearts5, Card.Clubs3, Card.Spades6, Card.HeartsAce), // Guest
-//                1 to listOf(Card.Spades6, Card.Spades4, Card.Diamonds4, Card.Clubs10) // Host
-//            )
-//        )
-//
-//        UiUtil.clickOnButton(R.id.startNewRoundBtn)
-//
-//        // Order is not deterministic because one is sent to a specific guest and the other is broadcasted
-//        val messageSent = waitForNextMessageSentByHost()
-//        assertThat(messageSent).isInstanceOf(Message.GameStateUpdatedMessage::class.java)
-//
-//        UiUtil.assertControlEnabled(R.id.exchangeBtn, enabled = false)
-//
-//        // The host (president) chooses the cards it wants to give up for the exchange with the asshole (guest)
-//        GameRoomUiUtil.chooseCardForExchange(0)
-//        GameRoomUiUtil.chooseCardForExchange(0)
-//        UiUtil.assertControlEnabled(R.id.exchangeBtn, enabled = true)
-//
-//        UiUtil.clickOnButton(R.id.exchangeBtn)
-//
-//        dudeWaitASec()
-//
-//        GameRoomUiUtil.assertGameRoomIsDisplayed()
-//
-//        GameRoomUiUtil.assertCardInHand(0, Card.Diamonds4)
-//        GameRoomUiUtil.assertCardInHand(1, Card.Clubs10)
-//
-//        otherPlayerSendsCardExchangeMessage(setOf(Card.Spades6, Card.HeartsAce))
-//
-//        assertGameStateUpdatedMessageSent()
-//
-//        GameRoomUiUtil.assertCardInHand(0, Card.Diamonds4)
-//        GameRoomUiUtil.assertCardInHand(1, Card.Clubs10)
-//        GameRoomUiUtil.assertCardInHand(2, Card.Spades6)
-//        GameRoomUiUtil.assertCardInHand(3, Card.HeartsAce)
-//
-//        UiUtil.assertControlTextContent(R.id.gameInfoTv, R.string.round_is_beginning)
-//    }
-//
-//    private fun otherPlayerSendsCardExchangeMessage(cards: Set<Card>) {
-//        val message = MessageFactory.createCardsForExchangeChosenMessage(guest1.dwitchId, cards)
-//        serverTestStub.guestSendsMessageToServer(PlayerHostTest.Guest1, message, true)
-//    }
-//
-//    private fun otherPlayerPlaysCard(guest: PlayerHostTest, card: Card) {
-//        val currentGameState = inGameStore.getGameState()
-//        val newGameState = ProdDwitchEngineFactory().create(currentGameState).playCard(card)
-//        serverTestStub.guestSendsMessageToServer(guest, MessageFactory.createGameStateUpdatedMessage(newGameState), true)
-//    }
-//
-//    private fun goToGameRoom() {
-//        goToWaitingRoom()
-//
-//        guestJoinsGame(PlayerHostTest.Guest1)
-//        guestBecomesReady(PlayerHostTest.Guest1)
-//
-//        UiUtil.assertControlEnabled(R.id.launchGameBtn, enabled = true)
-//
-//        initializeInitialGameSetup(cardsForPlayer, rankForPlayer)
-//
-//        UiUtil.clickOnButton(R.id.launchGameBtn)
-//        val messageSent = waitForNextMessageSentByHost()
-//        assertThat(messageSent).isInstanceOf(Message.LaunchGameMessage::class.java)
-//
-//        dudeWaitASec()
-//
-//        GameRoomUiUtil.assertGameRoomIsDisplayed()
-//    }
-//
-//    private fun assertGameStateUpdatedMessageSent() {
-//        val messageSent = waitForNextMessageSentByHost()
-//        assertThat(messageSent).isInstanceOf(Message.GameStateUpdatedMessage::class.java)
-//    }
+    private var rankForPlayer: Map<DwitchPlayerId, DwitchRank> = mapOf(
+        DwitchPlayerId(1) to DwitchRank.Asshole, // Host
+        DwitchPlayerId(2) to DwitchRank.President // Guest
+    )
+    private var cardsForPlayer: Map<DwitchPlayerId, Set<Card>> = mapOf(
+        DwitchPlayerId(1) to setOf(Card.Hearts5, Card.Clubs3),
+        DwitchPlayerId(2) to setOf(Card.Spades6, Card.Spades4)
+    )
+
+    @Test
+    fun goToGameRoomScreen() {
+        goToGameRoom()
+    }
+
+    @Test
+    fun playACard() {
+        goToGameRoom()
+
+        testRule.assertCardsInHand(Card.Hearts5, Card.Clubs3)
+        testRule.assertCardOnTable(Card.Blank)
+
+        testRule.playCard(Card.Hearts5)
+
+        assertGameStateUpdatedMessageSent()
+
+        testRule.assertCardsInHand(Card.Clubs3)
+        testRule.assertCardOnTable(Card.Hearts5)
+    }
+
+    @Test
+    fun passTurn() {
+        goToGameRoom()
+
+        testRule.assertCardsInHand(Card.Hearts5, Card.Clubs3)
+        testRule.assertCardOnTable(Card.Blank)
+
+        testRule.assertPlayerCanPassTurn()
+
+        testRule.passTurn()
+        assertGameStateUpdatedMessageSent()
+
+        testRule.assertPlayerCannotPassTurn()
+    }
+
+    @Test
+    fun playAWholeRound() {
+        goToGameRoom()
+
+        testRule.assertCardsInHand(Card.Hearts5, Card.Clubs3)
+        testRule.assertCardOnTable(Card.Blank)
+
+        testRule.playCard(Card.Clubs3)
+        assertGameStateUpdatedMessageSent()
+
+        testRule.assertCardsInHand(Card.Hearts5)
+        testRule.assertCardOnTable(Card.Clubs3)
+
+        otherPlayerPlaysCard(PlayerHostTest.Guest1, Card.Spades4)
+        waitUntilPlayerDashbordIsUpdated()
+
+        testRule.assertCardOnTable(Card.Spades4)
+
+        testRule.playCard(Card.Hearts5) // Local player plays its last card
+        assertGameStateUpdatedMessageSent()
+
+        testRule.assertEndOfRoundResult(PlayerGuestTest.Host.name, getString(R.string.president_long))
+        testRule.assertEndOfRoundResult(PlayerGuestTest.LocalGuest.name, getString(R.string.asshole_long))
+
+        testRule.endGame()
+
+        assertCurrentScreenIsHomeSreen()
+    }
+
+    @Test
+    fun showEndOfRoundResults() {
+        cardsForPlayer = mapOf(
+            DwitchPlayerId(1) to setOf(Card.Hearts3), // Host
+            DwitchPlayerId(2) to setOf(Card.Spades6) // Guest
+        )
+
+        goToGameRoom()
+
+        testRule.assertCardsInHand(Card.Hearts3)
+        testRule.assertCardOnTable(Card.Blank)
+
+        testRule.playCard(Card.Hearts3)
+        assertGameStateUpdatedMessageSent()
+
+        testRule.assertEndOfRoundResult(hostName, getString(R.string.president_long))
+        testRule.assertEndOfRoundResult(PlayerHostTest.Guest1.name, getString(R.string.asshole_long))
+    }
+
+    @Test
+    fun cardExchange() {
+        cardsForPlayer = mapOf(
+            DwitchPlayerId(1) to setOf(Card.Hearts3), // Host
+            DwitchPlayerId(2) to setOf(Card.Spades6) // Guest
+        )
+
+        goToGameRoom()
+
+        testRule.assertCardsInHand(Card.Hearts3)
+        testRule.assertCardOnTable(Card.Blank)
+
+        testRule.playCard(Card.Hearts3)
+        assertGameStateUpdatedMessageSent()
+
+        initializeNewRoundCardDealer(
+            mapOf(
+                DwitchPlayerId(1) to setOf(Card.Spades3, Card.Spades4, Card.Diamonds4, Card.Clubs10), // Host
+                DwitchPlayerId(2) to setOf(Card.Hearts5, Card.Clubs3, Card.Spades6, Card.HeartsAce) // Guest
+            )
+        )
+        testRule.startNewRound()
+        assertGameStateUpdatedMessageSent()
+
+        otherPlayerSendsCardExchangeMessage(setOf(Card.Spades6, Card.HeartsAce))
+        assertGameStateUpdatedMessageSent()
+
+        testRule.assertCardExchangeControlIsDisabled()
+        testRule.chooseCardForExchange(Card.Spades3)
+        testRule.chooseCardForExchange(Card.Spades4)
+        testRule.assertCardExchangeControlIsEnabled()
+        testRule.confirmCardExchange()
+
+        waitUntilPlayerDashbordIsUpdated()
+
+        testRule.assertGameRoomIsDisplayed()
+        testRule.assertCardsInHand(Card.Diamonds4, Card.Clubs10, Card.Spades6, Card.HeartsAce)
+    }
+
+    private fun otherPlayerSendsCardExchangeMessage(cards: Set<Card>) {
+        val message = MessageFactory.createCardsForExchangeChosenMessage(guest1.dwitchId, cards)
+        serverTestStub.guestSendsMessageToServer(PlayerHostTest.Guest1, message)
+    }
+
+    private fun otherPlayerPlaysCard(guest: PlayerHostTest, card: Card) {
+        val currentGameState = inGameStore.getGameState()
+        val newGameState = ProdDwitchEngineFactory().create(currentGameState).playCard(card)
+        serverTestStub.guestSendsMessageToServer(guest, MessageFactory.createGameStateUpdatedMessage(newGameState))
+        assertGameStateUpdatedMessageSent() // Broadcasted by host to other players
+    }
+
+    private fun goToGameRoom() {
+        goToWaitingRoom()
+
+        guestJoinsGame(PlayerHostTest.Guest1)
+        guestBecomesReady(PlayerHostTest.Guest1)
+
+        testRule.assertLaunchGameControlIsEnabled()
+
+        initializeInitialGameSetup(cardsForPlayer, rankForPlayer)
+
+        testRule.launchGame()
+        waitForNextMessageSentByHost() as Message.LaunchGameMessage
+
+        testRule.assertGameRoomIsDisplayed()
+    }
+
+    private fun assertGameStateUpdatedMessageSent() {
+        val messageSent = waitForNextMessageSentByHost()
+        assertThat(messageSent).isInstanceOf(Message.GameStateUpdatedMessage::class.java)
+    }
 }

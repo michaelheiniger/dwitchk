@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.host
 
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
-import ch.qscqlmpa.dwitchcommonutil.MyIdlingResource
+import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchcommunication.CommServer
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
@@ -27,7 +27,7 @@ internal class HostCommunicatorImpl constructor(
     private val communicationStateRepository: HostCommunicationStateRepository,
     private val connectionStore: ConnectionStore,
     private val schedulerFactory: SchedulerFactory,
-    private val idlingResource: MyIdlingResource
+    private val idlingResource: DwitchIdlingResource
 ) : HostCommunicator {
 
     private val disposableManager = DisposableManager()
@@ -57,6 +57,7 @@ internal class HostCommunicatorImpl constructor(
 
     override fun sendMessageToHost(message: Message) {
         Logger.info { "Send message to host: $message" }
+        idlingResource.increment()
         receivedMessageRelay.accept(EnvelopeReceived(hostConnectionId(), message))
     }
 
@@ -81,6 +82,7 @@ internal class HostCommunicatorImpl constructor(
                 .flatMapCompletable { event ->
                     communicationEventDispatcher.dispatch(event)
                         .subscribeOn(schedulerFactory.single())
+                        .doOnComplete { idlingResource.decrement() }
                 }
                 .subscribe(
                     { Logger.debug { "Communication events stream completed" } },
@@ -99,12 +101,7 @@ internal class HostCommunicatorImpl constructor(
             ).flatMapCompletable { envelopeReceived ->
                 Completable.merge(
                     listOf(
-                        messageDispatcher.dispatch(envelopeReceived)
-                            .subscribeOn(schedulerFactory.single())
-                            .doOnComplete {
-                                Logger.debug("Decrement idling resource counter")
-                                idlingResource.decrement()
-                            },
+                        dispatchReceivedMessage(envelopeReceived),
                         forwardMessageToGuestsIfNeeded(envelopeReceived)
                     )
                 )
@@ -114,6 +111,11 @@ internal class HostCommunicatorImpl constructor(
             )
         )
     }
+
+    private fun dispatchReceivedMessage(envelopeReceived: EnvelopeReceived) =
+        messageDispatcher.dispatch(envelopeReceived)
+            .subscribeOn(schedulerFactory.single())
+            .doOnComplete { idlingResource.decrement() }
 
     private fun hostConnectionId(): ConnectionId {
         val hostDwitchId = inGameStore.getLocalPlayerDwitchId()

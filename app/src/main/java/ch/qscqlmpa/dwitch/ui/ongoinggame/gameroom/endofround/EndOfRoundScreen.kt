@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -64,7 +65,10 @@ fun EndOfRoundScreen(endOfRoundInfo: EndOfRoundInfo) {
                 .animateContentSize()
         ) {
             items(endOfRoundInfo.playersInfo) { info ->
-                Text(text = "${info.name}: ${stringResource(ResourceMapper.getResourceLong(info.rank))}")
+                Text(
+                    text = "${info.name}: ${stringResource(ResourceMapper.getResourceLong(info.rank))}",
+                    modifier = Modifier.testTag(info.name)
+                )
             }
         }
     }

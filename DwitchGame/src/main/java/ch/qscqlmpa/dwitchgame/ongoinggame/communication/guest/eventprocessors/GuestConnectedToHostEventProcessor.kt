@@ -20,7 +20,7 @@ internal class GuestConnectedToHostEventProcessor @Inject constructor(
 
     override fun process(event: ClientCommunicationEvent): Completable {
 
-        Logger.debug { "Process GuestConnectedToHostEvent" }
+        Logger.debug { "Process ClientCommunicationEvent" }
 
         event as ClientCommunicationEvent.ConnectedToHost
 

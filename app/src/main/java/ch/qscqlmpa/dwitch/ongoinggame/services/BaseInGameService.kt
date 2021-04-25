@@ -13,7 +13,7 @@ import ch.qscqlmpa.dwitch.app.notifications.NotificationChannelFactory.DEFAULT_C
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
-import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameComponent
+import ch.qscqlmpa.dwitchgame.appevent.AppEvent
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import org.tinylog.kotlin.Logger
@@ -46,9 +46,7 @@ abstract class BaseInGameService : Service() {
         throw UnsupportedOperationException("Not implemented because not needed")
     }
 
-    protected fun getOngoingGameComponent(): OngoingGameComponent {
-        return (application as App).getGameComponent()!!
-    }
+    protected val app: App by lazy { application as App }
 
     protected fun showNotification(roomType: RoomType) {
         val notificationIntent = buildNotificationIntent(roomType)
@@ -79,6 +77,10 @@ abstract class BaseInGameService : Service() {
         }
 
         startForeground(NOTIFICATION_ID, notificationBuilder.build())
+    }
+
+    protected fun notifyServiceStarted() {
+        app.appEventRepository().notify(AppEvent.GameSetupDone)
     }
 
     private fun buildNotificationIntent(roomType: RoomType): Intent {

@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest
 
-import DashboardScreen
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
@@ -12,6 +11,7 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.GameOverDialog
 import ch.qscqlmpa.dwitch.ui.ongoinggame.LoadingSpinner
 import ch.qscqlmpa.dwitch.ui.ongoinggame.cardexchange.CardExchangeOnGoing
 import ch.qscqlmpa.dwitch.ui.ongoinggame.cardexchange.CardExchangeScreen
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.DashboardScreen
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.endofround.EndOfRoundScreen
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState

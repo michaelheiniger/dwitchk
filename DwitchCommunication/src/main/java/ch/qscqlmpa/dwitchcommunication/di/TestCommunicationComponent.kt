@@ -4,6 +4,7 @@ import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.client.test.ClientTestStub
 import ch.qscqlmpa.dwitchcommunication.websocket.server.test.ServerTestStub
 import dagger.Component
+import dagger.Lazy
 
 @CommunicationScope
 @Component(
@@ -15,7 +16,7 @@ import dagger.Component
 interface TestCommunicationComponent : CommunicationComponent {
 
     val serverTestStub: ServerTestStub
-    val clientTestStub: ClientTestStub
+    val clientTestStub: Lazy<ClientTestStub>
     val serializerFactory: SerializerFactory
 
     @Component.Factory

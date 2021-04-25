@@ -1,4 +1,4 @@
-
+package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -101,7 +101,6 @@ private fun DashboardScreenPreview() {
             DwitchCardInfo(Card.Spades3, false),
             DwitchCardInfo(Card.Clubs4, false),
             DwitchCardInfo(Card.Hearts8, true)
-
         ),
         canPass = false,
         canPlay = true
@@ -170,14 +169,16 @@ private fun PlayersInfo(playersInfo: List<PlayerInfo>) {
 private fun Table(lastCardPlayed: Card) {
     Row(
         horizontalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(UiTags.lastCardPlayed)
     ) {
         Image(
             painter = painterResource(ResourceMapper.getResource(lastCardPlayed)),
             contentDescription = lastCardPlayed.toString(),
             modifier = Modifier
                 .size(150.dp)
-                .testTag(UiTags.lastCardPlayer)
+                .testTag(lastCardPlayed.toString())
         )
     }
 }
@@ -191,7 +192,7 @@ private fun Controls(
         enabled = localPlayerDashboard.canPass,
         onClick = onPassClick,
         modifier = Modifier
-            .testTag(UiTags.passControl)
+            .testTag(UiTags.passTurnControl)
             .fillMaxWidth()
     ) {
         Text(stringResource(ch.qscqlmpa.dwitch.R.string.pass_turn))
@@ -208,7 +209,8 @@ private fun Hand(
         cells = GridCells.Fixed(4),
         modifier = Modifier
             .fillMaxWidth()
-            .animateContentSize(),
+            .animateContentSize()
+            .testTag(UiTags.hand)
     ) {
         items(localPlayerDashboard.cardsInHand) { card -> CardItemDisplay(card, onCardClick) }
     }
@@ -284,9 +286,8 @@ private fun PlayerInfoDisplay(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = backgroundColor, shape = componentShape),
-        horizontalArrangement = Arrangement.Center,
-
-        ) {
+        horizontalArrangement = Arrangement.Center
+    ) {
         content()
     }
 }

@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.di.modules
 
-import ch.qscqlmpa.dwitchcommonutil.MyIdlingResource
+import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchcommunication.CommServer
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
@@ -29,7 +29,7 @@ internal class HostCommunicationModule {
             communicationStateRepository: HostCommunicationStateRepository,
             connectionStore: ConnectionStore,
             schedulerFactory: SchedulerFactory,
-            idlingResource: MyIdlingResource
+            idlingResource: DwitchIdlingResource
         ): HostCommunicator {
             return HostCommunicatorImpl(
                 inGameStore,

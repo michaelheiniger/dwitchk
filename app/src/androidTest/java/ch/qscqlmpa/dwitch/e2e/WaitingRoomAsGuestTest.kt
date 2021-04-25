@@ -61,7 +61,6 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
     fun gameCanceled() {
         goToWaitingRoom()
 
-        idlingResourceIncrement()
         clientTestStub.serverSendsMessageToClient(Message.CancelGameMessage)
 
         testRule.onNodeWithText(getString(R.string.ok)).performClick()

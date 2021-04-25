@@ -7,11 +7,11 @@ interface ServerTestStub {
 
     fun connectClientToServer(connectionInitiator: PlayerHostTest)
 
-    fun guestSendsMessageToServer(sender: PlayerHostTest, message: Message, enableThreadBreak: Boolean = false)
+    fun guestSendsMessageToServer(sender: PlayerHostTest, message: Message)
 
     fun observeMessagesSent(): Observable<String>
 
     fun observeMessagesBroadcasted(): Observable<String>
 
-    fun disconnectFromServer(guestIdentifier: PlayerHostTest, enableThreadBreak: Boolean = false)
+    fun disconnectFromServer(guestIdentifier: PlayerHostTest)
 }

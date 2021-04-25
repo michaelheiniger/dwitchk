@@ -4,7 +4,9 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import ch.qscqlmpa.dwitch.R
@@ -45,7 +47,8 @@ fun InfoDialog(
                     onClick = {
                         onOkClick()
                         openDialog.value = false
-                    }
+                    },
+                    modifier = Modifier.testTag(UiTags.closeInfoDialog)
                 ) {
                     Text(text = stringResource(R.string.ok), color = Color.Black)
                 }

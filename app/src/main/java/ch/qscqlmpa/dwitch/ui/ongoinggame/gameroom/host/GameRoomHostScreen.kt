@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host
 
-import DashboardScreen
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
@@ -9,13 +8,16 @@ import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ConnectionHostScreen
+import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitch.ui.ongoinggame.LoadingSpinner
 import ch.qscqlmpa.dwitch.ui.ongoinggame.cardexchange.CardExchangeOnGoing
 import ch.qscqlmpa.dwitch.ui.ongoinggame.cardexchange.CardExchangeScreen
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.DashboardScreen
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.endofround.EndOfRoundScreen
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomScreen
 import ch.qscqlmpa.dwitchengine.model.card.Card
@@ -54,7 +56,9 @@ fun GameRoomHostScreen(
                 Spacer(Modifier.height(16.dp))
                 Button(
                     onClick = onStartNewRoundClick,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag(UiTags.startNewRound)
                 ) {
                     Text(stringResource(R.string.start_new_round))
                 }
@@ -71,14 +75,15 @@ fun GameRoomHostScreen(
                 )
             }
             is GameRoomScreen.CardExchangeOnGoing -> CardExchangeOnGoing()
-            null -> {
-                LoadingSpinner()
-            }
+            null -> LoadingSpinner()
+
         }
         Spacer(Modifier.height(8.dp))
         OutlinedButton(
             onClick = onEndGameClick,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(UiTags.endGame)
         ) {
             Text(stringResource(R.string.end_game))
         }

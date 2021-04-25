@@ -55,7 +55,8 @@ class HostCommunicatorImplTest : BaseUnitTest() {
             mockCommunicationEventDispatcher,
             mockCommEventRepository,
             mockConnectionStore,
-            TestSchedulerFactory()
+            TestSchedulerFactory(),
+            mockk(relaxed = true)
         )
 
         communicationEventsSubject = PublishSubject.create()

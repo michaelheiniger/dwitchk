@@ -9,6 +9,7 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchcommunication.websocket.client.test.OnStartEvent
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
@@ -16,6 +17,7 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import org.assertj.core.api.Assertions.assertThat
 import org.tinylog.kotlin.Logger
+import java.util.concurrent.TimeUnit
 
 abstract class BaseGuestTest : BaseOnGoingGameTest() {
 
@@ -28,14 +30,15 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
         testRule.onNodeWithTag(UiTags.playerName).performTextReplacement(PlayerGuestTest.LocalGuest.name)
         testRule.onNodeWithText(getString(R.string.join_game)).performClick()
 
-        dudeWaitASec() // Wait for Game to be created
+        waitForServiceToBeStarted()
 
         hookOngoingGameDependenciesForGuest()
 
-        idlingResourceIncrement() // JoinGameAckMessage
-        idlingResourceIncrement() // WaitingRoomStateUpdateMessage
+        clientTestStub.setConnectToServerOutcome(OnStartEvent.Success)
 
-        connectGuestToHost()
+        val message = waitForNextMessageSentByLocalGuest()
+        assertThat(message).isInstanceOf(Message.JoinGameMessage::class.java)
+
         hostSendsJoinGameAck()
         hostSendsInitialWaitingRoomUpdate()
 
@@ -46,7 +49,10 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
 
     protected fun waitForNextMessageSentByLocalGuest(): Message {
         Logger.debug { "Waiting for next message sent by local guest..." }
-        val messageSerialized = clientTestStub.observeMessagesSent().take(1).blockingFirst()
+        val messageSerialized = clientTestStub.observeMessagesSent()
+            .take(1)
+            .timeout(5, TimeUnit.SECONDS)
+            .blockingFirst()
         val message = commSerializerFactory.unserializeMessage(messageSerialized)
         Logger.debug { "Message sent to host: $message" }
         return message
@@ -58,15 +64,9 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
         networkAdapter.setPacket(Packet(gameAd, hostIpAddress, 4355))
     }
 
-    private fun connectGuestToHost() {
-        clientTestStub.connectClientToServer(true)
-        val message = waitForNextMessageSentByLocalGuest()
-        assertThat(message).isInstanceOf(Message.JoinGameMessage::class.java)
-    }
-
     protected fun hostSendsJoinGameAck() {
         val message = Message.JoinGameAckMessage(gameCommonId, PlayerGuestTest.LocalGuest.id)
-        clientTestStub.serverSendsMessageToClient(message, false)
+        clientTestStub.serverSendsMessageToClient(message)
     }
 
     protected fun localPlayerToggleReadyCheckbox() {
@@ -108,6 +108,6 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
                 )
             )
         )
-        clientTestStub.serverSendsMessageToClient(message, false)
+        clientTestStub.serverSendsMessageToClient(message)
     }
 }

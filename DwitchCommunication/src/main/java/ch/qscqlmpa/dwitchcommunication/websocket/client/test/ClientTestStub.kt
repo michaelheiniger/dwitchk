@@ -5,9 +5,9 @@ import io.reactivex.rxjava3.core.Observable
 
 interface ClientTestStub {
 
-    fun connectClientToServer(enableThreadBreak: Boolean)
+    fun setConnectToServerOutcome(event: OnStartEvent)
 
-    fun serverSendsMessageToClient(message: Message, enableThreadBreak: Boolean = false)
+    fun serverSendsMessageToClient(message: Message)
 
     fun breakConnectionWithHost()
 

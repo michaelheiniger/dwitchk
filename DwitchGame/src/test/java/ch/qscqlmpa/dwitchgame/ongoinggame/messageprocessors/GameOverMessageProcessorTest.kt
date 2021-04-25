@@ -31,7 +31,7 @@ internal class GameOverMessageProcessorTest : BaseMessageProcessorTest() {
     fun `Service is stopped`() {
         launchTest()
 
-        verify { mockAppEventRepository.notify(AppEvent.GameLeft) }
+        verify { mockAppEventRepository.notify(AppEvent.GameOverGuest) }
     }
 
     @Test

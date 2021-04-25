@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitchcommunication.di
 
+import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommunication.di.Qualifiers.HOST_IP_ADDRESS
 import ch.qscqlmpa.dwitchcommunication.di.Qualifiers.HOST_PORT
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
@@ -33,26 +34,30 @@ class TestWebsocketModule {
     @Provides
     internal fun bindWebsocketClientFactory(
         @Named(HOST_IP_ADDRESS) hostIpAddress: String,
-        @Named(HOST_PORT) hostPort: Int
+        @Named(HOST_PORT) hostPort: Int,
+        idlingResource: DwitchIdlingResource
     ): WebsocketClientFactory {
-        return TestWebsocketClientFactory(hostIpAddress, hostPort)
+        return TestWebsocketClientFactory(hostIpAddress, hostPort, idlingResource)
     }
 
     @CommunicationScope
     @Provides
     internal fun bindServerTestStub(
         serverFactory: WebsocketServerFactory,
-        serializerFactory: SerializerFactory
+        serializerFactory: SerializerFactory,
+        idlingResource: DwitchIdlingResource
     ): ServerTestStub {
-        return WebsocketServerTestStub(serverFactory.create() as TestWebsocketServer, serializerFactory)
+        return WebsocketServerTestStub(serverFactory.create() as TestWebsocketServer, serializerFactory, idlingResource)
     }
 
     @CommunicationScope
     @Provides
     internal fun bindClientTestStub(
         clientFactory: WebsocketClientFactory,
-        serializerFactory: SerializerFactory
+        serializerFactory: SerializerFactory,
+        idlingResource: DwitchIdlingResource
     ): ClientTestStub {
-        return WebsocketClientTestStub(clientFactory.create() as TestWebsocketClient, serializerFactory)
+        val client = (clientFactory as TestWebsocketClientFactory).getInstance()
+        return WebsocketClientTestStub(client as TestWebsocketClient, serializerFactory, idlingResource)
     }
 }

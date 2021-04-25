@@ -25,7 +25,7 @@ internal class TestWebsocketServer(
 
     override fun start() {
         Logger.debug { "start()" }
-        onStart(true)
+        onStart()
     }
 
     override fun stop() {
@@ -33,12 +33,10 @@ internal class TestWebsocketServer(
     }
 
     override fun send(websocket: WebSocket, message: String) {
-        threadBreakIfNeeded(true)
         messageSentRelay.accept(message)
     }
 
     override fun sendBroadcast(message: String) {
-        threadBreakIfNeeded(true)
         messageBroadcastedRelay.accept(message)
     }
 
@@ -50,8 +48,7 @@ internal class TestWebsocketServer(
         return messageRelay
     }
 
-    fun onStart(enableThreadBreak: Boolean) {
-        threadBreakIfNeeded(enableThreadBreak)
+    fun onStart() {
         eventRelay.accept(ServerCommEvent.Started(Address(hostIpAddress, hostPort)))
     }
 
@@ -62,18 +59,15 @@ internal class TestWebsocketServer(
         eventRelay.accept(ServerCommEvent.ClientConnected(conn, handshake))
     }
 
-    fun onClose(conn: WebSocket?, code: Int, reason: String?, remote: Boolean, enableThreadBreak: Boolean) {
-        threadBreakIfNeeded(enableThreadBreak)
+    fun onClose(conn: WebSocket?, code: Int, reason: String?, remote: Boolean) {
         eventRelay.accept(ServerCommEvent.ClientDisconnected(conn, code, reason, remote))
     }
 
-    fun onMessage(conn: WebSocket?, message: String?, enableThreadBreak: Boolean) {
-        threadBreakIfNeeded(enableThreadBreak)
+    fun onMessage(conn: WebSocket?, message: String?) {
         messageRelay.accept(ServerMessage(conn, message))
     }
 
-    fun onError(conn: WebSocket?, ex: Exception?, enableThreadBreak: Boolean) {
-        threadBreakIfNeeded(enableThreadBreak)
+    fun onError(conn: WebSocket?, ex: Exception?) {
         eventRelay.accept(ServerCommEvent.Error(conn, ex))
     }
 
@@ -87,11 +81,5 @@ internal class TestWebsocketServer(
 
     fun observeMessagesBroadcasted(): Observable<String> {
         return messageBroadcastedRelay
-    }
-
-    private fun threadBreakIfNeeded(enableThreadBreak: Boolean) {
-        if (enableThreadBreak) {
-            Thread.sleep(1000)
-        }
     }
 }

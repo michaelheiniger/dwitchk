@@ -9,11 +9,13 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ConnectionHostScreen
+import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomPlayersScreen
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
@@ -81,12 +83,11 @@ private fun HostControlScreen(
         Button(
             onClick = onLaunchGameClick,
             enabled = launchGameEnabled,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(UiTags.launchGameControl)
         ) {
-            Text(
-                stringResource(R.string.launch_game),
-                color = Color.White
-            )
+            Text(stringResource(R.string.launch_game), color = Color.White)
         }
         Spacer(Modifier.height(8.dp))
         OutlinedButton(

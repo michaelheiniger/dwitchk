@@ -3,13 +3,13 @@ package ch.qscqlmpa.dwitch.e2e.utils
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.ui.common.UiTags
 
 object WaitingRoomUtil {
 
     const val PLAYER_CONNECTED = R.string.player_connected
     const val PLAYER_DISCONNECTED = R.string.player_disconnected
 
-    //
     fun ComposeContentTestRule.assertPlayerInWr(name: String): SemanticsNodeInteraction {
         return onNode(hasTestTag(name))
     }
@@ -27,25 +27,18 @@ object WaitingRoomUtil {
         return sni
     }
 
-//
-//    fun assertPlayerInWr(position: Int, name: String, ready: Boolean, connectionState: Int) {
-//        assertPlayerInWr(position, name)
-//        assertPlayerConnected(position, connectionState)
-//        assertPlayerReady(position, ready)
-//    }
-//
-//    private fun assertPlayerReady(position: Int, ready: Boolean) {
-//        if (ready) {
-//            onView(withRecyclerView(R.id.playerListRw).atPositionOnView(position, R.id.playerReadyCkb))
-//                .check(ViewAssertions.matches(ViewMatchers.isChecked()))
-//        } else {
-//            onView(withRecyclerView(R.id.playerListRw).atPositionOnView(position, R.id.playerReadyCkb))
-//                .check(ViewAssertions.matches(CoreMatchers.not(ViewMatchers.isChecked())))
-//        }
-//    }
-//
-//    private fun assertPlayerConnected(position: Int, connectionStateResourceId: Int) {
-//        onView(withRecyclerView(R.id.playerListRw).atPositionOnView(position, R.id.connectionStateTv))
-//            .check(UiUtil.matchesWithText(connectionStateResourceId))
-//    }
+    fun ComposeContentTestRule.assertPlayerInWr(name: String, connectionState: String, ready: Boolean): SemanticsNodeInteraction {
+        assertPlayerInWr(name, connectionState)
+        return assertPlayerInWr(name, ready)
+    }
+
+    fun ComposeContentTestRule.assertLaunchGameControlIsEnabled() {
+        onNodeWithTag(UiTags.launchGameControl)
+            .assertIsEnabled()
+            .assertIsDisplayed()
+    }
+
+    fun ComposeContentTestRule.launchGame() {
+        onNodeWithTag(UiTags.launchGameControl).performClick()
+    }
 }

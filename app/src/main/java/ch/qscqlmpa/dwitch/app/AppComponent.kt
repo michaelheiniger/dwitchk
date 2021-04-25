@@ -6,7 +6,6 @@ import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameUiComponent
 import ch.qscqlmpa.dwitch.service.ServiceManagerModule
 import ch.qscqlmpa.dwitch.ui.home.HomeActivityBindingModule
 import ch.qscqlmpa.dwitch.ui.home.HomeViewModelBindingModule
-import ch.qscqlmpa.dwitchcommonutil.MyIdlingResource
 import ch.qscqlmpa.dwitchgame.di.GameComponent
 import dagger.BindsInstance
 import dagger.Component
@@ -22,13 +21,10 @@ import dagger.android.AndroidInjector
         HomeActivityBindingModule::class,
         HomeViewModelBindingModule::class,
         ServiceManagerModule::class,
-        SchedulersModule::class,
-        IdlingResourceModule::class
+        SchedulersModule::class
     ]
 )
 interface AppComponent : AndroidInjector<App> {
-
-    val idlingResource: MyIdlingResource
 
     @Component.Builder
     interface Builder {

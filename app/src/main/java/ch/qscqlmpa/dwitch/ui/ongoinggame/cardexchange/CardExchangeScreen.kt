@@ -14,10 +14,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitch.ui.ongoinggame.CardItemDisplay
 import ch.qscqlmpa.dwitch.ui.ongoinggame.LoadingSpinner
 import ch.qscqlmpa.dwitchengine.model.card.Card
@@ -79,10 +81,10 @@ fun CardExchangeScreen(
         Button(
             enabled = exchangeControlEnabled,
             onClick = onConfirmExchangeClick,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = stringResource(R.string.confirm_cards_to_exchange))
-        }
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(UiTags.confirmCardExchange)
+        ) { Text(stringResource(R.string.confirm_cards_to_exchange)) }
         Spacer(Modifier.height(16.dp))
         CardsInHand(
             cards = cardsInHand,
@@ -96,7 +98,8 @@ fun CardExchangeOnGoing() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .animateContentSize(),
+            .animateContentSize()
+            .testTag(UiTags.cardExchangeOngoing),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("Card exchange is ongoing ...")
@@ -142,6 +145,7 @@ private fun CardsInHand(
         Modifier
             .fillMaxWidth()
             .animateContentSize()
+            .testTag(UiTags.hand)
     ) {
         Text(stringResource(R.string.cards_in_hand))
         LazyVerticalGrid(

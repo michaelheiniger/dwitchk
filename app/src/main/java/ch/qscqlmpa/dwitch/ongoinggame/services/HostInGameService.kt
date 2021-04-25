@@ -21,7 +21,7 @@ class HostInGameService : BaseInGameService() {
 
         Logger.info { "Start service" }
         showNotification(RoomType.WAITING_ROOM)
-        (application as App).startOngoingGame(
+        app.startOngoingGame(
             playerRole,
             RoomType.WAITING_ROOM,
             gameCreatedInfo.gameLocalId,
@@ -29,8 +29,18 @@ class HostInGameService : BaseInGameService() {
             gameCreatedInfo.gamePort,
             "0.0.0.0"
         )
-        getOngoingGameComponent().hostFacade.startServer()
-        advertiseGame(GameAdvertisingInfo(gameCreatedInfo.isNew, gameCreatedInfo.gameCommonId, gameCreatedInfo.gameName, gameCreatedInfo.gamePort))
+        app.hostFacade().startServer()
+        advertiseGame(
+            GameAdvertisingInfo(
+                gameCreatedInfo.isNew,
+                gameCreatedInfo.gameCommonId,
+                gameCreatedInfo.gameName,
+                gameCreatedInfo.gamePort
+            )
+        )
+
+        Logger.info { "Service started" }
+        notifyServiceStarted()
     }
 
     override fun actionChangeRoomToGameRoom() {
@@ -40,14 +50,14 @@ class HostInGameService : BaseInGameService() {
     }
 
     override fun cleanUp() {
-        getOngoingGameComponent().hostFacade.stopServer()
+        app.hostFacade().stopServer()
         (application as App).stopOngoingGame()
         gameAdvertisingDisposable.dispose()
     }
 
     private fun advertiseGame(gameAdvertisingInfo: GameAdvertisingInfo) {
         gameAdvertisingDisposable.add(
-            getOngoingGameComponent().hostFacade.advertiseGame(gameAdvertisingInfo).subscribe(
+            app.hostFacade().advertiseGame(gameAdvertisingInfo).subscribe(
                 {},
                 { error -> Logger.error(error) { "Error while advertising the game." } }
             )
