@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitchengine.utils
 
+import ch.qscqlmpa.dwitchengine.utils.CollectionUtil.concatWith
 import ch.qscqlmpa.dwitchengine.utils.CollectionUtil.mergeWith
 import ch.qscqlmpa.dwitchengine.utils.CollectionUtil.shiftRightByN
 import org.assertj.core.api.Assertions.assertThat
@@ -120,6 +121,22 @@ internal class CollectionUtilTest {
             assertThat(set1.mergeWith(set2, set3)).containsExactlyInAnyOrder(1, 2, 3, 4, 5, 6, 7, 8, 9)
             assertThat(set2.mergeWith(set1, set3)).containsExactlyInAnyOrder(1, 2, 3, 4, 5, 6, 7, 8, 9)
             assertThat(set3.mergeWith(set1, set2)).containsExactlyInAnyOrder(1, 2, 3, 4, 5, 6, 7, 8, 9)
+        }
+    }
+
+    @Nested
+    inner class ConcatWith {
+
+        @Test
+        fun `Returns union of both lists`() {
+            val list1 = listOf(1, 2, 3, 4)
+            val list2 = listOf(4, 2, 3, 4, 5, 6)
+            val list3 = listOf(6, 7, 8, 9)
+
+            assertThat(list1.concatWith(list2)).containsExactly(1, 2, 3, 4, 4, 2, 3, 4, 5, 6)
+            assertThat(list2.concatWith(list1)).containsExactly(2, 3, 4, 5, 6, 1, 2, 3, 4)
+
+            assertThat(list1.concatWith(list2, list3)).containsExactly(1, 2, 3, 4, 4, 2, 3, 4, 5, 6, 6, 7, 8, 9)
         }
     }
 }

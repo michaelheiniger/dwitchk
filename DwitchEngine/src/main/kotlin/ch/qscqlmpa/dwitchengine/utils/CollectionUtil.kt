@@ -22,4 +22,11 @@ object CollectionUtil {
         otherSets.forEach { s -> resultSet.addAll(s) }
         return resultSet
     }
+
+    fun <T> List<T>.concatWith(vararg otherLists: List<T>): List<T> {
+        val resultList = mutableListOf<T>()
+        resultList.addAll(this)
+        otherLists.forEach { l -> resultList.addAll(l) }
+        return resultList
+    }
 }
