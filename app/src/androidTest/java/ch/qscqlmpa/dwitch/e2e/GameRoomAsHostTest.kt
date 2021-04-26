@@ -75,7 +75,6 @@ class GameRoomAsHostTest : BaseHostTest() {
         testRule.assertPlayerCannotPassTurn()
     }
 
-    //FIXME
     @Test
     fun playAWholeRound() {
         goToGameRoom()
