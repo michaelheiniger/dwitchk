@@ -38,11 +38,11 @@ internal class IntTestWebsocketServer constructor(
     }
 
     override fun observeEvents(): Observable<ServerCommEvent> {
-        TODO("Not yet implemented")
+        throw NotImplementedError()
     }
 
     override fun observeMessages(): Observable<ServerMessage> {
-        TODO("Not yet implemented")
+        throw NotImplementedError()
     }
 
     fun onStart() {
