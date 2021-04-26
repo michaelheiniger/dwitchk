@@ -127,6 +127,23 @@ class GameRoomActivity : OngoingGameBaseActivity() {
         }
     }
 
+    override fun onBackPressed() { // TODO: Show confirmation dialog ?
+        when (playerRole) {
+            PlayerRole.GUEST -> guestViewModel.leaveGame()
+            PlayerRole.HOST -> hostViewModel.endGame()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        relevantViewModels.forEach { vm -> vm.onStart() }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        relevantViewModels.forEach { vm -> vm.onStop() }
+    }
+
     private fun setupHostCommands() {
         hostViewModel.commands.observe(
             this,
@@ -153,23 +170,6 @@ class GameRoomActivity : OngoingGameBaseActivity() {
                 }
             }
         )
-    }
-
-    override fun onBackPressed() { // TODO: Show confirmation dialog ?
-        when (playerRole) {
-            PlayerRole.GUEST -> guestViewModel.leaveGame()
-            PlayerRole.HOST -> hostViewModel.endGame()
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        relevantViewModels.forEach { vm -> vm.onStart() }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        relevantViewModels.forEach { vm -> vm.onStop() }
     }
 
     companion object {
