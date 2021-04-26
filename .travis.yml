@@ -38,6 +38,5 @@ before_script:
   - chmod +x gradlew
 
 script:
-  - ./gradlew ktlintCheck
   - ./gradlew clean build
   - ./gradlew test
