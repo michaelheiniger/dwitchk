@@ -60,11 +60,13 @@ class JoinNewGameActivity : HomeBaseActivity() {
             this,
             { event ->
                 when (event) {
-                    JoinNewGameCommand.NavigateToWaitingRoom -> WaitingRoomActivity.startActivityForGuest(this)
+                    JoinNewGameCommand.NavigateToWaitingRoom -> {
+                        finish()
+                        WaitingRoomActivity.startActivityForGuest(this)
+                    }
                     else -> {
                     } // Nothing to do
                 }
-                finish()
             }
         )
     }

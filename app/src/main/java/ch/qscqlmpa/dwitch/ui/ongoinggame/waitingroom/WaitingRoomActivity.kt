@@ -2,6 +2,8 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom
 
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
@@ -95,13 +97,6 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
         }
     }
 
-    override fun onBackPressed() { // TODO: Show confirmation dialog ?
-        when (playerRole) {
-            PlayerRole.GUEST -> wrGuestViewModel.leaveGame()
-            PlayerRole.HOST -> wrHostViewModel.cancelGame()
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as App).getGameUiComponent()!!.inject(this)
         super.onCreate(savedInstanceState)
@@ -137,6 +132,13 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
                     )
                 }
             }
+        }
+    }
+
+    override fun onBackPressed() { // TODO: Show confirmation dialog ?
+        when (playerRole) {
+            PlayerRole.GUEST -> wrGuestViewModel.leaveGame()
+            PlayerRole.HOST -> wrHostViewModel.cancelGame()
         }
     }
 
@@ -189,12 +191,12 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
             { command ->
                 when (command) {
                     WaitingRoomGuestCommand.NavigateToHomeScreen -> {
-                        MainActivity.start(this)
                         finish()
+                        MainActivity.start(this)
                     }
                     WaitingRoomGuestCommand.NavigateToGameRoomScreen -> {
-                        GameRoomActivity.startForGuest(this)
                         finish()
+                        GameRoomActivity.startForGuest(this)
                     }
                     else -> {
                         // Nothing to do
@@ -206,14 +208,17 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
 
     companion object {
         fun startActivityForHost(context: Context) {
-            val intent = Intent(context, WaitingRoomActivity::class.java)
-            intent.putExtra(EXTRA_PLAYER_ROLE, PlayerRole.HOST.name)
-            context.startActivity(intent)
+            startActivity(context, PlayerRole.HOST)
         }
 
         fun startActivityForGuest(context: Context) {
+            startActivity(context, PlayerRole.GUEST)
+        }
+
+        private fun startActivity(context: Context, playerRole: PlayerRole) {
             val intent = Intent(context, WaitingRoomActivity::class.java)
-            intent.putExtra(EXTRA_PLAYER_ROLE, PlayerRole.GUEST.name)
+            intent.putExtra(EXTRA_PLAYER_ROLE, playerRole.name)
+            intent.flags = FLAG_ACTIVITY_CLEAR_TASK or FLAG_ACTIVITY_NEW_TASK
             context.startActivity(intent)
         }
     }

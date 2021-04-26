@@ -59,11 +59,13 @@ class HostNewGameActivity : HomeBaseActivity() {
             this,
             { event ->
                 when (event) {
-                    HostNewGameCommand.NavigateToWaitingRoom -> WaitingRoomActivity.startActivityForHost(this)
+                    HostNewGameCommand.NavigateToWaitingRoom -> {
+                        finish()
+                        WaitingRoomActivity.startActivityForHost(this)
+                    }
                     else -> {
                     } // Nothing to do
                 }
-                finish()
             }
         )
     }

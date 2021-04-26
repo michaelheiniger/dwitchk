@@ -52,12 +52,23 @@ class MainActivity : HomeBaseActivity() {
             { command ->
                 when (command) {
                     is MainActivityCommands.NavigateToNewGameActivityAsGuest -> JoinNewGameActivity.joinGame(this, command.game)
-                    MainActivityCommands.NavigateToWaitingRoomAsGuest -> WaitingRoomActivity.startActivityForGuest(this)
-                    MainActivityCommands.NavigateToWaitingRoomAsHost -> WaitingRoomActivity.startActivityForHost(this)
-                    MainActivityCommands.NavigateToGameRoomAsGuest -> GameRoomActivity.startForGuest(this)
-                    MainActivityCommands.NavigateToGameRoomAsHost -> GameRoomActivity.startForHost(this)
+                    MainActivityCommands.NavigateToWaitingRoomAsGuest -> {
+                        finish()
+                        WaitingRoomActivity.startActivityForGuest(this)
+                    }
+                    MainActivityCommands.NavigateToWaitingRoomAsHost -> {
+                        finish()
+                        WaitingRoomActivity.startActivityForHost(this)
+                    }
+                    MainActivityCommands.NavigateToGameRoomAsGuest -> {
+                        finish()
+                        GameRoomActivity.startForGuest(this)
+                    }
+                    MainActivityCommands.NavigateToGameRoomAsHost -> {
+                        finish()
+                        GameRoomActivity.startForHost(this)
+                    }
                 }
-                finish()
             }
         )
     }

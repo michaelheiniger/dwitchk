@@ -93,8 +93,8 @@ class GameRoomActivity : OngoingGameBaseActivity() {
                     onConfirmExchange = dashboardViewModel::confirmExchange,
                     connectionStatus = communicationState,
                     onReconnectClick = connectionGuestViewModel::reconnect,
-                    onGameOverAcknowledge = { onGameOverAcknowledge() },
-                    onLeaveGameClick = { onLeaveGameClick() }
+                    onGameOverAcknowledge = { guestViewModel.acknowledgeGameOver() },
+                    onLeaveGameClick = { guestViewModel.leaveGame() }
                 )
             }
         }
@@ -133,8 +133,8 @@ class GameRoomActivity : OngoingGameBaseActivity() {
             { command ->
                 when (command) {
                     GameRoomHostCommand.NavigateToHomeScreen -> {
-                        MainActivity.start(this)
                         finish()
+                        MainActivity.start(this)
                     }
                 }
             }
@@ -147,20 +147,19 @@ class GameRoomActivity : OngoingGameBaseActivity() {
             { command ->
                 when (command) {
                     GameRoomGuestCommand.NavigateToHomeScreen -> {
-                        MainActivity.start(this)
                         finish()
+                        MainActivity.start(this)
                     }
                 }
             }
         )
     }
 
-    private fun onGameOverAcknowledge() {
-        guestViewModel.acknowledgeGameOver()
-    }
-
-    private fun onLeaveGameClick() {
-        guestViewModel.leaveGame()
+    override fun onBackPressed() { // TODO: Show confirmation dialog ?
+        when (playerRole) {
+            PlayerRole.GUEST -> guestViewModel.leaveGame()
+            PlayerRole.HOST -> hostViewModel.endGame()
+        }
     }
 
     override fun onStart() {
@@ -185,6 +184,7 @@ class GameRoomActivity : OngoingGameBaseActivity() {
         private fun startActivity(context: Context, playerRole: PlayerRole) {
             val intent = Intent(context, GameRoomActivity::class.java)
             intent.putExtra(EXTRA_PLAYER_ROLE, playerRole.name)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             context.startActivity(intent)
         }
     }
