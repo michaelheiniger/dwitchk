@@ -7,6 +7,10 @@ import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import java.io.IOException
 
+/**
+ * Credits: Diogo Pires
+ * https://medium.com/@diogopires_55864/disabling-android-animations-in-espresso-tests-automatically-e6cfd897e767
+ */
 class DisableAnimationsRule : TestRule {
     override fun apply(base: Statement, description: Description): Statement {
         return object : Statement() {
