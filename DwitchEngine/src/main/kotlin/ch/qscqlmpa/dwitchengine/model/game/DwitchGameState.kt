@@ -102,7 +102,7 @@ data class DwitchGameState(
 
         players.values.forEach { p ->
             if (p.isTheOnePlaying) {
-                require(p.id === currentPlayerId) { "The player 'Playing' must always be the current player." }
+                require(p.id == currentPlayerId) { "The player 'Playing' must always be the current player." }
             }
         }
     }

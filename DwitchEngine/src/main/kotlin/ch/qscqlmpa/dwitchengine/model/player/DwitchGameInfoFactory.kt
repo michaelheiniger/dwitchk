@@ -11,8 +11,7 @@ import ch.qscqlmpa.dwitchengine.model.info.DwitchPlayerInfo
 internal class DwitchGameInfoFactory(val gameState: DwitchGameState) {
 
     private val minimumCardValueAllowed: CardName by lazy {
-        val lastCardOnTable = gameState.lastCardOnTable()
-        lastCardOnTable?.name ?: CardName.Blank
+        gameState.lastCardOnTable()?.name ?: CardName.Blank
     }
 
     fun create(): DwitchGameInfo {
@@ -46,9 +45,9 @@ internal class DwitchGameInfoFactory(val gameState: DwitchGameState) {
         )
     }
 
-    private fun isCardPlayable(card: Card) = cardHasValueHighEnough(card) || cardIsJoker(card)
+    private fun isCardPlayable(card: Card) = cardHasHighEnoughValue(card) || cardIsJoker(card)
 
-    private fun cardHasValueHighEnough(card: Card) = card.value() >= minimumCardValueAllowed.value || cardIsJoker(card)
+    private fun cardHasHighEnoughValue(card: Card) = card.value() >= minimumCardValueAllowed.value || cardIsJoker(card)
 
     private fun canPlay(player: DwitchPlayer) = gameState.phaseIsPlayable && player.isTheOnePlaying
 
