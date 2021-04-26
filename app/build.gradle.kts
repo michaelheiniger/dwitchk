@@ -154,4 +154,6 @@ dependencies {
 
     // Robolectric (for unit tests that log stuff)
     testImplementation("org.robolectric:robolectric:4.5.1")
+
+    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
 }

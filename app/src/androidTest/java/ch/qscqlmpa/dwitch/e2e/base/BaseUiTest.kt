@@ -9,6 +9,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.TestApp
+import ch.qscqlmpa.dwitch.e2e.DisableAnimationsRule
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommunication.di.TestCommunicationComponent
@@ -43,6 +44,9 @@ abstract class BaseUiTest {
 
     @get:Rule
     val testRule = createAndroidComposeRule<MainActivity>()
+
+    @get:Rule
+    val animationsRule = DisableAnimationsRule()
 
     protected val gameName = "LOTR"
 
