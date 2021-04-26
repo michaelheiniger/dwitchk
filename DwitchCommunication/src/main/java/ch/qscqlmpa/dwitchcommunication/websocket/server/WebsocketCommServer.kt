@@ -26,8 +26,8 @@ internal class WebsocketCommServer @Inject constructor(
 
     private lateinit var websocketServer: WebsocketServer
 
-    private val communicationEventRelay = PublishRelay.create<ServerCommunicationEvent>()
-    private val messageRelay = PublishRelay.create<EnvelopeReceived>()
+    private val communicationEventsRelay = PublishRelay.create<ServerCommunicationEvent>()
+    private val messagesReceivedRelay = PublishRelay.create<EnvelopeReceived>()
 
     override fun start() {
         websocketServer = websocketServerFactory.create()
@@ -35,13 +35,13 @@ internal class WebsocketCommServer @Inject constructor(
         disposableManager.add(
             websocketServer.observeEvents()
                 .concatMap(::processServerCommEvent)
-                .subscribe(communicationEventRelay)
+                .subscribe(communicationEventsRelay)
         )
 
         disposableManager.add(
             websocketServer.observeMessages()
                 .concatMap(::processMessageEvents)
-                .subscribe(messageRelay)
+                .subscribe(messagesReceivedRelay)
         )
 
         websocketServer.start()
@@ -52,7 +52,7 @@ internal class WebsocketCommServer @Inject constructor(
         disposableManager.disposeAndReset()
 
         // The websocket server (See class WebSocketServer) implementation doesn't provide a "stop" callback.
-        communicationEventRelay.accept(ServerCommunicationEvent.NoLongerListeningForConnections)
+        communicationEventsRelay.accept(ServerCommunicationEvent.NoLongerListeningForConnections)
     }
 
     override fun sendMessage(message: Message, recipient: Recipient) {
@@ -64,11 +64,11 @@ internal class WebsocketCommServer @Inject constructor(
     }
 
     override fun observeCommunicationEvents(): Observable<ServerCommunicationEvent> {
-        return communicationEventRelay
+        return communicationEventsRelay
     }
 
     override fun observeReceivedMessages(): Observable<EnvelopeReceived> {
-        return messageRelay
+        return messagesReceivedRelay
     }
 
     override fun closeConnectionWithClient(connectionId: ConnectionId) {
