@@ -29,11 +29,6 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
         gameEventLiveData()
     }
 
-    override fun onStop() {
-        super.onStop()
-        disposableManager.disposeAndReset()
-    }
-
     fun updateReadyState(ready: Boolean) {
         disposableManager.add(
             facade.updateReadyState(ready)

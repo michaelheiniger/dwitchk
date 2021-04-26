@@ -16,5 +16,6 @@ abstract class BaseViewModel : ViewModel() {
     }
 
     open fun onStop() {
+        disposableManager.disposeAndReset()
     }
 }

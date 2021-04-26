@@ -21,10 +21,6 @@ class WaitingRoomViewModel @Inject constructor(
         playersInWaitingRoom()
     }
 
-    override fun onStop() {
-        disposableManager.disposeAndReset()
-    }
-
     private fun playersInWaitingRoom() {
         disposableManager.add(
             facade.observePlayers()

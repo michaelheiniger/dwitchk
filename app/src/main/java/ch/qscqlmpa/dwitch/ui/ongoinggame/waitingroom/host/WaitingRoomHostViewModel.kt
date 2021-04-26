@@ -25,11 +25,6 @@ internal class WaitingRoomHostViewModel @Inject constructor(
         canGameBeLaunched()
     }
 
-    override fun onStop() {
-        super.onStop()
-        disposableManager.disposeAndReset()
-    }
-
     fun launchGame() {
         disposableManager.add(
             facade.launchGame()

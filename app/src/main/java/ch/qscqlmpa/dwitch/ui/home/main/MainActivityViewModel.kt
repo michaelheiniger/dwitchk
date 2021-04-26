@@ -44,10 +44,6 @@ class MainActivityViewModel @Inject constructor(
         observeResumableGames()
     }
 
-    override fun onStop() {
-        disposableManager.disposeAndReset()
-    }
-
     fun joinGame(game: AdvertisedGame) {
         if (game.isNew) {
             _commands.value = MainActivityCommands.NavigateToNewGameActivityAsGuest(game)
