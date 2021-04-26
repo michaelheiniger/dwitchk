@@ -36,7 +36,7 @@ internal class CardExchangeChooserTest : EngineTestBase() {
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.President,
                 listOf(Card.Clubs2, Card.Spades6, Card.Clubs10)
-            )
+            ).setCurrentPlayer(p1.id)
 
         launchTestForPlayer1(Card.Diamonds4, Card.HeartsAce)
 
@@ -59,7 +59,7 @@ internal class CardExchangeChooserTest : EngineTestBase() {
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.Asshole,
                 listOf(Card.Clubs2, Card.Spades6, Card.Clubs10)
-            )
+            ).setCurrentPlayer(p1.id)
 
         launchTestForPlayer1(Card.Clubs3, Card.Diamonds4)
     }
@@ -90,7 +90,7 @@ internal class CardExchangeChooserTest : EngineTestBase() {
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.President,
                 listOf(Card.Clubs6, Card.Diamonds7, Card.HeartsJack)
-            )
+            ).setCurrentPlayer(p2.id)
 
         launchTestForPlayer1(Card.Clubs3)
     }
@@ -109,7 +109,7 @@ internal class CardExchangeChooserTest : EngineTestBase() {
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.President,
                 listOf(Card.Clubs2, Card.Spades6, Card.Clubs10)
-            )
+            ).setCurrentPlayer(p1.id)
 
         launchTestForPlayer1(Card.Diamonds4, Card.HeartsAce)
     }
@@ -128,7 +128,7 @@ internal class CardExchangeChooserTest : EngineTestBase() {
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.President,
                 listOf(Card.Clubs2, Card.Spades6, Card.Clubs10)
-            )
+            ).setCurrentPlayer(p1.id)
 
         Assertions.assertThrows(IllegalArgumentException::class.java) { launchTestForPlayer1(Card.Clubs3, Card.Diamonds4) }
     }
@@ -159,7 +159,7 @@ internal class CardExchangeChooserTest : EngineTestBase() {
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.President,
                 listOf(Card.Clubs6, Card.Diamonds7, Card.HeartsJack)
-            )
+            ).setCurrentPlayer(p2.id)
 
         launchTestForPlayer1(Card.HeartsAce)
     }
@@ -190,7 +190,7 @@ internal class CardExchangeChooserTest : EngineTestBase() {
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.President,
                 listOf(Card.Clubs6, Card.Diamonds7, Card.HeartsJack)
-            )
+            ).setCurrentPlayer(p2.id)
 
         Assertions.assertThrows(IllegalArgumentException::class.java) { launchTestForPlayer1(Card.Clubs3) }
     }
@@ -227,7 +227,7 @@ internal class CardExchangeChooserTest : EngineTestBase() {
                 DwitchPlayerStatus.Waiting,
                 DwitchRank.ViceAsshole,
                 listOf(Card.Clubs7, Card.Diamonds8, Card.Hearts10)
-            )
+            ).setCurrentPlayer(p1.id)
 
         Assertions.assertThrows(IllegalArgumentException::class.java) { launchTestForPlayer1(Card.Clubs3) }
     }

@@ -134,7 +134,7 @@ internal class CollectionUtilTest {
             val list3 = listOf(6, 7, 8, 9)
 
             assertThat(list1.concatWith(list2)).containsExactly(1, 2, 3, 4, 4, 2, 3, 4, 5, 6)
-            assertThat(list2.concatWith(list1)).containsExactly(2, 3, 4, 5, 6, 1, 2, 3, 4)
+            assertThat(list2.concatWith(list1)).containsExactly(4, 2, 3, 4, 5, 6, 1, 2, 3, 4)
 
             assertThat(list1.concatWith(list2, list3)).containsExactly(1, 2, 3, 4, 4, 2, 3, 4, 5, 6, 6, 7, 8, 9)
         }
