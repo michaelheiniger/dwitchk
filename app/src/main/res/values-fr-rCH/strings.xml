@@ -12,7 +12,8 @@
     <string name="card_suit_spades">Piques</string>
     <string name="cards_in_hand">Cartes en mains</string>
     <string name="confirm_cards_to_exchange">Echanger</string>
-    <string name="choose_cards_to_exchange">Cartes à échanger</string>
+    <string name="choose_one_card_to_exchange">Choisis une carte à échanger</string>
+    <string name="choose_two_cards_to_exchange">Choisis deux cartes à échanger</string>
     <string name="connected_to_host">Connecté wouhouh !</string>
     <string name="disconnected_from_host">Déconnecté: ah damned !</string>
     <string name="game_canceled_by_host">Partie annulée par l\'hôte</string>
