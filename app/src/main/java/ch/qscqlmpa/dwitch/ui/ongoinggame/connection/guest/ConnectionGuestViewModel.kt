@@ -26,11 +26,6 @@ class ConnectionGuestViewModel @Inject constructor(
         currentCommunicationState()
     }
 
-    override fun onStop() {
-        super.onStop()
-        this.disposableManager.disposeAndReset()
-    }
-
     private fun currentCommunicationState() {
         this.disposableManager.add(
             facade.currentCommunicationState()

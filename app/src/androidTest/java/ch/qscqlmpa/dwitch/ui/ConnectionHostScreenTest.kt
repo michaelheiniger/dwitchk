@@ -58,7 +58,7 @@ class ConnectionHostScreenTest : BaseUiUnitTest() {
 
     private fun launchTest() {
         launchTestWithContent {
-            ConnectionHostScreen(state, onReconnectClick = {})
+            ConnectionHostScreen(state, onReconnectClick = {}, onAbortClick = {})
         }
     }
 }

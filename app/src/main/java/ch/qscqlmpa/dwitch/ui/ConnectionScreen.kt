@@ -1,20 +1,18 @@
 package ch.qscqlmpa.dwitch.ui
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ch.qscqlmpa.dwitch.BuildConfig
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
 
@@ -24,7 +22,10 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationSt
 )
 @Composable
 private fun CommunicationHostScreenPreview() {
-    ConnectionHostScreen(HostCommunicationState.Error) {}
+    ConnectionHostScreen(HostCommunicationState.Error,
+        onReconnectClick = {},
+        onAbortClick = {}
+    )
 }
 
 @Preview(
@@ -33,66 +34,54 @@ private fun CommunicationHostScreenPreview() {
 )
 @Composable
 private fun CommunicationGuestScreenPreview() {
-    ConnectionGuestScreen(GuestCommunicationState.Error) {}
+    ConnectionGuestScreen(
+        status = GuestCommunicationState.Error,
+        onReconnectClick = {},
+        onAbortClick = {}
+    )
 }
 
 @Composable
 fun ConnectionHostScreen(
     status: HostCommunicationState?,
-    onReconnectClick: () -> Unit
+    onReconnectClick: () -> Unit,
+    onAbortClick: () -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        when (status) {
-            HostCommunicationState.Open -> {
-                if (BuildConfig.DEBUG) {
-                    Status(R.string.listening_for_guests)
-                }
-            }
-            HostCommunicationState.Closed -> {
-                Status(R.string.not_listening_for_guests)
-                ReconnectionControls { onReconnectClick() }
-            }
-            HostCommunicationState.Error -> {
-                Status(R.string.host_connection_error)
-                ReconnectionControls { onReconnectClick() }
-            }
-            HostCommunicationState.Opening -> {
-                Status(R.string.host_connecting)
-                ReconnectionControls(true) { onReconnectClick() }
-            }
-            else -> {
-            }
-        }
+    val connectionInfo = when (status) {
+        HostCommunicationState.Opening -> ConnectionInfo(R.string.host_connecting, connecting = true)
+        HostCommunicationState.Closed -> ConnectionInfo(R.string.not_listening_for_guests, connecting = false)
+        HostCommunicationState.Error -> ConnectionInfo(R.string.host_connection_error, connecting = false)
+        else -> null
+    }
+    if (connectionInfo != null) {
+        ConnectionDialog(
+            connectionInfo = connectionInfo,
+            abortDescription = R.string.leave_game_btn,
+            onReconnectClick = onReconnectClick,
+            onAbortClick = onAbortClick
+        )
     }
 }
 
 @Composable
 fun ConnectionGuestScreen(
     status: GuestCommunicationState?,
-    onReconnectClick: () -> Unit
+    onReconnectClick: () -> Unit,
+    onAbortClick: () -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        when (status) {
-            GuestCommunicationState.Connected -> {
-                if (BuildConfig.DEBUG) {
-                    Status(R.string.connected_to_host)
-                }
-            }
-            GuestCommunicationState.Disconnected -> {
-                Status(R.string.disconnected_from_host)
-                ReconnectionControls { onReconnectClick() }
-            }
-            GuestCommunicationState.Error -> {
-                Status(R.string.guest_connection_error)
-                ReconnectionControls { onReconnectClick() }
-            }
-            GuestCommunicationState.Connecting -> {
-                Status(R.string.guest_connecting)
-                ReconnectionControls(true) { onReconnectClick() }
-            }
-            else -> {
-            }
-        }
+    val connectionInfo = when (status) {
+        GuestCommunicationState.Connecting -> ConnectionInfo(R.string.guest_connecting, connecting = true)
+        GuestCommunicationState.Disconnected -> ConnectionInfo(R.string.disconnected_from_host, connecting = false)
+        GuestCommunicationState.Error -> ConnectionInfo(R.string.guest_connection_error, connecting = false)
+        else -> null
+    }
+    if (connectionInfo != null) {
+        ConnectionDialog(
+            connectionInfo = connectionInfo,
+            abortDescription = R.string.leave_game_btn,
+            onReconnectClick = onReconnectClick,
+            onAbortClick = onAbortClick
+        )
     }
 }
 
@@ -106,28 +95,68 @@ private fun Status(statusResource: Int) {
 
 @Composable
 private fun ReconnectionControls(
-    connectionOnGoing: Boolean = false,
+    connecting: Boolean = false,
     onReconnectClick: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        Row(modifier = Modifier.fillMaxWidth()) {
-            OutlinedButton(
-                enabled = !connectionOnGoing,
-                onClick = onReconnectClick,
-                modifier = Modifier.padding(
-                    start = 0.dp,
-                    top = 0.dp,
-                    end = 16.dp,
-                    bottom = 0.dp
-                )
-            ) {
-                Text(text = stringResource(R.string.reconnect))
-            }
-            if (connectionOnGoing) {
-                CircularProgressIndicator(
-                    color = MaterialTheme.colors.secondary
-                )
-            }
+        if (connecting) {
+            CircularProgressIndicator(
+                color = MaterialTheme.colors.secondary,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+            Spacer(Modifier.height(16.dp))
+        }
+        Button(
+            enabled = !connecting,
+            onClick = onReconnectClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(UiTags.reconnect)
+        ) {
+            Text(stringResource(R.string.reconnect))
         }
     }
 }
+
+@Composable
+private fun ConnectionDialog(
+    connectionInfo: ConnectionInfo,
+    abortDescription: Int,
+    onReconnectClick: () -> Unit,
+    onAbortClick: () -> Unit
+) {
+    Dialog(
+        onDismissRequest = onAbortClick,
+        properties = DialogProperties(),
+        content = {
+            Surface(
+                shape = MaterialTheme.shapes.medium,
+                color = MaterialTheme.colors.surface,
+                contentColor = contentColorFor(MaterialTheme.colors.surface)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Status(connectionInfo.connectionStatus)
+                    Spacer(Modifier.height(16.dp))
+                    ReconnectionControls(
+                        connecting = connectionInfo.connecting,
+                        onReconnectClick = onReconnectClick
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedButton(
+                        onClick = onAbortClick,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(abortDescription))
+                    }
+                }
+            }
+        }
+    )
+}
+
+private data class ConnectionInfo(val connectionStatus: Int, val connecting: Boolean)

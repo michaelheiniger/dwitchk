@@ -1,7 +1,6 @@
 package ch.qscqlmpa.dwitch.e2e
 
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.*
 import ch.qscqlmpa.dwitch.PlayerGuestTest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertCheckboxChecked
@@ -55,6 +54,11 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
         testRule.assertPlayerInWr(PlayerGuestTest.LocalGuest.name, getString(PLAYER_DISCONNECTED))
         testRule.assertPlayerInWr(PlayerGuestTest.Guest2.name, getString(PLAYER_DISCONNECTED))
         testRule.assertPlayerInWr(PlayerGuestTest.Guest3.name, getString(PLAYER_DISCONNECTED))
+
+        testRule.onNodeWithText(getString(R.string.disconnected_from_host))
+        testRule.onNodeWithTag(UiTags.reconnect)
+            .assertIsEnabled()
+            .assertIsDisplayed()
     }
 
     @Test

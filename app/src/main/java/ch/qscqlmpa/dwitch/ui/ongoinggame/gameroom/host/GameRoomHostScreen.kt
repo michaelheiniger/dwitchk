@@ -86,6 +86,10 @@ fun GameRoomHostScreen(
         ) {
             Text(stringResource(R.string.end_game))
         }
-        ConnectionHostScreen(connectionStatus) { onReconnectClick() }
+        ConnectionHostScreen(
+            status = connectionStatus,
+            onReconnectClick = onReconnectClick,
+            onAbortClick = onEndGameClick
+        )
     }
 }

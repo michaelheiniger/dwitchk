@@ -9,26 +9,35 @@ import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
+//TODO: Write tests
 internal class GameRoomGuestViewModel @Inject constructor(
     private val facade: GameRoomGuestFacade,
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
+    private val _commands = MutableLiveData<GameRoomGuestCommand>()
     private val _gameOver = MutableLiveData<Boolean>()
+    val commands get(): LiveData<GameRoomGuestCommand> = _commands
     val gameOver get(): LiveData<Boolean> = _gameOver
 
     fun acknowledgeGameOver() {
         _gameOver.value = false
+        _commands.value = GameRoomGuestCommand.NavigateToHomeScreen
+    }
+
+    fun leaveGame() {
+        disposableManager.add(facade.leaveGame()
+            .observeOn(uiScheduler)
+            .subscribe(
+                { _commands.value = GameRoomGuestCommand.NavigateToHomeScreen },
+                { error -> Logger.error(error) { "Error while leaving the game." } }
+            )
+        )
     }
 
     override fun onStart() {
         super.onStart()
         observeGameEvent()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        disposableManager.disposeAndReset()
     }
 
     private fun observeGameEvent() {

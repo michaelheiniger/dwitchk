@@ -18,6 +18,7 @@ import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest.ConnectionGuestViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.host.ConnectionHostViewModel
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestCommand
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestScreen
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomGuestViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host.GameRoomHostCommand
@@ -92,7 +93,8 @@ class GameRoomActivity : OngoingGameBaseActivity() {
                     onConfirmExchange = dashboardViewModel::confirmExchange,
                     connectionStatus = communicationState,
                     onReconnectClick = connectionGuestViewModel::reconnect,
-                    onGameOverAcknowledge = { onGameOverAcknowledge() }
+                    onGameOverAcknowledge = { onGameOverAcknowledge() },
+                    onLeaveGameClick = { onLeaveGameClick() }
                 )
             }
         }
@@ -119,6 +121,7 @@ class GameRoomActivity : OngoingGameBaseActivity() {
             PlayerRole.GUEST -> {
                 guestViewModel = viewModelProvider.get(GameRoomGuestViewModel::class.java)
                 connectionGuestViewModel = viewModelProvider.get(ConnectionGuestViewModel::class.java)
+                setupGuestCommands()
                 setContent { ActivityScreenForGuest() }
             }
         }
@@ -133,7 +136,19 @@ class GameRoomActivity : OngoingGameBaseActivity() {
                         MainActivity.start(this)
                         finish()
                     }
-                    else -> { // Nothing to do
+                }
+            }
+        )
+    }
+
+    private fun setupGuestCommands() {
+        guestViewModel.commands.observe(
+            this,
+            { command ->
+                when (command) {
+                    GameRoomGuestCommand.NavigateToHomeScreen -> {
+                        MainActivity.start(this)
+                        finish()
                     }
                 }
             }
@@ -142,8 +157,10 @@ class GameRoomActivity : OngoingGameBaseActivity() {
 
     private fun onGameOverAcknowledge() {
         guestViewModel.acknowledgeGameOver()
-        MainActivity.start(this)
-        finish()
+    }
+
+    private fun onLeaveGameClick() {
+        guestViewModel.leaveGame()
     }
 
     override fun onStart() {
@@ -165,7 +182,7 @@ class GameRoomActivity : OngoingGameBaseActivity() {
             startActivity(context, PlayerRole.GUEST)
         }
 
-        fun startActivity(context: Context, playerRole: PlayerRole) {
+        private fun startActivity(context: Context, playerRole: PlayerRole) {
             val intent = Intent(context, GameRoomActivity::class.java)
             intent.putExtra(EXTRA_PLAYER_ROLE, playerRole.name)
             context.startActivity(intent)

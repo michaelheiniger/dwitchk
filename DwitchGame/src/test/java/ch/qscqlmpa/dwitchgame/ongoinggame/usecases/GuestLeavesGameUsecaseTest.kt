@@ -13,7 +13,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-internal class LeaveGameUsecaseTest : BaseUnitTest() {
+internal class GuestLeavesGameUsecaseTest : BaseUnitTest() {
 
     private val playerDwitchId = DwitchPlayerId(23)
 
@@ -21,13 +21,13 @@ internal class LeaveGameUsecaseTest : BaseUnitTest() {
 
     private val mockCommunicator = mockk<GuestCommunicator>(relaxed = true)
 
-    private lateinit var leaveGameUsecase: LeaveGameUsecase
+    private lateinit var guestLeavesGameUsecase: GuestLeavesGameUsecase
 
     @BeforeEach
     override fun setup() {
         super.setup()
         appEventRepository = AppEventRepository()
-        leaveGameUsecase = LeaveGameUsecase(mockInGameStore, appEventRepository, mockCommunicator)
+        guestLeavesGameUsecase = GuestLeavesGameUsecase(mockInGameStore, appEventRepository, mockCommunicator)
 
         every { mockInGameStore.getLocalPlayerDwitchId() } returns playerDwitchId
     }
@@ -68,6 +68,6 @@ internal class LeaveGameUsecaseTest : BaseUnitTest() {
     }
 
     private fun launchTest() {
-        leaveGameUsecase.leaveGame().test().assertComplete()
+        guestLeavesGameUsecase.leaveGame().test().assertComplete()
     }
 }

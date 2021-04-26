@@ -15,4 +15,5 @@ object UiTags {
     const val confirmCardExchange = "confirmCardExchange"
     const val cardExchangeOngoing = "cardExchangeOngoing"
     const val closeInfoDialog = "closeInfoDialog"
+    const val reconnect = "reconnect"
 }

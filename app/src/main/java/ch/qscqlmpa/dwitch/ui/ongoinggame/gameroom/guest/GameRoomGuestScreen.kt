@@ -28,7 +28,8 @@ fun GameRoomGuestScreen(
     onRemoveCardFromExchange: (card: Card) -> Unit,
     onConfirmExchange: () -> Unit,
     connectionStatus: GuestCommunicationState?,
-    onReconnectClick: () -> Unit
+    onReconnectClick: () -> Unit,
+    onLeaveGameClick: () -> Unit
 ) {
     Column(
         Modifier
@@ -63,6 +64,10 @@ fun GameRoomGuestScreen(
         }
 
         Spacer(Modifier.height(16.dp))
-        ConnectionGuestScreen(connectionStatus) { onReconnectClick() }
+        ConnectionGuestScreen(
+            status = connectionStatus,
+            onReconnectClick = onReconnectClick,
+            onAbortClick = onLeaveGameClick
+        )
     }
 }

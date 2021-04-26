@@ -27,7 +27,7 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
     backgroundColor = 0xFFFFFFFF
 )
 @Composable
-private fun WaitingRoomGuestScreenPreview() {
+private fun WaitingRoomGuestScreenPlayerConnectedPreview() {
     WaitingRoomGuestScreen(
         players = listOf(
             PlayerWrUi(name = "Aragorn", PlayerConnectionState.CONNECTED, ready = true),
@@ -35,7 +35,27 @@ private fun WaitingRoomGuestScreenPreview() {
             PlayerWrUi(name = "Gimli", PlayerConnectionState.DISCONNECTED, ready = false)
         ),
         ready = UiCheckboxModel(enabled = false, checked = false),
-        connectionStatus = GuestCommunicationState.Disconnected,
+        connectionStatus = GuestCommunicationState.Connected,
+        onReadyClick = {},
+        onLeaveClick = {},
+        onReconnectClick = {}
+    )
+}
+
+@Preview(
+    showBackground = true,
+    backgroundColor = 0xFFFFFFFF
+)
+@Composable
+private fun WaitingRoomGuestScreenPlayerDisconnectedPreview() {
+    WaitingRoomGuestScreen(
+        players = listOf(
+            PlayerWrUi(name = "Aragorn", PlayerConnectionState.DISCONNECTED, ready = true),
+            PlayerWrUi(name = "Boromir", PlayerConnectionState.DISCONNECTED, ready = false),
+            PlayerWrUi(name = "Gimli", PlayerConnectionState.DISCONNECTED, ready = false)
+        ),
+        ready = UiCheckboxModel(enabled = false, checked = false),
+        connectionStatus = GuestCommunicationState.Connecting,
         onReadyClick = {},
         onLeaveClick = {},
         onReconnectClick = {}
@@ -58,18 +78,18 @@ fun WaitingRoomGuestScreen(
             .padding(top = 16.dp, start = 16.dp, end = 16.dp)
     ) {
         WaitingRoomPlayersScreen(players)
-
         Spacer(Modifier.height(16.dp))
-
         GuestControlScreen(
             ready = ready,
             onReadyClick = onReadyClick,
             onLeaveClick = onLeaveClick
         )
-
         Spacer(Modifier.height(16.dp))
-
-        ConnectionGuestScreen(connectionStatus) { onReconnectClick() }
+        ConnectionGuestScreen(
+            status = connectionStatus,
+            onReconnectClick = onReconnectClick,
+            onAbortClick = onLeaveClick
+        )
     }
 }
 

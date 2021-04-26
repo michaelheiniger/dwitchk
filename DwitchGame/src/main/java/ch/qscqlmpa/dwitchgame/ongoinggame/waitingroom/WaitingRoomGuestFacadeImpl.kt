@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunication
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEventRepository
-import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.LeaveGameUsecase
+import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.GuestLeavesGameUsecase
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.PlayerReadyUsecase
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -14,7 +14,7 @@ import javax.inject.Inject
 internal class WaitingRoomGuestFacadeImpl @Inject constructor(
     private val guestCommunicator: GuestCommunicator,
     private val playerReadyUsecase: PlayerReadyUsecase,
-    private val leaveGameUsecase: LeaveGameUsecase,
+    private val guestLeavesGameUsecase: GuestLeavesGameUsecase,
     private val wrPlayerRepository: WaitingRoomPlayerRepository,
     private val gameEventRepository: GuestGameEventRepository,
     private val schedulerFactory: SchedulerFactory
@@ -35,7 +35,7 @@ internal class WaitingRoomGuestFacadeImpl @Inject constructor(
     }
 
     override fun leaveGame(): Completable {
-        return leaveGameUsecase.leaveGame()
+        return guestLeavesGameUsecase.leaveGame()
             .subscribeOn(schedulerFactory.io())
     }
 

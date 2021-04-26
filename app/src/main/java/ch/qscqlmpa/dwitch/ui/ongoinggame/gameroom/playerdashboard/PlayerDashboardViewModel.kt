@@ -66,11 +66,6 @@ class PlayerDashboardViewModel @Inject constructor(
         observeGameState()
     }
 
-    override fun onStop() {
-        super.onStop()
-        disposableManager.disposeAndReset()
-    }
-
     private fun observeGameState() {
         disposableManager.add(
             facade.observeGameData()

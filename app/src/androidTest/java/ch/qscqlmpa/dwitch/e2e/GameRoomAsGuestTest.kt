@@ -51,7 +51,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
     }
 
     @Test
-    fun playACard() {
+    fun localPlayerPlaysACard() {
         goToGameRoom()
 
         testRule.assertCardsInHand(Card.Spades4, Card.Spades6)
@@ -67,7 +67,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
     }
 
     @Test
-    fun showEndOfRoundResults() {
+    fun roundEnds() {
         cardsForPlayer = mapOf(
             PlayerGuestTest.Host.id to setOf(Card.Clubs3),
             PlayerGuestTest.LocalGuest.id to setOf(Card.Spades4)
@@ -84,7 +84,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
     }
 
     @Test
-    fun cardExchange() {
+    fun localPlayerPerformCardExchange() {
         cardsForPlayer = mapOf(
             PlayerGuestTest.Host.id to setOf(Card.Hearts5),
             PlayerGuestTest.LocalGuest.id to setOf(Card.Spades6)
@@ -109,7 +109,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
     }
 
     @Test
-    fun gameOver() {
+    fun hostTerminatesTheGame() {
         goToGameRoom()
 
         clientTestStub.serverSendsMessageToClient(Message.GameOverMessage)

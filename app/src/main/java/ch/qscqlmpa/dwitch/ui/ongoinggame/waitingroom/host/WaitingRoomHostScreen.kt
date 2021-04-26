@@ -56,20 +56,19 @@ fun WaitingRoomHostScreen(
             .animateContentSize()
             .padding(top = 16.dp, start = 16.dp, end = 16.dp)
     ) {
-
         WaitingRoomPlayersScreen(players = players)
-
         Spacer(Modifier.height(16.dp))
-
         HostControlScreen(
             launchGameEnabled = launchGameEnabled,
             onLaunchGameClick = onLaunchGameClick,
             onCancelGameClick = onCancelGameClick
         )
-
         Spacer(Modifier.height(16.dp))
-
-        ConnectionHostScreen(connectionStatus) { onReconnectClick() }
+        ConnectionHostScreen(
+            status = connectionStatus,
+            onReconnectClick = onReconnectClick,
+            onAbortClick = onCancelGameClick
+        )
     }
 }
 

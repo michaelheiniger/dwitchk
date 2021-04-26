@@ -46,7 +46,7 @@ class GameRoomAsHostTest : BaseHostTest() {
     }
 
     @Test
-    fun playACard() {
+    fun localPlayerPlaysACard() {
         goToGameRoom()
 
         testRule.assertCardsInHand(Card.Hearts5, Card.Clubs3)
@@ -61,7 +61,7 @@ class GameRoomAsHostTest : BaseHostTest() {
     }
 
     @Test
-    fun passTurn() {
+    fun localPlayerPasses() {
         goToGameRoom()
 
         testRule.assertCardsInHand(Card.Hearts5, Card.Clubs3)
@@ -75,6 +75,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         testRule.assertPlayerCannotPassTurn()
     }
 
+    //FIXME
     @Test
     fun playAWholeRound() {
         goToGameRoom()
@@ -105,7 +106,7 @@ class GameRoomAsHostTest : BaseHostTest() {
     }
 
     @Test
-    fun showEndOfRoundResults() {
+    fun roundEnds() {
         cardsForPlayer = mapOf(
             DwitchPlayerId(1) to setOf(Card.Hearts3), // Host
             DwitchPlayerId(2) to setOf(Card.Spades6) // Guest
@@ -124,7 +125,7 @@ class GameRoomAsHostTest : BaseHostTest() {
     }
 
     @Test
-    fun cardExchange() {
+    fun localPlayerPerformsCardExchange() {
         cardsForPlayer = mapOf(
             DwitchPlayerId(1) to setOf(Card.Hearts3), // Host
             DwitchPlayerId(2) to setOf(Card.Spades6) // Guest

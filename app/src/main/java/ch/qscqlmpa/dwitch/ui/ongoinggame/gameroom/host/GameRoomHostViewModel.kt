@@ -17,7 +17,6 @@ internal class GameRoomHostViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _commands = MutableLiveData<GameRoomHostCommand>()
-
     val commands get(): LiveData<GameRoomHostCommand> = _commands
 
     fun startNewRound() {
