@@ -26,7 +26,7 @@ import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
 fun GameOverDialog(onGameOverAcknowledge: () -> Unit) {
     InfoDialog(
         title = R.string.info_dialog_title,
-        text = R.string.game_canceled_by_host,
+        text = R.string.game_over,
         onOkClick = onGameOverAcknowledge
     )
 }
