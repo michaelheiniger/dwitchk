@@ -99,5 +99,11 @@ data class DwitchGameState(
         if (allCardsInGame.toSet().size != CardUtil.deckSize) {
             throw IllegalStateException("There must be exactly ${CardUtil.deckSize} cards in the game, actual value: ${allCardsInGame.size}")
         }
+
+        players.values.forEach { p ->
+            if (p.isTheOnePlaying) {
+                require(p.id === currentPlayerId) { "The player 'Playing' must always be the current player." }
+            }
+        }
     }
 }
