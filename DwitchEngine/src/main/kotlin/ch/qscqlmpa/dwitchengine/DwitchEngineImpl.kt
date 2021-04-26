@@ -16,8 +16,8 @@ import ch.qscqlmpa.dwitchengine.model.game.DwitchCardExchange
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 import ch.qscqlmpa.dwitchengine.model.info.DwitchGameInfo
+import ch.qscqlmpa.dwitchengine.model.player.DwitchGameInfoFactory
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
-import ch.qscqlmpa.dwitchengine.model.player.PlayerDashboardFactory
 import ch.qscqlmpa.dwitchengine.rules.CardExchangeComputer
 import org.tinylog.kotlin.Logger
 
@@ -39,7 +39,7 @@ internal class DwitchEngineImpl(private val currentGameState: DwitchGameState) :
     private val currentPlayerId = currentGameState.currentPlayerId
 
     override fun getGameInfo(): DwitchGameInfo {
-        return PlayerDashboardFactory(currentGameState).create()
+        return DwitchGameInfoFactory(currentGameState).create()
     }
 
     override fun playCard(cardPlayed: Card): DwitchGameState {

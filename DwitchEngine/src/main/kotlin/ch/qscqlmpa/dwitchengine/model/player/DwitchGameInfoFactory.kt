@@ -8,7 +8,7 @@ import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
 import ch.qscqlmpa.dwitchengine.model.info.DwitchGameInfo
 import ch.qscqlmpa.dwitchengine.model.info.DwitchPlayerInfo
 
-internal class PlayerDashboardFactory(val gameState: DwitchGameState) {
+internal class DwitchGameInfoFactory(val gameState: DwitchGameState) {
 
     private val minimumCardValueAllowed: CardName by lazy {
         val lastCardOnTable = gameState.lastCardOnTable()
