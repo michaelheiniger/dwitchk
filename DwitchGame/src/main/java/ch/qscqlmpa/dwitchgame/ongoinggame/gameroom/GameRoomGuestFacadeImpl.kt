@@ -25,5 +25,6 @@ internal class GameRoomGuestFacadeImpl @Inject constructor(
 
     override fun leaveGame(): Completable {
         return guestLeavesGameUsecase.leaveGame()
+            .subscribeOn(schedulerFactory.io())
     }
 }
