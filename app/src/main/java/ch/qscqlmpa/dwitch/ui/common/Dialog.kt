@@ -32,7 +32,7 @@ private fun InfoDialogPreview() {
 fun InfoDialog(
     title: Int,
     text: Int,
-    onOkClick: () -> Unit,
+    onOkClick: () -> Unit
 ) {
 
     val openDialog = remember { mutableStateOf(true) }
@@ -51,6 +51,49 @@ fun InfoDialog(
                     modifier = Modifier.testTag(UiTags.closeInfoDialog)
                 ) {
                     Text(text = stringResource(R.string.ok), color = Color.Black)
+                }
+            },
+            backgroundColor = Color.White,
+            contentColor = Color.White
+        )
+    }
+}
+
+@Composable
+fun ConfirmationDialog(
+    title: Int,
+    text: Int,
+    onConfirmClick: () -> Unit,
+    onCancelClick: () -> Unit = {}
+) {
+
+    val openDialog = remember { mutableStateOf(true) }
+
+    if (openDialog.value) {
+        AlertDialog(
+            onDismissRequest = onCancelClick,
+            title = { Text(text = stringResource(title), color = Color.Black) },
+            text = { Text(text = stringResource(text), color = Color.Black) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onConfirmClick()
+                        openDialog.value = false
+                    },
+                    modifier = Modifier.testTag(UiTags.confirmBtn)
+                ) {
+                    Text(text = stringResource(R.string.yes), color = Color.Black)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        onCancelClick()
+                        openDialog.value = false
+                    },
+                    modifier = Modifier.testTag(UiTags.cancelBtn)
+                ) {
+                    Text(text = stringResource(R.string.no), color = Color.Black)
                 }
             },
             backgroundColor = Color.White,

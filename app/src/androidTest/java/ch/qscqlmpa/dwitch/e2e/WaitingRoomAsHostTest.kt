@@ -1,14 +1,12 @@
 package ch.qscqlmpa.dwitch.e2e
 
-import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsNotEnabled
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.*
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.e2e.base.BaseHostTest
 import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.PLAYER_CONNECTED
 import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.PLAYER_DISCONNECTED
 import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.assertPlayerInWr
+import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.websocket.server.test.PlayerHostTest
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.GuestMessageFactory
@@ -101,6 +99,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
         guestJoinsGame(PlayerHostTest.Guest1)
 
         testRule.onNodeWithText(getString(R.string.cancel_game)).performClick()
+        testRule.onNodeWithTag(UiTags.confirmBtn).performClick()
 
         val messageSent = waitForNextMessageSentByHost()
         assertThat(messageSent).isInstanceOf(Message.CancelGameMessage::class.java)

@@ -88,4 +88,9 @@
     <string name="player_status_playing">Playing</string>
     <string name="player_status_turnPassed">Passed</string>
     <string name="player_status_waiting">Waiting</string>
+    <string name="guest_leaves_game_confirmation">Are you sure you want to leave the game ?</string>
+    <string name="yes">yes</string>
+    <string name="no">No</string>
+    <string name="host_ends_game_confirmation">Are you sure you want to end the game ?</string>
+    <string name="host_cancel_game_confirmation">Are you sure you want to cancel the game  ?</string>
 </resources>

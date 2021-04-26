@@ -10,10 +10,13 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitch.ui.common.ConfirmationDialog
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest.ConnectionGuestViewModel
@@ -36,6 +39,7 @@ class GameRoomActivity : OngoingGameBaseActivity() {
     private lateinit var connectionGuestViewModel: ConnectionGuestViewModel
     private lateinit var dashboardViewModel: PlayerDashboardViewModel
     private lateinit var playerRole: PlayerRole
+    private var showConfirmationDialog = MutableLiveData(false)
 
     private val hostViewModels: List<BaseViewModel> by lazy {
         listOf(viewModel, hostViewModel, connectionHostViewModel, dashboardViewModel)
@@ -71,6 +75,14 @@ class GameRoomActivity : OngoingGameBaseActivity() {
                     onEndGameClick = hostViewModel::endGame,
                     onReconnectClick = connectionHostViewModel::reconnect
                 )
+                if (showConfirmationDialog.observeAsState().value == true) {
+                    ConfirmationDialog(
+                        title = R.string.info_dialog_title,
+                        text = R.string.host_ends_game_confirmation,
+                        onConfirmClick = { hostViewModel.endGame() },
+                        onCancelClick = { showConfirmationDialog.value = false }
+                    )
+                }
             }
         }
     }
@@ -96,6 +108,14 @@ class GameRoomActivity : OngoingGameBaseActivity() {
                     onGameOverAcknowledge = { guestViewModel.acknowledgeGameOver() },
                     onLeaveGameClick = { guestViewModel.leaveGame() }
                 )
+                if (showConfirmationDialog.observeAsState().value == true) {
+                    ConfirmationDialog(
+                        title = R.string.info_dialog_title,
+                        text = R.string.guest_leaves_game_confirmation,
+                        onConfirmClick = { guestViewModel.leaveGame() },
+                        onCancelClick = { showConfirmationDialog.value = false }
+                    )
+                }
             }
         }
     }

@@ -11,10 +11,12 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
+import ch.qscqlmpa.dwitch.ui.common.ConfirmationDialog
 import ch.qscqlmpa.dwitch.ui.common.InfoDialog
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
@@ -38,6 +40,7 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
     private lateinit var connectionHostViewModel: ConnectionHostViewModel
     private lateinit var connectionGuestViewModel: ConnectionGuestViewModel
     private lateinit var playerRole: PlayerRole
+    private var showConfirmationDialog = MutableLiveData(false)
 
     @Composable
     private fun ActivityScreenForHost(
@@ -51,13 +54,21 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
                 val launchGameEnabled = wrHostViewModel.canGameBeLaunched.observeAsState(false).value
                 val connectionStatus = connectionViewModel.connectionStatus.observeAsState().value
                 WaitingRoomHostScreen(
-                    players,
-                    launchGameEnabled,
-                    connectionStatus,
-                    wrHostViewModel::launchGame,
-                    wrHostViewModel::cancelGame,
-                    connectionViewModel::reconnect
+                    players = players,
+                    launchGameEnabled = launchGameEnabled,
+                    connectionStatus = connectionStatus,
+                    onLaunchGameClick = wrHostViewModel::launchGame,
+                    onCancelGameClick = { showConfirmationDialog.value = true },
+                    onReconnectClick = connectionViewModel::reconnect
                 )
+                if (showConfirmationDialog.observeAsState().value == true) {
+                    ConfirmationDialog(
+                        title = R.string.info_dialog_title,
+                        text = R.string.host_cancel_game_confirmation,
+                        onConfirmClick = { wrHostViewModel.cancelGame() },
+                        onCancelClick = { showConfirmationDialog.value = false }
+                    )
+                }
             }
         }
     }
@@ -79,7 +90,7 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
                     ready = readyControl,
                     connectionStatus = connectionStatus,
                     onReadyClick = wrGuestViewModel::updateReadyState,
-                    onLeaveClick = wrGuestViewModel::leaveGame,
+                    onLeaveClick = { showConfirmationDialog.value = true },
                     onReconnectClick = connectionViewModel::reconnect
                 )
                 when (command) {
@@ -92,6 +103,14 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
                     }
                     else -> { // Nothing to do
                     }
+                }
+                if (showConfirmationDialog.observeAsState().value == true) {
+                    ConfirmationDialog(
+                        title = R.string.info_dialog_title,
+                        text = R.string.guest_leaves_game_confirmation,
+                        onConfirmClick = { wrGuestViewModel.leaveGame() },
+                        onCancelClick = { showConfirmationDialog.value = false }
+                    )
                 }
             }
         }
@@ -135,11 +154,8 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
         }
     }
 
-    override fun onBackPressed() { // TODO: Show confirmation dialog ?
-        when (playerRole) {
-            PlayerRole.GUEST -> wrGuestViewModel.leaveGame()
-            PlayerRole.HOST -> wrHostViewModel.cancelGame()
-        }
+    override fun onBackPressed() {
+        showConfirmationDialog.value = true
     }
 
     override fun onStart() {
