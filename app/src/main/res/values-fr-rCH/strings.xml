@@ -42,7 +42,6 @@
     <string name="ok">Si tu l\'dis, meuf</string>
     <string name="last_card_played">Dernière carte jouée</string>
     <string name="pass_turn">Passer</string>
-    <string name="pick_a_card">Piocher</string>
     <string name="play_card">Jouer</string>
     <string name="start_new_round">Nouveau tour</string>
     <string name="player_connected">Connecté wouh !</string>
