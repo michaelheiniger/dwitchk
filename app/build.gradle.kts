@@ -83,6 +83,7 @@ dependencies {
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlinVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.4.32") // Prevent compiler warning (implicit dependency)
 
     // Android / UI
     implementation("androidx.appcompat:appcompat:1.2.0")
