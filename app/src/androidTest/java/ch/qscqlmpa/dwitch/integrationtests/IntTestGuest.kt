@@ -5,10 +5,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameRoomGuestFacade
 import org.assertj.core.api.Assertions
 
-class IntTestGuest(
-//    private val guest: PlayerHostTest,
-//    advertisedGame: AdvertisedGame
-) : IntTestPlayer() {
+class IntTestGuest : IntTestPlayer() {
 
     private lateinit var gameRoomGuestFacade: GameRoomGuestFacade
 
@@ -36,14 +33,8 @@ class IntTestGuest(
         Assertions.assertThat(gameRoomGuestFacade.consumeLastEvent()).isEqualTo(GuestGameEvent.GameOver)
     }
 
-    override fun hookOnGoingGameComponent() {
-        super.hookOnGoingGameComponent()
-//        gameRoomGuestFacade = ongoingGameComponent.gameRoomGuestFacade
-    }
-
-//    private fun getWebsocketClient(): IntTestWebsocketClient {
+    //    private fun getWebsocketClient(): IntTestWebsocketClient {
 //        return ongoingGameComponent.websocketClientFactory.create() as IntTestWebsocketClient
-//        TODO()
 //    }
 
     private fun hookUpGuestToNetworkHub() {
