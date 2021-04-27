@@ -2,11 +2,11 @@ package ch.qscqlmpa.dwitchengine.actions.playcard
 
 import ch.qscqlmpa.dwitchengine.actions.GameStateBase
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 import ch.qscqlmpa.dwitchengine.model.player.*
 import ch.qscqlmpa.dwitchengine.rules.PlayerMove
 import ch.qscqlmpa.dwitchengine.rules.RankComputer
+import ch.qscqlmpa.dwitchengine.rules.SpecialRule
 
 internal class PlayCardState(
     private val currentGameState: DwitchGameState,
@@ -77,8 +77,10 @@ internal class PlayCardState(
     }
 
     fun isLastCardPlayedTheFirstJokerPlayedOfTheRound(): Boolean {
-        val lastCard = currentGameState.cardsOnTable.lastOrNull()
-        return lastCard != null && lastCard.name == CardName.Jack && currentGameState.cardsInGraveyard.none { c -> c.name == CardName.Jack }
+        return SpecialRule.isLastCardPlayedTheFirstJackOfTheRound(
+            currentGameState.cardsOnTable,
+            currentGameState.cardsInGraveyard
+        )
     }
 
     fun currentPlayerIsDone(): Boolean {
