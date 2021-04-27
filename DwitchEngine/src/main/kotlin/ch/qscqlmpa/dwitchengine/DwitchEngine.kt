@@ -4,6 +4,7 @@ import ch.qscqlmpa.dwitchengine.actions.startnewgame.GameBootstrap
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.DwitchCardExchange
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 import ch.qscqlmpa.dwitchengine.model.info.DwitchGameInfo
@@ -56,6 +57,10 @@ interface DwitchEngine {
      * constraint on card minimum value broken).
      */
     fun chooseCardsForExchange(playerId: DwitchPlayerId, cards: Set<Card>): DwitchGameState
+
+    fun isLastCardPlayedTheFirstJackOfTheRound(): Boolean
+
+    fun joker(): CardName
 
     companion object {
 

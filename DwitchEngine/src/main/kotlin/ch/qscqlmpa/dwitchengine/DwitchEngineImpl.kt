@@ -12,6 +12,7 @@ import ch.qscqlmpa.dwitchengine.actions.startnewround.StartNewRoundGameUpdater
 import ch.qscqlmpa.dwitchengine.actions.startnewround.StartNewRoundState
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.DwitchCardExchange
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
@@ -19,6 +20,7 @@ import ch.qscqlmpa.dwitchengine.model.info.DwitchGameInfo
 import ch.qscqlmpa.dwitchengine.model.player.DwitchGameInfoFactory
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.rules.CardExchangeComputer
+import ch.qscqlmpa.dwitchengine.rules.SpecialRule
 import org.tinylog.kotlin.Logger
 
 /**
@@ -100,6 +102,17 @@ internal class DwitchEngineImpl(private val currentGameState: DwitchGameState) :
             return CardExchangeComputer.getCardExchange(player.id, player.rank, player.cardsInHand.toSet())
         }
         return null // Cards already chosen
+    }
+
+    override fun isLastCardPlayedTheFirstJackOfTheRound(): Boolean {
+        return SpecialRule.isLastCardPlayedTheFirstJackOfTheRound(
+            currentGameState.cardsOnTable,
+            currentGameState.cardsInGraveyard
+        )
+    }
+
+    override fun joker(): CardName {
+        return currentGameState.joker
     }
 
     private fun logUpdatedGameState(gameState: DwitchGameState) {
