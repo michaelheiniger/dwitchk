@@ -59,9 +59,7 @@ fun GameRoomHostScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .testTag(UiTags.startNewRound)
-                ) {
-                    Text(stringResource(R.string.start_new_round))
-                }
+                ) { Text(stringResource(R.string.start_new_round)) }
             }
             is GameRoomScreen.CardExchange -> {
                 CardExchangeScreen(
