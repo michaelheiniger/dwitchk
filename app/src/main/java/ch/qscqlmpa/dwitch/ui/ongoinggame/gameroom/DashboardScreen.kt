@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.ui.ResourceMapper
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitch.ui.ongoinggame.CardItemDisplay
@@ -221,9 +222,11 @@ private fun PlayerDone(player: PlayerInfo) {
     val text = with(AnnotatedString.Builder()) {
         pushStyle(SpanStyle(textDecoration = TextDecoration.LineThrough))
         append(player.name)
-        append(" (")
-        append(stringResource(ResourceMapper.getResource(player.status)))
-        append(")")
+        if (BuildConfig.DEBUG) {
+            append(" (")
+            append(stringResource(ResourceMapper.getResource(player.status)))
+            append(")")
+        }
         pop()
         toAnnotatedString()
     }
@@ -234,11 +237,9 @@ private fun PlayerDone(player: PlayerInfo) {
 
 @Composable
 private fun PlayerPlaying(player: PlayerInfo) {
-    val rank = stringResource(ResourceMapper.getResource(player.status))
-    val text = "${player.name} ($rank)"
-    PlayerInfoDisplay(MaterialTheme.colors.primary) {
-        Text(text = text, color = Color.White)
-    }
+    val status = stringResource(ResourceMapper.getResource(player.status))
+    val text = if (BuildConfig.DEBUG) "${player.name} ($status)" else player.name
+    PlayerInfoDisplay(MaterialTheme.colors.primary) { Text(text = text, color = Color.White) }
 }
 
 @Composable
@@ -246,9 +247,11 @@ private fun PlayerTurnPassed(player: PlayerInfo) {
     val text = with(AnnotatedString.Builder()) {
         pushStyle(SpanStyle(fontWeight = FontWeight.Light))
         append(player.name)
-        append(" (")
-        append(stringResource(ResourceMapper.getResource(player.status)))
-        append(")")
+        if (BuildConfig.DEBUG) {
+            append(" (")
+            append(stringResource(ResourceMapper.getResource(player.status)))
+            append(")")
+        }
         pop()
         toAnnotatedString()
     }
@@ -261,11 +264,13 @@ private fun PlayerTurnPassed(player: PlayerInfo) {
 private fun PlayerWaiting(player: PlayerInfo) {
     val text = with(AnnotatedString.Builder()) {
         append(player.name)
-        append(" (")
-        append(stringResource(ResourceMapper.getResource(player.status)))
-        append(")")
-        if (player.dwitched) {
-            append(" Dwitched")
+        if (BuildConfig.DEBUG) {
+            append(" (")
+            append(stringResource(ResourceMapper.getResource(player.status)))
+            append(")")
+            if (player.dwitched) {
+                append(" Dwitched")
+            }
         }
         toAnnotatedString()
     }
