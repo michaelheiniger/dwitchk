@@ -129,8 +129,7 @@ fun DashboardScreen(
     Column(
         Modifier
             .fillMaxWidth()
-            .animateContentSize()
-    ) {
+            .animateContentSize()) {
         val localPlayerDashboard = dashboardInfo.localPlayerDashboard
         PlayersInfo(dashboardInfo.playersInfo)
         Spacer(Modifier.height(16.dp))
@@ -255,9 +254,7 @@ private fun PlayerTurnPassed(player: PlayerInfo) {
         pop()
         toAnnotatedString()
     }
-    PlayerInfoDisplay {
-        Text(text)
-    }
+    PlayerInfoDisplay { Text(text) }
 }
 
 @Composable
@@ -276,9 +273,7 @@ private fun PlayerWaiting(player: PlayerInfo) {
     }
     val backgroundColor = if (player.dwitched) MaterialTheme.colors.secondary else Color.White
     val textColor = if (player.dwitched) Color.White else Color.Black
-    PlayerInfoDisplay(backgroundColor) {
-        Text(text = text, color = textColor)
-    }
+    PlayerInfoDisplay(backgroundColor) { Text(text = text, color = textColor) }
 }
 
 @Composable
