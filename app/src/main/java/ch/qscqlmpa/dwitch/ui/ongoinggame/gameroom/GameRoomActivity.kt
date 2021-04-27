@@ -147,11 +147,8 @@ class GameRoomActivity : OngoingGameBaseActivity() {
         }
     }
 
-    override fun onBackPressed() { // TODO: Show confirmation dialog ?
-        when (playerRole) {
-            PlayerRole.GUEST -> guestViewModel.leaveGame()
-            PlayerRole.HOST -> hostViewModel.endGame()
-        }
+    override fun onBackPressed() {
+        showConfirmationDialog.value = true
     }
 
     override fun onStart() {
