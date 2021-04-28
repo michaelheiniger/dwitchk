@@ -70,7 +70,7 @@ internal class RejoinGameMessageProcessor @Inject constructor(
             RoomType.WAITING_ROOM -> store.updatePlayerWithConnectionStateAndReady(
                 playerLocalId,
                 PlayerConnectionState.CONNECTED,
-                false
+                ready = false
             )
             RoomType.GAME_ROOM -> store.updatePlayerWithConnectionState(playerLocalId, PlayerConnectionState.CONNECTED)
             else -> throw IllegalStateException("Current room is null !")
