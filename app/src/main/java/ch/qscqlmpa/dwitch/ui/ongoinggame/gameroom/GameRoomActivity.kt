@@ -72,7 +72,7 @@ class GameRoomActivity : OngoingGameBaseActivity() {
                     onConfirmExchange = dashboardViewModel::confirmExchange,
                     onStartNewRoundClick = hostViewModel::startNewRound,
                     connectionStatus = connectionStatus,
-                    onEndGameClick = hostViewModel::endGame,
+                    onEndGameClick = { showConfirmationDialog.value = true },
                     onReconnectClick = connectionHostViewModel::reconnect
                 )
                 if (showConfirmationDialog.observeAsState().value == true) {
