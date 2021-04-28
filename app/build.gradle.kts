@@ -13,8 +13,8 @@ android {
         applicationId = "ch.qscqlmpa.dwitch"
         minSdkVersion(Versions.minSdkVersion)
         targetSdkVersion(Versions.targetSdkVersion)
-        versionCode = 2
-        versionName = "1.0.0-beta"
+        versionCode = Versions.appVersionCode
+        versionName = Versions.appVersionName
 
         testInstrumentationRunner = "ch.qscqlmpa.dwitch.app.CustomTestRunner"
 
