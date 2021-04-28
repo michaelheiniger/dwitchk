@@ -19,6 +19,7 @@ class LanGameDiscovery @Inject constructor(
     override fun listenForAdvertisedGames(): Observable<AdvertisedGame> {
 
         Logger.info { "Listen for advertised games..." }
+        isListening = true
 
         val listeningPort = 8888
 
