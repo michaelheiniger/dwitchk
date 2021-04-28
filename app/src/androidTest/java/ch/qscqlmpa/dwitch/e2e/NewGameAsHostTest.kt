@@ -30,7 +30,9 @@ class NewGameAsHostTest : BaseUiTest() {
         testRule.onNodeWithText(getString(R.string.create_game)).performClick()
         testRule.assertTextIsDisplayedOnce(getString(R.string.host_game))
 
-        testRule.onNodeWithText(getString(R.string.back_to_home_screen)).performClick()
+        testRule.onNodeWithTag(UiTags.toolbarNavigationIcon)
+            .assertIsDisplayed()
+            .performClick()
         assertCurrentScreenIsHomeSreen()
     }
 }

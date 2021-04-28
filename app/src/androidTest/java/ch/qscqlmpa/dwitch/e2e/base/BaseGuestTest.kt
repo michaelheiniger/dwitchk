@@ -44,7 +44,7 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
 
         // Assert that the guest is indeed in the WaitingRoom
         testRule.assertTextIsDisplayedOnce(getString(R.string.players_in_waitingroom))
-        testRule.assertTextIsDisplayedOnce(getString(R.string.leave_game_btn))
+        testRule.assertTextIsDisplayedOnce(getString(R.string.leave_game))
     }
 
     protected fun waitForNextMessageSentByLocalGuest(): Message {

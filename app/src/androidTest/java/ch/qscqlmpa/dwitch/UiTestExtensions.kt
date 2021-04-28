@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitch
 
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
+import ch.qscqlmpa.dwitch.ui.common.UiTags
 
 fun ComposeContentTestRule.assertTextIsDisplayedOnce(
     textAsId: String,
@@ -23,4 +24,8 @@ fun ComposeContentTestRule.assertCheckboxChecked(
         sni.assertIsOff()
     }
     return sni
+}
+
+fun ComposeContentTestRule.clickOnDialogConfirmonButton() {
+    onNodeWithTag(UiTags.confirmBtn).performClick()
 }

@@ -34,6 +34,7 @@ class JoinNewGameActivity : HomeBaseActivity() {
         MaterialTheme {
             Surface(color = Color.White) {
                 JoinNewGameScreen(
+                    gameName = game.gameName,
                     playerName = playerName,
                     joinGameControlEnabled = joinGameControl,
                     onPlayerNameChange = { name -> viewModel.onPlayerNameChange(name) },

@@ -15,7 +15,7 @@ class ConnectionGuestViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _communicationState = MutableLiveData<GuestCommunicationState>()
-    val communicationState get(): LiveData<GuestCommunicationState> = _communicationState
+    val connectionStatus get(): LiveData<GuestCommunicationState> = _communicationState
 
     fun reconnect() {
         facade.connect()

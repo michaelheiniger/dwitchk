@@ -1,12 +1,10 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom
 
-import androidx.compose.ui.test.filterToOne
-import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.onChildren
-import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.*
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
 import ch.qscqlmpa.dwitch.base.BaseUiUnitTest
+import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import org.junit.Test
@@ -19,6 +17,8 @@ class WaitingRoomPlayersScreenTest : BaseUiUnitTest() {
     private val galadriel = PlayerWrUi(name = "Galadriel", connectionState = PlayerConnectionState.DISCONNECTED, ready = false)
     private val theoden = PlayerWrUi(name = "Theoden", connectionState = PlayerConnectionState.CONNECTED, ready = true)
 
+    private var showAddComputerPlayer = true
+
     @Test
     fun playersAreDisplayed() {
         launchTest()
@@ -30,6 +30,26 @@ class WaitingRoomPlayersScreenTest : BaseUiUnitTest() {
         assertPlayer(gimli)
         assertPlayer(galadriel)
         assertPlayer(theoden)
+    }
+
+    @Test
+    fun addComputerPlayerIsDisplayed() {
+        showAddComputerPlayer = true
+
+        launchTest()
+
+        composeTestRule.onNodeWithTag(UiTags.addComputerPlayer)
+            .assertIsEnabled()
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun addComputerPlayerIsNotDisplayed() {
+        showAddComputerPlayer = false
+
+        launchTest()
+
+        composeTestRule.onNodeWithTag(UiTags.addComputerPlayer).assertDoesNotExist()
     }
 
     private fun assertPlayer(player: PlayerWrUi) {
@@ -51,7 +71,7 @@ class WaitingRoomPlayersScreenTest : BaseUiUnitTest() {
         launchTestWithContent {
             WaitingRoomPlayersScreen(
                 players = listOf(aragorn, legolas, gimli, galadriel, theoden),
-                showAddComputerPlayer = true,
+                showAddComputerPlayer = showAddComputerPlayer,
                 onAddComputerPlayer = {},
             )
         }

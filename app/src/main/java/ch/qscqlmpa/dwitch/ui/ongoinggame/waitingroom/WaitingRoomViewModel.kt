@@ -14,9 +14,12 @@ class WaitingRoomViewModel @Inject constructor(
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val _showAddComputerPlayer = MutableLiveData<Boolean>()
+    private val _toolbarTitle = MutableLiveData<String>()
+    private val _canComputerPlayersBeAdded = MutableLiveData<Boolean>()
     private val _players = MutableLiveData<List<PlayerWrUi>>(emptyList())
-    val canComputerPlayersBeAdded get(): LiveData<Boolean> = _showAddComputerPlayer
+
+    val toolbarTitle get(): LiveData<String> = _toolbarTitle
+    val canComputerPlayersBeAdded get(): LiveData<Boolean> = _canComputerPlayersBeAdded
     val players get(): LiveData<List<PlayerWrUi>> = _players
 
     init {
@@ -29,9 +32,12 @@ class WaitingRoomViewModel @Inject constructor(
 
     private fun loadGame() {
         disposableManager.add(
-            facade.isGameANewGame()
+            facade.gameInfo()
                 .observeOn(uiScheduler)
-                .subscribe { gameIsNew -> _showAddComputerPlayer.value = gameIsNew }
+                .subscribe { gameInfo ->
+                    _toolbarTitle.value = gameInfo.name
+                    _canComputerPlayersBeAdded.value = gameInfo.gameIsNew
+                }
         )
     }
 

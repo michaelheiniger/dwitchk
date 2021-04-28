@@ -4,10 +4,12 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeInfo
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 
 interface GameFacade {
     fun observeGameData(): Observable<DwitchState>
     fun performAction(action: GameAction): Completable
+    fun getGameName(): Single<String>
 }
 
 sealed class GameAction {

@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.ui.common.DwitchTopBar
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
 import ch.qscqlmpa.dwitch.ui.common.toStringEuFormat
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
@@ -69,14 +70,21 @@ fun HomeScreen(
         Modifier
             .fillMaxWidth()
             .animateContentSize()
-            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
-
     ) {
-        AdvertisedGameContainer(advertisedGames, onJoinGameClick)
-        Spacer(Modifier.height(16.dp))
-        GameCreation(onCreateNewGameClick)
-        Spacer(Modifier.height(16.dp))
-        ResumableGamesContainer(resumableGames, onResumableGameClick)
+        DwitchTopBar(title = R.string.app_name)
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .animateContentSize()
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+
+        ) {
+            AdvertisedGameContainer(advertisedGames, onJoinGameClick)
+            Spacer(Modifier.height(16.dp))
+            GameCreation(onCreateNewGameClick)
+            Spacer(Modifier.height(16.dp))
+            ResumableGamesContainer(resumableGames, onResumableGameClick)
+        }
     }
 }
 

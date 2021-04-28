@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 
@@ -64,6 +65,7 @@ fun WaitingRoomPlayersScreen(
                     modifier = Modifier
                         .weight(1f)
                         .wrapContentWidth(Alignment.End)
+                        .testTag(UiTags.addComputerPlayer)
                 ) { Text(stringResource(R.string.add_computer_player)) }
                 Spacer(Modifier.height(8.dp))
             }

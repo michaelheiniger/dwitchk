@@ -2,7 +2,6 @@ package ch.qscqlmpa.dwitch.e2e
 
 import androidx.compose.ui.test.*
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
 import ch.qscqlmpa.dwitch.e2e.base.BaseUiTest
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
@@ -36,11 +35,13 @@ class NewGameAsGuestTest : BaseUiTest() {
         networkAdapter.setPacket(packet1)
         networkAdapter.setPacket(packet2)
 
-        testRule.onNodeWithText("Les Bronzés", substring = true).performClick()
+        testRule.onNodeWithText("Les Bronzés", substring = true)
+            .assertIsDisplayed()
+            .performClick()
 
-        testRule.assertTextIsDisplayedOnce(getString(R.string.back_to_home_screen))
-
-        testRule.onNodeWithText(getString(R.string.back_to_home_screen)).performClick()
+        testRule.onNodeWithTag(UiTags.toolbarNavigationIcon)
+            .assertIsDisplayed()
+            .performClick()
         assertCurrentScreenIsHomeSreen()
     }
 }

@@ -3,8 +3,6 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,6 +13,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ConnectionHostScreen
+import ch.qscqlmpa.dwitch.ui.common.DwitchTopBar
+import ch.qscqlmpa.dwitch.ui.common.NavigationIcon
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomPlayersScreen
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
@@ -28,6 +28,7 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 @Composable
 private fun WaitingRoomHostScreenPreview() {
     WaitingRoomHostScreen(
+        toolbarTitle = "Dwiiitch",
         showAddComputerPlayer = true,
         players = listOf(
             PlayerWrUi("Aragorn", PlayerConnectionState.CONNECTED, true),
@@ -45,6 +46,7 @@ private fun WaitingRoomHostScreenPreview() {
 
 @Composable
 fun WaitingRoomHostScreen(
+    toolbarTitle: String,
     showAddComputerPlayer: Boolean,
     players: List<PlayerWrUi>,
     launchGameEnabled: Boolean,
@@ -58,33 +60,41 @@ fun WaitingRoomHostScreen(
         Modifier
             .fillMaxWidth()
             .animateContentSize()
-            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
     ) {
-        WaitingRoomPlayersScreen(
-            players = players,
-            showAddComputerPlayer = showAddComputerPlayer,
-            onAddComputerPlayer = onAddComputerPlayer
+        DwitchTopBar(
+            title = toolbarTitle,
+            navigationIcon = NavigationIcon(R.drawable.ic_baseline_exit_to_app_24, R.string.end_game, onCancelGameClick)
         )
-        Spacer(Modifier.height(16.dp))
-        HostControlScreen(
-            launchGameEnabled = launchGameEnabled,
-            onLaunchGameClick = onLaunchGameClick,
-            onCancelGameClick = onCancelGameClick
-        )
-        Spacer(Modifier.height(16.dp))
-        ConnectionHostScreen(
-            status = connectionStatus,
-            onReconnectClick = onReconnectClick,
-            onAbortClick = onCancelGameClick
-        )
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .animateContentSize()
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+        ) {
+            WaitingRoomPlayersScreen(
+                players = players,
+                showAddComputerPlayer = showAddComputerPlayer,
+                onAddComputerPlayer = onAddComputerPlayer
+            )
+            Spacer(Modifier.height(16.dp))
+            HostControlScreen(
+                launchGameEnabled = launchGameEnabled,
+                onLaunchGameClick = onLaunchGameClick
+            )
+            Spacer(Modifier.height(16.dp))
+            ConnectionHostScreen(
+                status = connectionStatus,
+                onReconnectClick = onReconnectClick,
+                onAbortClick = onCancelGameClick
+            )
+        }
     }
 }
 
 @Composable
 private fun HostControlScreen(
     launchGameEnabled: Boolean,
-    onLaunchGameClick: () -> Unit,
-    onCancelGameClick: () -> Unit
+    onLaunchGameClick: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Button(
@@ -95,16 +105,6 @@ private fun HostControlScreen(
                 .testTag(UiTags.launchGameControl)
         ) {
             Text(stringResource(R.string.launch_game), color = Color.White)
-        }
-        Spacer(Modifier.height(8.dp))
-        OutlinedButton(
-            onClick = onCancelGameClick,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                stringResource(R.string.cancel_game),
-                color = MaterialTheme.colors.primary
-            )
         }
     }
 }

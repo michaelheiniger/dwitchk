@@ -69,7 +69,7 @@ object GameRoomUiUtil {
     }
 
     fun ComposeContentTestRule.endGame() {
-        onNodeWithTag(UiTags.endGame).performClick()
+        onNodeWithTag(UiTags.toolbarNavigationIcon).performClick()
     }
 
     fun ComposeContentTestRule.startNewRound() {

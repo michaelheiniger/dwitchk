@@ -1,11 +1,9 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host
 
-import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsEnabled
-import androidx.compose.ui.test.assertIsNotEnabled
-import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.*
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.base.BaseUiUnitTest
+import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
@@ -34,13 +32,11 @@ class WaitingRoomHostScreenTest : BaseUiUnitTest() {
 
         launchTest()
 
-        composeTestRule.onNode(hasText(getString(R.string.launch_game)))
+        composeTestRule.onNodeWithText(getString(R.string.launch_game))
             .assertIsEnabled()
             .assertIsDisplayed()
 
-        composeTestRule.onNode(hasText(getString(R.string.cancel_game)))
-            .assertIsEnabled()
-            .assertIsDisplayed()
+        composeTestRule.onNodeWithTag(UiTags.toolbarNavigationIcon).assertIsDisplayed()
     }
 
     @Test
@@ -49,18 +45,17 @@ class WaitingRoomHostScreenTest : BaseUiUnitTest() {
 
         launchTest()
 
-        composeTestRule.onNode(hasText(getString(R.string.launch_game)))
+        composeTestRule.onNodeWithText(getString(R.string.launch_game))
             .assertIsNotEnabled()
             .assertIsDisplayed()
 
-        composeTestRule.onNode(hasText(getString(R.string.cancel_game)))
-            .assertIsEnabled()
-            .assertIsDisplayed()
+        composeTestRule.onNodeWithTag(UiTags.toolbarNavigationIcon).assertIsDisplayed()
     }
 
     private fun launchTest() {
         launchTestWithContent {
             WaitingRoomHostScreen(
+                toolbarTitle = "Dwiitch",
                 showAddComputerPlayer = true,
                 players,
                 launchGameEnabled,

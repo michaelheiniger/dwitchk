@@ -3,8 +3,6 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.guest
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -15,6 +13,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ConnectionGuestScreen
+import ch.qscqlmpa.dwitch.ui.common.DwitchTopBar
+import ch.qscqlmpa.dwitch.ui.common.NavigationIcon
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomPlayersScreen
@@ -29,6 +29,7 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 @Composable
 private fun WaitingRoomGuestScreenPlayerConnectedPreview() {
     WaitingRoomGuestScreen(
+        toolbarTitle = "Dwiiitch",
         players = listOf(
             PlayerWrUi(name = "Aragorn", PlayerConnectionState.CONNECTED, ready = true),
             PlayerWrUi(name = "Boromir", PlayerConnectionState.CONNECTED, ready = false),
@@ -42,28 +43,9 @@ private fun WaitingRoomGuestScreenPlayerConnectedPreview() {
     )
 }
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
-@Composable
-private fun WaitingRoomGuestScreenPlayerDisconnectedPreview() {
-    WaitingRoomGuestScreen(
-        players = listOf(
-            PlayerWrUi(name = "Aragorn", PlayerConnectionState.DISCONNECTED, ready = true),
-            PlayerWrUi(name = "Boromir", PlayerConnectionState.DISCONNECTED, ready = false),
-            PlayerWrUi(name = "Gimli", PlayerConnectionState.DISCONNECTED, ready = false)
-        ),
-        ready = UiCheckboxModel(enabled = false, checked = false),
-        connectionStatus = GuestCommunicationState.Connecting,
-        onReadyClick = {},
-        onLeaveClick = {},
-        onReconnectClick = {}
-    )
-}
-
 @Composable
 fun WaitingRoomGuestScreen(
+    toolbarTitle: String,
     players: List<PlayerWrUi>,
     ready: UiCheckboxModel,
     connectionStatus: GuestCommunicationState?,
@@ -75,29 +57,37 @@ fun WaitingRoomGuestScreen(
         Modifier
             .fillMaxWidth()
             .animateContentSize()
-            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
     ) {
-        WaitingRoomPlayersScreen(players = players, showAddComputerPlayer = false, onAddComputerPlayer = {})
-        Spacer(Modifier.height(16.dp))
-        GuestControlScreen(
-            ready = ready,
-            onReadyClick = onReadyClick,
-            onLeaveClick = onLeaveClick
+        DwitchTopBar(
+            title = toolbarTitle,
+            navigationIcon = NavigationIcon(R.drawable.ic_baseline_exit_to_app_24, R.string.leave_game, onLeaveClick)
         )
-        Spacer(Modifier.height(16.dp))
-        ConnectionGuestScreen(
-            status = connectionStatus,
-            onReconnectClick = onReconnectClick,
-            onAbortClick = onLeaveClick
-        )
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .animateContentSize()
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+        ) {
+            WaitingRoomPlayersScreen(players = players, showAddComputerPlayer = false, onAddComputerPlayer = {})
+            Spacer(Modifier.height(16.dp))
+            GuestControlScreen(
+                ready = ready,
+                onReadyClick = onReadyClick
+            )
+            Spacer(Modifier.height(16.dp))
+            ConnectionGuestScreen(
+                status = connectionStatus,
+                onReconnectClick = onReconnectClick,
+                onAbortClick = onLeaveClick
+            )
+        }
     }
 }
 
 @Composable
 private fun GuestControlScreen(
     ready: UiCheckboxModel,
-    onReadyClick: (Boolean) -> Unit,
-    onLeaveClick: () -> Unit
+    onReadyClick: (Boolean) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -116,18 +106,6 @@ private fun GuestControlScreen(
                 modifier = Modifier
                     .clickable { onReadyClick(!ready.checked) }
                     .testTag(UiTags.localPlayerReadyText)
-            )
-        }
-
-        Spacer(Modifier.height(16.dp))
-
-        OutlinedButton(
-            onClick = onLeaveClick,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = stringResource(R.string.leave_game_btn),
-                color = MaterialTheme.colors.primary
             )
         }
     }

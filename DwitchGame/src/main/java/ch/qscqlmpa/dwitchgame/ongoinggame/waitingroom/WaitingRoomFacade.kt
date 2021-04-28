@@ -8,7 +8,8 @@ interface WaitingRoomFacade {
 
     fun observePlayers(): Observable<List<PlayerWrUi>>
 
-    fun isGameANewGame(): Single<Boolean>
+    fun gameInfo(): Single<GameInfoUi>
 }
 
 data class PlayerWrUi(val name: String, val connectionState: PlayerConnectionState, val ready: Boolean)
+data class GameInfoUi(val name: String, val gameIsNew: Boolean)

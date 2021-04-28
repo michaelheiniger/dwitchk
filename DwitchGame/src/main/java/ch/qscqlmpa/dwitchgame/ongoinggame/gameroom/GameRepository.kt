@@ -8,6 +8,7 @@ import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeInfo
 import ch.qscqlmpa.dwitchstore.model.Player
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 @OngoingGameScope
@@ -15,6 +16,10 @@ internal class GameRepository @Inject constructor(
     private val store: InGameStore,
     private val dwitchEngineFactory: DwitchEngineFactory
 ) {
+
+    fun getGameName(): Single<String> {
+        return Single.fromCallable { store.getGameName() }
+    }
 
     fun observeGameData(): Observable<DwitchState> {
         return Observable.combineLatest(

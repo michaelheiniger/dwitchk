@@ -10,7 +10,6 @@ object UiTags {
     const val lastCardPlayed = "lastCardPlayed"
     const val passTurnControl = "passTurnControl"
     const val hand = "hand"
-    const val endGame = "endGame"
     const val startNewRound = "startNewRound"
     const val confirmCardExchange = "confirmCardExchange"
     const val cardExchangeOngoing = "cardExchangeOngoing"
@@ -18,4 +17,6 @@ object UiTags {
     const val confirmBtn = "confirmBtn"
     const val cancelBtn = "cancelBtn"
     const val reconnect = "reconnect"
+    const val toolbarNavigationIcon = "toolbarNavigationIcon"
+    const val addComputerPlayer = "addComputerPlayer"
 }

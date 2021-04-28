@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom
 
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
+import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.GameInfoUi
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomFacade
 import io.mockk.every
@@ -48,7 +49,7 @@ class WaitingRoomViewModelTest : BaseViewModelUnitTest() {
     @Test
     fun `Computer players can be added when the game is a new one`() {
         // Given
-        every { mockFacade.isGameANewGame() } returns Single.just(true)
+        every { mockFacade.gameInfo() } returns Single.just(GameInfoUi("Dwiitch", gameIsNew = true))
         createViewModel()
 
         //When
@@ -61,7 +62,7 @@ class WaitingRoomViewModelTest : BaseViewModelUnitTest() {
     @Test
     fun `Computer players cannot be added when the game is a resumed one`() {
         // Given
-        every { mockFacade.isGameANewGame() } returns Single.just(false)
+        every { mockFacade.gameInfo() } returns Single.just(GameInfoUi("Dwiitch", gameIsNew = false))
         createViewModel()
 
         //When

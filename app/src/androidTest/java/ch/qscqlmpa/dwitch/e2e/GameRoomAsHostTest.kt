@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitch.e2e
 
 import ch.qscqlmpa.dwitch.PlayerGuestTest
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.clickOnDialogConfirmonButton
 import ch.qscqlmpa.dwitch.e2e.base.BaseHostTest
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertCardExchangeControlIsDisabled
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertCardExchangeControlIsEnabled
@@ -100,6 +101,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         testRule.assertEndOfRoundResult(PlayerGuestTest.LocalGuest.name, getString(R.string.asshole_long))
 
         testRule.endGame()
+        testRule.clickOnDialogConfirmonButton()
 
         assertCurrentScreenIsHomeSreen()
     }

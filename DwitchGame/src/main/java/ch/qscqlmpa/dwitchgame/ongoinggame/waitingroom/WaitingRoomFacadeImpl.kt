@@ -17,8 +17,9 @@ internal class WaitingRoomFacadeImpl @Inject constructor(
             .subscribeOn(schedulerFactory.io())
     }
 
-    override fun isGameANewGame(): Single<Boolean> {
-        return Single.fromCallable { store.gameIsNew() }
+    override fun gameInfo(): Single<GameInfoUi> {
+        return Single.fromCallable { store.getGame() }
+            .map { g -> GameInfoUi(g.name, g.isNew()) }
             .subscribeOn(schedulerFactory.io())
     }
 }

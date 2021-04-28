@@ -17,6 +17,7 @@ import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.common.ConfirmationDialog
+import ch.qscqlmpa.dwitch.ui.common.toolbarDefaultTitle
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest.ConnectionGuestViewModel
@@ -59,11 +60,13 @@ class GameRoomActivity : OngoingGameBaseActivity() {
     @ExperimentalFoundationApi
     @Composable
     private fun ActivityScreenForHost() {
+        val toolbarTitle = dashboardViewModel.toolbarTitle.observeAsState(toolbarDefaultTitle).value
         val screen = dashboardViewModel.screen.observeAsState().value
         val connectionStatus = connectionHostViewModel.connectionStatus.observeAsState().value
         MaterialTheme {
             Surface(color = Color.White) {
                 GameRoomHostScreen(
+                    toolbarTitle = toolbarTitle,
                     screen = screen,
                     onCardClick = dashboardViewModel::playCard,
                     onPassClick = dashboardViewModel::passTurn,
@@ -90,20 +93,22 @@ class GameRoomActivity : OngoingGameBaseActivity() {
     @ExperimentalFoundationApi
     @Composable
     private fun ActivityScreenForGuest() {
-        val communicationState = connectionGuestViewModel.communicationState.observeAsState().value
+        val toolbarTitle = dashboardViewModel.toolbarTitle.observeAsState(toolbarDefaultTitle).value
         val screen = dashboardViewModel.screen.observeAsState().value
+        val connectionStatus = connectionGuestViewModel.connectionStatus.observeAsState().value
         val gameOver = guestViewModel.gameOver.observeAsState(false).value
         MaterialTheme {
             Surface(color = Color.White) {
                 GameRoomGuestScreen(
+                    toolbarTitle = toolbarTitle,
                     screen = screen,
-                    showGameOver = gameOver,
+                    showGameOverDialog = gameOver,
                     onCardClick = dashboardViewModel::playCard,
                     onPassClick = dashboardViewModel::passTurn,
                     onAddCardToExchange = dashboardViewModel::addCardToExchange,
                     onRemoveCardFromExchange = dashboardViewModel::removeCardFromExchange,
                     onConfirmExchange = dashboardViewModel::confirmExchange,
-                    connectionStatus = communicationState,
+                    connectionStatus = connectionStatus,
                     onReconnectClick = connectionGuestViewModel::reconnect,
                     onGameOverAcknowledge = { guestViewModel.acknowledgeGameOver() },
                     onLeaveGameClick = { guestViewModel.leaveGame() }

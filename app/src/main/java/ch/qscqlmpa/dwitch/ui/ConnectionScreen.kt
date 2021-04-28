@@ -56,7 +56,7 @@ fun ConnectionHostScreen(
     if (connectionInfo != null) {
         ConnectionDialog(
             connectionInfo = connectionInfo,
-            abortDescription = R.string.leave_game_btn,
+            abortDescription = R.string.leave_game,
             onReconnectClick = onReconnectClick,
             onAbortClick = onAbortClick
         )
@@ -78,7 +78,7 @@ fun ConnectionGuestScreen(
     if (connectionInfo != null) {
         ConnectionDialog(
             connectionInfo = connectionInfo,
-            abortDescription = R.string.leave_game_btn,
+            abortDescription = R.string.leave_game,
             onReconnectClick = onReconnectClick,
             onAbortClick = onAbortClick
         )

@@ -59,6 +59,9 @@ internal abstract class GameDao(database: AppRoomDatabase) {
     @Query("SELECT game_common_id FROM Game WHERE id = :localId ")
     abstract fun getGameCommonId(localId: Long): GameCommonId
 
+    @Query("SELECT name FROM Game WHERE id = :localId ")
+    abstract fun getGameName(localId: Long): String
+
     @Query("SELECT * FROM Game WHERE game_common_id = :gameCommonId")
     abstract fun getGame(gameCommonId: GameCommonId): Game?
 

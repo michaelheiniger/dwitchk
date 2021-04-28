@@ -25,6 +25,7 @@ internal class InGameStoreImpl constructor(
     private val playerDao = database.playerDao()
 
     private val _gameCommonId: GameCommonId by lazy { gameDao.getGameCommonId(gameLocalId) }
+    private val _gameName: String by lazy { gameDao.getGameName(gameLocalId) }
     private val _localDwitchPlayerId: DwitchPlayerId by lazy { playerDao.getPlayerDwitchId(localPlayerLocalId) }
 
     // Game
@@ -34,6 +35,10 @@ internal class InGameStoreImpl constructor(
 
     override fun getGameCommonId(): GameCommonId {
         return _gameCommonId
+    }
+
+    override fun getGameName(): String {
+        return _gameName
     }
 
     override fun getCurrentRoom(): RoomType {

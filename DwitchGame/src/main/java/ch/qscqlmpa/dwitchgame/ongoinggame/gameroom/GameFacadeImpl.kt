@@ -5,6 +5,7 @@ import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.GameCommunicator
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 internal class GameFacadeImpl @Inject constructor(
@@ -25,6 +26,11 @@ internal class GameFacadeImpl @Inject constructor(
 
     override fun performAction(action: GameAction): Completable {
         return gameInteractor.performAction(action)
+            .subscribeOn(schedulerFactory.io())
+    }
+
+    override fun getGameName(): Single<String> {
+        return gameRepository.getGameName()
             .subscribeOn(schedulerFactory.io())
     }
 }

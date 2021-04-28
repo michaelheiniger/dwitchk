@@ -23,7 +23,13 @@ class PlayerDashboardViewModel @Inject constructor(
     private var cardExchangeStateEngine: CardExchangeStateEngine? = null
 
     private val _screen = MutableLiveData<GameRoomScreen>()
+    private val _toolbarTitle = MutableLiveData<String>()
     val screen get(): LiveData<GameRoomScreen> = _screen
+    val toolbarTitle get(): LiveData<String> = _toolbarTitle
+
+    init {
+        loadGameName()
+    }
 
     fun playCard(cardPlayed: Card) {
         performOperation("Card $cardPlayed played successfully.", "Error while playing card $cardPlayed.") {
@@ -66,6 +72,17 @@ class PlayerDashboardViewModel @Inject constructor(
         observeGameState()
     }
 
+    private fun loadGameName() {
+        disposableManager.add(
+            facade.getGameName()
+                .observeOn(uiScheduler)
+                .subscribe(
+                    { gameName -> _toolbarTitle.value = gameName },
+                    { error -> Logger.error(error) { "Error while loading game name." } }
+                )
+        )
+    }
+
     private fun observeGameState() {
         disposableManager.add(
             facade.observeGameData()
@@ -80,7 +97,10 @@ class PlayerDashboardViewModel @Inject constructor(
                     }
                 }
                 .observeOn(uiScheduler)
-                .subscribe { screen -> _screen.value = screen }
+                .subscribe(
+                    { screen -> _screen.value = screen },
+                    { error -> Logger.error(error) { "Error while loading game data." } }
+                )
         )
     }
 

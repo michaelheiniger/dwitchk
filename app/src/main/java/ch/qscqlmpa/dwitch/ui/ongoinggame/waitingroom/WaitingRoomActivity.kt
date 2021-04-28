@@ -18,6 +18,7 @@ import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
 import ch.qscqlmpa.dwitch.ui.common.ConfirmationDialog
 import ch.qscqlmpa.dwitch.ui.common.InfoDialog
+import ch.qscqlmpa.dwitch.ui.common.toolbarDefaultTitle
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseActivity
@@ -50,11 +51,13 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
     ) {
         MaterialTheme {
             Surface(color = Color.White) {
+                val toolbarTitle = wrViewModel.toolbarTitle.observeAsState(toolbarDefaultTitle).value
                 val showAddComputerPlayer = wrViewModel.canComputerPlayersBeAdded.observeAsState(false).value
                 val players = wrViewModel.players.observeAsState(emptyList()).value
                 val launchGameEnabled = wrHostViewModel.canGameBeLaunched.observeAsState(false).value
                 val connectionStatus = connectionViewModel.connectionStatus.observeAsState().value
                 WaitingRoomHostScreen(
+                    toolbarTitle = toolbarTitle,
                     showAddComputerPlayer = showAddComputerPlayer,
                     players = players,
                     launchGameEnabled = launchGameEnabled,
@@ -84,11 +87,13 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
     ) {
         MaterialTheme {
             Surface(color = Color.White) {
+                val toolbarTitle = wrViewModel.toolbarTitle.observeAsState(toolbarDefaultTitle).value
                 val players = wrViewModel.players.observeAsState(emptyList()).value
                 val readyControl = wrGuestViewModel.ready.observeAsState(UiCheckboxModel(checked = false, enabled = false)).value
                 val command = wrGuestViewModel.commands.observeAsState().value
-                val connectionStatus = connectionViewModel.communicationState.observeAsState().value
+                val connectionStatus = connectionViewModel.connectionStatus.observeAsState().value
                 WaitingRoomGuestScreen(
+                    toolbarTitle = toolbarTitle,
                     players = players,
                     ready = readyControl,
                     connectionStatus = connectionStatus,

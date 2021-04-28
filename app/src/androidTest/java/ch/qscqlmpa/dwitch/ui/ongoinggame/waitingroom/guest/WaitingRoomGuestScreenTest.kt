@@ -65,6 +65,7 @@ class WaitingRoomGuestScreenTest : BaseUiUnitTest() {
     private fun launchTest() {
         launchTestWithContent {
             WaitingRoomGuestScreen(
+                toolbarTitle = "Dwiitch",
                 players = players,
                 ready = ready,
                 connectionStatus = connectionStatus,
