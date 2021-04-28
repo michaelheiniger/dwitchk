@@ -6,8 +6,8 @@ import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 
 object GuestMessageFactory {
 
-    fun createJoinGameMessage(playerName: String): Message {
-        return Message.JoinGameMessage(playerName)
+    fun createJoinGameMessage(playerName: String, computerManaged: Boolean = false): Message {
+        return Message.JoinGameMessage(playerName, computerManaged)
     }
 
     fun createRejoinGameMessage(gameCommonId: GameCommonId, dwitchPlayerId: DwitchPlayerId): Message {

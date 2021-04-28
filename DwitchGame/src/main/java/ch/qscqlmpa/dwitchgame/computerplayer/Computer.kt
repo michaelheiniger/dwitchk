@@ -44,7 +44,7 @@ internal class Computer @Inject constructor(
         communicator.sendMessageToHostFromComputerPlayer(
             EnvelopeReceived(
                 ConnectionId(playerCounter),
-                GuestMessageFactory.createJoinGameMessage("Computer $playerCounter")
+                GuestMessageFactory.createJoinGameMessage(playerName = "Computer $playerCounter", computerManaged = true)
             )
         )
     }
