@@ -9,9 +9,8 @@ import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.eventprocessors.GuestCommunicationEventDispatcher
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.MessageDispatcher
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import io.mockk.*
-import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -21,18 +20,14 @@ import org.junit.jupiter.api.Test
 class GuestCommunicatorImplTest : BaseUnitTest() {
 
     private val mockCommClient = mockk<CommClient>(relaxed = true)
-
     private val mockMessageDispatcher = mockk<MessageDispatcher>(relaxed = true)
-
     private val mockCommunicationEventDispatcher = mockk<GuestCommunicationEventDispatcher>(relaxed = true)
-
     private val mockCommEventRepository = mockk<GuestCommunicationStateRepository>(relaxed = true)
 
     private lateinit var guestCommunicator: GuestCommunicator
 
-    private lateinit var communicationEventsStream: PublishSubject<ClientCommunicationEvent>
-
-    private lateinit var receivedMessagesStream: PublishSubject<EnvelopeReceived>
+    private lateinit var communicationEventsSubject: PublishSubject<ClientCommunicationEvent>
+    private lateinit var receivedMessagesSubject: PublishSubject<EnvelopeReceived>
 
     @BeforeEach
     override fun setup() {
@@ -47,22 +42,36 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
             mockk(relaxed = true)
         )
 
-        communicationEventsStream = PublishSubject.create()
-        every { mockCommClient.observeCommunicationEvents() } returns communicationEventsStream
+        communicationEventsSubject = PublishSubject.create()
+        every { mockCommClient.observeCommunicationEvents() } returns communicationEventsSubject
 
-        receivedMessagesStream = PublishSubject.create()
-        every { mockCommClient.observeReceivedMessages() } returns receivedMessagesStream
+        receivedMessagesSubject = PublishSubject.create()
+        every { mockCommClient.observeReceivedMessages() } returns receivedMessagesSubject
+
+        every { mockCommunicationEventDispatcher.dispatch(any()) } returns Completable.complete()
     }
+
+    /**
+     * connect
+     * disconnect
+     * sendMessageToHost
+     */
 
     @Nested
     inner class Connect {
 
         @Test
-        fun `Setup connection with host`() {
-            assertThat(communicationEventsStream.hasObservers()).isFalse
+        fun `Start communication client operations`() {
+            // Given
+            assertThat(communicationEventsSubject.hasObservers()).isFalse
+            assertThat(receivedMessagesSubject.hasObservers()).isFalse
 
+            // When
             guestCommunicator.connect()
-            assertThat(communicationEventsStream.hasObservers()).isTrue
+
+            // Then
+            assertThat(communicationEventsSubject.hasObservers()).isTrue
+            assertThat(receivedMessagesSubject.hasObservers()).isTrue
 
             verifyOrder {
                 mockCommClient.observeCommunicationEvents()
@@ -73,49 +82,59 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
         }
 
         @Test
-        fun `Communication events emitted by websocket client are dispatched`() {
+        fun `Communication events emitted by communication client are dispatched`() {
+            // Given
             guestCommunicator.connect()
 
-            communicationEventsStream.onNext(ClientCommunicationEvent.ConnectedToHost)
-            communicationEventsStream.onNext(ClientCommunicationEvent.DisconnectedFromHost)
+            // When
+            communicationEventsSubject.onNext(ClientCommunicationEvent.ConnectedToHost)
+            communicationEventsSubject.onNext(ClientCommunicationEvent.DisconnectedFromHost)
 
+            // Then
             val dispatchedEventCap = mutableListOf<ClientCommunicationEvent>()
             verify(exactly = 2) { mockCommunicationEventDispatcher.dispatch(capture(dispatchedEventCap)) }
-
             assertThat(dispatchedEventCap[0]).isEqualTo(ClientCommunicationEvent.ConnectedToHost)
             assertThat(dispatchedEventCap[1]).isEqualTo(ClientCommunicationEvent.DisconnectedFromHost)
-
             confirmVerified(mockCommunicationEventDispatcher)
         }
 
         @Test
-        fun `Received messages emitted by websocket client are dispatched`() {
+        fun `Messages received through communication client are dispatched`() {
+            // Given
             guestCommunicator.connect()
 
+            // When
             val messageReceived1 = mockk<EnvelopeReceived>()
             val messageReceived2 = mockk<EnvelopeReceived>()
-            receivedMessagesStream.onNext(messageReceived1)
-            receivedMessagesStream.onNext(messageReceived2)
+            receivedMessagesSubject.onNext(messageReceived1)
+            receivedMessagesSubject.onNext(messageReceived2)
 
+            // Then
             val dispatchedMessageCap = mutableListOf<EnvelopeReceived>()
             verify(exactly = 2) { mockMessageDispatcher.dispatch(capture(dispatchedMessageCap)) }
-
             assertThat(dispatchedMessageCap[0]).isEqualTo(messageReceived1)
             assertThat(dispatchedMessageCap[1]).isEqualTo(messageReceived2)
-
             confirmVerified(mockMessageDispatcher)
         }
     }
 
     @Nested
-    inner class CloseConnection {
+    inner class Disconnect {
 
         @Test
-        fun `Close connection with host`() {
+        fun `Client communication is disconnected from the host and messages and communication events are no longer processed`() {
+            // Given
             guestCommunicator.connect()
+            assertThat(communicationEventsSubject.hasObservers()).isTrue
+            assertThat(receivedMessagesSubject.hasObservers()).isTrue
 
+            // When
             guestCommunicator.disconnect()
-            assertThat(communicationEventsStream.hasObservers()).isFalse // Observed streams have been disposed.
+            communicationEventsSubject.onNext(ClientCommunicationEvent.DisconnectedFromHost)
+
+            // Then
+            assertThat(communicationEventsSubject.hasObservers()).isFalse // Observed streams have been disposed.
+            assertThat(receivedMessagesSubject.hasObservers()).isFalse // Observed streams have been disposed.
 
             verifyOrder {
                 mockCommClient.observeCommunicationEvents()
@@ -128,55 +147,21 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
     }
 
     @Nested
-    inner class SendMessage {
+    inner class SendMessageToHost {
 
         @Test
-        fun `Send message to host`() {
+        fun `Send message to the host`() {
+            // Given
             val messageToSend = Message.PlayerReadyMessage(DwitchPlayerId(2), true)
 
+            // When
             guestCommunicator.sendMessageToHost(messageToSend)
 
+            // Then
             val messageCap = CapturingSlot<Message>()
             verify { mockCommClient.sendMessageToServer(capture(messageCap)) }
-
             val messageSentCap = messageCap.captured as Message.PlayerReadyMessage
             assertThat(messageSentCap).isEqualTo(messageToSend)
-        }
-    }
-
-    @Nested
-    inner class ObserveCommunicationState {
-
-        @Test
-        fun `Communication events emitted by the repository are simply forwarded`() {
-            every { mockCommEventRepository.observeEvents() } returns Observable.just(GuestCommunicationState.Connected)
-
-            guestCommunicator.currentCommunicationState().test().assertValue(GuestCommunicationState.Connected)
-        }
-    }
-
-    @Nested
-    inner class ObservePlayerConnectionState {
-
-        @Test
-        fun `Communication state open is mapped to connected`() {
-            every { mockCommEventRepository.observeEvents() } returns Observable.just(GuestCommunicationState.Connected)
-
-            guestCommunicator.observePlayerConnectionState().test().assertValue(PlayerConnectionState.CONNECTED)
-        }
-
-        @Test
-        fun `Communication state closed is mapped to disconnected`() {
-            every { mockCommEventRepository.observeEvents() } returns Observable.just(GuestCommunicationState.Disconnected)
-
-            guestCommunicator.observePlayerConnectionState().test().assertValue(PlayerConnectionState.DISCONNECTED)
-        }
-
-        @Test
-        fun `Communication state error is mapped to disconnected`() {
-            every { mockCommEventRepository.observeEvents() } returns Observable.just(GuestCommunicationState.Error)
-
-            guestCommunicator.observePlayerConnectionState().test().assertValue(PlayerConnectionState.DISCONNECTED)
         }
     }
 }

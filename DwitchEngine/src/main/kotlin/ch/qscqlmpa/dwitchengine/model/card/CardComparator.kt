@@ -1,19 +1,19 @@
 package ch.qscqlmpa.dwitchengine.model.card
 
 import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
-import ch.qscqlmpa.dwitchengine.rules.INITIAL_JOKER
+import ch.qscqlmpa.dwitchengine.rules.initialJoker
 
-class CardNameValueDescComparator : Comparator<CardName> {
+class CardNameValueDescComparator(private val joker: CardName = initialJoker) : Comparator<CardName> {
 
     override fun compare(cardName1: CardName, cardName2: CardName): Int {
 
         // Joker has highest value
-        if (cardName1 == INITIAL_JOKER) {
+        if (cardName1 == joker) {
             return -1
         }
 
         // Joker has highest value
-        if (cardName2 == INITIAL_JOKER) {
+        if (cardName2 == joker) {
             return 1
         }
 
@@ -22,14 +22,39 @@ class CardNameValueDescComparator : Comparator<CardName> {
     }
 }
 
-class CardValueDescComparator : Comparator<Card> {
+class CardValueDescComparator(joker: CardName = initialJoker) : Comparator<Card> {
+
+    private val comparator = CardNameValueDescComparator(joker)
+
     override fun compare(card1: Card, card2: Card): Int {
-        return CardNameValueDescComparator().compare(card1.name, card2.name)
+        return comparator.compare(card1.name, card2.name)
     }
 }
 
-class DwitchCardInfoValueDescComparator : Comparator<DwitchCardInfo> {
-    override fun compare(cardInfo1: DwitchCardInfo, cardInfo2: DwitchCardInfo): Int {
-        return CardValueDescComparator().compare(cardInfo1.card, cardInfo2.card)
+class CardValueAscComparator(joker: CardName = initialJoker) : Comparator<Card> {
+
+    private val comparator = CardValueDescComparator(joker)
+
+    override fun compare(card1: Card, card2: Card): Int {
+        return comparator.compare(card2, card1)
     }
 }
+
+class DwitchCardInfoValueDescComparator(joker: CardName = initialJoker) : Comparator<DwitchCardInfo> {
+
+    private val comparator = CardValueDescComparator(joker)
+
+    override fun compare(cardInfo1: DwitchCardInfo, cardInfo2: DwitchCardInfo): Int {
+        return comparator.compare(cardInfo1.card, cardInfo2.card)
+    }
+}
+
+class DwitchCardInfoValueAscComparator(joker: CardName = initialJoker) : Comparator<DwitchCardInfo> {
+
+    private val comparator = CardValueDescComparator(joker)
+
+    override fun compare(cardInfo1: DwitchCardInfo, cardInfo2: DwitchCardInfo): Int {
+        return comparator.compare(cardInfo2.card, cardInfo1.card)
+    }
+}
+

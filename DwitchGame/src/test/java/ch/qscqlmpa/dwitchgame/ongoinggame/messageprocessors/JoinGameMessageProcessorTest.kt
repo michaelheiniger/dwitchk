@@ -45,7 +45,7 @@ internal class JoinGameMessageProcessorTest : BaseMessageProcessorTest() {
         val joinAckMessageWrapperMock = mockk<EnvelopeToSend>()
         every { mockHostMessageFactory.createJoinAckMessage(any(), any()) } returns joinAckMessageWrapperMock
 
-        every { mockInGameStore.insertNewGuestPlayer(any()) } returns guestPlayer.id
+        every { mockInGameStore.insertNewGuestPlayer(any(), any()) } returns guestPlayer.id
         every { mockInGameStore.getPlayerDwitchId(any()) } returns guestPlayer.dwitchId
 
         launchTest().test().assertComplete()
@@ -61,7 +61,7 @@ internal class JoinGameMessageProcessorTest : BaseMessageProcessorTest() {
         }
         confirmVerified(mockHostCommunicator)
 
-        verify { mockInGameStore.insertNewGuestPlayer(guestPlayer.name) }
+        verify { mockInGameStore.insertNewGuestPlayer(guestPlayer.name, false) }
         verify { mockInGameStore.getPlayerDwitchId(guestPlayer.id) }
         verify { mockInGameStore.gameIsNew() }
         confirmVerified(mockInGameStore)

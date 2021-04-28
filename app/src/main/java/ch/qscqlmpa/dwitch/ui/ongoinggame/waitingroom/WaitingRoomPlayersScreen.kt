@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +25,7 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 @Composable
 private fun WaitingRoomPlayersScreenPreview() {
     WaitingRoomPlayersScreen(
+        showAddComputerPlayer = true,
         players = listOf(
             PlayerWrUi(
                 name = "Mirlick",
@@ -35,18 +37,37 @@ private fun WaitingRoomPlayersScreenPreview() {
                 connectionState = PlayerConnectionState.DISCONNECTED,
                 ready = false
             )
-        )
+        ),
+        onAddComputerPlayer = {}
     )
 }
 
 @Composable
-fun WaitingRoomPlayersScreen(players: List<PlayerWrUi>) {
+fun WaitingRoomPlayersScreen(
+    showAddComputerPlayer: Boolean,
+    players: List<PlayerWrUi>,
+    onAddComputerPlayer: () -> Unit = {}
+) {
     Column(Modifier.fillMaxWidth()) {
-        Text(
-            stringResource(R.string.players_in_waitingroom),
-            fontSize = 32.sp,
-            color = MaterialTheme.colors.primary
-        )
+        Row(Modifier.fillMaxWidth()) {
+            Text(
+                stringResource(R.string.players_in_waitingroom),
+                fontSize = 32.sp,
+                color = MaterialTheme.colors.primary,
+                modifier = Modifier
+                    .weight(1f)
+                    .wrapContentWidth(Alignment.Start)
+            )
+            if (showAddComputerPlayer) {
+                TextButton(
+                    onClick = onAddComputerPlayer,
+                    modifier = Modifier
+                        .weight(1f)
+                        .wrapContentWidth(Alignment.End)
+                ) { Text(stringResource(R.string.add_computer_player)) }
+                Spacer(Modifier.height(8.dp))
+            }
+        }
         Spacer(Modifier.height(8.dp))
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(players) { player ->

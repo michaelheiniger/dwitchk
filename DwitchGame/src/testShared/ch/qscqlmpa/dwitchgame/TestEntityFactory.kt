@@ -54,7 +54,8 @@ object TestEntityFactory {
         localId: Long = 11L,
         dwitchId: DwitchPlayerId = DwitchPlayerId(101),
         connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
-        ready: Boolean = true
+        ready: Boolean = true,
+        computerManaged: Boolean = false
     ): Player {
         return Player(
             localId,
@@ -63,7 +64,8 @@ object TestEntityFactory {
             "Boromir",
             PlayerRole.GUEST,
             connectionState,
-            ready
+            ready,
+            computerManaged = computerManaged
         )
     }
 
@@ -71,7 +73,8 @@ object TestEntityFactory {
         localId: Long = 12L,
         dwitchId: DwitchPlayerId = DwitchPlayerId(102),
         connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
-        ready: Boolean = true
+        ready: Boolean = true,
+        computerManaged: Boolean = false
     ): Player {
         return Player(
             localId,
@@ -80,7 +83,8 @@ object TestEntityFactory {
             "Celeborn",
             PlayerRole.GUEST,
             connectionState,
-            ready
+            ready,
+            computerManaged = computerManaged
         )
     }
 
@@ -88,7 +92,8 @@ object TestEntityFactory {
         localId: Long = 13L,
         dwitchId: DwitchPlayerId = DwitchPlayerId(103),
         connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
-        ready: Boolean = true
+        ready: Boolean = true,
+        computerManaged: Boolean = false
     ): Player {
         return Player(
             localId,
@@ -97,7 +102,8 @@ object TestEntityFactory {
             "Denethor",
             PlayerRole.GUEST,
             connectionState,
-            ready
+            ready,
+            computerManaged = computerManaged
         )
     }
 

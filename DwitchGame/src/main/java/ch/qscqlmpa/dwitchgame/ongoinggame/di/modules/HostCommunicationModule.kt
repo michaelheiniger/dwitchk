@@ -3,14 +3,13 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.di.modules
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchcommunication.CommServer
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
+import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.ComputerCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicatorImpl
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.eventprocessors.HostCommunicationEventDispatcher
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
-import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import dagger.Module
 import dagger.Provides
 
@@ -21,26 +20,34 @@ internal class HostCommunicationModule {
 
         @OngoingGameScope
         @Provides
-        fun provideHostCommunicator(
-            inGameStore: InGameStore,
+        fun provideHostCommunicatorImpl(
             commServer: CommServer,
             messageDispatcher: MessageDispatcher,
             hostCommunicationEventDispatcher: HostCommunicationEventDispatcher,
             communicationStateRepository: HostCommunicationStateRepository,
-            connectionStore: ConnectionStore,
             schedulerFactory: SchedulerFactory,
             idlingResource: DwitchIdlingResource
-        ): HostCommunicator {
+        ): HostCommunicatorImpl {
             return HostCommunicatorImpl(
-                inGameStore,
                 commServer,
                 messageDispatcher,
                 hostCommunicationEventDispatcher,
                 communicationStateRepository,
-                connectionStore,
                 schedulerFactory,
                 idlingResource
             )
+        }
+
+        @OngoingGameScope
+        @Provides
+        fun provideHostCommunicator(hostCommunicatorImpl: HostCommunicatorImpl): HostCommunicator {
+            return hostCommunicatorImpl
+        }
+
+        @OngoingGameScope
+        @Provides
+        fun provideComputerCommClient(hostCommunicatorImpl: HostCommunicatorImpl): ComputerCommunicator {
+            return hostCommunicatorImpl
         }
     }
 }

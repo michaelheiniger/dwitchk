@@ -117,7 +117,7 @@ internal class WebsocketCommServer @Inject constructor(
 
     private fun processStartedEvent(): Observable<ServerCommunicationEvent> {
         Logger.debug { "Server is now listening for connections" }
-        return Observable.just(ServerCommunicationEvent.ListeningForConnections(connectionStore.getHostConnectionId()))
+        return Observable.just(ServerCommunicationEvent.ListeningForConnections)
     }
 
     private fun processClientConnectedEvent(clientConnectedEvent: ServerCommEvent.ClientConnected): Observable<ServerCommunicationEvent> {
@@ -134,12 +134,6 @@ internal class WebsocketCommServer @Inject constructor(
                 Logger.debug { "Client connected $senderAddress (assign local connection ID $localConnectionId)" }
                 ServerCommunicationEvent.ClientConnected(localConnectionId)
             }
-    }
-
-    private fun processErrorEvent(event: ServerCommEvent.Error): Observable<ServerCommunicationEvent> {
-        Logger.debug { "Communication error: $event" }
-        connectionStore.clearStore()
-        return Observable.just(ServerCommunicationEvent.ErrorListeningForConnections(event.ex))
     }
 
     private fun processClientDisconnectedEvent(clientDisconnected: ServerCommEvent.ClientDisconnected): Observable<ServerCommunicationEvent> {
@@ -162,6 +156,12 @@ internal class WebsocketCommServer @Inject constructor(
                     Observable.fromIterable(missingConnections.map(ServerCommunicationEvent::ClientDisconnected))
                 }
             }
+    }
+
+    private fun processErrorEvent(event: ServerCommEvent.Error): Observable<ServerCommunicationEvent> {
+        Logger.debug { "Communication error: $event" }
+        connectionStore.clearStore()
+        return Observable.just(ServerCommunicationEvent.ErrorListeningForConnections(event.ex))
     }
 
     private fun processMessageEvents(serverMessage: ServerMessage): Observable<EnvelopeReceived> {

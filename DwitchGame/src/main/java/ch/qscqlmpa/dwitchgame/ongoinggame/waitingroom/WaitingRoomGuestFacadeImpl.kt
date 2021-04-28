@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom
 
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
+import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.GuestLeavesGameUsecase
@@ -12,22 +12,13 @@ import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
 internal class WaitingRoomGuestFacadeImpl @Inject constructor(
-    private val guestCommunicator: GuestCommunicator,
+    private val communicationStateRepository: GuestCommunicationStateRepository,
     private val playerReadyUsecase: PlayerReadyUsecase,
     private val guestLeavesGameUsecase: GuestLeavesGameUsecase,
     private val wrPlayerRepository: WaitingRoomPlayerRepository,
     private val gameEventRepository: GuestGameEventRepository,
     private val schedulerFactory: SchedulerFactory
 ) : WaitingRoomGuestFacade {
-
-    override fun connect() {
-        guestCommunicator.connect()
-    }
-
-    override fun observeCommunicationState(): Observable<GuestCommunicationState> {
-        return guestCommunicator.currentCommunicationState()
-            .subscribeOn(schedulerFactory.io())
-    }
 
     override fun updateReadyState(ready: Boolean): Completable {
         return playerReadyUsecase.updateReadyState(ready)
@@ -37,6 +28,10 @@ internal class WaitingRoomGuestFacadeImpl @Inject constructor(
     override fun leaveGame(): Completable {
         return guestLeavesGameUsecase.leaveGame()
             .subscribeOn(schedulerFactory.io())
+    }
+
+    override fun observeCommunicationState(): Observable<GuestCommunicationState> {
+        return communicationStateRepository.currentState()
     }
 
     override fun observeLocalPlayerReadyState(): Observable<Boolean> {

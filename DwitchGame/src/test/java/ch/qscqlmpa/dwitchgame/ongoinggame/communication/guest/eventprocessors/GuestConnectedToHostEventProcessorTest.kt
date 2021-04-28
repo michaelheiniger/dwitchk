@@ -70,7 +70,7 @@ class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
     }
 
     private fun assertCommunicationStateIsNowConnected() {
-        assertThat(commStateRepository.observeEvents().blockingFirst()).isEqualTo(GuestCommunicationState.Connected)
+        assertThat(commStateRepository.currentState().blockingFirst()).isEqualTo(GuestCommunicationState.Connected)
     }
 
     private fun setupTest(localPlayerDwitchId: DwitchPlayerId) {

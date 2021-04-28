@@ -12,7 +12,7 @@ internal class GuestCommunicationStateRepository @Inject constructor() {
     // Cache last event
     private val relay = BehaviorRelay.create<GuestCommunicationState>()
 
-    fun observeEvents(): Observable<GuestCommunicationState> {
+    fun currentState(): Observable<GuestCommunicationState> {
         return relay
     }
 

@@ -14,11 +14,25 @@ class WaitingRoomViewModel @Inject constructor(
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
+    private val _showAddComputerPlayer = MutableLiveData<Boolean>()
     private val _players = MutableLiveData<List<PlayerWrUi>>(emptyList())
+    val canComputerPlayersBeAdded get(): LiveData<Boolean> = _showAddComputerPlayer
     val players get(): LiveData<List<PlayerWrUi>> = _players
+
+    init {
+        loadGame()
+    }
 
     override fun onStart() {
         playersInWaitingRoom()
+    }
+
+    private fun loadGame() {
+        disposableManager.add(
+            facade.isGameANewGame()
+                .observeOn(uiScheduler)
+                .subscribe { gameIsNew -> _showAddComputerPlayer.value = gameIsNew }
+        )
     }
 
     private fun playersInWaitingRoom() {

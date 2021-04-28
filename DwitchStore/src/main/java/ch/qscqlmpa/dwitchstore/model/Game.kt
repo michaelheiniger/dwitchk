@@ -51,4 +51,8 @@ data class Game(
     fun isNew(): Boolean {
         return gameState == null
     }
+
+    fun isNotNew(): Boolean {
+        return !isNew()
+    }
 }

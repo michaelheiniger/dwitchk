@@ -81,4 +81,5 @@
     <string name="no">Non</string>
     <string name="host_ends_game_confirmation">T\'es sûr de vouloir terminer la partie ?</string>
     <string name="host_cancel_game_confirmation">T\'es sûr de vouloir annuler la partie ?</string>
+    <string name="add_computer_player">Ajouter un joueur géré par l\'ordinateur</string>
 </resources>

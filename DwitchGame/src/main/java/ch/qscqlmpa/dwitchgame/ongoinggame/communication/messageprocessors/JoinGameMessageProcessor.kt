@@ -25,7 +25,7 @@ internal class JoinGameMessageProcessor @Inject constructor(
 
         return Completable.fromAction {
             if (store.gameIsNew()) {
-                val newPlayerLocalId = store.insertNewGuestPlayer(msg.playerName)
+                val newPlayerLocalId = store.insertNewGuestPlayer(msg.playerName, msg.computerManaged)
                 storeConnectionId(senderConnectionID, newPlayerLocalId)
                 sendMessages(senderConnectionID, newPlayerLocalId)
             } else {

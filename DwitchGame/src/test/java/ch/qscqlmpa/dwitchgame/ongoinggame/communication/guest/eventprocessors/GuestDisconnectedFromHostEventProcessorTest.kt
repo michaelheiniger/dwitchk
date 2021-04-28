@@ -27,7 +27,7 @@ internal class GuestDisconnectedFromHostEventProcessorTest : BaseUnitTest() {
     fun `Notify that Guest communication state is now Disconnected`() {
         launchTest()
 
-        assertThat(commStateRepository.observeEvents().blockingFirst()).isEqualTo(GuestCommunicationState.Disconnected)
+        assertThat(commStateRepository.currentState().blockingFirst()).isEqualTo(GuestCommunicationState.Disconnected)
     }
 
     @Test

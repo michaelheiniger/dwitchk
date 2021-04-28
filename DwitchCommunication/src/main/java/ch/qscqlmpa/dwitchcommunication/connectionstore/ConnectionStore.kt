@@ -11,4 +11,14 @@ interface ConnectionStore {
     fun removeConnectionIdForDwitchId(connectionId: ConnectionId)
     fun getDwitchId(connectionId: ConnectionId): DwitchPlayerId?
     fun getConnectionId(dwitchPlayerId: DwitchPlayerId): ConnectionId?
+
+    companion object {
+
+        val hostConnectionId = ConnectionId(0) // Keep in sync with ConnectionStoreInternal.hostConnectionId
+
+        /**
+         * Range of connection IDs reserved for computer players.
+         */
+        val computerConnectionIdRange = 1..10
+    }
 }

@@ -26,6 +26,6 @@ internal class GuestConnectionErrorEventProcessorTest : BaseUnitTest() {
         processorGuest.process(ClientCommunicationEvent.ConnectionError("Error"))
             .test().assertComplete()
 
-        assertThat(commStateRepository.observeEvents().blockingFirst()).isEqualTo(GuestCommunicationState.Error)
+        assertThat(commStateRepository.currentState().blockingFirst()).isEqualTo(GuestCommunicationState.Error)
     }
 }

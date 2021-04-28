@@ -61,9 +61,11 @@ class WaitingRoomHostScreenTest : BaseUiUnitTest() {
     private fun launchTest() {
         launchTestWithContent {
             WaitingRoomHostScreen(
+                showAddComputerPlayer = true,
                 players,
                 launchGameEnabled,
                 connectionState,
+                onAddComputerPlayer = {},
                 onLaunchGameClick = {},
                 onCancelGameClick = {},
                 onReconnectClick = {}

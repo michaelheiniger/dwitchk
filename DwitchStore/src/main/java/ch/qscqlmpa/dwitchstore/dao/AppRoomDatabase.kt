@@ -14,7 +14,7 @@ import ch.qscqlmpa.dwitchstore.typeconverter.*
         Player::class
     ],
     views = [ResumableGameInfo::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(

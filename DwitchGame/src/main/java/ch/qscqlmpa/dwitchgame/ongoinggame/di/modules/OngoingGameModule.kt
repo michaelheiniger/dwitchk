@@ -10,6 +10,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.common.GuestFacadeImpl
 import ch.qscqlmpa.dwitchgame.ongoinggame.common.HostFacade
 import ch.qscqlmpa.dwitchgame.ongoinggame.common.HostFacadeImpl
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.GameCommunicator
+import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
@@ -128,7 +129,10 @@ class OngoingGameModule(
 
     @OngoingGameScope
     @Provides
-    internal fun provideGuestFacade(communicator: GuestCommunicator): GuestFacade {
-        return GuestFacadeImpl(communicator)
+    internal fun provideGuestFacade(
+        guestCommunicationStateRepository: GuestCommunicationStateRepository,
+        communicator: GuestCommunicator
+    ): GuestFacade {
+        return GuestFacadeImpl(communicator, guestCommunicationStateRepository)
     }
 }

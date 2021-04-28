@@ -6,7 +6,6 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 
 interface WaitingRoomGuestFacade {
-    fun connect()
     fun updateReadyState(ready: Boolean): Completable
     fun leaveGame(): Completable
     fun observeCommunicationState(): Observable<GuestCommunicationState>

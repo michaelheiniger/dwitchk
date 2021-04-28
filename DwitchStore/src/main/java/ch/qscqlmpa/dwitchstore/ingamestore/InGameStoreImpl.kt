@@ -7,6 +7,7 @@ import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchstore.dao.AppRoomDatabase
 import ch.qscqlmpa.dwitchstore.ingamestore.model.GameCommonIdAndCurrentRoom
+import ch.qscqlmpa.dwitchstore.ingamestore.model.ResumeComputerPlayersInfo
 import ch.qscqlmpa.dwitchstore.model.Game
 import ch.qscqlmpa.dwitchstore.model.Player
 import ch.qscqlmpa.dwitchstore.util.SerializerFactory
@@ -23,13 +24,16 @@ internal class InGameStoreImpl constructor(
     private val gameDao = database.gameDao()
     private val playerDao = database.playerDao()
 
+    private val _gameCommonId: GameCommonId by lazy { gameDao.getGameCommonId(gameLocalId) }
+    private val _localDwitchPlayerId: DwitchPlayerId by lazy { playerDao.getPlayerDwitchId(localPlayerLocalId) }
+
     // Game
     override fun getGame(): Game {
         return gameDao.getGame(gameLocalId)
     }
 
     override fun getGameCommonId(): GameCommonId {
-        return gameDao.getGameCommonId(gameLocalId)
+        return _gameCommonId
     }
 
     override fun getCurrentRoom(): RoomType {
@@ -43,6 +47,10 @@ internal class InGameStoreImpl constructor(
 
     override fun gameIsNew(): Boolean {
         return gameDao.getGame(gameLocalId).isNew()
+    }
+
+    override fun gameIsNotNew(): Boolean {
+        return gameDao.getGame(gameLocalId).isNotNew()
     }
 
     override fun observeGameState(): Observable<DwitchGameState> {
@@ -76,8 +84,8 @@ internal class InGameStoreImpl constructor(
     }
 
     // Player
-    override fun insertNewGuestPlayer(name: String): Long {
-        return playerDao.insertNewGuestPlayer(gameLocalId, name)
+    override fun insertNewGuestPlayer(name: String, computerManaged: Boolean): Long {
+        return playerDao.insertNewGuestPlayer(gameLocalId, name, computerManaged)
     }
 
     override fun insertPlayers(players: List<Player>): List<Long> {
@@ -137,7 +145,7 @@ internal class InGameStoreImpl constructor(
     }
 
     override fun getLocalPlayerDwitchId(): DwitchPlayerId {
-        return playerDao.gePlayer(localPlayerLocalId).dwitchId
+        return _localDwitchPlayerId
     }
 
     override fun getPlayerDwitchId(playerLocalId: Long): DwitchPlayerId {
@@ -164,6 +172,10 @@ internal class InGameStoreImpl constructor(
     }
 
     override fun getPlayersInWaitingRoom(): List<Player> {
-        return playerDao.getPlayersInWaitingRoom(gameLocalId)
+        return playerDao.getPlayers(gameLocalId)
+    }
+
+    override fun getComputerPlayersToResume(): ResumeComputerPlayersInfo {
+        return ResumeComputerPlayersInfo(_gameCommonId, playerDao.getComputerPlayersDwitchId(gameLocalId))
     }
 }

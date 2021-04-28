@@ -85,7 +85,7 @@ internal class CardExchangeComputerTest {
 
         val cardExchange = CardExchangeComputer.getCardExchange(playerId, DwitchRank.Asshole, cards)
 
-        assertThat(cardExchange!!.allowedCardValues).containsExactlyInAnyOrder(INITIAL_JOKER, INITIAL_JOKER)
+        assertThat(cardExchange!!.allowedCardValues).containsExactlyInAnyOrder(initialJoker, initialJoker)
     }
 
     @Test
@@ -94,7 +94,7 @@ internal class CardExchangeComputerTest {
 
         val cardExchange = CardExchangeComputer.getCardExchange(playerId, DwitchRank.Asshole, cards)
 
-        assertThat(cardExchange!!.allowedCardValues).containsExactlyInAnyOrder(INITIAL_JOKER, CardName.Ace)
+        assertThat(cardExchange!!.allowedCardValues).containsExactlyInAnyOrder(initialJoker, CardName.Ace)
     }
 
     @Test
@@ -112,6 +112,6 @@ internal class CardExchangeComputerTest {
 
         val cardExchange = CardExchangeComputer.getCardExchange(playerId, DwitchRank.ViceAsshole, cards)
 
-        assertThat(cardExchange!!.allowedCardValues).containsExactlyInAnyOrder(INITIAL_JOKER)
+        assertThat(cardExchange!!.allowedCardValues).containsExactlyInAnyOrder(initialJoker)
     }
 }

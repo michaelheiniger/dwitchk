@@ -28,6 +28,7 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 @Composable
 private fun WaitingRoomHostScreenPreview() {
     WaitingRoomHostScreen(
+        showAddComputerPlayer = true,
         players = listOf(
             PlayerWrUi("Aragorn", PlayerConnectionState.CONNECTED, true),
             PlayerWrUi("Boromir", PlayerConnectionState.CONNECTED, false),
@@ -35,6 +36,7 @@ private fun WaitingRoomHostScreenPreview() {
         ),
         launchGameEnabled = false,
         connectionStatus = HostCommunicationState.Error,
+        onAddComputerPlayer = {},
         onLaunchGameClick = {},
         onCancelGameClick = {},
         onReconnectClick = {}
@@ -43,9 +45,11 @@ private fun WaitingRoomHostScreenPreview() {
 
 @Composable
 fun WaitingRoomHostScreen(
+    showAddComputerPlayer: Boolean,
     players: List<PlayerWrUi>,
     launchGameEnabled: Boolean,
     connectionStatus: HostCommunicationState?,
+    onAddComputerPlayer: () -> Unit,
     onLaunchGameClick: () -> Unit,
     onCancelGameClick: () -> Unit,
     onReconnectClick: () -> Unit
@@ -56,7 +60,11 @@ fun WaitingRoomHostScreen(
             .animateContentSize()
             .padding(top = 16.dp, start = 16.dp, end = 16.dp)
     ) {
-        WaitingRoomPlayersScreen(players = players)
+        WaitingRoomPlayersScreen(
+            players = players,
+            showAddComputerPlayer = showAddComputerPlayer,
+            onAddComputerPlayer = onAddComputerPlayer
+        )
         Spacer(Modifier.height(16.dp))
         HostControlScreen(
             launchGameEnabled = launchGameEnabled,

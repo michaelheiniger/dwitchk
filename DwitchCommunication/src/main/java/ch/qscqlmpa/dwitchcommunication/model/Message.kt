@@ -16,7 +16,7 @@ sealed class Message {
     data class JoinGameAckMessage(val gameCommonId: GameCommonId, val playerId: DwitchPlayerId) : Message()
 
     @Serializable
-    data class RejoinGameAckMessage(val gameCommonId: GameCommonId, val dwitchPlayerId: DwitchPlayerId) : Message() {
+    data class RejoinGameAckMessage(val gameCommonId: GameCommonId, val playerId: DwitchPlayerId) : Message() {
         constructor(rejoinInfo: RejoinInfo) : this(rejoinInfo.gameCommonId, rejoinInfo.dwitchPlayerId)
     }
 
@@ -36,7 +36,7 @@ sealed class Message {
      * Messages sent by Guests
      *****************************************************************************************************************/
     @Serializable
-    data class JoinGameMessage(val playerName: String) : Message()
+    data class JoinGameMessage(val playerName: String, val computerManaged: Boolean = false) : Message()
 
     @Serializable
     data class RejoinGameMessage(val gameCommonId: GameCommonId, val dwitchPlayerId: DwitchPlayerId) : Message()

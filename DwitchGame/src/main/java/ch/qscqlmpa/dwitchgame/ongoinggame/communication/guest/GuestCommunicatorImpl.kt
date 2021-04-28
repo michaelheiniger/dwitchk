@@ -8,8 +8,6 @@ import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientCommunicationEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.eventprocessors.GuestCommunicationEventDispatcher
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.MessageDispatcher
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
-import io.reactivex.rxjava3.core.Observable
 import org.tinylog.kotlin.Logger
 
 internal class GuestCommunicatorImpl constructor(
@@ -24,6 +22,7 @@ internal class GuestCommunicatorImpl constructor(
     private val disposableManager = DisposableManager()
 
     override fun connect() {
+        Logger.info { "Connect to host" }
         communicationStateRepository.updateState(GuestCommunicationState.Connecting)
         observeCommunicationEvents()
         observeReceivedMessages()
@@ -31,28 +30,15 @@ internal class GuestCommunicatorImpl constructor(
     }
 
     override fun disconnect() {
+        Logger.info { "Disconnect from host" }
+        idlingResource.increment() // Event ClientCommunicationEvent.DisconnectedFromHost
         commClient.stop()
-        disposableManager.disposeAndReset()
+        // Subscribed streams are disposed when ServerCommunicationEvent.NoLongerListeningForConnections has been processed
     }
 
     override fun sendMessageToHost(message: Message) {
         Logger.debug { "Sending message to host: $message" }
         commClient.sendMessageToServer(message)
-    }
-
-    override fun currentCommunicationState(): Observable<GuestCommunicationState> {
-        return communicationStateRepository.observeEvents().subscribeOn(schedulerFactory.io())
-    }
-
-    override fun observePlayerConnectionState(): Observable<PlayerConnectionState> {
-        return communicationStateRepository.observeEvents().map { state ->
-            when (state) {
-                GuestCommunicationState.Connected -> PlayerConnectionState.CONNECTED
-                GuestCommunicationState.Connecting,
-                GuestCommunicationState.Disconnected,
-                GuestCommunicationState.Error -> PlayerConnectionState.DISCONNECTED
-            }
-        }.subscribeOn(schedulerFactory.io())
     }
 
     private fun observeCommunicationEvents() {
@@ -61,8 +47,15 @@ internal class GuestCommunicatorImpl constructor(
                 .flatMapCompletable { event ->
                     communicationEventDispatcher.dispatch(event)
                         .subscribeOn(schedulerFactory.single())
-                        .doOnComplete { if (event is ClientCommunicationEvent.DisconnectedFromHost) disconnect() }
+//                        .doOnComplete { if (event is ClientCommunicationEvent.DisconnectedFromHost) disconnect() }
                         .doOnComplete { idlingResource.decrement() }
+                        .doFinally {
+                            if (event is ClientCommunicationEvent.DisconnectedFromHost ||
+                                event is ClientCommunicationEvent.ConnectionError
+                            ) {
+                                disposableManager.disposeAndReset()
+                            }
+                        }
                 }
                 .subscribe(
                     { Logger.debug { "Communication events stream completed" } },

@@ -50,13 +50,16 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
     ) {
         MaterialTheme {
             Surface(color = Color.White) {
+                val showAddComputerPlayer = wrViewModel.canComputerPlayersBeAdded.observeAsState(false).value
                 val players = wrViewModel.players.observeAsState(emptyList()).value
                 val launchGameEnabled = wrHostViewModel.canGameBeLaunched.observeAsState(false).value
                 val connectionStatus = connectionViewModel.connectionStatus.observeAsState().value
                 WaitingRoomHostScreen(
+                    showAddComputerPlayer = showAddComputerPlayer,
                     players = players,
                     launchGameEnabled = launchGameEnabled,
                     connectionStatus = connectionStatus,
+                    onAddComputerPlayer = wrHostViewModel::addComputerPlayer,
                     onLaunchGameClick = wrHostViewModel::launchGame,
                     onCancelGameClick = { showConfirmationDialog.value = true },
                     onReconnectClick = connectionViewModel::reconnect

@@ -18,7 +18,7 @@ internal interface PlayerDao {
     fun insertPlayers(players: List<Player>): List<Long>
 
     @Transaction
-    fun insertNewGuestPlayer(gameLocalId: Long, name: String): Long {
+    fun insertNewGuestPlayer(gameLocalId: Long, name: String, computerManaged: Boolean): Long {
         val player = Player(
             0,
             DwitchPlayerId(0),
@@ -26,7 +26,8 @@ internal interface PlayerDao {
             name,
             PlayerRole.GUEST,
             PlayerConnectionState.CONNECTED,
-            false
+            ready = false,
+            computerManaged = computerManaged
         )
         val playerLocalId = insertPlayer(player)
         updatePlayer(player.copy(id = playerLocalId, dwitchId = DwitchPlayerId(playerLocalId)))
@@ -153,7 +154,17 @@ internal interface PlayerDao {
         ORDER BY name ASC
         """
     )
-    fun getPlayersInWaitingRoom(gameLocalId: Long): List<Player>
+    fun getPlayers(gameLocalId: Long): List<Player>
+
+    @Query(
+        """
+        SELECT dwitch_id FROM Player
+        WHERE game_local_id = :gameLocalId
+        AND computer_managed = 1
+        ORDER BY name ASC
+        """
+    )
+    fun getComputerPlayersDwitchId(gameLocalId: Long): List<DwitchPlayerId>
 
     @Query(
         """

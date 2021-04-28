@@ -23,8 +23,8 @@ internal class PlayerDaoTest : BaseInstrumentedTest() {
         assertThat(playersBefore.size).isEqualTo(1)
         assertThat(playersBefore[0].name).isEqualTo(hostName)
 
-        val player1LocalId = playerDao.insertNewGuestPlayer(gameLocalId!!, "Gimli")
-        val player2LocalId = playerDao.insertNewGuestPlayer(gameLocalId!!, "Legolas")
+        val player1LocalId = playerDao.insertNewGuestPlayer(gameLocalId!!, "Gimli", computerManaged = false)
+        val player2LocalId = playerDao.insertNewGuestPlayer(gameLocalId!!, "Legolas", computerManaged = false)
 
         val player1FromStore = playerDao.getPlayer(player1LocalId)
         PlayerRobot(player1FromStore)
@@ -33,7 +33,7 @@ internal class PlayerDaoTest : BaseInstrumentedTest() {
             .assertPlayerRole(PlayerRole.GUEST)
             .assertConnectionState(PlayerConnectionState.CONNECTED)
             .assertReady(false)
-        assertThat(player1FromStore.dwitchId).isNotNull() // Do NOT simplify by using "isNotNull", somehow it produces an error
+        assertThat(player1FromStore.dwitchId).isNotNull // Do NOT simplify by using "isNotNull", somehow it produces an error
 
         val player2FromStore = playerDao.getPlayer(player2LocalId)
         PlayerRobot(player2FromStore)
@@ -42,7 +42,7 @@ internal class PlayerDaoTest : BaseInstrumentedTest() {
             .assertPlayerRole(PlayerRole.GUEST)
             .assertConnectionState(PlayerConnectionState.CONNECTED)
             .assertReady(false)
-        assertThat(player2FromStore.dwitchId).isNotNull() // Do NOT simplify by using "isNotNull", somehow it produces an error
+        assertThat(player2FromStore.dwitchId).isNotNull // Do NOT simplify by using "isNotNull", somehow it produces an error
 
         assertThat(player1FromStore.dwitchId).isNotEqualTo(playersBefore[0].dwitchId)
         assertThat(player1FromStore.dwitchId).isNotEqualTo(player2FromStore.dwitchId)
@@ -75,6 +75,40 @@ internal class PlayerDaoTest : BaseInstrumentedTest() {
         assertThat(players[2].name).isEqualTo("Gimli")
         assertThat(players[3].name).isEqualTo("Legolas")
         assertThat(players[4].name).isEqualTo("Saruman")
+    }
+
+    @Test
+    fun getComputerPlayersDwitchId() {
+        bootstrapDb(
+            listOf(
+                Player(0, DwitchPlayerId(2), 0, "Saruman", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, ready = true),
+                Player(
+                    0,
+                    DwitchPlayerId(3),
+                    0,
+                    "Gimli",
+                    PlayerRole.GUEST,
+                    PlayerConnectionState.CONNECTED,
+                    ready = false,
+                    computerManaged = true
+                ),
+                Player(0, DwitchPlayerId(4), 0, "Boromir", PlayerRole.GUEST, PlayerConnectionState.DISCONNECTED, ready = true),
+                Player(
+                    0,
+                    DwitchPlayerId(5),
+                    0,
+                    "Legolas",
+                    PlayerRole.GUEST,
+                    PlayerConnectionState.CONNECTED,
+                    ready = true,
+                    computerManaged = true
+                )
+            )
+        )
+
+        val computerPlayersId = playerDao.getComputerPlayersDwitchId(gameLocalId!!)
+
+        assertThat(computerPlayersId).containsExactlyInAnyOrder(DwitchPlayerId(3), DwitchPlayerId(5))
     }
 
     private fun bootstrapDb(players: List<Player> = emptyList()) {

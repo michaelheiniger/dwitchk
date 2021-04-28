@@ -77,7 +77,7 @@ fun WaitingRoomGuestScreen(
             .animateContentSize()
             .padding(top = 16.dp, start = 16.dp, end = 16.dp)
     ) {
-        WaitingRoomPlayersScreen(players)
+        WaitingRoomPlayersScreen(players = players, showAddComputerPlayer = false, onAddComputerPlayer = {})
         Spacer(Modifier.height(16.dp))
         GuestControlScreen(
             ready = ready,

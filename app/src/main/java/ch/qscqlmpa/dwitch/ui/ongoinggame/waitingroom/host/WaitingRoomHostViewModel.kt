@@ -25,6 +25,17 @@ internal class WaitingRoomHostViewModel @Inject constructor(
         canGameBeLaunched()
     }
 
+    fun addComputerPlayer() {
+        disposableManager.add(
+            facade.addComputerPlayer()
+                .observeOn(uiScheduler)
+                .subscribe(
+                    {},
+                    { error -> Logger.error(error) { "Error while adding a computer player." } }
+                )
+        )
+    }
+
     fun launchGame() {
         disposableManager.add(
             facade.launchGame()

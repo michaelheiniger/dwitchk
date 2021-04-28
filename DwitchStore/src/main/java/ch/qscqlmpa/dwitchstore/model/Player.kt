@@ -27,8 +27,8 @@ data class Player(
     val name: String,
     @ColumnInfo(name = "player_role") val playerRole: PlayerRole,
     val connectionState: PlayerConnectionState,
-    val ready: Boolean
+    val ready: Boolean,
+    @ColumnInfo(name = "computer_managed") val computerManaged: Boolean = false
 ) {
-
     val isHost: Boolean get() = playerRole == PlayerRole.HOST
 }

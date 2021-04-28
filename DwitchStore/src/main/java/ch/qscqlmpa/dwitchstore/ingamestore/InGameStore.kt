@@ -6,6 +6,7 @@ import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchstore.ingamestore.model.GameCommonIdAndCurrentRoom
+import ch.qscqlmpa.dwitchstore.ingamestore.model.ResumeComputerPlayersInfo
 import ch.qscqlmpa.dwitchstore.model.Game
 import ch.qscqlmpa.dwitchstore.model.Player
 import io.reactivex.rxjava3.core.Flowable
@@ -19,6 +20,7 @@ interface InGameStore {
     fun getCurrentRoom(): RoomType
     fun getGameState(): DwitchGameState
     fun gameIsNew(): Boolean
+    fun gameIsNotNew(): Boolean
     fun observeGameState(): Observable<DwitchGameState>
     fun getGameCommonIdAndCurrentRoom(): GameCommonIdAndCurrentRoom
     fun getPlayerLocalId(dwitchId: DwitchPlayerId): Long?
@@ -29,7 +31,7 @@ interface InGameStore {
     fun updateGameState(gameState: DwitchGameState)
 
     // Player
-    fun insertNewGuestPlayer(name: String): Long
+    fun insertNewGuestPlayer(name: String, computerManaged: Boolean): Long
     fun insertPlayers(players: List<Player>): List<Long>
 
     fun updateLocalPlayerWithDwitchId(dwitchPlayerId: DwitchPlayerId): Int
@@ -56,4 +58,5 @@ interface InGameStore {
      */
     fun observePlayersInWaitingRoom(): Flowable<List<Player>>
     fun getPlayersInWaitingRoom(): List<Player>
+    fun getComputerPlayersToResume(): ResumeComputerPlayersInfo
 }

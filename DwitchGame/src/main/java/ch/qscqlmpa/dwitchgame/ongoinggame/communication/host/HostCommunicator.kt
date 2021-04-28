@@ -6,11 +6,11 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.GameCommunicator
 
 internal interface HostCommunicator : GameCommunicator {
 
-    fun sendMessage(envelopeToSend: EnvelopeToSend)
-
     fun startServer()
 
     fun stopServer()
 
     fun closeConnectionWithClient(connectionId: ConnectionId)
+
+    fun sendMessage(envelopeToSend: EnvelopeToSend)
 }
