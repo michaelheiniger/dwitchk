@@ -110,7 +110,7 @@ internal abstract class GameDao(database: AppRoomDatabase) {
             hostPlayerName,
             PlayerRole.HOST,
             PlayerConnectionState.CONNECTED,
-            true
+            ready = true
         )
         val playerLocalId = playerDao.insertPlayer(player)
         playerDao.updatePlayer(
@@ -169,7 +169,7 @@ internal abstract class GameDao(database: AppRoomDatabase) {
             guestPlayerName,
             PlayerRole.GUEST,
             PlayerConnectionState.CONNECTED,
-            false
+            ready = false
         )
         val playerLocalId = playerDao.insertPlayer(player)
 
