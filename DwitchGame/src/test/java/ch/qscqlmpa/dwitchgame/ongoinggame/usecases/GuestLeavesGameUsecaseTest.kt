@@ -24,8 +24,7 @@ internal class GuestLeavesGameUsecaseTest : BaseUnitTest() {
     private lateinit var guestLeavesGameUsecase: GuestLeavesGameUsecase
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         appEventRepository = AppEventRepository()
         guestLeavesGameUsecase = GuestLeavesGameUsecase(mockInGameStore, appEventRepository, mockCommunicator)
 

@@ -21,8 +21,7 @@ internal class EndGameUsecaseTest : BaseUnitTest() {
     private lateinit var usecase: EndGameUsecase
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         usecase = EndGameUsecase(
             mockAppEventRepository,
             mockCommunicator

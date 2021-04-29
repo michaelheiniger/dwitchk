@@ -18,8 +18,7 @@ internal class PlayerReadyMessageProcessorTest : BaseMessageProcessorTest() {
     private val guestPlayer = TestEntityFactory.createGuestPlayer1()
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         processor = PlayerReadyMessageProcessor(
             mockInGameStore,
             mockHostMessageFactory,

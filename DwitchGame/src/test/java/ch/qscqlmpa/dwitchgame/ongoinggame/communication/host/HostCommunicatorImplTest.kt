@@ -39,9 +39,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
     private lateinit var receivedMessagesSubject: PublishSubject<EnvelopeReceived>
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
-
+    fun setup() {
         hostCommunicator = HostCommunicatorImpl(
             mockCommServer,
             mockMessageDispatcher,

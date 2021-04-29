@@ -16,8 +16,7 @@ internal class GameUpdatedUsecaseTest : BaseUnitTest() {
     private lateinit var usecase: GameUpdatedUsecase
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         usecase = GameUpdatedUsecase(mockInGameStore, mockCommunicator)
     }
 

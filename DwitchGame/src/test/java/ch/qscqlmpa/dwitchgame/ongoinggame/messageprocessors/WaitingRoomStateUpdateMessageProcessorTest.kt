@@ -27,8 +27,7 @@ internal class WaitingRoomStateUpdateMessageProcessorTest : BaseMessageProcessor
     private val guest3Player = TestEntityFactory.createGuestPlayer3(connectionState = PlayerConnectionState.CONNECTED)
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         processor = WaitingRoomStateUpdateMessageProcessor(mockInGameStore)
     }
 

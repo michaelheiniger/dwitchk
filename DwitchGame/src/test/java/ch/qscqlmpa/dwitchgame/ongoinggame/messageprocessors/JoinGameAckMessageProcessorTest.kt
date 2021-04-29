@@ -19,8 +19,7 @@ internal class JoinGameAckMessageProcessorTest : BaseMessageProcessorTest() {
     private lateinit var processor: JoinGameAckMessageProcessor
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         processor = JoinGameAckMessageProcessor(mockInGameStore)
     }
 

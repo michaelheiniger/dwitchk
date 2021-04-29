@@ -38,8 +38,7 @@ internal class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
     private val currentGameCommonId = GameCommonId(1)
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         connectionStore = ConnectionStoreFactory.createConnectionStore()
 
         processor = RejoinGameMessageProcessor(

@@ -16,7 +16,7 @@ class ResumeComputerPlayersUsecaseTest : BaseUnitTest() {
     private lateinit var usecase: ResumeComputerPlayersUsecase
 
     @BeforeEach
-    override fun setup() {
+    fun setup() {
         usecase = ResumeComputerPlayersUsecase(mockInGameStore, mockComputer)
     }
 

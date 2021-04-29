@@ -26,8 +26,7 @@ internal class LaunchGameUsecaseTest : BaseUnitTest() {
     private val mockExistingGameState = mockk<DwitchGameState>()
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         launchGameUsecase = LaunchGameUsecase(
             mockInGameStore,
             mockGameInitializerService,

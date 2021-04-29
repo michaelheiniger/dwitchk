@@ -20,8 +20,7 @@ class HostMessageFactoryTest : BaseUnitTest() {
     private lateinit var hostMessageFactory: HostMessageFactory
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         hostMessageFactory = HostMessageFactory(mockInGameStore)
     }
 

@@ -7,7 +7,6 @@ import io.mockk.verify
 import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.net.SocketException
 
@@ -16,11 +15,6 @@ class LanGameDiscoveryTest : BaseUnitTest() {
     companion object {
         const val gameAd1 = "{\"isNew\":true,\"gameCommonId\":{\"value\":23},\"gameName\":\"Kaamelott\",\"gamePort\":8889}"
         const val gameAd2 = "{\"isNew\":true,\"gameCommonId\":{\"value\":54},\"gameName\":\"LOTR\",\"gamePort\":8890}"
-    }
-
-    @BeforeEach
-    override fun setup() {
-        super.setup()
     }
 
     @Test

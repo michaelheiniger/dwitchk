@@ -21,8 +21,7 @@ internal class GameOverMessageProcessorTest : BaseMessageProcessorTest() {
     private lateinit var processor: GameOverMessageProcessor
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         gameEventRepository = GuestGameEventRepository()
         processor = GameOverMessageProcessor(mockAppEventRepository, gameEventRepository)
     }

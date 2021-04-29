@@ -31,8 +31,7 @@ class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
     private lateinit var localPlayer: Player
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         commStateRepository = GuestCommunicationStateRepository()
         processorGuest = GuestConnectedToHostEventProcessor(
             mockInGameStore,

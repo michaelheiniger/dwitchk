@@ -17,8 +17,7 @@ internal class GuestDisconnectedFromHostEventProcessorTest : BaseUnitTest() {
     private lateinit var processorGuest: GuestDisconnectedFromHostEventProcessor
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         commStateRepository = GuestCommunicationStateRepository()
         processorGuest = GuestDisconnectedFromHostEventProcessor(mockInGameStore, commStateRepository)
     }

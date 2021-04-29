@@ -26,8 +26,7 @@ class CancelGameUsecaseTest : BaseUnitTest() {
     private lateinit var usecase: CancelGameUsecase
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         gameEventRepository = GuestGameEventRepository()
         usecase = CancelGameUsecase(
             mockInGameStore,

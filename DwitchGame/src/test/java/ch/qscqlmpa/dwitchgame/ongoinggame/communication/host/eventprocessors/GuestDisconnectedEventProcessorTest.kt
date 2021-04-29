@@ -30,8 +30,7 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
     private val guestPlayer = TestEntityFactory.createGuestPlayer1().copy(connectionState = PlayerConnectionState.CONNECTED)
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         connectionStore = ConnectionStoreFactory.createConnectionStore()
         processor = GuestDisconnectedEventProcessor(
             mockInGameStore,

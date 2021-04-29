@@ -15,8 +15,7 @@ class WaitingRoomPlayerRepositoryTest : BaseUnitTest() {
     private lateinit var repository: WaitingRoomPlayerRepository
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         repository = WaitingRoomPlayerRepository(mockInGameStore)
     }
 

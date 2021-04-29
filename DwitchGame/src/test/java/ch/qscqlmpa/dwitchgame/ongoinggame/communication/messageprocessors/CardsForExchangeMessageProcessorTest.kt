@@ -28,8 +28,7 @@ internal class CardsForExchangeMessageProcessorTest : BaseMessageProcessorTest()
     private val mockCurrentGameState = mockk<DwitchGameState>(relaxed = true)
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         dwitchEngineFactory = TestDwitchEngineFactory()
         processor = CardsForExchangeMessageProcessor(mockInGameStore, dwitchEngineFactory, TestUtil.lazyOf(mockHostCommunicator))
         every { mockInGameStore.getGameState() } returns mockCurrentGameState

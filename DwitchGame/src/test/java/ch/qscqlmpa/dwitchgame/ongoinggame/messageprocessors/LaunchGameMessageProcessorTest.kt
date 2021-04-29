@@ -24,9 +24,7 @@ internal class LaunchGameMessageProcessorTest : BaseMessageProcessorTest() {
     private lateinit var message: Message.LaunchGameMessage
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
-
+    fun setup() {
         gameEventRepository = GuestGameEventRepository()
         processor = LaunchGameMessageProcessor(
             mockInGameStore,

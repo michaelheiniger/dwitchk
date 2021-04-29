@@ -28,7 +28,7 @@ class GameAdvertisingTest : BaseUnitTest() {
     private lateinit var timeScheduler: TestScheduler
 
     @BeforeEach
-    override fun setup() {
+    fun setup() {
         val testSchedulerFactory = TestSchedulerFactory()
         timeScheduler = TestScheduler()
         testSchedulerFactory.setTimeScheduler(timeScheduler)

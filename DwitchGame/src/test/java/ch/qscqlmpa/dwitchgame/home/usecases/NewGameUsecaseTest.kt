@@ -23,8 +23,7 @@ class NewGameUsecaseTest : BaseUnitTest() {
     private lateinit var newGameUsecase: NewGameUsecase
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         newGameUsecase = NewGameUsecase(mockAppEventRepository, mockStore)
     }
 

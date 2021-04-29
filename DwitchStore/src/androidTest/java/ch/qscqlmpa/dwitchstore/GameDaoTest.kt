@@ -17,8 +17,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
     private val playerName = "Arthur"
 
     @Before
-    override fun setup() {
-        super.setup()
+    fun setup() {
         bootstrapDb(this)
     }
 

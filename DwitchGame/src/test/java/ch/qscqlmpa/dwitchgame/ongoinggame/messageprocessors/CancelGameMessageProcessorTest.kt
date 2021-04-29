@@ -22,8 +22,7 @@ internal class CancelGameMessageProcessorTest : BaseMessageProcessorTest() {
     private lateinit var processor: GameCanceledMessageProcessor
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         processor = GameCanceledMessageProcessor(mockInGameStore, mockAppEventRepository, mockGameEventRepository)
     }
 

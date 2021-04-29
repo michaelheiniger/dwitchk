@@ -18,8 +18,7 @@ internal class LeaveGameMessageProcessorTest : BaseMessageProcessorTest() {
     private val guestPlayer = TestEntityFactory.createGuestPlayer1()
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         processor = LeaveGameMessageProcessor(mockInGameStore, mockHostMessageFactory, TestUtil.lazyOf(mockHostCommunicator))
     }
 

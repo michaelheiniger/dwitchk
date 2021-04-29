@@ -27,8 +27,7 @@ internal class HostListeningForConnectionsEventProcessorTest : BaseUnitTest() {
     private val hostDwitchId = DwitchPlayerId(1)
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         connectionStore = ConnectionStoreFactory.createConnectionStore()
         processor = HostListeningForConnectionsEventProcessor(
             mockInGameStore,

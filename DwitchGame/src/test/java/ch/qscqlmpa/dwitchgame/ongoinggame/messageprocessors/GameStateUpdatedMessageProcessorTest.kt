@@ -21,8 +21,7 @@ internal class GameStateUpdatedMessageProcessorTest : BaseMessageProcessorTest()
     private lateinit var processor: GameStateUpdatedMessageProcessor
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         processor = GameStateUpdatedMessageProcessor(mockInGameStore)
     }
 

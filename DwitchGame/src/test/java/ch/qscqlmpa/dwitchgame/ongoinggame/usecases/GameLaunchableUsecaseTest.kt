@@ -20,8 +20,7 @@ internal class GameLaunchableUsecaseTest : BaseUnitTest() {
     private lateinit var gameLaunchableUsecase: GameLaunchableUsecase
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         gameLaunchableUsecase = GameLaunchableUsecase(mockPlayerWrRepository)
     }
 

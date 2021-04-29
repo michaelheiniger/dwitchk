@@ -30,9 +30,7 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
     private lateinit var receivedMessagesSubject: PublishSubject<EnvelopeReceived>
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
-
+    fun setup() {
         guestCommunicator = GuestCommunicatorImpl(
             mockCommClient,
             mockMessageDispatcher,

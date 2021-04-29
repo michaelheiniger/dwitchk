@@ -15,8 +15,7 @@ internal class GuestConnectionErrorEventProcessorTest : BaseUnitTest() {
     private lateinit var processorGuest: GuestConnectionErrorEventProcessor
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         commStateRepository = GuestCommunicationStateRepository()
         processorGuest = GuestConnectionErrorEventProcessor(commStateRepository)
     }

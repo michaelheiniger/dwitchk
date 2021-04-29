@@ -19,8 +19,7 @@ class PlayerReadyUsecaseTest : BaseUnitTest() {
     private val localPlayerDwitchId = DwitchPlayerId(23)
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         usecase = PlayerReadyUsecase(mockInGameStore, mockCommunicator)
         every { mockInGameStore.getLocalPlayerDwitchId() } returns localPlayerDwitchId
     }

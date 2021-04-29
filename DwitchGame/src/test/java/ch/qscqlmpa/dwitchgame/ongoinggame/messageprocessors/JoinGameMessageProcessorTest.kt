@@ -25,8 +25,7 @@ internal class JoinGameMessageProcessorTest : BaseMessageProcessorTest() {
     private lateinit var senderConnectionId: ConnectionId
 
     @BeforeEach
-    override fun setup() {
-        super.setup()
+    fun setup() {
         connectionStore = ConnectionStoreFactory.createConnectionStore()
         processor = JoinGameMessageProcessor(
             mockInGameStore,
