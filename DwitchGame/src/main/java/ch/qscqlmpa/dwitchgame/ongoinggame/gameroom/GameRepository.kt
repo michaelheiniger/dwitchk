@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.gameroom
 
-import ch.qscqlmpa.dwitchengine.DwitchEngineFactory
+import ch.qscqlmpa.dwitchengine.DwitchFactory
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
@@ -14,7 +14,7 @@ import javax.inject.Inject
 @OngoingGameScope
 internal class GameRepository @Inject constructor(
     private val store: InGameStore,
-    private val dwitchEngineFactory: DwitchEngineFactory
+    private val dwitchFactory: DwitchFactory
 ) {
 
     fun getGameName(): Single<String> {
@@ -38,7 +38,7 @@ internal class GameRepository @Inject constructor(
     }
 
     private fun getDataForCardExchange(localPlayer: Player, gameState: DwitchGameState): DwitchState {
-        val cardExchange = dwitchEngineFactory.create(gameState).getCardExchangeIfRequired(localPlayer.dwitchId)
+        val cardExchange = dwitchFactory.createDwitchEngine(gameState).getCardExchangeIfRequired(localPlayer.dwitchId)
         if (cardExchange != null) { // Local player needs to perform a card exchange
             return DwitchState.CardExchange(CardExchangeInfo(cardExchange, gameState.player(localPlayer.dwitchId).cardsInHand))
         }
@@ -47,14 +47,14 @@ internal class GameRepository @Inject constructor(
 
     private fun createDashboardInfo(localPlayer: Player, gameState: DwitchGameState): GameDashboardInfo {
         return GameInfoFactory.createGameDashboardInfo(
-            dwitchEngineFactory.create(gameState).getGameInfo(),
+            dwitchFactory.createDwitchEngine(gameState).getGameInfo(),
             localPlayer.dwitchId,
             localPlayer.connectionState
         )
     }
 
     private fun createEndOfRoundInfo(localPlayer: Player, gameState: DwitchGameState): EndOfRoundInfo {
-        val playerInfos = dwitchEngineFactory.create(gameState).getGameInfo().playerInfos.values.toList()
+        val playerInfos = dwitchFactory.createDwitchEngine(gameState).getGameInfo().playerInfos.values.toList()
         return GameInfoFactory.createEndOfGameInfo(playerInfos, localPlayerIsHost = localPlayer.isHost)
     }
 }

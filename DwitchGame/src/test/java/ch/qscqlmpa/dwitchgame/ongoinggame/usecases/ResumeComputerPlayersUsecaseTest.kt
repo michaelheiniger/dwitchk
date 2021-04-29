@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
-import ch.qscqlmpa.dwitchgame.computerplayer.Computer
+import ch.qscqlmpa.dwitchgame.computerplayer.ComputerPlayersManager
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.ingamestore.model.ResumeComputerPlayersInfo
 import io.mockk.*
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 
 class ResumeComputerPlayersUsecaseTest : BaseUnitTest() {
 
-    private val mockComputer = mockk<Computer>()
+    private val mockComputer = mockk<ComputerPlayersManager>()
 
     private lateinit var usecase: ResumeComputerPlayersUsecase
 

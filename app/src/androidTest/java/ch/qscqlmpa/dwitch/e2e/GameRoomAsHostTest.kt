@@ -22,7 +22,7 @@ import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.assertLaunchGameControlIsEna
 import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.launchGame
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.websocket.server.test.PlayerHostTest
-import ch.qscqlmpa.dwitchengine.ProdDwitchEngineFactory
+import ch.qscqlmpa.dwitchengine.ProdDwitchFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
@@ -171,7 +171,7 @@ class GameRoomAsHostTest : BaseHostTest() {
 
     private fun otherPlayerPlaysCard(guest: PlayerHostTest, card: Card) {
         val currentGameState = inGameStore.getGameState()
-        val newGameState = ProdDwitchEngineFactory().create(currentGameState).playCard(card)
+        val newGameState = ProdDwitchFactory().createDwitchEngine(currentGameState).playCard(card)
         serverTestStub.guestSendsMessageToServer(guest, MessageFactory.createGameStateUpdatedMessage(newGameState))
         assertGameStateUpdatedMessageSent() // Broadcasted by host to other players
     }

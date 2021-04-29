@@ -1,13 +1,13 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
-import ch.qscqlmpa.dwitchgame.computerplayer.Computer
+import ch.qscqlmpa.dwitchgame.computerplayer.ComputerPlayersManager
 import io.reactivex.rxjava3.core.Completable
 import javax.inject.Inject
 
 internal class AddComputerPlayerUsecase @Inject constructor(
-    private val computer: Computer
+    private val computerPlayersManager: ComputerPlayersManager
 ) {
     fun addPlayer(): Completable {
-        return Completable.fromAction { computer.addNewPlayer() }
+        return Completable.fromAction { computerPlayersManager.addNewPlayer() }
     }
 }

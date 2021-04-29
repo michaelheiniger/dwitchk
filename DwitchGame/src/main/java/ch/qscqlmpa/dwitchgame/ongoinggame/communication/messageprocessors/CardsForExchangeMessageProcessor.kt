@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchengine.DwitchEngineFactory
+import ch.qscqlmpa.dwitchengine.DwitchFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 internal class CardsForExchangeMessageProcessor @Inject constructor(
     private val store: InGameStore,
-    private val dwitchEngineFactory: DwitchEngineFactory,
+    private val dwitchFactory: DwitchFactory,
     communicatorLazy: Lazy<HostCommunicator>
 ) : BaseHostProcessor(communicatorLazy) {
 
@@ -22,7 +22,7 @@ internal class CardsForExchangeMessageProcessor @Inject constructor(
 
         return Completable.fromAction {
             val currentGameState = store.getGameState()
-            val dwitchEngine = dwitchEngineFactory.create(currentGameState)
+            val dwitchEngine = dwitchFactory.createDwitchEngine(currentGameState)
 
             /**
              * In case of

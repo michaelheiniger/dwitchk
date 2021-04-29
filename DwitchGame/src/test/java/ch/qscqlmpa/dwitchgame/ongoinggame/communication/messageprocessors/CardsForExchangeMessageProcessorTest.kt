@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.Recipient
 import ch.qscqlmpa.dwitchengine.DwitchEngine
-import ch.qscqlmpa.dwitchengine.TestDwitchEngineFactory
+import ch.qscqlmpa.dwitchengine.TestDwitchFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test
 
 internal class CardsForExchangeMessageProcessorTest : BaseMessageProcessorTest() {
 
-    private lateinit var dwitchEngineFactory: TestDwitchEngineFactory
+    private lateinit var dwitchEngineFactory: TestDwitchFactory
 
     private lateinit var processor: CardsForExchangeMessageProcessor
 
@@ -29,7 +29,7 @@ internal class CardsForExchangeMessageProcessorTest : BaseMessageProcessorTest()
 
     @BeforeEach
     fun setup() {
-        dwitchEngineFactory = TestDwitchEngineFactory()
+        dwitchEngineFactory = TestDwitchFactory()
         processor = CardsForExchangeMessageProcessor(mockInGameStore, dwitchEngineFactory, TestUtil.lazyOf(mockHostCommunicator))
         every { mockInGameStore.getGameState() } returns mockCurrentGameState
     }

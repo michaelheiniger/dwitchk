@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.di.modules
 
-import ch.qscqlmpa.dwitchengine.DwitchEngineFactory
-import ch.qscqlmpa.dwitchengine.ProdDwitchEngineFactory
+import ch.qscqlmpa.dwitchengine.DwitchFactory
+import ch.qscqlmpa.dwitchengine.ProdDwitchFactory
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealerFactory
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetupFactory
@@ -36,8 +36,8 @@ abstract class TestGameModule {
 
         @OngoingGameScope
         @Provides
-        internal fun provideDwitchEngineFactory(): DwitchEngineFactory {
-            return ProdDwitchEngineFactory()
+        internal fun provideDwitchEngineFactory(): DwitchFactory {
+            return ProdDwitchFactory()
         }
     }
 }

@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.gameroom
 
 import ch.qscqlmpa.dwitchengine.DwitchEngine
-import ch.qscqlmpa.dwitchengine.DwitchEngineFactory
+import ch.qscqlmpa.dwitchengine.DwitchFactory
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
@@ -17,7 +17,7 @@ import javax.inject.Inject
 internal class GameInteractor @Inject constructor(
     private val store: InGameStore,
     private val gameUpdatedUsecase: GameUpdatedUsecase,
-    private val dwitchEngineFactory: DwitchEngineFactory,
+    private val dwitchFactory: DwitchFactory,
     private val cardDealerFactory: CardDealerFactory,
     private val cardForExchangeSubmitUsecase: CardForExchangeChosenUsecase
 ) {
@@ -31,7 +31,7 @@ internal class GameInteractor @Inject constructor(
     }
 
     private fun handleGameStateUpdated(updateGameState: (engine: DwitchEngine) -> DwitchGameState): Completable {
-        return Single.fromCallable { updateGameState(dwitchEngineFactory.create(store.getGameState())) }
+        return Single.fromCallable { updateGameState(dwitchFactory.createDwitchEngine(store.getGameState())) }
             .flatMapCompletable(gameUpdatedUsecase::handleUpdatedGameState)
             .doOnError { error -> Logger.error(error) { "Error while updating the game state." } }
     }

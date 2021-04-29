@@ -19,7 +19,7 @@ import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitch.utils.TestEntityFactory
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchengine.DwitchEngine.Companion.createNewGame
-import ch.qscqlmpa.dwitchengine.ProdDwitchEngineFactory
+import ch.qscqlmpa.dwitchengine.ProdDwitchFactory
 import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealer
 import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealerFactory
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
@@ -153,7 +153,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
                 )
             )
         )
-        val newRoundGameState = ProdDwitchEngineFactory().create(gameState).startNewRound(cardDealerFactory)
+        val newRoundGameState = ProdDwitchFactory().createDwitchEngine(gameState).startNewRound(cardDealerFactory)
         val message = MessageFactory.createGameStateUpdatedMessage(newRoundGameState)
         clientTestStub.serverSendsMessageToClient(message)
 
