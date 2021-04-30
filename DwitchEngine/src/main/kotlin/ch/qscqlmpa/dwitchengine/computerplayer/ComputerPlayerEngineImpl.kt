@@ -109,5 +109,3 @@ internal class ComputerPlayerEngineImpl(
         return gameInfo.playerInfos.getValue(playerId).cardsInHand
     }
 }
-
-data class ComputerPlayerActionResult(val dwitchId: DwitchPlayerId, val updatedGameState: DwitchGameState)
