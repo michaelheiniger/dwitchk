@@ -410,7 +410,7 @@ class PlayCardTest : EngineTestBase() {
             .addPlayerToGame(p1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(cardPlayed, Card.Diamonds5))
             .addPlayerToGame(p2, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.Diamonds4))
             .setCardsdOnTable(Card.ClubsJack)
-            .setGraveyard(Card.HeartsJack, Card.DiamondsKing)
+            .setCardGraveyard(Card.HeartsJack, Card.DiamondsKing)
             .build()
 
         launchPlayCardTest(cardPlayed)

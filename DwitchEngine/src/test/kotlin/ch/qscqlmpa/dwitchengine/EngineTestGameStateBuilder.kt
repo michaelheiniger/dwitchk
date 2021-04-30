@@ -74,7 +74,7 @@ class EngineTestGameStateBuilder {
         return this
     }
 
-    fun setGraveyard(vararg cardsInGraveyard: Card): EngineTestGameStateBuilder {
+    fun setCardGraveyard(vararg cardsInGraveyard: Card): EngineTestGameStateBuilder {
         this.cardsInGraveyard = listOf(*cardsInGraveyard)
         return this
     }
@@ -84,12 +84,24 @@ class EngineTestGameStateBuilder {
         return this
     }
 
-    fun setPlayersDoneForRound(list: List<DwitchPlayerId>) {
-        playersDoneForRound = list
+    fun setPlayerStatus(id: DwitchPlayerId, status: DwitchPlayerStatus): EngineTestGameStateBuilder {
+        playersMap[id] = playersMap.getValue(id).copy(status = status)
+        return this
     }
 
-    fun setPlayerCards(id: DwitchPlayerId, cards: List<Card>) {
-        playersMap[id] = playersMap.getValue(id).copy(cardsInHand = cards)
+    fun updatePlayer(id: DwitchPlayerId, rank: DwitchRank, vararg cards: Card): EngineTestGameStateBuilder {
+        playersMap[id] = playersMap.getValue(id).copy(rank = rank, cardsInHand = listOf(*cards))
+        return this
+    }
+
+    fun setPlayersDoneForRound(list: List<DwitchPlayerId>): EngineTestGameStateBuilder {
+        playersDoneForRound = list
+        return this
+    }
+
+    fun setPlayerCards(id: DwitchPlayerId, vararg cards: Card): EngineTestGameStateBuilder {
+        playersMap[id] = playersMap.getValue(id).copy(cardsInHand = listOf(*cards))
+        return this
     }
 
     fun addPlayerToGame(
