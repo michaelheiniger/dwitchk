@@ -28,7 +28,7 @@ internal class ComputerPlayersManager @Inject constructor(
 
     fun addNewPlayer() {
         playerCounter++
-        Logger.info { "Add computer player (id: $playerCounter)" }
+        Logger.info { "Add computer player (connection id: $playerCounter)" }
         if (playerCounter == 1L) {
             start()
         }
@@ -36,28 +36,20 @@ internal class ComputerPlayersManager @Inject constructor(
             Logger.error("Maximum number of computer player is $maxNumOfComputerPlayers.")
             return
         }
-        communicator.sendCommunicationEventFromComputerPlayer(ServerCommunicationEvent.ClientConnected(ConnectionId(playerCounter)))
-        communicator.sendMessageToHostFromComputerPlayer(
-            EnvelopeReceived(
-                ConnectionId(playerCounter),
-                GuestMessageFactory.createJoinGameMessage(playerName = "Computer $playerCounter", computerManaged = true)
-            )
-        )
+        val connectionId = ConnectionId(playerCounter)
+        connectPlayerToHost(connectionId)
+        playerJoinsGame(connectionId)
     }
 
-    fun resumeExistingPlayer(gameCommonId: GameCommonId, dwitchPlayerId: DwitchPlayerId) {
+    fun resumeExistingPlayer(gameCommonId: GameCommonId, playerId: DwitchPlayerId) {
         playerCounter++
-        Logger.info { "Resume computer player (id: $playerCounter)" }
+        Logger.info { "Resume computer player (dwitch id: $playerId, connection id: $playerCounter)" }
         if (playerCounter == 1L) {
             start()
         }
-        communicator.sendCommunicationEventFromComputerPlayer(ServerCommunicationEvent.ClientConnected(ConnectionId(playerCounter)))
-        communicator.sendMessageToHostFromComputerPlayer(
-            EnvelopeReceived(
-                ConnectionId(playerCounter),
-                GuestMessageFactory.createRejoinGameMessage(gameCommonId, dwitchPlayerId)
-            )
-        )
+        val connectionId = ConnectionId(playerCounter)
+        connectPlayerToHost(connectionId)
+        playerRejoinsGame(connectionId, gameCommonId, playerId)
     }
 
     private fun start() {
@@ -75,40 +67,46 @@ internal class ComputerPlayersManager @Inject constructor(
         disposableManager.disposeAndReset()
     }
 
+    private fun connectPlayerToHost(connectionId: ConnectionId) {
+        communicator.sendCommunicationEventFromComputerPlayer(ServerCommunicationEvent.ClientConnected(connectionId))
+    }
+
+    private fun playerJoinsGame(connectionId: ConnectionId) {
+        communicator.sendMessageToHostFromComputerPlayer(
+            EnvelopeReceived(
+                connectionId,
+                GuestMessageFactory.createJoinGameMessage(playerName = "Computer $playerCounter", computerManaged = true)
+            )
+        )
+    }
+
+    private fun playerRejoinsGame(connectionId: ConnectionId, gameCommonId: GameCommonId, playerId: DwitchPlayerId) {
+        communicator.sendMessageToHostFromComputerPlayer(
+            EnvelopeReceived(connectionId, GuestMessageFactory.createRejoinGameMessage(gameCommonId, playerId))
+        )
+    }
+
     private fun processMessage(envelope: EnvelopeToSend) {
         when (val message = envelope.message) {
             Message.CancelGameMessage, Message.GameOverMessage -> stop()
-            is Message.LaunchGameMessage -> processLaunchGameMessage(message)
-            is Message.GameStateUpdatedMessage -> processGameStateUpdatedMessage(message)
-            is Message.JoinGameAckMessage -> processJoinGameAckMessage(message, envelope)
-            is Message.RejoinGameAckMessage -> processRejoinGameAckMessage(message, envelope)
+            is Message.LaunchGameMessage -> handleComputerPlayerAction(message.gameState)
+            is Message.GameStateUpdatedMessage -> handleComputerPlayerAction(message.gameState)
+            is Message.JoinGameAckMessage -> playerNotifiesHostThatItsReady(message.playerId, envelope)
+            is Message.RejoinGameAckMessage -> playerNotifiesHostThatItsReady(message.playerId, envelope)
             else -> {
                 // Nothing to do
             }
         }
     }
 
-    private fun processRejoinGameAckMessage(message: Message.RejoinGameAckMessage, envelope: EnvelopeToSend) {
-        dwitchIdConnectionIdMap[message.playerId] = (envelope.recipient as Recipient.Single).id
-        sendPlayerReadyMessage(envelope.recipient as Recipient.Single, message.playerId)
-    }
-
-    private fun processJoinGameAckMessage(message: Message.JoinGameAckMessage, envelope: EnvelopeToSend) {
-        dwitchIdConnectionIdMap[message.playerId] = (envelope.recipient as Recipient.Single).id
-        sendPlayerReadyMessage(envelope.recipient as Recipient.Single, message.playerId)
-    }
-
-    private fun processGameStateUpdatedMessage(message: Message.GameStateUpdatedMessage) {
-        handleComputerPlayerAction(message.gameState)
-    }
-
-    private fun processLaunchGameMessage(message: Message.LaunchGameMessage) {
-        handleComputerPlayerAction(message.gameState)
-    }
-
     private fun handleComputerPlayerAction(gameState: DwitchGameState) {
         computerPlayerEngine(gameState).handleComputerPlayerAction()
             .forEach { (dwitchId, updatedGameState) -> sendUpdatedGameState(dwitchId, updatedGameState) }
+    }
+
+    private fun playerNotifiesHostThatItsReady(playerId: DwitchPlayerId, envelope: EnvelopeToSend) {
+        dwitchIdConnectionIdMap[playerId] = (envelope.recipient as Recipient.Single).id
+        sendPlayerReadyMessage(envelope.recipient as Recipient.Single, playerId)
     }
 
     private fun computerPlayerEngine(gameState: DwitchGameState): DwitchComputerPlayerEngine {
@@ -120,10 +118,10 @@ internal class ComputerPlayersManager @Inject constructor(
         communicator.sendMessageToHostFromComputerPlayer(EnvelopeReceived(recipient.id, messageToSend))
     }
 
-    private fun sendUpdatedGameState(playingPlayerId: DwitchPlayerId, gameStateUpdated: DwitchGameState) {
+    private fun sendUpdatedGameState(playerId: DwitchPlayerId, gameStateUpdated: DwitchGameState) {
         communicator.sendMessageToHostFromComputerPlayer(
             EnvelopeReceived(
-                dwitchIdConnectionIdMap.getValue(playingPlayerId),
+                dwitchIdConnectionIdMap.getValue(playerId),
                 MessageFactory.createGameStateUpdatedMessage(gameStateUpdated)
             )
         )
