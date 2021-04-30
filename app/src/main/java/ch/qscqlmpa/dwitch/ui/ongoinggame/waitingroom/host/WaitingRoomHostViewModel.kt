@@ -37,6 +37,7 @@ internal class WaitingRoomHostViewModel @Inject constructor(
     }
 
     fun launchGame() {
+        _commands.value = WaitingRoomHostCommand.Loading
         disposableManager.add(
             facade.launchGame()
                 .observeOn(uiScheduler)

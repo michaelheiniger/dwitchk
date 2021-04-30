@@ -18,6 +18,7 @@ import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
 import ch.qscqlmpa.dwitch.ui.common.ConfirmationDialog
 import ch.qscqlmpa.dwitch.ui.common.InfoDialog
+import ch.qscqlmpa.dwitch.ui.common.LoadingDialog
 import ch.qscqlmpa.dwitch.ui.common.toolbarDefaultTitle
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
@@ -54,6 +55,7 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
                 val toolbarTitle = wrViewModel.toolbarTitle.observeAsState(toolbarDefaultTitle).value
                 val showAddComputerPlayer = wrViewModel.canComputerPlayersBeAdded.observeAsState(false).value
                 val players = wrViewModel.players.observeAsState(emptyList()).value
+                val command = wrHostViewModel.commands.observeAsState().value
                 val launchGameEnabled = wrHostViewModel.canGameBeLaunched.observeAsState(false).value
                 val connectionStatus = connectionViewModel.connectionStatus.observeAsState().value
                 WaitingRoomHostScreen(
@@ -75,6 +77,7 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
                         onCancelClick = { showConfirmationDialog.value = false }
                     )
                 }
+                if (command != null && command is WaitingRoomHostCommand.Loading) LoadingDialog()
             }
         }
     }
@@ -203,6 +206,9 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
                 when (command) {
                     WaitingRoomHostCommand.NavigateToHomeScreen -> MainActivity.start(this)
                     WaitingRoomHostCommand.NavigateToGameRoomScreen -> GameRoomActivity.startForHost(this)
+                    else -> {
+                        // Nothing do to
+                    }
                 }
                 finish()
             }

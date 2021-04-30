@@ -96,4 +96,5 @@
     <string name="add_computer_player">Add computer player</string>
     <string name="back">Back</string>
     <string name="join_new_game_title">Join %1$</string>
+    <string name="loading">Loading...</string>
 </resources>

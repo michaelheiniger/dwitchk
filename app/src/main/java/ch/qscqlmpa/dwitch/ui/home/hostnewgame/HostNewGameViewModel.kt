@@ -46,6 +46,7 @@ class HostNewGameViewModel @Inject constructor(
         val gameName = gameName.value
         require(!playerName.isNullOrBlank()) { "Player name cannot be blank" }
         require(!gameName.isNullOrBlank()) { "Game name cannot be blank" }
+        _command.value = HostNewGameCommand.Loading
         disposableManager.add(
             hostFacade.hostGame(gameName, playerName, 8889) // TODO: Extract the port somewhere where it makes more sense
                 .observeOn(uiScheduler)

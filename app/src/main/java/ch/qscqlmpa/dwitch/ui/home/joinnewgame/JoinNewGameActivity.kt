@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
+import ch.qscqlmpa.dwitch.ui.common.LoadingDialog
 import ch.qscqlmpa.dwitch.ui.home.HomeBaseActivity
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
@@ -31,6 +32,7 @@ class JoinNewGameActivity : HomeBaseActivity() {
     fun ActivityScreen(viewModel: JoinNewGameViewModel) {
         val playerName = viewModel.playerName.observeAsState(initialPlayerName).value
         val joinGameControl = viewModel.joinGameControl.observeAsState(initialJoinGameControl).value
+        val command = viewModel.commands.observeAsState().value
         MaterialTheme {
             Surface(color = Color.White) {
                 JoinNewGameScreen(
@@ -40,10 +42,11 @@ class JoinNewGameActivity : HomeBaseActivity() {
                     onPlayerNameChange = { name -> viewModel.onPlayerNameChange(name) },
                     onJoinGameClick = { viewModel.joinGame(game) },
                     onBackClick = {
-                        MainActivity.start(this)
                         finish()
+                        MainActivity.start(this)
                     }
                 )
+                if (command != null && command is JoinNewGameCommand.Loading) LoadingDialog()
             }
         }
     }
@@ -66,7 +69,8 @@ class JoinNewGameActivity : HomeBaseActivity() {
                         WaitingRoomActivity.startActivityForGuest(this)
                     }
                     else -> {
-                    } // Nothing to do
+                        // Nothing to do
+                    }
                 }
             }
         )

@@ -1,14 +1,21 @@
 package ch.qscqlmpa.dwitch.ui.common
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import ch.qscqlmpa.dwitch.R
 
 @Preview(
@@ -100,4 +107,41 @@ fun ConfirmationDialog(
             contentColor = Color.White
         )
     }
+}
+
+@Preview(
+    showBackground = true,
+    backgroundColor = 0xFFFFFFFF
+)
+@Composable
+private fun LoadingDialogPreview() {
+    LoadingDialog()
+}
+
+@Composable
+fun LoadingDialog() {
+    Dialog(
+        onDismissRequest = {},
+        properties = DialogProperties(),
+        content = {
+            Surface(
+                shape = MaterialTheme.shapes.medium,
+                color = MaterialTheme.colors.surface,
+                contentColor = contentColorFor(MaterialTheme.colors.surface)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(stringResource(id = R.string.loading))
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colors.secondary,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+                }
+            }
+        }
+    )
 }

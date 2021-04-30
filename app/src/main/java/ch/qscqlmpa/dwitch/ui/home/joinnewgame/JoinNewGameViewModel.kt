@@ -37,6 +37,7 @@ class JoinNewGameViewModel @Inject constructor(
     fun joinGame(advertisedGame: AdvertisedGame) {
         val playerName = playerName.value
         require(!playerName.isNullOrBlank()) { "Player name cannot be blank" }
+        _command.value = JoinNewGameCommand.Loading
         disposableManager.add(
             guestFacade.joinGame(advertisedGame, playerName)
                 .observeOn(uiScheduler)
