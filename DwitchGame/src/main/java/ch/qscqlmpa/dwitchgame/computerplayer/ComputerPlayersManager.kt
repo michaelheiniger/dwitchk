@@ -14,10 +14,12 @@ import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.ComputerCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.GuestMessageFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
+import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
+@OngoingGameScope
 internal class ComputerPlayersManager @Inject constructor(
     private val communicator: ComputerCommunicator,
     private val dwitchFactory: DwitchFactory
