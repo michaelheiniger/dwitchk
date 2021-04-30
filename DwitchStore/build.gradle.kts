@@ -38,6 +38,8 @@ dependencies {
     implementation(project(path = ":DwitchEngine"))
     implementation(project(path = ":DwitchModel"))
 
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.4.32") // Prevent compiler warning (implicit dependency)
+
     // Logging
     implementation("org.tinylog:tinylog-api-kotlin:2.3.0-M2")
 
@@ -58,7 +60,7 @@ dependencies {
     // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc")
 
-    // JUnit4 (For ViewModel unit tests and instrumented tests)
+    // JUnit4 (for instrumented tests)
     testImplementation("junit:junit:4.13.2")
 
     // MockK
