@@ -174,8 +174,8 @@ private fun Table(lastCardPlayed: Card) {
             .testTag(UiTags.lastCardPlayed)
     ) {
         Image(
-            painter = painterResource(ResourceMapper.getResource(lastCardPlayed)),
-            contentDescription = lastCardPlayed.toString(),
+            painter = painterResource(ResourceMapper.getImageResource(lastCardPlayed)),
+            contentDescription = stringResource(ResourceMapper.getContentDescriptionResource(lastCardPlayed)),
             modifier = Modifier
                 .size(150.dp)
                 .testTag(lastCardPlayed.toString())
@@ -223,7 +223,7 @@ private fun PlayerDone(player: PlayerInfo) {
         append(player.name)
         if (BuildConfig.DEBUG) {
             append(" (")
-            append(stringResource(ResourceMapper.getResource(player.status)))
+            append(stringResource(ResourceMapper.getImageResource(player.status)))
             append(")")
         }
         pop()
@@ -236,7 +236,7 @@ private fun PlayerDone(player: PlayerInfo) {
 
 @Composable
 private fun PlayerPlaying(player: PlayerInfo) {
-    val status = stringResource(ResourceMapper.getResource(player.status))
+    val status = stringResource(ResourceMapper.getImageResource(player.status))
     val text = if (BuildConfig.DEBUG) "${player.name} ($status)" else player.name
     PlayerInfoDisplay(MaterialTheme.colors.primary) { Text(text = text, color = Color.White) }
 }
@@ -248,7 +248,7 @@ private fun PlayerTurnPassed(player: PlayerInfo) {
         append(player.name)
         if (BuildConfig.DEBUG) {
             append(" (")
-            append(stringResource(ResourceMapper.getResource(player.status)))
+            append(stringResource(ResourceMapper.getImageResource(player.status)))
             append(")")
         }
         pop()
@@ -263,7 +263,7 @@ private fun PlayerWaiting(player: PlayerInfo) {
         append(player.name)
         if (BuildConfig.DEBUG) {
             append(" (")
-            append(stringResource(ResourceMapper.getResource(player.status)))
+            append(stringResource(ResourceMapper.getImageResource(player.status)))
             append(")")
             if (player.dwitched) {
                 append(" Dwitched")

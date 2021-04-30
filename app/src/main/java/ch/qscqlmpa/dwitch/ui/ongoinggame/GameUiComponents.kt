@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ResourceMapper
 import ch.qscqlmpa.dwitch.ui.common.InfoDialog
@@ -57,8 +58,8 @@ fun CardItemDisplay(
         alpha = 0.2f
     )
     Image(
-        painter = painterResource(ResourceMapper.getResource(cardItem.card)),
-        contentDescription = cardItem.toString(),
+        painter = painterResource(ResourceMapper.getImageResource(cardItem.card)),
+        contentDescription = stringResource(ResourceMapper.getContentDescriptionResource(cardItem.card)),
         colorFilter = ColorFilter.tint(surfaceColor, BlendMode.Overlay),
         contentScale = ContentScale.Fit,
         modifier = Modifier

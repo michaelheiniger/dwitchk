@@ -10,7 +10,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationSt
 
 object ResourceMapper {
 
-    fun getResource(state: GuestCommunicationState): Resource {
+    fun getImageResource(state: GuestCommunicationState): Resource {
         return Resource(
             when (state) {
                 GuestCommunicationState.Connecting -> R.string.guest_connecting
@@ -21,7 +21,7 @@ object ResourceMapper {
         )
     }
 
-    fun getResource(state: HostCommunicationState): Resource {
+    fun getImageResource(state: HostCommunicationState): Resource {
         return Resource(
             when (state) {
                 HostCommunicationState.Opening -> R.string.host_connecting
@@ -52,7 +52,7 @@ object ResourceMapper {
         }
     }
 
-    fun getResource(status: DwitchPlayerStatus): Int {
+    fun getImageResource(status: DwitchPlayerStatus): Int {
         return when (status) {
             DwitchPlayerStatus.Done -> R.string.player_status_done
             DwitchPlayerStatus.Playing -> R.string.player_status_playing
@@ -61,7 +61,7 @@ object ResourceMapper {
         }
     }
 
-    fun getResource(card: Card): Int {
+    fun getImageResource(card: Card): Int {
         return when (card) {
             Card.Clubs2 -> R.drawable.clubs_2
             Card.Clubs3 -> R.drawable.clubs_3
@@ -116,6 +116,64 @@ object ResourceMapper {
             Card.DiamondsKing -> R.drawable.diamonds_king
             Card.DiamondsAce -> R.drawable.diamonds_ace
             Card.Blank -> R.drawable.back
+        }
+    }
+
+    fun getContentDescriptionResource(card: Card): Int {
+        return when (card) {
+            Card.Clubs2 -> R.string.clubs_2_content_description
+            Card.Clubs3 -> R.string.clubs_3_content_description
+            Card.Clubs4 -> R.string.clubs_4_content_description
+            Card.Clubs5 -> R.string.clubs_5_content_description
+            Card.Clubs6 -> R.string.clubs_6_content_description
+            Card.Clubs7 -> R.string.clubs_7_content_description
+            Card.Clubs8 -> R.string.clubs_8_content_description
+            Card.Clubs9 -> R.string.clubs_9_content_description
+            Card.Clubs10 -> R.string.clubs_10_content_description
+            Card.ClubsJack -> R.string.clubs_jack_content_description
+            Card.ClubsQueen -> R.string.clubs_queen_content_description
+            Card.ClubsKing -> R.string.clubs_king_content_description
+            Card.ClubsAce -> R.string.clubs_ace_content_description
+            Card.Spades2 -> R.string.spades_2_content_description
+            Card.Spades3 -> R.string.spades_3_content_description
+            Card.Spades4 -> R.string.spades_4_content_description
+            Card.Spades5 -> R.string.spades_5_content_description
+            Card.Spades6 -> R.string.spades_6_content_description
+            Card.Spades7 -> R.string.spades_7_content_description
+            Card.Spades8 -> R.string.spades_8_content_description
+            Card.Spades9 -> R.string.spades_9_content_description
+            Card.Spades10 -> R.string.spades_10_content_description
+            Card.SpadesJack -> R.string.spades_jack_content_description
+            Card.SpadesQueen -> R.string.spades_queen_content_description
+            Card.SpadesKing -> R.string.spades_king_content_description
+            Card.SpadesAce -> R.string.spades_ace_content_description
+            Card.Hearts2 -> R.string.hearts_2_content_description
+            Card.Hearts3 -> R.string.hearts_3_content_description
+            Card.Hearts4 -> R.string.hearts_4_content_description
+            Card.Hearts5 -> R.string.hearts_5_content_description
+            Card.Hearts6 -> R.string.hearts_6_content_description
+            Card.Hearts7 -> R.string.hearts_7_content_description
+            Card.Hearts8 -> R.string.hearts_8_content_description
+            Card.Hearts9 -> R.string.hearts_9_content_description
+            Card.Hearts10 -> R.string.hearts_10_content_description
+            Card.HeartsJack -> R.string.hearts_jack_content_description
+            Card.HeartsQueen -> R.string.hearts_queen_content_description
+            Card.HeartsKing -> R.string.hearts_king_content_description
+            Card.HeartsAce -> R.string.hearts_ace_content_description
+            Card.Diamonds2 -> R.string.diamonds_2_content_description
+            Card.Diamonds3 -> R.string.diamonds_3_content_description
+            Card.Diamonds4 -> R.string.diamonds_4_content_description
+            Card.Diamonds5 -> R.string.diamonds_5_content_description
+            Card.Diamonds6 -> R.string.diamonds_6_content_description
+            Card.Diamonds7 -> R.string.diamonds_7_content_description
+            Card.Diamonds8 -> R.string.diamonds_8_content_description
+            Card.Diamonds9 -> R.string.diamonds_9_content_description
+            Card.Diamonds10 -> R.string.diamonds_10_content_description
+            Card.DiamondsJack -> R.string.diamonds_jack_content_description
+            Card.DiamondsQueen -> R.string.diamonds_queen_content_description
+            Card.DiamondsKing -> R.string.diamonds_king_content_description
+            Card.DiamondsAce -> R.string.diamonds_ace_content_description
+            Card.Blank -> R.string.back_content_description
         }
     }
 }
