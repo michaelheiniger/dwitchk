@@ -18,7 +18,6 @@ internal class CardExchangeChooserTest : EngineTestBase() {
         gameStateBuilder
             .setGamePhase(DwitchGamePhase.CardExchange)
             .setCardsdOnTable(Card.Clubs4)
-            .setLocalPlayer(p1Id)
             .setCurrentPlayer(p1Id)
     }
 

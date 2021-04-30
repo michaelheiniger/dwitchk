@@ -18,7 +18,6 @@ class EngineTestGameStateBuilder {
     private var dwitchGameEvent: DwitchGameEvent? = null
     private var joker: CardName = CardName.Two
     private lateinit var gamePhase: DwitchGamePhase
-    private lateinit var localPlayer: DwitchPlayerId
     private lateinit var currentPlayer: DwitchPlayerId
     private var playersDoneForRound: List<DwitchPlayerId> = emptyList()
 
@@ -77,11 +76,6 @@ class EngineTestGameStateBuilder {
 
     fun setGraveyard(vararg cardsInGraveyard: Card): EngineTestGameStateBuilder {
         this.cardsInGraveyard = listOf(*cardsInGraveyard)
-        return this
-    }
-
-    fun setLocalPlayer(id: DwitchPlayerId): EngineTestGameStateBuilder {
-        this.localPlayer = id
         return this
     }
 

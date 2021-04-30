@@ -26,7 +26,6 @@ class StartNewRoundTest : EngineTestBase() {
         super.setup()
         gameStateBuilder
             .setGamePhase(DwitchGamePhase.RoundIsOver)
-            .setLocalPlayer(p2Id)
             .setCurrentPlayer(p2Id)
     }
 

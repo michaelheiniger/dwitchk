@@ -27,7 +27,6 @@ class PassTurnTest : EngineTestBase() {
                 .addPlayerToGame(p3, DwitchPlayerStatus.Waiting, DwitchRank.VicePresident, listOf(Card.Clubs5))
                 .addPlayerToGame(p4, DwitchPlayerStatus.TurnPassed, DwitchRank.President, listOf(Card.Clubs6))
                 .setCardsdOnTable(Card.Clubs7)
-                .setLocalPlayer(p1Id)
                 .setCurrentPlayer(p1Id)
                 .build()
 
@@ -59,7 +58,6 @@ class PassTurnTest : EngineTestBase() {
                 .addPlayerToGame(p2, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.Clubs4))
                 .addPlayerToGame(p3, DwitchPlayerStatus.Done, DwitchRank.Neutral, listOf(Card.Clubs5))
                 .setCardsdOnTable(Card.Clubs7)
-                .setLocalPlayer(p1Id)
                 .setCurrentPlayer(p1Id)
                 .build()
 
@@ -84,7 +82,6 @@ class PassTurnTest : EngineTestBase() {
                 .addPlayerToGame(p3, DwitchPlayerStatus.Waiting, DwitchRank.VicePresident, listOf(Card.Clubs5))
                 .addPlayerToGame(p4, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.Clubs6))
                 .setCardsdOnTable(Card.Clubs7)
-                .setLocalPlayer(p1Id)
                 .setCurrentPlayer(p1Id)
                 .build()
 

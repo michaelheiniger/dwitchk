@@ -22,7 +22,6 @@ class PlayCardTest : EngineTestBase() {
         super.setup()
         gameStateBuilder
             .setGamePhase(DwitchGamePhase.RoundIsOnGoing)
-            .setLocalPlayer(p1Id)
             .setCurrentPlayer(p1Id)
     }
 
