@@ -4,9 +4,7 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationComponent
-import ch.qscqlmpa.dwitchgame.di.DaggerTestGameComponent
 import ch.qscqlmpa.dwitchgame.di.TestGameComponent
-import ch.qscqlmpa.dwitchgame.di.modules.StoreModule
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.TestOngoingGameComponent
 import ch.qscqlmpa.dwitchstore.DaggerTestStoreComponent
 import ch.qscqlmpa.dwitchstore.TestStoreComponent
@@ -42,7 +40,7 @@ abstract class BaseIntegrationTest {
     @Before
     fun setupGameAndStoreComponents() {
         storeComponent = DaggerTestStoreComponent.factory().create(TestStoreModule(context))
-        gameComponent = DaggerTestGameComponent.factory().create(StoreModule(storeComponent.store))
+//        gameComponent = DaggerTestGameComponent.factory().create(StoreModule(storeComponent.store))
     }
 
     @After
