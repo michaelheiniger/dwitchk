@@ -33,9 +33,9 @@ private fun WaitingRoomGuestScreenPlayerConnectedPreview() {
     WaitingRoomGuestScreen(
         toolbarTitle = "Dwiiitch",
         players = listOf(
-            PlayerWrUi(name = "Aragorn", PlayerConnectionState.CONNECTED, ready = true),
-            PlayerWrUi(name = "Boromir", PlayerConnectionState.CONNECTED, ready = false),
-            PlayerWrUi(name = "Gimli", PlayerConnectionState.DISCONNECTED, ready = false)
+            PlayerWrUi(name = "Aragorn", PlayerConnectionState.CONNECTED, ready = true, kickable = false),
+            PlayerWrUi(name = "Boromir", PlayerConnectionState.CONNECTED, ready = false, kickable = false),
+            PlayerWrUi(name = "Gimli", PlayerConnectionState.DISCONNECTED, ready = false, kickable = false)
         ),
         ready = UiCheckboxModel(enabled = false, checked = false),
         connectionStatus = GuestCommunicationState.Connected,

@@ -54,7 +54,6 @@ fun DwitchTopBar(
                         contentDescription = stringResource(navigationIcon.contentDescription)
                     )
                 }
-
             }
         }
     )

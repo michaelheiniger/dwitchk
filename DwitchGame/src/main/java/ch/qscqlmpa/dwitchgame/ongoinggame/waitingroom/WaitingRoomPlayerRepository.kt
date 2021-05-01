@@ -1,13 +1,17 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom
 
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
+import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import ch.qscqlmpa.dwitchstore.model.Player
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
 @OngoingGameScope
-internal class WaitingRoomPlayerRepository @Inject constructor(private val store: InGameStore) {
+internal class WaitingRoomPlayerRepository @Inject constructor(
+    private val store: InGameStore,
+    private val localPlayerRole: PlayerRole
+) {
 
     fun observePlayers(): Observable<List<PlayerWrUi>> {
         return store.observePlayersInWaitingRoom()
@@ -21,6 +25,10 @@ internal class WaitingRoomPlayerRepository @Inject constructor(private val store
     }
 
     private fun toPlayerWrUi(player: Player): PlayerWrUi {
-        return PlayerWrUi(player.name, player.connectionState, player.ready)
+        return PlayerWrUi(player.name, player.connectionState, player.ready, playerIsKickable(player))
+    }
+
+    private fun playerIsKickable(player: Player): Boolean {
+        return player.isGuest && localPlayerRole.isHost()
     }
 }

@@ -31,9 +31,9 @@ private fun WaitingRoomHostScreenPreview() {
         toolbarTitle = "Dwiiitch",
         showAddComputerPlayer = true,
         players = listOf(
-            PlayerWrUi("Aragorn", PlayerConnectionState.CONNECTED, true),
-            PlayerWrUi("Boromir", PlayerConnectionState.CONNECTED, false),
-            PlayerWrUi("Gimli", PlayerConnectionState.DISCONNECTED, false)
+            PlayerWrUi("Aragorn", PlayerConnectionState.CONNECTED, ready = true, kickable = false),
+            PlayerWrUi("Boromir", PlayerConnectionState.CONNECTED, ready = false, kickable = true),
+            PlayerWrUi("Gimli", PlayerConnectionState.DISCONNECTED, ready = false, kickable = true)
         ),
         launchGameEnabled = false,
         connectionStatus = HostCommunicationState.Error,

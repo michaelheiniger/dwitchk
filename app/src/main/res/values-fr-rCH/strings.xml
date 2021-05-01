@@ -142,4 +142,5 @@
     <string name="notify_host_you_are_not_ready_cd">Informer l\'hôte que tu n\'es pas prêt(e)</string>
     <string name="current_screen_name_cd">Ecran actuel %1$s</string>
     <string name="last_card_played_cd">Dernière carte jouée est </string>
+    <string name="kick_player">Ejecter %1$s</string>
 </resources>

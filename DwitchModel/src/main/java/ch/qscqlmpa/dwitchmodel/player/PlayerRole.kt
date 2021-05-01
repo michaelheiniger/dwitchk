@@ -5,5 +5,9 @@ package ch.qscqlmpa.dwitchmodel.player
  */
 enum class PlayerRole {
     GUEST,
-    HOST
+    HOST;
+
+    fun isHost(): Boolean {
+        return this == HOST
+    }
 }

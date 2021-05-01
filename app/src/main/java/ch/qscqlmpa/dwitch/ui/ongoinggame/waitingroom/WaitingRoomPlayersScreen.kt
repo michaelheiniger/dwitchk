@@ -3,13 +3,12 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,15 +31,16 @@ private fun WaitingRoomPlayersScreenPreview() {
             PlayerWrUi(
                 name = "Mirlick",
                 connectionState = PlayerConnectionState.CONNECTED,
-                ready = true
+                ready = true,
+                kickable = true
             ),
             PlayerWrUi(
                 name = "Mébène",
                 connectionState = PlayerConnectionState.DISCONNECTED,
-                ready = false
+                ready = false,
+                kickable = false
             )
-        ),
-        onAddComputerPlayer = {}
+        )
     )
 }
 
@@ -48,7 +48,8 @@ private fun WaitingRoomPlayersScreenPreview() {
 fun WaitingRoomPlayersScreen(
     showAddComputerPlayer: Boolean,
     players: List<PlayerWrUi>,
-    onAddComputerPlayer: () -> Unit = {}
+    onAddComputerPlayer: () -> Unit = {},
+    onKickPlayer: () -> Unit = {}
 ) {
     Column(Modifier.fillMaxWidth()) {
         Row(Modifier.fillMaxWidth()) {
@@ -80,8 +81,8 @@ fun WaitingRoomPlayersScreen(
                         .testTag(player.name)
                         .semantics(mergeDescendants = true, properties = {}),
                 ) {
-                    PlayerName(player.name)
-                    PlayerStateDetails(player)
+                    PlayerDetailsRow1(player, onKickPlayer = onKickPlayer)
+                    PlayerDetailsRow2(player)
                 }
             }
         }
@@ -89,16 +90,40 @@ fun WaitingRoomPlayersScreen(
 }
 
 @Composable
-private fun PlayerName(name: String) {
-    Text(
-        text = name,
-        fontSize = 24.sp,
-        color = MaterialTheme.colors.secondary
-    )
+private fun PlayerDetailsRow1(
+    player: PlayerWrUi,
+    onKickPlayer: () -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(
+            text = player.name,
+            fontSize = 24.sp,
+            color = MaterialTheme.colors.secondary,
+            modifier = Modifier
+                .weight(1f)
+                .wrapContentWidth(Alignment.Start)
+        )
+        if (player.kickable) {
+            IconButton(
+                onClick = onKickPlayer,
+                modifier = Modifier
+                    .testTag(UiTags.kickPlayer)
+                    .weight(1f)
+                    .wrapContentWidth(Alignment.End)
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_baseline_clear_24),
+                    contentDescription = stringResource(R.string.kick_player, player.name)
+                )
+            }
+        }
+    }
 }
 
 @Composable
-private fun PlayerStateDetails(player: PlayerWrUi) {
+private fun PlayerDetailsRow2(player: PlayerWrUi) {
     Row(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier

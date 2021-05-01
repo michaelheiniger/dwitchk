@@ -31,4 +31,5 @@ data class Player(
     @ColumnInfo(name = "computer_managed") val computerManaged: Boolean = false
 ) {
     val isHost: Boolean get() = playerRole == PlayerRole.HOST
+    val isGuest: Boolean get() = playerRole == PlayerRole.GUEST
 }
