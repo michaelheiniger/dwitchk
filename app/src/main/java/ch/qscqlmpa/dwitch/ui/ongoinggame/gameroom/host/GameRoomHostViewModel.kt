@@ -16,8 +16,8 @@ internal class GameRoomHostViewModel @Inject constructor(
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val _commands = MutableLiveData<GameRoomHostCommand>()
-    val commands get(): LiveData<GameRoomHostCommand> = _commands
+    private val _navigationCommand = MutableLiveData<GameRoomHostCommand>()
+    val navigationCommand get(): LiveData<GameRoomHostCommand> = _navigationCommand
 
     fun startNewRound() {
         disposableManager.add(
@@ -37,7 +37,7 @@ internal class GameRoomHostViewModel @Inject constructor(
                 .subscribe(
                     {
                         Logger.debug { "Game ended successfully." }
-                        _commands.value = GameRoomHostCommand.NavigateToHomeScreen
+                        _navigationCommand.value = GameRoomHostCommand.NavigateToHomeScreen
                     },
                     { error -> Logger.error(error) { "Error while ending game." } }
                 )

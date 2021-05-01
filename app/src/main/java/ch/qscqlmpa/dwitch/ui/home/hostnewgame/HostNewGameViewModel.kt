@@ -13,7 +13,8 @@ class HostNewGameViewModel @Inject constructor(
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val _command = MutableLiveData<HostNewGameCommand>()
+    private val _navigationCommand = MutableLiveData<HostNewGameNavigationCommand>()
+    private val _loading = MutableLiveData<Boolean>()
     private val _createGameControl = MutableLiveData(false)
     private val _playerName = MutableLiveData("")
     private val _gameName = MutableLiveData("")
@@ -26,7 +27,8 @@ class HostNewGameViewModel @Inject constructor(
 //        }
     }
 
-    val commands get(): LiveData<HostNewGameCommand> = _command
+    val navigationCommand get(): LiveData<HostNewGameNavigationCommand> = _navigationCommand
+    val loading get(): LiveData<Boolean> = _loading
     val playerName get(): LiveData<String> = _playerName
     val gameName get(): LiveData<String> = _gameName
     val createGameControl get(): LiveData<Boolean> = _createGameControl
@@ -46,12 +48,13 @@ class HostNewGameViewModel @Inject constructor(
         val gameName = gameName.value
         require(!playerName.isNullOrBlank()) { "Player name cannot be blank" }
         require(!gameName.isNullOrBlank()) { "Game name cannot be blank" }
-        _command.value = HostNewGameCommand.Loading
+        _loading.value = true
         disposableManager.add(
             hostFacade.hostGame(gameName, playerName, 8889) // TODO: Extract the port somewhere where it makes more sense
                 .observeOn(uiScheduler)
+                .doOnTerminate { _loading.value = true }
                 .subscribe(
-                    { _command.setValue(HostNewGameCommand.NavigateToWaitingRoom) },
+                    { _navigationCommand.setValue(HostNewGameNavigationCommand.NavigateToWaitingRoom) },
                     { error -> Logger.error(error) { "Error while start hosting the game" } }
                 )
         )

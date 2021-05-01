@@ -26,10 +26,10 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameBaseActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.guest.ConnectionGuestViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.host.ConnectionHostViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
-import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.guest.WaitingRoomGuestCommand
+import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.guest.WaitingRoomGuestDestination
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.guest.WaitingRoomGuestScreen
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.guest.WaitingRoomGuestViewModel
-import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host.WaitingRoomHostCommand
+import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host.WaitingRoomHostDestination
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host.WaitingRoomHostScreen
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host.WaitingRoomHostViewModel
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
@@ -55,7 +55,6 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
                 val toolbarTitle = wrViewModel.toolbarTitle.observeAsState(toolbarDefaultTitle).value
                 val showAddComputerPlayer = wrViewModel.canComputerPlayersBeAdded.observeAsState(false).value
                 val players = wrViewModel.players.observeAsState(emptyList()).value
-                val command = wrHostViewModel.commands.observeAsState().value
                 val launchGameEnabled = wrHostViewModel.canGameBeLaunched.observeAsState(false).value
                 val connectionStatus = connectionViewModel.connectionStatus.observeAsState().value
                 WaitingRoomHostScreen(
@@ -77,7 +76,7 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
                         onCancelClick = { showConfirmationDialog.value = false }
                     )
                 }
-                if (command != null && command is WaitingRoomHostCommand.Loading) LoadingDialog()
+                if (wrHostViewModel.loading.observeAsState(false).value) LoadingDialog()
             }
         }
     }
@@ -93,7 +92,7 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
                 val toolbarTitle = wrViewModel.toolbarTitle.observeAsState(toolbarDefaultTitle).value
                 val players = wrViewModel.players.observeAsState(emptyList()).value
                 val readyControl = wrGuestViewModel.ready.observeAsState(UiCheckboxModel(checked = false, enabled = false)).value
-                val command = wrGuestViewModel.commands.observeAsState().value
+                val command = wrGuestViewModel.navigation.observeAsState().value
                 val connectionStatus = connectionViewModel.connectionStatus.observeAsState().value
                 WaitingRoomGuestScreen(
                     toolbarTitle = toolbarTitle,
@@ -105,7 +104,7 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
                     onReconnectClick = connectionViewModel::reconnect
                 )
                 when (command) {
-                    WaitingRoomGuestCommand.NotifyUserGameCanceled -> {
+                    WaitingRoomGuestDestination.NotifyUserGameCanceled -> {
                         InfoDialog(
                             title = R.string.info_dialog_title,
                             text = R.string.game_canceled_by_host,
@@ -200,31 +199,36 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
     }
 
     private fun setupHostCommands(wrHostViewModel: WaitingRoomHostViewModel) {
-        wrHostViewModel.commands.observe(
+        wrHostViewModel.navigation.observe(
             this,
             { command ->
                 when (command) {
-                    WaitingRoomHostCommand.NavigateToHomeScreen -> MainActivity.start(this)
-                    WaitingRoomHostCommand.NavigateToGameRoomScreen -> GameRoomActivity.startForHost(this)
+                    WaitingRoomHostDestination.NavigateToHomeScreen -> {
+                        finish()
+                        MainActivity.start(this)
+                    }
+                    WaitingRoomHostDestination.NavigateToGameRoomScreen -> {
+                        finish()
+                        GameRoomActivity.startForHost(this)
+                    }
                     else -> {
                         // Nothing do to
                     }
                 }
-                finish()
             }
         )
     }
 
     private fun setupGuestCommands(wrGuestViewModel: WaitingRoomGuestViewModel) {
-        wrGuestViewModel.commands.observe(
+        wrGuestViewModel.navigation.observe(
             this,
             { command ->
                 when (command) {
-                    WaitingRoomGuestCommand.NavigateToHomeScreen -> {
+                    WaitingRoomGuestDestination.NavigateToHomeScreen -> {
                         finish()
                         MainActivity.start(this)
                     }
-                    WaitingRoomGuestCommand.NavigateToGameRoomScreen -> {
+                    WaitingRoomGuestDestination.NavigateToGameRoomScreen -> {
                         finish()
                         GameRoomActivity.startForGuest(this)
                     }

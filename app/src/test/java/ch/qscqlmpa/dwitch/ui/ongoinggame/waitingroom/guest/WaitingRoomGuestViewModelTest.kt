@@ -92,20 +92,20 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
 
     @Test
     fun `Navigate to Home screen when user acknowledges that the game has been canceled`() {
-        assertThat(viewModel.commands.value).isNull()
+        assertThat(viewModel.navigation.value).isNull()
 
         viewModel.acknowledgeGameCanceledEvent()
 
-        assertThat(viewModel.commands.value).isEqualTo(WaitingRoomGuestCommand.NavigateToHomeScreen)
+        assertThat(viewModel.navigation.value).isEqualTo(WaitingRoomGuestDestination.NavigateToHomeScreen)
     }
 
     @Test
     fun `Navigate to Home screen when user leaves the game`() {
-        assertThat(viewModel.commands.value).isNull()
+        assertThat(viewModel.navigation.value).isNull()
 
         viewModel.leaveGame()
 
-        assertThat(viewModel.commands.value).isEqualTo(WaitingRoomGuestCommand.NavigateToHomeScreen)
+        assertThat(viewModel.navigation.value).isEqualTo(WaitingRoomGuestDestination.NavigateToHomeScreen)
         verify { mockFacade.leaveGame() }
     }
 
@@ -113,7 +113,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
     fun `User is notified when GameCanceled event occurs`() {
         gameEventSubject.onNext(GuestGameEvent.GameCanceled)
 
-        assertThat(viewModel.commands.value).isEqualTo(WaitingRoomGuestCommand.NotifyUserGameCanceled)
+        assertThat(viewModel.navigation.value).isEqualTo(WaitingRoomGuestDestination.NotifyUserGameCanceled)
     }
 
     @Test
@@ -122,6 +122,6 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
 
         viewModel.acknowledgeGameCanceledEvent()
 
-        assertThat(viewModel.commands.value).isEqualTo(WaitingRoomGuestCommand.NavigateToHomeScreen)
+        assertThat(viewModel.navigation.value).isEqualTo(WaitingRoomGuestDestination.NavigateToHomeScreen)
     }
 }

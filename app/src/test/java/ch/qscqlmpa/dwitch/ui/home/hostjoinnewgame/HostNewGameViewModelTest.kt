@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.home.hostjoinnewgame
 
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameCommand
+import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameNavigationCommand
 import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameViewModel
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
 import io.mockk.confirmVerified
@@ -63,7 +63,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
         viewModel.onGameNameChange(gameName)
         viewModel.hostGame()
 
-        assertThat(viewModel.commands.value).isEqualTo(HostNewGameCommand.NavigateToWaitingRoom)
+        assertThat(viewModel.navigationCommand.value).isEqualTo(HostNewGameNavigationCommand.NavigateToWaitingRoom)
         verify { mockHostFacade.hostGame(gameName, playerName, gamePort) }
         confirmVerified(mockHostFacade)
     }
@@ -82,7 +82,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
             // Nothing to do
         }
 
-        assertNull(viewModel.commands.value)
+        assertNull(viewModel.navigationCommand.value)
         confirmVerified(mockHostFacade)
     }
 
@@ -100,7 +100,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
             // Nothing to do    
         }
 
-        assertNull(viewModel.commands.value)
+        assertNull(viewModel.navigationCommand.value)
         confirmVerified(mockHostFacade)
     }
 }

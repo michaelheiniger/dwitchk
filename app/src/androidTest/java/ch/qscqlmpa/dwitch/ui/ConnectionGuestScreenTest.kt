@@ -1,9 +1,6 @@
 package ch.qscqlmpa.dwitch.ui
 
-import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsEnabled
-import androidx.compose.ui.test.assertIsNotEnabled
-import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.*
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
 import ch.qscqlmpa.dwitch.base.BaseUiUnitTest
@@ -20,7 +17,7 @@ class ConnectionGuestScreenTest : BaseUiUnitTest() {
         launchTest()
 
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.disconnected_from_host))
-        composeTestRule.onNode(hasText(getString(R.string.reconnect)))
+        composeTestRule.onNodeWithText(getString(R.string.reconnect))
             .assertIsDisplayed()
             .assertIsEnabled()
     }
@@ -31,7 +28,7 @@ class ConnectionGuestScreenTest : BaseUiUnitTest() {
         launchTest()
 
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.guest_connecting))
-        composeTestRule.onNode(hasText(getString(R.string.reconnect)))
+        composeTestRule.onNodeWithText(getString(R.string.reconnect))
             .assertIsDisplayed()
             .assertIsNotEnabled()
     }
@@ -41,8 +38,7 @@ class ConnectionGuestScreenTest : BaseUiUnitTest() {
         state = GuestCommunicationState.Connected
         launchTest()
 
-        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.connected_to_host))
-        composeTestRule.onNode(hasText(getString(R.string.reconnect))).assertDoesNotExist()
+        composeTestRule.onNodeWithTag(getString(R.string.reconnect)).assertDoesNotExist()
     }
 
     @Test
@@ -51,7 +47,7 @@ class ConnectionGuestScreenTest : BaseUiUnitTest() {
         launchTest()
 
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.guest_connection_error))
-        composeTestRule.onNode(hasText(getString(R.string.reconnect)))
+        composeTestRule.onNodeWithText(getString(R.string.reconnect))
             .assertIsDisplayed()
             .assertIsEnabled()
     }

@@ -14,7 +14,8 @@ class JoinNewGameViewModel @Inject constructor(
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val _command = MutableLiveData<JoinNewGameCommand>()
+    private val _navigationCommand = MutableLiveData<JoinNewGameNavigationCommand>()
+    private val _loading = MutableLiveData<Boolean>()
     private val _joinGameControl = MutableLiveData(false)
     private val _playerName = MutableLiveData("")
 
@@ -25,7 +26,8 @@ class JoinNewGameViewModel @Inject constructor(
 //        }
     }
 
-    val commands get(): LiveData<JoinNewGameCommand> = _command
+    val navigationCommand get(): LiveData<JoinNewGameNavigationCommand> = _navigationCommand
+    val loading get(): LiveData<Boolean> = _loading
     val playerName get(): LiveData<String> = _playerName
     val joinGameControl get(): LiveData<Boolean> = _joinGameControl
 
@@ -37,12 +39,13 @@ class JoinNewGameViewModel @Inject constructor(
     fun joinGame(advertisedGame: AdvertisedGame) {
         val playerName = playerName.value
         require(!playerName.isNullOrBlank()) { "Player name cannot be blank" }
-        _command.value = JoinNewGameCommand.Loading
+        _loading.value = true
         disposableManager.add(
             guestFacade.joinGame(advertisedGame, playerName)
                 .observeOn(uiScheduler)
+                .doOnTerminate { _loading.value = true }
                 .subscribe(
-                    { _command.setValue(JoinNewGameCommand.NavigateToWaitingRoom) },
+                    { _navigationCommand.setValue(JoinNewGameNavigationCommand.NavigateToWaitingRoom) },
                     { error -> Logger.error(error) { "Error while joining the game" } }
                 )
         )

@@ -23,7 +23,6 @@ class HostNewGameScreenTest : BaseUiUnitTest() {
         launchTest()
 
         composeTestRule.onNodeWithText(getString(R.string.host_game)).assertIsNotEnabled()
-        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.back_to_home_screen))
     }
 
     @Test
@@ -37,7 +36,6 @@ class HostNewGameScreenTest : BaseUiUnitTest() {
         composeTestRule.assertTextIsDisplayedOnce("Aragorn")
         composeTestRule.assertTextIsDisplayedOnce("LOTR")
         composeTestRule.onNodeWithText(getString(R.string.host_game)).assertIsEnabled()
-        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.back_to_home_screen))
     }
 
     private fun launchTest() {

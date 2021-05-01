@@ -89,7 +89,7 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
 
         viewModel.launchGame()
 
-        assertThat(viewModel.commands.value).isEqualTo(WaitingRoomHostCommand.NavigateToGameRoomScreen)
+        assertThat(viewModel.navigation.value).isEqualTo(WaitingRoomHostDestination.NavigateToGameRoomScreen)
 
         verify { mockFacade.launchGame() }
         verify { mockFacade.observeGameLaunchableEvents() }
@@ -100,11 +100,11 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
     fun `Navigate Home when the game is canceled`() {
         every { mockFacade.cancelGame() } returns Completable.complete()
 
-        val commands = viewModel.commands
+        val commands = viewModel.navigation
 
         viewModel.cancelGame()
 
-        assertThat(commands.value).isEqualTo(WaitingRoomHostCommand.NavigateToHomeScreen)
+        assertThat(commands.value).isEqualTo(WaitingRoomHostDestination.NavigateToHomeScreen)
         verify { mockFacade.cancelGame() }
         verify { mockFacade.observeGameLaunchableEvents() }
         confirmVerified(mockFacade)

@@ -54,7 +54,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
         viewModel.onPlayerNameChange(playerName)
         viewModel.joinGame(advertisedGame)
 
-        assertThat(viewModel.commands.value).isEqualTo(JoinNewGameCommand.NavigateToWaitingRoom)
+        assertThat(viewModel.navigationCommand.value).isEqualTo(JoinNewGameNavigationCommand.NavigateToWaitingRoom)
         verify { mockGuestFacade.joinGame(advertisedGame, playerName) }
         confirmVerified(mockGuestFacade)
     }
@@ -72,7 +72,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
             // Nothing to do
         }
 
-        assertNull(viewModel.commands.value)
+        assertNull(viewModel.navigationCommand.value)
         confirmVerified(mockGuestFacade)
     }
 }

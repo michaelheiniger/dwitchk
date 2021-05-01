@@ -21,7 +21,6 @@ class JoinNewGameScreenTest : BaseUiUnitTest() {
         launchTest()
 
         composeTestRule.onNodeWithText(getString(R.string.join_game)).assertIsNotEnabled()
-        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.back_to_home_screen))
     }
 
     @Test
@@ -33,7 +32,6 @@ class JoinNewGameScreenTest : BaseUiUnitTest() {
 
         composeTestRule.assertTextIsDisplayedOnce(playerName)
         composeTestRule.onNodeWithText(getString(R.string.join_game)).assertIsEnabled()
-        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.back_to_home_screen))
     }
 
     private fun launchTest() {

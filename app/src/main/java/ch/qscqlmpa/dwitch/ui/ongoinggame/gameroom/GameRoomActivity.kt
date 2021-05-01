@@ -140,13 +140,13 @@ class GameRoomActivity : OngoingGameBaseActivity() {
             PlayerRole.HOST -> {
                 hostViewModel = viewModelProvider.get(GameRoomHostViewModel::class.java)
                 connectionHostViewModel = viewModelProvider.get(ConnectionHostViewModel::class.java)
-                setupHostCommands()
+                setupHostNavigationCommands()
                 setContent { ActivityScreenForHost() }
             }
             PlayerRole.GUEST -> {
                 guestViewModel = viewModelProvider.get(GameRoomGuestViewModel::class.java)
                 connectionGuestViewModel = viewModelProvider.get(ConnectionGuestViewModel::class.java)
-                setupGuestCommands()
+                setupGuestNavigationCommands()
                 setContent { ActivityScreenForGuest() }
             }
         }
@@ -166,8 +166,8 @@ class GameRoomActivity : OngoingGameBaseActivity() {
         relevantViewModels.forEach { vm -> vm.onStop() }
     }
 
-    private fun setupHostCommands() {
-        hostViewModel.commands.observe(
+    private fun setupHostNavigationCommands() {
+        hostViewModel.navigationCommand.observe(
             this,
             { command ->
                 when (command) {
@@ -180,8 +180,8 @@ class GameRoomActivity : OngoingGameBaseActivity() {
         )
     }
 
-    private fun setupGuestCommands() {
-        guestViewModel.commands.observe(
+    private fun setupGuestNavigationCommands() {
+        guestViewModel.navigationCommand.observe(
             this,
             { command ->
                 when (command) {

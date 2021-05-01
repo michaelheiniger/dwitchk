@@ -17,10 +17,10 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val _commands = MutableLiveData<WaitingRoomGuestCommand>()
+    private val _navigation = MutableLiveData<WaitingRoomGuestDestination>()
     private val _ready = MutableLiveData(UiCheckboxModel(enabled = false, checked = false))
 
-    val commands get(): LiveData<WaitingRoomGuestCommand> = _commands
+    val navigation get(): LiveData<WaitingRoomGuestDestination> = _navigation
     val ready get(): LiveData<UiCheckboxModel> = _ready
 
     override fun onStart() {
@@ -38,7 +38,7 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
     }
 
     fun acknowledgeGameCanceledEvent() {
-        _commands.value = WaitingRoomGuestCommand.NavigateToHomeScreen
+        _navigation.value = WaitingRoomGuestDestination.NavigateToHomeScreen
     }
 
     fun leaveGame() {
@@ -48,7 +48,7 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
                 .subscribe(
                     {
                         Logger.info { "Left game successfully" }
-                        _commands.value = WaitingRoomGuestCommand.NavigateToHomeScreen
+                        _navigation.value = WaitingRoomGuestDestination.NavigateToHomeScreen
                     },
                     { error -> Logger.error(error) { "Error while leaving game" } }
                 )
@@ -86,14 +86,14 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
                 .observeOn(uiScheduler)
                 .map(::getCommandForGameEvent)
                 .doOnError { error -> Logger.error(error) { "Error while observing game events." } }
-                .subscribe { command -> _commands.value = command }
+                .subscribe { command -> _navigation.value = command }
         )
     }
 
-    private fun getCommandForGameEvent(event: GuestGameEvent): WaitingRoomGuestCommand {
+    private fun getCommandForGameEvent(event: GuestGameEvent): WaitingRoomGuestDestination {
         return when (event) {
-            GuestGameEvent.GameCanceled -> WaitingRoomGuestCommand.NotifyUserGameCanceled
-            GuestGameEvent.GameLaunched -> WaitingRoomGuestCommand.NavigateToGameRoomScreen
+            GuestGameEvent.GameCanceled -> WaitingRoomGuestDestination.NotifyUserGameCanceled
+            GuestGameEvent.GameLaunched -> WaitingRoomGuestDestination.NavigateToGameRoomScreen
             GuestGameEvent.GameOver -> throw IllegalStateException("Event '$event' is not supposed to occur in WaitingRoom.")
         }
     }

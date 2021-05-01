@@ -32,7 +32,6 @@ class JoinNewGameActivity : HomeBaseActivity() {
     fun ActivityScreen(viewModel: JoinNewGameViewModel) {
         val playerName = viewModel.playerName.observeAsState(initialPlayerName).value
         val joinGameControl = viewModel.joinGameControl.observeAsState(initialJoinGameControl).value
-        val command = viewModel.commands.observeAsState().value
         MaterialTheme {
             Surface(color = Color.White) {
                 JoinNewGameScreen(
@@ -46,7 +45,7 @@ class JoinNewGameActivity : HomeBaseActivity() {
                         MainActivity.start(this)
                     }
                 )
-                if (command != null && command is JoinNewGameCommand.Loading) LoadingDialog()
+                if (viewModel.loading.observeAsState(false).value) LoadingDialog()
             }
         }
     }
@@ -56,15 +55,15 @@ class JoinNewGameActivity : HomeBaseActivity() {
         game = intent.getParcelableExtra(EXTRA_GAME)
         wrViewModel = ViewModelProvider(this, viewModelFactory).get(JoinNewGameViewModel::class.java)
         setContent { ActivityScreen(wrViewModel) }
-        observeCommands()
+        observeNavigationCommands()
     }
 
-    private fun observeCommands() {
-        wrViewModel.commands.observe(
+    private fun observeNavigationCommands() {
+        wrViewModel.navigationCommand.observe(
             this,
             { event ->
                 when (event) {
-                    JoinNewGameCommand.NavigateToWaitingRoom -> {
+                    JoinNewGameNavigationCommand.NavigateToWaitingRoom -> {
                         finish()
                         WaitingRoomActivity.startActivityForGuest(this)
                     }

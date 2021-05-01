@@ -14,10 +14,12 @@ internal class WaitingRoomHostViewModel @Inject constructor(
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val _commands = MutableLiveData<WaitingRoomHostCommand>()
+    private val _navigation = MutableLiveData<WaitingRoomHostDestination>()
+    private val _loading = MutableLiveData<Boolean>(false)
     private val _canGameBeLaunched = MutableLiveData(false)
 
-    val commands get(): LiveData<WaitingRoomHostCommand> = _commands
+    val navigation get(): LiveData<WaitingRoomHostDestination> = _navigation
+    val loading get(): LiveData<Boolean> = _loading
     val canGameBeLaunched get(): LiveData<Boolean> = _canGameBeLaunched
 
     override fun onStart() {
@@ -37,16 +39,17 @@ internal class WaitingRoomHostViewModel @Inject constructor(
     }
 
     fun launchGame() {
-        _commands.value = WaitingRoomHostCommand.Loading
+        _loading.value = true
         disposableManager.add(
             facade.launchGame()
                 .observeOn(uiScheduler)
+                .doOnTerminate { _loading.value = false }
                 .subscribe(
                     {
                         Logger.info { "Game launched" }
-                        _commands.value = WaitingRoomHostCommand.NavigateToGameRoomScreen
+                        _navigation.value = WaitingRoomHostDestination.NavigateToGameRoomScreen
                     },
-                    { error -> Logger.error(error) { "Error while launching game" } }
+                    { error -> Logger.error(error) { "Error while launching game" } },
                 )
         )
     }
@@ -58,7 +61,7 @@ internal class WaitingRoomHostViewModel @Inject constructor(
                 .subscribe(
                     {
                         Logger.info { "Game canceled" }
-                        _commands.value = WaitingRoomHostCommand.NavigateToHomeScreen
+                        _navigation.value = WaitingRoomHostDestination.NavigateToHomeScreen
                     },
                     { error -> Logger.error(error) { "Error while canceling game" } }
                 )

@@ -15,21 +15,21 @@ internal class GameRoomGuestViewModel @Inject constructor(
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val _commands = MutableLiveData<GameRoomGuestCommand>()
+    private val _navigationCommand = MutableLiveData<GameRoomGuestCommand>()
     private val _gameOver = MutableLiveData<Boolean>()
-    val commands get(): LiveData<GameRoomGuestCommand> = _commands
+    val navigationCommand get(): LiveData<GameRoomGuestCommand> = _navigationCommand
     val gameOver get(): LiveData<Boolean> = _gameOver
 
     fun acknowledgeGameOver() {
         _gameOver.value = false
-        _commands.value = GameRoomGuestCommand.NavigateToHomeScreen
+        _navigationCommand.value = GameRoomGuestCommand.NavigateToHomeScreen
     }
 
     fun leaveGame() {
         disposableManager.add(facade.leaveGame()
             .observeOn(uiScheduler)
             .subscribe(
-                { _commands.value = GameRoomGuestCommand.NavigateToHomeScreen },
+                { _navigationCommand.value = GameRoomGuestCommand.NavigateToHomeScreen },
                 { error -> Logger.error(error) { "Error while leaving the game." } }
             )
         )

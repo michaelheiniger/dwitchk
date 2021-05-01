@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitch.ui
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
-import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.onNodeWithText
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
 import ch.qscqlmpa.dwitch.base.BaseUiUnitTest
@@ -20,7 +20,7 @@ class ConnectionHostScreenTest : BaseUiUnitTest() {
         launchTest()
 
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.not_listening_for_guests))
-        composeTestRule.onNode(hasText(getString(R.string.reconnect)))
+        composeTestRule.onNodeWithText(getString(R.string.reconnect))
             .assertIsDisplayed()
             .assertIsEnabled()
     }
@@ -31,7 +31,7 @@ class ConnectionHostScreenTest : BaseUiUnitTest() {
         launchTest()
 
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.host_connecting))
-        composeTestRule.onNode(hasText(getString(R.string.reconnect)))
+        composeTestRule.onNodeWithText(getString(R.string.reconnect))
             .assertIsDisplayed()
             .assertIsNotEnabled()
     }
@@ -41,8 +41,7 @@ class ConnectionHostScreenTest : BaseUiUnitTest() {
         state = HostCommunicationState.Open
         launchTest()
 
-        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.connected_to_host))
-        composeTestRule.onNode(hasText(getString(R.string.reconnect))).assertDoesNotExist()
+        composeTestRule.onNodeWithText(getString(R.string.reconnect)).assertDoesNotExist()
     }
 
     @Test
@@ -51,7 +50,7 @@ class ConnectionHostScreenTest : BaseUiUnitTest() {
         launchTest()
 
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.host_connection_error))
-        composeTestRule.onNode(hasText(getString(R.string.reconnect)))
+        composeTestRule.onNodeWithText(getString(R.string.reconnect))
             .assertIsDisplayed()
             .assertIsEnabled()
     }

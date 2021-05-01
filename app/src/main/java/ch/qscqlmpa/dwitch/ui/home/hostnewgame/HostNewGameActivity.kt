@@ -30,7 +30,6 @@ class HostNewGameActivity : HomeBaseActivity() {
         val playerName = viewModel.playerName.observeAsState(initialPlayerName).value
         val gameName = viewModel.gameName.observeAsState(initialGameName).value
         val hostGameControl = viewModel.createGameControl.observeAsState(initialHostGameControl).value
-        val command = viewModel.commands.observeAsState().value
         MaterialTheme {
             Surface(color = Color.White) {
                 HostNewGameScreen(
@@ -45,7 +44,7 @@ class HostNewGameActivity : HomeBaseActivity() {
                         finish()
                     }
                 )
-                if (command != null && command is HostNewGameCommand.Loading) LoadingDialog()
+                if (viewModel.loading.observeAsState(false).value) LoadingDialog()
             }
         }
     }
@@ -54,15 +53,15 @@ class HostNewGameActivity : HomeBaseActivity() {
         super.onCreate(savedInstanceState)
         wrViewModel = ViewModelProvider(this, viewModelFactory).get(HostNewGameViewModel::class.java)
         setContent { ActivityScreen(wrViewModel) }
-        observeCommands()
+        observeNavigationCommands()
     }
 
-    private fun observeCommands() {
-        wrViewModel.commands.observe(
+    private fun observeNavigationCommands() {
+        wrViewModel.navigationCommand.observe(
             this,
             { event ->
                 when (event) {
-                    HostNewGameCommand.NavigateToWaitingRoom -> {
+                    HostNewGameNavigationCommand.NavigateToWaitingRoom -> {
                         finish()
                         WaitingRoomActivity.startActivityForHost(this)
                     }

@@ -41,7 +41,6 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
 
         // Assert that the host is indeed in the WaitingRoom
         testRule.assertTextIsDisplayedOnce(getString(R.string.players_in_waitingroom))
-        testRule.assertTextIsDisplayedOnce(getString(R.string.leave_game))
 
         testRule.assertPlayerInWr(hostName)
 
