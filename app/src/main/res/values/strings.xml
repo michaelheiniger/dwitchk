@@ -43,7 +43,7 @@
     <string name="resumable_games">Resumable games</string>
     <string name="loading_resumable_games_failed">Having troubles while fetching existing games, yo !</string>
     <string name="advertised_games">Games</string>
-    <string name="listening_for_advertised_games">Listening for games…</string>
+    <string name="no_game_discovered">No game discovered</string>
     <string name="resume_game">Resume game</string>
     <string name="neutral_long">Neutral</string>
     <string name="neutral_short">N</string>
@@ -149,4 +149,9 @@
     <string name="diamonds_king_content_description">King of Diamonds</string>
     <string name="diamonds_ace_content_description">Ace of Diamonds</string>
     <string name="back_content_description">No card</string>
+    <string name="join_specific_game_cd">Join game %1$s</string>
+    <string name="notify_host_you_are_ready_cd">You are not ready. Click to notify the host if you are ready</string>
+    <string name="notify_host_you_are_not_ready_cd">You are ready. Click to notify the host if you are not ready</string>
+    <string name="current_screen_name_cd">Current screen is %1$s</string>
+    <string name="last_card_played_cd">Last card played is %1$s </string>
 </resources>

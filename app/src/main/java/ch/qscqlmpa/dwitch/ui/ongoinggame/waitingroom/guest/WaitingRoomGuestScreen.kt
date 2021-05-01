@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
@@ -91,7 +93,10 @@ private fun GuestControlScreen(
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onReadyClick(!ready.checked) }
+                .semantics(mergeDescendants = true, properties = {}),
             horizontalArrangement = Arrangement.End
         ) {
             Switch(
@@ -101,12 +106,17 @@ private fun GuestControlScreen(
                 modifier = Modifier.testTag(UiTags.localPlayerReadyCheckbox)
             )
             val label = if (ready.checked) R.string.ready else R.string.not_ready
+            val contentDescription = stringResource(getReadyContentDescription(ready))
             Text(
                 text = stringResource(label),
                 modifier = Modifier
-                    .clickable { onReadyClick(!ready.checked) }
                     .testTag(UiTags.localPlayerReadyText)
+                    .semantics { this.contentDescription = contentDescription }
             )
         }
     }
+}
+
+private fun getReadyContentDescription(ready: UiCheckboxModel): Int {
+    return if (ready.checked) R.string.notify_host_you_are_not_ready_cd else R.string.notify_host_you_are_ready_cd
 }

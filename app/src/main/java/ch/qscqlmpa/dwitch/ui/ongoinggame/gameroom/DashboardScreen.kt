@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.BuildConfig
+import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ResourceMapper
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitch.ui.ongoinggame.CardItemDisplay
@@ -129,7 +130,8 @@ fun DashboardScreen(
     Column(
         Modifier
             .fillMaxWidth()
-            .animateContentSize()) {
+            .animateContentSize()
+    ) {
         val localPlayerDashboard = dashboardInfo.localPlayerDashboard
         PlayersInfo(dashboardInfo.playersInfo)
         Spacer(Modifier.height(16.dp))
@@ -173,9 +175,11 @@ private fun Table(lastCardPlayed: Card) {
             .fillMaxWidth()
             .testTag(UiTags.lastCardPlayed)
     ) {
+        val lastCardPlayedRes = stringResource(ResourceMapper.getContentDescriptionResource(lastCardPlayed))
+        val cardOnTableCd = stringResource(R.string.last_card_played_cd, lastCardPlayedRes)
         Image(
             painter = painterResource(ResourceMapper.getImageResource(lastCardPlayed)),
-            contentDescription = stringResource(ResourceMapper.getContentDescriptionResource(lastCardPlayed)),
+            contentDescription = cardOnTableCd,
             modifier = Modifier
                 .size(150.dp)
                 .testTag(lastCardPlayed.toString())

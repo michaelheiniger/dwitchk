@@ -12,9 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.common.DwitchTopBar
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
@@ -131,9 +134,13 @@ private fun AdvertisedGames(
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             items(advertisedGames) { game ->
+                val text = if (BuildConfig.DEBUG) "${game.gameName} (${game.gameIpAddress})" else game.gameName
+                val contentDescription = stringResource(R.string.join_specific_game_cd, game.gameName)
                 Text(
-                    text = "${game.gameName} (${game.gameIpAddress})",
-                    Modifier.clickable { onJoinGameClick(game) }
+                    text = text,
+                    Modifier
+                        .clickable { onJoinGameClick(game) }
+                        .semantics { this.contentDescription = contentDescription }
                 )
             }
         }
@@ -142,7 +149,7 @@ private fun AdvertisedGames(
 
 @Composable
 private fun ListeningForAdvertisedGames() {
-    Text(stringResource(R.string.listening_for_advertised_games))
+    Text(stringResource(R.string.no_game_discovered))
 }
 
 @Composable

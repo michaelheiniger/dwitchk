@@ -47,7 +47,7 @@ class HomeScreenTest : BaseUiUnitTest() {
         launchTest()
 
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.advertised_games))
-        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.listening_for_advertised_games))
+        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.no_game_discovered))
     }
 
     @Test
@@ -57,7 +57,7 @@ class HomeScreenTest : BaseUiUnitTest() {
         launchTest()
 
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.advertised_games))
-        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.listening_for_advertised_games))
+        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.no_game_discovered))
     }
 
     @Test

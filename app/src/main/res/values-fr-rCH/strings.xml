@@ -65,7 +65,7 @@
     <string name="cancel_game">Annuler partie</string>
     <string name="launch_game">Go go !</string>
     <string name="host_game">Allons y, fidèles compagnons de la Comté !</string>
-    <string name="listening_for_advertised_games">En attente de parties…</string>
+    <string name="no_game_discovered">Aucune partie trouvée</string>
     <string name="loading_resumable_games">Chargement des parties à reprendre</string>
     <string name="no_resumable_games">Aucune partie à reprendre</string>
     <string name="guest_connecting">Connection…</string>
@@ -137,4 +137,9 @@
     <string name="diamonds_king_content_description">Roi de Carreau</string>
     <string name="diamonds_ace_content_description">As de Carreau</string>
     <string name="back_content_description">Aucune carte</string>
+    <string name="join_specific_game_cd">Rejoindre partie %1$</string>
+    <string name="notify_host_you_are_ready_cd">Informer l\'hôte que tu es prêt(e)</string>
+    <string name="notify_host_you_are_not_ready_cd">Informer l\'hôte que tu n\'es pas prêt(e)</string>
+    <string name="current_screen_name_cd">Ecran actuel %1$s</string>
+    <string name="last_card_played_cd">Dernière carte jouée est </string>
 </resources>

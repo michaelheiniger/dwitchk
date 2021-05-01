@@ -9,6 +9,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import ch.qscqlmpa.dwitch.R
 
 
 data class NavigationIcon(
@@ -29,11 +32,17 @@ fun DwitchTopBar(
 
 @Composable
 fun DwitchTopBar(
-    title: String = toolbarDefaultTitle,
+    title: String,
     navigationIcon: NavigationIcon?
 ) {
+    val titleCd = stringResource(R.string.current_screen_name_cd, title)
     TopAppBar(
-        title = { Text(title) },
+        title = {
+            Text(
+                text = title,
+                modifier = Modifier.semantics { this.contentDescription = titleCd }
+            )
+        },
         navigationIcon = {
             if (navigationIcon != null) {
                 IconButton(
