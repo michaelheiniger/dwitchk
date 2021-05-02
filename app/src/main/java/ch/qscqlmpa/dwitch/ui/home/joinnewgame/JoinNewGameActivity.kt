@@ -52,7 +52,7 @@ class JoinNewGameActivity : HomeBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        game = intent.getParcelableExtra(EXTRA_GAME)
+        game = intent.getParcelableExtra(EXTRA_GAME)!!
         wrViewModel = ViewModelProvider(this, viewModelFactory).get(JoinNewGameViewModel::class.java)
         setContent { ActivityScreen(wrViewModel) }
         observeNavigationCommands()

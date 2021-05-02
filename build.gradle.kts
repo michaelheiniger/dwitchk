@@ -11,7 +11,7 @@ buildscript {
     }
     dependencies {
         classpath("com.android.tools.build:gradle:7.0.0-alpha15")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.31")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.32") // 1.4.31 is not compatible with version 1.0.0-alpha13 of Compose compiler
         classpath("org.jetbrains.kotlin:kotlin-serialization:${Versions.kotlinVersion}")
         classpath("de.mannodermaus.gradle.plugins:android-junit5:1.6.2.0")
 //        classpath("org.jlleitschuh.gradle:ktlint-gradle:${Versions.ktlintGradlePluginVersion}")

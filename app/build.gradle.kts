@@ -36,8 +36,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     testOptions {
@@ -51,11 +51,12 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.0.0-beta01"
+        kotlinCompilerExtensionVersion = "1.0.0-beta05"
+
     }
 
     lint {
@@ -80,7 +81,7 @@ dependencies {
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlinVersion}")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.4.32") // Prevent compiler warning (implicit dependency)
+    implementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlinVersion}") // Prevent compiler warning (implicit dependency)
 
     // Android / UI
     implementation("androidx.appcompat:appcompat:1.2.0")

@@ -69,7 +69,7 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
     }
 
     protected fun localPlayerToggleReadyCheckbox() {
-        testRule.onNodeWithTag(UiTags.localPlayerReadyCheckbox).performClick()
+        testRule.onNodeWithTag(UiTags.localPlayerReadyControl).performClick()
         val playerReadyMessage = waitForNextMessageSentByLocalGuest()
         assertThat(playerReadyMessage).isInstanceOf(Message.PlayerReadyMessage::class.java)
     }
