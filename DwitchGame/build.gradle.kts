@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion(Versions.compileSdkVersion)
+    compileSdk = Versions.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion(Versions.minSdkVersion)
-        targetSdkVersion(Versions.targetSdkVersion)
+        minSdk = Versions.minSdkVersion
+        targetSdk = Versions.targetSdkVersion
         Versions.appVersionCode
         Versions.appVersionName
 

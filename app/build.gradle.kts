@@ -7,12 +7,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion(Versions.compileSdkVersion)
-    buildToolsVersion(Versions.buildToolsVersion)
+    compileSdk = Versions.compileSdkVersion
+    buildToolsVersion = Versions.buildToolsVersion
     defaultConfig {
         applicationId = "ch.qscqlmpa.dwitch"
-        minSdkVersion(Versions.minSdkVersion)
-        targetSdkVersion(Versions.targetSdkVersion)
+        minSdk = Versions.minSdkVersion
+        targetSdk = Versions.targetSdkVersion
         versionCode = Versions.appVersionCode
         versionName = Versions.appVersionName
 
@@ -20,7 +20,7 @@ android {
 
         // Clears the app state between instrumented tests (activities, DB, ...)
         // Documentation: https://developer.android.com/training/testing/junit-runner
-        testInstrumentationRunnerArguments(mapOf("clearPackageData" to "true"))
+        testInstrumentationRunnerArguments["clearPackageData"] = "true"
     }
 
     buildFeatures {
@@ -30,9 +30,6 @@ android {
     buildTypes {
         named("release") {
             isMinifyEnabled = true // Enables code shrinking, obfuscation, and optimization
-
-            // Enables resource shrinking performed by the Android Gradle plugin.
-            isShrinkResources = true
 
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
