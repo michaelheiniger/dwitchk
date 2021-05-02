@@ -20,6 +20,11 @@ interface WaitingRoomHostFacade {
     fun cancelGame(): Completable
 
     /**
+     * Kick player off the game.
+     */
+    fun kickPlayer(player: PlayerWrUi): Completable
+
+    /**
      * Tell whether the game can be launched. If so, it can be launched using [launchGame]
      */
     fun observeGameLaunchableEvents(): Observable<GameLaunchableEvent>

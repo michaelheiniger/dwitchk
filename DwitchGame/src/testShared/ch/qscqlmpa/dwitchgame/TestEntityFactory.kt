@@ -26,11 +26,11 @@ object TestEntityFactory {
     }
 
     fun createPlayerWrUi1(): PlayerWrUi {
-        return PlayerWrUi(name = "Sheev", PlayerConnectionState.CONNECTED, ready = true)
+        return PlayerWrUi(11L, "Sheev", PlayerConnectionState.CONNECTED, ready = true, kickable = true)
     }
 
     fun createPlayerWrUi2(): PlayerWrUi {
-        return PlayerWrUi(name = "Obi-Wan", PlayerConnectionState.CONNECTED, ready = true)
+        return PlayerWrUi(12L, "Obi-Wan", PlayerConnectionState.CONNECTED, ready = true, kickable = false)
     }
 
     fun createHostPlayer(

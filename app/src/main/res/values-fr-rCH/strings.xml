@@ -137,10 +137,11 @@
     <string name="diamonds_king_content_description">Roi de Carreau</string>
     <string name="diamonds_ace_content_description">As de Carreau</string>
     <string name="back_content_description">Aucune carte</string>
-    <string name="join_specific_game_cd">Rejoindre partie %1$</string>
+    <string name="join_specific_game_cd">Rejoindre partie %1$s</string>
     <string name="notify_host_you_are_ready_cd">Informer l\'hôte que tu es prêt(e)</string>
     <string name="notify_host_you_are_not_ready_cd">Informer l\'hôte que tu n\'es pas prêt(e)</string>
     <string name="current_screen_name_cd">Ecran actuel %1$s</string>
-    <string name="last_card_played_cd">Dernière carte jouée est </string>
+    <string name="last_card_played_cd">Dernière carte jouée est  %1$s</string>
     <string name="kick_player">Ejecter %1$s</string>
+    <string name="you_have_been_kick">Tu as été éjecter par l\'hôte</string>
 </resources>

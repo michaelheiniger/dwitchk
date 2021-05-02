@@ -33,9 +33,9 @@ private fun WaitingRoomGuestScreenPlayerConnectedPreview() {
     WaitingRoomGuestScreen(
         toolbarTitle = "Dwiiitch",
         players = listOf(
-            PlayerWrUi(name = "Aragorn", PlayerConnectionState.CONNECTED, ready = true, kickable = false),
-            PlayerWrUi(name = "Boromir", PlayerConnectionState.CONNECTED, ready = false, kickable = false),
-            PlayerWrUi(name = "Gimli", PlayerConnectionState.DISCONNECTED, ready = false, kickable = false)
+            PlayerWrUi(1L, name = "Aragorn", PlayerConnectionState.CONNECTED, ready = true, kickable = false),
+            PlayerWrUi(2L, name = "Boromir", PlayerConnectionState.CONNECTED, ready = false, kickable = false),
+            PlayerWrUi(3L, name = "Gimli", PlayerConnectionState.DISCONNECTED, ready = false, kickable = false)
         ),
         ready = UiCheckboxModel(enabled = false, checked = false),
         connectionStatus = GuestCommunicationState.Connected,
@@ -103,7 +103,7 @@ private fun GuestControlScreen(
                 checked = ready.checked,
                 enabled = true,
                 onCheckedChange = onReadyClick,
-                modifier = Modifier.testTag(UiTags.localPlayerReadyCheckbox)
+                modifier = Modifier.testTag(UiTags.localPlayerReadyControl)
             )
             val label = if (ready.checked) R.string.ready else R.string.not_ready
             val contentDescription = stringResource(getReadyContentDescription(ready))

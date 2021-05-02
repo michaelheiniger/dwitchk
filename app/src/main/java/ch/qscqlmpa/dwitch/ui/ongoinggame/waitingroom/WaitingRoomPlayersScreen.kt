@@ -29,12 +29,14 @@ private fun WaitingRoomPlayersScreenPreview() {
         showAddComputerPlayer = true,
         players = listOf(
             PlayerWrUi(
+                id = 1L,
                 name = "Mirlick",
                 connectionState = PlayerConnectionState.CONNECTED,
                 ready = true,
                 kickable = true
             ),
             PlayerWrUi(
+                id = 2L,
                 name = "Mébène",
                 connectionState = PlayerConnectionState.DISCONNECTED,
                 ready = false,
@@ -49,7 +51,7 @@ fun WaitingRoomPlayersScreen(
     showAddComputerPlayer: Boolean,
     players: List<PlayerWrUi>,
     onAddComputerPlayer: () -> Unit = {},
-    onKickPlayer: () -> Unit = {}
+    onKickPlayer: (PlayerWrUi) -> Unit = {}
 ) {
     Column(Modifier.fillMaxWidth()) {
         Row(Modifier.fillMaxWidth()) {
@@ -92,7 +94,7 @@ fun WaitingRoomPlayersScreen(
 @Composable
 private fun PlayerDetailsRow1(
     player: PlayerWrUi,
-    onKickPlayer: () -> Unit
+    onKickPlayer: (PlayerWrUi) -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth()
@@ -107,9 +109,9 @@ private fun PlayerDetailsRow1(
         )
         if (player.kickable) {
             IconButton(
-                onClick = onKickPlayer,
+                onClick = { onKickPlayer(player) },
                 modifier = Modifier
-                    .testTag(UiTags.kickPlayer)
+                    .testTag("${UiTags.kickPlayer}-${player.name}")
                     .weight(1f)
                     .wrapContentWidth(Alignment.End)
             ) {

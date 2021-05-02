@@ -31,13 +31,12 @@ private fun WaitingRoomHostScreenPreview() {
         toolbarTitle = "Dwiiitch",
         showAddComputerPlayer = true,
         players = listOf(
-            PlayerWrUi("Aragorn", PlayerConnectionState.CONNECTED, ready = true, kickable = false),
-            PlayerWrUi("Boromir", PlayerConnectionState.CONNECTED, ready = false, kickable = true),
-            PlayerWrUi("Gimli", PlayerConnectionState.DISCONNECTED, ready = false, kickable = true)
+            PlayerWrUi(1L, "Aragorn", PlayerConnectionState.CONNECTED, ready = true, kickable = false),
+            PlayerWrUi(2L, "Boromir", PlayerConnectionState.CONNECTED, ready = false, kickable = true),
+            PlayerWrUi(3L, "Gimli", PlayerConnectionState.DISCONNECTED, ready = false, kickable = true)
         ),
         launchGameEnabled = false,
         connectionStatus = HostCommunicationState.Error,
-        onAddComputerPlayer = {},
         onLaunchGameClick = {},
         onCancelGameClick = {},
         onReconnectClick = {}
@@ -51,10 +50,11 @@ fun WaitingRoomHostScreen(
     players: List<PlayerWrUi>,
     launchGameEnabled: Boolean,
     connectionStatus: HostCommunicationState?,
-    onAddComputerPlayer: () -> Unit,
     onLaunchGameClick: () -> Unit,
     onCancelGameClick: () -> Unit,
-    onReconnectClick: () -> Unit
+    onReconnectClick: () -> Unit,
+    onAddComputerPlayer: () -> Unit = {},
+    onKickPlayer: (PlayerWrUi) -> Unit = {}
 ) {
     Column(
         Modifier
@@ -74,7 +74,8 @@ fun WaitingRoomHostScreen(
             WaitingRoomPlayersScreen(
                 players = players,
                 showAddComputerPlayer = showAddComputerPlayer,
-                onAddComputerPlayer = onAddComputerPlayer
+                onAddComputerPlayer = onAddComputerPlayer,
+                onKickPlayer = onKickPlayer
             )
             Spacer(Modifier.height(16.dp))
             HostControlScreen(

@@ -19,6 +19,6 @@ interface ConnectionStore {
         /**
          * Range of connection IDs reserved for computer players.
          */
-        val computerConnectionIdRange = 1..10
+        val computerConnectionIdRange = 1L..10L
     }
 }

@@ -12,6 +12,7 @@ internal class WaitingRoomHostFacadeImpl @Inject constructor(
     private val communicationStateRepository: HostCommunicationStateRepository,
     private val gameLaunchableUsecase: GameLaunchableUsecase,
     private val addComputerPlayerUsecase: AddComputerPlayerUsecase,
+    private val kickPlayerUsecase: KickPlayerUsecase,
     private val launchGameUsecase: LaunchGameUsecase,
     private val cancelGameUsecase: CancelGameUsecase,
     private val schedulerFactory: SchedulerFactory
@@ -28,6 +29,11 @@ internal class WaitingRoomHostFacadeImpl @Inject constructor(
 
     override fun cancelGame(): Completable {
         return cancelGameUsecase.cancelGame()
+            .subscribeOn(schedulerFactory.io())
+    }
+
+    override fun kickPlayer(player: PlayerWrUi): Completable {
+        return kickPlayerUsecase.kickPlayer(player)
             .subscribeOn(schedulerFactory.io())
     }
 

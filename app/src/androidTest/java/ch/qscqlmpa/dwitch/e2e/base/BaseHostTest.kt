@@ -104,7 +104,7 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
         val messagesSerialized =
             Observable.merge(listOf(serverTestStub.observeMessagesSent(), serverTestStub.observeMessagesBroadcasted()))
                 .take(numMessagesExpected)
-                .timeout(10 * numMessagesExpected, TimeUnit.SECONDS)
+                .timeout(3 * numMessagesExpected, TimeUnit.SECONDS)
                 .scan(
                     mutableListOf<String>(),
                     { messages, lastMessage ->

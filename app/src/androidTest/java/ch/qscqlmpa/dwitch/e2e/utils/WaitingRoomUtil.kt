@@ -11,7 +11,7 @@ object WaitingRoomUtil {
     const val PLAYER_DISCONNECTED = R.string.player_disconnected
 
     fun ComposeContentTestRule.assertPlayerInWr(name: String): SemanticsNodeInteraction {
-        return onNode(hasTestTag(name))
+        return onNodeWithTag(name, useUnmergedTree = true)
     }
 
     fun ComposeContentTestRule.assertPlayerInWr(name: String, ready: Boolean): SemanticsNodeInteraction {

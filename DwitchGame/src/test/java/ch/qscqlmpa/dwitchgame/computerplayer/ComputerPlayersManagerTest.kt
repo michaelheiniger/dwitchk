@@ -33,6 +33,8 @@ internal class ComputerPlayersManagerTest : BaseUnitTest() {
     private val gameCommonId = GameCommonId(1)
     private val player1 = ComputerPlayer(ConnectionId(1), DwitchPlayerId(1))
     private val player2 = ComputerPlayer(ConnectionId(2), DwitchPlayerId(2))
+    private val player3 = ComputerPlayer(ConnectionId(3), DwitchPlayerId(3))
+    private val player4 = ComputerPlayer(ConnectionId(4), DwitchPlayerId(4))
 
     data class ComputerPlayer(val connectionId: ConnectionId, val dwitchId: DwitchPlayerId)
 
@@ -219,6 +221,47 @@ internal class ComputerPlayersManagerTest : BaseUnitTest() {
         private val updatedGameState = mockk<DwitchGameState>()
 
         @Test
+        fun `When the only enabled computer player is kicked, the processing of messages is stopped`() {
+            // Given
+            addPlayerAndPerformFullOnboardingProcess(player1)
+            assertThat(messagesForComputerPlayersSubject.hasObservers()).isTrue
+
+            // When
+            messagesForComputerPlayersSubject.onNext(
+                EnvelopeToSend(Recipient.Single(player1.connectionId), Message.KickPlayerMessage(player1.dwitchId))
+            )
+
+            // Then
+            assertThat(messagesForComputerPlayersSubject.hasObservers()).isFalse
+        }
+
+        @Test
+        fun `When KickPlayerMessage is received, the corresponding computer player is disabled`() {
+            // Given
+            addPlayerAndPerformFullOnboardingProcess(player1)
+            addPlayerAndPerformFullOnboardingProcess(player2)
+            addPlayerAndPerformFullOnboardingProcess(player3)
+
+            // When
+            messagesForComputerPlayersSubject.onNext(
+                EnvelopeToSend(Recipient.Single(player2.connectionId), Message.KickPlayerMessage(player2.dwitchId))
+            )
+            addPlayerAndPerformFullOnboardingProcess(player2)
+            addPlayerAndPerformFullOnboardingProcess(player4)
+
+            // Then
+            val eventsSendToHost = mutableListOf<ServerCommunicationEvent>()
+            verify { mockCommunicator.sendCommunicationEventFromComputerPlayer(capture(eventsSendToHost)) }
+            assertThat((eventsSendToHost[0] as ServerCommunicationEvent.ClientConnected).connectionId).isEqualTo(player1.connectionId)
+            assertThat((eventsSendToHost[1] as ServerCommunicationEvent.ClientConnected).connectionId).isEqualTo(player2.connectionId)
+            assertThat((eventsSendToHost[2] as ServerCommunicationEvent.ClientConnected).connectionId).isEqualTo(player3.connectionId)
+
+            // Connection ID of player2 is recycled for the next player to be added
+            assertThat((eventsSendToHost[3] as ServerCommunicationEvent.ClientConnected).connectionId).isEqualTo(player2.connectionId)
+            assertThat((eventsSendToHost[4] as ServerCommunicationEvent.ClientConnected).connectionId).isEqualTo(player4.connectionId)
+        }
+
+        @Test
         fun `Cancel game message stops the processing of messages by the computer`() {
             // Given
             addPlayerAndPerformFullOnboardingProcess(player1)
@@ -362,9 +405,7 @@ internal class ComputerPlayersManagerTest : BaseUnitTest() {
     private fun serverSendsJoinGameAckMessageToComputer(player: ComputerPlayer) {
         messagesForComputerPlayersSubject.onNext(
             EnvelopeToSend(
-                Recipient.Single(player.connectionId), Message.JoinGameAckMessage(
-                    gameCommonId, player.dwitchId
-                )
+                Recipient.Single(player.connectionId), Message.JoinGameAckMessage(gameCommonId, player.dwitchId)
             )
         )
     }
@@ -372,9 +413,7 @@ internal class ComputerPlayersManagerTest : BaseUnitTest() {
     private fun serverSendsRejoinGameAckMessageToComputer(player: ComputerPlayer) {
         messagesForComputerPlayersSubject.onNext(
             EnvelopeToSend(
-                Recipient.Single(player.connectionId), Message.RejoinGameAckMessage(
-                    gameCommonId, player.dwitchId
-                )
+                Recipient.Single(player.connectionId), Message.RejoinGameAckMessage(gameCommonId, player.dwitchId)
             )
         )
     }

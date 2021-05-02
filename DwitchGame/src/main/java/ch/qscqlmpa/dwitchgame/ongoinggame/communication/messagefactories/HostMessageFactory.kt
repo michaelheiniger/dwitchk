@@ -42,6 +42,10 @@ class HostMessageFactory @Inject constructor(private val store: InGameStore) {
             return EnvelopeToSend(Recipient.Single(rejoinInfo.connectionId), message)
         }
 
+        fun createKickPlayerMessage(playerId: DwitchPlayerId, connectionId: ConnectionId): EnvelopeToSend {
+            return EnvelopeToSend(Recipient.Single(connectionId), Message.KickPlayerMessage(playerId))
+        }
+
         fun createGameOverMessage(): EnvelopeToSend {
             return EnvelopeToSend(Recipient.All, Message.GameOverMessage)
         }

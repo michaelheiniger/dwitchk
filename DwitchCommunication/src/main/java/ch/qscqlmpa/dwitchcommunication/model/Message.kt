@@ -21,6 +21,9 @@ sealed class Message {
     }
 
     @Serializable
+    data class KickPlayerMessage(val playerId: DwitchPlayerId) : Message()
+
+    @Serializable
     data class WaitingRoomStateUpdateMessage(val playerList: List<PlayerWr>) : Message()
 
     @Serializable

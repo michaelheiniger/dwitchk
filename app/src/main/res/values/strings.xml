@@ -153,6 +153,7 @@
     <string name="notify_host_you_are_ready_cd">You are not ready. Click to notify the host if you are ready</string>
     <string name="notify_host_you_are_not_ready_cd">You are ready. Click to notify the host if you are not ready</string>
     <string name="current_screen_name_cd">Current screen is %1$s</string>
-    <string name="last_card_played_cd">Last card played is %1$s </string>
+    <string name="last_card_played_cd">Last card played is %1$s</string>
     <string name="kick_player">Kick %1$s</string>
+    <string name="you_have_been_kick">You have been kicked by the host</string>
 </resources>

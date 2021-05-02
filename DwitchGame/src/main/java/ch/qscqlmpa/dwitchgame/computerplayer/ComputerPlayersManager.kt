@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitchgame.computerplayer
 
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
+import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
@@ -25,36 +26,41 @@ internal class ComputerPlayersManager @Inject constructor(
     private val dwitchFactory: DwitchFactory
 ) {
     private val disposableManager = DisposableManager()
-    private var playerCounter = 0L
+    private val availableConnectionIds = initializeConnectionIdPool() // Sorted ASC so that IDs are given like: 1, 2, 3, ...
+
+    private var playerCounter: Int = 0
     private var dwitchIdConnectionIdMap: MutableMap<DwitchPlayerId, ConnectionId> = mutableMapOf()
 
     fun addNewPlayer() {
-        playerCounter++
-        Logger.info { "Add computer player (connection id: $playerCounter)" }
-        if (playerCounter == 1L) {
-            start()
-        }
-        if (playerCounter == maxNumOfComputerPlayers) {
-            Logger.error("Maximum number of computer player is $maxNumOfComputerPlayers.")
+        val connectionId = availableConnectionIds.removeFirstOrNull()
+        if (connectionId == null) {
+            Logger.error("Can't add a new computer player: maximum number is reached.")
             return
         }
-        val connectionId = ConnectionId(playerCounter)
+        Logger.info { "Add computer player (connection id: $connectionId)" }
+
+        playerCounter++
+        if (playerCounter == 1) startObservingMessages()
+
         connectPlayerToHost(connectionId)
         playerJoinsGame(connectionId)
     }
 
     fun resumeExistingPlayer(gameCommonId: GameCommonId, playerId: DwitchPlayerId) {
+        val connectionId = availableConnectionIds.removeFirst()
+        Logger.info { "Resume computer player (dwitch id: $playerId, connection id: $connectionId)" }
+
         playerCounter++
-        Logger.info { "Resume computer player (dwitch id: $playerId, connection id: $playerCounter)" }
-        if (playerCounter == 1L) {
-            start()
-        }
-        val connectionId = ConnectionId(playerCounter)
+        if (playerCounter == 1) startObservingMessages()
+
         connectPlayerToHost(connectionId)
         playerRejoinsGame(connectionId, gameCommonId, playerId)
     }
 
-    private fun start() {
+    private fun initializeConnectionIdPool() =
+        (ConnectionStore.computerConnectionIdRange).toList().map { v -> ConnectionId(v) }.toMutableList()
+
+    private fun startObservingMessages() {
         disposableManager.add(
             communicator.observeMessagesForComputerPlayers()
                 .doOnNext { envelope -> Logger.debug { "Message received by computer(s): $envelope" } }
@@ -65,7 +71,7 @@ internal class ComputerPlayersManager @Inject constructor(
         )
     }
 
-    private fun stop() {
+    private fun stopObservingMessages() {
         disposableManager.disposeAndReset()
     }
 
@@ -77,7 +83,7 @@ internal class ComputerPlayersManager @Inject constructor(
         communicator.sendMessageToHostFromComputerPlayer(
             EnvelopeReceived(
                 connectionId,
-                GuestMessageFactory.createJoinGameMessage(playerName = "Computer $playerCounter", computerManaged = true)
+                GuestMessageFactory.createJoinGameMessage(playerName = "Computer ${connectionId.value}", computerManaged = true)
             )
         )
     }
@@ -90,7 +96,8 @@ internal class ComputerPlayersManager @Inject constructor(
 
     private fun processMessage(envelope: EnvelopeToSend) {
         when (val message = envelope.message) {
-            Message.CancelGameMessage, Message.GameOverMessage -> stop()
+            Message.CancelGameMessage, Message.GameOverMessage -> stopObservingMessages()
+            is Message.KickPlayerMessage -> processKickMessage(message.playerId)
             is Message.LaunchGameMessage -> handleComputerPlayerAction(message.gameState)
             is Message.GameStateUpdatedMessage -> handleComputerPlayerAction(message.gameState)
             is Message.JoinGameAckMessage -> playerNotifiesHostThatItsReady(message.playerId, envelope)
@@ -129,7 +136,16 @@ internal class ComputerPlayersManager @Inject constructor(
         )
     }
 
-    companion object {
-        const val maxNumOfComputerPlayers = 10L
+    private fun processKickMessage(playerId: DwitchPlayerId) {
+        val connectionIdToRecycle = dwitchIdConnectionIdMap.remove(playerId)
+        if (connectionIdToRecycle != null) {
+            availableConnectionIds.add(connectionIdToRecycle)
+            availableConnectionIds.sortBy { id -> id.value } // So that next ID assigned is the smallest one available
+        }
+
+        playerCounter--
+        if (playerCounter == 0) { // No more computer players
+            stopObservingMessages()
+        }
     }
 }

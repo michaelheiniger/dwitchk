@@ -11,11 +11,15 @@ import org.junit.Test
 
 class WaitingRoomPlayersScreenTest : BaseUiUnitTest() {
 
-    private val aragorn = PlayerWrUi(name = "Aragorn", connectionState = PlayerConnectionState.CONNECTED, ready = true)
-    private val legolas = PlayerWrUi(name = "Legolas", connectionState = PlayerConnectionState.CONNECTED, ready = false)
-    private val gimli = PlayerWrUi(name = "Gimli", connectionState = PlayerConnectionState.DISCONNECTED, ready = false)
-    private val galadriel = PlayerWrUi(name = "Galadriel", connectionState = PlayerConnectionState.DISCONNECTED, ready = false)
-    private val theoden = PlayerWrUi(name = "Theoden", connectionState = PlayerConnectionState.CONNECTED, ready = true)
+    private val aragorn = PlayerWrUi(10L, name = "Aragorn", connectionState = PlayerConnectionState.CONNECTED, ready = true)
+    private val legolas =
+        PlayerWrUi(11L, name = "Legolas", connectionState = PlayerConnectionState.CONNECTED, ready = false, kickable = true)
+    private val gimli =
+        PlayerWrUi(12L, name = "Gimli", connectionState = PlayerConnectionState.DISCONNECTED, ready = false, kickable = true)
+    private val galadriel =
+        PlayerWrUi(13L, name = "Galadriel", connectionState = PlayerConnectionState.DISCONNECTED, ready = false, kickable = true)
+    private val theoden =
+        PlayerWrUi(14L, name = "Theoden", connectionState = PlayerConnectionState.CONNECTED, ready = true, kickable = true)
 
     private var showAddComputerPlayer = true
 

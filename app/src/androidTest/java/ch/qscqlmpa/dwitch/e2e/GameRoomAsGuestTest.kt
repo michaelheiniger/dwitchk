@@ -127,7 +127,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
         hostSendsJoinGameAck()
         hostSendsInitialWaitingRoomUpdate()
 
-        testRule.onNodeWithTag(UiTags.localPlayerReadyCheckbox).performClick()
+        testRule.onNodeWithTag(UiTags.localPlayerReadyControl).performClick()
 
         clientTestStub.serverSendsMessageToClient(Message.LaunchGameMessage(createGameState()))
 

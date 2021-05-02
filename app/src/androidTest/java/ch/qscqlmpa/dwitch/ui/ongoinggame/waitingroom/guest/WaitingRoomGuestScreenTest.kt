@@ -20,9 +20,9 @@ class WaitingRoomGuestScreenTest : BaseUiUnitTest() {
     @Before
     fun setup() {
         players = listOf(
-            PlayerWrUi(name = "Aragorn", PlayerConnectionState.CONNECTED, ready = true),
-            PlayerWrUi(name = "Legolas", PlayerConnectionState.CONNECTED, ready = false),
-            PlayerWrUi(name = "Gimli", PlayerConnectionState.DISCONNECTED, ready = false)
+            PlayerWrUi(10L, name = "Aragorn", PlayerConnectionState.CONNECTED, ready = true),
+            PlayerWrUi(11L, name = "Legolas", PlayerConnectionState.CONNECTED, ready = false, kickable = false),
+            PlayerWrUi(12L, name = "Gimli", PlayerConnectionState.DISCONNECTED, ready = false, kickable = false)
         )
         ready = UiCheckboxModel(enabled = true, checked = false)
         connectionStatus = GuestCommunicationState.Connected
@@ -35,12 +35,12 @@ class WaitingRoomGuestScreenTest : BaseUiUnitTest() {
 
         launchTest()
 
-        composeTestRule.onNode(hasTestTag(UiTags.localPlayerReadyCheckbox))
+        composeTestRule.onNodeWithTag(UiTags.localPlayerReadyControl, useUnmergedTree = true)
             .assertIsEnabled()
             .assertIsDisplayed()
             .assertIsOn()
 
-        composeTestRule.onNode(hasTestTag(UiTags.localPlayerReadyText))
+        composeTestRule.onNodeWithTag(UiTags.localPlayerReadyText, useUnmergedTree = true)
             .assertTextContains(getString(R.string.ready))
             .assertIsDisplayed()
     }
@@ -52,12 +52,12 @@ class WaitingRoomGuestScreenTest : BaseUiUnitTest() {
 
         launchTest()
 
-        composeTestRule.onNodeWithTag(UiTags.localPlayerReadyCheckbox)
+        composeTestRule.onNodeWithTag(UiTags.localPlayerReadyControl, useUnmergedTree = true)
             .assertIsEnabled()
             .assertIsDisplayed()
             .assertIsOff()
 
-        composeTestRule.onNodeWithTag(UiTags.localPlayerReadyText)
+        composeTestRule.onNodeWithTag(UiTags.localPlayerReadyText, useUnmergedTree = true)
             .assertTextContains(getString(R.string.not_ready))
             .assertIsDisplayed()
     }

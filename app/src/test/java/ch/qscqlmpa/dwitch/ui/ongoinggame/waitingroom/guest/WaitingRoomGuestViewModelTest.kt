@@ -25,9 +25,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
     private lateinit var viewModel: WaitingRoomGuestViewModel
 
     private lateinit var communicationStateSubject: PublishSubject<GuestCommunicationState>
-
     private lateinit var localPlayerReadyStateSubject: PublishSubject<Boolean>
-
     private lateinit var gameEventSubject: PublishSubject<GuestGameEvent>
 
     @Before
@@ -113,7 +111,14 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
     fun `User is notified when GameCanceled event occurs`() {
         gameEventSubject.onNext(GuestGameEvent.GameCanceled)
 
-        assertThat(viewModel.navigation.value).isEqualTo(WaitingRoomGuestDestination.NotifyUserGameCanceled)
+        assertThat(viewModel.notifications.value).isEqualTo(WaitingRoomGuestNotification.NotifyGameCanceled)
+    }
+
+    @Test
+    fun `User is notified when KickedOffGame event occurs`() {
+        gameEventSubject.onNext(GuestGameEvent.KickedOffGame)
+
+        assertThat(viewModel.notifications.value).isEqualTo(WaitingRoomGuestNotification.NotifyPlayerKickedOffGame)
     }
 
     @Test
@@ -121,6 +126,15 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         gameEventSubject.onNext(GuestGameEvent.GameCanceled)
 
         viewModel.acknowledgeGameCanceledEvent()
+
+        assertThat(viewModel.navigation.value).isEqualTo(WaitingRoomGuestDestination.NavigateToHomeScreen)
+    }
+
+    @Test
+    fun `Navigate to Home screen when user acknowledges KickedOffGame event`() {
+        gameEventSubject.onNext(GuestGameEvent.KickedOffGame)
+
+        viewModel.acknowledgeKickOffGame()
 
         assertThat(viewModel.navigation.value).isEqualTo(WaitingRoomGuestDestination.NavigateToHomeScreen)
     }

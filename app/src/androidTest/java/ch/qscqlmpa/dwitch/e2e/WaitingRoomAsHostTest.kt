@@ -70,6 +70,24 @@ class WaitingRoomAsHostTest : BaseHostTest() {
     }
 
     @Test
+    fun kickGuest1OffGame() {
+        goToWaitingRoom()
+
+        guestJoinsGame(PlayerHostTest.Guest1)
+        guestJoinsGame(PlayerHostTest.Guest2)
+
+        testRule.assertPlayerInWr(hostName, ready = true)
+        testRule.assertPlayerInWr(PlayerHostTest.Guest1.name)
+        testRule.assertPlayerInWr(PlayerHostTest.Guest2.name)
+
+        testRule.onNodeWithTag("${UiTags.kickPlayer}-${PlayerHostTest.Guest1.name}").performClick()
+        waitForNextNMessageSentByHost(2) // KickPlayerMessage and WaitingRoomStateUpdatedMessage
+
+        testRule.assertPlayerInWr(hostName, ready = true)
+        testRule.assertPlayerInWr(PlayerHostTest.Guest2.name)
+    }
+
+    @Test
     fun guest1DisconnectsAndComesBackWaitingRoom() {
         goToWaitingRoom()
 

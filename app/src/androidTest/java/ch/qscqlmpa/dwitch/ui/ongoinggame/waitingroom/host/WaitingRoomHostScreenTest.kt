@@ -19,9 +19,9 @@ class WaitingRoomHostScreenTest : BaseUiUnitTest() {
     @Before
     fun setup() {
         players = listOf(
-            PlayerWrUi(name = "Aragorn", PlayerConnectionState.CONNECTED, ready = true),
-            PlayerWrUi(name = "Legolas", PlayerConnectionState.CONNECTED, ready = false),
-            PlayerWrUi(name = "Gimli", PlayerConnectionState.DISCONNECTED, ready = false)
+            PlayerWrUi(10L, name = "Aragorn", PlayerConnectionState.CONNECTED, ready = true),
+            PlayerWrUi(11L, name = "Legolas", PlayerConnectionState.CONNECTED, ready = false, kickable = true),
+            PlayerWrUi(12L, name = "Gimli", PlayerConnectionState.DISCONNECTED, ready = false, kickable = true)
         )
         connectionState = HostCommunicationState.Open
     }

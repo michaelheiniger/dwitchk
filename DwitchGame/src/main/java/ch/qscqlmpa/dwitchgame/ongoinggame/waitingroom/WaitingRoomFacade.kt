@@ -12,10 +12,11 @@ interface WaitingRoomFacade {
 }
 
 data class PlayerWrUi(
+    val id: Long,
     val name: String,
     val connectionState: PlayerConnectionState,
     val ready: Boolean,
-    val kickable: Boolean
+    val kickable: Boolean = false
 )
 
 data class GameInfoUi(val name: String, val gameIsNew: Boolean)

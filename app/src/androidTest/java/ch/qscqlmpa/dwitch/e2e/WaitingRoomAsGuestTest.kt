@@ -31,11 +31,11 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
         testRule.assertPlayerInWr(PlayerGuestTest.LocalGuest.name, ready = false)
 
         localPlayerToggleReadyCheckbox()
-        testRule.assertCheckboxChecked(UiTags.localPlayerReadyCheckbox, checked = true)
+        testRule.assertCheckboxChecked(UiTags.localPlayerReadyControl, checked = true)
         testRule.assertPlayerInWr(PlayerGuestTest.LocalGuest.name, ready = true)
 
         localPlayerToggleReadyCheckbox()
-        testRule.assertCheckboxChecked(UiTags.localPlayerReadyCheckbox, checked = false)
+        testRule.assertCheckboxChecked(UiTags.localPlayerReadyControl, checked = false)
         testRule.assertPlayerInWr(PlayerGuestTest.LocalGuest.name, ready = false)
     }
 
@@ -66,6 +66,17 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
         goToWaitingRoom()
 
         clientTestStub.serverSendsMessageToClient(Message.CancelGameMessage)
+
+        testRule.onNodeWithText(getString(R.string.ok)).performClick()
+
+        assertCurrentScreenIsHomeSreen()
+    }
+
+    @Test
+    fun playerKickedOffGame() {
+        goToWaitingRoom()
+
+        clientTestStub.serverSendsMessageToClient(Message.KickPlayerMessage(PlayerGuestTest.LocalGuest.id))
 
         testRule.onNodeWithText(getString(R.string.ok)).performClick()
 

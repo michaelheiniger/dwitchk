@@ -1,11 +1,12 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom
 
-import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
+import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import io.mockk.every
 import io.reactivex.rxjava3.core.Flowable
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -14,45 +15,126 @@ class WaitingRoomPlayerRepositoryTest : BaseUnitTest() {
 
     private lateinit var repository: WaitingRoomPlayerRepository
 
-    @BeforeEach
-    fun setup() {
-        repository = WaitingRoomPlayerRepository(mockInGameStore)
-    }
-
     @Nested
-    inner class ObserveConnectedPlayers {
+    inner class ObservePlayers {
+
+        private val host = TestEntityFactory.createHostPlayer()
+        private val guest1 = TestEntityFactory.createGuestPlayer1(
+            connectionState = PlayerConnectionState.CONNECTED,
+            ready = true,
+            computerManaged = true
+        )
+        private val guest2 = TestEntityFactory.createGuestPlayer2(
+            connectionState = PlayerConnectionState.DISCONNECTED,
+            ready = false,
+            computerManaged = false
+        )
+
+        @BeforeEach
+        fun setup() {
+            every { mockInGameStore.observePlayersInWaitingRoom() } returns Flowable.just(
+                listOf(host, guest1, guest2)
+            )
+            every { mockInGameStore.gameIsNew() } returns true
+        }
 
         @Test
         fun `should return players from store`() {
-            val hostPlayer =
-                TestEntityFactory.createHostPlayer(dwitchId = DwitchPlayerId(1), ready = true)
-            val playerGuest1 =
-                TestEntityFactory.createGuestPlayer1(dwitchId = DwitchPlayerId(2), ready = false)
-            val playerGuest2 =
-                TestEntityFactory.createGuestPlayer2(dwitchId = DwitchPlayerId(3), ready = true)
+            createRepository(PlayerRole.HOST)
+            every { mockInGameStore.gameIsNew() } returns true
 
-            val players = listOf(hostPlayer, playerGuest1, playerGuest2)
-            every { mockInGameStore.observePlayersInWaitingRoom() } returns Flowable.just(players)
+            val testObserver = repository.observePlayers().test()
+            testObserver.assertValueCount(1)
+            val values = testObserver.values()
 
-            repository.observePlayers().test().assertValue(
-                listOf(
-                    PlayerWrUi(
-                        hostPlayer.name,
-                        PlayerConnectionState.CONNECTED,
-                        ready = true
-                    ),
-                    PlayerWrUi(
-                        playerGuest1.name,
-                        PlayerConnectionState.CONNECTED,
-                        ready = false
-                    ),
-                    PlayerWrUi(
-                        playerGuest2.name,
-                        PlayerConnectionState.CONNECTED,
-                        ready = true
-                    )
-                )
-            )
+            assertThat(values[0].size).isEqualTo(3)
+
+            assertThat(values[0][0].id).isEqualTo(10L)
+            assertThat(values[0][0].name).isEqualTo("Aragorn")
+            assertThat(values[0][0].connectionState).isEqualTo(PlayerConnectionState.CONNECTED)
+            assertThat(values[0][0].ready).isTrue
+
+            assertThat(values[0][1].id).isEqualTo(11L)
+            assertThat(values[0][1].name).isEqualTo("Boromir")
+            assertThat(values[0][1].connectionState).isEqualTo(PlayerConnectionState.CONNECTED)
+            assertThat(values[0][1].ready).isTrue
+
+            assertThat(values[0][2].id).isEqualTo(12L)
+            assertThat(values[0][2].name).isEqualTo("Celeborn")
+            assertThat(values[0][2].connectionState).isEqualTo(PlayerConnectionState.DISCONNECTED)
+            assertThat(values[0][2].ready).isFalse
         }
+
+        @Test
+        fun `when local player is host and game is new, all players are kickable except the host`() {
+            createRepository(PlayerRole.HOST)
+            every { mockInGameStore.gameIsNew() } returns true
+
+            val values = repository.observePlayers().test().values()
+
+            assertThat(values[0][0].name).isEqualTo(host.name)
+            assertThat(values[0][0].kickable).isFalse
+
+            assertThat(values[0][1].name).isEqualTo(guest1.name)
+            assertThat(values[0][1].kickable).isTrue
+
+            assertThat(values[0][2].name).isEqualTo(guest2.name)
+            assertThat(values[0][2].kickable).isTrue
+        }
+
+        @Test
+        fun `when local player is host and game is resumed, no player is kickable`() {
+            createRepository(PlayerRole.HOST)
+            every { mockInGameStore.gameIsNew() } returns false
+
+            val values = repository.observePlayers().test().values()
+
+            assertThat(values[0][0].name).isEqualTo(host.name)
+            assertThat(values[0][0].kickable).isFalse
+
+            assertThat(values[0][1].name).isEqualTo(guest1.name)
+            assertThat(values[0][1].kickable).isFalse
+
+            assertThat(values[0][2].name).isEqualTo(guest2.name)
+            assertThat(values[0][2].kickable).isFalse
+        }
+
+        @Test
+        fun `when local player is guest and game is new, no player is kickable`() {
+            createRepository(PlayerRole.GUEST)
+            every { mockInGameStore.gameIsNew() } returns true
+
+            val values = repository.observePlayers().test().values()
+
+            assertThat(values[0][0].name).isEqualTo(host.name)
+            assertThat(values[0][0].kickable).isFalse
+
+            assertThat(values[0][1].name).isEqualTo(guest1.name)
+            assertThat(values[0][1].kickable).isFalse
+
+            assertThat(values[0][2].name).isEqualTo(guest2.name)
+            assertThat(values[0][2].kickable).isFalse
+        }
+
+        @Test
+        fun `when local player is guest and game is resumed, no player is kickable`() {
+            createRepository(PlayerRole.GUEST)
+            every { mockInGameStore.gameIsNew() } returns false
+
+            val values = repository.observePlayers().test().values()
+
+            assertThat(values[0][0].name).isEqualTo(host.name)
+            assertThat(values[0][0].kickable).isFalse
+
+            assertThat(values[0][1].name).isEqualTo(guest1.name)
+            assertThat(values[0][1].kickable).isFalse
+
+            assertThat(values[0][2].name).isEqualTo(guest2.name)
+            assertThat(values[0][2].kickable).isFalse
+        }
+    }
+
+    private fun createRepository(localPlayerRole: PlayerRole) {
+        repository = WaitingRoomPlayerRepository(mockInGameStore, localPlayerRole)
     }
 }
