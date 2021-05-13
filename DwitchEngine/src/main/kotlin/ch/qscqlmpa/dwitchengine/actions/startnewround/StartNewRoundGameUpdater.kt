@@ -42,8 +42,4 @@ internal class StartNewRoundGameUpdater(currentGameState: DwitchGameState) : Gam
         gameStateMutable.activePlayers.clear()
         gameStateMutable.activePlayers.addAll(players)
     }
-
-    fun setFirstCardOnTable(card: Card) {
-        gameStateMutable.setCardsOnTable(card)
-    }
 }

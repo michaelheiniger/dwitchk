@@ -16,6 +16,7 @@ import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.DwitchCardExchange
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.info.DwitchGameInfo
 import ch.qscqlmpa.dwitchengine.model.player.DwitchGameInfoFactory
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
@@ -44,10 +45,10 @@ internal class DwitchEngineImpl(private val currentGameState: DwitchGameState) :
         return DwitchGameInfoFactory(currentGameState).create()
     }
 
-    override fun playCard(cardPlayed: Card): DwitchGameState {
-        Logger.debug { "Player $currentPlayerId plays card $cardPlayed, current game state: $currentGameState" }
+    override fun playCards(cardsPlayed: PlayedCards): DwitchGameState {
+        Logger.debug { "Player $currentPlayerId plays cards $cardsPlayed, current game state: $currentGameState" }
         return PlayCard(
-            PlayCardState(currentGameState, cardPlayed),
+            PlayCardState(currentGameState, cardsPlayed),
             PlayCardGameUpdater(currentGameState)
         ).getUpdatedGameState()
             .also(this::logUpdatedGameState)

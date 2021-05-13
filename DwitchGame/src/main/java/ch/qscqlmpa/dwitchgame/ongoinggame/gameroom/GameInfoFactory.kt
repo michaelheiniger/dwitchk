@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.gameroom
 
-import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
 import ch.qscqlmpa.dwitchengine.model.info.DwitchGameInfo
 import ch.qscqlmpa.dwitchengine.model.info.DwitchPlayerInfo
@@ -31,7 +31,6 @@ object GameInfoFactory {
             },
             LocalPlayerDashboard(
                 adjustCardItemSelectability(localPlayerInfo.cardsInHand, dashboardEnabled, localPlayerIsCurrentPlayer),
-                canPlay = localPlayerIsCurrentPlayer && dashboardEnabled && localPlayerInfo.canPlay,
                 canPass = localPlayerIsCurrentPlayer && dashboardEnabled
             ),
             lastCardPlayed = gameInfo.lastCardPlayed
@@ -62,12 +61,13 @@ data class GameDashboardInfo(
      * Also defines the order of the players
      */
     val playersInfo: List<PlayerInfo>,
+
     val localPlayerDashboard: LocalPlayerDashboard,
 
     /**
-     * Last card played sitting on the table.
+     * Last card(s) played sitting on the table.
      */
-    val lastCardPlayed: Card
+    val lastCardPlayed: PlayedCards?
 )
 
 data class PlayerInfo(
@@ -80,7 +80,6 @@ data class PlayerInfo(
 
 data class LocalPlayerDashboard(
     val cardsInHand: List<DwitchCardInfo>,
-    val canPlay: Boolean,
     val canPass: Boolean
 )
 

@@ -1,8 +1,8 @@
 package ch.qscqlmpa.dwitchengine.actions.playcard
 
 import ch.qscqlmpa.dwitchengine.actions.GameStateBase
-import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.player.*
 import ch.qscqlmpa.dwitchengine.rules.PlayerMove
 import ch.qscqlmpa.dwitchengine.rules.RankComputer
@@ -10,7 +10,7 @@ import ch.qscqlmpa.dwitchengine.rules.SpecialRule
 
 internal class PlayCardState(
     private val currentGameState: DwitchGameState,
-    private val cardPlayed: Card
+    private val cardsPlayed: PlayedCards
 ) : GameStateBase(currentGameState) {
 
     override fun checkState() {
@@ -19,8 +19,8 @@ internal class PlayCardState(
         checkCardPlayedIsAValidMove()
     }
 
-    fun cardPlayed(): Card {
-        return cardPlayed
+    fun cardsPlayed(): PlayedCards {
+        return cardsPlayed
     }
 
     fun roundIsOver(): Boolean {
@@ -53,11 +53,11 @@ internal class PlayCardState(
     }
 
     fun nextWaitingPlayerIsDwitched(): Boolean {
-        val lastCardOnTable = currentGameState.lastCardOnTable()
-        return lastCardOnTable != null && lastCardOnTable.value() == cardPlayed.value()
+        val lastCardOnTable = currentGameState.lastCardsPlayed()
+        return lastCardOnTable != null && lastCardOnTable.value == cardsPlayed.value
     }
 
-    fun cardPlayedIsJoker() = cardPlayed.name == currentGameState.joker
+    fun cardPlayedIsJoker() = cardsPlayed.name == currentGameState.joker
 
     fun getLastActivePlayer(): DwitchPlayerId {
         if (currentGameState.activePlayers.size != 2) {
@@ -116,9 +116,9 @@ internal class PlayCardState(
     }
 
     private fun checkCardPlayedIsAValidMove() {
-        val lastCardOnTable = currentGameState.lastCardOnTable()
-        if (!PlayerMove.cardPlayedIsAValidMove(lastCardOnTable, cardPlayed, currentGameState.joker)) {
-            throw IllegalArgumentException("The card '$cardPlayed' may not be played on top of card '$lastCardOnTable'")
+        val lastCardOnTable = currentGameState.lastCardsPlayed()
+        if (!PlayerMove.cardPlayedIsAValidMove(lastCardOnTable, cardsPlayed, currentGameState.joker)) {
+            throw IllegalArgumentException("The card '$cardsPlayed' may not be played on top of card '$lastCardOnTable'")
         }
     }
 }

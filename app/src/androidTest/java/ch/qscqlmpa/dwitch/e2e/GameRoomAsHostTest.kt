@@ -2,21 +2,21 @@ package ch.qscqlmpa.dwitch.e2e
 
 import ch.qscqlmpa.dwitch.PlayerGuestTest
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.clickOnDialogConfirmonButton
+import ch.qscqlmpa.dwitch.clickOnDialogConfirmButton
 import ch.qscqlmpa.dwitch.e2e.base.BaseHostTest
-import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertCardExchangeControlIsDisabled
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertCardExchangeControlIsEnabled
+import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertCardExchangeControlIsHidden
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertCardOnTable
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertCardsInHand
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertEndOfRoundResult
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertGameRoomIsDisplayed
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertPlayerCanPassTurn
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertPlayerCannotPassTurn
-import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.chooseCardForExchange
+import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.chooseCardsForExchange
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.confirmCardExchange
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.endGame
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.passTurn
-import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.playCard
+import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.playCards
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.startNewRound
 import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.assertLaunchGameControlIsEnabled
 import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.launchGame
@@ -24,6 +24,7 @@ import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.websocket.server.test.PlayerHostTest
 import ch.qscqlmpa.dwitchengine.ProdDwitchFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
@@ -37,7 +38,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         DwitchPlayerId(2) to DwitchRank.President // Guest
     )
     private var cardsForPlayer: Map<DwitchPlayerId, Set<Card>> = mapOf(
-        DwitchPlayerId(1) to setOf(Card.Hearts5, Card.Clubs3),
+        DwitchPlayerId(1) to setOf(Card.Hearts5, Card.Clubs5, Card.Clubs3),
         DwitchPlayerId(2) to setOf(Card.Spades6, Card.Spades4)
     )
 
@@ -47,25 +48,25 @@ class GameRoomAsHostTest : BaseHostTest() {
     }
 
     @Test
-    fun localPlayerPlaysACard() {
+    fun localPlayerPlaysTwoCards() {
         goToGameRoom()
 
-        testRule.assertCardsInHand(Card.Hearts5, Card.Clubs3)
+        testRule.assertCardsInHand(Card.Hearts5, Card.Clubs5, Card.Clubs3)
         testRule.assertCardOnTable(Card.Blank)
 
-        testRule.playCard(Card.Hearts5)
+        testRule.playCards(Card.Hearts5, Card.Clubs5)
 
         assertGameStateUpdatedMessageSent()
 
         testRule.assertCardsInHand(Card.Clubs3)
-        testRule.assertCardOnTable(Card.Hearts5)
+        testRule.assertCardOnTable(Card.Hearts5, Card.Clubs5)
     }
 
     @Test
     fun localPlayerPasses() {
         goToGameRoom()
 
-        testRule.assertCardsInHand(Card.Hearts5, Card.Clubs3)
+        testRule.assertCardsInHand(Card.Hearts5, Card.Clubs5, Card.Clubs3)
         testRule.assertCardOnTable(Card.Blank)
 
         testRule.assertPlayerCanPassTurn()
@@ -77,13 +78,18 @@ class GameRoomAsHostTest : BaseHostTest() {
     }
 
     @Test
-    fun playAWholeRound() {
+    fun playAWholeRoundWithHumanGuest() {
+        cardsForPlayer = mapOf(
+            DwitchPlayerId(1) to setOf(Card.Hearts5, Card.Clubs3),
+            DwitchPlayerId(2) to setOf(Card.Spades6, Card.Spades4)
+        )
+
         goToGameRoom()
 
         testRule.assertCardsInHand(Card.Hearts5, Card.Clubs3)
         testRule.assertCardOnTable(Card.Blank)
 
-        testRule.playCard(Card.Clubs3)
+        testRule.playCards(Card.Clubs3)
         assertGameStateUpdatedMessageSent()
 
         testRule.assertCardsInHand(Card.Hearts5)
@@ -94,35 +100,16 @@ class GameRoomAsHostTest : BaseHostTest() {
 
         testRule.assertCardOnTable(Card.Spades4)
 
-        testRule.playCard(Card.Hearts5) // Local player plays its last card
+        testRule.playCards(Card.Hearts5) // Local player plays its last card
         assertGameStateUpdatedMessageSent()
 
         testRule.assertEndOfRoundResult(PlayerGuestTest.Host.name, getString(R.string.president_long))
         testRule.assertEndOfRoundResult(PlayerGuestTest.LocalGuest.name, getString(R.string.asshole_long))
 
         testRule.endGame()
-        testRule.clickOnDialogConfirmonButton()
+        testRule.clickOnDialogConfirmButton()
 
         assertCurrentScreenIsHomeSreen()
-    }
-
-    @Test
-    fun roundEnds() {
-        cardsForPlayer = mapOf(
-            DwitchPlayerId(1) to setOf(Card.Hearts3), // Host
-            DwitchPlayerId(2) to setOf(Card.Spades6) // Guest
-        )
-
-        goToGameRoom()
-
-        testRule.assertCardsInHand(Card.Hearts3)
-        testRule.assertCardOnTable(Card.Blank)
-
-        testRule.playCard(Card.Hearts3)
-        assertGameStateUpdatedMessageSent()
-
-        testRule.assertEndOfRoundResult(hostName, getString(R.string.president_long))
-        testRule.assertEndOfRoundResult(PlayerHostTest.Guest1.name, getString(R.string.asshole_long))
     }
 
     @Test
@@ -137,7 +124,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         testRule.assertCardsInHand(Card.Hearts3)
         testRule.assertCardOnTable(Card.Blank)
 
-        testRule.playCard(Card.Hearts3)
+        testRule.playCards(Card.Hearts3)
         assertGameStateUpdatedMessageSent()
 
         initializeNewRoundCardDealer(
@@ -152,9 +139,8 @@ class GameRoomAsHostTest : BaseHostTest() {
         otherPlayerSendsCardExchangeMessage(setOf(Card.Spades6, Card.HeartsAce))
         assertGameStateUpdatedMessageSent()
 
-        testRule.assertCardExchangeControlIsDisabled()
-        testRule.chooseCardForExchange(Card.Spades3)
-        testRule.chooseCardForExchange(Card.Spades4)
+        testRule.assertCardExchangeControlIsHidden()
+        testRule.chooseCardsForExchange(Card.Spades3, Card.Spades4)
         testRule.assertCardExchangeControlIsEnabled()
         testRule.confirmCardExchange()
 
@@ -171,7 +157,7 @@ class GameRoomAsHostTest : BaseHostTest() {
 
     private fun otherPlayerPlaysCard(guest: PlayerHostTest, card: Card) {
         val currentGameState = inGameStore.getGameState()
-        val newGameState = ProdDwitchFactory().createDwitchEngine(currentGameState).playCard(card)
+        val newGameState = ProdDwitchFactory().createDwitchEngine(currentGameState).playCards(PlayedCards(card))
         serverTestStub.guestSendsMessageToServer(guest, MessageFactory.createGameStateUpdatedMessage(newGameState))
         assertGameStateUpdatedMessageSent() // Broadcasted by host to other players
     }

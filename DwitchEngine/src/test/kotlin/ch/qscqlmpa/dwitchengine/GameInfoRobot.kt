@@ -1,9 +1,9 @@
 package ch.qscqlmpa.dwitchengine
 
-import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameEvent
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
+import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.info.DwitchGameInfo
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import org.assertj.core.api.Assertions.assertThat
@@ -25,7 +25,7 @@ class GameInfoRobot(private val info: DwitchGameInfo) {
         return this
     }
 
-    fun assertCardsOnTable(vararg cards: Card): GameInfoRobot {
+    fun assertCardsOnTable(vararg cards: PlayedCards): GameInfoRobot {
         assertThat(info.cardsOnTable).containsExactly(*cards)
         return this
     }

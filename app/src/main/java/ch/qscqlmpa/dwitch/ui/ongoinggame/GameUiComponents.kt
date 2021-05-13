@@ -1,10 +1,14 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -20,8 +24,9 @@ import androidx.compose.ui.res.stringResource
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ResourceMapper
 import ch.qscqlmpa.dwitch.ui.common.InfoDialog
+import ch.qscqlmpa.dwitch.ui.common.UiTags
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.CardInfo
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
 
 @Composable
 fun GameOverDialog(onGameOverAcknowledge: () -> Unit) {
@@ -46,17 +51,44 @@ fun LoadingSpinner() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CardItemDisplay(
-    cardItem: DwitchCardInfo,
+fun PlayerHand(
+    cardsInHand: List<CardInfo>,
     onCardClick: (Card) -> Unit
 ) {
-    val surfaceColor = if (cardItem.selectable) Color.Transparent else Color(
-        red = 0.3f,
-        green = 0.3f,
-        blue = 0.3f,
-        alpha = 0.2f
-    )
+    LazyVerticalGrid(
+        cells = GridCells.Fixed(4),
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize()
+            .testTag(UiTags.hand)
+    ) {
+        items(cardsInHand) { card -> CardItemDisplay(card, onCardClick) }
+    }
+}
+
+@ExperimentalFoundationApi
+@Composable
+fun CardItemDisplay(
+    cardItem: CardInfo,
+    onCardClick: (Card) -> Unit
+) {
+    val surfaceColor = when {
+        cardItem.selected -> Color(
+            red = 0.0f,
+            green = 0.3f,
+            blue = 0.0f,
+            alpha = 0.2f
+        )
+        cardItem.selectable -> Color.Transparent
+        else -> Color(
+            red = 0.3f,
+            green = 0.3f,
+            blue = 0.3f,
+            alpha = 0.2f
+        )
+    }
     Image(
         painter = painterResource(ResourceMapper.getImageResource(cardItem.card)),
         contentDescription = stringResource(ResourceMapper.getContentDescriptionResource(cardItem.card)),
@@ -65,7 +97,8 @@ fun CardItemDisplay(
         modifier = Modifier
             .clickable(
                 enabled = cardItem.selectable,
-                onClick = { onCardClick(cardItem.card) }
+                onClick = { onCardClick(cardItem.card) },
+                onClickLabel = "", //TODO
             )
             .testTag(cardItem.card.toString())
 //            .border(

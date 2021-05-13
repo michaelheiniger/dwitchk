@@ -3,6 +3,7 @@ package ch.qscqlmpa.dwitch.ui
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.common.Resource
 import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
@@ -116,6 +117,25 @@ object ResourceMapper {
             Card.DiamondsKing -> R.drawable.diamonds_king
             Card.DiamondsAce -> R.drawable.diamonds_ace
             Card.Blank -> R.drawable.back
+        }
+    }
+
+    fun getContentDescriptionResource(name: CardName): Int {
+        return when (name) {
+            CardName.Ace -> R.string.ace_content_description
+            CardName.Blank -> R.string.blank_content_description
+            CardName.Eight -> R.string.eight_content_description
+            CardName.Five -> R.string.five_content_description
+            CardName.Four -> R.string.four_content_description
+            CardName.Jack -> R.string.jack_content_description
+            CardName.King -> R.string.king_content_description
+            CardName.Nine -> R.string.nine_content_description
+            CardName.Queen -> R.string.queen_content_description
+            CardName.Seven -> R.string.seven_content_description
+            CardName.Six -> R.string.six_content_description
+            CardName.Ten -> R.string.ten_content_description
+            CardName.Three -> R.string.three_content_description
+            CardName.Two -> R.string.two_content_description
         }
     }
 

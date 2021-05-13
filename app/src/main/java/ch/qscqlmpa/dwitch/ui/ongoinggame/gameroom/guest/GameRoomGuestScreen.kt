@@ -13,9 +13,9 @@ import ch.qscqlmpa.dwitch.ui.common.DwitchTopBar
 import ch.qscqlmpa.dwitch.ui.common.NavigationIcon
 import ch.qscqlmpa.dwitch.ui.ongoinggame.GameOverDialog
 import ch.qscqlmpa.dwitch.ui.ongoinggame.LoadingSpinner
-import ch.qscqlmpa.dwitch.ui.ongoinggame.cardexchange.CardExchangeOnGoing
-import ch.qscqlmpa.dwitch.ui.ongoinggame.cardexchange.CardExchangeScreen
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.DashboardScreen
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.cardexchange.CardExchangeOnGoing
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.cardexchange.CardExchangeScreen
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.endofround.EndOfRoundScreen
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
@@ -34,9 +34,9 @@ fun GameRoomHostScreenPreview() {
         showGameOverDialog = false,
         onGameOverAcknowledge = {},
         onCardClick = {},
+        onPlayClick = {},
         onPassClick = {},
         onAddCardToExchange = {},
-        onRemoveCardFromExchange = {},
         onConfirmExchange = {},
         onReconnectClick = {},
         onLeaveGameClick = {}
@@ -52,9 +52,9 @@ fun GameRoomGuestScreen(
     showGameOverDialog: Boolean,
     onGameOverAcknowledge: () -> Unit,
     onCardClick: (Card) -> Unit,
+    onPlayClick: () -> Unit,
     onPassClick: () -> Unit,
     onAddCardToExchange: (card: Card) -> Unit,
-    onRemoveCardFromExchange: (card: Card) -> Unit,
     onConfirmExchange: () -> Unit,
     onReconnectClick: () -> Unit,
     onLeaveGameClick: () -> Unit
@@ -83,17 +83,16 @@ fun GameRoomGuestScreen(
                 is GameRoomScreen.Dashboard -> DashboardScreen(
                     dashboardInfo = screen.dashboardInfo,
                     onCardClick = onCardClick,
+                    onPlayClick = onPlayClick,
                     onPassClick = onPassClick
                 )
                 is GameRoomScreen.EndOfRound -> EndOfRoundScreen(screen.endOfRoundInfo)
                 is GameRoomScreen.CardExchange -> {
                     CardExchangeScreen(
                         numCardsToChoose = screen.cardExchangeState.numCardsToChoose,
-                        cardsToExchange = screen.cardExchangeState.cardsToExchange,
                         cardsInHand = screen.cardExchangeState.cardsInHand,
-                        exchangeControlEnabled = screen.cardExchangeState.canPerformExchange,
-                        onCardToExchangeClick = onRemoveCardFromExchange,
-                        onCardInHandClick = onAddCardToExchange,
+                        canSubmitCardsForExchange = screen.cardExchangeState.canPerformExchange,
+                        onCardClick = onAddCardToExchange,
                         onConfirmExchangeClick = onConfirmExchange
                     )
                 }

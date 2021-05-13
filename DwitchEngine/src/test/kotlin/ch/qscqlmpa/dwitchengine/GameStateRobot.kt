@@ -1,10 +1,10 @@
 package ch.qscqlmpa.dwitchengine
 
-import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameEvent
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.SpecialRuleBreaker
 import org.assertj.core.api.Assertions.assertThat
@@ -16,12 +16,12 @@ class GameStateRobot(private val gameState: DwitchGameState) {
         return this
     }
 
-    fun assertCardsOnTableContains(vararg expectedCards: Card): GameStateRobot {
+    fun assertCardsOnTableContains(vararg expectedCards: PlayedCards): GameStateRobot {
         assertThat(gameState.cardsOnTable).contains(*expectedCards)
         return this
     }
 
-    fun assertCardsOnTable(vararg expectedCards: Card): GameStateRobot {
+    fun assertCardsOnTable(vararg expectedCards: PlayedCards): GameStateRobot {
         assertThat(gameState.cardsOnTable).containsExactly(*expectedCards)
         return this
     }
@@ -81,8 +81,8 @@ class GameStateRobot(private val gameState: DwitchGameState) {
         return this
     }
 
-    fun assertTableContains(card: Card): GameStateRobot {
-        assertThat(gameState.cardsOnTable).contains(card)
+    fun assertTableContains(cards: PlayedCards): GameStateRobot {
+        assertThat(gameState.cardsOnTable).contains(cards)
         return this
     }
 

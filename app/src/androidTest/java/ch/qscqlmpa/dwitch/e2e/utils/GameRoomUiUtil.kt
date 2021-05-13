@@ -11,8 +11,11 @@ object GameRoomUiUtil {
         onNodeWithTag(UiTags.passTurnControl).assertIsDisplayed()
     }
 
-    fun ComposeContentTestRule.assertCardOnTable(card: Card) {
-        onNodeWithTag(UiTags.lastCardPlayed).onChildren().filterToOne(hasTestTag(card.toString())).assertIsDisplayed()
+    fun ComposeContentTestRule.assertCardOnTable(vararg card: Card) {
+        card.forEach { c ->
+            onNodeWithTag(UiTags.lastCardPlayed, useUnmergedTree = true).onChildren().filterToOne(hasTestTag(c.toString()))
+                .assertIsDisplayed()
+        }
     }
 
     fun ComposeContentTestRule.assertCardsInHand(vararg cards: Card) {
@@ -32,20 +35,21 @@ object GameRoomUiUtil {
             .assertIsNotEnabled()
     }
 
-    fun ComposeContentTestRule.playCard(card: Card) {
-        clickOnCardInHand(card)
+    fun ComposeContentTestRule.playCards(vararg card: Card) {
+        card.forEach { c -> clickOnCardInHand(c) }
+        clickOnPlay()
     }
 
     fun ComposeContentTestRule.passTurn() {
         onNodeWithTag(UiTags.passTurnControl).performClick()
     }
 
-    fun ComposeContentTestRule.chooseCardForExchange(card: Card) {
-        clickOnCardInHand(card)
+    fun ComposeContentTestRule.chooseCardsForExchange(vararg card: Card) {
+        card.forEach { c -> clickOnCardInHand(c) }
     }
 
-    fun ComposeContentTestRule.assertCardExchangeControlIsDisabled() {
-        onNodeWithTag(UiTags.confirmCardExchange).assertIsDisplayed()
+    fun ComposeContentTestRule.assertCardExchangeControlIsHidden() {
+        onNodeWithTag(UiTags.confirmCardExchange).assertDoesNotExist()
     }
 
     fun ComposeContentTestRule.assertCardExchangeControlIsEnabled() {
@@ -65,7 +69,7 @@ object GameRoomUiUtil {
     }
 
     fun ComposeContentTestRule.closeGameOverDialog() {
-        onNodeWithTag(UiTags.closeInfoDialog).performClick()
+        onNodeWithTag(UiTags.confirmBtn).performClick()
     }
 
     fun ComposeContentTestRule.endGame() {
@@ -74,6 +78,10 @@ object GameRoomUiUtil {
 
     fun ComposeContentTestRule.startNewRound() {
         onNodeWithTag(UiTags.startNewRound).performClick()
+    }
+
+    private fun ComposeContentTestRule.clickOnPlay() {
+        onNodeWithTag(UiTags.playCardControl).performClick()
     }
 
     private fun ComposeContentTestRule.clickOnCardInHand(card: Card) {

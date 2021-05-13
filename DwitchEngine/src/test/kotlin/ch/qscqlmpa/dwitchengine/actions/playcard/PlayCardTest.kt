@@ -7,6 +7,7 @@ import ch.qscqlmpa.dwitchengine.PlayerRobot
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameEvent
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
+import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import org.assertj.core.api.Assertions.assertThat
@@ -33,7 +34,7 @@ class PlayCardTest : EngineTestBase() {
             initialGameState = gameStateBuilder
                 .addPlayerToGame(p1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(cardPlayed))
                 .addPlayerToGame(p2, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.Diamonds4))
-                .setCardsdOnTable(Card.Spades4)
+                .setCardsdOnTable(PlayedCards(Card.Spades4))
                 .build()
 
             Assertions.assertThrows(IllegalArgumentException::class.java) { launchPlayCardTest(cardPlayed) }
@@ -44,7 +45,7 @@ class PlayCardTest : EngineTestBase() {
             initialGameState = gameStateBuilder
                 .addPlayerToGame(p1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(Card.Clubs3))
                 .addPlayerToGame(p2, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.Diamonds4))
-                .setCardsdOnTable(Card.Spades4)
+                .setCardsdOnTable(PlayedCards(Card.Spades4))
                 .build()
 
             Assertions.assertThrows(IllegalArgumentException::class.java) { launchPlayCardTest(Card.Clubs10) }
@@ -56,14 +57,14 @@ class PlayCardTest : EngineTestBase() {
             initialGameState = gameStateBuilder
                 .addPlayerToGame(p1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(cardPlayed, Card.Spades5))
                 .addPlayerToGame(p2, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.Diamonds4))
-                .setCardsdOnTable(Card.Clubs3)
+                .setCardsdOnTable(PlayedCards(Card.Clubs3))
                 .build()
 
             launchPlayCardTest(cardPlayed)
 
             GameStateRobot(gameStateUpdated)
                 .assertNumCardsOnTable(2)
-                .assertCardsOnTableContains(Card.Clubs3, cardPlayed) // Card has been added to table
+                .assertCardsOnTableContains(PlayedCards(Card.Clubs3), PlayedCards(cardPlayed)) // Card has been added to table
 
             PlayerRobot(gameStateUpdated, p1Id)
                 .assertNumCardsInHand(1)
@@ -80,10 +81,10 @@ class PlayCardTest : EngineTestBase() {
                 .addPlayerToGame(p1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(cardPlayed, Card.Spades5))
                 .addPlayerToGame(p2, DwitchPlayerStatus.Waiting, DwitchRank.Neutral, listOf(Card.Diamonds4))
                 .addPlayerToGame(p3, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.Spades10))
-                .setCardsdOnTable(Card.Spades4)
+                .setCardsdOnTable(PlayedCards(Card.Spades4))
                 .build()
 
-            assertThat(initialGameState.lastCardOnTable()!!.value()).isEqualTo(cardPlayed.value())
+            assertThat(initialGameState.lastCardsPlayed()!!.value).isEqualTo(cardPlayed.value())
 
             launchPlayCardTest(cardPlayed)
 
@@ -106,7 +107,7 @@ class PlayCardTest : EngineTestBase() {
                 .addPlayerToGame(p2, DwitchPlayerStatus.TurnPassed, DwitchRank.ViceAsshole, listOf(Card.Diamonds4))
                 .addPlayerToGame(p3, DwitchPlayerStatus.Waiting, DwitchRank.VicePresident, listOf(Card.Hearts10))
                 .addPlayerToGame(p4, DwitchPlayerStatus.TurnPassed, DwitchRank.President, listOf(Card.HeartsJack))
-                .setCardsdOnTable(Card.Spades3)
+                .setCardsdOnTable(PlayedCards(Card.Spades3))
                 .build()
 
             launchPlayCardTest(cardPlayed)
@@ -129,12 +130,12 @@ class PlayCardTest : EngineTestBase() {
                 .addPlayerToGame(p2, DwitchPlayerStatus.TurnPassed, DwitchRank.ViceAsshole, listOf(Card.Diamonds4))
                 .addPlayerToGame(p3, DwitchPlayerStatus.Waiting, DwitchRank.VicePresident, listOf(Card.Hearts10))
                 .addPlayerToGame(p4, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.HeartsJack))
-                .setCardsdOnTable(Card.Spades3)
+                .setCardsdOnTable(PlayedCards(Card.Spades3))
                 .build()
 
             launchPlayCardTest(cardPlayed)
 
-            GameStateRobot(gameStateUpdated).assertTableContains(cardPlayed)
+            GameStateRobot(gameStateUpdated).assertTableContains(PlayedCards(cardPlayed))
 
             PlayerRobot(gameStateUpdated, p1Id).assertPlayerState(DwitchPlayerStatus.Waiting)
             PlayerRobot(gameStateUpdated, p2Id).assertPlayerState(DwitchPlayerStatus.TurnPassed)
@@ -152,12 +153,12 @@ class PlayCardTest : EngineTestBase() {
                 .addPlayerToGame(p2, DwitchPlayerStatus.TurnPassed, DwitchRank.ViceAsshole, listOf(Card.Diamonds4))
                 .addPlayerToGame(p3, DwitchPlayerStatus.Waiting, DwitchRank.VicePresident, listOf(Card.Hearts10))
                 .addPlayerToGame(p4, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.HeartsJack))
-                .setCardsdOnTable(Card.Spades3)
+                .setCardsdOnTable(PlayedCards(Card.Spades3))
                 .build()
 
             launchPlayCardTest(cardPlayed)
 
-            GameStateRobot(gameStateUpdated).assertTableContains(cardPlayed)
+            GameStateRobot(gameStateUpdated).assertTableContains(PlayedCards(cardPlayed))
 
             PlayerRobot(gameStateUpdated, p1Id).assertPlayerState(DwitchPlayerStatus.Waiting)
             PlayerRobot(gameStateUpdated, p2Id).assertPlayerState(DwitchPlayerStatus.TurnPassed)
@@ -173,7 +174,7 @@ class PlayCardTest : EngineTestBase() {
                 .addPlayerToGame(p2, DwitchPlayerStatus.TurnPassed, DwitchRank.ViceAsshole, listOf(Card.Diamonds4))
                 .addPlayerToGame(p3, DwitchPlayerStatus.Waiting, DwitchRank.VicePresident, listOf(Card.Hearts10))
                 .addPlayerToGame(p4, DwitchPlayerStatus.TurnPassed, DwitchRank.President, listOf(Card.HeartsJack))
-                .setCardsdOnTable(Card.Spades4)
+                .setCardsdOnTable(PlayedCards(Card.Spades4))
                 .build()
 
             launchPlayCardTest(cardPlayed)
@@ -196,7 +197,7 @@ class PlayCardTest : EngineTestBase() {
                 .addPlayerToGame(p1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(cardPlayed))
                 .addPlayerToGame(p2, DwitchPlayerStatus.Waiting, DwitchRank.Neutral, listOf(Card.Diamonds4))
                 .addPlayerToGame(p3, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.Spades10))
-                .setCardsdOnTable(Card.Spades3)
+                .setCardsdOnTable(PlayedCards(Card.Spades3))
                 .build()
 
             launchPlayCardTest(cardPlayed)
@@ -218,7 +219,7 @@ class PlayCardTest : EngineTestBase() {
                 .addPlayerToGame(p1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(cardPlayed))
                 .addPlayerToGame(p2, DwitchPlayerStatus.Waiting, DwitchRank.Neutral, listOf(Card.Diamonds4))
                 .addPlayerToGame(p3, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.Spades10))
-                .setCardsdOnTable(Card.Spades3)
+                .setCardsdOnTable(PlayedCards(Card.Spades3))
                 .build()
 
             launchPlayCardTest(cardPlayed)
@@ -245,7 +246,7 @@ class PlayCardTest : EngineTestBase() {
                 .addPlayerToGame(p2, DwitchPlayerStatus.TurnPassed, DwitchRank.ViceAsshole, listOf(Card.Diamonds4))
                 .addPlayerToGame(p3, DwitchPlayerStatus.Waiting, DwitchRank.VicePresident, listOf(Card.Hearts10))
                 .addPlayerToGame(p4, DwitchPlayerStatus.TurnPassed, DwitchRank.President, listOf(Card.HeartsJack))
-                .setCardsdOnTable(Card.Spades3)
+                .setCardsdOnTable(PlayedCards(Card.Spades3))
                 .build()
 
             launchPlayCardTest(cardPlayed)
@@ -254,7 +255,7 @@ class PlayCardTest : EngineTestBase() {
                 .assertPlayerIsDoneForRound(p1Id)
                 .assertPlayerHasNotFinishedWithJoker(p1Id)
                 .assertTableIsEmpty()
-                .assertGameEvent(DwitchGameEvent.TableHasBeenCleared(cardPlayed))
+                .assertGameEvent(DwitchGameEvent.TableHasBeenCleared(PlayedCards(cardPlayed)))
                 .assertRoundIsNotOver()
 
             PlayerRobot(gameStateUpdated, p1Id).assertPlayerState(DwitchPlayerStatus.Done)
@@ -273,7 +274,7 @@ class PlayCardTest : EngineTestBase() {
                 .addPlayerToGame(p2, DwitchPlayerStatus.TurnPassed, DwitchRank.ViceAsshole, listOf(Card.Diamonds4))
                 .addPlayerToGame(p3, DwitchPlayerStatus.Waiting, DwitchRank.VicePresident, listOf(Card.Hearts10))
                 .addPlayerToGame(p4, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.HeartsJack))
-                .setCardsdOnTable(Card.Spades3)
+                .setCardsdOnTable(PlayedCards(Card.Spades3))
                 .build()
 
             launchPlayCardTest(cardPlayed)
@@ -296,7 +297,7 @@ class PlayCardTest : EngineTestBase() {
             initialGameState = gameStateBuilder
                 .addPlayerToGame(p1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(cardPlayed))
                 .addPlayerToGame(p2, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.Diamonds4))
-                .setCardsdOnTable(Card.Spades3)
+                .setCardsdOnTable(PlayedCards(Card.Spades3))
                 .build()
 
             launchPlayCardTest(cardPlayed)
@@ -324,7 +325,7 @@ class PlayCardTest : EngineTestBase() {
                 .addPlayerToGame(p1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(cardPlayed))
                 .addPlayerToGame(p2, DwitchPlayerStatus.Waiting, DwitchRank.Neutral, listOf(Card.Diamonds4))
                 .addPlayerToGame(p3, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.Spades10))
-                .setCardsdOnTable(Card.Spades3)
+                .setCardsdOnTable(PlayedCards(Card.Spades3))
                 .build()
 
             launchPlayCardTest(cardPlayed)
@@ -349,7 +350,7 @@ class PlayCardTest : EngineTestBase() {
                 .addPlayerToGame(p3, DwitchPlayerStatus.TurnPassed, DwitchRank.VicePresident, listOf(Card.Hearts10))
                 .addPlayerToGame(p4, DwitchPlayerStatus.Done, DwitchRank.President, listOf(Card.HeartsJack))
                 .addPlayerToGame(p5, DwitchPlayerStatus.TurnPassed, DwitchRank.Neutral, listOf(Card.Clubs4))
-                .setCardsdOnTable(Card.Spades4)
+                .setCardsdOnTable(PlayedCards(Card.Spades4))
                 .build()
 
             launchPlayCardTest(cardPlayed)
@@ -372,12 +373,16 @@ class PlayCardTest : EngineTestBase() {
                 .addPlayerToGame(p3, DwitchPlayerStatus.Waiting, DwitchRank.VicePresident, listOf(Card.Hearts10))
                 .addPlayerToGame(p4, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.HeartsJack))
                 .addPlayerToGame(p5, DwitchPlayerStatus.TurnPassed, DwitchRank.Neutral, listOf(Card.Clubs4))
-                .setCardsdOnTable(Card.Spades4, Card.DiamondsJack)
+                .setCardsdOnTable(PlayedCards(Card.Spades4), PlayedCards(Card.DiamondsJack))
                 .build()
 
             launchPlayCardTest(cardPlayed)
 
-            GameStateRobot(gameStateUpdated).assertCardsOnTable(Card.Spades4, Card.DiamondsJack, Card.ClubsQueen)
+            GameStateRobot(gameStateUpdated).assertCardsOnTable(
+                PlayedCards(Card.Spades4),
+                PlayedCards(Card.DiamondsJack),
+                PlayedCards(Card.ClubsQueen)
+            )
 
             PlayerRobot(gameStateUpdated, p1Id).assertPlayerState(DwitchPlayerStatus.Done)
             PlayerRobot(gameStateUpdated, p2Id).assertPlayerState(DwitchPlayerStatus.Playing)
@@ -393,7 +398,7 @@ class PlayCardTest : EngineTestBase() {
         initialGameState = gameStateBuilder
             .addPlayerToGame(p1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(cardPlayed, Card.Diamonds5))
             .addPlayerToGame(p2, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.Diamonds4))
-            .setCardsdOnTable(Card.ClubsJack)
+            .setCardsdOnTable(PlayedCards(Card.ClubsJack))
             .build()
 
         launchPlayCardTest(cardPlayed)
@@ -409,8 +414,8 @@ class PlayCardTest : EngineTestBase() {
         initialGameState = gameStateBuilder
             .addPlayerToGame(p1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(cardPlayed, Card.Diamonds5))
             .addPlayerToGame(p2, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.Diamonds4))
-            .setCardsdOnTable(Card.ClubsJack)
-            .setCardGraveyard(Card.HeartsJack, Card.DiamondsKing)
+            .setCardsdOnTable(PlayedCards(Card.ClubsJack))
+            .setCardGraveyard(PlayedCards(Card.HeartsJack), PlayedCards(Card.DiamondsKing))
             .build()
 
         launchPlayCardTest(cardPlayed)
@@ -422,6 +427,6 @@ class PlayCardTest : EngineTestBase() {
 
     private fun launchPlayCardTest(cardPlayed: Card) {
         val gameState = gameStateBuilder.build()
-        gameStateUpdated = DwitchEngineImpl(gameState).playCard(cardPlayed)
+        gameStateUpdated = DwitchEngineImpl(gameState).playCards(PlayedCards(cardPlayed))
     }
 }

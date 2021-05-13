@@ -6,14 +6,15 @@ import ch.qscqlmpa.dwitchengine.model.card.CardUtil
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameEvent
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.player.*
 
 class EngineTestGameStateBuilder {
 
     private val playersMap = mutableMapOf<DwitchPlayerId, DwitchPlayer>()
 
-    private var cardsOnTable: List<Card> = emptyList()
-    private var cardsInGraveyard: List<Card> = emptyList()
+    private var cardsOnTable: List<PlayedCards> = emptyList()
+    private var cardsInGraveyard: List<PlayedCards> = emptyList()
 
     private var dwitchGameEvent: DwitchGameEvent? = null
     private var joker: CardName = CardName.Two
@@ -24,12 +25,9 @@ class EngineTestGameStateBuilder {
     private val playingOrder: MutableList<DwitchPlayerId> = mutableListOf()
 
     fun build(): DwitchGameState {
-        val cardsTakenFromDeck = playersMap
-            .map { (_, player) -> player.cardsInHand }
-            .flatten()
-            .toMutableList()
-        cardsTakenFromDeck.addAll(cardsOnTable)
-        cardsTakenFromDeck.addAll(cardsInGraveyard)
+        val cardsTakenFromDeck = playersMap.flatMap { (_, player) -> player.cardsInHand }.toMutableList()
+        cardsTakenFromDeck.addAll(cardsOnTable.flatMap(PlayedCards::cards))
+        cardsTakenFromDeck.addAll(cardsInGraveyard.flatMap(PlayedCards::cards))
 
         val activePlayers = playersMap
             .filter { (_, player) -> player.status != DwitchPlayerStatus.Done }
@@ -69,12 +67,12 @@ class EngineTestGameStateBuilder {
         return this
     }
 
-    fun setCardsdOnTable(vararg cardsOnTable: Card): EngineTestGameStateBuilder {
+    fun setCardsdOnTable(vararg cardsOnTable: PlayedCards): EngineTestGameStateBuilder {
         this.cardsOnTable = listOf(*cardsOnTable)
         return this
     }
 
-    fun setCardGraveyard(vararg cardsInGraveyard: Card): EngineTestGameStateBuilder {
+    fun setCardGraveyard(vararg cardsInGraveyard: PlayedCards): EngineTestGameStateBuilder {
         this.cardsInGraveyard = listOf(*cardsInGraveyard)
         return this
     }

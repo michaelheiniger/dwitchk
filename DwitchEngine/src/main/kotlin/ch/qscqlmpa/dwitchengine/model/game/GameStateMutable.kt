@@ -14,9 +14,9 @@ internal data class GameStateMutable(
     val playersWhoBrokeASpecialRule: MutableList<SpecialRuleBreaker>,
     var joker: CardName,
     var dwitchGameEvent: DwitchGameEvent?,
-    val cardsOnTable: MutableList<Card>,
+    val cardsOnTable: MutableList<PlayedCards>,
     val cardsInDeck: MutableSet<Card>,
-    val cardsInGraveyard: MutableList<Card>
+    val cardsInGraveyard: MutableList<PlayedCards>
 ) {
 
     fun addCardToHand(playerId: DwitchPlayerId, card: Card) {
@@ -27,8 +27,9 @@ internal data class GameStateMutable(
         cards.forEach { card -> addCardToHand(playerId, card) }
     }
 
-    fun removeCardFromHand(playerId: DwitchPlayerId, card: Card) {
-        player(playerId).removeCardFromHand(card)
+    fun removeCardsFromHand(playerId: DwitchPlayerId, playedCards: PlayedCards) {
+        val player = player(playerId)
+        playedCards.cards.forEach { card -> player.removeCardFromHand(card) }
     }
 
     fun removeAllCardsForCardExchange(playerId: DwitchPlayerId) {
@@ -43,8 +44,8 @@ internal data class GameStateMutable(
         allPlayers().forEach { p -> p.dwitched = false }
     }
 
-    fun addCardToTable(card: Card) {
-        cardsOnTable.add(card)
+    fun addCardsToTable(cards: PlayedCards) {
+        cardsOnTable.add(cards)
     }
 
     fun setPlayerRank(playerId: DwitchPlayerId, rank: DwitchRank) {
@@ -79,7 +80,7 @@ internal data class GameStateMutable(
         cardsInGraveyard.clear()
     }
 
-    fun setCardsOnTable(card: Card) {
+    fun setCardsOnTable(card: PlayedCards) {
         clearTable()
         cardsOnTable.add(card)
     }

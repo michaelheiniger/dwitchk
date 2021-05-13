@@ -4,6 +4,7 @@ import androidx.compose.ui.test.*
 import ch.qscqlmpa.dwitch.PlayerGuestTest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertCheckboxChecked
+import ch.qscqlmpa.dwitch.clickOnDialogConfirmButton
 import ch.qscqlmpa.dwitch.e2e.base.BaseGuestTest
 import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.PLAYER_CONNECTED
 import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.PLAYER_DISCONNECTED
@@ -67,7 +68,7 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
 
         clientTestStub.serverSendsMessageToClient(Message.CancelGameMessage)
 
-        testRule.onNodeWithText(getString(R.string.ok)).performClick()
+        testRule.clickOnDialogConfirmButton()
 
         assertCurrentScreenIsHomeSreen()
     }

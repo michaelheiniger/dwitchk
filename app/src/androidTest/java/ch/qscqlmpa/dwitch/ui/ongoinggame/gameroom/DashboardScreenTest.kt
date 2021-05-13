@@ -8,11 +8,9 @@ import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
 import ch.qscqlmpa.dwitch.base.BaseUiUnitTest
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
+import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
-import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameDashboardInfo
-import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.LocalPlayerDashboard
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.PlayerInfo
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -20,14 +18,15 @@ import org.junit.Test
 
 class DashboardScreenTest : BaseUiUnitTest() {
 
-    private lateinit var dashboardInfo: GameDashboardInfo
+    private lateinit var dashboardInfo: DashboardInfo
 
     private var anyCardClicked = false
+    private var playClicked = false
     private var passClicked = false
 
     @Before
     fun setup() {
-        dashboardInfo = GameDashboardInfo(
+        dashboardInfo = DashboardInfo(
             listOf(
                 PlayerInfo("Aragorn", DwitchRank.President, DwitchPlayerStatus.Playing, dwitched = false, localPlayer = true),
                 PlayerInfo("Boromir", DwitchRank.VicePresident, DwitchPlayerStatus.Done, dwitched = false, localPlayer = false),
@@ -35,25 +34,26 @@ class DashboardScreenTest : BaseUiUnitTest() {
                 PlayerInfo("Legolas", DwitchRank.Asshole, DwitchPlayerStatus.TurnPassed, dwitched = false, localPlayer = false),
                 PlayerInfo("Galadriel", DwitchRank.ViceAsshole, DwitchPlayerStatus.Waiting, dwitched = true, localPlayer = false)
             ),
-            LocalPlayerDashboard(
+            LocalPlayerInfo(
                 cardsInHand = listOf(
-                    DwitchCardInfo(Card.Clubs2, true),
-                    DwitchCardInfo(Card.Clubs3, false),
-                    DwitchCardInfo(Card.Clubs4, false),
-                    DwitchCardInfo(Card.Clubs5, false),
-                    DwitchCardInfo(Card.Clubs6, false),
-                    DwitchCardInfo(Card.Clubs7, false),
-                    DwitchCardInfo(Card.Clubs8, true),
-                    DwitchCardInfo(Card.Clubs9, true),
-                    DwitchCardInfo(Card.Clubs10, true),
-                    DwitchCardInfo(Card.ClubsJack, true),
+                    CardInfo(Card.Clubs2, selectable = true, selected = true),
+                    CardInfo(Card.Clubs3, selectable = false, selected = false),
+                    CardInfo(Card.Clubs4, selectable = false, selected = false),
+                    CardInfo(Card.Clubs5, selectable = false, selected = false),
+                    CardInfo(Card.Clubs6, selectable = false, selected = false),
+                    CardInfo(Card.Clubs7, selectable = false, selected = false),
+                    CardInfo(Card.Clubs8, selectable = true, selected = false),
+                    CardInfo(Card.Clubs9, selectable = true, selected = false),
+                    CardInfo(Card.Clubs10, selectable = true, selected = false),
+                    CardInfo(Card.ClubsJack, selectable = true, selected = false)
                 ),
                 canPass = false,
                 canPlay = true
             ),
-            lastCardPlayed = Card.Hearts8
+            lastCardPlayed = PlayedCards(Card.Hearts8)
         )
         anyCardClicked = false
+        playClicked = false
         passClicked = false
     }
 
@@ -151,8 +151,30 @@ class DashboardScreenTest : BaseUiUnitTest() {
     }
 
     @Test
-    fun cannotPickACardOrPassWhenControlsAreDisabled() {
-        dashboardInfo = dashboardInfo.copy(localPlayerDashboard = dashboardInfo.localPlayerDashboard.copy(canPass = false))
+    fun cannotPlayACardWhenControlIsDisabled() {
+        dashboardInfo = dashboardInfo.copy(localPlayerInfo = dashboardInfo.localPlayerInfo.copy(canPlay = false))
+
+        launchTest()
+
+        composeTestRule.onNodeWithTag(UiTags.playCardControl).assertDoesNotExist()
+
+        assertThat(playClicked).isFalse
+    }
+
+    @Test
+    fun canPlayACardWhenControlIsEnabled() {
+        dashboardInfo = dashboardInfo.copy(localPlayerInfo = dashboardInfo.localPlayerInfo.copy(canPlay = true))
+
+        launchTest()
+
+        composeTestRule.onNodeWithTag(UiTags.playCardControl).assertIsDisplayed().performClick()
+
+        assertThat(playClicked).isTrue
+    }
+
+    @Test
+    fun cannotPassWhenControlIsDisabled() {
+        dashboardInfo = dashboardInfo.copy(localPlayerInfo = dashboardInfo.localPlayerInfo.copy(canPass = false))
 
         launchTest()
 
@@ -161,11 +183,23 @@ class DashboardScreenTest : BaseUiUnitTest() {
         assertThat(passClicked).isFalse
     }
 
+    @Test
+    fun canPassWhenControlIsEnabled() {
+        dashboardInfo = dashboardInfo.copy(localPlayerInfo = dashboardInfo.localPlayerInfo.copy(canPass = true))
+
+        launchTest()
+
+        composeTestRule.onNodeWithTag(UiTags.passTurnControl).assertIsDisplayed().performClick()
+
+        assertThat(passClicked).isTrue
+    }
+
     private fun launchTest() {
         launchTestWithContent {
             DashboardScreen(
                 dashboardInfo,
                 onCardClick = { anyCardClicked = true },
+                onPlayClick = { playClicked = true },
                 onPassClick = { passClicked = true }
             )
         }

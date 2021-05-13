@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitchengine.model.game
 
-import ch.qscqlmpa.dwitchengine.model.card.Card
 import kotlinx.serialization.Serializable
 
 // TODO: Actually use this information
@@ -9,7 +8,7 @@ import kotlinx.serialization.Serializable
 sealed class DwitchGameEvent {
 
     @Serializable
-    data class TableHasBeenCleared(val lastCardPlayed: Card) : DwitchGameEvent()
+    data class TableHasBeenCleared(val lastCardPlayed: PlayedCards) : DwitchGameEvent()
 
     @Serializable
     object TableHasBeenClearedTurnPassed : DwitchGameEvent()

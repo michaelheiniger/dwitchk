@@ -1,10 +1,10 @@
 package ch.qscqlmpa.dwitchengine.actions.startnewgame
 
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetup
-import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayer
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerOnboardingInfo
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
@@ -30,7 +30,7 @@ internal object GameBootstrap {
         val cardsInDeck = initialGameSetup.getRemainingCards()
         val activePlayers = players.map(DwitchPlayer::id).toSet()
         val joker = CardName.Two
-        val cardGraveyard = emptyList<Card>()
+        val cardGraveyard = emptyList<PlayedCards>()
 
         return DwitchGameState(
             DwitchGamePhase.RoundIsBeginning,

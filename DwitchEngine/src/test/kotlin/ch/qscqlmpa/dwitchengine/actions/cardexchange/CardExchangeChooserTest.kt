@@ -5,6 +5,7 @@ import ch.qscqlmpa.dwitchengine.EngineTestBase
 import ch.qscqlmpa.dwitchengine.PlayerRobot
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
+import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import org.junit.jupiter.api.Assertions
@@ -17,7 +18,7 @@ internal class CardExchangeChooserTest : EngineTestBase() {
     fun setupInitialGameState() {
         gameStateBuilder
             .setGamePhase(DwitchGamePhase.CardExchange)
-            .setCardsdOnTable(Card.Clubs4)
+            .setCardsdOnTable(PlayedCards(Card.Clubs8))
             .setCurrentPlayer(p1Id)
     }
 

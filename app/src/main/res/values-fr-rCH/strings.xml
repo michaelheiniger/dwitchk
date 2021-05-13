@@ -136,6 +136,20 @@
     <string name="diamonds_queen_content_description">Reine de Carreau</string>
     <string name="diamonds_king_content_description">Roi de Carreau</string>
     <string name="diamonds_ace_content_description">As de Carreau</string>
+    <string name="blank_content_description">Blank</string>
+    <string name="two_content_description">Deux</string>
+    <string name="three_content_description">Trois</string>
+    <string name="four_content_description">Quatre</string>
+    <string name="five_content_description">Cinq</string>
+    <string name="six_content_description">Six</string>
+    <string name="seven_content_description">Seot</string>
+    <string name="eight_content_description">Huit</string>
+    <string name="nine_content_description">Neuf</string>
+    <string name="ten_content_description">Dix</string>
+    <string name="jack_content_description">Valet</string>
+    <string name="queen_content_description">Reine</string>
+    <string name="king_content_description">Roi</string>
+    <string name="ace_content_description">As</string>
     <string name="back_content_description">Aucune carte</string>
     <string name="join_specific_game_cd">Rejoindre partie %1$s</string>
     <string name="notify_host_you_are_ready_cd">Informer l\'hôte que tu es prêt(e)</string>
@@ -144,4 +158,5 @@
     <string name="last_card_played_cd">Dernière carte jouée est  %1$s</string>
     <string name="kick_player">Ejecter %1$s</string>
     <string name="you_have_been_kick">Tu as été éjecter par l\'hôte</string>
+    <string name="table_is_empty_cd">La table est vide</string>
 </resources>

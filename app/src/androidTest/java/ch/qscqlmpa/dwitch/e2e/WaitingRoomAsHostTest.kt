@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitch.e2e
 
 import androidx.compose.ui.test.*
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.clickOnDialogConfirmonButton
+import ch.qscqlmpa.dwitch.clickOnDialogConfirmButton
 import ch.qscqlmpa.dwitch.e2e.base.BaseHostTest
 import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.PLAYER_CONNECTED
 import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.PLAYER_DISCONNECTED
@@ -120,7 +120,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
         testRule.onNodeWithTag(UiTags.toolbarNavigationIcon)
             .assertIsDisplayed()
             .performClick()
-        testRule.clickOnDialogConfirmonButton()
+        testRule.clickOnDialogConfirmButton()
 
         val messageSent = waitForNextMessageSentByHost()
         assertThat(messageSent).isInstanceOf(Message.CancelGameMessage::class.java)

@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.gameroom
 
 import ch.qscqlmpa.dwitchengine.model.card.Card
+import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeInfo
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -13,7 +14,7 @@ interface GameFacade {
 }
 
 sealed class GameAction {
-    data class PlayCard(val cardPlayed: Card) : GameAction()
+    data class PlayCard(val cardsPlayed: PlayedCards) : GameAction()
     object PassTurn : GameAction()
     object StartNewRound : GameAction()
     data class SubmitCardsForExchange(val cards: Set<Card>) : GameAction()

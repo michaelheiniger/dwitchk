@@ -7,6 +7,7 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.game.DwitchCardExchange
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.info.DwitchGameInfo
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerOnboardingInfo
@@ -24,10 +25,13 @@ interface DwitchEngine {
     fun getGameInfo(): DwitchGameInfo
 
     /**
-     * Current player plays [cardPlayed].
+     * Current player plays [cardsPlayed].
+     * The value of the card(s) must be equal or greater than the previous card(s) played or be a joker.
+     * Several cards can be played if they have the same [Card.name] and if the number of cards played matches
+     * the number of cards that have been played before (if the table is not empty).
      * @return the updated game state
      */
-    fun playCard(cardPlayed: Card): DwitchGameState
+    fun playCards(cardsPlayed: PlayedCards): DwitchGameState
 
     /**
      * Current player passes its turn. It won't be allowed to play a card until the table is cleared (i.e. a joker is played or

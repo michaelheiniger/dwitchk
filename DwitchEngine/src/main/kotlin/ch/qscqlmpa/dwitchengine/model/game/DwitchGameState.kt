@@ -21,9 +21,9 @@ data class DwitchGameState(
     val playersWhoBrokeASpecialRule: List<SpecialRuleBreaker>,
     val joker: CardName,
     val dwitchGameEvent: DwitchGameEvent?,
-    val cardsOnTable: List<Card>,
+    val cardsOnTable: List<PlayedCards>,
     val cardsInDeck: Set<Card>,
-    val cardsInGraveyard: List<Card>
+    val cardsInGraveyard: List<PlayedCards>
 ) {
 
     init {
@@ -35,7 +35,7 @@ data class DwitchGameState(
             return phase.isOneOf(DwitchGamePhase.RoundIsBeginning, DwitchGamePhase.RoundIsOnGoing)
         }
 
-    fun lastCardOnTable(): Card? {
+    fun lastCardsPlayed(): PlayedCards? {
         return cardsOnTable.lastOrNull()
     }
 
@@ -85,18 +85,20 @@ data class DwitchGameState(
         }
         val allCardsInGame = listOf(
             cardsInDeck,
-            players.map { (_, player) -> player.cardsInHand }.flatten(),
-            players.map { (_, player) -> player.cardsForExchange }.flatten(),
-            cardsOnTable,
-            cardsInGraveyard
+            players.flatMap { (_, player) -> player.cardsInHand },
+            players.flatMap { (_, player) -> player.cardsForExchange },
+            cardsOnTable.flatMap { c -> c.cards },
+            cardsInGraveyard.flatMap { c -> c.cards }
         ).flatten()
 
         // For debug
 //        allCardsInGame
-//            .sortedWith { o1, o2 -> o1.id.value.compareTo(o2.id.value) }
-//            .forEachIndexed { index, c -> Logger.debug { "index: $index, card: $c" } }
+//            .groupBy { c -> c }
+//            .mapValues { (_, v) -> v.size }
+//            .forEach { (name, count) -> Logger.trace { "ID: $name, count: $count" } }
+//            .forEachIndexed { index, c -> Logger.trace { "index: $index, card: $c" } }
 
-        if (allCardsInGame.toSet().size != CardUtil.deckSize) {
+        if (allCardsInGame.size != CardUtil.deckSize) {
             throw IllegalStateException("There must be exactly ${CardUtil.deckSize} cards in the game, actual value: ${allCardsInGame.size}")
         }
 

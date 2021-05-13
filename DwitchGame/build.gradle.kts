@@ -9,7 +9,7 @@ plugins {
 
 android {
     compileSdk = Versions.compileSdkVersion
-
+    buildToolsVersion = Versions.buildToolsVersion
     defaultConfig {
         minSdk = Versions.minSdkVersion
         targetSdk = Versions.targetSdkVersion
@@ -39,7 +39,6 @@ android {
         getByName("test").java.srcDirs("src/test/java", "src/testShared")
         getByName("androidTest").java.srcDirs("src/androidTest/java", "src/testShared")
     }
-    buildToolsVersion = "30.0.2"
 }
 
 dependencies {

@@ -22,6 +22,15 @@ class CardNameValueDescComparator(private val joker: CardName = initialJoker) : 
     }
 }
 
+class CardNameValueAscComparator(joker: CardName = initialJoker) : Comparator<CardName> {
+
+    private val comparator = CardNameValueDescComparator(joker)
+
+    override fun compare(cardName1: CardName, cardName2: CardName): Int {
+        return comparator.compare(cardName2, cardName1)
+    }
+}
+
 class CardValueDescComparator(joker: CardName = initialJoker) : Comparator<Card> {
 
     private val comparator = CardNameValueDescComparator(joker)

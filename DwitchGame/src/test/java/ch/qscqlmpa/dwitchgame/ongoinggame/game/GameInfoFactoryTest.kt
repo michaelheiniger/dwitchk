@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.game
 
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 
+//FIXME
 internal class GameInfoFactoryTest : BaseUnitTest() {
 
 //    @Test

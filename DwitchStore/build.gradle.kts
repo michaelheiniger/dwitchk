@@ -7,7 +7,7 @@ plugins {
 
 android {
     compileSdk = Versions.compileSdkVersion
-
+    buildToolsVersion = Versions.buildToolsVersion
     defaultConfig {
         minSdk = Versions.minSdkVersion
         targetSdk = Versions.targetSdkVersion
@@ -31,7 +31,6 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildToolsVersion = "30.0.2"
 }
 
 dependencies {

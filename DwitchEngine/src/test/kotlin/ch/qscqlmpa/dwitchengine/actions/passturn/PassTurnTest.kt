@@ -6,6 +6,7 @@ import ch.qscqlmpa.dwitchengine.GameStateRobot
 import ch.qscqlmpa.dwitchengine.PlayerRobot
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
+import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import org.junit.jupiter.api.DisplayName
@@ -26,7 +27,7 @@ class PassTurnTest : EngineTestBase() {
                 .addPlayerToGame(p2, DwitchPlayerStatus.TurnPassed, DwitchRank.ViceAsshole, listOf(Card.Clubs4))
                 .addPlayerToGame(p3, DwitchPlayerStatus.Waiting, DwitchRank.VicePresident, listOf(Card.Clubs5))
                 .addPlayerToGame(p4, DwitchPlayerStatus.TurnPassed, DwitchRank.President, listOf(Card.Clubs6))
-                .setCardsdOnTable(Card.Clubs7)
+                .setCardsdOnTable(PlayedCards(Card.Clubs7))
                 .setCurrentPlayer(p1Id)
                 .build()
 
@@ -57,7 +58,7 @@ class PassTurnTest : EngineTestBase() {
                 .addPlayerToGame(p1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(Card.Clubs3))
                 .addPlayerToGame(p2, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.Clubs4))
                 .addPlayerToGame(p3, DwitchPlayerStatus.Done, DwitchRank.Neutral, listOf(Card.Clubs5))
-                .setCardsdOnTable(Card.Clubs7)
+                .setCardsdOnTable(PlayedCards(Card.Clubs7))
                 .setCurrentPlayer(p1Id)
                 .build()
 
@@ -81,7 +82,7 @@ class PassTurnTest : EngineTestBase() {
                 .addPlayerToGame(p2, DwitchPlayerStatus.TurnPassed, DwitchRank.ViceAsshole, listOf(Card.Clubs4))
                 .addPlayerToGame(p3, DwitchPlayerStatus.Waiting, DwitchRank.VicePresident, listOf(Card.Clubs5))
                 .addPlayerToGame(p4, DwitchPlayerStatus.Waiting, DwitchRank.President, listOf(Card.Clubs6))
-                .setCardsdOnTable(Card.Clubs7)
+                .setCardsdOnTable(PlayedCards(Card.Clubs7))
                 .setCurrentPlayer(p1Id)
                 .build()
 
@@ -89,7 +90,7 @@ class PassTurnTest : EngineTestBase() {
 
             GameStateRobot(gameStateUpdated)
                 .assertCurrentPlayerId(p3Id)
-                .assertTableContains(Card.Clubs7)
+                .assertTableContains(PlayedCards(Card.Clubs7))
 
             PlayerRobot(gameStateUpdated, p1Id)
                 .assertPlayerState(DwitchPlayerStatus.TurnPassed)

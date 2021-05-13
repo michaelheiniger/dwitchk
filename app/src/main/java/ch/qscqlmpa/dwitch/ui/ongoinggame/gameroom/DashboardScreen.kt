@@ -1,14 +1,13 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -28,13 +28,11 @@ import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ResourceMapper
 import ch.qscqlmpa.dwitch.ui.common.UiTags
-import ch.qscqlmpa.dwitch.ui.ongoinggame.CardItemDisplay
+import ch.qscqlmpa.dwitch.ui.ongoinggame.PlayerHand
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
+import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
-import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameDashboardInfo
-import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.LocalPlayerDashboard
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.PlayerInfo
 
 @Preview(
@@ -87,44 +85,46 @@ private fun DashboardScreenPreview() {
 
     val players = listOf(donePlayer, turnPassedPlayer, playingPlayer, waitingPlayer, waitingAndDwitchedPlayer)
 
-    val localPlayerDashboard = LocalPlayerDashboard(
+    val localPlayerDashboard = LocalPlayerInfo(
         cardsInHand = listOf(
-            DwitchCardInfo(Card.Clubs2, true),
-            DwitchCardInfo(Card.Hearts5, false),
-            DwitchCardInfo(Card.Diamonds8, true),
-            DwitchCardInfo(Card.SpadesJack, true),
-            DwitchCardInfo(Card.Clubs10, true),
-            DwitchCardInfo(Card.Hearts4, false),
-            DwitchCardInfo(Card.Hearts6, false),
-            DwitchCardInfo(Card.Diamonds9, true),
-            DwitchCardInfo(Card.SpadesAce, true),
-            DwitchCardInfo(Card.ClubsJack, true),
-            DwitchCardInfo(Card.Hearts7, false),
-            DwitchCardInfo(Card.Spades3, false),
-            DwitchCardInfo(Card.Clubs4, false),
-            DwitchCardInfo(Card.Hearts8, true)
+            CardInfo(Card.Clubs2, selectable = false, selected = false),
+            CardInfo(Card.Spades3, selectable = false, selected = false),
+            CardInfo(Card.Hearts4, selectable = false, selected = false),
+            CardInfo(Card.Clubs4, selectable = false, selected = false),
+            CardInfo(Card.Hearts5, selectable = false, selected = false),
+            CardInfo(Card.Hearts6, selectable = false, selected = false),
+            CardInfo(Card.Diamonds8, selectable = true, selected = true),
+            CardInfo(Card.Hearts8, selectable = true, selected = true),
+            CardInfo(Card.Diamonds9, selectable = false, selected = false),
+            CardInfo(Card.Clubs10, selectable = false, selected = false),
+            CardInfo(Card.SpadesJack, selectable = false, selected = false),
+            CardInfo(Card.ClubsJack, selectable = false, selected = false),
+            CardInfo(Card.HeartsJack, selectable = false, selected = false),
+            CardInfo(Card.SpadesAce, selectable = false, selected = false)
         ),
         canPass = false,
         canPlay = true
     )
 
-    val gameDashboardInfo = GameDashboardInfo(
+    val dashboardInfo = DashboardInfo(
         playersInfo = players,
-        localPlayerDashboard = localPlayerDashboard,
-        lastCardPlayed = Card.Clubs8
+        localPlayerInfo = localPlayerDashboard,
+        lastCardPlayed = PlayedCards(listOf(Card.Clubs8, Card.Spades8))
     )
 
     DashboardScreen(
-        dashboardInfo = gameDashboardInfo,
+        dashboardInfo = dashboardInfo,
         onCardClick = {},
+        onPlayClick = {},
         onPassClick = {}
     )
 }
 
 @Composable
 fun DashboardScreen(
-    dashboardInfo: GameDashboardInfo,
+    dashboardInfo: DashboardInfo,
     onCardClick: (Card) -> Unit,
+    onPlayClick: () -> Unit,
     onPassClick: () -> Unit
 ) {
     Column(
@@ -132,20 +132,35 @@ fun DashboardScreen(
             .fillMaxWidth()
             .animateContentSize()
     ) {
-        val localPlayerDashboard = dashboardInfo.localPlayerDashboard
         PlayersInfo(dashboardInfo.playersInfo)
         Spacer(Modifier.height(16.dp))
 
         Table(dashboardInfo.lastCardPlayed)
         Spacer(Modifier.height(16.dp))
 
-        Controls(
-            localPlayerDashboard,
-            onPassClick = onPassClick
-        )
+        Button(
+            enabled = dashboardInfo.localPlayerInfo.canPass,
+            onClick = onPassClick,
+            modifier = Modifier
+                .testTag(UiTags.passTurnControl)
+                .fillMaxWidth()
+        ) {
+            Text(stringResource(R.string.pass_turn))
+        }
         Spacer(Modifier.height(16.dp))
 
-        Hand(localPlayerDashboard, onCardClick = onCardClick)
+        if (dashboardInfo.localPlayerInfo.canPlay) {
+            FloatingActionButton(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .testTag(UiTags.playCardControl),
+                onClick = onPlayClick
+            ) {
+                Text(stringResource(R.string.play_card))
+            }
+        }
+
+        PlayerHand(dashboardInfo.localPlayerInfo.cardsInHand, onCardClick = onCardClick)
     }
 }
 
@@ -168,55 +183,30 @@ private fun PlayersInfo(playersInfo: List<PlayerInfo>) {
 }
 
 @Composable
-private fun Table(lastCardPlayed: Card) {
-    Row(
+private fun Table(lastCardPlayed: PlayedCards?) {
+    val cards = lastCardPlayed?.cards ?: listOf(Card.Blank)
+    val cardOnTableCd = if (lastCardPlayed != null) {
+        val lastCardPlayedRes = stringResource(ResourceMapper.getContentDescriptionResource(lastCardPlayed.name))
+        stringResource(R.string.last_card_played_cd, lastCardPlayed.multiplicity, lastCardPlayedRes)
+    } else {
+        stringResource(R.string.table_is_empty_cd)
+    }
+    LazyRow(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxWidth()
             .testTag(UiTags.lastCardPlayed)
+            .semantics(mergeDescendants = true) {}
     ) {
-        val lastCardPlayedRes = stringResource(ResourceMapper.getContentDescriptionResource(lastCardPlayed))
-        val cardOnTableCd = stringResource(R.string.last_card_played_cd, lastCardPlayedRes)
-        Image(
-            painter = painterResource(ResourceMapper.getImageResource(lastCardPlayed)),
-            contentDescription = cardOnTableCd,
-            modifier = Modifier
-                .size(150.dp)
-                .testTag(lastCardPlayed.toString())
-        )
-    }
-}
-
-@Composable
-private fun Controls(
-    localPlayerDashboard: LocalPlayerDashboard,
-    onPassClick: () -> Unit
-) {
-    Button(
-        enabled = localPlayerDashboard.canPass,
-        onClick = onPassClick,
-        modifier = Modifier
-            .testTag(UiTags.passTurnControl)
-            .fillMaxWidth()
-    ) {
-        Text(stringResource(ch.qscqlmpa.dwitch.R.string.pass_turn))
-    }
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun Hand(
-    localPlayerDashboard: LocalPlayerDashboard,
-    onCardClick: (Card) -> Unit
-) {
-    LazyVerticalGrid(
-        cells = GridCells.Fixed(4),
-        modifier = Modifier
-            .fillMaxWidth()
-            .animateContentSize()
-            .testTag(UiTags.hand)
-    ) {
-        items(localPlayerDashboard.cardsInHand) { card -> CardItemDisplay(card, onCardClick) }
+        items(cards) { card ->
+            Image(
+                painter = painterResource(ResourceMapper.getImageResource(card)),
+                contentDescription = cardOnTableCd,
+                modifier = Modifier
+                    .fillMaxWidth(0.25f) // Max 4 cards can be played at once (1/4 == 0.25)
+                    .testTag(card.toString())
+            )
+        }
     }
 }
 

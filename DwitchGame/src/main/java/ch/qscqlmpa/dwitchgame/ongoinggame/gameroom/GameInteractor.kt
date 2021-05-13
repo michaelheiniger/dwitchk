@@ -24,7 +24,7 @@ internal class GameInteractor @Inject constructor(
     fun performAction(action: GameAction): Completable {
         return when (action) {
             GameAction.PassTurn -> handleGameStateUpdated { engine -> engine.passTurn() }
-            is GameAction.PlayCard -> handleGameStateUpdated { engine -> engine.playCard(action.cardPlayed) }
+            is GameAction.PlayCard -> handleGameStateUpdated { engine -> engine.playCards(action.cardsPlayed) }
             GameAction.StartNewRound -> handleGameStateUpdated { engine -> engine.startNewRound(cardDealerFactory) }
             is GameAction.SubmitCardsForExchange -> cardForExchangeSubmitUsecase.chooseCardForExchange(action.cards)
         }

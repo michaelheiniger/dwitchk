@@ -26,6 +26,6 @@ fun ComposeContentTestRule.assertCheckboxChecked(
     return sni
 }
 
-fun ComposeContentTestRule.clickOnDialogConfirmonButton() {
+fun ComposeContentTestRule.clickOnDialogConfirmButton() {
     onNodeWithTag(UiTags.confirmBtn).performClick()
 }

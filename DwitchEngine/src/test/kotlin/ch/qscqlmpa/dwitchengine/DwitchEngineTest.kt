@@ -7,6 +7,7 @@ import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInit
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerOnboardingInfo
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
@@ -107,9 +108,9 @@ internal class DwitchEngineTest {
             .assertCanStartNewRound(false)
 
         // Player1 plays a card
-        playCard(Card.Diamonds3)
+        playCards(Card.Diamonds3)
         createGameInfoRobot()
-            .assertCardsOnTable(Card.Diamonds3)
+            .assertCardsOnTable(PlayedCards(Card.Diamonds3))
             .assertGamePhase(DwitchGamePhase.RoundIsOnGoing)
         createPlayerInfoRobot(p1Id)
             .assertCanPlay(false)
@@ -117,14 +118,14 @@ internal class DwitchEngineTest {
         createPlayerInfoRobot(p2Id).assertCanPlay(true)
 
         // Player2 plays a card
-        playCard(Card.Clubs4)
-        createGameInfoRobot().assertCardsOnTable(Card.Diamonds3, Card.Clubs4)
+        playCards(Card.Clubs4)
+        createGameInfoRobot().assertCardsOnTable(PlayedCards(Card.Diamonds3), PlayedCards(Card.Clubs4))
         createPlayerInfoRobot(p2Id).assertCanPlay(false)
         createPlayerInfoRobot(p3Id).assertCanPlay(true)
 
         // Player3 plays a card and dwitches Player4
-        playCard(Card.Hearts4)
-        createGameInfoRobot().assertCardsOnTable(Card.Diamonds3, Card.Clubs4, Card.Hearts4)
+        playCards(Card.Hearts4)
+        createGameInfoRobot().assertCardsOnTable(PlayedCards(Card.Diamonds3), PlayedCards(Card.Clubs4), PlayedCards(Card.Hearts4))
         createPlayerInfoRobot(p3Id).assertCanPlay(false)
         createPlayerInfoRobot(p4Id)
             .assertCanPlay(false)
@@ -134,58 +135,84 @@ internal class DwitchEngineTest {
             .assertIsNotDwitched()
 
         // Player5 plays a card
-        playCard(Card.Diamonds10)
-        createGameInfoRobot().assertCardsOnTable(Card.Diamonds3, Card.Clubs4, Card.Hearts4, Card.Diamonds10)
+        playCards(Card.Diamonds10)
+        createGameInfoRobot().assertCardsOnTable(
+            PlayedCards(Card.Diamonds3),
+            PlayedCards(Card.Clubs4),
+            PlayedCards(Card.Hearts4),
+            PlayedCards(Card.Diamonds10)
+        )
         createPlayerInfoRobot(p5Id).assertCanPlay(false)
         createPlayerInfoRobot(p1Id).assertCanPlay(true)
 
         // Player1 passes
         passTurn()
-        createGameInfoRobot().assertCardsOnTable(Card.Diamonds3, Card.Clubs4, Card.Hearts4, Card.Diamonds10)
+        createGameInfoRobot().assertCardsOnTable(
+            PlayedCards(Card.Diamonds3),
+            PlayedCards(Card.Clubs4),
+            PlayedCards(Card.Hearts4),
+            PlayedCards(Card.Diamonds10)
+        )
         createPlayerInfoRobot(p1Id)
             .assertCanPlay(false)
             .assertHand(Card.Diamonds2, Card.Diamonds5)
         createPlayerInfoRobot(p2Id).assertCanPlay(true)
 
         // Player2 plays a card
-        playCard(Card.ClubsKing)
-        createGameInfoRobot().assertCardsOnTable(Card.Diamonds3, Card.Clubs4, Card.Hearts4, Card.Diamonds10, Card.ClubsKing)
+        playCards(Card.ClubsKing)
+        createGameInfoRobot().assertCardsOnTable(
+            PlayedCards(Card.Diamonds3),
+            PlayedCards(Card.Clubs4),
+            PlayedCards(Card.Hearts4),
+            PlayedCards(Card.Diamonds10),
+            PlayedCards(Card.ClubsKing)
+        )
         createPlayerInfoRobot(p2Id).assertCanPlay(false)
         createPlayerInfoRobot(p3Id).assertCanPlay(true)
 
         // Player3 passes
         passTurn()
-        createGameInfoRobot().assertCardsOnTable(Card.Diamonds3, Card.Clubs4, Card.Hearts4, Card.Diamonds10, Card.ClubsKing)
+        createGameInfoRobot().assertCardsOnTable(
+            PlayedCards(Card.Diamonds3),
+            PlayedCards(Card.Clubs4),
+            PlayedCards(Card.Hearts4),
+            PlayedCards(Card.Diamonds10),
+            PlayedCards(Card.ClubsKing)
+        )
         createPlayerInfoRobot(p3Id).assertCanPlay(false)
         createPlayerInfoRobot(p4Id).assertCanPlay(true)
 
         // Player4 plays a joker
-        playCard(Card.Spades2)
+        playCards(Card.Spades2)
         createGameInfoRobot().assertTableIsEmpty()
         createPlayerInfoRobot(p4Id).assertCanPlay(true) // Player4 can play another card after a joker
         createPlayerInfoRobot(p5Id).assertCanPlay(false)
 
         // Player4 plays a card
-        playCard(Card.Spades4)
-        createGameInfoRobot().assertCardsOnTable(Card.Spades4)
+        playCards(Card.Spades4)
+        createGameInfoRobot().assertCardsOnTable(PlayedCards(Card.Spades4))
         createPlayerInfoRobot(p4Id).assertCanPlay(false)
         createPlayerInfoRobot(p5Id).assertCanPlay(true)
 
         // Player5 plays a card: First Jack of the round !
-        playCard(Card.DiamondsJack)
-        createGameInfoRobot().assertCardsOnTable(Card.Spades4, Card.DiamondsJack)
+        playCards(Card.DiamondsJack)
+        createGameInfoRobot().assertCardsOnTable(PlayedCards(Card.Spades4), PlayedCards(Card.DiamondsJack))
         createPlayerInfoRobot(p5Id).assertCanPlay(false)
         createPlayerInfoRobot(p1Id).assertCanPlay(true)
 
         // Player1 passes
         passTurn()
-        createGameInfoRobot().assertCardsOnTable(Card.Spades4, Card.DiamondsJack)
+        createGameInfoRobot().assertCardsOnTable(PlayedCards(Card.Spades4), PlayedCards(Card.DiamondsJack))
         createPlayerInfoRobot(p1Id).assertCanPlay(false)
         createPlayerInfoRobot(p2Id).assertCanPlay(true)
 
         // Player2 plays its last card
-        playCard(Card.ClubsQueen) // Card played on top of the first Jack of the round: Player2 breaks a special rule !
-        createGameInfoRobot().assertCardsOnTable(Card.Spades4, Card.DiamondsJack, Card.ClubsQueen)
+        playCards(Card.ClubsQueen) // Card played on top of the first Jack of the round: Player2 breaks a special rule !
+        createGameInfoRobot().assertCardsOnTable(
+            PlayedCards(Card.Spades4),
+            PlayedCards(Card.DiamondsJack),
+            PlayedCards(Card.ClubsQueen)
+        )
         createPlayerInfoRobot(p2Id)
             .assertCanPlay(false)
             .assertPlayerStatus(DwitchPlayerStatus.Done)
@@ -194,7 +221,11 @@ internal class DwitchEngineTest {
 
         // Player3 passes
         passTurn()
-        createGameInfoRobot().assertCardsOnTable(Card.Spades4, Card.DiamondsJack, Card.ClubsQueen)
+        createGameInfoRobot().assertCardsOnTable(
+            PlayedCards(Card.Spades4),
+            PlayedCards(Card.DiamondsJack),
+            PlayedCards(Card.ClubsQueen)
+        )
         createPlayerInfoRobot(p3Id).assertCanPlay(false)
         createPlayerInfoRobot(p4Id).assertCanPlay(true)
 
@@ -205,8 +236,8 @@ internal class DwitchEngineTest {
         createPlayerInfoRobot(p5Id).assertCanPlay(true)
 
         // Player5 plays its last card
-        playCard(Card.HeartsAce)
-        createGameInfoRobot().assertCardsOnTable(Card.HeartsAce)
+        playCards(Card.HeartsAce)
+        createGameInfoRobot().assertCardsOnTable(PlayedCards(Card.HeartsAce))
         createPlayerInfoRobot(p5Id)
             .assertCanPlay(false)
             .assertPlayerStatus(DwitchPlayerStatus.Done)
@@ -214,14 +245,14 @@ internal class DwitchEngineTest {
         createPlayerInfoRobot(p1Id).assertCanPlay(true)
 
         // Player1 plays a joker
-        playCard(Card.Diamonds2)
+        playCards(Card.Diamonds2)
         createGameInfoRobot().assertTableIsEmpty()
         createPlayerInfoRobot(p1Id).assertCanPlay(true)
         createPlayerInfoRobot(p2Id).assertCanPlay(false)
 
         // Player1 plays its last card
-        playCard(Card.Diamonds5)
-        createGameInfoRobot().assertCardsOnTable(Card.Diamonds5)
+        playCards(Card.Diamonds5)
+        createGameInfoRobot().assertCardsOnTable(PlayedCards(Card.Diamonds5))
         createPlayerInfoRobot(p1Id)
             .assertCanPlay(false)
             .assertCanStartNewRound(false)
@@ -240,7 +271,7 @@ internal class DwitchEngineTest {
             .assertCanPlay(true)
 
         // Player4 plays its last card and ends the round
-        playCard(Card.Spades6)
+        playCards(Card.Spades6)
         createGameInfoRobot().assertGamePhase(DwitchGamePhase.RoundIsOver)
         createPlayerInfoRobot(p1Id)
             .assertCanPlay(false)
@@ -293,8 +324,8 @@ internal class DwitchEngineTest {
         createPlayerInfoRobot(p5Id).assertCanPlay(false)
     }
 
-    private fun playCard(card: Card) {
-        gameState = DwitchEngineImpl(gameState).playCard(card)
+    private fun playCards(vararg cards: Card) {
+        gameState = DwitchEngineImpl(gameState).playCards(PlayedCards(listOf(*cards)))
     }
 
     private fun passTurn() {
@@ -313,7 +344,7 @@ internal class DwitchEngineTest {
     }
 
     private fun assertCardExchangeRequired(playerId: DwitchPlayerId) {
-        assertThat(DwitchEngineImpl(gameState).getCardExchangeIfRequired(playerId)).isNotNull()
+        assertThat(DwitchEngineImpl(gameState).getCardExchangeIfRequired(playerId)).isNotNull
     }
 
     private fun assertNoCardExchangeRequired(playerId: DwitchPlayerId) {

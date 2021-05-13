@@ -55,7 +55,7 @@ fun InfoDialog(
                         onOkClick()
                         openDialog.value = false
                     },
-                    modifier = Modifier.testTag(UiTags.closeInfoDialog)
+                    modifier = Modifier.testTag(UiTags.confirmBtn)
                 ) {
                     Text(text = stringResource(R.string.ok), color = Color.Black)
                 }
