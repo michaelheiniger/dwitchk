@@ -37,24 +37,24 @@ dependencies {
     implementation(project(path = ":DwitchEngine"))
     implementation(project(path = ":DwitchModel"))
 
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.4.32") // Prevent compiler warning (implicit dependency)
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.0") // Prevent compiler warning (implicit dependency)
 
     // Logging
-    implementation("org.tinylog:tinylog-api-kotlin:2.3.0-M2")
+    implementation("org.tinylog:tinylog-api-kotlin:2.4.0-M1")
 
     // Room database
-    implementation("androidx.room:room-runtime:2.4.0-alpha01")
-    implementation("androidx.room:room-rxjava3:2.4.0-alpha01")
-    kapt("androidx.room:room-compiler:2.4.0-alpha01")
-    testImplementation("androidx.room:room-testing:2.4.0-alpha01")
+    implementation("androidx.room:room-runtime:2.4.0-alpha02")
+    implementation("androidx.room:room-rxjava3:2.4.0-alpha02")
+    kapt("androidx.room:room-compiler:2.4.0-alpha02")
+    testImplementation("androidx.room:room-testing:2.4.0-alpha02")
 
     // Dagger
-    implementation("com.google.dagger:dagger-android-support:2.30.1")
-    implementation("com.google.dagger:dagger-android:2.30.1")
-    implementation("com.google.dagger:dagger:2.30.1")
-    kapt("com.google.dagger:dagger-android-processor:2.30.1")
-    kapt("com.google.dagger:dagger-compiler:2.30.1")
-    kaptAndroidTest("com.google.dagger:dagger-compiler:2.30.1")
+    implementation("com.google.dagger:dagger-android-support:2.35.1")
+    implementation("com.google.dagger:dagger-android:2.35.1")
+    implementation("com.google.dagger:dagger:2.35.1")
+    kapt("com.google.dagger:dagger-android-processor:2.35.1")
+    kapt("com.google.dagger:dagger-compiler:2.35.1")
+    kaptAndroidTest("com.google.dagger:dagger-compiler:2.35.1")
 
     // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc")
@@ -63,12 +63,12 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
 
     // MockK
-    testImplementation("io.mockk:mockk:1.9.3")
-    androidTestImplementation("io.mockk:mockk-android:1.9.3")
+    testImplementation("io.mockk:mockk:1.11.0")
+    androidTestImplementation("io.mockk:mockk-android:1.11.0")
 
     // AssertJ
-    testImplementation("org.assertj:assertj-core:3.18.1")
-    androidTestImplementation("org.assertj:assertj-core:3.18.1")
+    testImplementation("org.assertj:assertj-core:3.19.0")
+    androidTestImplementation("org.assertj:assertj-core:3.19.0")
 
     // Android testing stuff
     androidTestImplementation("androidx.test:core:1.3.0")
@@ -76,9 +76,9 @@ dependencies {
     androidTestImplementation("androidx.test:runner:1.3.0")
     androidTestImplementation("androidx.test:rules:1.3.0")
     androidTestImplementation("androidx.test.ext:junit-ktx:1.1.2")
-    androidTestUtil("androidx.test:orchestrator:1.4.0-alpha05")
+    androidTestUtil("androidx.test:orchestrator:1.4.0-alpha06")
     testImplementation("android.arch.core:core-testing:1.1.1")
 
     // Joda time
-    implementation("joda-time:joda-time:2.10.1")
+    implementation("joda-time:joda-time:2.10.10")
 }

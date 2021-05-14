@@ -13,11 +13,11 @@ dependencies {
     implementation(project(path = ":DwitchModel"))
 
     // Logging
-    implementation("org.tinylog:tinylog-api-kotlin:2.3.0-M2")
+    implementation("org.tinylog:tinylog-api-kotlin:2.4.0-M1")
 
     // Dagger
-    implementation("com.google.dagger:dagger:2.30.1")
-    kapt("com.google.dagger:dagger-compiler:2.30.1")
+    implementation("com.google.dagger:dagger:2.35.1")
+    kapt("com.google.dagger:dagger-compiler:2.35.1")
 
     // RxJava
     implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")

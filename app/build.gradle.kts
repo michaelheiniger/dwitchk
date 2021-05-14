@@ -91,12 +91,12 @@ dependencies {
     implementation("com.google.android.material:material:1.3.0")
 
     // Dagger
-    implementation("com.google.dagger:dagger-android-support:2.30.1")
-    implementation("com.google.dagger:dagger-android:2.30.1")
-    implementation("com.google.dagger:dagger:2.30.1")
-    kapt("com.google.dagger:dagger-android-processor:2.30.1")
-    kapt("com.google.dagger:dagger-compiler:2.30.1")
-    kaptAndroidTest("com.google.dagger:dagger-compiler:2.30.1")
+    implementation("com.google.dagger:dagger-android-support:2.35.1")
+    implementation("com.google.dagger:dagger-android:2.35.1")
+    implementation("com.google.dagger:dagger:2.35.1")
+    kapt("com.google.dagger:dagger-android-processor:2.35.1")
+    kapt("com.google.dagger:dagger-compiler:2.35.1")
+    kaptAndroidTest("com.google.dagger:dagger-compiler:2.35.1")
 
     // Logging
     implementation("org.tinylog:tinylog-api-kotlin:2.2.1")
@@ -108,7 +108,7 @@ dependencies {
     implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
 
     // Joda time
-    implementation("joda-time:joda-time:2.10.1")
+    implementation("joda-time:joda-time:2.10.10")
 
     // JUnit4 (For ViewModel unit tests and instrumented tests)
     testImplementation("junit:junit:4.13.2")
@@ -119,7 +119,7 @@ dependencies {
     androidTestImplementation("androidx.test:core:1.3.0")
     androidTestImplementation("androidx.test:rules:1.3.0")
     androidTestImplementation("androidx.test:runner:1.3.0")
-    androidTestUtil("androidx.test:orchestrator:1.4.0-alpha05")
+    androidTestUtil("androidx.test:orchestrator:1.4.0-alpha06")
 
     // Espresso (needed for CounterIdlingResource)
     androidTestImplementation("androidx.test.espresso:espresso-contrib:3.3.0")
@@ -128,14 +128,14 @@ dependencies {
     testImplementation("android.arch.core:core-testing:1.1.1")
 
     // MockK
-    testImplementation("io.mockk:mockk:1.9.3")
+    testImplementation("io.mockk:mockk:1.11.0")
 
     // AssertJ
-    testImplementation("org.assertj:assertj-core:3.18.1")
-    androidTestImplementation("org.assertj:assertj-core:3.18.1")
+    testImplementation("org.assertj:assertj-core:3.19.0")
+    androidTestImplementation("org.assertj:assertj-core:3.19.0")
 
     // ####### Jetpack Compose #######
-    val composeVersion = "1.0.0-beta05"
+    val composeVersion = "1.0.0-beta06"
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
@@ -144,7 +144,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
     implementation("androidx.compose.runtime:runtime-rxjava3:$composeVersion")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.0-beta05")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.0-beta06")
     androidTestImplementation("androidx.compose.ui:ui-test:$composeVersion")
 
     implementation("androidx.activity:activity-compose:1.3.0-alpha07")

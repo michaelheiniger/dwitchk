@@ -12,7 +12,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc")
 
     // Joda time
-    implementation("joda-time:joda-time:2.10.1")
+    implementation("joda-time:joda-time:2.10.10")
 }
 
 java {
