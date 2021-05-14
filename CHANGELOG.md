@@ -1,12 +1,10 @@
-# Dwitch
+# Change log
 
-## Releases
-
-### 1.0.0-beta (21.04.2021)
+## 1.0.0-beta (21.04.2021)
 
 - initial release
 
-### 1.0.1-beta (28.04.2021)
+## 1.0.1-beta (28.04.2021)
 
 #### UX enhancements:
 
