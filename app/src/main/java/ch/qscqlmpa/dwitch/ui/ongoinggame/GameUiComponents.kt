@@ -21,6 +21,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ResourceMapper
 import ch.qscqlmpa.dwitch.ui.common.InfoDialog
@@ -68,19 +69,22 @@ fun PlayerHand(
     }
 }
 
-@ExperimentalFoundationApi
+@Preview(
+    showBackground = true,
+    backgroundColor = 0xFFFFFFFF
+)
+@Composable
+private fun CardItemDisplayPreview() {
+    CardItemDisplay(cardItem = CardInfo(Card.Hearts10, selectable = true, selected = true), onCardClick = {})
+}
+
 @Composable
 fun CardItemDisplay(
     cardItem: CardInfo,
     onCardClick: (Card) -> Unit
 ) {
     val surfaceColor = when {
-        cardItem.selected -> Color(
-            red = 0.0f,
-            green = 0.3f,
-            blue = 0.0f,
-            alpha = 0.2f
-        )
+        cardItem.selected -> MaterialTheme.colors.secondary
         cardItem.selectable -> Color.Transparent
         else -> Color(
             red = 0.3f,
@@ -101,10 +105,5 @@ fun CardItemDisplay(
                 onClickLabel = "", //TODO
             )
             .testTag(cardItem.card.toString())
-//            .border(
-//                width = Dp.Hairline,
-//                brush = Brush.linearGradient(listOf(Color.Black, Color.Black)),
-//                shape = RoundedCornerShape(10.dp, 10.dp, 10.dp, 10.dp)
-//            )
     )
 }
