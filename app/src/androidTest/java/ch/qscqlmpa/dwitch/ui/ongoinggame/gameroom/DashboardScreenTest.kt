@@ -173,12 +173,12 @@ class DashboardScreenTest : BaseUiUnitTest() {
     }
 
     @Test
-    fun cannotPassWhenControlIsDisabled() {
+    fun cannotPassWhenControlIsHidden() {
         dashboardInfo = dashboardInfo.copy(localPlayerInfo = dashboardInfo.localPlayerInfo.copy(canPass = false))
 
         launchTest()
 
-        composeTestRule.onNodeWithTag(UiTags.passTurnControl).assertIsDisplayed().performClick()
+        composeTestRule.onNodeWithTag(UiTags.passTurnControl).assertDoesNotExist()
 
         assertThat(passClicked).isFalse
     }
