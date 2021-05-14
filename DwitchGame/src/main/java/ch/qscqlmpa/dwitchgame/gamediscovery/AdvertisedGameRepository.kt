@@ -55,14 +55,18 @@ internal class AdvertisedGameRepository @Inject constructor(
             .subscribeOn(schedulerFactory.io())
     }
 
-    private fun updateLocalMap(advertisedGame: AdvertisedGame): Map<IpAddress, AdvertisedGame> {
-        val timeNow = LocalTime.now()
+    private fun updateLocalMap(advertisedGame: AdvertisedGame) {
+        // Add new ad
         advertisedGames[IpAddress(advertisedGame.gameIpAddress)] = advertisedGame
-        return advertisedGames.filterValues { game -> gameAdIsRecentEnough(timeNow, game) }
+
+        // Remove obsolete ads
+        val timeNow = LocalTime.now()
+        advertisedGames.filterValues { game -> adIsTooOld(timeNow, game) }.keys
+            .forEach { ip -> advertisedGames.remove(ip) }
     }
 
-    private fun gameAdIsRecentEnough(timeNow: LocalTime, game: AdvertisedGame): Boolean {
-        return timeNow.minusSeconds(GAME_AD_TIMEOUT_SEC) <= game.discoveryTime
+    private fun adIsTooOld(timeNow: LocalTime, game: AdvertisedGame): Boolean {
+        return timeNow.minusSeconds(GAME_AD_TIMEOUT_SEC) > game.discoveryTime
     }
 
     private data class IpAddress(val value: String)
