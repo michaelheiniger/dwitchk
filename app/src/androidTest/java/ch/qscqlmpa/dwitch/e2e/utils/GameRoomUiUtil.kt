@@ -8,12 +8,14 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 object GameRoomUiUtil {
 
     fun ComposeContentTestRule.assertGameRoomIsDisplayed() {
-        onNodeWithTag(UiTags.passTurnControl).assertIsDisplayed()
+        onNodeWithTag(UiTags.gameRoomPlayersInfo).assertIsDisplayed()
     }
 
     fun ComposeContentTestRule.assertCardOnTable(vararg card: Card) {
         card.forEach { c ->
-            onNodeWithTag(UiTags.lastCardPlayed, useUnmergedTree = true).onChildren().filterToOne(hasTestTag(c.toString()))
+            onNodeWithTag(UiTags.lastCardPlayed, useUnmergedTree = true)
+                .onChildren()
+                .filterToOne(hasTestTag(c.toString()))
                 .assertIsDisplayed()
         }
     }
@@ -31,8 +33,7 @@ object GameRoomUiUtil {
 
     fun ComposeContentTestRule.assertPlayerCannotPassTurn() {
         onNodeWithTag(UiTags.passTurnControl)
-            .assertIsDisplayed()
-            .assertIsNotEnabled()
+            .assertDoesNotExist()
     }
 
     fun ComposeContentTestRule.playCards(vararg card: Card) {

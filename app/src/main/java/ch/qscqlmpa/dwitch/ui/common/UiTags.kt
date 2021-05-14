@@ -20,4 +20,5 @@ object UiTags {
     const val reconnect = "reconnect"
     const val toolbarNavigationIcon = "toolbarNavigationIcon"
     const val addComputerPlayer = "addComputerPlayer"
+    const val gameRoomPlayersInfo = "gameRoomPlayersInfo"
 }
