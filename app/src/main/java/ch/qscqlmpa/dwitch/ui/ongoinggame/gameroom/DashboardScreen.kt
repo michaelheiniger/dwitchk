@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -102,7 +101,7 @@ private fun DashboardScreenPreview() {
             CardInfo(Card.HeartsJack, selectable = false, selected = false),
             CardInfo(Card.SpadesAce, selectable = false, selected = false)
         ),
-        canPass = false,
+        canPass = true,
         canPlay = true
     )
 
@@ -138,30 +137,43 @@ fun DashboardScreen(
         Table(dashboardInfo.lastCardPlayed)
         Spacer(Modifier.height(16.dp))
 
-        Button(
-            enabled = dashboardInfo.localPlayerInfo.canPass,
-            onClick = onPassClick,
-            modifier = Modifier
-                .testTag(UiTags.passTurnControl)
-                .fillMaxWidth()
-        ) {
-            Text(stringResource(R.string.pass_turn))
-        }
+        Controls(dashboardInfo, onPassClick = onPassClick, onPlayClick = onPlayClick)
         Spacer(Modifier.height(16.dp))
+        PlayerHand(dashboardInfo.localPlayerInfo.cardsInHand, onCardClick = onCardClick)
+    }
+}
 
+@Composable
+private fun Controls(
+    dashboardInfo: DashboardInfo,
+    onPassClick: () -> Unit,
+    onPlayClick: () -> Unit
+) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize()
+    ) {
+        if (dashboardInfo.localPlayerInfo.canPass) {
+            FloatingActionButton(
+                backgroundColor = MaterialTheme.colors.primary,
+                modifier = Modifier.testTag(UiTags.passTurnControl),
+                onClick = onPassClick
+            ) {
+                Text(stringResource(R.string.pass_turn))
+            }
+            Spacer(Modifier.width(16.dp))
+        }
         if (dashboardInfo.localPlayerInfo.canPlay) {
             FloatingActionButton(
                 backgroundColor = MaterialTheme.colors.primary,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .testTag(UiTags.playCardControl),
+                modifier = Modifier.testTag(UiTags.playCardControl),
                 onClick = onPlayClick
             ) {
                 Text(stringResource(R.string.play_card))
             }
         }
-
-        PlayerHand(dashboardInfo.localPlayerInfo.cardsInHand, onCardClick = onCardClick)
     }
 }
 
