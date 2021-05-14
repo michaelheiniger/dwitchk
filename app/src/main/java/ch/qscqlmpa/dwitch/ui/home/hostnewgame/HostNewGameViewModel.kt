@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitch.ui.home.hostnewgame
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
 import io.reactivex.rxjava3.core.Scheduler
@@ -20,11 +21,11 @@ class HostNewGameViewModel @Inject constructor(
     private val _gameName = MutableLiveData("")
 
     init {
-//        if (BuildConfig.DEBUG) { //TODO: Create variant DEV ??
-//            _createGameControl.value = true
-//            _playerName.value = "Mirlick"
-//            _gameName.value = "Dwiiitch"
-//        }
+        if (BuildConfig.DEBUG) {
+            _createGameControl.value = true
+            _playerName.value = "Mirlick"
+            _gameName.value = "Dwiiitch"
+        }
     }
 
     val navigationCommand get(): LiveData<HostNewGameNavigationCommand> = _navigationCommand

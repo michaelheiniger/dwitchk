@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.home.joinnewgame
 
+import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
@@ -13,6 +14,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.fail
 import org.junit.Assert.assertNull
+import org.junit.Assume
 import org.junit.Before
 import org.junit.Test
 
@@ -32,6 +34,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
 
     @Test
     fun `Join game control is initially disabled`() {
+        Assume.assumeFalse("We are in debug variant", BuildConfig.DEBUG)
         assertThat(viewModel.joinGameControl.value).isEqualTo(false)
     }
 
