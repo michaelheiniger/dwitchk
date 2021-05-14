@@ -27,7 +27,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc")
 
     // Java-WebSocket
-    implementation("org.java-websocket:Java-WebSocket:1.5.1")
+    implementation("org.java-websocket:Java-WebSocket:1.5.2")
 }
 
 java {

@@ -5,6 +5,7 @@ import org.java_websocket.drafts.Draft
 import org.java_websocket.enums.Opcode
 import org.java_websocket.enums.ReadyState
 import org.java_websocket.framing.Framedata
+import org.java_websocket.protocols.IProtocol
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
 import javax.net.ssl.SSLSession
@@ -109,5 +110,9 @@ internal class TestWebSocket(private val remoteAddress: String, private val remo
 
     override fun isClosed(): Boolean {
         throw NotImplementedError()
+    }
+
+    override fun getProtocol(): IProtocol? {
+        return null
     }
 }
