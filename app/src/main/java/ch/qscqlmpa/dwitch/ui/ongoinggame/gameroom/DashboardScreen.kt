@@ -151,6 +151,7 @@ fun DashboardScreen(
 
         if (dashboardInfo.localPlayerInfo.canPlay) {
             FloatingActionButton(
+                backgroundColor = MaterialTheme.colors.primary,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .testTag(UiTags.playCardControl),
