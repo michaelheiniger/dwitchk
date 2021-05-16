@@ -6,6 +6,8 @@ plugins {
     id("kotlin-android")
 }
 
+val composeVersion = "1.0.0-beta06"
+
 android {
     compileSdk = Versions.compileSdkVersion
     buildToolsVersion = Versions.buildToolsVersion
@@ -55,8 +57,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.0.0-beta05"
-
+        kotlinCompilerExtensionVersion = composeVersion
     }
 
     lint {
@@ -135,7 +136,6 @@ dependencies {
     androidTestImplementation("org.assertj:assertj-core:3.19.0")
 
     // ####### Jetpack Compose #######
-    val composeVersion = "1.0.0-beta06"
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
