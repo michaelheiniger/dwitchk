@@ -71,22 +71,27 @@ fun HomeScreen(
 ) {
     Column(
         Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .animateContentSize()
     ) {
         DwitchTopBar(title = R.string.app_name)
         Column(
             Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .animateContentSize()
-                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
 
         ) {
-            AdvertisedGameContainer(advertisedGames, onJoinGameClick)
-            Spacer(Modifier.height(16.dp))
-            GameCreation(onCreateNewGameClick)
-            Spacer(Modifier.height(16.dp))
-            ResumableGamesContainer(resumableGames, onResumableGameClick)
+            Column(Modifier.fillMaxSize().weight(1f)) {
+                AdvertisedGameContainer(advertisedGames, onJoinGameClick)
+                Spacer(Modifier.height(16.dp))
+                Row(horizontalArrangement = Arrangement.End) {
+                    GameCreation(onCreateNewGameClick = onCreateNewGameClick)
+                }
+            }
+            Column(Modifier.fillMaxSize().weight(1f)) {
+                ResumableGamesContainer(resumableGames, onResumableGameClick)
+            }
         }
     }
 }
@@ -127,22 +132,24 @@ private fun AdvertisedGames(
     advertisedGames: List<AdvertisedGame>,
     onJoinGameClick: (AdvertisedGame) -> Unit
 ) {
-    if (advertisedGames.isEmpty()) {
-        ListeningForAdvertisedGames()
-    } else {
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-        ) {
-            items(advertisedGames) { game ->
-                val text = if (BuildConfig.DEBUG) "${game.gameName} (${game.gameIpAddress})" else game.gameName
-                val contentDescription = stringResource(R.string.join_specific_game_cd, game.gameName)
-                Text(
-                    text = text,
-                    Modifier
-                        .clickable { onJoinGameClick(game) }
-                        .semantics { this.contentDescription = contentDescription }
-                )
+    LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+
+        if (advertisedGames.isEmpty()) {
+            item {
+                ListeningForAdvertisedGames()
             }
+        }
+
+        items(advertisedGames, key = { g -> g.gameIpAddress }) { game ->
+            val text = if (BuildConfig.DEBUG) "${game.gameName} (${game.gameIpAddress})" else game.gameName
+            val contentDescription = stringResource(R.string.join_specific_game_cd, game.gameName)
+            Text(
+                text = text,
+                modifier = Modifier
+                    .clickable { onJoinGameClick(game) }
+                    .semantics { this.contentDescription = contentDescription }
+                    .fillMaxWidth()
+            )
         }
     }
 }
@@ -161,19 +168,27 @@ fun ResumableGamesContainer(
         Modifier
             .fillMaxWidth()
             .animateContentSize()
-
     ) {
-        Text(
-            stringResource(R.string.resumable_games),
-            fontSize = 32.sp,
-            color = MaterialTheme.colors.primary
-        )
         when (resumableGames) {
-            LoadedData.Loading -> Text(stringResource(R.string.loading_resumable_games))
             is LoadedData.Success -> ResumableGames(resumableGames.data, onResumableGameClick)
-            is LoadedData.Failed -> Text(stringResource(R.string.loading_resumable_games_failed), color = Color.Red)
+            is LoadedData.Failed -> {
+                ResumableGameTitle()
+                Text(stringResource(R.string.loading_resumable_games_failed), color = Color.Red)
+            }
+            else -> {
+                // Nothing to do
+            }
         }
     }
+}
+
+@Composable
+private fun ResumableGameTitle() {
+    Text(
+        stringResource(R.string.resumable_games),
+        fontSize = 32.sp,
+        color = MaterialTheme.colors.primary
+    )
 }
 
 @Composable
@@ -181,14 +196,15 @@ private fun ResumableGames(
     resumableGames: List<ResumableGameInfo>,
     onResumableGameclick: (ResumableGameInfo) -> Unit
 ) {
-    if (resumableGames.isEmpty()) {
-        Text(stringResource(R.string.no_resumable_games))
-    } else {
+    if (resumableGames.isNotEmpty()) {
+        ResumableGameTitle()
         LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            items(resumableGames) { game ->
+            items(resumableGames, key = { g -> g.id }) { game ->
                 Text(
                     text = "${game.name} (${game.creationDate.toStringEuFormat()} - ${game.playersName.joinToString(", ")})",
-                    Modifier.clickable { onResumableGameclick(game) }
+                    Modifier
+                        .clickable { onResumableGameclick(game) }
+                        .fillMaxWidth()
                 )
             }
         }
