@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
@@ -25,6 +26,7 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomScreen
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
 
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Preview(
     showBackground = true,
@@ -47,6 +49,7 @@ fun GameRoomHostScreenPreview() {
     )
 }
 
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
 fun GameRoomHostScreen(
@@ -75,7 +78,7 @@ fun GameRoomHostScreen(
             Modifier
                 .fillMaxWidth()
                 .animateContentSize()
-                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
             when (screen) {
                 is GameRoomScreen.Dashboard -> {

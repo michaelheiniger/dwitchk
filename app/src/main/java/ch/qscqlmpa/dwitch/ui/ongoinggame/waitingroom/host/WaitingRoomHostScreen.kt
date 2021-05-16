@@ -69,7 +69,7 @@ fun WaitingRoomHostScreen(
             Modifier
                 .fillMaxWidth()
                 .animateContentSize()
-                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
             WaitingRoomPlayersScreen(
                 players = players,
