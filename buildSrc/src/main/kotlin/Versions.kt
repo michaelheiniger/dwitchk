@@ -1,7 +1,7 @@
 object Versions {
 
-    const val appVersionCode = 3
-    const val appVersionName = "1.0.1-beta"
+    const val appVersionCode = 4
+    const val appVersionName = "1.0.2-beta"
 
     const val kotlinVersion = "1.5.0"
 
