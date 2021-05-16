@@ -18,7 +18,7 @@ internal class AdvertisedGameRepository @Inject constructor(
 ) {
 
     companion object {
-        const val GAME_AD_TIMEOUT_SEC = 10
+        const val GAME_AD_TIMEOUT_SEC = 4
     }
 
     private val advertisedGames = mutableMapOf<IpAddress, AdvertisedGame>() // Local cache surviving unsubscriptions
