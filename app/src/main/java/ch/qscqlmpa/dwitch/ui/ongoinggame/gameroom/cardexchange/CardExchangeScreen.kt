@@ -100,29 +100,3 @@ fun CardExchangeOnGoing() {
         LoadingSpinner()
     }
 }
-
-//TODO: REmove
-//@ExperimentalFoundationApi
-//@Composable
-//private fun CardsInHand(
-//    cards: List<CardInfo>,
-//    cardClickLabel: Int,
-//    onCardClick: (Card) -> Unit
-//) {
-//    Column(
-//        Modifier
-//            .fillMaxWidth()
-//            .animateContentSize()
-//            .testTag(UiTags.hand)
-//    ) {
-//        Text(stringResource(R.string.cards_in_hand))
-//        LazyVerticalGrid(
-//            cells = GridCells.Fixed(4),
-//            Modifier
-//                .fillMaxWidth()
-//                .animateContentSize()
-//        ) {
-//            items(cards) { card -> CardItemDisplay(cardItem = card, onCardClick = onCardClick) }
-//        }
-//    }
-//}
