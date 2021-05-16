@@ -2,7 +2,6 @@ plugins {
     id("com.android.library")
     kotlin("android")
     kotlin("kapt")
-    id("de.mannodermaus.android-junit5")
     kotlin("plugin.serialization")
     id("kotlin-parcelize")
 }
