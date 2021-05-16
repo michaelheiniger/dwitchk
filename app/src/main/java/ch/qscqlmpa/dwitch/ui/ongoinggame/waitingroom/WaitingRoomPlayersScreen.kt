@@ -76,7 +76,7 @@ fun WaitingRoomPlayersScreen(
         }
         Spacer(Modifier.height(8.dp))
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(players) { player ->
+            items(players, key = { p -> p.id }) { player ->
                 Column(
                     Modifier
                         .fillMaxWidth()
