@@ -11,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -21,6 +22,7 @@ import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.common.DwitchTopBar
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
+import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitch.ui.common.toStringEuFormat
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
@@ -100,7 +102,7 @@ fun HomeScreen(
 private fun GameCreation(onCreateNewGameClick: () -> Unit) {
     Button(
         onClick = onCreateNewGameClick,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth().testTag(UiTags.createGame)
     ) { Text(stringResource(R.string.create_game)) }
 }
 

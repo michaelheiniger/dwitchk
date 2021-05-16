@@ -107,7 +107,6 @@ abstract class BaseUiTest {
 
     protected fun assertCurrentScreenIsHomeSreen() {
         testRule.onNodeWithText(getString(R.string.advertised_games)).assertExists()
-        testRule.onNodeWithText(getString(R.string.resumable_games)).assertExists()
         testRule.onNodeWithText(getString(R.string.create_game)).assertExists()
     }
 
