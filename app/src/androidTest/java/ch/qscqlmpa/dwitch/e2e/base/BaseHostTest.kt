@@ -25,7 +25,7 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
     protected lateinit var guest3: Player
 
     protected open fun goToWaitingRoom() {
-        testRule.onNodeWithText(getString(R.string.create_game)).performClick()
+        testRule.onNodeWithTag(UiTags.createGame).performClick()
 
         testRule.onNodeWithTag(UiTags.playerName).performTextReplacement(hostName)
         testRule.onNodeWithTag(UiTags.gameName).performTextReplacement(gameName)
@@ -37,16 +37,10 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
         waitForServiceToBeStarted()
         hookOngoingGameDependenciesForHost()
 
-//        app.waitForGameToBeCreated()
-
         // Assert that the host is indeed in the WaitingRoom
         testRule.assertTextIsDisplayedOnce(getString(R.string.players_in_waitingroom))
 
         testRule.assertPlayerInWr(hostName)
-
-//        testRule.waitForIdle()
-
-//        hookOngoingGameDependenciesForHost()
     }
 
     protected fun guestJoinsGame(guest: PlayerHostTest) {

@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitch.ui.common
 
 object UiTags {
 
+    const val createGame = "createGame"
     const val kickPlayer = "kickPlayer"
     const val localPlayerReadyControl = "localPlayerReadyControl"
     const val localPlayerReadyText = "localPlayerReadyText"
