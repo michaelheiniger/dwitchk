@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -57,6 +58,7 @@ class GameRoomActivity : OngoingGameBaseActivity() {
         }
     }
 
+    @ExperimentalAnimationApi
     @ExperimentalFoundationApi
     @Composable
     private fun ActivityScreenForHost() {
@@ -90,6 +92,7 @@ class GameRoomActivity : OngoingGameBaseActivity() {
         }
     }
 
+    @ExperimentalAnimationApi
     @ExperimentalFoundationApi
     @Composable
     private fun ActivityScreenForGuest() {
@@ -125,6 +128,7 @@ class GameRoomActivity : OngoingGameBaseActivity() {
         }
     }
 
+    @ExperimentalAnimationApi
     @ExperimentalFoundationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as App).getGameUiComponent()!!.inject(this)

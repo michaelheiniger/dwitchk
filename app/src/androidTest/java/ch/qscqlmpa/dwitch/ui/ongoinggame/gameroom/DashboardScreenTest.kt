@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
@@ -16,6 +17,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 
+@ExperimentalAnimationApi
 class DashboardScreenTest : BaseUiUnitTest() {
 
     private lateinit var dashboardInfo: DashboardInfo

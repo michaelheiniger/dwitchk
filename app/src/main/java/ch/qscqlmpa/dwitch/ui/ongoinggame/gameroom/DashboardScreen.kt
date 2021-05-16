@@ -1,10 +1,11 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.MaterialTheme
@@ -12,6 +13,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -34,6 +36,7 @@ import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.PlayerInfo
 
+@ExperimentalAnimationApi
 @Preview(
     showBackground = true,
     backgroundColor = 0xFFFFFFFF
@@ -99,7 +102,7 @@ private fun DashboardScreenPreview() {
             CardInfo(Card.SpadesJack, selectable = false, selected = false),
             CardInfo(Card.ClubsJack, selectable = false, selected = false),
             CardInfo(Card.HeartsJack, selectable = false, selected = false),
-            CardInfo(Card.SpadesAce, selectable = false, selected = false)
+            CardInfo(Card.ClubsAce, selectable = false, selected = false)
         ),
         canPass = true,
         canPlay = true
@@ -119,6 +122,7 @@ private fun DashboardScreenPreview() {
     )
 }
 
+@ExperimentalAnimationApi
 @Composable
 fun DashboardScreen(
     dashboardInfo: DashboardInfo,
@@ -133,16 +137,15 @@ fun DashboardScreen(
     ) {
         PlayersInfo(dashboardInfo.playersInfo)
         Spacer(Modifier.height(16.dp))
-
         Table(dashboardInfo.lastCardPlayed)
         Spacer(Modifier.height(16.dp))
-
         Controls(dashboardInfo, onPassClick = onPassClick, onPlayClick = onPlayClick)
         Spacer(Modifier.height(16.dp))
         PlayerHand(dashboardInfo.localPlayerInfo.cardsInHand, onCardClick = onCardClick)
     }
 }
 
+@ExperimentalAnimationApi
 @Composable
 private fun Controls(
     dashboardInfo: DashboardInfo,
@@ -151,28 +154,35 @@ private fun Controls(
 ) {
     Row(
         horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .animateContentSize()
     ) {
-        if (dashboardInfo.localPlayerInfo.canPass) {
+        AnimatedVisibility(
+            visible = dashboardInfo.localPlayerInfo.canPass,
+            enter = expandIn(expandFrom = Alignment.Center),
+            exit = shrinkOut(shrinkTowards = Alignment.Center),
+            modifier = Modifier.clip(CircleShape)
+        ) {
             FloatingActionButton(
                 backgroundColor = MaterialTheme.colors.primary,
                 modifier = Modifier.testTag(UiTags.passTurnControl),
                 onClick = onPassClick
-            ) {
-                Text(stringResource(R.string.pass_turn))
-            }
-            Spacer(Modifier.width(16.dp))
+            ) { Text(stringResource(R.string.pass_turn)) }
         }
-        if (dashboardInfo.localPlayerInfo.canPlay) {
+        if (dashboardInfo.localPlayerInfo.canPass) Spacer(Modifier.width(16.dp))
+        AnimatedVisibility(
+            visible = dashboardInfo.localPlayerInfo.canPlay,
+            enter = expandIn(expandFrom = Alignment.Center),
+            exit = shrinkOut(shrinkTowards = Alignment.Center),
+            modifier = Modifier.clip(CircleShape)
+        ) {
             FloatingActionButton(
                 backgroundColor = MaterialTheme.colors.primary,
                 modifier = Modifier.testTag(UiTags.playCardControl),
-                onClick = onPlayClick
-            ) {
-                Text(stringResource(R.string.play_card))
-            }
+                onClick = onPlayClick,
+            ) { Text(stringResource(R.string.play_card)) }
         }
     }
 }
@@ -180,7 +190,9 @@ private fun Controls(
 @Composable
 private fun PlayersInfo(playersInfo: List<PlayerInfo>) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(UiTags.gameRoomPlayersInfo),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         for (player in playersInfo) {
@@ -211,7 +223,7 @@ private fun Table(lastCardPlayed: PlayedCards?) {
             .testTag(UiTags.lastCardPlayed)
             .semantics(mergeDescendants = true) {}
     ) {
-        items(cards) { card ->
+        items(cards, key = { c -> c.id.value }) { card ->
             Image(
                 painter = painterResource(ResourceMapper.getImageResource(card)),
                 contentDescription = cardOnTableCd,
