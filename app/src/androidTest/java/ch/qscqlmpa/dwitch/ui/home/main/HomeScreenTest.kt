@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.home.main
 
+import androidx.compose.ui.test.onNodeWithText
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
 import ch.qscqlmpa.dwitch.base.BaseUiUnitTest
@@ -92,23 +93,12 @@ class HomeScreenTest : BaseUiUnitTest() {
     }
 
     @Test
-    fun resumableGamesAreLoading() {
-        resumableGames = LoadedData.Loading
-
-        launchTest()
-
-        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.resumable_games))
-        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.loading_resumable_games))
-    }
-
-    @Test
     fun noResumableGames() {
         resumableGames = LoadedData.Success(emptyList())
 
         launchTest()
 
-        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.resumable_games))
-        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.no_resumable_games))
+        composeTestRule.onNodeWithText(getString(R.string.resumable_games)).assertDoesNotExist()
     }
 
     @Test
