@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ResourceMapper
+import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.EndOfRoundInfo
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.PlayerEndOfRoundInfo
@@ -35,7 +36,9 @@ private fun EndOfRoundInfoDialogPreview() {
         canStartNewRound = true,
         canEndGame = true
     )
-    EndOfRoundScreen(endOfRoundInfo)
+    ActivityScreenContainer {
+        EndOfRoundScreen(endOfRoundInfo)
+    }
 }
 
 @Composable

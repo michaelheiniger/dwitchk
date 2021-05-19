@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 
 @Preview(
     showBackground = true,
@@ -24,14 +25,12 @@ import ch.qscqlmpa.dwitch.R
 )
 @Composable
 private fun InfoDialogPreview() {
-    MaterialTheme {
-        Surface(color = Color.White) {
-            InfoDialog(
-                title = R.string.info_dialog_title,
-                text = R.string.game_canceled_by_host,
-                onOkClick = {}
-            )
-        }
+    ActivityScreenContainer {
+        InfoDialog(
+            title = R.string.info_dialog_title,
+            text = R.string.game_canceled_by_host,
+            onOkClick = {}
+        )
     }
 }
 
@@ -115,7 +114,9 @@ fun ConfirmationDialog(
 )
 @Composable
 private fun LoadingDialogPreview() {
-    LoadingDialog()
+    ActivityScreenContainer {
+        LoadingDialog()
+    }
 }
 
 @Composable

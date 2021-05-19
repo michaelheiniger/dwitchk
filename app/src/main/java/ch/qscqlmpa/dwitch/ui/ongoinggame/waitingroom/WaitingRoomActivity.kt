@@ -6,16 +6,14 @@ import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
+import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.ConfirmationDialog
 import ch.qscqlmpa.dwitch.ui.common.InfoDialog
 import ch.qscqlmpa.dwitch.ui.common.LoadingDialog
@@ -51,36 +49,32 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
         wrHostViewModel: WaitingRoomHostViewModel,
         connectionViewModel: ConnectionHostViewModel
     ) {
-        MaterialTheme {
-            Surface(color = Color.White) {
-                val toolbarTitle = wrViewModel.toolbarTitle.observeAsState(toolbarDefaultTitle).value
-                val showAddComputerPlayer = wrViewModel.canComputerPlayersBeAdded.observeAsState(false).value
-                val players = wrViewModel.players.observeAsState(emptyList()).value
-                val launchGameEnabled = wrHostViewModel.canGameBeLaunched.observeAsState(false).value
-                val connectionStatus = connectionViewModel.connectionStatus.observeAsState().value
-                WaitingRoomHostScreen(
-                    toolbarTitle = toolbarTitle,
-                    showAddComputerPlayer = showAddComputerPlayer,
-                    players = players,
-                    launchGameEnabled = launchGameEnabled,
-                    connectionStatus = connectionStatus,
-                    onLaunchGameClick = wrHostViewModel::launchGame,
-                    onCancelGameClick = { showConfirmationDialog.value = true },
-                    onReconnectClick = connectionViewModel::reconnect,
-                    onAddComputerPlayer = wrHostViewModel::addComputerPlayer,
-                    onKickPlayer = wrHostViewModel::kickPlayer
-                )
-                if (showConfirmationDialog.observeAsState().value == true) {
-                    ConfirmationDialog(
-                        title = R.string.info_dialog_title,
-                        text = R.string.host_cancel_game_confirmation,
-                        onConfirmClick = { wrHostViewModel.cancelGame() },
-                        onCancelClick = { showConfirmationDialog.value = false }
-                    )
-                }
-                if (wrHostViewModel.loading.observeAsState(false).value) LoadingDialog()
-            }
+        val toolbarTitle = wrViewModel.toolbarTitle.observeAsState(toolbarDefaultTitle).value
+        val showAddComputerPlayer = wrViewModel.canComputerPlayersBeAdded.observeAsState(false).value
+        val players = wrViewModel.players.observeAsState(emptyList()).value
+        val launchGameEnabled = wrHostViewModel.canGameBeLaunched.observeAsState(false).value
+        val connectionStatus = connectionViewModel.connectionStatus.observeAsState().value
+        WaitingRoomHostScreen(
+            toolbarTitle = toolbarTitle,
+            showAddComputerPlayer = showAddComputerPlayer,
+            players = players,
+            launchGameEnabled = launchGameEnabled,
+            connectionStatus = connectionStatus,
+            onLaunchGameClick = wrHostViewModel::launchGame,
+            onCancelGameClick = { showConfirmationDialog.value = true },
+            onReconnectClick = connectionViewModel::reconnect,
+            onAddComputerPlayer = wrHostViewModel::addComputerPlayer,
+            onKickPlayer = wrHostViewModel::kickPlayer
+        )
+        if (showConfirmationDialog.observeAsState().value == true) {
+            ConfirmationDialog(
+                title = R.string.info_dialog_title,
+                text = R.string.host_cancel_game_confirmation,
+                onConfirmClick = { wrHostViewModel.cancelGame() },
+                onCancelClick = { showConfirmationDialog.value = false }
+            )
         }
+        if (wrHostViewModel.loading.observeAsState(false).value) LoadingDialog()
     }
 
     @Composable
@@ -89,48 +83,44 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
         wrGuestViewModel: WaitingRoomGuestViewModel,
         connectionViewModel: ConnectionGuestViewModel
     ) {
-        MaterialTheme {
-            Surface(color = Color.White) {
-                val toolbarTitle = wrViewModel.toolbarTitle.observeAsState(toolbarDefaultTitle).value
-                val players = wrViewModel.players.observeAsState(emptyList()).value
-                val readyControl = wrGuestViewModel.ready.observeAsState(UiCheckboxModel(checked = false, enabled = false)).value
-                val connectionStatus = connectionViewModel.connectionStatus.observeAsState().value
-                WaitingRoomGuestScreen(
-                    toolbarTitle = toolbarTitle,
-                    players = players,
-                    ready = readyControl,
-                    connectionStatus = connectionStatus,
-                    onReadyClick = wrGuestViewModel::updateReadyState,
-                    onLeaveClick = { showConfirmationDialog.value = true },
-                    onReconnectClick = connectionViewModel::reconnect
+        val toolbarTitle = wrViewModel.toolbarTitle.observeAsState(toolbarDefaultTitle).value
+        val players = wrViewModel.players.observeAsState(emptyList()).value
+        val readyControl = wrGuestViewModel.ready.observeAsState(UiCheckboxModel(checked = false, enabled = false)).value
+        val connectionStatus = connectionViewModel.connectionStatus.observeAsState().value
+        WaitingRoomGuestScreen(
+            toolbarTitle = toolbarTitle,
+            players = players,
+            ready = readyControl,
+            connectionStatus = connectionStatus,
+            onReadyClick = wrGuestViewModel::updateReadyState,
+            onLeaveClick = { showConfirmationDialog.value = true },
+            onReconnectClick = connectionViewModel::reconnect
+        )
+        when (wrGuestViewModel.notifications.observeAsState().value) {
+            WaitingRoomGuestNotification.NotifyGameCanceled -> {
+                InfoDialog(
+                    title = R.string.info_dialog_title,
+                    text = R.string.game_canceled_by_host,
+                    onOkClick = { wrGuestViewModel.acknowledgeGameCanceledEvent() }
                 )
-                when (wrGuestViewModel.notifications.observeAsState().value) {
-                    WaitingRoomGuestNotification.NotifyGameCanceled -> {
-                        InfoDialog(
-                            title = R.string.info_dialog_title,
-                            text = R.string.game_canceled_by_host,
-                            onOkClick = { wrGuestViewModel.acknowledgeGameCanceledEvent() }
-                        )
-                    }
-                    WaitingRoomGuestNotification.NotifyPlayerKickedOffGame -> {
-                        InfoDialog(
-                            title = R.string.info_dialog_title,
-                            text = R.string.you_have_been_kick,
-                            onOkClick = { wrGuestViewModel.acknowledgeKickOffGame() }
-                        )
-                    }
-                    else -> { // Nothing to do
-                    }
-                }
-                if (showConfirmationDialog.observeAsState().value == true) {
-                    ConfirmationDialog(
-                        title = R.string.info_dialog_title,
-                        text = R.string.guest_leaves_game_confirmation,
-                        onConfirmClick = { wrGuestViewModel.leaveGame() },
-                        onCancelClick = { showConfirmationDialog.value = false }
-                    )
-                }
             }
+            WaitingRoomGuestNotification.NotifyPlayerKickedOffGame -> {
+                InfoDialog(
+                    title = R.string.info_dialog_title,
+                    text = R.string.you_have_been_kick,
+                    onOkClick = { wrGuestViewModel.acknowledgeKickOffGame() }
+                )
+            }
+            else -> { // Nothing to do
+            }
+        }
+        if (showConfirmationDialog.observeAsState().value == true) {
+            ConfirmationDialog(
+                title = R.string.info_dialog_title,
+                text = R.string.guest_leaves_game_confirmation,
+                onConfirmClick = { wrGuestViewModel.leaveGame() },
+                onCancelClick = { showConfirmationDialog.value = false }
+            )
         }
     }
 
@@ -149,11 +139,13 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
                 connectionHostViewModel = ViewModelProvider(this, viewModelFactory).get(ConnectionHostViewModel::class.java)
                 setupHostNavigation(wrHostViewModel)
                 setContent {
-                    ActivityScreenForHost(
-                        wrViewModel = wrViewModel,
-                        wrHostViewModel = wrHostViewModel,
-                        connectionViewModel = connectionHostViewModel
-                    )
+                    ActivityScreenContainer {
+                        ActivityScreenForHost(
+                            wrViewModel = wrViewModel,
+                            wrHostViewModel = wrHostViewModel,
+                            connectionViewModel = connectionHostViewModel
+                        )
+                    }
                 }
             }
 
@@ -162,11 +154,13 @@ class WaitingRoomActivity : OngoingGameBaseActivity() {
                 connectionGuestViewModel = viewModelProvider.get(ConnectionGuestViewModel::class.java)
                 setupGuestNavigation(wrGuestViewModel)
                 setContent {
-                    ActivityScreenForGuest(
-                        wrViewModel = wrViewModel,
-                        wrGuestViewModel = wrGuestViewModel,
-                        connectionViewModel = connectionGuestViewModel
-                    )
+                    ActivityScreenContainer {
+                        ActivityScreenForGuest(
+                            wrViewModel = wrViewModel,
+                            wrGuestViewModel = wrGuestViewModel,
+                            connectionViewModel = connectionGuestViewModel
+                        )
+                    }
                 }
             }
         }

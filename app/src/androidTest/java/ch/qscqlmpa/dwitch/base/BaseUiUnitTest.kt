@@ -1,9 +1,9 @@
 package ch.qscqlmpa.dwitch.base
 
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.platform.app.InstrumentationRegistry
+import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import org.junit.Rule
 
 abstract class BaseUiUnitTest {
@@ -19,9 +19,7 @@ abstract class BaseUiUnitTest {
 
     protected fun launchTestWithContent(content: @Composable () -> Unit) {
         composeTestRule.setContent {
-            MaterialTheme {
-                content()
-            }
+            ActivityScreenContainer(content)
         }
     }
 }

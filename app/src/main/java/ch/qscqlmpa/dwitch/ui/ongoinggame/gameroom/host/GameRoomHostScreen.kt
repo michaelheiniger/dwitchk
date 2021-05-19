@@ -23,6 +23,7 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.cardexchange.CardExchangeOnGoi
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.cardexchange.CardExchangeScreen
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.endofround.EndOfRoundScreen
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomScreen
+import ch.qscqlmpa.dwitch.ui.theme.DwitchTheme
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
 
@@ -34,19 +35,21 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationSt
 )
 @Composable
 fun GameRoomHostScreenPreview() {
-    GameRoomHostScreen(
-        toolbarTitle = "Dwiiiitch",
-        screen = null,
-        connectionStatus = null,
-        onCardClick = {},
-        onPlayClick = {},
-        onPassClick = {},
-        onCardToExchangeClick = {},
-        onConfirmExchange = {},
-        onStartNewRoundClick = {},
-        onEndGameClick = {},
-        onReconnectClick = {}
-    )
+    DwitchTheme(false) {
+        GameRoomHostScreen(
+            toolbarTitle = "Dwiiiitch",
+            screen = null,
+            connectionStatus = null,
+            onCardClick = {},
+            onPlayClick = {},
+            onPassClick = {},
+            onCardToExchangeClick = {},
+            onConfirmExchange = {},
+            onStartNewRoundClick = {},
+            onEndGameClick = {},
+            onReconnectClick = {}
+        )
+    }
 }
 
 @ExperimentalAnimationApi

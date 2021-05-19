@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.DwitchTopBar
 import ch.qscqlmpa.dwitch.ui.common.NavigationIcon
 import ch.qscqlmpa.dwitch.ui.common.UiTags
@@ -22,12 +23,14 @@ import ch.qscqlmpa.dwitch.ui.common.UiTags
 )
 @Composable
 fun HostNewGameScreenPreview() {
-    JoinNewGameScreen(
-        gameName = "Dwiiiitch",
-        playerName = "Aragorn",
-        joinGameControlEnabled = true,
-        {}, {}, {}
-    )
+    ActivityScreenContainer {
+        JoinNewGameScreen(
+            gameName = "Dwiiiitch",
+            playerName = "Aragorn",
+            joinGameControlEnabled = true,
+            {}, {}, {}
+        )
+    }
 }
 
 @Composable

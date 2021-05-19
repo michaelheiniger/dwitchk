@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ResourceMapper
+import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitch.ui.ongoinggame.PlayerHand
 import ch.qscqlmpa.dwitchengine.model.card.Card
@@ -114,12 +115,14 @@ private fun DashboardScreenPreview() {
         lastCardPlayed = PlayedCards(listOf(Card.Clubs8, Card.Spades8))
     )
 
-    DashboardScreen(
-        dashboardInfo = dashboardInfo,
-        onCardClick = {},
-        onPlayClick = {},
-        onPassClick = {}
-    )
+    ActivityScreenContainer {
+        DashboardScreen(
+            dashboardInfo = dashboardInfo,
+            onCardClick = {},
+            onPlayClick = {},
+            onPassClick = {}
+        )
+    }
 }
 
 @ExperimentalAnimationApi

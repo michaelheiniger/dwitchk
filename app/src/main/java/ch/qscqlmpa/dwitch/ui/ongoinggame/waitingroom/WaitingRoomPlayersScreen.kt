@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
@@ -25,25 +26,27 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 )
 @Composable
 private fun WaitingRoomPlayersScreenPreview() {
-    WaitingRoomPlayersScreen(
-        showAddComputerPlayer = true,
-        players = listOf(
-            PlayerWrUi(
-                id = 1L,
-                name = "Mirlick",
-                connectionState = PlayerConnectionState.CONNECTED,
-                ready = true,
-                kickable = true
-            ),
-            PlayerWrUi(
-                id = 2L,
-                name = "Mébène",
-                connectionState = PlayerConnectionState.DISCONNECTED,
-                ready = false,
-                kickable = false
+    ActivityScreenContainer {
+        WaitingRoomPlayersScreen(
+            showAddComputerPlayer = true,
+            players = listOf(
+                PlayerWrUi(
+                    id = 1L,
+                    name = "Mirlick",
+                    connectionState = PlayerConnectionState.CONNECTED,
+                    ready = true,
+                    kickable = true
+                ),
+                PlayerWrUi(
+                    id = 2L,
+                    name = "Mébène",
+                    connectionState = PlayerConnectionState.DISCONNECTED,
+                    ready = false,
+                    kickable = false
+                )
             )
         )
-    )
+    }
 }
 
 @Composable

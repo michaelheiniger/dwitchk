@@ -4,14 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants.EXTRA_PLAYER_ROLE
+import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.LoadingDialog
 import ch.qscqlmpa.dwitch.ui.home.HomeBaseActivity
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
@@ -30,29 +28,25 @@ class HostNewGameActivity : HomeBaseActivity() {
         val playerName = viewModel.playerName.observeAsState(initialPlayerName).value
         val gameName = viewModel.gameName.observeAsState(initialGameName).value
         val hostGameControl = viewModel.createGameControl.observeAsState(initialHostGameControl).value
-        MaterialTheme {
-            Surface(color = Color.White) {
-                HostNewGameScreen(
-                    playerName = playerName,
-                    gameName = gameName,
-                    hostGameControlEnabled = hostGameControl,
-                    onPlayerNameChange = { name -> viewModel.onPlayerNameChange(name) },
-                    onGameNameChange = { name -> viewModel.onGameNameChange(name) },
-                    onCreateGameClick = { viewModel.hostGame() },
-                    onBackClick = {
-                        MainActivity.start(this)
-                        finish()
-                    }
-                )
-                if (viewModel.loading.observeAsState(false).value) LoadingDialog()
+        HostNewGameScreen(
+            playerName = playerName,
+            gameName = gameName,
+            hostGameControlEnabled = hostGameControl,
+            onPlayerNameChange = { name -> viewModel.onPlayerNameChange(name) },
+            onGameNameChange = { name -> viewModel.onGameNameChange(name) },
+            onCreateGameClick = { viewModel.hostGame() },
+            onBackClick = {
+                MainActivity.start(this)
+                finish()
             }
-        }
+        )
+        if (viewModel.loading.observeAsState(false).value) LoadingDialog()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         wrViewModel = ViewModelProvider(this, viewModelFactory).get(HostNewGameViewModel::class.java)
-        setContent { ActivityScreen(wrViewModel) }
+        setContent { ActivityScreenContainer { ActivityScreen(wrViewModel) } }
         observeNavigationCommands()
     }
 

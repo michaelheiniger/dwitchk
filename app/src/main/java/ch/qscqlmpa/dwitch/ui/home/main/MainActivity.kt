@@ -4,12 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModelProvider
+import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
 import ch.qscqlmpa.dwitch.ui.home.HomeBaseActivity
 import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameActivity
@@ -23,19 +21,15 @@ class MainActivity : HomeBaseActivity() {
 
     @Composable
     fun ActivityScreen(viewModel: MainActivityViewModel) {
-        MaterialTheme {
-            Surface(color = Color.White) {
-                val advertisedGames = viewModel.advertisedGames.observeAsState(LoadedData.Loading)
-                val resumableGames = viewModel.resumableGames.observeAsState(LoadedData.Loading)
-                HomeScreen(
-                    advertisedGames = advertisedGames.value,
-                    resumableGames = resumableGames.value,
-                    onJoinGameClick = { game -> viewModel.joinGame(game) },
-                    onCreateNewGameClick = { HostNewGameActivity.hostNewGame(this) },
-                    onResumableGameClick = { game -> viewModel.resumeGame(game) }
-                )
-            }
-        }
+        val advertisedGames = viewModel.advertisedGames.observeAsState(LoadedData.Loading)
+        val resumableGames = viewModel.resumableGames.observeAsState(LoadedData.Loading)
+        HomeScreen(
+            advertisedGames = advertisedGames.value,
+            resumableGames = resumableGames.value,
+            onJoinGameClick = { game -> viewModel.joinGame(game) },
+            onCreateNewGameClick = { HostNewGameActivity.hostNewGame(this) },
+            onResumableGameClick = { game -> viewModel.resumeGame(game) }
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,9 +37,7 @@ class MainActivity : HomeBaseActivity() {
 
         wrViewModel = ViewModelProvider(this, viewModelFactory).get(MainActivityViewModel::class.java)
 
-        setContent {
-            ActivityScreen(wrViewModel)
-        }
+        setContent { ActivityScreenContainer { ActivityScreen(wrViewModel) } }
 
         wrViewModel.commands.observe(
             this,

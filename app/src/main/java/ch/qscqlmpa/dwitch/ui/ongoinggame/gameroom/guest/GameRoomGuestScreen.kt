@@ -10,6 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ConnectionGuestScreen
+import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.DwitchTopBar
 import ch.qscqlmpa.dwitch.ui.common.NavigationIcon
 import ch.qscqlmpa.dwitch.ui.ongoinggame.GameOverDialog
@@ -29,20 +30,22 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunication
 )
 @Composable
 fun GameRoomHostScreenPreview() {
-    GameRoomGuestScreen(
-        toolbarTitle = "Dwiiiitch",
-        screen = null,
-        connectionStatus = null,
-        showGameOverDialog = false,
-        onGameOverAcknowledge = {},
-        onCardClick = {},
-        onPlayClick = {},
-        onPassClick = {},
-        onAddCardToExchange = {},
-        onConfirmExchange = {},
-        onReconnectClick = {},
-        onLeaveGameClick = {}
-    )
+    ActivityScreenContainer {
+        GameRoomGuestScreen(
+            toolbarTitle = "Dwiiiitch",
+            screen = null,
+            connectionStatus = null,
+            showGameOverDialog = false,
+            onGameOverAcknowledge = {},
+            onCardClick = {},
+            onPlayClick = {},
+            onPassClick = {},
+            onAddCardToExchange = {},
+            onConfirmExchange = {},
+            onReconnectClick = {},
+            onLeaveGameClick = {}
+        )
+    }
 }
 
 @ExperimentalAnimationApi

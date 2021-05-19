@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitch.ui.ongoinggame.LoadingSpinner
 import ch.qscqlmpa.dwitch.ui.ongoinggame.PlayerHand
@@ -41,13 +43,15 @@ private fun CardExchangeScreenPreview() {
         CardInfo(Card.Clubs3, selectable = false, selected = false)
     )
 
-    CardExchangeScreen(
-        numCardsToChoose = NumCardsToExchange.Two,
-        cardsInHand = cardsInHand,
-        canSubmitCardsForExchange = true,
-        onCardClick = {},
-        onConfirmExchangeClick = {}
-    )
+    ActivityScreenContainer {
+        CardExchangeScreen(
+            numCardsToChoose = NumCardsToExchange.Two,
+            cardsInHand = cardsInHand,
+            canSubmitCardsForExchange = true,
+            onCardClick = {},
+            onConfirmExchangeClick = {}
+        )
+    }
 }
 
 @ExperimentalFoundationApi
@@ -74,6 +78,7 @@ fun CardExchangeScreen(
 
         if (canSubmitCardsForExchange) {
             FloatingActionButton(
+                backgroundColor = MaterialTheme.colors.primary,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .testTag(UiTags.confirmCardExchange),

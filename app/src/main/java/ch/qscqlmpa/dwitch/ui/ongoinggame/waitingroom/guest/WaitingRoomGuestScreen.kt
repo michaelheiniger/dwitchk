@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ConnectionGuestScreen
+import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.DwitchTopBar
 import ch.qscqlmpa.dwitch.ui.common.NavigationIcon
 import ch.qscqlmpa.dwitch.ui.common.UiTags
@@ -30,19 +31,21 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 )
 @Composable
 private fun WaitingRoomGuestScreenPlayerConnectedPreview() {
-    WaitingRoomGuestScreen(
-        toolbarTitle = "Dwiiitch",
-        players = listOf(
-            PlayerWrUi(1L, name = "Aragorn", PlayerConnectionState.CONNECTED, ready = true, kickable = false),
-            PlayerWrUi(2L, name = "Boromir", PlayerConnectionState.CONNECTED, ready = false, kickable = false),
-            PlayerWrUi(3L, name = "Gimli", PlayerConnectionState.DISCONNECTED, ready = false, kickable = false)
-        ),
-        ready = UiCheckboxModel(enabled = false, checked = false),
-        connectionStatus = GuestCommunicationState.Connected,
-        onReadyClick = {},
-        onLeaveClick = {},
-        onReconnectClick = {}
-    )
+    ActivityScreenContainer {
+        WaitingRoomGuestScreen(
+            toolbarTitle = "Dwiiitch",
+            players = listOf(
+                PlayerWrUi(1L, name = "Aragorn", PlayerConnectionState.CONNECTED, ready = true, kickable = false),
+                PlayerWrUi(2L, name = "Boromir", PlayerConnectionState.CONNECTED, ready = false, kickable = false),
+                PlayerWrUi(3L, name = "Gimli", PlayerConnectionState.DISCONNECTED, ready = false, kickable = false)
+            ),
+            ready = UiCheckboxModel(enabled = false, checked = false),
+            connectionStatus = GuestCommunicationState.Connected,
+            onReadyClick = {},
+            onLeaveClick = {},
+            onReconnectClick = {}
+        )
+    }
 }
 
 @Composable

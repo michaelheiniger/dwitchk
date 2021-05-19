@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.DwitchTopBar
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
 import ch.qscqlmpa.dwitch.ui.common.UiTags
@@ -54,13 +55,15 @@ fun HomeScreenPreview() {
             )
         )
     )
-    HomeScreen(
-        advertisedGames = advertisedGame,
-        resumableGames = resumableGameResponse,
-        onCreateNewGameClick = {},
-        onJoinGameClick = {},
-        onResumableGameClick = {}
-    )
+    ActivityScreenContainer {
+        HomeScreen(
+            advertisedGames = advertisedGame,
+            resumableGames = resumableGameResponse,
+            onCreateNewGameClick = {},
+            onJoinGameClick = {},
+            onResumableGameClick = {}
+        )
+    }
 }
 
 @Composable

@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ConnectionHostScreen
+import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.DwitchTopBar
 import ch.qscqlmpa.dwitch.ui.common.NavigationIcon
 import ch.qscqlmpa.dwitch.ui.common.UiTags
@@ -27,20 +28,22 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 )
 @Composable
 private fun WaitingRoomHostScreenPreview() {
-    WaitingRoomHostScreen(
-        toolbarTitle = "Dwiiitch",
-        showAddComputerPlayer = true,
-        players = listOf(
-            PlayerWrUi(1L, "Aragorn", PlayerConnectionState.CONNECTED, ready = true, kickable = false),
-            PlayerWrUi(2L, "Boromir", PlayerConnectionState.CONNECTED, ready = false, kickable = true),
-            PlayerWrUi(3L, "Gimli", PlayerConnectionState.DISCONNECTED, ready = false, kickable = true)
-        ),
-        launchGameEnabled = false,
-        connectionStatus = HostCommunicationState.Error,
-        onLaunchGameClick = {},
-        onCancelGameClick = {},
-        onReconnectClick = {}
-    )
+    ActivityScreenContainer {
+        WaitingRoomHostScreen(
+            toolbarTitle = "Dwiiitch",
+            showAddComputerPlayer = true,
+            players = listOf(
+                PlayerWrUi(1L, "Aragorn", PlayerConnectionState.CONNECTED, ready = true, kickable = false),
+                PlayerWrUi(2L, "Boromir", PlayerConnectionState.CONNECTED, ready = false, kickable = true),
+                PlayerWrUi(3L, "Gimli", PlayerConnectionState.DISCONNECTED, ready = false, kickable = true)
+            ),
+            launchGameEnabled = false,
+            connectionStatus = HostCommunicationState.Error,
+            onLaunchGameClick = {},
+            onCancelGameClick = {},
+            onReconnectClick = {}
+        )
+    }
 }
 
 @Composable

@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
@@ -22,10 +23,13 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationSt
 )
 @Composable
 private fun CommunicationHostScreenPreview() {
-    ConnectionHostScreen(HostCommunicationState.Error,
-        onReconnectClick = {},
-        onAbortClick = {}
-    )
+    ActivityScreenContainer {
+        ConnectionHostScreen(
+            status = HostCommunicationState.Error,
+            onReconnectClick = {},
+            onAbortClick = {}
+        )
+    }
 }
 
 @Preview(
@@ -34,11 +38,13 @@ private fun CommunicationHostScreenPreview() {
 )
 @Composable
 private fun CommunicationGuestScreenPreview() {
-    ConnectionGuestScreen(
-        status = GuestCommunicationState.Error,
-        onReconnectClick = {},
-        onAbortClick = {}
-    )
+    ActivityScreenContainer {
+        ConnectionGuestScreen(
+            status = GuestCommunicationState.Error,
+            onReconnectClick = {},
+            onAbortClick = {}
+        )
+    }
 }
 
 @Composable
@@ -69,6 +75,7 @@ fun ConnectionGuestScreen(
     onReconnectClick: () -> Unit,
     onAbortClick: () -> Unit
 ) {
+    println("salut: ${MaterialTheme.colors.primary}")
     val connectionInfo = when (status) {
         GuestCommunicationState.Connecting -> ConnectionInfo(R.string.guest_connecting, connecting = true)
         GuestCommunicationState.Disconnected -> ConnectionInfo(R.string.disconnected_from_host, connecting = false)
@@ -89,7 +96,7 @@ fun ConnectionGuestScreen(
 private fun Status(statusResource: Int) {
     Text(
         text = stringResource(statusResource),
-        color = MaterialTheme.colors.secondary
+        color = MaterialTheme.colors.primary
     )
 }
 
