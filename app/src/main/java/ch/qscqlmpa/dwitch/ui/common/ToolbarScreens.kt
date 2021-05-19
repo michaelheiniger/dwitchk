@@ -36,15 +36,10 @@ fun DwitchTopBar(
     navigationIcon: NavigationIcon?
 ) {
     val titleCd = stringResource(R.string.current_screen_name_cd, title)
-    TopAppBar(
-        title = {
-            Text(
-                text = title,
-                modifier = Modifier.semantics { this.contentDescription = titleCd }
-            )
-        },
-        navigationIcon = {
-            if (navigationIcon != null) {
+    if (navigationIcon != null) {
+        TopAppBar(
+            title = { TopAppBarTitle(title, titleCd) },
+            navigationIcon = {
                 IconButton(
                     onClick = navigationIcon.onNavigationIconClick,
                     modifier = Modifier.testTag(UiTags.toolbarNavigationIcon)
@@ -55,6 +50,16 @@ fun DwitchTopBar(
                     )
                 }
             }
-        }
+        )
+    } else {
+        TopAppBar(title = { TopAppBarTitle(title, titleCd) })
+    }
+}
+
+@Composable
+private fun TopAppBarTitle(title: String, titleCd: String) {
+    Text(
+        text = title,
+        modifier = Modifier.semantics { this.contentDescription = titleCd }
     )
 }
