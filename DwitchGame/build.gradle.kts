@@ -91,6 +91,6 @@ dependencies {
     androidTestImplementation("androidx.test:core:1.3.0")
     androidTestImplementation("androidx.test:rules:1.3.0")
     androidTestImplementation("androidx.test:runner:1.3.0")
-    androidTestUtil("androidx.test:orchestrator:1.4.0-alpha06")
+    androidTestUtil("androidx.test:orchestrator:1.4.0-beta01")
     testImplementation("android.arch.core:core-testing:1.1.1")
 }

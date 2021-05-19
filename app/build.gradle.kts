@@ -6,7 +6,7 @@ plugins {
     id("kotlin-android")
 }
 
-val composeVersion = "1.0.0-beta06"
+val composeVersion = "1.0.0-beta07"
 
 android {
     compileSdk = Versions.compileSdkVersion
@@ -85,8 +85,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlinVersion}") // Prevent compiler warning (implicit dependency)
 
     // Android / UI
-    implementation("androidx.appcompat:appcompat:1.2.0")
-    implementation("androidx.core:core-ktx:1.3.2")
+    implementation("androidx.appcompat:appcompat:1.3.0")
+    implementation("androidx.core:core-ktx:1.5.0")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
     implementation("com.google.android.material:material:1.3.0")
@@ -120,7 +120,7 @@ dependencies {
     androidTestImplementation("androidx.test:core:1.3.0")
     androidTestImplementation("androidx.test:rules:1.3.0")
     androidTestImplementation("androidx.test:runner:1.3.0")
-    androidTestUtil("androidx.test:orchestrator:1.4.0-alpha06")
+    androidTestUtil("androidx.test:orchestrator:1.4.0-beta01")
 
     // Espresso (needed for CounterIdlingResource)
     androidTestImplementation("androidx.test.espresso:espresso-contrib:3.3.0")
@@ -144,11 +144,11 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
     implementation("androidx.compose.runtime:runtime-rxjava3:$composeVersion")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.0-beta06")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.0-beta07")
     androidTestImplementation("androidx.compose.ui:ui-test:$composeVersion")
 
-    implementation("androidx.activity:activity-compose:1.3.0-alpha07")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha04")
+    implementation("androidx.activity:activity-compose:1.3.0-alpha08")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha05")
 
     // Robolectric (for unit tests that log stuff)
     testImplementation("org.robolectric:robolectric:4.5.1")
