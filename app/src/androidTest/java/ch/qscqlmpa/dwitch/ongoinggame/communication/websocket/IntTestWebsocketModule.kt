@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitch.ongoinggame.communication.websocket
 
 import dagger.Module
 
+@Suppress("unused")
 @Module
 class IntTestWebsocketModule {
 

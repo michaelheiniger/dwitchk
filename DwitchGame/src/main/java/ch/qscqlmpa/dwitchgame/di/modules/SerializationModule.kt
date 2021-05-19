@@ -5,14 +5,13 @@ import dagger.Module
 import dagger.Provides
 import kotlinx.serialization.json.Json
 
+@Suppress("unused")
 @Module
 internal abstract class SerializationModule {
 
-    @Module
     companion object {
 
         @GameScope
-        @JvmStatic
         @Provides
         fun provideKotlinxJson(): Json {
             return Json.Default

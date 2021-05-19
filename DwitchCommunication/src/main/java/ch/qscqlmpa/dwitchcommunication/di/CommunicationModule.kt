@@ -18,6 +18,7 @@ import dagger.Provides
 import kotlinx.serialization.json.Json
 import javax.inject.Named
 
+@Suppress("unused")
 @Module
 class CommunicationModule(
     private val hostIpAddress: String,

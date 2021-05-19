@@ -14,8 +14,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.ConnectionGuestScreen
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
+import ch.qscqlmpa.dwitch.ui.common.ConnectionGuestScreen
 import ch.qscqlmpa.dwitch.ui.common.DwitchTopBar
 import ch.qscqlmpa.dwitch.ui.common.NavigationIcon
 import ch.qscqlmpa.dwitch.ui.common.UiTags

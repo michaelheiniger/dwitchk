@@ -18,6 +18,7 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 import javax.inject.Named
 
+@Suppress("unused")
 @Module
 abstract class OngoingGameViewModelBindingModule {
 

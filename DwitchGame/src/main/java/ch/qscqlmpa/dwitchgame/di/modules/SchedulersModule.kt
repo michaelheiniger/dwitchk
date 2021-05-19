@@ -6,6 +6,7 @@ import ch.qscqlmpa.dwitchgame.di.GameScope
 import dagger.Module
 import dagger.Provides
 
+@Suppress("unused")
 @Module
 internal class SchedulersModule {
 

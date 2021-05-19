@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitchstore.store
 
 import dagger.Module
 
+@Suppress("unused")
 @Module
 abstract class IntTestStoreModule {
 

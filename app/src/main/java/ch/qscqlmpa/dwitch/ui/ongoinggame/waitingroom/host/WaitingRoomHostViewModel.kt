@@ -16,7 +16,7 @@ internal class WaitingRoomHostViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _navigation = MutableLiveData<WaitingRoomHostDestination>()
-    private val _loading = MutableLiveData<Boolean>(false)
+    private val _loading = MutableLiveData(false)
     private val _canGameBeLaunched = MutableLiveData(false)
 
     val navigation get(): LiveData<WaitingRoomHostDestination> = _navigation

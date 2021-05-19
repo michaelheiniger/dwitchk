@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.Provides
 import kotlinx.serialization.json.Json
 
+@Suppress("unused")
 @Module
 class InGameStoreModule(
     private val gameLocalId: Long,

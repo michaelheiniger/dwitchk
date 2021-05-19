@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitch.persistence
 
 import dagger.Module
 
+@Suppress("unused")
 @Module
 abstract class TestDatabaseModule {
 

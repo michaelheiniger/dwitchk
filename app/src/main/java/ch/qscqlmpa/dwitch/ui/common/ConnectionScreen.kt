@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.ui
+package ch.qscqlmpa.dwitch.ui.common
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -13,7 +13,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
-import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
 

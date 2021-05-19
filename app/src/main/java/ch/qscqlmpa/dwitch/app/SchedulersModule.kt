@@ -5,6 +5,7 @@ import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import dagger.Module
 import dagger.Provides
 
+@Suppress("unused")
 @Module
 class SchedulersModule {
 

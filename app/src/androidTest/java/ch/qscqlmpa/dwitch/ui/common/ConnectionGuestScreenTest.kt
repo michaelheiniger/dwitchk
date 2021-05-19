@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.ui
+package ch.qscqlmpa.dwitch.ui.common
 
 import androidx.compose.ui.test.*
 import ch.qscqlmpa.dwitch.R

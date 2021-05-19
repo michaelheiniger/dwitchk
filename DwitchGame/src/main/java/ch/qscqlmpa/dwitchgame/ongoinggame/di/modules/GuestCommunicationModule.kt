@@ -12,15 +12,14 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
 import dagger.Module
 import dagger.Provides
 
+@Suppress("unused")
 @Module
 internal class GuestCommunicationModule {
 
-    @Module
     companion object {
 
         @OngoingGameScope
         @Provides
-        @JvmStatic
         fun provideGuestCommunicator(
             commClient: CommClient,
             messageDispatcher: MessageDispatcher,

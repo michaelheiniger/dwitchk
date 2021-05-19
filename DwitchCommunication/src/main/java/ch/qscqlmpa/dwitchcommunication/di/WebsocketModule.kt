@@ -8,6 +8,7 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Named
 
+@Suppress("unused")
 @Module
 internal class WebsocketModule {
 

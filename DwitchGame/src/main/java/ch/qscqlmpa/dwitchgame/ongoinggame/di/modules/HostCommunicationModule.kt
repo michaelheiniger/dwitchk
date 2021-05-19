@@ -13,6 +13,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
 import dagger.Module
 import dagger.Provides
 
+@Suppress("unused")
 @Module
 internal class HostCommunicationModule {
 

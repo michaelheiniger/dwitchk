@@ -8,6 +8,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameRoomHostFacadeImpl
 import dagger.Binds
 import dagger.Module
 
+@Suppress("unused")
 @Module
 abstract class GameRoomModule {
 

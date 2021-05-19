@@ -67,7 +67,7 @@ internal class IntTestWebsocketClient constructor(
 //        isClosed = false
     }
 
-    fun onClose(
+    private fun onClose(
         @Suppress("UNUSED_PARAMETER") code: Int,
         @Suppress("UNUSED_PARAMETER") reason: String?,
         @Suppress("UNUSED_PARAMETER") remote: Boolean

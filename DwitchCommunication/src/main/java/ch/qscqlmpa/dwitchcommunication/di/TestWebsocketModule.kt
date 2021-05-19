@@ -18,6 +18,7 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Named
 
+@Suppress("unused")
 @Module
 class TestWebsocketModule {
 

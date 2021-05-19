@@ -15,6 +15,7 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
+@Suppress("unused")
 @InGameStoreScope
 class SerializerFactory @Inject constructor(private val json: Json) {
 

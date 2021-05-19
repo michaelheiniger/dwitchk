@@ -105,10 +105,4 @@ class TestApp : App() {
         return testGameComponent.appEventRepository
     }
 
-    /**
-     * Blocks on main thread until the game has been fully created and setup.
-     */
-    fun waitForGameToBeCreated() {
-        testAppEventRelay.blockingFirst()
-    }
 }

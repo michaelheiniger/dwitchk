@@ -4,6 +4,7 @@ package android.util
  * Prevents the following error in unit tests containing logging statements:
  * Caused by: java.lang.RuntimeException: Method isLoggable in android.util.Log not mocked. See http://g.co/androidstudio/not-mocked for details.
  */
+//FIXME: Still necessary ? --> run all tests without
 object Log {
 
     @JvmStatic

@@ -8,6 +8,7 @@ import ch.qscqlmpa.dwitchgame.gamediscovery.network.UdpNetworkAdapter
 import dagger.Binds
 import dagger.Module
 
+@Suppress("unused")
 @Module
 abstract class GameDiscoveryModule {
 

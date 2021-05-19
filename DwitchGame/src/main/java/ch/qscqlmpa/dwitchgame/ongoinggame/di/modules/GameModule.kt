@@ -13,6 +13,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 
+@Suppress("unused")
 @Module
 abstract class GameModule {
 

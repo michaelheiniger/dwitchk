@@ -10,6 +10,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 
+@Suppress("unused")
 @Module
 abstract class TestGameModule {
 
@@ -17,19 +18,16 @@ abstract class TestGameModule {
     @Binds
     internal abstract fun provideGameInteractor(gameInteractor: GameFacade): GameFacade
 
-    @Module
     companion object {
 
         @OngoingGameScope
         @Provides
-        @JvmStatic
         internal fun provideCardDealerFactory(): CardDealerFactory {
             return DeterministicCardDealerFactory()
         }
 
         @OngoingGameScope
         @Provides
-        @JvmStatic
         internal fun provideInitialGameSetup(): InitialGameSetupFactory {
             return DeterministicInitialGameSetupFactory()
         }

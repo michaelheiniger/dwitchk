@@ -11,6 +11,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomHostFacade
 import dagger.Module
 import dagger.Provides
 
+@Suppress("unused")
 @Module
 class OnGoingGameUiModule(
     private val hostFacade: HostFacade,

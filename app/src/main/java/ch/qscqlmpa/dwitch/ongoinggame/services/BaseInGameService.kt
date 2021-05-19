@@ -55,7 +55,7 @@ abstract class BaseInGameService : Service() {
             this,
             0,
             notificationIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         val notificationMessage = when (roomType) {
@@ -98,7 +98,7 @@ abstract class BaseInGameService : Service() {
             this,
             1,
             createIntent(this, this::class.java, ACTION_STOP_SERVICE),
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         return NotificationCompat.Action(
             R.drawable.ic_stop_black_24dp,

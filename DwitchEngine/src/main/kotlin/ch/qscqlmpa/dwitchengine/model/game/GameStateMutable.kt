@@ -80,11 +80,6 @@ internal data class GameStateMutable(
         cardsInGraveyard.clear()
     }
 
-    fun setCardsOnTable(card: PlayedCards) {
-        clearTable()
-        cardsOnTable.add(card)
-    }
-
     fun addDonePlayer(playerId: DwitchPlayerId, lastCardPlayedIsJoker: Boolean) {
         playersDoneForRound.add(playerId)
         if (lastCardPlayedIsJoker) {

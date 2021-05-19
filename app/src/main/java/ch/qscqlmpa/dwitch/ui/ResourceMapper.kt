@@ -1,47 +1,12 @@
 package ch.qscqlmpa.dwitch.ui
 
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.common.Resource
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
 
 object ResourceMapper {
-
-    fun getImageResource(state: GuestCommunicationState): Resource {
-        return Resource(
-            when (state) {
-                GuestCommunicationState.Connecting -> R.string.guest_connecting
-                GuestCommunicationState.Connected -> R.string.connected_to_host
-                GuestCommunicationState.Disconnected -> R.string.disconnected_from_host
-                GuestCommunicationState.Error -> R.string.guest_connection_error
-            }
-        )
-    }
-
-    fun getImageResource(state: HostCommunicationState): Resource {
-        return Resource(
-            when (state) {
-                HostCommunicationState.Opening -> R.string.host_connecting
-                HostCommunicationState.Open -> R.string.listening_for_guests
-                HostCommunicationState.Closed -> R.string.not_listening_for_guests
-                HostCommunicationState.Error -> R.string.host_connection_error
-            }
-        )
-    }
-
-    fun getResourceShort(rank: DwitchRank): Int {
-        return when (rank) {
-            DwitchRank.President -> R.string.president_short
-            DwitchRank.VicePresident -> R.string.vice_president_short
-            DwitchRank.Neutral -> R.string.neutral_short
-            DwitchRank.ViceAsshole -> R.string.vice_asshole_short
-            DwitchRank.Asshole -> R.string.asshole_short
-        }
-    }
 
     fun getResourceLong(rank: DwitchRank): Int {
         return when (rank) {

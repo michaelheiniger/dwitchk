@@ -1,3 +1,8 @@
+@file:Suppress(
+    "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused", "unused",
+    "unused", "unused", "unused", "unused", "unused", "unused", "unused"
+)
+
 package ch.qscqlmpa.dwitch.ui.theme
 
 import androidx.compose.ui.graphics.Color

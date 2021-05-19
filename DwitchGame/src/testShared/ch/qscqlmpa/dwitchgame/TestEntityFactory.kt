@@ -10,20 +10,11 @@ import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
-import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import ch.qscqlmpa.dwitchstore.model.Game
 import ch.qscqlmpa.dwitchstore.model.Player
 import org.joda.time.DateTime
 
 object TestEntityFactory {
-
-    fun createPlayerWr1(): PlayerWr {
-        return PlayerWr(DwitchPlayerId(1), "Sheev", PlayerRole.HOST, PlayerConnectionState.CONNECTED, true)
-    }
-
-    fun createPlayerWr2(): PlayerWr {
-        return PlayerWr(DwitchPlayerId(2), "Obi-Wan", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true)
-    }
 
     fun createPlayerWrUi1(): PlayerWrUi {
         return PlayerWrUi(11L, "Sheev", PlayerConnectionState.CONNECTED, ready = true, kickable = true)

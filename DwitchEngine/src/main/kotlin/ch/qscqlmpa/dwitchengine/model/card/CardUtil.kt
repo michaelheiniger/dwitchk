@@ -2,10 +2,6 @@ package ch.qscqlmpa.dwitchengine.model.card
 
 object CardUtil {
 
-    fun fromId(id: CardId): Card {
-        return cardMap.getValue(id)
-    }
-
     fun getAllCardsExcept(cardsToOmit: List<Card>): List<Card> {
         return deck.filter { card -> !cardsToOmit.contains(card) }
     }

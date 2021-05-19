@@ -7,6 +7,7 @@ import ch.qscqlmpa.dwitchstore.dao.AppRoomDatabase
 import dagger.Module
 import dagger.Provides
 
+@Suppress("unused")
 @Module
 class StoreModule(private val context: Context) {
 

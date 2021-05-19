@@ -5,6 +5,7 @@ import ch.qscqlmpa.dwitchstore.store.Store
 import dagger.Module
 import dagger.Provides
 
+@Suppress("unused")
 @Module
 class StoreModule(
     private val store: Store

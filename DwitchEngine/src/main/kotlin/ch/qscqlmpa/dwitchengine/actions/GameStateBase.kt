@@ -10,10 +10,6 @@ internal abstract class GameStateBase(private val currentGameState: DwitchGameSt
     open fun checkState() {
     }
 
-    fun numPlayersTotal(): Int {
-        return currentGameState.players.size
-    }
-
     fun currentPlayerId(): DwitchPlayerId {
         return currentGameState.currentPlayerId
     }

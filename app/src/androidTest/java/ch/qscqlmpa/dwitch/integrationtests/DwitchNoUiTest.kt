@@ -7,7 +7,7 @@ import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@Ignore
+@Ignore("To re-enable when fixing integration tests")
 @RunWith(AndroidJUnit4::class)
 class DwitchNoUiTest {
 

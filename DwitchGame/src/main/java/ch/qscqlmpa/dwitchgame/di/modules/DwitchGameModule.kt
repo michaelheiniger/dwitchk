@@ -5,6 +5,7 @@ import ch.qscqlmpa.dwitchgame.di.GameScope
 import dagger.Module
 import dagger.Provides
 
+@Suppress("unused")
 @Module
 class DwitchGameModule(private val idlingResource: DwitchIdlingResource) {
 
