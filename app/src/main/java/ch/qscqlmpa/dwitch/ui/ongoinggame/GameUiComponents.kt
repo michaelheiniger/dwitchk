@@ -14,6 +14,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -86,16 +87,8 @@ fun CardItemDisplay(
     cardItem: CardInfo,
     onCardClick: (Card) -> Unit
 ) {
-    val surfaceColor = when {
-        cardItem.selected -> MaterialTheme.colors.secondary
-        cardItem.selectable -> Color.Transparent
-        else -> Color(
-            red = 0.3f,
-            green = 0.3f,
-            blue = 0.3f,
-            alpha = 0.2f
-        )
-    }
+    val surfaceColor = if (cardItem.selected) MaterialTheme.colors.secondary else Color.Transparent
+    val alpha = if (cardItem.selectable) 1.0f else 0.2f
     Image(
         painter = painterResource(ResourceMapper.getImageResource(cardItem.card)),
         contentDescription = stringResource(ResourceMapper.getContentDescriptionResource(cardItem.card)),
@@ -108,5 +101,6 @@ fun CardItemDisplay(
                 onClickLabel = "", //TODO
             )
             .testTag(cardItem.card.toString())
+            .alpha(alpha)
     )
 }
