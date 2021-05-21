@@ -52,8 +52,10 @@ fun JoinNewGameScreen(
             navigationIcon = NavigationIcon(
                 icon = R.drawable.ic_baseline_arrow_back_24,
                 contentDescription = R.string.back,
-                onNavigationIconClick = onBackClick
-            )
+                onClick = onBackClick
+            ),
+            actions = emptyList(),
+            onActionClick = {}
         )
         Column(
             Modifier

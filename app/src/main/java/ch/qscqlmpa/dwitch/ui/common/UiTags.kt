@@ -22,4 +22,5 @@ object UiTags {
     const val toolbarNavigationIcon = "toolbarNavigationIcon"
     const val addComputerPlayer = "addComputerPlayer"
     const val gameRoomPlayersInfo = "gameRoomPlayersInfo"
+    const val gameRulesInfo = "gameRulesInfo"
 }

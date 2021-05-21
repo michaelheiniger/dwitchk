@@ -55,7 +55,7 @@
     <string name="not_listening_for_guests">Bros can\'t join !</string>
     <string name="not_ready">Not ready</string>
     <string name="notification_title">Dwitch</string>
-    <string name="ok">OK, mate</string>
+    <string name="ok">Got it, mate</string>
     <string name="last_card_played">Last card played</string>
     <string name="pass_turn">Pass</string>
     <string name="play_card">Play</string>
@@ -171,4 +171,16 @@
     <string name="kick_player">Kick %1$s</string>
     <string name="you_have_been_kick">You have been kicked by the host</string>
     <string name="table_is_empty_cd">Table is empty</string>
+    <string name="game_rules_info_cd">Game rules</string>
+    <string name="game_rules_info_title">Games rules</string>
+    <string name="game_rules_info_content">
+        The card(s) played must have a value equal or higher than the card(s) on the table (if any).\n
+        Cards sorted by value (ascending order): 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen, King, Ace, 2 (Joker)\n
+        If a player plays a card that has the same value as the one the table, the next player is dwitched and skips its turn.\n
+        \n
+        Special rules:\n
+        - Playing (instead of passing) on the first Jack of the round\n
+        - Playing a joker as last card\n
+        Breaking a special makes you automatically the Asshole. If another player breaks a special rule later in the same round, the it becomes the Asshole and the previous player becomes the Vice-Asshole and so on.
+    </string>
 </resources>

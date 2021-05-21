@@ -66,7 +66,9 @@ fun WaitingRoomHostScreen(
     ) {
         DwitchTopBar(
             title = toolbarTitle,
-            navigationIcon = NavigationIcon(R.drawable.ic_baseline_exit_to_app_24, R.string.cancel_game, onCancelGameClick)
+            navigationIcon = NavigationIcon(R.drawable.ic_baseline_exit_to_app_24, R.string.cancel_game, onCancelGameClick),
+            actions = emptyList(),
+            onActionClick = {}
         )
         Column(
             Modifier

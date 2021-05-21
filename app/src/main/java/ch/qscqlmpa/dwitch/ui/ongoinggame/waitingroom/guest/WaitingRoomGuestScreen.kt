@@ -65,7 +65,9 @@ fun WaitingRoomGuestScreen(
     ) {
         DwitchTopBar(
             title = toolbarTitle,
-            navigationIcon = NavigationIcon(R.drawable.ic_baseline_exit_to_app_24, R.string.leave_game, onLeaveClick)
+            navigationIcon = NavigationIcon(R.drawable.ic_baseline_exit_to_app_24, R.string.leave_game, onLeaveClick),
+            actions = emptyList(),
+            onActionClick = {}
         )
         Column(
             Modifier

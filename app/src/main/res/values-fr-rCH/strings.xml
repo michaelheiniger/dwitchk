@@ -159,4 +159,16 @@
     <string name="kick_player">Ejecter %1$s</string>
     <string name="you_have_been_kick">Tu as été éjecter par l\'hôte</string>
     <string name="table_is_empty_cd">La table est vide</string>
+    <string name="game_rules_info_cd">Règles du jeu</string>
+    <string name="game_rules_info_title">Games rules</string>
+    <string name="game_rules_info_content">
+        Les cartes jouées doivent avoir une valeur égale ou plus haute que les dernières cartes jouées.\n
+        Cartes triées par valeur (ordre croissant): 3, 4, 5, 6, 7, 8, 9, 10, Vallet, Reine, Roi, As, 2 (Joker)\n
+        Si un joueur joue une carte qui a la même valeur que la dernière carte jouée sur la table, le joueur suivant est dwitché et passe son tour.\n
+        \n
+        Règles spéciales:\n
+        - Jouer (au lieu de passer) sur le premier vallet joué dans le tour\n
+        - Jouer un Joker comme dernière carte\n
+        Violer une règle spéciale propulse le joueur au rang de Trou-Du-Cul. Si un autre viole une règle spéciale plus tard dans le même tour, il devient le Trou-Du-Cul et le joueur prédédent devient Vice-Trou-Du-Cul et ainsi de suite.
+    </string>
 </resources>

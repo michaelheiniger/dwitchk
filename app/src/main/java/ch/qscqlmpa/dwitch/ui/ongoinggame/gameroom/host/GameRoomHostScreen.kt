@@ -7,16 +7,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.common.ConnectionHostScreen
-import ch.qscqlmpa.dwitch.ui.common.DwitchTopBar
-import ch.qscqlmpa.dwitch.ui.common.NavigationIcon
-import ch.qscqlmpa.dwitch.ui.common.UiTags
+import ch.qscqlmpa.dwitch.ui.common.*
 import ch.qscqlmpa.dwitch.ui.ongoinggame.LoadingSpinner
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.DashboardScreen
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.cardexchange.CardExchangeOnGoing
@@ -26,6 +25,7 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomScreen
 import ch.qscqlmpa.dwitch.ui.theme.DwitchTheme
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
+
 
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
@@ -68,14 +68,31 @@ fun GameRoomHostScreen(
     onEndGameClick: () -> Unit,
     onReconnectClick: () -> Unit
 ) {
+    val gameRules = remember { mutableStateOf(false) }
+
     Column(
         Modifier
             .fillMaxWidth()
-            .animateContentSize()) {
+            .animateContentSize()
+    ) {
         DwitchTopBar(
             title = toolbarTitle,
-            navigationIcon = NavigationIcon(R.drawable.ic_baseline_exit_to_app_24, R.string.end_game, onEndGameClick)
+            navigationIcon = NavigationIcon(R.drawable.ic_baseline_exit_to_app_24, R.string.end_game, onEndGameClick),
+            actions = listOf(GameRules),
+            onActionClick = { action ->
+                when (action) {
+                    GameRules -> gameRules.value = true
+                }
+            }
         )
+
+        if (gameRules.value) {
+            InfoDialog(
+                title = R.string.game_rules_info_title,
+                text = R.string.game_rules_info_content,
+                onOkClick = { gameRules.value = false }
+            )
+        }
 
         Column(
             Modifier

@@ -5,14 +5,14 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
-import ch.qscqlmpa.dwitch.ui.common.ConnectionGuestScreen
-import ch.qscqlmpa.dwitch.ui.common.DwitchTopBar
-import ch.qscqlmpa.dwitch.ui.common.NavigationIcon
+import ch.qscqlmpa.dwitch.ui.common.*
 import ch.qscqlmpa.dwitch.ui.ongoinggame.GameOverDialog
 import ch.qscqlmpa.dwitch.ui.ongoinggame.LoadingSpinner
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.DashboardScreen
@@ -65,6 +65,8 @@ fun GameRoomGuestScreen(
     onReconnectClick: () -> Unit,
     onLeaveGameClick: () -> Unit
 ) {
+    val gameRules = remember { mutableStateOf(false) }
+
     Column(
         Modifier
             .fillMaxWidth()
@@ -72,8 +74,22 @@ fun GameRoomGuestScreen(
     ) {
         DwitchTopBar(
             title = toolbarTitle,
-            navigationIcon = NavigationIcon(R.drawable.ic_baseline_exit_to_app_24, R.string.leave_game, onLeaveGameClick)
+            navigationIcon = NavigationIcon(R.drawable.ic_baseline_exit_to_app_24, R.string.leave_game, onLeaveGameClick),
+            actions = emptyList(),
+            onActionClick = { action ->
+                when (action) {
+                    GameRules -> gameRules.value = true
+                }
+            }
         )
+
+        if (gameRules.value) {
+            InfoDialog(
+                title = R.string.game_rules_info_title,
+                text = R.string.game_rules_info_content,
+                onOkClick = { gameRules.value = false }
+            )
+        }
 
         Column(
             Modifier
