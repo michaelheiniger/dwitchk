@@ -96,7 +96,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         testRule.assertCardOnTable(Card.Clubs3)
 
         otherPlayerPlaysCard(PlayerHostTest.Guest1, Card.Spades4)
-        waitUntilPlayerDashbordIsUpdated()
+        waitUntilPlayerDashboardIsUpdated()
 
         testRule.assertCardOnTable(Card.Spades4)
 
@@ -144,7 +144,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         testRule.assertCardExchangeControlIsEnabled()
         testRule.confirmCardExchange()
 
-        waitUntilPlayerDashbordIsUpdated()
+        waitUntilPlayerDashboardIsUpdated()
 
         testRule.assertGameRoomIsDisplayed()
         testRule.assertCardsInHand(Card.Diamonds4, Card.Clubs10, Card.Spades6, Card.HeartsAce)

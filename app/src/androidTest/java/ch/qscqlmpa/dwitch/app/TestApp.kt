@@ -6,11 +6,11 @@ import ch.qscqlmpa.dwitch.TestIdlingResource
 import ch.qscqlmpa.dwitch.ongoinggame.OnGoingGameUiModule
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationModule
 import ch.qscqlmpa.dwitchcommunication.di.DaggerTestCommunicationComponent
-import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
 import ch.qscqlmpa.dwitchgame.di.DaggerTestGameComponent
 import ch.qscqlmpa.dwitchgame.di.TestGameComponent
 import ch.qscqlmpa.dwitchgame.di.modules.DwitchGameModule
 import ch.qscqlmpa.dwitchgame.di.modules.StoreModule
+import ch.qscqlmpa.dwitchgame.home.HomeFacade
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameComponent
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.modules.OngoingGameModule
 import ch.qscqlmpa.dwitchmodel.game.RoomType
@@ -84,8 +84,8 @@ class TestApp : App() {
             )
             ongoingGameUiComponent = testAppComponent.addOngoingGameUiComponent(
                 OnGoingGameUiModule(
-                    ongoingGameComponent!!.hostFacade,
-                    ongoingGameComponent!!.guestFacade,
+                    ongoingGameComponent!!.hostGameFacade,
+                    ongoingGameComponent!!.guestGameFacade,
                     ongoingGameComponent!!.waitingRoomFacade,
                     ongoingGameComponent!!.waitingRoomHostFacade,
                     ongoingGameComponent!!.waitingRoomGuestFacade,
@@ -101,8 +101,11 @@ class TestApp : App() {
         return ongoingGameComponent
     }
 
-    override fun appEventRepository(): AppEventRepository {
-        return testGameComponent.appEventRepository
+    override fun homeFacade(): HomeFacade {
+        return testGameComponent.homeFacade
     }
 
+    fun appEventRepository(): AppEventRepository {
+        return testAppComponent.appEventRepository
+    }
 }

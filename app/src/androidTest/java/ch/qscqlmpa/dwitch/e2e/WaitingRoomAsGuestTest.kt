@@ -41,6 +41,18 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
     }
 
     @Test
+    fun playerLeavesGame() {
+        goToWaitingRoom()
+
+        testRule.assertPlayerInWr(PlayerGuestTest.LocalGuest.name, ready = false)
+
+        testRule.onNodeWithTag(UiTags.toolbarNavigationIcon).performClick()
+        testRule.clickOnDialogConfirmButton()
+
+        assertCurrentScreenIsHomeSreen()
+    }
+
+    @Test
     fun localPlayerGetsDisconnected() {
         goToWaitingRoom()
 

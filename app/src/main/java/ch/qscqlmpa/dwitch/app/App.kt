@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.app
 
-import android.annotation.SuppressLint
 import ch.qscqlmpa.dwitch.app.notifications.NotificationChannelFactory
 import ch.qscqlmpa.dwitch.ongoinggame.OnGoingGameUiModule
 import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameUiComponent
@@ -8,13 +7,12 @@ import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationComponent
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationModule
 import ch.qscqlmpa.dwitchcommunication.di.DaggerCommunicationComponent
-import ch.qscqlmpa.dwitchgame.appevent.AppEvent
-import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
 import ch.qscqlmpa.dwitchgame.di.DaggerGameComponent
 import ch.qscqlmpa.dwitchgame.di.GameComponent
 import ch.qscqlmpa.dwitchgame.di.modules.DwitchGameModule
-import ch.qscqlmpa.dwitchgame.ongoinggame.common.GuestFacade
-import ch.qscqlmpa.dwitchgame.ongoinggame.common.HostFacade
+import ch.qscqlmpa.dwitchgame.home.HomeFacade
+import ch.qscqlmpa.dwitchgame.ongoinggame.common.GuestGameFacade
+import ch.qscqlmpa.dwitchgame.ongoinggame.common.HostGameFacade
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameComponent
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.modules.OngoingGameModule
 import ch.qscqlmpa.dwitchmodel.game.RoomType
@@ -62,7 +60,7 @@ open class App : DaggerApplication() {
         super.onCreate()
 
         createNotificationChannels()
-        observeAppEvents()
+        serviceManager.init()
     }
 
     open fun startOngoingGame(
@@ -94,8 +92,8 @@ open class App : DaggerApplication() {
             )
             ongoingGameUiComponent = appComponent.addOngoingGameUiComponent(
                 OnGoingGameUiModule(
-                    ongoingGameComponent!!.hostFacade,
-                    ongoingGameComponent!!.guestFacade,
+                    ongoingGameComponent!!.hostGameFacade,
+                    ongoingGameComponent!!.guestGameFacade,
                     ongoingGameComponent!!.waitingRoomFacade,
                     ongoingGameComponent!!.waitingRoomHostFacade,
                     ongoingGameComponent!!.waitingRoomGuestFacade,
@@ -110,18 +108,18 @@ open class App : DaggerApplication() {
         return ongoingGameComponent
     }
 
-    fun hostFacade(): HostFacade {
+    fun hostFacade(): HostGameFacade {
         checkNotNull(ongoingGameComponent) { "No on-going game component!" }
-        return ongoingGameComponent!!.hostFacade
+        return ongoingGameComponent!!.hostGameFacade
     }
 
-    fun guestFacade(): GuestFacade {
+    fun guestFacade(): GuestGameFacade {
         checkNotNull(ongoingGameComponent) { "No on-going game component!" }
-        return ongoingGameComponent!!.guestFacade
+        return ongoingGameComponent!!.guestGameFacade
     }
 
-    open fun appEventRepository(): AppEventRepository {
-        return gameComponent.appEventRepository
+    open fun homeFacade(): HomeFacade {
+        return gameComponent.homeFacade
     }
 
     fun getGameUiComponent(): OngoingGameUiComponent? {
@@ -133,23 +131,6 @@ open class App : DaggerApplication() {
         ongoingGameUiComponent = null
         ongoingGameComponent = null
         inGameStoreComponent = null
-    }
-
-    @SuppressLint("CheckResult") // Subscription is disposed when app is destroyed
-    protected open fun observeAppEvents() {
-        appEventRepository().observeEvents().subscribe { event ->
-            when (event) {
-                is AppEvent.GameCreated -> serviceManager.startHostService(event.gameInfo)
-                is AppEvent.GameJoined -> serviceManager.startGuestService(event.gameInfo)
-                AppEvent.GameRoomJoinedByHost -> serviceManager.goToHostGameRoom()
-                AppEvent.GameRoomJoinedByGuest -> serviceManager.goToGuestGameRoom()
-                AppEvent.GameOverHost -> serviceManager.stopHostService()
-                AppEvent.GameLeft, AppEvent.GameCanceled, AppEvent.GameOverGuest -> serviceManager.stopGuestService()
-                else -> {
-                    // Nothing to do
-                }
-            }
-        }
     }
 
     private fun createNotificationChannels() {

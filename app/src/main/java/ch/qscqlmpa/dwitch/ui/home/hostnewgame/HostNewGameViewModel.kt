@@ -3,13 +3,17 @@ package ch.qscqlmpa.dwitch.ui.home.hostnewgame
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.BuildConfig
+import ch.qscqlmpa.dwitch.app.AppEvent
+import ch.qscqlmpa.dwitch.app.AppEventRepository
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 class HostNewGameViewModel @Inject constructor(
+    private val appEventRepository: AppEventRepository,
     private val hostFacade: HomeHostFacade,
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
@@ -51,8 +55,17 @@ class HostNewGameViewModel @Inject constructor(
         require(!gameName.isNullOrBlank()) { "Game name cannot be blank" }
         _loading.value = true
         disposableManager.add(
-            hostFacade.hostGame(gameName, playerName, 8889) // TODO: Extract the port somewhere where it makes more sense
-                .observeOn(uiScheduler)
+            Completable.merge(
+                listOf(
+                    appEventRepository.observeEvents()
+                        .filter { event -> event is AppEvent.ServiceStarted }
+                        .firstElement()
+                        .ignoreElement(),
+                    // TODO: Extract the port somewhere where it makes more sense
+                    hostFacade.hostGame(gameName, playerName, 8889)
+                        .observeOn(uiScheduler),
+                )
+            )
                 .doOnTerminate { _loading.value = true }
                 .subscribe(
                     { _navigationCommand.setValue(HostNewGameNavigationCommand.NavigateToWaitingRoom) },

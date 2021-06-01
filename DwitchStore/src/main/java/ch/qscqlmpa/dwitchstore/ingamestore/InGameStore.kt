@@ -5,6 +5,7 @@ import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
+import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.ingamestore.model.GameCommonIdAndCurrentRoom
 import ch.qscqlmpa.dwitchstore.ingamestore.model.ResumeComputerPlayersInfo
 import ch.qscqlmpa.dwitchstore.model.Game
@@ -25,6 +26,7 @@ interface InGameStore {
     fun observeGameState(): Observable<DwitchGameState>
     fun getGameCommonIdAndCurrentRoom(): GameCommonIdAndCurrentRoom
     fun getPlayerLocalId(dwitchId: DwitchPlayerId): Long?
+    fun getLocalPlayerRole(): PlayerRole
 
     fun updateGameWithCommonId(gameCommonId: GameCommonId)
     fun deleteGame()

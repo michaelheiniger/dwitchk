@@ -1,9 +1,31 @@
-package ch.qscqlmpa.dwitchgame.ongoinggame.common
+package ch.qscqlmpa.dwitchgame.common
 
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
 import org.tinylog.kotlin.Logger
 import java.util.concurrent.atomic.AtomicReference
+
+internal abstract class CachedEventRepository<T> {
+
+    private val eventRelay = PublishRelay.create<T>()
+
+    private var lastEvent: T? = null
+
+    fun observeEvents(): Observable<T> {
+        Logger.debug { "Observing events..." }
+        return eventRelay
+    }
+
+    fun lastEvent(): T? {
+        return lastEvent
+    }
+
+    fun notify(event: T) {
+        Logger.debug { "Notify of event: $event" }
+        lastEvent = event
+        eventRelay.accept(event)
+    }
+}
 
 /**
  * Features required:
@@ -12,7 +34,7 @@ import java.util.concurrent.atomic.AtomicReference
  * consumes it and a subscriber cannot consume it twice. The rational is that the consumer has a lifecycle tied to the UI
  * so we don't want to lose an event. At the same time, we don't want to perform an operation resulting of an event more than once.
  */
-internal abstract class EventRepository<T> {
+internal abstract class ConsumeOnceEventRepository<T> {
 
     private var lastEvent = AtomicReference<T?>()
 

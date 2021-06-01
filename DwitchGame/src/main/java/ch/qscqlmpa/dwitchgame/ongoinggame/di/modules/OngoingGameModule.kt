@@ -5,10 +5,10 @@ import ch.qscqlmpa.dwitchcommunication.CommServer
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationComponent
 import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertising
-import ch.qscqlmpa.dwitchgame.ongoinggame.common.GuestFacade
-import ch.qscqlmpa.dwitchgame.ongoinggame.common.GuestFacadeImpl
-import ch.qscqlmpa.dwitchgame.ongoinggame.common.HostFacade
-import ch.qscqlmpa.dwitchgame.ongoinggame.common.HostFacadeImpl
+import ch.qscqlmpa.dwitchgame.ongoinggame.common.GuestGameFacade
+import ch.qscqlmpa.dwitchgame.ongoinggame.common.GuestGameFacadeImpl
+import ch.qscqlmpa.dwitchgame.ongoinggame.common.HostGameFacade
+import ch.qscqlmpa.dwitchgame.ongoinggame.common.HostGameFacadeImpl
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.GameCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
@@ -124,8 +124,8 @@ class OngoingGameModule(
         hostCommunicationStateRepository: HostCommunicationStateRepository,
         communicator: HostCommunicator,
         gameAdvertising: GameAdvertising
-    ): HostFacade {
-        return HostFacadeImpl(hostCommunicationStateRepository, communicator, gameAdvertising)
+    ): HostGameFacade {
+        return HostGameFacadeImpl(hostCommunicationStateRepository, communicator, gameAdvertising)
     }
 
     @OngoingGameScope
@@ -133,7 +133,7 @@ class OngoingGameModule(
     internal fun provideGuestFacade(
         guestCommunicationStateRepository: GuestCommunicationStateRepository,
         communicator: GuestCommunicator
-    ): GuestFacade {
-        return GuestFacadeImpl(communicator, guestCommunicationStateRepository)
+    ): GuestGameFacade {
+        return GuestGameFacadeImpl(communicator, guestCommunicationStateRepository)
     }
 }

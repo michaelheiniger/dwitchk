@@ -1,10 +1,11 @@
 package ch.qscqlmpa.dwitch.ui.home
 
+import ch.qscqlmpa.dwitch.app.AppEventRepository
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
 import ch.qscqlmpa.dwitch.ui.home.main.MainActivityViewModel
-import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
+import ch.qscqlmpa.dwitchgame.home.HomeFacade
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
@@ -25,9 +26,10 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class) // Needed because of logging
 class MainActivityViewModelTest : BaseViewModelUnitTest() {
 
+    private val mockAppEventRepository = mockk<AppEventRepository>(relaxed = true)
+    private val mockHomeFacade = mockk<HomeFacade>(relaxed = true)
     private val mockHomeGuestFacade = mockk<HomeGuestFacade>(relaxed = true)
     private val mockHomeHostFacade = mockk<HomeHostFacade>(relaxed = true)
-    private val mockAppEventRepository = mockk<AppEventRepository>(relaxed = true)
 
     private lateinit var viewModel: MainActivityViewModel
 
@@ -37,9 +39,10 @@ class MainActivityViewModelTest : BaseViewModelUnitTest() {
     @Before
     fun setup() {
         viewModel = MainActivityViewModel(
+            mockAppEventRepository,
+            mockHomeFacade,
             mockHomeGuestFacade,
             mockHomeHostFacade,
-            mockAppEventRepository,
             Schedulers.trampoline()
         )
 

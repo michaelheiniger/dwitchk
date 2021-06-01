@@ -3,8 +3,8 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.messageprocessors
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
-import ch.qscqlmpa.dwitchgame.appevent.AppEvent
-import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
+import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GuestGameLifecycleEvent
+import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GuestGameLifecycleEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.LaunchGameMessageProcessor
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEventRepository
@@ -16,8 +16,7 @@ import org.junit.jupiter.api.Test
 internal class LaunchGameMessageProcessorTest : BaseMessageProcessorTest() {
 
     private lateinit var gameEventRepository: GuestGameEventRepository
-
-    private val mockAppEventRepository = mockk<AppEventRepository>(relaxed = true)
+    private val mockGameLifecycleEventRepository = mockk<GuestGameLifecycleEventRepository>(relaxed = true)
 
     private lateinit var processor: LaunchGameMessageProcessor
 
@@ -28,7 +27,7 @@ internal class LaunchGameMessageProcessorTest : BaseMessageProcessorTest() {
         gameEventRepository = GuestGameEventRepository()
         processor = LaunchGameMessageProcessor(
             mockInGameStore,
-            mockAppEventRepository,
+            mockGameLifecycleEventRepository,
             gameEventRepository
         )
 
@@ -56,12 +55,11 @@ internal class LaunchGameMessageProcessorTest : BaseMessageProcessorTest() {
     fun `Change room to GameRoom`() {
         launchTest()
 
-        verify { mockAppEventRepository.notify(AppEvent.GameRoomJoinedByGuest) }
+        verify { mockGameLifecycleEventRepository.notify(GuestGameLifecycleEvent.MovedToGameRoom) }
     }
 
     private fun launchTest() {
-        processor.process(message, ConnectionId(0L))
-            .test().assertComplete()
+        processor.process(message, ConnectionId(0L)).test().assertComplete()
     }
 
     private fun buildMessage(): Message.LaunchGameMessage {

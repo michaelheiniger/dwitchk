@@ -42,7 +42,7 @@ internal class GameRoomGuestViewModel @Inject constructor(
 
     private fun observeGameEvent() {
         disposableManager.add(
-            facade.observeEvents()
+            facade.observeGameEvents()
                 .observeOn(uiScheduler)
                 .doOnNext { event -> Logger.debug("Game event received: $event") }
                 .filter { event -> event is GuestGameEvent.GameOver }

@@ -1,7 +1,6 @@
 package ch.qscqlmpa.dwitch.ongoinggame.services
 
 import android.app.PendingIntent
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
@@ -9,16 +8,22 @@ import androidx.core.app.NotificationCompat
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
+import ch.qscqlmpa.dwitch.app.AppEvent
+import ch.qscqlmpa.dwitch.app.AppEventRepository
 import ch.qscqlmpa.dwitch.app.notifications.NotificationChannelFactory.DEFAULT_CHANNEL_ID
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
 import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
-import ch.qscqlmpa.dwitchgame.appevent.AppEvent
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
+import dagger.android.DaggerService
 import org.tinylog.kotlin.Logger
+import javax.inject.Inject
 
-abstract class BaseInGameService : Service() {
+abstract class BaseInGameService : DaggerService() {
+
+    @Inject
+    lateinit var appEventRepository: AppEventRepository
 
     protected abstract val playerRole: PlayerRole
 
@@ -80,7 +85,7 @@ abstract class BaseInGameService : Service() {
     }
 
     protected fun notifyServiceStarted() {
-        app.appEventRepository().notify(AppEvent.GameSetupDone)
+        appEventRepository.notify(AppEvent.ServiceStarted)
     }
 
     private fun buildNotificationIntent(roomType: RoomType): Intent {

@@ -6,8 +6,9 @@ import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import io.reactivex.rxjava3.core.Completable
 import javax.inject.Inject
 
-internal class JoinGameAckMessageProcessor @Inject constructor(private val store: InGameStore) :
-    MessageProcessor {
+internal class JoinGameAckMessageProcessor @Inject constructor(
+    private val store: InGameStore
+) : MessageProcessor {
 
     override fun process(message: Message, senderConnectionID: ConnectionId): Completable {
 

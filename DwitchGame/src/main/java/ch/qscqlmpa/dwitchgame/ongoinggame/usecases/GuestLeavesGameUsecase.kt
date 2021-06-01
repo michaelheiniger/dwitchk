@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
-import ch.qscqlmpa.dwitchgame.appevent.AppEvent
-import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
+import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GuestGameLifecycleEvent
+import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GuestGameLifecycleEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.GuestMessageFactory
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 internal class GuestLeavesGameUsecase @Inject constructor(
     private val store: InGameStore,
-    private val appEventRepository: AppEventRepository,
+    private val gameLifecycleEventRepository: GuestGameLifecycleEventRepository,
     private val communicator: GuestCommunicator
 ) {
 
@@ -21,7 +21,7 @@ internal class GuestLeavesGameUsecase @Inject constructor(
                 communicator.sendMessageToHost(message)
                 store.deleteGame()
             }
-            appEventRepository.notify(AppEvent.GameLeft)
+            gameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GuestLeftGame)
         }
     }
 }

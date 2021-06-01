@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitch.ongoinggame.services
 
 import android.content.Context
 import android.content.Intent
-import ch.qscqlmpa.dwitchgame.appevent.GameJoinedInfo
+import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GameJoinedInfo
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import org.tinylog.kotlin.Logger

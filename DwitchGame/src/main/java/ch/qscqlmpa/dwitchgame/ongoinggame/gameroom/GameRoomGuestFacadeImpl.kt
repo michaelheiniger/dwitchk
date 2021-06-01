@@ -14,13 +14,9 @@ internal class GameRoomGuestFacadeImpl @Inject constructor(
     private val schedulerFactory: SchedulerFactory
 ) : GameRoomGuestFacade {
 
-    override fun observeEvents(): Observable<GuestGameEvent> {
+    override fun observeGameEvents(): Observable<GuestGameEvent> {
         return gameEventRepository.observeEvents()
             .subscribeOn(schedulerFactory.io())
-    }
-
-    override fun consumeLastEvent(): GuestGameEvent? {
-        return gameEventRepository.consumeLastEvent()
     }
 
     override fun leaveGame(): Completable {

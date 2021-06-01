@@ -10,7 +10,6 @@ import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.websocket.client.test.OnStartEvent
-import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
@@ -24,7 +23,7 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
     protected val gameCommonId = GameCommonId(12345)
 
     protected open fun goToWaitingRoom() {
-        advertiseGame()
+        advertiseGameToJoin()
 
         testRule.onNodeWithText(gameName, substring = true).performClick()
         testRule.onNodeWithTag(UiTags.playerName).performTextReplacement(PlayerGuestTest.LocalGuest.name)
@@ -46,6 +45,17 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
         testRule.assertTextIsDisplayedOnce(getString(R.string.players_in_waitingroom))
     }
 
+    protected fun advertiseGameToJoin() {
+        advertiseGame(
+            isNew = true,
+            gameName = gameName,
+            gameCommonId = gameCommonId,
+            gamePort = 8890,
+            senderIpAddress = "192.168.1.1",
+            senderPort = 2454
+        )
+    }
+
     protected fun waitForNextMessageSentByLocalGuest(): Message {
         Logger.debug { "Waiting for next message sent by local guest..." }
         val messageSerialized = clientTestStub.observeMessagesSent()
@@ -55,12 +65,6 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
         val message = commSerializerFactory.unserializeMessage(messageSerialized)
         Logger.debug { "Message sent to host: $message" }
         return message
-    }
-
-    protected fun advertiseGame() {
-        val hostIpAddress = "192.168.1.1"
-        val gameAd = buildSerializedAdvertisedGame(true, gameName, gameCommonId, 8889)
-        networkAdapter.setPacket(Packet(gameAd, hostIpAddress, 4355))
     }
 
     protected fun hostSendsJoinGameAck() {

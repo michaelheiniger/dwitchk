@@ -7,11 +7,11 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
-internal class HostFacadeImpl @Inject constructor(
+internal class HostGameFacadeImpl @Inject constructor(
     private val communicationStateRepository: HostCommunicationStateRepository,
     private val communicator: HostCommunicator,
     private val gameAdvertising: GameAdvertising
-) : HostFacade, GameAdvertising by gameAdvertising {
+) : HostGameFacade, GameAdvertising by gameAdvertising {
 
     override fun currentCommunicationState(): Observable<HostCommunicationState> {
         return communicationStateRepository.currentState()

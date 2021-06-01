@@ -87,10 +87,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
         testRule.assertCardOnTable(Card.Clubs3)
 
         hostPlaysCard(Card.Spades4)
-        waitUntilPlayerDashbordIsUpdated() //TODO: Understand why so many updates
-        waitUntilPlayerDashbordIsUpdated()
-        waitUntilPlayerDashbordIsUpdated()
-        waitUntilPlayerDashbordIsUpdated()
+        waitUntilPlayerDashboardIsUpdated()
 
         testRule.assertCardOnTable(Card.Spades4)
 
@@ -131,8 +128,6 @@ class GameRoomAsGuestTest : BaseGuestTest() {
     }
 
     private fun goToGameRoom() {
-        advertiseGame()
-
         goToWaitingRoom()
 
         hostSendsJoinGameAck()

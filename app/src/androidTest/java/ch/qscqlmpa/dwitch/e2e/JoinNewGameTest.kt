@@ -4,21 +4,15 @@ import androidx.compose.ui.test.*
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.e2e.base.BaseUiTest
 import ch.qscqlmpa.dwitch.ui.common.UiTags
-import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import org.junit.Test
 
-class NewGameAsGuestTest : BaseUiTest() {
-
-    private val message1 = buildSerializedAdvertisedGame(true, "Kaamelott", GameCommonId(23), 8890)
-    private val message2 = buildSerializedAdvertisedGame(true, "Les Bronzés", GameCommonId(65), 8891)
-    private val packet1 = Packet(message1, "192.168.1.1", 3456)
-    private val packet2 = Packet(message2, "192.168.1.2", 7657)
+class JoinNewGameTest : BaseUiTest() {
 
     @Test
     fun guestMustProvideANameToJoinTheGame() {
-        networkAdapter.setPacket(packet1)
-        networkAdapter.setPacket(packet2)
+        advertiseGame1()
+        advertiseGame2()
 
         testRule.onNodeWithText("Les Bronzés", substring = true).performClick()
 
@@ -32,8 +26,8 @@ class NewGameAsGuestTest : BaseUiTest() {
 
     @Test
     fun guestCanAbortAndComeBackToHomeScreen() {
-        networkAdapter.setPacket(packet1)
-        networkAdapter.setPacket(packet2)
+        advertiseGame1()
+        advertiseGame2()
 
         testRule.onNodeWithText("Les Bronzés", substring = true)
             .assertIsDisplayed()
@@ -43,5 +37,27 @@ class NewGameAsGuestTest : BaseUiTest() {
             .assertIsDisplayed()
             .performClick()
         assertCurrentScreenIsHomeSreen()
+    }
+
+    private fun advertiseGame1() {
+        advertiseGame(
+            isNew = true,
+            gameName = "Kaamelott",
+            gameCommonId = GameCommonId(23),
+            gamePort = 8890,
+            senderIpAddress = "192.168.1.1",
+            senderPort = 2454
+        )
+    }
+
+    private fun advertiseGame2() {
+        advertiseGame(
+            isNew = true,
+            gameName = "Les Bronzés",
+            gameCommonId = GameCommonId(65),
+            gamePort = 8891,
+            senderIpAddress = "192.168.1.2",
+            senderPort = 6543
+        )
     }
 }

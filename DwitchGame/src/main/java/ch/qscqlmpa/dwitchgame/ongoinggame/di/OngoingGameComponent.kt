@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.di
 
-import ch.qscqlmpa.dwitchgame.ongoinggame.common.GuestFacade
-import ch.qscqlmpa.dwitchgame.ongoinggame.common.HostFacade
+import ch.qscqlmpa.dwitchgame.ongoinggame.common.GuestGameFacade
+import ch.qscqlmpa.dwitchgame.ongoinggame.common.HostGameFacade
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.modules.*
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.modules.GuestCommunicationModule
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.modules.HostCommunicationModule
@@ -29,8 +29,8 @@ import dagger.Subcomponent
     ]
 )
 interface OngoingGameComponent {
-    val hostFacade: HostFacade
-    val guestFacade: GuestFacade
+    val hostGameFacade: HostGameFacade
+    val guestGameFacade: GuestGameFacade
     val waitingRoomFacade: WaitingRoomFacade
     val waitingRoomHostFacade: WaitingRoomHostFacade
     val waitingRoomGuestFacade: WaitingRoomGuestFacade

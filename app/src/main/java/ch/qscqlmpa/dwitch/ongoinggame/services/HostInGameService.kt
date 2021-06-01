@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
-import ch.qscqlmpa.dwitchgame.appevent.GameCreatedInfo
 import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertisingInfo
+import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GameCreatedInfo
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import org.tinylog.kotlin.Logger

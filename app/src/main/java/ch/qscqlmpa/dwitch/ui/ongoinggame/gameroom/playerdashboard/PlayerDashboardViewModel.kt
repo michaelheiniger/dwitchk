@@ -92,7 +92,7 @@ class PlayerDashboardViewModel @Inject constructor(
             Observable.merge(
                 listOf(
                     playManager.observeScreen(),
-                    endOfRoundManager.observeScreenInfo(),
+                    endOfRoundManager.observeScreen(),
                     cardExchangeManager.observeScreen()
                 )
             )

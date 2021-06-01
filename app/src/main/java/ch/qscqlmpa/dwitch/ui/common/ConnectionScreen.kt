@@ -74,7 +74,6 @@ fun ConnectionGuestScreen(
     onReconnectClick: () -> Unit,
     onAbortClick: () -> Unit
 ) {
-    println("salut: ${MaterialTheme.colors.primary}")
     val connectionInfo = when (status) {
         GuestCommunicationState.Connecting -> ConnectionInfo(R.string.guest_connecting, connecting = true)
         GuestCommunicationState.Disconnected -> ConnectionInfo(R.string.disconnected_from_host, connecting = false)

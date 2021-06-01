@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitchgame.computerplayer
+package ch.qscqlmpa.dwitchgame.ongoinggame.computerplayer
 
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId

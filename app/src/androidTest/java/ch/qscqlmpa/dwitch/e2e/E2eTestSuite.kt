@@ -6,8 +6,8 @@ import org.junit.runners.Suite
 @RunWith(Suite::class)
 @Suite.SuiteClasses(
     HomeTest::class,
-    NewGameAsGuestTest::class,
-    NewGameAsHostTest::class,
+    JoinNewGameTest::class,
+    HostNewGameTest::class,
     WaitingRoomAsGuestTest::class,
     WaitingRoomAsHostTest::class,
     GameRoomAsGuestTest::class,

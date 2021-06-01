@@ -2,8 +2,8 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
-import ch.qscqlmpa.dwitchgame.appevent.AppEvent
-import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
+import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GuestGameLifecycleEvent
+import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GuestGameLifecycleEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.GuestMessageFactory
 import io.mockk.confirmVerified
@@ -15,18 +15,17 @@ import org.junit.jupiter.api.Test
 
 internal class GuestLeavesGameUsecaseTest : BaseUnitTest() {
 
-    private val playerDwitchId = DwitchPlayerId(23)
-
-    private lateinit var appEventRepository: AppEventRepository
-
+    private lateinit var gameLifecycleEventRepository: GuestGameLifecycleEventRepository
     private val mockCommunicator = mockk<GuestCommunicator>(relaxed = true)
 
     private lateinit var guestLeavesGameUsecase: GuestLeavesGameUsecase
 
+    private val playerDwitchId = DwitchPlayerId(23)
+
     @BeforeEach
     fun setup() {
-        appEventRepository = AppEventRepository()
-        guestLeavesGameUsecase = GuestLeavesGameUsecase(mockInGameStore, appEventRepository, mockCommunicator)
+        gameLifecycleEventRepository = GuestGameLifecycleEventRepository()
+        guestLeavesGameUsecase = GuestLeavesGameUsecase(mockInGameStore, gameLifecycleEventRepository, mockCommunicator)
 
         every { mockInGameStore.getLocalPlayerDwitchId() } returns playerDwitchId
     }
@@ -34,12 +33,12 @@ internal class GuestLeavesGameUsecaseTest : BaseUnitTest() {
     @Test
     fun `Local player (guest) is leaving the new game`() {
         every { mockInGameStore.gameIsNew() } returns true
-        val testObserver = appEventRepository.observeEvents().test()
+        val testObserver = gameLifecycleEventRepository.observeEvents().test()
         testObserver.assertNoValues()
 
         launchTest()
 
-        testObserver.assertValue(AppEvent.GameLeft)
+        testObserver.assertValue(GuestGameLifecycleEvent.GuestLeftGame)
 
         verify { mockCommunicator.sendMessageToHost(GuestMessageFactory.createLeaveGameMessage(playerDwitchId)) }
         confirmVerified(mockCommunicator)
@@ -53,12 +52,12 @@ internal class GuestLeavesGameUsecaseTest : BaseUnitTest() {
     @Test
     fun `Local player (guest) is leaving the existing game`() {
         every { mockInGameStore.gameIsNew() } returns false
-        val testObserver = appEventRepository.observeEvents().test()
+        val testObserver = gameLifecycleEventRepository.observeEvents().test()
         testObserver.assertNoValues()
 
         launchTest()
 
-        testObserver.assertValue(AppEvent.GameLeft)
+        testObserver.assertValue(GuestGameLifecycleEvent.GuestLeftGame)
 
         confirmVerified(mockCommunicator)
 

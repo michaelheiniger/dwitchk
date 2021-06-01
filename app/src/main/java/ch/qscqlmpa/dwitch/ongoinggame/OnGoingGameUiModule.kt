@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ongoinggame
 
-import ch.qscqlmpa.dwitchgame.ongoinggame.common.GuestFacade
-import ch.qscqlmpa.dwitchgame.ongoinggame.common.HostFacade
+import ch.qscqlmpa.dwitchgame.ongoinggame.common.GuestGameFacade
+import ch.qscqlmpa.dwitchgame.ongoinggame.common.HostGameFacade
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameFacade
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameRoomGuestFacade
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameRoomHostFacade
@@ -14,8 +14,8 @@ import dagger.Provides
 @Suppress("unused")
 @Module
 class OnGoingGameUiModule(
-    private val hostFacade: HostFacade,
-    private val guestFacade: GuestFacade,
+    private val hostGameFacade: HostGameFacade,
+    private val guestGameFacade: GuestGameFacade,
     private val waitingRoomFacade: WaitingRoomFacade,
     private val waitingRoomHostFacade: WaitingRoomHostFacade,
     private val waitingRoomGuestFacade: WaitingRoomGuestFacade,
@@ -25,13 +25,13 @@ class OnGoingGameUiModule(
 ) {
 
     @Provides
-    fun provideHostFacade(): HostFacade {
-        return hostFacade
+    fun provideHostFacade(): HostGameFacade {
+        return hostGameFacade
     }
 
     @Provides
-    fun provideGuestFacade(): GuestFacade {
-        return guestFacade
+    fun provideGuestFacade(): GuestGameFacade {
+        return guestGameFacade
     }
 
     @Provides

@@ -7,7 +7,7 @@ import ch.qscqlmpa.dwitch.e2e.base.BaseUiTest
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import org.junit.Test
 
-class NewGameAsHostTest : BaseUiTest() {
+class HostNewGameTest : BaseUiTest() {
 
     @Test
     fun hostMustProvideAPlayerNameAndAGameNameToCreateAGame() {

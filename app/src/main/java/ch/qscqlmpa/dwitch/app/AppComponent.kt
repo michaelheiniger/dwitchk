@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitch.app
 import android.app.Application
 import ch.qscqlmpa.dwitch.ongoinggame.OnGoingGameUiModule
 import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameUiComponent
-import ch.qscqlmpa.dwitch.service.ServiceManagerModule
+import ch.qscqlmpa.dwitch.service.AndroidServiceBindingModule
 import ch.qscqlmpa.dwitch.ui.home.HomeActivityBindingModule
 import ch.qscqlmpa.dwitch.ui.home.HomeViewModelBindingModule
 import ch.qscqlmpa.dwitchgame.di.GameComponent
@@ -20,11 +20,13 @@ import dagger.android.AndroidInjector
         ApplicationModule::class,
         HomeActivityBindingModule::class,
         HomeViewModelBindingModule::class,
-        ServiceManagerModule::class,
+        AndroidServiceBindingModule::class,
         SchedulersModule::class
     ]
 )
 interface AppComponent : AndroidInjector<App> {
+
+    val appEventRepository: AppEventRepository
 
     @Component.Builder
     interface Builder {

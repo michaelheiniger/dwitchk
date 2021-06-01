@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationSt
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 
-interface HostFacade {
+interface HostGameFacade {
     fun advertiseGame(gameAdvertisingInfo: GameAdvertisingInfo): Completable
     fun startServer()
     fun stopServer()

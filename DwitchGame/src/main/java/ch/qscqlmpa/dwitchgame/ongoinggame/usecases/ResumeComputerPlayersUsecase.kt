@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
-import ch.qscqlmpa.dwitchgame.computerplayer.ComputerPlayersManager
+import ch.qscqlmpa.dwitchgame.ongoinggame.computerplayer.ComputerPlayersManager
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject

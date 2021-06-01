@@ -2,8 +2,8 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchgame.appevent.AppEvent
-import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
+import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GuestGameLifecycleEvent
+import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GuestGameLifecycleEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.GameOverMessageProcessor
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEventRepository
@@ -14,8 +14,7 @@ import org.junit.jupiter.api.Test
 
 internal class GameOverMessageProcessorTest : BaseMessageProcessorTest() {
 
-    private val mockAppEventRepository = mockk<AppEventRepository>(relaxed = true)
-
+    private val mockGameLifecycleEventRepository = mockk<GuestGameLifecycleEventRepository>(relaxed = true)
     private lateinit var gameEventRepository: GuestGameEventRepository
 
     private lateinit var processor: GameOverMessageProcessor
@@ -23,29 +22,32 @@ internal class GameOverMessageProcessorTest : BaseMessageProcessorTest() {
     @BeforeEach
     fun setup() {
         gameEventRepository = GuestGameEventRepository()
-        processor = GameOverMessageProcessor(mockAppEventRepository, gameEventRepository)
+        processor = GameOverMessageProcessor(mockGameLifecycleEventRepository, gameEventRepository)
     }
 
     @Test
     fun `Service is stopped`() {
+        // When
         launchTest()
 
-        verify { mockAppEventRepository.notify(AppEvent.GameOverGuest) }
+        // Then
+        verify { mockGameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GameOver) }
     }
 
     @Test
     fun `Notify of GameOver event`() {
+        // Given
         val testObserver = gameEventRepository.observeEvents().test()
         testObserver.assertNoValues()
 
+        // When
         launchTest()
 
+        // Then
         testObserver.assertValue(GuestGameEvent.GameOver)
     }
 
     private fun launchTest() {
-        processor.process(Message.GameOverMessage, ConnectionId(0))
-            .test()
-            .assertComplete()
+        processor.process(Message.GameOverMessage, ConnectionId(0)).test().assertComplete()
     }
 }

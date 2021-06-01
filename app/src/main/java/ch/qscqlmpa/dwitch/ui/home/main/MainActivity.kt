@@ -9,6 +9,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.ViewModelProvider
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
+import ch.qscqlmpa.dwitch.ui.common.LoadingDialog
 import ch.qscqlmpa.dwitch.ui.home.HomeBaseActivity
 import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameActivity
 import ch.qscqlmpa.dwitch.ui.home.joinnewgame.JoinNewGameActivity
@@ -30,6 +31,7 @@ class MainActivity : HomeBaseActivity() {
             onCreateNewGameClick = { HostNewGameActivity.hostNewGame(this) },
             onResumableGameClick = { game -> viewModel.resumeGame(game) }
         )
+        if (viewModel.loading.observeAsState(false).value) LoadingDialog()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

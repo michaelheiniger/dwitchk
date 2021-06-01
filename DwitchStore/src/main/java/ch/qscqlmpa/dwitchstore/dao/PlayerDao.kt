@@ -210,4 +210,12 @@ internal interface PlayerDao {
         """
     )
     fun getPlayerLocalId(gameLocalId: Long, dwitchId: DwitchPlayerId): Long?
+
+    @Query(
+        """
+            SELECT player_role FROM Player
+            WHERE id = :playerLocalId
+        """
+    )
+    fun getPlayerRole(playerLocalId: Long): PlayerRole
 }

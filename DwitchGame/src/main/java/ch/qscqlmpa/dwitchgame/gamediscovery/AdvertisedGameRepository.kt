@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitchgame.gamediscovery
 
+import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchgame.di.GameScope
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
@@ -14,7 +15,8 @@ import javax.inject.Inject
 internal class AdvertisedGameRepository @Inject constructor(
     private val store: Store,
     private val gameDiscovery: GameDiscovery,
-    private val schedulerFactory: SchedulerFactory
+    private val schedulerFactory: SchedulerFactory,
+    private val idlingResource: DwitchIdlingResource
 ) {
 
     companion object {
@@ -47,6 +49,7 @@ internal class AdvertisedGameRepository @Inject constructor(
 
     private fun advertisedGames(): Observable<AdvertisedGame> {
         return gameDiscovery.listenForAdvertisedGames()
+            .doOnNext { idlingResource.decrement() }
             .subscribeOn(schedulerFactory.io())
     }
 

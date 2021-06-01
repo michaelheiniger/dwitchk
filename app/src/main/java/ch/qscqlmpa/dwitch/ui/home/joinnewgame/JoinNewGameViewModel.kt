@@ -3,14 +3,18 @@ package ch.qscqlmpa.dwitch.ui.home.joinnewgame
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.BuildConfig
+import ch.qscqlmpa.dwitch.app.AppEvent
+import ch.qscqlmpa.dwitch.app.AppEventRepository
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 class JoinNewGameViewModel @Inject constructor(
+    private val appEventRepository: AppEventRepository,
     private val guestFacade: HomeGuestFacade,
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
@@ -42,9 +46,17 @@ class JoinNewGameViewModel @Inject constructor(
         require(!playerName.isNullOrBlank()) { "Player name cannot be blank" }
         _loading.value = true
         disposableManager.add(
-            guestFacade.joinGame(advertisedGame, playerName)
-                .observeOn(uiScheduler)
-                .doOnTerminate { _loading.value = true }
+            Completable.merge(
+                listOf(
+                    appEventRepository.observeEvents()
+                        .filter { event -> event is AppEvent.ServiceStarted }
+                        .firstElement()
+                        .ignoreElement(),
+                    guestFacade.joinGame(advertisedGame, playerName)
+                        .observeOn(uiScheduler)
+                )
+            )
+                .doOnTerminate { _loading.value = false }
                 .subscribe(
                     { _navigationCommand.setValue(JoinNewGameNavigationCommand.NavigateToWaitingRoom) },
                     { error -> Logger.error(error) { "Error while joining the game" } }

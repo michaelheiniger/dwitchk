@@ -1,11 +1,9 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
-import ch.qscqlmpa.dwitchgame.appevent.AppEvent
-import ch.qscqlmpa.dwitchgame.appevent.AppEventRepository
+import ch.qscqlmpa.dwitchgame.gamelifecycleevents.HostGameLifecycleEvent
+import ch.qscqlmpa.dwitchgame.gamelifecycleevents.HostGameLifecycleEventRepository
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
-import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEvent
-import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEventRepository
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import io.reactivex.rxjava3.core.Completable
 import javax.inject.Inject
@@ -13,8 +11,7 @@ import javax.inject.Inject
 internal class CancelGameUsecase @Inject constructor(
     private val store: InGameStore,
     private val communicator: HostCommunicator,
-    private val appEventRepository: AppEventRepository,
-    private val gameEventRepository: GuestGameEventRepository
+    private val gameLifecycleEventRepository: HostGameLifecycleEventRepository
 ) {
 
     fun cancelGame(): Completable {
@@ -23,8 +20,7 @@ internal class CancelGameUsecase @Inject constructor(
                 store.deleteGame()
             }
             sendCancelGameMessage()
-            appEventRepository.notify(AppEvent.GameOverHost)
-            gameEventRepository.notify(GuestGameEvent.GameCanceled)
+            gameLifecycleEventRepository.notify(HostGameLifecycleEvent.GameCanceled)
         }
     }
 

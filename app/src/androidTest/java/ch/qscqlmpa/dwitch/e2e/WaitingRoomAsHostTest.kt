@@ -28,7 +28,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
     }
 
     @Test
-    fun guestJoinsWaitingRoom() {
+    fun guest1JoinsWaitingRoom() {
         goToWaitingRoom()
 
         guestJoinsGame(PlayerHostTest.Guest1)
@@ -70,7 +70,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
     }
 
     @Test
-    fun kickGuest1OffGame() {
+    fun hostKicksGuest1OffGame() {
         goToWaitingRoom()
 
         guestJoinsGame(PlayerHostTest.Guest1)
@@ -112,7 +112,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
     }
 
     @Test
-    fun gameCanceled() {
+    fun hostCancelsGame() {
         goToWaitingRoom()
 
         guestJoinsGame(PlayerHostTest.Guest1)

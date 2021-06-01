@@ -16,25 +16,25 @@ internal class GameRepository @Inject constructor(
     private val store: InGameStore,
     private val dwitchFactory: DwitchFactory
 ) {
+    private val gameData = Observable.combineLatest(
+        store.observeLocalPlayer().distinctUntilChanged(),
+        store.observeGameState().distinctUntilChanged(),
+        { localPlayer, gameState ->
+            when (gameState.phase) {
+                DwitchGamePhase.RoundIsBeginning -> DwitchState.RoundIsBeginning(createDashboardInfo(localPlayer, gameState))
+                DwitchGamePhase.CardExchange -> getDataForCardExchange(localPlayer, gameState)
+                DwitchGamePhase.RoundIsOnGoing -> DwitchState.RoundIsOngoing(createDashboardInfo(localPlayer, gameState))
+                DwitchGamePhase.RoundIsOver -> DwitchState.EndOfRound(createEndOfRoundInfo(localPlayer, gameState))
+            }
+        }
+    ).share()
 
     fun getGameName(): Single<String> {
         return Single.fromCallable { store.getGameName() }
     }
 
     fun observeGameData(): Observable<DwitchState> {
-        return Observable.combineLatest(
-            store.observeLocalPlayer(),
-            store.observeGameState(),
-            { localPlayer, gameState ->
-                when (gameState.phase) {
-                    DwitchGamePhase.RoundIsBeginning -> DwitchState.RoundIsBeginning(createDashboardInfo(localPlayer, gameState))
-                    DwitchGamePhase.CardExchange -> getDataForCardExchange(localPlayer, gameState)
-                    DwitchGamePhase.RoundIsOnGoing -> DwitchState.RoundIsOngoing(createDashboardInfo(localPlayer, gameState))
-                    DwitchGamePhase.RoundIsOver -> DwitchState.EndOfRound(createEndOfRoundInfo(localPlayer, gameState))
-                    else -> throw IllegalStateException("Unexpected error") // To satisfy buggy compiler
-                }
-            }
-        ).distinctUntilChanged()
+        return gameData
     }
 
     private fun getDataForCardExchange(localPlayer: Player, gameState: DwitchGameState): DwitchState {

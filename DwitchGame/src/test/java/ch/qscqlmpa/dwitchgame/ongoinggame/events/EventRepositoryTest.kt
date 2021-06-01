@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.events
 
-import ch.qscqlmpa.dwitchgame.ongoinggame.common.EventRepository
+import ch.qscqlmpa.dwitchgame.common.ConsumeOnceEventRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -45,4 +45,4 @@ internal class EventRepositoryTest {
     }
 }
 
-private class MyEventRepository : EventRepository<String>()
+private class MyEventRepository : ConsumeOnceEventRepository<String>()

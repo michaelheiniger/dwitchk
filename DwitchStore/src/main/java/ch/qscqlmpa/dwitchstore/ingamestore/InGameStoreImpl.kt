@@ -5,6 +5,7 @@ import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
+import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.dao.AppRoomDatabase
 import ch.qscqlmpa.dwitchstore.ingamestore.model.GameCommonIdAndCurrentRoom
 import ch.qscqlmpa.dwitchstore.ingamestore.model.ResumeComputerPlayersInfo
@@ -27,6 +28,7 @@ internal class InGameStoreImpl constructor(
     private val _gameCommonId: GameCommonId by lazy { gameDao.getGameCommonId(gameLocalId) }
     private val _gameName: String by lazy { gameDao.getGameName(gameLocalId) }
     private val _localDwitchPlayerId: DwitchPlayerId by lazy { playerDao.getPlayerDwitchId(localPlayerLocalId) }
+    private val _localPlayerRole: PlayerRole by lazy { playerDao.getPlayerRole(localPlayerLocalId) }
 
     // Game
     override fun getGame(): Game {
@@ -69,6 +71,10 @@ internal class InGameStoreImpl constructor(
 
     override fun getPlayerLocalId(dwitchId: DwitchPlayerId): Long? {
         return playerDao.getPlayerLocalId(gameLocalId, dwitchId)
+    }
+
+    override fun getLocalPlayerRole(): PlayerRole {
+        return _localPlayerRole
     }
 
     override fun updateGameWithCommonId(gameCommonId: GameCommonId) {

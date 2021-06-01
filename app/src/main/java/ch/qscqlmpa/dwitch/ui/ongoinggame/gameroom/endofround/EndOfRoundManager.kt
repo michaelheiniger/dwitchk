@@ -10,7 +10,7 @@ class EndOfRoundManager @Inject constructor(
     private val facade: GameFacade
 ) {
 
-    fun observeScreenInfo(): Observable<GameRoomScreen.EndOfRound> {
+    fun observeScreen(): Observable<GameRoomScreen.EndOfRound> {
         return facade.observeGameData()
             .filter { data -> data is DwitchState.EndOfRound }
             .map { data ->

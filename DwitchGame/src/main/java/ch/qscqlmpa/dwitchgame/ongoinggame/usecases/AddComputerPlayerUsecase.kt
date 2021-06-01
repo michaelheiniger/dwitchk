@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.usecases
 
-import ch.qscqlmpa.dwitchgame.computerplayer.ComputerPlayersManager
+import ch.qscqlmpa.dwitchgame.ongoinggame.computerplayer.ComputerPlayersManager
 import io.reactivex.rxjava3.core.Completable
 import javax.inject.Inject
 
