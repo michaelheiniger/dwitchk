@@ -7,7 +7,7 @@ buildscript {
     }
     dependencies {
         classpath("com.android.tools.build:gradle:7.1.0-alpha01")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.32")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlinVersion}")
         classpath("org.jetbrains.kotlin:kotlin-serialization:${Versions.kotlinVersion}")
         classpath("de.mannodermaus.gradle.plugins:android-junit5:1.6.2.0")
 
