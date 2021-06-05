@@ -20,7 +20,7 @@ import java.util.*
 
 class JoinNewGameActivity : HomeBaseActivity() {
 
-    private lateinit var wrViewModel: JoinNewGameViewModel
+    private lateinit var jngViewModel: JoinNewGameViewModel
     private lateinit var game: AdvertisedGame
 
     private val initialPlayerName = if (BuildConfig.DEBUG) "Mébène" else ""
@@ -47,13 +47,13 @@ class JoinNewGameActivity : HomeBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         game = intent.getParcelableExtra(EXTRA_GAME)!!
-        wrViewModel = ViewModelProvider(this, viewModelFactory).get(JoinNewGameViewModel::class.java)
-        setContent { ActivityScreenContainer { ActivityScreen(wrViewModel) } }
+        jngViewModel = ViewModelProvider(this, viewModelFactory).get(JoinNewGameViewModel::class.java)
+        setContent { ActivityScreenContainer { ActivityScreen(jngViewModel) } }
         observeNavigationCommands()
     }
 
     private fun observeNavigationCommands() {
-        wrViewModel.navigationCommand.observe(
+        jngViewModel.navigationCommand.observe(
             this,
             { event ->
                 when (event) {
@@ -71,12 +71,12 @@ class JoinNewGameActivity : HomeBaseActivity() {
 
     override fun onStart() {
         super.onStart()
-        wrViewModel.onStart()
+        jngViewModel.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        wrViewModel.onStop()
+        jngViewModel.onStop()
     }
 
     companion object {

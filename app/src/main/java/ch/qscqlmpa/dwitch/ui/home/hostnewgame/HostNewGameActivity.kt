@@ -18,7 +18,7 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 
 class HostNewGameActivity : HomeBaseActivity() {
 
-    private lateinit var wrViewModel: HostNewGameViewModel
+    private lateinit var hngViewModel: HostNewGameViewModel
     private val initialPlayerName = if (BuildConfig.DEBUG) "Mirlick" else ""
     private val initialGameName = if (BuildConfig.DEBUG) "Dwiiitch !" else ""
     private val initialHostGameControl = BuildConfig.DEBUG
@@ -45,13 +45,13 @@ class HostNewGameActivity : HomeBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        wrViewModel = ViewModelProvider(this, viewModelFactory).get(HostNewGameViewModel::class.java)
-        setContent { ActivityScreenContainer { ActivityScreen(wrViewModel) } }
+        hngViewModel = ViewModelProvider(this, viewModelFactory).get(HostNewGameViewModel::class.java)
+        setContent { ActivityScreenContainer { ActivityScreen(hngViewModel) } }
         observeNavigationCommands()
     }
 
     private fun observeNavigationCommands() {
-        wrViewModel.navigationCommand.observe(
+        hngViewModel.navigationCommand.observe(
             this,
             { event ->
                 when (event) {
@@ -68,12 +68,12 @@ class HostNewGameActivity : HomeBaseActivity() {
 
     override fun onStart() {
         super.onStart()
-        wrViewModel.onStart()
+        hngViewModel.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        wrViewModel.onStop()
+        hngViewModel.onStop()
     }
 
     companion object {

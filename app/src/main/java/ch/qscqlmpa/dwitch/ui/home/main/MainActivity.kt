@@ -18,7 +18,7 @@ import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
 
 class MainActivity : HomeBaseActivity() {
 
-    private lateinit var wrViewModel: MainActivityViewModel
+    private lateinit var homeViewModel: MainActivityViewModel
 
     @Composable
     fun ActivityScreen(viewModel: MainActivityViewModel) {
@@ -37,11 +37,11 @@ class MainActivity : HomeBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        wrViewModel = ViewModelProvider(this, viewModelFactory).get(MainActivityViewModel::class.java)
+        homeViewModel = ViewModelProvider(this, viewModelFactory).get(MainActivityViewModel::class.java)
 
-        setContent { ActivityScreenContainer { ActivityScreen(wrViewModel) } }
+        setContent { ActivityScreenContainer { ActivityScreen(homeViewModel) } }
 
-        wrViewModel.commands.observe(
+        homeViewModel.commands.observe(
             this,
             { command ->
                 when (command) {
@@ -69,12 +69,12 @@ class MainActivity : HomeBaseActivity() {
 
     override fun onStart() {
         super.onStart()
-        wrViewModel.onStart()
+        homeViewModel.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        wrViewModel.onStop()
+        homeViewModel.onStop()
     }
 
     companion object {
