@@ -40,7 +40,7 @@ class HostNewGameScreenTest : BaseUiUnitTest() {
 
     private fun launchTest() {
         launchTestWithContent {
-            HostNewGameScreen(
+            HostNewGameBody(
                 playerName = playerName,
                 gameName = gameName,
                 hostGameControlEnabled = hostGameControlEnabled,

@@ -6,16 +6,24 @@ import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.DwitchTopBar
+import ch.qscqlmpa.dwitch.ui.common.LoadingDialog
 import ch.qscqlmpa.dwitch.ui.common.NavigationIcon
 import ch.qscqlmpa.dwitch.ui.common.UiTags
+import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 
 @Preview(
     showBackground = true,
@@ -24,17 +32,52 @@ import ch.qscqlmpa.dwitch.ui.common.UiTags
 @Composable
 fun HostNewGameScreenPreview() {
     ActivityScreenContainer {
-        JoinNewGameScreen(
-            gameName = "Dwiiiitch",
-            playerName = "Aragorn",
-            joinGameControlEnabled = true,
-            {}, {}, {}
-        )
+//        JoinNewGameScreen(
+//            gameName = "Dwiiiitch",
+//            playerName = "Aragorn",
+//            joinGameControlEnabled = true,
+//            {}, {}, {}
+//        )
     }
 }
 
 @Composable
 fun JoinNewGameScreen(
+    vmFactory: ViewModelFactory,
+    gameIpAddress: String,
+    onJoinGameClick: () -> Unit,
+    onBackClick: () -> Unit
+) {
+    val viewModel = viewModel<JoinNewGameViewModel>(factory = vmFactory)
+
+    DisposableEffect(key1 = viewModel) {
+        viewModel.onStart()
+        onDispose { viewModel.onStop() }
+    }
+
+    when (viewModel.navigationCommand.observeAsState().value) {
+        JoinNewGameNavigationCommand.NavigateToWaitingRoom -> onJoinGameClick()
+    }
+
+    val initialPlayerName = if (BuildConfig.DEBUG) "Mébène" else ""
+    val initialJoinGameControl = BuildConfig.DEBUG
+    val playerName = viewModel.playerName.observeAsState(initialPlayerName).value
+    val joinGameControl = viewModel.joinGameControl.observeAsState(initialJoinGameControl).value
+    val game = remember { mutableStateOf(viewModel.getGame(gameIpAddress)) }
+    JoinNewGameBody(
+        gameName = game.value.gameName,
+        playerName = playerName,
+        joinGameControlEnabled = joinGameControl,
+        onPlayerNameChange = { name -> viewModel.onPlayerNameChange(name) },
+        onJoinGameClick = { viewModel.joinGame() },
+        onBackClick = onBackClick
+    )
+    if (viewModel.loading.observeAsState(false).value) LoadingDialog()
+}
+
+
+@Composable
+fun JoinNewGameBody(
     gameName: String,
     playerName: String,
     joinGameControlEnabled: Boolean,

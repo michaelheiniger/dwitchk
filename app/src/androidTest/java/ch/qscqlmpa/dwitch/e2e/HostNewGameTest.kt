@@ -1,8 +1,8 @@
 package ch.qscqlmpa.dwitch.e2e
 
 import androidx.compose.ui.test.*
+import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
 import ch.qscqlmpa.dwitch.e2e.base.BaseUiTest
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import org.junit.Test
@@ -11,28 +11,44 @@ class HostNewGameTest : BaseUiTest() {
 
     @Test
     fun hostMustProvideAPlayerNameAndAGameNameToCreateAGame() {
-        testRule.onNodeWithText(getString(R.string.create_game)).performClick()
-        testRule.assertTextIsDisplayedOnce(getString(R.string.host_game))
+        testRule.createNewGameButton().performClick()
+        testRule.hostGameButton().assertIsDisplayed()
 
-        testRule.onNodeWithTag(UiTags.playerName).performTextClearance()
-        testRule.onNodeWithTag(UiTags.gameName).performTextClearance()
-        testRule.onNodeWithTag(UiTags.playerName).assertTextEquals("")
-        testRule.onNodeWithTag(UiTags.gameName).assertTextEquals("")
-        testRule.onNodeWithText(getString(R.string.host_game)).assertIsNotEnabled()
+        testRule.playerName().performTextClearance()
+        testRule.gameName().performTextClearance()
+        testRule.playerName().assertTextEquals("")
+        testRule.gameName().assertTextEquals("")
+        testRule.hostGameButton().assertIsNotEnabled()
 
-        testRule.onNodeWithTag(UiTags.playerName).performTextInput("Mirlick")
-        testRule.onNodeWithTag(UiTags.gameName).performTextInput("Dwiiitch !")
-        testRule.onNodeWithText(getString(R.string.host_game)).assertIsEnabled()
+        testRule.playerName().performTextInput("Mirlick")
+        testRule.gameName().performTextInput("Dwiiitch !")
+        testRule.hostGameButton().assertIsEnabled()
     }
 
     @Test
     fun hostCanAbortAndGoBackToHomeScreen() {
-        testRule.onNodeWithText(getString(R.string.create_game)).performClick()
-        testRule.assertTextIsDisplayedOnce(getString(R.string.host_game))
+        testRule.createNewGameButton().performClick()
+        testRule.hostGameButton().assertIsDisplayed()
 
         testRule.onNodeWithTag(UiTags.toolbarNavigationIcon)
             .assertIsDisplayed()
             .performClick()
         assertCurrentScreenIsHomeSreen()
+    }
+
+    private fun ComposeContentTestRule.createNewGameButton(): SemanticsNodeInteraction {
+        return onNodeWithText(getString(R.string.create_new_game))
+    }
+
+    private fun ComposeContentTestRule.playerName(): SemanticsNodeInteraction {
+        return onNodeWithTag(UiTags.playerName, useUnmergedTree = true)
+    }
+
+    private fun ComposeContentTestRule.gameName(): SemanticsNodeInteraction {
+        return onNodeWithTag(UiTags.gameName, useUnmergedTree = true)
+    }
+
+    private fun ComposeContentTestRule.hostGameButton(): SemanticsNodeInteraction {
+        return onNodeWithText(getString(R.string.host_game))
     }
 }

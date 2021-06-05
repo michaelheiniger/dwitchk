@@ -39,7 +39,7 @@
     <string name="leave_game">See ya mate !</string>
     <string name="listening_for_guests">Online</string>
     <string name="listening_advertised_games_failed">Having troubles while looking for games, yo !</string>
-    <string name="create_game">Create game</string>
+    <string name="create_new_game">Create game</string>
     <string name="resumable_games">Resumable games</string>
     <string name="loading_resumable_games_failed">Having troubles while fetching existing games, yo !</string>
     <string name="advertised_games">Games</string>

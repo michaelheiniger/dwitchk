@@ -24,6 +24,8 @@ class JoinNewGameViewModel @Inject constructor(
     private val _joinGameControl = MutableLiveData(false)
     private val _playerName = MutableLiveData("")
 
+    private lateinit var game: AdvertisedGame
+
     init {
         if (BuildConfig.DEBUG) {
             _joinGameControl.value = true
@@ -36,12 +38,18 @@ class JoinNewGameViewModel @Inject constructor(
     val playerName get(): LiveData<String> = _playerName
     val joinGameControl get(): LiveData<Boolean> = _joinGameControl
 
+    //TODO: find better solution without side effet (i.e. assignment)
+    fun getGame(ipAddress: String): AdvertisedGame {
+        game = guestFacade.getAdvertisedGame(ipAddress)
+        return game
+    }
+
     fun onPlayerNameChange(value: String) {
         _playerName.value = value
         _joinGameControl.value = !playerName.value.isNullOrBlank()
     }
 
-    fun joinGame(advertisedGame: AdvertisedGame) {
+    fun joinGame() {
         val playerName = playerName.value
         require(!playerName.isNullOrBlank()) { "Player name cannot be blank" }
         _loading.value = true
@@ -52,7 +60,7 @@ class JoinNewGameViewModel @Inject constructor(
                         .filter { event -> event is AppEvent.ServiceStarted }
                         .firstElement()
                         .ignoreElement(),
-                    guestFacade.joinGame(advertisedGame, playerName)
+                    guestFacade.joinGame(game, playerName)
                         .observeOn(uiScheduler)
                 )
             )

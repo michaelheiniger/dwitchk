@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitch.e2e
 
 import androidx.compose.ui.test.*
+import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.e2e.base.BaseUiTest
 import ch.qscqlmpa.dwitch.ui.common.UiTags
@@ -16,12 +17,12 @@ class JoinNewGameTest : BaseUiTest() {
 
         testRule.onNodeWithText("Les Bronzés", substring = true).performClick()
 
-        testRule.onNodeWithTag(UiTags.playerName).performTextClearance()
-        testRule.onNodeWithTag(UiTags.playerName).assertTextEquals("")
-        testRule.onNodeWithText(getString(R.string.join_game)).assertIsNotEnabled()
+        testRule.playerName().performTextClearance()
+        testRule.playerName().assertTextEquals("")
+        testRule.joinGameButton().assertIsNotEnabled()
 
-        testRule.onNodeWithTag(UiTags.playerName).performTextInput("Mébène")
-        testRule.onNodeWithText(getString(R.string.join_game)).assertIsEnabled()
+        testRule.playerName().performTextInput("Mébène")
+        testRule.joinGameButton().assertIsEnabled()
     }
 
     @Test
@@ -37,6 +38,14 @@ class JoinNewGameTest : BaseUiTest() {
             .assertIsDisplayed()
             .performClick()
         assertCurrentScreenIsHomeSreen()
+    }
+
+    private fun ComposeContentTestRule.playerName(): SemanticsNodeInteraction {
+        return onNodeWithTag(UiTags.playerName, useUnmergedTree = true)
+    }
+
+    private fun ComposeContentTestRule.joinGameButton(): SemanticsNodeInteraction {
+        return onNodeWithText(getString(R.string.join_game))
     }
 
     private fun advertiseGame1() {

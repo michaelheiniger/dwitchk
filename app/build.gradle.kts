@@ -144,6 +144,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
     implementation("androidx.compose.runtime:runtime-rxjava3:$composeVersion")
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha02")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.0-beta08")
     androidTestImplementation("androidx.compose.ui:ui-test:$composeVersion")
 

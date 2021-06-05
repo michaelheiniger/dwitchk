@@ -20,6 +20,10 @@ internal class HomeGuestFacadeImpl @Inject constructor(
         return advertisedGameRepository.listenForAdvertisedGames()
     }
 
+    override fun getAdvertisedGame(ipAddress: String): AdvertisedGame {
+        return advertisedGameRepository.getGame(ipAddress)
+    }
+
     override fun joinGame(advertisedGame: AdvertisedGame, playerName: String): Completable {
         return joinNewGameUsecase.joinGame(advertisedGame, playerName)
             .subscribeOn(schedulerFactory.io())

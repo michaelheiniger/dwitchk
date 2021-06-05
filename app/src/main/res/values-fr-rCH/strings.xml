@@ -25,7 +25,7 @@
     <string name="leave_game">Quitter</string>
     <string name="listening_for_guests">En ligne</string>
     <string name="listening_advertised_games_failed">Erreur lors la recherche de parties</string>
-    <string name="create_game">Créer partie</string>
+    <string name="create_new_game">Créer partie</string>
     <string name="resumable_games">Parties à reprendre</string>
     <string name="loading_resumable_games_failed">Erreur lors de la recherche des parties existantes</string>
     <string name="advertised_games">Parties</string>

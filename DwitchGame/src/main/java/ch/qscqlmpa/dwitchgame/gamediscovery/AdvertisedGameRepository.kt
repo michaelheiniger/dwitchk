@@ -20,7 +20,7 @@ internal class AdvertisedGameRepository @Inject constructor(
 ) {
 
     companion object {
-        const val GAME_AD_TIMEOUT_SEC = 4
+        const val GAME_AD_TIMEOUT_SEC = 40
     }
 
     private val advertisedGames = mutableMapOf<IpAddress, AdvertisedGame>() // Local cache surviving unsubscriptions
@@ -40,6 +40,10 @@ internal class AdvertisedGameRepository @Inject constructor(
             .doOnNext { adGame -> updateLocalMap(adGame) }
             .doFinally { Logger.debug { "Stop listening for advertised games" } }
             .map { ArrayList(advertisedGames.values) }
+    }
+
+    fun getGame(ipAddress: String): AdvertisedGame {
+        return advertisedGames.getValue(IpAddress(ipAddress))
     }
 
     private fun resumableGames(): Observable<List<GameCommonId>> {

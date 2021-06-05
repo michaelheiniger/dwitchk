@@ -34,7 +34,7 @@ class MainActivityViewModel @Inject constructor(
     val loading get(): LiveData<Boolean> = _loading
     val advertisedGames get(): LiveData<LoadedData<List<AdvertisedGame>>> = _advertisedGames
     val resumableGames get(): LiveData<LoadedData<List<ResumableGameInfo>>> = _resumableGames
-    val commands get(): LiveData<MainActivityCommands> = _commands
+    val navigation get(): LiveData<MainActivityCommands> = _commands
 
     init {
         when (homeFacade.lastHostGameEvent()) {

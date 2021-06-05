@@ -9,6 +9,8 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
@@ -18,13 +20,12 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
-import ch.qscqlmpa.dwitch.ui.common.DwitchTopBar
-import ch.qscqlmpa.dwitch.ui.common.LoadedData
-import ch.qscqlmpa.dwitch.ui.common.UiTags
-import ch.qscqlmpa.dwitch.ui.common.toStringEuFormat
+import ch.qscqlmpa.dwitch.ui.common.*
+import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
@@ -56,7 +57,7 @@ fun HomeScreenPreview() {
         )
     )
     ActivityScreenContainer {
-        HomeScreen(
+        HomeBody(
             advertisedGames = advertisedGame,
             resumableGames = resumableGameResponse,
             onCreateNewGameClick = {},
@@ -68,6 +69,51 @@ fun HomeScreenPreview() {
 
 @Composable
 fun HomeScreen(
+    vmFactory: ViewModelFactory,
+    onCreateNewGameClick: () -> Unit,
+    onJoinNewGameEvent: (AdvertisedGame) -> Unit
+) {
+    val viewModel = viewModel<MainActivityViewModel>(factory = vmFactory)
+    DisposableEffect(key1 = viewModel) {
+        viewModel.onStart()
+        onDispose { viewModel.onStop() }
+    }
+
+    val advertisedGames = viewModel.advertisedGames.observeAsState(LoadedData.Loading)
+    val resumableGames = viewModel.resumableGames.observeAsState(LoadedData.Loading)
+    HomeBody(
+        advertisedGames = advertisedGames.value,
+        resumableGames = resumableGames.value,
+        onJoinGameClick = { game -> viewModel.joinGame(game) },
+        onCreateNewGameClick = onCreateNewGameClick,
+        onResumableGameClick = { game -> viewModel.resumeGame(game) }
+    )
+    if (viewModel.loading.observeAsState(false).value) LoadingDialog()
+
+    val navigation = viewModel.navigation.observeAsState().value
+    when (navigation) {
+        is MainActivityCommands.NavigateToNewGameActivityAsGuest -> onJoinNewGameEvent(navigation.game)
+//        MainActivityCommands.NavigateToWaitingRoomAsGuest -> {
+////            finish()
+//            WaitingRoomActivity.startActivityForGuest(this)
+//        }
+//        MainActivityCommands.NavigateToWaitingRoomAsHost -> {
+////            finish()
+//            WaitingRoomActivity.startActivityForHost(this)
+//        }
+//        MainActivityCommands.NavigateToGameRoomAsGuest -> {
+////            finish()
+//            GameRoomActivity.startForGuest(this)
+//        }
+//        MainActivityCommands.NavigateToGameRoomAsHost -> {
+////            finish()
+//            GameRoomActivity.startForHost(this)
+//        }
+    }
+}
+
+@Composable
+fun HomeBody(
     advertisedGames: LoadedData<List<AdvertisedGame>>,
     resumableGames: LoadedData<List<ResumableGameInfo>>,
     onCreateNewGameClick: () -> Unit,
@@ -106,7 +152,7 @@ private fun GameCreation(onCreateNewGameClick: () -> Unit) {
     Button(
         onClick = onCreateNewGameClick,
         modifier = Modifier.fillMaxWidth().testTag(UiTags.createGame)
-    ) { Text(stringResource(R.string.create_game)) }
+    ) { Text(stringResource(R.string.create_new_game)) }
 }
 
 @Composable

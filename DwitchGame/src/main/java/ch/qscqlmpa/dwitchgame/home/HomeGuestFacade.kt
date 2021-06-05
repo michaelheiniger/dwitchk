@@ -8,6 +8,8 @@ interface HomeGuestFacade {
 
     fun listenForAdvertisedGames(): Observable<List<AdvertisedGame>>
 
+    fun getAdvertisedGame(ipAddress: String): AdvertisedGame
+
     fun joinGame(advertisedGame: AdvertisedGame, playerName: String): Completable
 
     fun joinResumedGame(advertisedGame: AdvertisedGame): Completable

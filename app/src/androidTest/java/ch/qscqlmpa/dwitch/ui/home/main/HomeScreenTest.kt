@@ -113,7 +113,7 @@ class HomeScreenTest : BaseUiUnitTest() {
 
     private fun launchTest() {
         launchTestWithContent {
-            HomeScreen(
+            HomeBody(
                 advertisedGames,
                 resumableGames,
                 onCreateNewGameClick = {},
