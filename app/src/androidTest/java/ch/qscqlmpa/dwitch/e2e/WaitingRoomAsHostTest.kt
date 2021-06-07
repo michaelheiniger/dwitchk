@@ -122,6 +122,8 @@ class WaitingRoomAsHostTest : BaseHostTest() {
             .performClick()
         testRule.clickOnDialogConfirmButton()
 
+        incrementGameIdlingResource("Communication server stopped.")
+
         val messageSent = waitForNextMessageSentByHost()
         assertThat(messageSent).isInstanceOf(Message.CancelGameMessage::class.java)
 
@@ -130,10 +132,11 @@ class WaitingRoomAsHostTest : BaseHostTest() {
 
     private fun guestRejoinsGame(guest: PlayerHostTest) {
         val player = getGuest(guest)
+        incrementGameIdlingResource("Guest rejoins game ($guest)")
         serverTestStub.connectClientToServer(guest)
         val gameCommonId = inGameStore.getGame().gameCommonId
         val rejoinMessage = GuestMessageFactory.createRejoinGameMessage(gameCommonId, player.dwitchId)
-        serverTestStub.guestSendsMessageToServer(guest, rejoinMessage)
+        serverTestStub.clientSendsMessageToServer(guest, rejoinMessage)
 
         val messageSent1 = waitForNextMessageSentByHost()
         assertThat(messageSent1).isInstanceOf(Message.RejoinGameAckMessage::class.java)

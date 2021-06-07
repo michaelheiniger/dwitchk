@@ -47,6 +47,10 @@ internal class InGameStoreImpl constructor(
         return getGame().currentRoom
     }
 
+    override fun observeCurrentRoom(): Observable<RoomType> {
+        return gameDao.observeGameCurrentRoom(gameLocalId)
+    }
+
     override fun getGameState(): DwitchGameState {
         val game = gameDao.getGame(gameLocalId)
         return serializerFactory.unserializeGameState(game.gameState!!)

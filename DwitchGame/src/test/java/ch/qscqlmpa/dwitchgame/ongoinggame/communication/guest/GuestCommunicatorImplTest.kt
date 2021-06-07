@@ -36,8 +36,7 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
             mockMessageDispatcher,
             mockCommunicationEventDispatcher,
             mockCommEventRepository,
-            TestSchedulerFactory(),
-            mockk(relaxed = true)
+            TestSchedulerFactory()
         )
 
         communicationEventsSubject = PublishSubject.create()

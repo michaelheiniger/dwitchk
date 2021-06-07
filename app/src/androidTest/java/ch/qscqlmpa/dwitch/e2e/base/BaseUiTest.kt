@@ -7,11 +7,11 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import ch.qscqlmpa.dwitch.HomeActivity
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.TestApp
 import ch.qscqlmpa.dwitch.e2e.DisableAnimationsRule
-import ch.qscqlmpa.dwitch.ui.home.main.MainActivity
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommunication.di.TestCommunicationComponent
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
@@ -29,7 +29,6 @@ import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.TestNetworkAdapter
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.TestOngoingGameComponent
-import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.DwitchState
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.TestStoreComponent
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
@@ -44,7 +43,7 @@ import java.util.concurrent.TimeUnit
 abstract class BaseUiTest {
 
     @get:Rule
-    val testRule = createAndroidComposeRule<MainActivity>()
+    val testRule = createAndroidComposeRule<HomeActivity>()
 
     @get:Rule
     val animationsRule = DisableAnimationsRule()
@@ -106,9 +105,9 @@ abstract class BaseUiTest {
         senderIpAddress: String,
         senderPort: Int
     ) {
-        incrementGameIdlingResource()
         val ad =
             "{\"isNew\": $isNew, \"gameCommonId\":{\"value\":${gameCommonId.value}},\"gameName\":\"$gameName\",\"gamePort\":$gamePort}"
+        incrementGameIdlingResource("Advertise game $ad")
         networkAdapter.setPacket(Packet(ad, senderIpAddress, senderPort))
     }
 
@@ -129,24 +128,12 @@ abstract class BaseUiTest {
         return res.getString(resource)
     }
 
-    protected fun incrementGameIdlingResource() {
-        gameIdlingResource.increment()
+    protected fun incrementGameIdlingResource(reason: String) {
+        gameIdlingResource.increment(reason)
     }
 
-    protected fun decrementGameIdlingResource() {
-        gameIdlingResource.decrement()
-    }
-
-    /**
-     * Used to wait for game data update before letting Compose check the screen.
-     * This can't easily be done with idling resource since it is complicated
-     * to determine when game data is updated (since it is often updated).
-     * Not the ideal solution but a pragmatic one.
-     */
-    protected fun waitUntilPlayerDashboardIsUpdated() {
-        ongoingGameComponent.gameFacade.observeGameData()
-            .filter { data -> data is DwitchState.RoundIsBeginning || data is DwitchState.RoundIsOngoing }
-            .blockingFirst()
+    protected fun decrementGameIdlingResource(reason: String) {
+        gameIdlingResource.decrement(reason)
     }
 
     protected fun waitUntilGuestIsConnected() {
@@ -183,11 +170,11 @@ class IdlingResourceAdapter(private val idlingResource: DwitchIdlingResource) : 
     override val isIdleNow: Boolean
         get() = idlingResource.isIdleNow()
 
-    fun increment() {
-        idlingResource.increment()
+    fun increment(reason: String) {
+        idlingResource.increment(reason)
     }
 
-    fun decrement() {
-        idlingResource.decrement()
+    fun decrement(reason: String) {
+        idlingResource.decrement(reason)
     }
 }

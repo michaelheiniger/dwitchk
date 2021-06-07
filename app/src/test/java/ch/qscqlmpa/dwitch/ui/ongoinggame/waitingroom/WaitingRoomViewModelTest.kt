@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom
 
+import ch.qscqlmpa.dwitch.app.ProdIdlingResource
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.GameInfoUi
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
@@ -11,7 +12,10 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
+@RunWith(RobolectricTestRunner::class)
 class WaitingRoomViewModelTest : BaseViewModelUnitTest() {
 
     private val mockFacade = mockk<WaitingRoomFacade>(relaxed = true)
@@ -75,6 +79,6 @@ class WaitingRoomViewModelTest : BaseViewModelUnitTest() {
     private fun createViewModel() {
         playersSubject = PublishSubject.create()
         every { mockFacade.observePlayers() } returns playersSubject
-        viewModel = WaitingRoomViewModel(mockFacade, Schedulers.trampoline())
+        viewModel = WaitingRoomViewModel(mockFacade, Schedulers.trampoline(), ProdIdlingResource())
     }
 }

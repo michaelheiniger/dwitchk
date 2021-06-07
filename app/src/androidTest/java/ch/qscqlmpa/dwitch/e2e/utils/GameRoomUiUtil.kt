@@ -66,7 +66,7 @@ object GameRoomUiUtil {
     }
 
     fun ComposeContentTestRule.assertEndOfRoundResult(playerName: String, rank: String) {
-        onNodeWithTag(playerName).assertTextContains(rank)
+        onNodeWithTag(playerName).assertTextContains(rank, substring = true, ignoreCase = true)
     }
 
     fun ComposeContentTestRule.closeGameOverDialog() {

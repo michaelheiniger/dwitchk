@@ -15,7 +15,9 @@ class JoinNewGameTest : BaseUiTest() {
         advertiseGame1()
         advertiseGame2()
 
-        testRule.onNodeWithText("Les Bronzés", substring = true).performClick()
+        testRule.onNodeWithText("Les Bronzés", substring = true)
+            .assertIsDisplayed()
+            .performClick()
 
         testRule.playerName().performTextClearance()
         testRule.playerName().assertTextEquals("")
@@ -33,6 +35,8 @@ class JoinNewGameTest : BaseUiTest() {
         testRule.onNodeWithText("Les Bronzés", substring = true)
             .assertIsDisplayed()
             .performClick()
+
+        testRule.joinGameButton().assertIsDisplayed()
 
         testRule.onNodeWithTag(UiTags.toolbarNavigationIcon)
             .assertIsDisplayed()

@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom
 
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
+import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import ch.qscqlmpa.dwitchstore.model.Player
@@ -26,11 +27,25 @@ internal class WaitingRoomPlayerRepository @Inject constructor(
 
     fun observeLocalPlayer(): Observable<PlayerWrUi> {
         // Local player is never kickable: either it's the host or it's a guest and guests cannot kick anyone.
-        return store.observeLocalPlayer().map { p -> PlayerWrUi(p.id, p.name, p.connectionState, p.ready, kickable = false) }
+        return store.observeLocalPlayer().map { p ->
+            PlayerWrUi(
+                p.id,
+                p.name,
+                p.connectionState == PlayerConnectionState.CONNECTED,
+                p.ready,
+                kickable = false
+            )
+        }
     }
 
     private fun toPlayerWrUi(player: Player, gameIsNew: Boolean): PlayerWrUi {
-        return PlayerWrUi(player.id, player.name, player.connectionState, player.ready, playerIsKickable(player, gameIsNew))
+        return PlayerWrUi(
+            player.id,
+            player.name,
+            player.connectionState == PlayerConnectionState.CONNECTED,
+            player.ready,
+            playerIsKickable(player, gameIsNew)
+        )
     }
 
     private fun playerIsKickable(player: Player, gameIsNew: Boolean): Boolean {

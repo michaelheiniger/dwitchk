@@ -9,6 +9,7 @@ import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeInfo
 import ch.qscqlmpa.dwitchstore.model.Player
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 @OngoingGameScope
@@ -27,14 +28,14 @@ internal class GameRepository @Inject constructor(
                 DwitchGamePhase.RoundIsOver -> DwitchState.EndOfRound(createEndOfRoundInfo(localPlayer, gameState))
             }
         }
-    ).share()
+    )
 
     fun getGameName(): Single<String> {
         return Single.fromCallable { store.getGameName() }
     }
 
     fun observeGameData(): Observable<DwitchState> {
-        return gameData
+        return gameData.doOnNext { data -> Logger.debug { "GameData emitted: $data" } }
     }
 
     private fun getDataForCardExchange(localPlayer: Player, gameState: DwitchGameState): DwitchState {

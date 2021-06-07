@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -14,15 +16,20 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.common.*
+import ch.qscqlmpa.dwitch.ui.ongoinggame.GameRulesDialog
 import ch.qscqlmpa.dwitch.ui.ongoinggame.LoadingSpinner
+import ch.qscqlmpa.dwitch.ui.ongoinggame.connection.host.ConnectionHostViewModel
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.DashboardScreen
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.cardexchange.CardExchangeOnGoing
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.cardexchange.CardExchangeScreen
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.endofround.EndOfRoundScreen
 import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.guest.GameRoomScreen
+import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.playerdashboard.GameRoomViewModel
 import ch.qscqlmpa.dwitch.ui.theme.DwitchTheme
+import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
 
@@ -36,7 +43,7 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationSt
 @Composable
 fun GameRoomHostScreenPreview() {
     DwitchTheme(false) {
-        GameRoomHostScreen(
+        GameRoomHostBody(
             toolbarTitle = "Dwiiiitch",
             screen = null,
             connectionStatus = null,
@@ -46,16 +53,59 @@ fun GameRoomHostScreenPreview() {
             onCardToExchangeClick = {},
             onConfirmExchange = {},
             onStartNewRoundClick = {},
-            onEndGameClick = {},
+            onEndGameConfirmClick = {},
             onReconnectClick = {}
         )
     }
 }
 
+@ExperimentalFoundationApi
+@ExperimentalAnimationApi
+@Composable
+fun GameRoomHostScreen(
+    vmFactory: ViewModelFactory,
+    onNavigationEvent: (GameRoomHostDestination) -> Unit
+) {
+    val playerViewModel = viewModel<GameRoomViewModel>(factory = vmFactory)
+    val hostViewModel = viewModel<GameRoomHostViewModel>(factory = vmFactory)
+    val connectionViewModel = viewModel<ConnectionHostViewModel>(factory = vmFactory)
+
+    DisposableEffect(playerViewModel, hostViewModel, connectionViewModel) {
+        playerViewModel.onStart()
+        hostViewModel.onStart()
+        connectionViewModel.onStart()
+        onDispose {
+            playerViewModel.onStop()
+            hostViewModel.onStop()
+            connectionViewModel.onStop()
+        }
+    }
+
+    val event = hostViewModel.navigation.observeAsState().value
+    if (event != null) onNavigationEvent(event)
+
+    val toolbarTitle = playerViewModel.toolbarTitle.observeAsState(toolbarDefaultTitle).value
+    val screen = playerViewModel.screen.observeAsState().value
+    val connectionStatus = connectionViewModel.connectionStatus.observeAsState().value
+    GameRoomHostBody(
+        toolbarTitle = toolbarTitle,
+        screen = screen,
+        onCardClick = playerViewModel::onCardToPlayClick,
+        onPlayClick = playerViewModel::onPlayClick,
+        onPassClick = playerViewModel::onPassTurnClick,
+        onCardToExchangeClick = playerViewModel::onCardToExchangeClick,
+        onConfirmExchange = playerViewModel::confirmExchange,
+        onStartNewRoundClick = hostViewModel::startNewRound,
+        connectionStatus = connectionStatus,
+        onEndGameConfirmClick = hostViewModel::endGame,
+        onReconnectClick = connectionViewModel::reconnect
+    )
+}
+
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
-fun GameRoomHostScreen(
+fun GameRoomHostBody(
     toolbarTitle: String,
     screen: GameRoomScreen?,
     connectionStatus: HostCommunicationState?,
@@ -65,10 +115,11 @@ fun GameRoomHostScreen(
     onCardToExchangeClick: (card: Card) -> Unit,
     onConfirmExchange: () -> Unit,
     onStartNewRoundClick: () -> Unit,
-    onEndGameClick: () -> Unit,
+    onEndGameConfirmClick: () -> Unit,
     onReconnectClick: () -> Unit
 ) {
     val gameRules = remember { mutableStateOf(false) }
+    val showConfirmationDialog = remember { mutableStateOf(false) }
 
     Column(
         Modifier
@@ -77,7 +128,10 @@ fun GameRoomHostScreen(
     ) {
         DwitchTopBar(
             title = toolbarTitle,
-            navigationIcon = NavigationIcon(R.drawable.ic_baseline_exit_to_app_24, R.string.end_game, onEndGameClick),
+            navigationIcon = NavigationIcon(
+                icon = R.drawable.ic_baseline_exit_to_app_24,
+                contentDescription = R.string.end_game,
+                onClick = { showConfirmationDialog.value = true }),
             actions = listOf(GameRules),
             onActionClick = { action ->
                 when (action) {
@@ -86,13 +140,7 @@ fun GameRoomHostScreen(
             }
         )
 
-        if (gameRules.value) {
-            InfoDialog(
-                title = R.string.game_rules_info_title,
-                text = R.string.game_rules_info_content,
-                onOkClick = { gameRules.value = false }
-            )
-        }
+        if (gameRules.value) GameRulesDialog(onOkClick = { gameRules.value = false })
 
         Column(
             Modifier
@@ -134,7 +182,16 @@ fun GameRoomHostScreen(
             ConnectionHostScreen(
                 status = connectionStatus,
                 onReconnectClick = onReconnectClick,
-                onAbortClick = onEndGameClick
+                onAbortClick = { showConfirmationDialog.value = true }
+            )
+        }
+
+        if (showConfirmationDialog.value) {
+            ConfirmationDialog(
+                title = R.string.info_dialog_title,
+                text = R.string.host_ends_game_confirmation,
+                onConfirmClick = onEndGameConfirmClick,
+                onCancelClick = { showConfirmationDialog.value = false }
             )
         }
     }

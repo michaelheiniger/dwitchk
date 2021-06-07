@@ -6,14 +6,13 @@ import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import ch.qscqlmpa.dwitch.BuildConfig
+import ch.qscqlmpa.dwitch.HomeActivity
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.AppEventRepository
 import ch.qscqlmpa.dwitch.app.notifications.NotificationChannelFactory.DEFAULT_CHANNEL_ID
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants
-import ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.GameRoomActivity
-import ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.WaitingRoomActivity
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import dagger.android.DaggerService
@@ -54,7 +53,7 @@ abstract class BaseInGameService : DaggerService() {
     protected val app: App by lazy { application as App }
 
     protected fun showNotification(roomType: RoomType) {
-        val notificationIntent = buildNotificationIntent(roomType)
+        val notificationIntent = buildNotificationIntent()
 
         val pendingIntent = PendingIntent.getActivity(
             this,
@@ -88,11 +87,8 @@ abstract class BaseInGameService : DaggerService() {
         appEventRepository.notify(AppEvent.ServiceStarted)
     }
 
-    private fun buildNotificationIntent(roomType: RoomType): Intent {
-        val notificationIntent = when (roomType) {
-            RoomType.WAITING_ROOM -> Intent(this, WaitingRoomActivity::class.java)
-            RoomType.GAME_ROOM -> Intent(this, GameRoomActivity::class.java)
-        }
+    private fun buildNotificationIntent(): Intent {
+        val notificationIntent = Intent(this, HomeActivity::class.java)
         notificationIntent.putExtra(CommonExtraConstants.EXTRA_PLAYER_ROLE, playerRole.name)
         notificationIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         return notificationIntent

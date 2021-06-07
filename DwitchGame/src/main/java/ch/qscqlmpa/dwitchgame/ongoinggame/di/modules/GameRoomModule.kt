@@ -1,5 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.di.modules
 
+import ch.qscqlmpa.dwitchgame.ongoinggame.GameFacade
+import ch.qscqlmpa.dwitchgame.ongoinggame.GameFacadeImpl
 import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameScope
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameRoomGuestFacade
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameRoomGuestFacadeImpl
@@ -11,6 +13,10 @@ import dagger.Module
 @Suppress("unused")
 @Module
 abstract class GameRoomModule {
+
+    @OngoingGameScope
+    @Binds
+    internal abstract fun provideGameFacade(facade: GameFacadeImpl): GameFacade
 
     @OngoingGameScope
     @Binds

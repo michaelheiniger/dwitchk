@@ -32,12 +32,15 @@ import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 @Composable
 fun HostNewGameScreenPreview() {
     ActivityScreenContainer {
-//        JoinNewGameScreen(
-//            gameName = "Dwiiiitch",
-//            playerName = "Aragorn",
-//            joinGameControlEnabled = true,
-//            {}, {}, {}
-//        )
+        JoinNewGameBody(
+            gameName = "Dwiiitch",
+            playerName = "Aragorn",
+            joinGameControlEnabled = false,
+            loading = false,
+            onPlayerNameChange = {},
+            onJoinGameClick = {},
+            onBackClick = {}
+        )
     }
 }
 
@@ -56,23 +59,24 @@ fun JoinNewGameScreen(
     }
 
     when (viewModel.navigationCommand.observeAsState().value) {
-        JoinNewGameNavigationCommand.NavigateToWaitingRoom -> onJoinGameClick()
+        JoinNewGameDestination.NavigateToWaitingRoom -> onJoinGameClick()
     }
 
     val initialPlayerName = if (BuildConfig.DEBUG) "Mébène" else ""
     val initialJoinGameControl = BuildConfig.DEBUG
     val playerName = viewModel.playerName.observeAsState(initialPlayerName).value
     val joinGameControl = viewModel.joinGameControl.observeAsState(initialJoinGameControl).value
+    val loading = viewModel.loading.observeAsState(false).value
     val game = remember { mutableStateOf(viewModel.getGame(gameIpAddress)) }
     JoinNewGameBody(
         gameName = game.value.gameName,
         playerName = playerName,
         joinGameControlEnabled = joinGameControl,
+        loading = loading,
         onPlayerNameChange = { name -> viewModel.onPlayerNameChange(name) },
         onJoinGameClick = { viewModel.joinGame() },
         onBackClick = onBackClick
     )
-    if (viewModel.loading.observeAsState(false).value) LoadingDialog()
 }
 
 
@@ -81,10 +85,12 @@ fun JoinNewGameBody(
     gameName: String,
     playerName: String,
     joinGameControlEnabled: Boolean,
+    loading: Boolean,
     onPlayerNameChange: (String) -> Unit,
     onJoinGameClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
+    if (loading) LoadingDialog()
     Column(
         Modifier
             .fillMaxWidth()

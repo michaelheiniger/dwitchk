@@ -16,7 +16,6 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import org.assertj.core.api.Assertions.assertThat
 import org.tinylog.kotlin.Logger
-import java.util.concurrent.TimeUnit
 
 abstract class BaseGuestTest : BaseOnGoingGameTest() {
 
@@ -29,11 +28,9 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
         testRule.onNodeWithTag(UiTags.playerName).performTextReplacement(PlayerGuestTest.LocalGuest.name)
         testRule.onNodeWithText(getString(R.string.join_game)).performClick()
 
-        waitForServiceToBeStarted()
-
+        testRule.waitForIdle() // Can't hook on-going game dependencies before component is created
         hookOngoingGameDependenciesForGuest()
-
-        clientTestStub.setConnectToServerOutcome(OnStartEvent.Success)
+        connectClientToServer(OnStartEvent.Success)
 
         val message = waitForNextMessageSentByLocalGuest()
         assertThat(message).isInstanceOf(Message.JoinGameMessage::class.java)
@@ -43,6 +40,11 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
 
         // Assert that the guest is indeed in the WaitingRoom
         testRule.assertTextIsDisplayedOnce(getString(R.string.players_in_waitingroom))
+    }
+
+    protected fun connectClientToServer(onStartEvent: OnStartEvent) {
+        incrementGameIdlingResource("Client connects to server (linked with comm state)")
+        clientTestStub.connectClientToServer(onStartEvent)
     }
 
     protected fun advertiseGameToJoin() {
@@ -58,13 +60,8 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
 
     protected fun waitForNextMessageSentByLocalGuest(): Message {
         Logger.debug { "Waiting for next message sent by local guest..." }
-        val messageSerialized = clientTestStub.observeMessagesSent()
-            .take(1)
-            .timeout(5, TimeUnit.SECONDS)
-            .blockingFirst()
-        val message = commSerializerFactory.unserializeMessage(messageSerialized)
-        Logger.debug { "Message sent to host: $message" }
-        return message
+        val messageSerialized = clientTestStub.blockUntilMessageSentIsAvailable()
+        return commSerializerFactory.unserializeMessage(messageSerialized)
     }
 
     protected fun hostSendsJoinGameAck() {
@@ -79,6 +76,7 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
     }
 
     private fun hostSendsInitialWaitingRoomUpdate() {
+        incrementGameIdlingResource("Host sends initial state of WR players")
         val message = Message.WaitingRoomStateUpdateMessage(
             listOf(
                 PlayerWr(

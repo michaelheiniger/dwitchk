@@ -3,6 +3,7 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchgame.ongoinggame.usecases.GameLaunchableEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomHostFacade
@@ -12,7 +13,8 @@ import javax.inject.Inject
 
 internal class WaitingRoomHostViewModel @Inject constructor(
     private val facade: WaitingRoomHostFacade,
-    private val uiScheduler: Scheduler
+    private val uiScheduler: Scheduler,
+    private val idlingResource: DwitchIdlingResource
 ) : BaseViewModel() {
 
     private val _navigation = MutableLiveData<WaitingRoomHostDestination>()
@@ -40,11 +42,12 @@ internal class WaitingRoomHostViewModel @Inject constructor(
     }
 
     fun kickPlayer(player: PlayerWrUi) {
+        idlingResource.increment("Click to kick a player")
         disposableManager.add(
             facade.kickPlayer(player)
                 .observeOn(uiScheduler)
                 .subscribe(
-                    {},
+                    { Logger.info { "Player kick successfully ($player)" } },
                     { error -> Logger.error(error) { "Error while kicking player $player." } }
                 )
         )
@@ -67,6 +70,7 @@ internal class WaitingRoomHostViewModel @Inject constructor(
     }
 
     fun cancelGame() {
+        idlingResource.increment("Click to cancel game")
         disposableManager.add(
             facade.cancelGame()
                 .observeOn(uiScheduler)
@@ -84,17 +88,11 @@ internal class WaitingRoomHostViewModel @Inject constructor(
         disposableManager.add(
             facade.observeGameLaunchableEvents()
                 .observeOn(uiScheduler)
-                .map(::processGameLaunchableEvent)
+                .map(::isGameLaunchable)
                 .doOnError { error -> Logger.error(error) { "Error while observing if game can be launched." } }
                 .subscribe { value -> _canGameBeLaunched.value = value }
         )
     }
 
-    private fun processGameLaunchableEvent(event: GameLaunchableEvent): Boolean {
-        return when (event) {
-            GameLaunchableEvent.GameIsReadyToBeLaunched -> true
-            GameLaunchableEvent.NotEnoughPlayers,
-            GameLaunchableEvent.NotAllPlayersAreReady -> false
-        }
-    }
+    private fun isGameLaunchable(event: GameLaunchableEvent) = event.launchable
 }

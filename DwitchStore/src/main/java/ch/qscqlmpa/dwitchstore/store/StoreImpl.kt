@@ -11,23 +11,12 @@ import javax.inject.Inject
 
 internal class StoreImpl @Inject constructor(private val appRoomDatabase: AppRoomDatabase) : Store {
 
-    override fun insertGameForHost(
-        gameName: String,
-        hostPlayerName: String
-    ): InsertGameResult {
+    override fun insertGameForHost(gameName: String, hostPlayerName: String): InsertGameResult {
         return appRoomDatabase.gameDao().insertGameForHost(gameName, hostPlayerName)
     }
 
-    override fun insertGameForGuest(
-        gameName: String,
-        gameCommonId: GameCommonId,
-        guestPlayerName: String
-    ): InsertGameResult {
-        return appRoomDatabase.gameDao().insertGameForGuest(
-            gameName,
-            gameCommonId,
-            guestPlayerName
-        )
+    override fun insertGameForGuest(gameName: String, gameCommonId: GameCommonId, guestPlayerName: String): InsertGameResult {
+        return appRoomDatabase.gameDao().insertGameForGuest(gameName, gameCommonId, guestPlayerName)
     }
 
     override fun updateCurrentRoom(gameId: Long, room: RoomType) {

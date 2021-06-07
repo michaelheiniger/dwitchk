@@ -7,7 +7,6 @@ import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import org.junit.Before
 import org.junit.Test
 
@@ -20,9 +19,9 @@ class WaitingRoomGuestScreenTest : BaseUiUnitTest() {
     @Before
     fun setup() {
         players = listOf(
-            PlayerWrUi(10L, name = "Aragorn", PlayerConnectionState.CONNECTED, ready = true),
-            PlayerWrUi(11L, name = "Legolas", PlayerConnectionState.CONNECTED, ready = false, kickable = false),
-            PlayerWrUi(12L, name = "Gimli", PlayerConnectionState.DISCONNECTED, ready = false, kickable = false)
+            PlayerWrUi(10L, name = "Aragorn", connected = true, ready = true),
+            PlayerWrUi(11L, name = "Legolas", connected = true, ready = false, kickable = false),
+            PlayerWrUi(12L, name = "Gimli", connected = false, ready = false, kickable = false)
         )
         ready = UiCheckboxModel(enabled = true, checked = false)
         connectionStatus = GuestCommunicationState.Connected
@@ -64,14 +63,17 @@ class WaitingRoomGuestScreenTest : BaseUiUnitTest() {
 
     private fun launchTest() {
         launchTestWithContent {
-            WaitingRoomGuestScreen(
+            WaitingRoomGuestBody(
                 toolbarTitle = "Dwiitch",
                 players = players,
                 ready = ready,
-                connectionStatus = connectionStatus,
+                notification = null,
+                connectionStatus = GuestCommunicationState.Connected,
                 onReadyClick = {},
-                onLeaveClick = {},
-                onReconnectClick = {}
+                onLeaveConfirmClick = {},
+                onReconnectClick = {},
+                onGameCanceledAcknowledge = {},
+                onKickOffGameAcknowledge = {}
             )
         }
     }

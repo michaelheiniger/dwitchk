@@ -68,6 +68,9 @@ internal abstract class GameDao(database: AppRoomDatabase) {
     @Query("SELECT * FROM Game WHERE id = :localId")
     abstract fun observeGame(localId: Long): Observable<Game>
 
+    @Query("SELECT current_room FROM Game WHERE id = :localId")
+    abstract fun observeGameCurrentRoom(localId: Long): Observable<RoomType>
+
     @Query(
         """
         UPDATE Game
@@ -90,24 +93,21 @@ internal abstract class GameDao(database: AppRoomDatabase) {
      * Room requires the method to be "open".
      */
     @Transaction
-    open fun insertGameForHost(
-        gameName: String,
-        hostPlayerName: String,
-    ): InsertGameResult {
+    open fun insertGameForHost(gameName: String, hostPlayerName: String): InsertGameResult {
         val gameCommonId = GameCommonId(Date().time)
         val game = Game(
-            0,
+            id = 0,
             DateTime.now(),
             RoomType.WAITING_ROOM,
             gameCommonId,
             gameName,
-            null,
-            0
+            gameState = null,
+            localPlayerLocalId = 0
         )
         val gameLocalId = insertGame(game)
 
         val player = Player(
-            0,
+            id = 0,
             DwitchPlayerId(0),
             gameLocalId,
             hostPlayerName,
@@ -116,9 +116,7 @@ internal abstract class GameDao(database: AppRoomDatabase) {
             ready = true
         )
         val playerLocalId = playerDao.insertPlayer(player)
-        playerDao.updatePlayer(
-            player.copy(id = playerLocalId, dwitchId = DwitchPlayerId(playerLocalId))
-        )
+        playerDao.updatePlayer(player.copy(id = playerLocalId, dwitchId = DwitchPlayerId(playerLocalId)))
 
         updateGame(game.copy(id = gameLocalId, localPlayerLocalId = playerLocalId))
 
@@ -130,11 +128,7 @@ internal abstract class GameDao(database: AppRoomDatabase) {
      * Room requires the method to be "open".
      */
     @Transaction
-    open fun insertGameForGuest(
-        gameName: String,
-        gameCommonId: GameCommonId,
-        guestPlayerName: String
-    ): InsertGameResult {
+    open fun insertGameForGuest(gameName: String, gameCommonId: GameCommonId, guestPlayerName: String): InsertGameResult {
         val existingGame = getGame(gameCommonId)
         return if (existingGame != null) {
             InsertGameResult(existingGame)
@@ -149,24 +143,20 @@ internal abstract class GameDao(database: AppRoomDatabase) {
         deleteGameAndPlayers(gameLocalId)
     }
 
-    private fun insertNewGuestGame(
-        gameCommonId: GameCommonId,
-        gameName: String,
-        guestPlayerName: String
-    ): InsertGameResult {
+    private fun insertNewGuestGame(gameCommonId: GameCommonId, gameName: String, guestPlayerName: String): InsertGameResult {
         val game = Game(
-            0,
+            id = 0,
             DateTime.now(),
             RoomType.WAITING_ROOM,
             gameCommonId,
             gameName,
-            null,
-            0
+            gameState = null,
+            localPlayerLocalId = 0
         )
         val gameLocalId = insertGame(game)
 
         val player = Player(
-            0,
+            id = 0,
             DwitchPlayerId(0),
             gameLocalId,
             guestPlayerName,

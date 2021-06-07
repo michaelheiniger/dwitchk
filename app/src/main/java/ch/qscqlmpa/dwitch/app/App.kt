@@ -50,7 +50,7 @@ open class App : DaggerApplication() {
 
         appComponent = DaggerAppComponent.builder()
             .application(this)
-            .applicationModule(ApplicationModule(this))
+            .applicationModule(ApplicationModule(this, ProdIdlingResource()))
             .gameComponent(gameComponent)
             .build()
         return appComponent
@@ -92,6 +92,7 @@ open class App : DaggerApplication() {
             )
             ongoingGameUiComponent = appComponent.addOngoingGameUiComponent(
                 OnGoingGameUiModule(
+                    ongoingGameComponent!!.gameFacade,
                     ongoingGameComponent!!.hostGameFacade,
                     ongoingGameComponent!!.guestGameFacade,
                     ongoingGameComponent!!.waitingRoomFacade,
@@ -99,7 +100,7 @@ open class App : DaggerApplication() {
                     ongoingGameComponent!!.waitingRoomGuestFacade,
                     ongoingGameComponent!!.gameRoomHostFacade,
                     ongoingGameComponent!!.gameRoomGuestFacade,
-                    ongoingGameComponent!!.gameFacade
+                    ongoingGameComponent!!.playerFacade
                 )
             )
         } else {

@@ -61,7 +61,9 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
         testRule.assertPlayerInWr(PlayerGuestTest.Guest2.name, getString(PLAYER_CONNECTED))
         testRule.assertPlayerInWr(PlayerGuestTest.Guest3.name, getString(PLAYER_CONNECTED))
 
-        clientTestStub.breakConnectionWithHost()
+        clientTestStub.breakConnectionWithServer()
+        incrementGameIdlingResource("Connection with host broken")
+        incrementGameIdlingResource("Local player is disconnected so new WR players state")
 
         testRule.assertPlayerInWr(PlayerGuestTest.Host.name, getString(PLAYER_DISCONNECTED))
         testRule.assertPlayerInWr(PlayerGuestTest.LocalGuest.name, getString(PLAYER_DISCONNECTED))
@@ -79,6 +81,8 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
         goToWaitingRoom()
 
         clientTestStub.serverSendsMessageToClient(Message.CancelGameMessage)
+        incrementGameIdlingResource("Game canceled: WR players state will be updated")
+        incrementGameIdlingResource("Game canceled: Communication state will be updated")
 
         testRule.clickOnDialogConfirmButton()
 
@@ -90,6 +94,8 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
         goToWaitingRoom()
 
         clientTestStub.serverSendsMessageToClient(Message.KickPlayerMessage(PlayerGuestTest.LocalGuest.id))
+        incrementGameIdlingResource("Local player kicked off: WR players state will be updated")
+        incrementGameIdlingResource("Local player kicked off: Communication state will be updated")
 
         testRule.onNodeWithText(getString(R.string.ok)).performClick()
 

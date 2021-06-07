@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom
 
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 
@@ -14,7 +13,7 @@ interface WaitingRoomFacade {
 data class PlayerWrUi(
     val id: Long,
     val name: String,
-    val connectionState: PlayerConnectionState,
+    val connected: Boolean,
     val ready: Boolean,
     val kickable: Boolean = false
 )

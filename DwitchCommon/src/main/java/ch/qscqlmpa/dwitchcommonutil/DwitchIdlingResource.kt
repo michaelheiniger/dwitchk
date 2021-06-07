@@ -10,6 +10,6 @@ package ch.qscqlmpa.dwitchcommonutil
  */
 interface DwitchIdlingResource {
     fun isIdleNow(): Boolean
-    fun increment()
-    fun decrement()
+    fun increment(reason: String)
+    fun decrement(reason: String)
 }

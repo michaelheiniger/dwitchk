@@ -6,7 +6,7 @@ plugins {
     id("kotlin-android")
 }
 
-val composeVersion = "1.0.0-beta08"
+val composeVersion = "1.0.0-beta09"
 
 android {
     compileSdk = Versions.compileSdkVersion
@@ -26,7 +26,8 @@ android {
     }
 
     buildFeatures {
-        compose = true // Enables Jetpack Compose for this module
+        compose = true
+        viewBinding = true// Enables Jetpack Compose for this module
     }
 
     buildTypes {
@@ -54,6 +55,10 @@ android {
 
     kotlinOptions {
         jvmTarget = "11"
+        freeCompilerArgs = listOf(
+            "-P",
+            "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true"
+        )
     }
 
     composeOptions {
@@ -95,6 +100,10 @@ dependencies {
     implementation("com.google.dagger:dagger-android-support:2.35.1")
     implementation("com.google.dagger:dagger-android:2.35.1")
     implementation("com.google.dagger:dagger:2.35.1")
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
+    implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
     kapt("com.google.dagger:dagger-android-processor:2.35.1")
     kapt("com.google.dagger:dagger-compiler:2.35.1")
     kaptAndroidTest("com.google.dagger:dagger-compiler:2.35.1")
@@ -120,7 +129,7 @@ dependencies {
     androidTestImplementation("androidx.test:core:1.3.0")
     androidTestImplementation("androidx.test:rules:1.3.0")
     androidTestImplementation("androidx.test:runner:1.3.0")
-    androidTestUtil("androidx.test:orchestrator:1.4.0-beta01")
+    androidTestUtil("androidx.test:orchestrator:1.4.0-beta02")
 
     // Espresso (needed for CounterIdlingResource)
     androidTestImplementation("androidx.test.espresso:espresso-contrib:3.3.0")
@@ -145,10 +154,10 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
     implementation("androidx.compose.runtime:runtime-rxjava3:$composeVersion")
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha02")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.0-beta08")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
     androidTestImplementation("androidx.compose.ui:ui-test:$composeVersion")
 
-    implementation("androidx.activity:activity-compose:1.3.0-beta01")
+    implementation("androidx.activity:activity-compose:1.3.0-beta02")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha06")
 
     // Robolectric (for unit tests that log stuff)

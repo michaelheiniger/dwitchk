@@ -6,7 +6,6 @@ import ch.qscqlmpa.dwitch.base.BaseUiUnitTest
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import org.junit.Before
 import org.junit.Test
 
@@ -19,9 +18,9 @@ class WaitingRoomHostScreenTest : BaseUiUnitTest() {
     @Before
     fun setup() {
         players = listOf(
-            PlayerWrUi(10L, name = "Aragorn", PlayerConnectionState.CONNECTED, ready = true),
-            PlayerWrUi(11L, name = "Legolas", PlayerConnectionState.CONNECTED, ready = false, kickable = true),
-            PlayerWrUi(12L, name = "Gimli", PlayerConnectionState.DISCONNECTED, ready = false, kickable = true)
+            PlayerWrUi(10L, name = "Aragorn", connected = true, ready = true),
+            PlayerWrUi(11L, name = "Legolas", connected = true, ready = false, kickable = true),
+            PlayerWrUi(12L, name = "Gimli", connected = false, ready = false, kickable = true)
         )
         connectionState = HostCommunicationState.Open
     }
@@ -54,7 +53,7 @@ class WaitingRoomHostScreenTest : BaseUiUnitTest() {
 
     private fun launchTest() {
         launchTestWithContent {
-            WaitingRoomHostScreen(
+            WaitingRoomHostBody(
                 toolbarTitle = "Dwiitch",
                 showAddComputerPlayer = true,
                 players,

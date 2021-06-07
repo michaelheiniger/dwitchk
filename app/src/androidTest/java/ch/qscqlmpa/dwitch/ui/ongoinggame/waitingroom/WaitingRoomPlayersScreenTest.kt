@@ -6,20 +6,19 @@ import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
 import ch.qscqlmpa.dwitch.base.BaseUiUnitTest
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import org.junit.Test
 
 class WaitingRoomPlayersScreenTest : BaseUiUnitTest() {
 
-    private val aragorn = PlayerWrUi(10L, name = "Aragorn", connectionState = PlayerConnectionState.CONNECTED, ready = true)
+    private val aragorn = PlayerWrUi(10L, name = "Aragorn", connected = true, ready = true)
     private val legolas =
-        PlayerWrUi(11L, name = "Legolas", connectionState = PlayerConnectionState.CONNECTED, ready = false, kickable = true)
+        PlayerWrUi(11L, name = "Legolas", connected = true, ready = false, kickable = true)
     private val gimli =
-        PlayerWrUi(12L, name = "Gimli", connectionState = PlayerConnectionState.DISCONNECTED, ready = false, kickable = true)
+        PlayerWrUi(12L, name = "Gimli", connected = false, ready = false, kickable = true)
     private val galadriel =
-        PlayerWrUi(13L, name = "Galadriel", connectionState = PlayerConnectionState.DISCONNECTED, ready = false, kickable = true)
+        PlayerWrUi(13L, name = "Galadriel", connected = false, ready = false, kickable = true)
     private val theoden =
-        PlayerWrUi(14L, name = "Theoden", connectionState = PlayerConnectionState.CONNECTED, ready = true, kickable = true)
+        PlayerWrUi(14L, name = "Theoden", connected = true, ready = true, kickable = true)
 
     private var showAddComputerPlayer = true
 
@@ -65,9 +64,9 @@ class WaitingRoomPlayersScreenTest : BaseUiUnitTest() {
             childNodes.filterToOne(hasText(getString(R.string.not_ready)))
         }
 
-        when (player.connectionState) {
-            PlayerConnectionState.CONNECTED -> childNodes.filterToOne(hasText(getString(R.string.connected_to_host)))
-            PlayerConnectionState.DISCONNECTED -> childNodes.filterToOne(hasText(getString(R.string.disconnected_from_host)))
+        when (player.connected) {
+            true -> childNodes.filterToOne(hasText(getString(R.string.connected_to_host)))
+            false -> childNodes.filterToOne(hasText(getString(R.string.disconnected_from_host)))
         }
     }
 

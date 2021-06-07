@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.di.modules
 
-import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchcommunication.CommClient
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationStateRepository
@@ -25,16 +24,14 @@ internal class GuestCommunicationModule {
             messageDispatcher: MessageDispatcher,
             guestCommunicationEventDispatcher: GuestCommunicationEventDispatcher,
             communicationStateRepository: GuestCommunicationStateRepository,
-            schedulerFactory: SchedulerFactory,
-            idlingResource: DwitchIdlingResource
+            schedulerFactory: SchedulerFactory
         ): GuestCommunicator {
             return GuestCommunicatorImpl(
                 commClient,
                 messageDispatcher,
                 guestCommunicationEventDispatcher,
                 communicationStateRepository,
-                schedulerFactory,
-                idlingResource
+                schedulerFactory
             )
         }
     }

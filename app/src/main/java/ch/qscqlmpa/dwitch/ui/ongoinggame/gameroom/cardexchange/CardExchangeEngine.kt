@@ -62,12 +62,8 @@ class CardExchangeEngine(cardExchangeInfo: CardExchangeInfo) {
             Logger.warn { "No more card can be chosen: already ${cardsSelected.size} chosen." }
             return
         }
-//        if (!cardsInHand.remove(card)) throw IllegalArgumentException("Card $card is not in the hand !")
         cardsSelected.add(card)
     }
 
-    private fun isCardSelectable(card: Card): Boolean {
-        //        Logger.trace { "Is card $card selectable ? ${card.value()} is in $allowedCardValues : $cardHasAllowedValue" }
-        return allowedCardValues.contains(card.name) || cardsSelected.contains(card)
-    }
+    private fun isCardSelectable(card: Card) = allowedCardValues.contains(card.name) || cardsSelected.contains(card)
 }

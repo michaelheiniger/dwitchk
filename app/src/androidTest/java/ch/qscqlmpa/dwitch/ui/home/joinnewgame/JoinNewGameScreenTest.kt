@@ -35,15 +35,16 @@ class JoinNewGameScreenTest : BaseUiUnitTest() {
     }
 
     private fun launchTest() {
-//        launchTestWithContent {
-//            JoinNewGameScreen(
-//                gameName = "Dwiiitch",
-//                playerName = playerName,
-//                joinGameControlEnabled = joinGameControlEnabled,
-//                onPlayerNameChange = {},
-//                onJoinGameClick = {},
-//                onBackClick = {}
-//            )
-//        }
+        launchTestWithContent {
+            JoinNewGameBody(
+                gameName = "Dwiiitch",
+                playerName = playerName,
+                joinGameControlEnabled = joinGameControlEnabled,
+                loading = false,
+                onPlayerNameChange = {},
+                onJoinGameClick = {},
+                onBackClick = {}
+            )
+        }
     }
 }

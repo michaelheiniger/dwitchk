@@ -18,7 +18,6 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 
 @Preview(
     showBackground = true,
@@ -33,14 +32,14 @@ private fun WaitingRoomPlayersScreenPreview() {
                 PlayerWrUi(
                     id = 1L,
                     name = "Mirlick",
-                    connectionState = PlayerConnectionState.CONNECTED,
+                    connected = true,
                     ready = true,
                     kickable = true
                 ),
                 PlayerWrUi(
                     id = 2L,
                     name = "Mébène",
-                    connectionState = PlayerConnectionState.DISCONNECTED,
+                    connected = false,
                     ready = false,
                     kickable = false
                 )
@@ -140,9 +139,9 @@ private fun PlayerDetailsRow2(player: PlayerWrUi) {
             Text(stringResource(readyLabel))
         }
 
-        val connectionLabel = when (player.connectionState) {
-            PlayerConnectionState.CONNECTED -> R.string.player_connected
-            PlayerConnectionState.DISCONNECTED -> R.string.player_disconnected
+        val connectionLabel = when (player.connected) {
+            true -> R.string.player_connected
+            false -> R.string.player_disconnected
         }
         Text(
             stringResource(connectionLabel),

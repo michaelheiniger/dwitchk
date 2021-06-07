@@ -45,8 +45,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
             mockMessageDispatcher,
             mockCommunicationEventDispatcher,
             mockCommEventRepository,
-            TestSchedulerFactory(),
-            mockk(relaxed = true)
+            TestSchedulerFactory()
         )
         computerCommunicator = hostCommunicator as HostCommunicatorImpl
 

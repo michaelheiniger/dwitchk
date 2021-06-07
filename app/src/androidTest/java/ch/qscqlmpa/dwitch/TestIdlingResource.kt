@@ -12,13 +12,13 @@ class TestIdlingResource(resourceName: String) : DwitchIdlingResource {
         return resource.isIdleNow
     }
 
-    override fun increment() {
-        Logger.debug("Increment counter")
+    override fun increment(reason: String) {
+        Logger.debug("Increment counter: $reason")
         resource.increment()
     }
 
-    override fun decrement() {
-        Logger.debug("Decrement counter")
+    override fun decrement(reason: String) {
+        Logger.debug("Decrement counter: $reason")
         resource.decrement()
     }
 }

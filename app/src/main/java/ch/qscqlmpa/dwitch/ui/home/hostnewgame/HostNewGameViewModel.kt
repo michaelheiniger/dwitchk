@@ -18,7 +18,7 @@ class HostNewGameViewModel @Inject constructor(
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val _navigationCommand = MutableLiveData<HostNewGameNavigationCommand>()
+    private val _navigation = MutableLiveData<HostNewGameDestination>()
     private val _loading = MutableLiveData<Boolean>()
     private val _createGameControl = MutableLiveData(false)
     private val _playerName = MutableLiveData("")
@@ -30,9 +30,10 @@ class HostNewGameViewModel @Inject constructor(
             _playerName.value = "Mirlick"
             _gameName.value = "Dwiiitch"
         }
+        Logger.debug { "Viewmodel lifecycle event: create HostNewGameViewModel ($this)" }
     }
 
-    val navigationCommand get(): LiveData<HostNewGameNavigationCommand> = _navigationCommand
+    val navigation get(): LiveData<HostNewGameDestination> = _navigation
     val loading get(): LiveData<Boolean> = _loading
     val playerName get(): LiveData<String> = _playerName
     val gameName get(): LiveData<String> = _gameName
@@ -68,10 +69,15 @@ class HostNewGameViewModel @Inject constructor(
             )
                 .doOnTerminate { _loading.value = true }
                 .subscribe(
-                    { _navigationCommand.setValue(HostNewGameNavigationCommand.NavigateToWaitingRoom) },
+                    { _navigation.setValue(HostNewGameDestination.NavigateToWaitingRoom) },
                     { error -> Logger.error(error) { "Error while start hosting the game" } }
                 )
         )
+    }
+
+    override fun onCleared() {
+        Logger.debug { "Viewmodel lifecycle event: clear HostNewGameViewModel ($this)" }
+        super.onCleared()
     }
 
     private fun updateHostGameControl() {

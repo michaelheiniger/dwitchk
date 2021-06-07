@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
 import ch.qscqlmpa.dwitchgame.gameadvertising.SerializerFactory
-import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameFacade
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.PlayerFacade
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 
 abstract class IntTestPlayer {
@@ -11,7 +11,7 @@ abstract class IntTestPlayer {
 
     //    protected lateinit var ongoingGameComponent: IntTestOngoingGameComponent
     private lateinit var inGameStore: InGameStore
-    private lateinit var playerFacade: GameFacade
+    private lateinit var playerFacade: PlayerFacade
     protected lateinit var serializerFactory: SerializerFactory
 
 //    private val serviceManager = appComponent.serviceManager as IntTestServiceManager

@@ -1,17 +1,14 @@
 package ch.qscqlmpa.dwitchcommunication.websocket.server.test
 
-import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.java_websocket.WebSocket
 
 internal class WebsocketServerTestStub(
     private val server: TestWebsocketServer,
-    private val serializerFactory: SerializerFactory,
-    private val idlingResource: DwitchIdlingResource
+    private val serializerFactory: SerializerFactory
 ) : ServerTestStub {
 
     private val guest1Socket = TestWebSocket("192.168.1.1", 1025)
@@ -19,30 +16,23 @@ internal class WebsocketServerTestStub(
     private val guest3Socket = TestWebSocket("192.168.1.3", 1027)
 
     override fun connectClientToServer(connectionInitiator: PlayerHostTest) {
-        idlingResource.increment()
         Completable.fromAction { server.onOpen(getSocketForGuest(connectionInitiator), handshake = null) }
             .subscribeOn(Schedulers.io())
             .subscribe()
     }
 
-    override fun guestSendsMessageToServer(sender: PlayerHostTest, message: Message) {
-        idlingResource.increment()
+    override fun clientSendsMessageToServer(sender: PlayerHostTest, message: Message) {
         val messageSerialized = serializerFactory.serialize(message)
         Completable.fromAction { server.onMessage(getSocketForGuest(sender), messageSerialized) }
             .subscribeOn(Schedulers.io())
             .subscribe()
     }
 
-    override fun observeMessagesSent(): Observable<String> {
-        return server.observeMessagesSent()
-    }
-
-    override fun observeMessagesBroadcasted(): Observable<String> {
-        return server.observeMessagesBroadcasted()
+    override fun blockUntilMessageSentIsAvailable(): String {
+        return server.blockUntilMessageSentIsAvailable()
     }
 
     override fun disconnectFromServer(guestIdentifier: PlayerHostTest) {
-        idlingResource.increment()
         Completable.fromAction { server.onClose(getSocketForGuest(guestIdentifier), 1, "reason", remote = true) }
             .subscribeOn(Schedulers.io())
             .subscribe()

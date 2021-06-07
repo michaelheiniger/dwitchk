@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitch.ui.base
 
 import androidx.lifecycle.ViewModel
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
+import org.tinylog.kotlin.Logger
 
 abstract class BaseViewModel : ViewModel() {
 
@@ -13,9 +14,11 @@ abstract class BaseViewModel : ViewModel() {
     }
 
     open fun onStart() {
+        Logger.debug { "${this::class.java}.onStart()" }
     }
 
     open fun onStop() {
+        Logger.debug { "${this::class.java}.onStop()" }
         disposableManager.disposeAndReset()
     }
 }

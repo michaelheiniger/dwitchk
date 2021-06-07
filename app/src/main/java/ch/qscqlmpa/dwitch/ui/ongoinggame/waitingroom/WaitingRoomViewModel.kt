@@ -3,6 +3,7 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomFacade
 import io.reactivex.rxjava3.core.Scheduler
@@ -11,7 +12,8 @@ import javax.inject.Inject
 
 class WaitingRoomViewModel @Inject constructor(
     private val facade: WaitingRoomFacade,
-    private val uiScheduler: Scheduler
+    private val uiScheduler: Scheduler,
+    private val idlingResource: DwitchIdlingResource
 ) : BaseViewModel() {
 
     private val _toolbarTitle = MutableLiveData<String>()
@@ -42,8 +44,14 @@ class WaitingRoomViewModel @Inject constructor(
     }
 
     private fun playersInWaitingRoom() {
+        idlingResource.increment("Initial state of WR players")
         disposableManager.add(
             facade.observePlayers()
+                .distinctUntilChanged()
+                .doOnNext { players ->
+                    idlingResource.decrement("State of WR players is updated ($players)")
+                    Logger.debug { "players updated: $players" }
+                }
                 .observeOn(uiScheduler)
                 .doOnError { error -> Logger.error(error) { "Error while observing connected players." } }
                 .subscribe { players -> _players.value = players }

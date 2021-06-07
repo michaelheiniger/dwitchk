@@ -4,7 +4,7 @@ import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.AppEventRepository
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameNavigationCommand
+import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameDestination
 import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameViewModel
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
 import io.mockk.confirmVerified
@@ -20,7 +20,10 @@ import org.junit.Assert.assertNull
 import org.junit.Assume
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
+@RunWith(RobolectricTestRunner::class)
 class HostNewGameViewModelTest : BaseViewModelUnitTest() {
 
     private val mockAppEventRepository = mockk<AppEventRepository>(relaxed = true)
@@ -76,7 +79,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
         viewModel.hostGame()
 
         // Then
-        assertThat(viewModel.navigationCommand.value).isEqualTo(HostNewGameNavigationCommand.NavigateToWaitingRoom)
+        assertThat(viewModel.navigation.value).isEqualTo(HostNewGameDestination.NavigateToWaitingRoom)
         verify { mockHostFacade.hostGame(gameName, playerName, gamePort) }
         confirmVerified(mockHostFacade)
     }
@@ -97,7 +100,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
         }
 
         // Then
-        assertNull(viewModel.navigationCommand.value)
+        assertNull(viewModel.navigation.value)
         confirmVerified(mockHostFacade)
     }
 
@@ -117,7 +120,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
         }
 
         // Then
-        assertNull(viewModel.navigationCommand.value)
+        assertNull(viewModel.navigation.value)
         confirmVerified(mockHostFacade)
     }
 }

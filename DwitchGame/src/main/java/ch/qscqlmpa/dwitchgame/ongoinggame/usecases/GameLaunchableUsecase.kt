@@ -28,8 +28,8 @@ internal class GameLaunchableUsecase @Inject constructor(
     }
 }
 
-sealed class GameLaunchableEvent {
-    object GameIsReadyToBeLaunched : GameLaunchableEvent()
-    object NotEnoughPlayers : GameLaunchableEvent()
-    object NotAllPlayersAreReady : GameLaunchableEvent()
+sealed class GameLaunchableEvent(val launchable: Boolean) {
+    object GameIsReadyToBeLaunched : GameLaunchableEvent(launchable = true)
+    object NotEnoughPlayers : GameLaunchableEvent(launchable = false)
+    object NotAllPlayersAreReady : GameLaunchableEvent(launchable = false)
 }

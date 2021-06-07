@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
+import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameevents.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.WaitingRoomGuestFacade
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 internal class WaitingRoomGuestViewModel @Inject constructor(
     private val facade: WaitingRoomGuestFacade,
-    private val uiScheduler: Scheduler
+    private val uiScheduler: Scheduler,
+    private val idlingResource: DwitchIdlingResource
 ) : BaseViewModel() {
 
     private val _navigation = MutableLiveData<WaitingRoomGuestDestination>()
@@ -32,10 +34,14 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
     }
 
     fun updateReadyState(ready: Boolean) {
+        idlingResource.increment("Click on ready")
         disposableManager.add(
             facade.updateReadyState(ready)
                 .observeOn(uiScheduler)
-                .subscribe()
+                .subscribe(
+                    { Logger.info { "Update ready state successfully" } },
+                    { error -> Logger.error(error) { "Error while leaving game" } }
+                )
         )
     }
 
@@ -48,6 +54,8 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
     }
 
     fun leaveGame() {
+        idlingResource.increment("Click on leave game (WR state update)")
+        idlingResource.increment("Click on leave game (Communication state update)")
         disposableManager.add(
             facade.leaveGame()
                 .observeOn(uiScheduler)

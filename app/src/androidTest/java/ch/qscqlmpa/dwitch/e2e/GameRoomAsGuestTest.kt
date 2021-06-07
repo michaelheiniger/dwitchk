@@ -60,7 +60,6 @@ class GameRoomAsGuestTest : BaseGuestTest() {
         testRule.assertCardOnTable(Card.Blank)
 
         testRule.playCards(Card.Spades4)
-
         assertGameStateUpdatedMessageSent()
 
         testRule.assertCardsInHand(Card.Spades6)
@@ -87,7 +86,6 @@ class GameRoomAsGuestTest : BaseGuestTest() {
         testRule.assertCardOnTable(Card.Clubs3)
 
         hostPlaysCard(Card.Spades4)
-        waitUntilPlayerDashboardIsUpdated()
 
         testRule.assertCardOnTable(Card.Spades4)
 
@@ -104,7 +102,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
     }
 
     @Test
-    fun localPlayerPerformCardExchange() {
+    fun localPlayerPerformsCardExchange() {
         cardsForPlayer = mapOf(
             PlayerGuestTest.Host.id to setOf(Card.Hearts5),
             PlayerGuestTest.LocalGuest.id to setOf(Card.Spades6)
@@ -124,16 +122,15 @@ class GameRoomAsGuestTest : BaseGuestTest() {
 
         waitForNextMessageSentByLocalGuest() as Message.CardsForExchangeMessage
 
+        // Display loading screen while other players perform the card exchange
         testRule.assertCardExchangeIsOnGoing()
     }
 
     private fun goToGameRoom() {
         goToWaitingRoom()
 
-        hostSendsJoinGameAck()
-        hostSendsInitialWaitingRoomUpdate()
-
         testRule.onNodeWithTag(UiTags.localPlayerReadyControl).performClick()
+        waitForNextMessageSentByLocalGuest() as Message.PlayerReadyMessage
 
         clientTestStub.serverSendsMessageToClient(Message.LaunchGameMessage(createGameState()))
 
@@ -141,12 +138,15 @@ class GameRoomAsGuestTest : BaseGuestTest() {
     }
 
     private fun hostPlaysCard(card: Card) {
+        incrementGameIdlingResource("Host plays a card")
         val currentGameState = inGameStore.getGameState()
         val newGameState = ProdDwitchFactory().createDwitchEngine(currentGameState).playCards(PlayedCards(card))
         clientTestStub.serverSendsMessageToClient(MessageFactory.createGameStateUpdatedMessage(newGameState))
     }
 
     private fun hostEndsGame() {
+        incrementGameIdlingResource("Host ends game: screen updated")
+        incrementGameIdlingResource("Host ends game: communication state updated")
         clientTestStub.serverSendsMessageToClient(Message.GameOverMessage)
     }
 
@@ -167,6 +167,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
 
 
     private fun hostStartsNewRound(gameState: DwitchGameState): DwitchGameState {
+        incrementGameIdlingResource("Host start new round")
         val cardDealerFactory = DeterministicCardDealerFactory()
         cardDealerFactory.setInstance(
             DeterministicCardDealer(

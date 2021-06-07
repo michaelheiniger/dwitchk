@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.guest
 
+import ch.qscqlmpa.dwitch.app.ProdIdlingResource
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
@@ -30,7 +31,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
 
     @Before
     fun setup() {
-        viewModel = WaitingRoomGuestViewModel(mockFacade, Schedulers.trampoline())
+        viewModel = WaitingRoomGuestViewModel(mockFacade, Schedulers.trampoline(), ProdIdlingResource())
 
         communicationStateSubject = PublishSubject.create()
         localPlayerReadyStateSubject = PublishSubject.create()

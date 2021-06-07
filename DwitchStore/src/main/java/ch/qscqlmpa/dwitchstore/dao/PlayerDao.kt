@@ -140,9 +140,9 @@ internal interface PlayerDao {
      */
     @Query(
         """
-        SELECT Player.* FROM Player
+        SELECT * FROM Player
         WHERE game_local_id = :gameLocalId
-        ORDER BY Player.name ASC
+        ORDER BY name ASC
         """
     )
     fun observePlayersInWaitingRoom(gameLocalId: Long): Flowable<List<Player>>

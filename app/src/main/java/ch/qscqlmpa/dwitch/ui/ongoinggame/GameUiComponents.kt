@@ -104,3 +104,12 @@ fun CardItemDisplay(
             .alpha(alpha)
     )
 }
+
+@Composable
+fun GameRulesDialog(onOkClick: () -> Unit) {
+    InfoDialog(
+        title = R.string.game_rules_info_title,
+        text = R.string.game_rules_info_content,
+        onOkClick = onOkClick
+    )
+}

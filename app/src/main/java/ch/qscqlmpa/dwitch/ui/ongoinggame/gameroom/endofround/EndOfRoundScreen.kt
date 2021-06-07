@@ -67,10 +67,10 @@ fun EndOfRoundScreen(endOfRoundInfo: EndOfRoundInfo) {
                 .fillMaxWidth()
                 .animateContentSize()
         ) {
-            items(endOfRoundInfo.playersInfo, key = { p -> p.name }) { info ->
+            items(endOfRoundInfo.playersInfo) { player ->
                 Text(
-                    text = "${info.name}: ${stringResource(ResourceMapper.getResourceLong(info.rank))}",
-                    modifier = Modifier.testTag(info.name)
+                    text = "${player.name}: ${stringResource(ResourceMapper.getResourceLong(player.rank))}",
+                    modifier = Modifier.testTag(player.name)
                 )
             }
         }

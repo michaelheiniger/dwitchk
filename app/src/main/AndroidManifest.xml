@@ -14,17 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Dwitch">
         <activity
-            android:name=".ui.home.main.MainActivity"
-            android:exported="false">
+            android:name=".HomeActivity"
+            android:exported="true"
+            android:label="@string/title_activity_home"
+            android:theme="@style/Theme.Dwitch.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.home.hostnewgame.HostNewGameActivity" />
-        <activity android:name=".ui.home.joinnewgame.JoinNewGameActivity" />
-        <activity android:name=".ui.ongoinggame.waitingroom.WaitingRoomActivity" />
-        <activity android:name=".ui.ongoinggame.gameroom.GameRoomActivity" />
 
         <service
             android:name=".ongoinggame.services.HostInGameService"

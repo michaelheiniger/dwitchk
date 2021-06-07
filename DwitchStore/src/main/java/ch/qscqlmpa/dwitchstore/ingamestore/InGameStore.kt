@@ -20,6 +20,7 @@ interface InGameStore {
     fun getGameCommonId(): GameCommonId
     fun getGameName(): String
     fun getCurrentRoom(): RoomType
+    fun observeCurrentRoom(): Observable<RoomType>
     fun getGameState(): DwitchGameState
     fun gameIsNew(): Boolean
     fun gameIsNotNew(): Boolean

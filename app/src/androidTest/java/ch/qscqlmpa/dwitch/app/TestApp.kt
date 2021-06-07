@@ -47,7 +47,7 @@ class TestApp : App() {
         )
 
         testAppComponent = DaggerTestAppComponent.builder()
-            .applicationModule(ApplicationModule(this))
+            .applicationModule(ApplicationModule(this, gameIdlingResource))
             .gameComponent(testGameComponent)
             .build()
         return testAppComponent
@@ -84,6 +84,7 @@ class TestApp : App() {
             )
             ongoingGameUiComponent = testAppComponent.addOngoingGameUiComponent(
                 OnGoingGameUiModule(
+                    ongoingGameComponent!!.gameFacade,
                     ongoingGameComponent!!.hostGameFacade,
                     ongoingGameComponent!!.guestGameFacade,
                     ongoingGameComponent!!.waitingRoomFacade,
@@ -91,7 +92,7 @@ class TestApp : App() {
                     ongoingGameComponent!!.waitingRoomGuestFacade,
                     ongoingGameComponent!!.gameRoomHostFacade,
                     ongoingGameComponent!!.gameRoomGuestFacade,
-                    ongoingGameComponent!!.gameFacade
+                    ongoingGameComponent!!.playerFacade
                 )
             )
             testAppEventRelay.accept(TestAppEvent.GameCreated)

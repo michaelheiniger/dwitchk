@@ -47,8 +47,8 @@ fun HostNewGameScreen(
         onDispose { viewModel.onStop() }
     }
 
-    when (viewModel.navigationCommand.observeAsState().value) {
-        HostNewGameNavigationCommand.NavigateToWaitingRoom -> onHostGameClick()
+    when (viewModel.navigation.observeAsState().value) {
+        HostNewGameDestination.NavigateToWaitingRoom -> onHostGameClick()
     }
 
     val initialPlayerName = if (BuildConfig.DEBUG) "Mirlick" else ""

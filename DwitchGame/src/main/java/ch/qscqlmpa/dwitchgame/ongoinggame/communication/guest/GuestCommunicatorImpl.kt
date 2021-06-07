@@ -1,7 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest
 
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
-import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchcommunication.CommClient
 import ch.qscqlmpa.dwitchcommunication.model.Message
@@ -15,8 +14,7 @@ internal class GuestCommunicatorImpl constructor(
     private val messageDispatcher: MessageDispatcher,
     private val communicationEventDispatcher: GuestCommunicationEventDispatcher,
     private val communicationStateRepository: GuestCommunicationStateRepository,
-    private val schedulerFactory: SchedulerFactory,
-    private val idlingResource: DwitchIdlingResource
+    private val schedulerFactory: SchedulerFactory
 ) : GuestCommunicator {
 
     private val disposableManager = DisposableManager()
@@ -31,7 +29,6 @@ internal class GuestCommunicatorImpl constructor(
 
     override fun disconnect() {
         Logger.info { "Disconnect from host" }
-        idlingResource.increment() // Event ClientCommunicationEvent.DisconnectedFromHost
         commClient.stop()
         // Subscribed streams are disposed when ServerCommunicationEvent.NoLongerListeningForConnections has been processed
     }
@@ -47,8 +44,6 @@ internal class GuestCommunicatorImpl constructor(
                 .flatMapCompletable { event ->
                     communicationEventDispatcher.dispatch(event)
                         .subscribeOn(schedulerFactory.single())
-//                        .doOnComplete { if (event is ClientCommunicationEvent.DisconnectedFromHost) disconnect() }
-                        .doOnComplete { idlingResource.decrement() }
                         .doFinally {
                             if (event is ClientCommunicationEvent.DisconnectedFromHost ||
                                 event is ClientCommunicationEvent.ConnectionError
@@ -70,7 +65,6 @@ internal class GuestCommunicatorImpl constructor(
                 .flatMapCompletable { msg ->
                     messageDispatcher.dispatch(msg)
                         .subscribeOn(schedulerFactory.single())
-                        .doOnComplete { idlingResource.decrement() }
                 }
                 .subscribe(
                     { Logger.debug { "Received messages stream completed !" } },

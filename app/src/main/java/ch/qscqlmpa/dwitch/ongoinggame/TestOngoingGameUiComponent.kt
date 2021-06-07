@@ -1,15 +1,13 @@
 package ch.qscqlmpa.dwitch.ongoinggame
 
-import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameScreenBindingModule
-import ch.qscqlmpa.dwitch.ui.ongoinggame.OngoingGameViewModelBindingModule
+import ch.qscqlmpa.dwitch.ui.ongoinggame.GameViewModelBindingModule
 import dagger.Subcomponent
 
-@OngoingGameUiScope
+@GameUiScope
 @Subcomponent(
     modules = [
         OnGoingGameUiModule::class,
-        OngoingGameScreenBindingModule::class,
-        OngoingGameViewModelBindingModule::class,
+        GameViewModelBindingModule::class
     ]
 )
 interface TestOngoingGameUiComponent : OngoingGameUiComponent

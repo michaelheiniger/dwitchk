@@ -1,7 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ongoinggame.communication.host
 
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
-import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchcommunication.CommServer
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
@@ -23,8 +22,7 @@ internal class HostCommunicatorImpl constructor(
     private val messageDispatcher: MessageDispatcher,
     private val communicationEventDispatcher: HostCommunicationEventDispatcher,
     private val communicationStateRepository: HostCommunicationStateRepository,
-    private val schedulerFactory: SchedulerFactory,
-    private val idlingResource: DwitchIdlingResource
+    private val schedulerFactory: SchedulerFactory
 ) : HostCommunicator, ComputerCommunicator {
 
     private val disposableManager = DisposableManager()
@@ -46,7 +44,6 @@ internal class HostCommunicatorImpl constructor(
 
     override fun stopServer() {
         Logger.info { "Stop server" }
-        idlingResource.increment() // Event GuestCommunicationEvent.NoLongerListeningForConnections
         commServer.stop()
         // Subscribed streams are disposed when ServerCommunicationEvent.NoLongerListeningForConnections has been processed
     }
@@ -64,7 +61,6 @@ internal class HostCommunicatorImpl constructor(
 
     override fun sendMessageToHost(message: Message) {
         Logger.info { "Send message to host: $message" }
-        idlingResource.increment()
         hostReceivedMessagesRelay.accept(EnvelopeReceived(hostConnectionId, message))
     }
 
@@ -92,7 +88,6 @@ internal class HostCommunicatorImpl constructor(
             ).flatMapCompletable { event ->
                 communicationEventDispatcher.dispatch(event)
                     .subscribeOn(schedulerFactory.single())
-                    .doOnComplete { idlingResource.decrement() }
                     .doFinally {
                         if (event is ServerCommunicationEvent.NoLongerListeningForConnections ||
                             event is ServerCommunicationEvent.ErrorListeningForConnections
@@ -132,7 +127,6 @@ internal class HostCommunicatorImpl constructor(
     private fun dispatchReceivedMessage(envelopeReceived: EnvelopeReceived) =
         messageDispatcher.dispatch(envelopeReceived)
             .subscribeOn(schedulerFactory.single())
-            .doOnComplete { idlingResource.decrement() }
 
     private fun sendMessageToAllGuests(envelopeToSend: EnvelopeToSend) {
         Logger.info { "Send message to all guests: ${envelopeToSend.message}" }

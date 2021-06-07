@@ -19,7 +19,7 @@ class JoinNewGameViewModel @Inject constructor(
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val _navigationCommand = MutableLiveData<JoinNewGameNavigationCommand>()
+    private val _navigation = MutableLiveData<JoinNewGameDestination>()
     private val _loading = MutableLiveData<Boolean>()
     private val _joinGameControl = MutableLiveData(false)
     private val _playerName = MutableLiveData("")
@@ -31,9 +31,10 @@ class JoinNewGameViewModel @Inject constructor(
             _joinGameControl.value = true
             _playerName.value = "Mébène"
         }
+        Logger.debug { "Viewmodel lifecycle event: create JoinNewGameViewModel ($this)" }
     }
 
-    val navigationCommand get(): LiveData<JoinNewGameNavigationCommand> = _navigationCommand
+    val navigationCommand get(): LiveData<JoinNewGameDestination> = _navigation
     val loading get(): LiveData<Boolean> = _loading
     val playerName get(): LiveData<String> = _playerName
     val joinGameControl get(): LiveData<Boolean> = _joinGameControl
@@ -61,14 +62,21 @@ class JoinNewGameViewModel @Inject constructor(
                         .firstElement()
                         .ignoreElement(),
                     guestFacade.joinGame(game, playerName)
-                        .observeOn(uiScheduler)
                 )
             )
+                .observeOn(uiScheduler)
                 .doOnTerminate { _loading.value = false }
                 .subscribe(
-                    { _navigationCommand.setValue(JoinNewGameNavigationCommand.NavigateToWaitingRoom) },
+                    {
+                        _navigation.value = JoinNewGameDestination.NavigateToWaitingRoom
+                    },
                     { error -> Logger.error(error) { "Error while joining the game" } }
                 )
         )
+    }
+
+    override fun onCleared() {
+        Logger.debug { "Viewmodel lifecycle event: clear JoinNewGameViewModel ($this)" }
+        super.onCleared()
     }
 }

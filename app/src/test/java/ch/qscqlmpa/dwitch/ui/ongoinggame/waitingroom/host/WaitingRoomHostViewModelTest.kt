@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.ongoinggame.waitingroom.host
 
+import ch.qscqlmpa.dwitch.app.ProdIdlingResource
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
@@ -35,7 +36,7 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
         val schedulerFactory = TestSchedulerFactory()
         schedulerFactory.setTimeScheduler(TestScheduler())
 
-        viewModel = WaitingRoomHostViewModel(mockFacade, Schedulers.trampoline())
+        viewModel = WaitingRoomHostViewModel(mockFacade, Schedulers.trampoline(), ProdIdlingResource())
 
         communicatorSubject = PublishSubject.create()
         canGameBeLaunchedSubject = PublishSubject.create()

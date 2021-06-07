@@ -17,11 +17,11 @@ import org.joda.time.DateTime
 object TestEntityFactory {
 
     fun createPlayerWrUi1(): PlayerWrUi {
-        return PlayerWrUi(11L, "Sheev", PlayerConnectionState.CONNECTED, ready = true, kickable = true)
+        return PlayerWrUi(11L, "Sheev", connected = true, ready = true, kickable = true)
     }
 
     fun createPlayerWrUi2(): PlayerWrUi {
-        return PlayerWrUi(12L, "Obi-Wan", PlayerConnectionState.CONNECTED, ready = true, kickable = false)
+        return PlayerWrUi(12L, "Obi-Wan", connected = true, ready = true, kickable = false)
     }
 
     fun createHostPlayer(

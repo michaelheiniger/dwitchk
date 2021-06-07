@@ -51,17 +51,17 @@ class WaitingRoomPlayerRepositoryTest : BaseUnitTest() {
 
             assertThat(values[0][0].id).isEqualTo(10L)
             assertThat(values[0][0].name).isEqualTo("Aragorn")
-            assertThat(values[0][0].connectionState).isEqualTo(PlayerConnectionState.CONNECTED)
+            assertThat(values[0][0].connected).isTrue
             assertThat(values[0][0].ready).isTrue
 
             assertThat(values[0][1].id).isEqualTo(11L)
             assertThat(values[0][1].name).isEqualTo("Boromir")
-            assertThat(values[0][1].connectionState).isEqualTo(PlayerConnectionState.CONNECTED)
+            assertThat(values[0][1].connected).isTrue
             assertThat(values[0][1].ready).isTrue
 
             assertThat(values[0][2].id).isEqualTo(12L)
             assertThat(values[0][2].name).isEqualTo("Celeborn")
-            assertThat(values[0][2].connectionState).isEqualTo(PlayerConnectionState.DISCONNECTED)
+            assertThat(values[0][2].connected).isFalse
             assertThat(values[0][2].ready).isFalse
         }
 

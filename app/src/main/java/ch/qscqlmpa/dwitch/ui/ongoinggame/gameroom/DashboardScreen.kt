@@ -226,7 +226,7 @@ private fun Table(lastCardPlayed: PlayedCards?) {
             .testTag(UiTags.lastCardPlayed)
             .semantics(mergeDescendants = true) {}
     ) {
-        items(cards, key = { c -> c.id.value }) { card ->
+        items(cards) { card ->
             Image(
                 painter = painterResource(ResourceMapper.getImageResource(card)),
                 contentDescription = cardOnTableCd,

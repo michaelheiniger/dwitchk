@@ -53,7 +53,7 @@ internal class AdvertisedGameRepository @Inject constructor(
 
     private fun advertisedGames(): Observable<AdvertisedGame> {
         return gameDiscovery.listenForAdvertisedGames()
-            .doOnNext { idlingResource.decrement() }
+            .doOnNext { game -> idlingResource.decrement("Advertised game received ($game)") }
             .subscribeOn(schedulerFactory.io())
     }
 

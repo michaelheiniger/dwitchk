@@ -3,21 +3,23 @@ package ch.qscqlmpa.dwitch.ui.ongoinggame.gameroom.host
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameAction
-import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameFacade
 import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameRoomHostFacade
+import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.PlayerFacade
 import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 internal class GameRoomHostViewModel @Inject constructor(
     private val facade: GameRoomHostFacade,
-    private val dashboardFacade: GameFacade,
-    private val uiScheduler: Scheduler
+    private val dashboardFacade: PlayerFacade,
+    private val uiScheduler: Scheduler,
+    private val idlingResource: DwitchIdlingResource
 ) : BaseViewModel() {
 
-    private val _navigationCommand = MutableLiveData<GameRoomHostCommand>()
-    val navigationCommand get(): LiveData<GameRoomHostCommand> = _navigationCommand
+    private val _navigationCommand = MutableLiveData<GameRoomHostDestination>()
+    val navigation get(): LiveData<GameRoomHostDestination> = _navigationCommand
 
     fun startNewRound() {
         disposableManager.add(
@@ -31,13 +33,14 @@ internal class GameRoomHostViewModel @Inject constructor(
     }
 
     fun endGame() {
+        idlingResource.increment("Click on end game (Communication state update)")
         disposableManager.add(
             facade.endGame()
                 .observeOn(uiScheduler)
                 .subscribe(
                     {
                         Logger.debug { "Game ended successfully." }
-                        _navigationCommand.value = GameRoomHostCommand.NavigateToHomeScreen
+                        _navigationCommand.value = GameRoomHostDestination.NavigateToHomeScreen
                     },
                     { error -> Logger.error(error) { "Error while ending game." } }
                 )

@@ -7,11 +7,11 @@ class ProdIdlingResource : DwitchIdlingResource {
         return true
     }
 
-    override fun increment() {
+    override fun increment(reason: String) {
         // Nothing to do: this is the production implementation
     }
 
-    override fun decrement() {
+    override fun decrement(reason: String) {
         // Nothing to do: this is the production implementation
     }
 }

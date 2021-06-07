@@ -9,6 +9,7 @@ import io.reactivex.rxjava3.core.Observable
 import org.java_websocket.WebSocket
 import org.java_websocket.handshake.ClientHandshake
 import org.tinylog.kotlin.Logger
+import java.util.concurrent.LinkedBlockingQueue
 
 internal class TestWebsocketServer(
     private val hostIpAddress: String,
@@ -18,8 +19,7 @@ internal class TestWebsocketServer(
     private val eventRelay = PublishRelay.create<ServerCommEvent>()
     private val messageRelay = PublishRelay.create<ServerMessage>()
 
-    private val messageSentRelay = PublishRelay.create<String>()
-    private val messageBroadcastedRelay = PublishRelay.create<String>()
+    private val messageSentOrBroadcastedRelay = LinkedBlockingQueue<String>()
 
     private var connections = mutableListOf<WebSocket>()
 
@@ -33,24 +33,20 @@ internal class TestWebsocketServer(
     }
 
     override fun send(websocket: WebSocket, message: String) {
-        messageSentRelay.accept(message)
+        Logger.info { "Message sent to client: $message ($websocket)" }
+        messageSentOrBroadcastedRelay.put(message)
     }
 
     override fun sendBroadcast(message: String) {
-        messageBroadcastedRelay.accept(message)
+        Logger.info { "Message broadcasted to clients: $message" }
+        messageSentOrBroadcastedRelay.put(message)
     }
 
-    override fun observeEvents(): Observable<ServerCommEvent> {
-        return eventRelay
-    }
+    override fun observeEvents(): Observable<ServerCommEvent> = eventRelay
 
-    override fun observeMessages(): Observable<ServerMessage> {
-        return messageRelay
-    }
+    override fun observeMessages(): Observable<ServerMessage> = messageRelay
 
-    fun onStart() {
-        eventRelay.accept(ServerCommEvent.Started(Address(hostIpAddress, hostPort)))
-    }
+    fun onStart() = eventRelay.accept(ServerCommEvent.Started(Address(hostIpAddress, hostPort)))
 
     fun onOpen(conn: WebSocket?, handshake: ClientHandshake?) {
         if (conn != null) {
@@ -59,27 +55,15 @@ internal class TestWebsocketServer(
         eventRelay.accept(ServerCommEvent.ClientConnected(conn, handshake))
     }
 
-    fun onClose(conn: WebSocket?, code: Int, reason: String?, remote: Boolean) {
+    fun onClose(conn: WebSocket?, code: Int, reason: String?, remote: Boolean) =
         eventRelay.accept(ServerCommEvent.ClientDisconnected(conn, code, reason, remote))
-    }
 
-    fun onMessage(conn: WebSocket?, message: String?) {
-        messageRelay.accept(ServerMessage(conn, message))
-    }
+    fun onMessage(conn: WebSocket?, message: String?) = messageRelay.accept(ServerMessage(conn, message))
 
-    fun onError(conn: WebSocket?, ex: Exception?) {
-        eventRelay.accept(ServerCommEvent.Error(conn, ex))
-    }
+    fun onError(conn: WebSocket?, ex: Exception?) = eventRelay.accept(ServerCommEvent.Error(conn, ex))
 
-    override fun getConnections(): Collection<WebSocket> {
-        return connections.toList()
-    }
+    override fun getConnections(): Collection<WebSocket> = connections.toList()
 
-    fun observeMessagesSent(): Observable<String> {
-        return messageSentRelay
-    }
 
-    fun observeMessagesBroadcasted(): Observable<String> {
-        return messageBroadcastedRelay
-    }
+    fun blockUntilMessageSentIsAvailable(): String = messageSentOrBroadcastedRelay.take()
 }

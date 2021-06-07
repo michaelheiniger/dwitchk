@@ -20,7 +20,10 @@ import org.junit.Assert.assertNull
 import org.junit.Assume
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
+@RunWith(RobolectricTestRunner::class)
 class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
 
     private val mockAppEventRepository = mockk<AppEventRepository>(relaxed = true)
@@ -34,6 +37,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
     fun setup() {
         viewModel = JoinNewGameViewModel(mockAppEventRepository, mockGuestFacade, Schedulers.trampoline())
         every { mockGuestFacade.joinGame(any(), any()) } returns Completable.complete()
+        every { mockGuestFacade.getAdvertisedGame("192.168.1.1") } returns advertisedGame
     }
 
     @Test
@@ -64,10 +68,12 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
 
         // When
         viewModel.onPlayerNameChange(playerName)
-        viewModel.joinGame(advertisedGame)
+        viewModel.getGame("192.168.1.1")
+        viewModel.joinGame()
 
         // Then
-        assertThat(viewModel.navigationCommand.value).isEqualTo(JoinNewGameNavigationCommand.NavigateToWaitingRoom)
+        assertThat(viewModel.navigationCommand.value).isEqualTo(JoinNewGameDestination.NavigateToWaitingRoom)
+        verify { mockGuestFacade.getAdvertisedGame(any()) }
         verify { mockGuestFacade.joinGame(advertisedGame, playerName) }
         confirmVerified(mockGuestFacade)
     }
@@ -80,7 +86,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
         // When the required data is not provided, the "create game" control is supposed to be disabled.
         // Hence the user should not be able to launch the game creation
         try {
-            viewModel.joinGame(advertisedGame)
+            viewModel.joinGame()
             fail("Must throw error when player name is not set")
         } catch (e: IllegalArgumentException) {
             // Nothing to do

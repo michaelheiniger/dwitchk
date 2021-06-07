@@ -7,7 +7,7 @@ import ch.qscqlmpa.dwitch.app.SchedulersModule
 import ch.qscqlmpa.dwitch.ongoinggame.OnGoingGameUiModule
 import ch.qscqlmpa.dwitch.ongoinggame.TestOngoingGameUiComponent
 import ch.qscqlmpa.dwitch.service.AndroidServiceBindingModule
-import ch.qscqlmpa.dwitch.ui.home.HomeActivityBindingModule
+import ch.qscqlmpa.dwitch.ui.home.HomeBindingModule
 import ch.qscqlmpa.dwitch.ui.home.HomeViewModelBindingModule
 import ch.qscqlmpa.dwitchgame.di.GameComponent
 import dagger.Component
@@ -19,7 +19,7 @@ import dagger.android.AndroidInjectionModule
     modules = [
         AndroidInjectionModule::class,
         ApplicationModule::class,
-        HomeActivityBindingModule::class,
+        HomeBindingModule::class,
         HomeViewModelBindingModule::class,
         AndroidServiceBindingModule::class,
         SchedulersModule::class

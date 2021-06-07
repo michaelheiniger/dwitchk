@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitchcommunication.websocket.client.test
 
-import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientCommEvent
 import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientMessage
 import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClient
@@ -14,11 +13,10 @@ import java.util.concurrent.LinkedBlockingQueue
 
 internal class TestWebsocketClient constructor(
     private val destinationAddress: String,
-    private val destinationPort: Int,
-    private val idlingResource: DwitchIdlingResource
+    private val destinationPort: Int
 ) : WebsocketClient {
 
-    private val messagesSentRelay = PublishRelay.create<String>()
+    private val messagesSentQueue = LinkedBlockingQueue<String>()
     private val eventRelay = PublishRelay.create<ClientCommEvent>()
     private val messageRelay = PublishRelay.create<ClientMessage>()
 
@@ -29,8 +27,7 @@ internal class TestWebsocketClient constructor(
 
     override fun start() {
         Completable.fromAction {
-            Logger.trace { "start(): wait for start event" }
-            idlingResource.increment()
+            Logger.debug { "start()" }
             when (startEvent.take()) {
                 OnStartEvent.Failure -> onError(null)
                 OnStartEvent.Success -> onOpen(null)
@@ -42,30 +39,20 @@ internal class TestWebsocketClient constructor(
             )
     }
 
-    override fun stop() {
-        onClose(1, "Connection closed manually", remote = true)
-    }
+    override fun stop() = onClose(1, "Connection closed manually", remote = true)
 
-    override fun isOpen(): Boolean {
-        return isOpen
-    }
+    override fun isOpen(): Boolean = isOpen
 
-    override fun isClosed(): Boolean {
-        return isClosed
-    }
+    override fun isClosed(): Boolean = isClosed
 
     override fun send(message: String) {
         Logger.info { "Message sent to server: $message" }
-        messagesSentRelay.accept(message)
+        messagesSentQueue.put(message)
     }
 
-    override fun observeEvents(): Observable<ClientCommEvent> {
-        return eventRelay
-    }
+    override fun observeEvents(): Observable<ClientCommEvent> = eventRelay
 
-    override fun observeMessages(): Observable<ClientMessage> {
-        return messageRelay
-    }
+    override fun observeMessages(): Observable<ClientMessage> = messageRelay
 
     fun onClose(code: Int, reason: String?, remote: Boolean) {
         eventRelay.accept(ClientCommEvent.Disconnected(code, reason, remote))
@@ -73,13 +60,9 @@ internal class TestWebsocketClient constructor(
         isClosed = true
     }
 
-    fun onMessage(message: String) {
-        messageRelay.accept(ClientMessage(destinationAddress, destinationPort, message))
-    }
+    fun onMessage(message: String) = messageRelay.accept(ClientMessage(destinationAddress, destinationPort, message))
 
-    fun observeMessagesSent(): Observable<String> {
-        return messagesSentRelay
-    }
+    fun blockUntilMessageSentIsAvailable(): String = messagesSentQueue.take()
 
     fun putOnStartEvent(event: OnStartEvent) {
         Logger.debug { "putOnStartEvent: $event" }
@@ -92,9 +75,7 @@ internal class TestWebsocketClient constructor(
         isClosed = false
     }
 
-    private fun onError(ex: Exception?) {
-        eventRelay.accept(ClientCommEvent.Error(ex))
-    }
+    private fun onError(ex: Exception?) = eventRelay.accept(ClientCommEvent.Error(ex))
 }
 
 sealed class OnStartEvent {

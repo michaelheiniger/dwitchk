@@ -28,7 +28,6 @@ import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 class GameRoomAsHostTest : BaseHostTest() {
@@ -77,6 +76,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         testRule.assertPlayerCannotPassTurn()
     }
 
+    //FIXME: Counter has been corrupted
     @Test
     fun playAWholeRoundWithHumanGuest() {
         cardsForPlayer = mapOf(
@@ -96,7 +96,6 @@ class GameRoomAsHostTest : BaseHostTest() {
         testRule.assertCardOnTable(Card.Clubs3)
 
         otherPlayerPlaysCard(PlayerHostTest.Guest1, Card.Spades4)
-        waitUntilPlayerDashboardIsUpdated()
 
         testRule.assertCardOnTable(Card.Spades4)
 
@@ -134,6 +133,7 @@ class GameRoomAsHostTest : BaseHostTest() {
             )
         )
         testRule.startNewRound()
+        incrementGameIdlingResource("Click to start new round")
         assertGameStateUpdatedMessageSent()
 
         otherPlayerSendsCardExchangeMessage(setOf(Card.Spades6, Card.HeartsAce))
@@ -144,21 +144,20 @@ class GameRoomAsHostTest : BaseHostTest() {
         testRule.assertCardExchangeControlIsEnabled()
         testRule.confirmCardExchange()
 
-        waitUntilPlayerDashboardIsUpdated()
-
         testRule.assertGameRoomIsDisplayed()
         testRule.assertCardsInHand(Card.Diamonds4, Card.Clubs10, Card.Spades6, Card.HeartsAce)
     }
 
     private fun otherPlayerSendsCardExchangeMessage(cards: Set<Card>) {
         val message = MessageFactory.createCardsForExchangeChosenMessage(guest1.dwitchId, cards)
-        serverTestStub.guestSendsMessageToServer(PlayerHostTest.Guest1, message)
+        serverTestStub.clientSendsMessageToServer(PlayerHostTest.Guest1, message)
     }
 
     private fun otherPlayerPlaysCard(guest: PlayerHostTest, card: Card) {
+        incrementGameIdlingResource("Guest plays card ($guest, $card)")
         val currentGameState = inGameStore.getGameState()
         val newGameState = ProdDwitchFactory().createDwitchEngine(currentGameState).playCards(PlayedCards(card))
-        serverTestStub.guestSendsMessageToServer(guest, MessageFactory.createGameStateUpdatedMessage(newGameState))
+        serverTestStub.clientSendsMessageToServer(guest, MessageFactory.createGameStateUpdatedMessage(newGameState))
         assertGameStateUpdatedMessageSent() // Broadcasted by host to other players
     }
 
@@ -179,7 +178,6 @@ class GameRoomAsHostTest : BaseHostTest() {
     }
 
     private fun assertGameStateUpdatedMessageSent() {
-        val messageSent = waitForNextMessageSentByHost()
-        assertThat(messageSent).isInstanceOf(Message.GameStateUpdatedMessage::class.java)
+        waitForNextMessageSentByHost() as Message.GameStateUpdatedMessage
     }
 }
