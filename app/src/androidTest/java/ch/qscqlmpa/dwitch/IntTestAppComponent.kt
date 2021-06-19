@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch
 
 import ch.qscqlmpa.dwitch.app.AppScope
-import ch.qscqlmpa.dwitch.ongoinggame.services.TestServiceManagerModule
+import ch.qscqlmpa.dwitch.ingame.services.TestServiceManagerModule
 import ch.qscqlmpa.dwitch.persistence.IntTestDatabaseModule
 import ch.qscqlmpa.dwitchgame.di.TestGameDiscoveryModule
 import ch.qscqlmpa.dwitchgame.di.modules.HomeModule

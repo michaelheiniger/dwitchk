@@ -4,8 +4,8 @@ import ch.qscqlmpa.dwitch.app.AppComponent
 import ch.qscqlmpa.dwitch.app.AppScope
 import ch.qscqlmpa.dwitch.app.ApplicationModule
 import ch.qscqlmpa.dwitch.app.SchedulersModule
-import ch.qscqlmpa.dwitch.ongoinggame.OnGoingGameUiModule
-import ch.qscqlmpa.dwitch.ongoinggame.TestOngoingGameUiComponent
+import ch.qscqlmpa.dwitch.ingame.OnGoingGameUiModule
+import ch.qscqlmpa.dwitch.ingame.TestOngoingGameUiComponent
 import ch.qscqlmpa.dwitch.service.AndroidServiceBindingModule
 import ch.qscqlmpa.dwitch.ui.home.HomeBindingModule
 import ch.qscqlmpa.dwitch.ui.home.HomeViewModelBindingModule

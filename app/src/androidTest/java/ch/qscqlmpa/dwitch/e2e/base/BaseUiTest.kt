@@ -27,8 +27,8 @@ import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchgame.di.TestGameComponent
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
 import ch.qscqlmpa.dwitchgame.gamediscovery.network.TestNetworkAdapter
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
-import ch.qscqlmpa.dwitchgame.ongoinggame.di.TestOngoingGameComponent
+import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
+import ch.qscqlmpa.dwitchgame.ingame.di.TestInGameComponent
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.TestStoreComponent
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
@@ -57,7 +57,7 @@ abstract class BaseUiTest {
     private lateinit var storeComponent: TestStoreComponent
     private lateinit var gameComponent: TestGameComponent
 
-    private lateinit var ongoingGameComponent: TestOngoingGameComponent
+    private lateinit var ongoingGameComponent: TestInGameComponent
     private lateinit var communicationComponent: TestCommunicationComponent
 
     protected lateinit var networkAdapter: TestNetworkAdapter
@@ -160,7 +160,7 @@ abstract class BaseUiTest {
     }
 
     private fun hookOngoingGameDependenciesCommon() {
-        ongoingGameComponent = app.ongoingGameComponent as TestOngoingGameComponent
+        ongoingGameComponent = app.inGameComponent as TestInGameComponent
         inGameStore = app.inGameStoreComponent!!.inGameStore
         communicationComponent = app.communicationComponent as TestCommunicationComponent
     }

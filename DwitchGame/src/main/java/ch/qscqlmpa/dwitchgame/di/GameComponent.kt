@@ -4,8 +4,8 @@ import ch.qscqlmpa.dwitchgame.di.modules.*
 import ch.qscqlmpa.dwitchgame.home.HomeFacade
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
-import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameComponent
-import ch.qscqlmpa.dwitchgame.ongoinggame.di.modules.OngoingGameModule
+import ch.qscqlmpa.dwitchgame.ingame.di.InGameComponent
+import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameModule
 import dagger.Component
 
 @GameScope
@@ -24,7 +24,7 @@ interface GameComponent {
     val homeHostFacade: HomeHostFacade
     val homeGuestFacade: HomeGuestFacade
 
-    fun addOngoingGameComponent(module: OngoingGameModule): OngoingGameComponent
+    fun addInGameComponent(module: InGameModule): InGameComponent
 
     @Component.Factory
     interface Factory {

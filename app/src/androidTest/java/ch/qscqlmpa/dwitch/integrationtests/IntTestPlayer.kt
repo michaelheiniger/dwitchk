@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
 import ch.qscqlmpa.dwitchgame.gameadvertising.SerializerFactory
-import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.PlayerFacade
+import ch.qscqlmpa.dwitchgame.ingame.gameroom.PlayerFacade
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 
 abstract class IntTestPlayer {

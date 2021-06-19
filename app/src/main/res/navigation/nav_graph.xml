@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/GameFragment"
-        android:name="ch.qscqlmpa.dwitch.ui.ongoinggame.GameFragment">
+        android:name="ch.qscqlmpa.dwitch.ui.ingame.GameFragment">
         <action
             android:id="@+id/action_GameFragment_to_HomeFragment"
             app:destination="@id/HomeFragment"

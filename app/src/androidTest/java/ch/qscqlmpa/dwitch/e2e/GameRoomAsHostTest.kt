@@ -27,7 +27,7 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
+import ch.qscqlmpa.dwitchgame.ingame.communication.messagefactories.MessageFactory
 import org.junit.Test
 
 class GameRoomAsHostTest : BaseHostTest() {

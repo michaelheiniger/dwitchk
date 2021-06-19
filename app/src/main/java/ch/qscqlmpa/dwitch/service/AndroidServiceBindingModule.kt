@@ -1,10 +1,10 @@
 package ch.qscqlmpa.dwitch.service
 
 import ch.qscqlmpa.dwitch.app.AppScope
-import ch.qscqlmpa.dwitch.ongoinggame.services.GuestInGameService
-import ch.qscqlmpa.dwitch.ongoinggame.services.HostInGameService
-import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
-import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManagerImpl
+import ch.qscqlmpa.dwitch.ingame.services.GuestInGameService
+import ch.qscqlmpa.dwitch.ingame.services.HostInGameService
+import ch.qscqlmpa.dwitch.ingame.services.ServiceManager
+import ch.qscqlmpa.dwitch.ingame.services.ServiceManagerImpl
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector

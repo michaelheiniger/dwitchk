@@ -13,8 +13,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationState
+import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
+import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationState
 
 @Preview(
     showBackground = true,

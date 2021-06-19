@@ -1,9 +1,9 @@
 package ch.qscqlmpa.dwitch.app
 
 import ch.qscqlmpa.dwitch.app.notifications.NotificationChannelFactory
-import ch.qscqlmpa.dwitch.ongoinggame.OnGoingGameUiModule
-import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameUiComponent
-import ch.qscqlmpa.dwitch.ongoinggame.services.ServiceManager
+import ch.qscqlmpa.dwitch.ingame.OnGoingGameUiModule
+import ch.qscqlmpa.dwitch.ingame.OngoingGameUiComponent
+import ch.qscqlmpa.dwitch.ingame.services.ServiceManager
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationComponent
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationModule
 import ch.qscqlmpa.dwitchcommunication.di.DaggerCommunicationComponent
@@ -11,10 +11,10 @@ import ch.qscqlmpa.dwitchgame.di.DaggerGameComponent
 import ch.qscqlmpa.dwitchgame.di.GameComponent
 import ch.qscqlmpa.dwitchgame.di.modules.DwitchGameModule
 import ch.qscqlmpa.dwitchgame.home.HomeFacade
-import ch.qscqlmpa.dwitchgame.ongoinggame.common.GuestGameFacade
-import ch.qscqlmpa.dwitchgame.ongoinggame.common.HostGameFacade
-import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameComponent
-import ch.qscqlmpa.dwitchgame.ongoinggame.di.modules.OngoingGameModule
+import ch.qscqlmpa.dwitchgame.ingame.common.GuestGameFacade
+import ch.qscqlmpa.dwitchgame.ingame.common.HostGameFacade
+import ch.qscqlmpa.dwitchgame.ingame.di.InGameComponent
+import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameModule
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.DaggerStoreComponent
@@ -35,7 +35,7 @@ open class App : DaggerApplication() {
     var communicationComponent: CommunicationComponent? = null
     var inGameStoreComponent: InGameStoreComponent? = null
     var ongoingGameUiComponent: OngoingGameUiComponent? = null
-    var ongoingGameComponent: OngoingGameComponent? = null
+    var inGameComponent: InGameComponent? = null
 
     @Inject
     lateinit var serviceManager: ServiceManager
@@ -70,16 +70,16 @@ open class App : DaggerApplication() {
         localPlayerLocalId: Long,
         hostPort: Int,
         hostIpAddress: String
-    ): OngoingGameComponent? {
+    ): InGameComponent? {
         Logger.debug { "startOngoingGame()" }
-        if (ongoingGameComponent == null) {
+        if (inGameComponent == null) {
             inGameStoreComponent = storeComponent.addInGameStoreComponent(InGameStoreModule(gameLocalId, localPlayerLocalId))
 
             communicationComponent = DaggerCommunicationComponent.factory()
                 .create(CommunicationModule(hostIpAddress, hostPort, ProdIdlingResource()))
 
-            ongoingGameComponent = gameComponent.addOngoingGameComponent(
-                OngoingGameModule(
+            inGameComponent = gameComponent.addInGameComponent(
+                InGameModule(
                     playerRole,
                     roomType,
                     gameLocalId,
@@ -92,31 +92,31 @@ open class App : DaggerApplication() {
             )
             ongoingGameUiComponent = appComponent.addOngoingGameUiComponent(
                 OnGoingGameUiModule(
-                    ongoingGameComponent!!.gameFacade,
-                    ongoingGameComponent!!.hostGameFacade,
-                    ongoingGameComponent!!.guestGameFacade,
-                    ongoingGameComponent!!.waitingRoomFacade,
-                    ongoingGameComponent!!.waitingRoomHostFacade,
-                    ongoingGameComponent!!.waitingRoomGuestFacade,
-                    ongoingGameComponent!!.gameRoomHostFacade,
-                    ongoingGameComponent!!.gameRoomGuestFacade,
-                    ongoingGameComponent!!.playerFacade
+                    inGameComponent!!.gameFacade,
+                    inGameComponent!!.hostGameFacade,
+                    inGameComponent!!.guestGameFacade,
+                    inGameComponent!!.waitingRoomFacade,
+                    inGameComponent!!.waitingRoomHostFacade,
+                    inGameComponent!!.waitingRoomGuestFacade,
+                    inGameComponent!!.gameRoomHostFacade,
+                    inGameComponent!!.gameRoomGuestFacade,
+                    inGameComponent!!.playerFacade
                 )
             )
         } else {
             Logger.warn { "startOngoingGame() called when a game is already on-going." }
         }
-        return ongoingGameComponent
+        return inGameComponent
     }
 
     fun hostFacade(): HostGameFacade {
-        checkNotNull(ongoingGameComponent) { "No on-going game component!" }
-        return ongoingGameComponent!!.hostGameFacade
+        checkNotNull(inGameComponent) { "No on-going game component!" }
+        return inGameComponent!!.hostGameFacade
     }
 
     fun guestFacade(): GuestGameFacade {
-        checkNotNull(ongoingGameComponent) { "No on-going game component!" }
-        return ongoingGameComponent!!.guestGameFacade
+        checkNotNull(inGameComponent) { "No on-going game component!" }
+        return inGameComponent!!.guestGameFacade
     }
 
     open fun homeFacade(): HomeFacade {
@@ -124,13 +124,13 @@ open class App : DaggerApplication() {
     }
 
     fun getGameUiComponent(): OngoingGameUiComponent? {
-        checkNotNull(ongoingGameComponent) { "No on-going game ui component!" }
+        checkNotNull(inGameComponent) { "No on-going game ui component!" }
         return ongoingGameUiComponent
     }
 
     fun stopOngoingGame() {
         ongoingGameUiComponent = null
-        ongoingGameComponent = null
+        inGameComponent = null
         inGameStoreComponent = null
     }
 

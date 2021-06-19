@@ -4,7 +4,7 @@ import androidx.compose.ui.test.*
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
 import ch.qscqlmpa.dwitch.base.BaseUiUnitTest
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.guest.GuestCommunicationState
+import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
 import org.junit.Test
 
 class ConnectionGuestScreenTest : BaseUiUnitTest() {

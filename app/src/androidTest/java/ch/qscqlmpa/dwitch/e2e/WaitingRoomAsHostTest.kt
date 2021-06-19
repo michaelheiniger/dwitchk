@@ -10,7 +10,7 @@ import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.assertPlayerInWr
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.websocket.server.test.PlayerHostTest
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.GuestMessageFactory
+import ch.qscqlmpa.dwitchgame.ingame.communication.messagefactories.GuestMessageFactory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 

@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitchengine.initialgamesetup.random.RandomInitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerOnboardingInfo
-import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
+import ch.qscqlmpa.dwitchgame.ingame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole

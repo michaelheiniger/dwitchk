@@ -5,10 +5,10 @@ import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertisingImpl
 import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.gameadvertising.network.Network
-import ch.qscqlmpa.dwitchgame.ongoinggame.common.HostGameFacade
-import ch.qscqlmpa.dwitchgame.ongoinggame.common.HostGameFacadeImpl
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicationStateRepository
-import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
+import ch.qscqlmpa.dwitchgame.ingame.common.HostGameFacade
+import ch.qscqlmpa.dwitchgame.ingame.common.HostGameFacadeImpl
+import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationStateRepository
+import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.mockk.mockk
 import io.mockk.verify

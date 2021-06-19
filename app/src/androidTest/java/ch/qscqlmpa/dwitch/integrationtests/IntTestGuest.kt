@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
-import ch.qscqlmpa.dwitchgame.ongoinggame.gameroom.GameRoomGuestFacade
+import ch.qscqlmpa.dwitchgame.ingame.gameroom.GameRoomGuestFacade
 
 class IntTestGuest : IntTestPlayer() {
 

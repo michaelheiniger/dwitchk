@@ -1,8 +1,8 @@
 package ch.qscqlmpa.dwitch.app
 
 import android.app.Application
-import ch.qscqlmpa.dwitch.ongoinggame.OnGoingGameUiModule
-import ch.qscqlmpa.dwitch.ongoinggame.OngoingGameUiComponent
+import ch.qscqlmpa.dwitch.ingame.OnGoingGameUiModule
+import ch.qscqlmpa.dwitch.ingame.OngoingGameUiComponent
 import ch.qscqlmpa.dwitch.service.AndroidServiceBindingModule
 import ch.qscqlmpa.dwitch.ui.home.HomeBindingModule
 import ch.qscqlmpa.dwitchgame.di.GameComponent

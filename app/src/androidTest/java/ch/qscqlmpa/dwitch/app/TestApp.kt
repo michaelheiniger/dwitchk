@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitch.app
 import ch.qscqlmpa.dwitch.DaggerTestAppComponent
 import ch.qscqlmpa.dwitch.TestAppComponent
 import ch.qscqlmpa.dwitch.TestIdlingResource
-import ch.qscqlmpa.dwitch.ongoinggame.OnGoingGameUiModule
+import ch.qscqlmpa.dwitch.ingame.OnGoingGameUiModule
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationModule
 import ch.qscqlmpa.dwitchcommunication.di.DaggerTestCommunicationComponent
 import ch.qscqlmpa.dwitchgame.di.DaggerTestGameComponent
@@ -11,8 +11,8 @@ import ch.qscqlmpa.dwitchgame.di.TestGameComponent
 import ch.qscqlmpa.dwitchgame.di.modules.DwitchGameModule
 import ch.qscqlmpa.dwitchgame.di.modules.StoreModule
 import ch.qscqlmpa.dwitchgame.home.HomeFacade
-import ch.qscqlmpa.dwitchgame.ongoinggame.di.OngoingGameComponent
-import ch.qscqlmpa.dwitchgame.ongoinggame.di.modules.OngoingGameModule
+import ch.qscqlmpa.dwitchgame.ingame.di.InGameComponent
+import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameModule
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.DaggerTestStoreComponent
@@ -60,9 +60,9 @@ class TestApp : App() {
         localPlayerLocalId: Long,
         hostPort: Int,
         hostIpAddress: String
-    ): OngoingGameComponent? {
+    ): InGameComponent? {
         Logger.debug { "startOngoingGame()" }
-        if (ongoingGameComponent == null) {
+        if (inGameComponent == null) {
             inGameStoreComponent = testStoreComponent.addInGameStoreComponent(
                 InGameStoreModule(gameLocalId, localPlayerLocalId)
             )
@@ -70,8 +70,8 @@ class TestApp : App() {
             communicationComponent = DaggerTestCommunicationComponent.factory()
                 .create(CommunicationModule(hostIpAddress, hostPort, gameIdlingResource))
 
-            ongoingGameComponent = testGameComponent.addTestOngoingGameComponent(
-                OngoingGameModule(
+            inGameComponent = testGameComponent.addTestInGameComponent(
+                InGameModule(
                     playerRole,
                     roomType,
                     gameLocalId,
@@ -84,22 +84,22 @@ class TestApp : App() {
             )
             ongoingGameUiComponent = testAppComponent.addOngoingGameUiComponent(
                 OnGoingGameUiModule(
-                    ongoingGameComponent!!.gameFacade,
-                    ongoingGameComponent!!.hostGameFacade,
-                    ongoingGameComponent!!.guestGameFacade,
-                    ongoingGameComponent!!.waitingRoomFacade,
-                    ongoingGameComponent!!.waitingRoomHostFacade,
-                    ongoingGameComponent!!.waitingRoomGuestFacade,
-                    ongoingGameComponent!!.gameRoomHostFacade,
-                    ongoingGameComponent!!.gameRoomGuestFacade,
-                    ongoingGameComponent!!.playerFacade
+                    inGameComponent!!.gameFacade,
+                    inGameComponent!!.hostGameFacade,
+                    inGameComponent!!.guestGameFacade,
+                    inGameComponent!!.waitingRoomFacade,
+                    inGameComponent!!.waitingRoomHostFacade,
+                    inGameComponent!!.waitingRoomGuestFacade,
+                    inGameComponent!!.gameRoomHostFacade,
+                    inGameComponent!!.gameRoomGuestFacade,
+                    inGameComponent!!.playerFacade
                 )
             )
             testAppEventRelay.accept(TestAppEvent.GameCreated)
         } else {
             Logger.warn { "startOngoingGame() called when a game is already on-going." }
         }
-        return ongoingGameComponent
+        return inGameComponent
     }
 
     override fun homeFacade(): HomeFacade {

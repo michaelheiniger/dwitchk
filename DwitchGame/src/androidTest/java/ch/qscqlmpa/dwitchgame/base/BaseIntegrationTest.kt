@@ -5,7 +5,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationComponent
 import ch.qscqlmpa.dwitchgame.di.TestGameComponent
-import ch.qscqlmpa.dwitchgame.ongoinggame.di.TestOngoingGameComponent
+import ch.qscqlmpa.dwitchgame.ingame.di.TestInGameComponent
 import ch.qscqlmpa.dwitchstore.DaggerTestStoreComponent
 import ch.qscqlmpa.dwitchstore.TestStoreComponent
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
@@ -33,7 +33,7 @@ abstract class BaseIntegrationTest {
     protected lateinit var gameComponent: TestGameComponent
     protected var inGameStoreComponent: InGameStoreComponent? = null
     protected var communicationComponent: CommunicationComponent? = null
-    protected var ongoingGameComponent: TestOngoingGameComponent? = null
+    protected var ongoingGameComponent: TestInGameComponent? = null
 
     protected lateinit var inGameStore: InGameStore
 
