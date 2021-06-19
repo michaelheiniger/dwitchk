@@ -76,7 +76,6 @@ class GameRoomAsHostTest : BaseHostTest() {
         testRule.assertPlayerCannotPassTurn()
     }
 
-    //FIXME: Counter has been corrupted
     @Test
     fun playAWholeRoundWithHumanGuest() {
         cardsForPlayer = mapOf(
