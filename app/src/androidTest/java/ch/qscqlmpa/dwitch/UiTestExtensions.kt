@@ -8,8 +8,8 @@ fun ComposeContentTestRule.assertTextIsDisplayedOnce(
     textAsId: String,
     vararg containedStrings: String
 ): SemanticsNodeInteraction {
-    val sni = onNodeWithText(textAsId, substring = true).assertExists()
-    containedStrings.forEach(sni::assertTextContains)
+    val sni = onNodeWithText(textAsId, substring = true, ignoreCase = true).assertExists()
+    containedStrings.forEach { str -> sni.assertTextContains(value = str, substring = true, ignoreCase = true) }
     return sni
 }
 

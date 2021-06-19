@@ -10,7 +10,6 @@ import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import org.joda.time.DateTime
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 
 class HomeScreenTest : BaseUiUnitTest() {
@@ -72,8 +71,6 @@ class HomeScreenTest : BaseUiUnitTest() {
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.listening_advertised_games_failed))
     }
 
-    //FIXME
-    @Ignore // Hard to debug without the debugger (Android studio broken ?)
     @Test
     fun resumableGamesAreSuccesfullyDisplayed() {
         resumableGames = LoadedData.Success(
