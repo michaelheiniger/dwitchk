@@ -43,10 +43,10 @@ dependencies {
     implementation("org.tinylog:tinylog-api-kotlin:2.4.0-M1")
 
     // Room database
-    implementation("androidx.room:room-runtime:2.4.0-alpha02")
-    implementation("androidx.room:room-rxjava3:2.4.0-alpha02")
-    kapt("androidx.room:room-compiler:2.4.0-alpha02")
-    testImplementation("androidx.room:room-testing:2.4.0-alpha02")
+    implementation("androidx.room:room-runtime:2.4.0-alpha03")
+    implementation("androidx.room:room-rxjava3:2.4.0-alpha03")
+    kapt("androidx.room:room-compiler:2.4.0-alpha03")
+    testImplementation("androidx.room:room-testing:2.4.0-alpha03")
 
     // Dagger
     implementation("com.google.dagger:dagger-android-support:2.35.1")
