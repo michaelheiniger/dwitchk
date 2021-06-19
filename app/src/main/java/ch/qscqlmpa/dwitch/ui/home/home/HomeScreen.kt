@@ -230,7 +230,7 @@ private fun ResumableGameTitle() {
 @Composable
 private fun ResumableGames(
     resumableGames: List<ResumableGameInfo>,
-    onResumableGameclick: (ResumableGameInfo) -> Unit
+    onResumableGameClick: (ResumableGameInfo) -> Unit
 ) {
     if (resumableGames.isNotEmpty()) {
         ResumableGameTitle()
@@ -239,7 +239,7 @@ private fun ResumableGames(
                 Text(
                     text = "${game.name} (${game.creationDate.toStringEuFormat()} - ${game.playersName.joinToString(", ")})",
                     Modifier
-                        .clickable { onResumableGameclick(game) }
+                        .clickable { onResumableGameClick(game) }
                         .fillMaxWidth()
                 )
             }
