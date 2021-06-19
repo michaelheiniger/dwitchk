@@ -6,7 +6,6 @@ import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import dagger.Lazy
 import io.reactivex.rxjava3.core.Completable
@@ -48,13 +47,12 @@ internal class GuestDisconnectedEventProcessor @Inject constructor(
     }
 
     private fun updatePlayerWithDisconnectedState(dwitchPlayerId: DwitchPlayerId, connectionId: ConnectionId) {
-        val newState = PlayerConnectionState.DISCONNECTED
-        val numRecordsAffected = store.updatePlayer(dwitchPlayerId, newState, false)
+        val numRecordsAffected = store.updatePlayer(dwitchPlayerId, connected = false, ready = false)
 
         if (numRecordsAffected != 1) {
             throw IllegalStateException("State of player with connection ID $connectionId could not be updated because not found in store.")
         } else {
-            Logger.info { "Player with connection ID $connectionId changed state to $newState." }
+            Logger.info { "Player with connection ID $connectionId is now disconnected." }
         }
     }
 }

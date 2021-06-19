@@ -11,7 +11,6 @@ import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.websocket.client.test.OnStartEvent
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import org.assertj.core.api.Assertions.assertThat
@@ -83,28 +82,28 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
                     PlayerGuestTest.Host.id,
                     PlayerGuestTest.Host.name,
                     PlayerRole.HOST,
-                    PlayerConnectionState.CONNECTED,
+                    connected = true,
                     ready = true
                 ),
                 PlayerWr(
                     PlayerGuestTest.LocalGuest.id,
                     PlayerGuestTest.LocalGuest.name,
                     PlayerRole.GUEST,
-                    PlayerConnectionState.CONNECTED,
+                    connected = true,
                     ready = false
                 ),
                 PlayerWr(
                     PlayerGuestTest.Guest2.id,
                     PlayerGuestTest.Guest2.name,
                     PlayerRole.GUEST,
-                    PlayerConnectionState.CONNECTED,
+                    connected = true,
                     ready = true
                 ),
                 PlayerWr(
                     PlayerGuestTest.Guest3.id,
                     PlayerGuestTest.Guest3.name,
                     PlayerRole.GUEST,
-                    PlayerConnectionState.CONNECTED,
+                    connected = true,
                     ready = true
                 )
             )

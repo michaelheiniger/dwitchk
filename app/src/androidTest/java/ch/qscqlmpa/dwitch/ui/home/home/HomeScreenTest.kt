@@ -1,10 +1,12 @@
 package ch.qscqlmpa.dwitch.ui.home.home
 
-import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onNodeWithTag
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.assertTextIsDisplayed
 import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
 import ch.qscqlmpa.dwitch.base.BaseUiUnitTest
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
+import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
@@ -35,7 +37,7 @@ class HomeScreenTest : BaseUiUnitTest() {
 
         launchTest()
 
-        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.advertised_games))
+        composeTestRule.assertTextIsDisplayed(UiTags.advertisedGames)
         composeTestRule.assertTextIsDisplayedOnce("Game 1")
         composeTestRule.assertTextIsDisplayedOnce("Game 2")
         composeTestRule.assertTextIsDisplayedOnce("Game 3")
@@ -47,7 +49,7 @@ class HomeScreenTest : BaseUiUnitTest() {
 
         launchTest()
 
-        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.advertised_games))
+        composeTestRule.assertTextIsDisplayed(UiTags.advertisedGames)
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.no_game_discovered))
     }
 
@@ -57,7 +59,7 @@ class HomeScreenTest : BaseUiUnitTest() {
 
         launchTest()
 
-        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.advertised_games))
+        composeTestRule.assertTextIsDisplayed(UiTags.advertisedGames)
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.no_game_discovered))
     }
 
@@ -67,7 +69,7 @@ class HomeScreenTest : BaseUiUnitTest() {
 
         launchTest()
 
-        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.advertised_games))
+        composeTestRule.assertTextIsDisplayed(UiTags.advertisedGames)
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.listening_advertised_games_failed))
     }
 
@@ -92,7 +94,7 @@ class HomeScreenTest : BaseUiUnitTest() {
 
         launchTest()
 
-        composeTestRule.assertTextIsDisplayedOnce("Resumable games")
+        composeTestRule.assertTextIsDisplayed(UiTags.resumableGames)
         composeTestRule.assertTextIsDisplayedOnce("LOTR", "Aragorn", "Legolas", "Gimli")
         composeTestRule.assertTextIsDisplayedOnce("GoT", "Ned Stark", "Arya Stark", "Sandor Clegane")
     }
@@ -103,7 +105,7 @@ class HomeScreenTest : BaseUiUnitTest() {
 
         launchTest()
 
-        composeTestRule.onNodeWithText(getString(R.string.resumable_games)).assertDoesNotExist()
+        composeTestRule.onNodeWithTag(UiTags.resumableGames).assertDoesNotExist()
     }
 
     @Test
@@ -112,7 +114,7 @@ class HomeScreenTest : BaseUiUnitTest() {
 
         launchTest()
 
-        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.resumable_games))
+        composeTestRule.assertTextIsDisplayed(UiTags.resumableGames)
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.loading_resumable_games_failed))
     }
 

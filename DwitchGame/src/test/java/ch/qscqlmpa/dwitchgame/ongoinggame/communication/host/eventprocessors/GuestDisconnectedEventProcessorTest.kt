@@ -10,7 +10,6 @@ import ch.qscqlmpa.dwitchgame.LazyImpl
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import io.mockk.*
 import io.reactivex.rxjava3.core.Completable
 import org.assertj.core.api.Assertions.assertThat
@@ -27,7 +26,7 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
 
     private lateinit var processor: GuestDisconnectedEventProcessor
 
-    private val guestPlayer = TestEntityFactory.createGuestPlayer1().copy(connectionState = PlayerConnectionState.CONNECTED)
+    private val guestPlayer = TestEntityFactory.createGuestPlayer1().copy(connected = true)
 
     @BeforeEach
     fun setup() {
@@ -53,7 +52,7 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
         launchTest(guestConnectionId).test().assertComplete()
 
         verify { mockCommunicator.sendMessage(waitingRoomStateUpdateMessageWrapperMock) }
-        verify { mockInGameStore.updatePlayer(guestPlayer.dwitchId, PlayerConnectionState.DISCONNECTED, false) }
+        verify { mockInGameStore.updatePlayer(guestPlayer.dwitchId, connected = false, ready = false) }
         assertThat(connectionStore.getDwitchId(guestConnectionId)).isNull()
     }
 

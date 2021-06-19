@@ -155,7 +155,8 @@ private fun AdvertisedGameContainer(
         Text(
             text = stringResource(R.string.advertised_games),
             fontSize = 30.sp,
-            color = MaterialTheme.colors.primary
+            color = MaterialTheme.colors.primary,
+            modifier = Modifier.fillMaxWidth().testTag(UiTags.advertisedGames)
         )
         when (advertisedGames) {
             LoadedData.Loading -> ListeningForAdvertisedGames()
@@ -223,7 +224,8 @@ private fun ResumableGameTitle() {
     Text(
         stringResource(R.string.resumable_games),
         fontSize = 32.sp,
-        color = MaterialTheme.colors.primary
+        color = MaterialTheme.colors.primary,
+        modifier = Modifier.fillMaxWidth().testTag(UiTags.resumableGames)
     )
 }
 

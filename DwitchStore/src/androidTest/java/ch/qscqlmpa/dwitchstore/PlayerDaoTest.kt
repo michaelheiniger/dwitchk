@@ -1,7 +1,6 @@
 package ch.qscqlmpa.dwitchstore
 
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.model.Player
 import org.assertj.core.api.Assertions.assertThat
@@ -31,7 +30,7 @@ internal class PlayerDaoTest : BaseInstrumentedTest() {
             .assertGameLocalId(gameLocalId!!)
             .assertName("Gimli")
             .assertPlayerRole(PlayerRole.GUEST)
-            .assertConnectionState(PlayerConnectionState.CONNECTED)
+            .assertConnected()
             .assertReady(false)
         assertThat(player1FromStore.dwitchId).isNotNull // Do NOT simplify by using "isNotNull", somehow it produces an error
 
@@ -40,7 +39,7 @@ internal class PlayerDaoTest : BaseInstrumentedTest() {
             .assertGameLocalId(gameLocalId!!)
             .assertName("Legolas")
             .assertPlayerRole(PlayerRole.GUEST)
-            .assertConnectionState(PlayerConnectionState.CONNECTED)
+            .assertConnected()
             .assertReady(false)
         assertThat(player2FromStore.dwitchId).isNotNull // Do NOT simplify by using "isNotNull", somehow it produces an error
 
@@ -58,10 +57,10 @@ internal class PlayerDaoTest : BaseInstrumentedTest() {
     fun observePlayersInWaitingRoom() {
         bootstrapDb(
             listOf(
-                Player(0, DwitchPlayerId(2), 0, "Saruman", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true),
-                Player(0, DwitchPlayerId(3), 0, "Gimli", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, false),
-                Player(0, DwitchPlayerId(4), 0, "Boromir", PlayerRole.GUEST, PlayerConnectionState.DISCONNECTED, true),
-                Player(0, DwitchPlayerId(5), 0, "Legolas", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, true)
+                Player(0, DwitchPlayerId(2), 0, "Saruman", PlayerRole.GUEST, connected = true, true),
+                Player(0, DwitchPlayerId(3), 0, "Gimli", PlayerRole.GUEST, connected = true, false),
+                Player(0, DwitchPlayerId(4), 0, "Boromir", PlayerRole.GUEST, connected = false, true),
+                Player(0, DwitchPlayerId(5), 0, "Legolas", PlayerRole.GUEST, connected = true, true)
             )
         )
 
@@ -81,25 +80,25 @@ internal class PlayerDaoTest : BaseInstrumentedTest() {
     fun getComputerPlayersDwitchId() {
         bootstrapDb(
             listOf(
-                Player(0, DwitchPlayerId(2), 0, "Saruman", PlayerRole.GUEST, PlayerConnectionState.CONNECTED, ready = true),
+                Player(0, DwitchPlayerId(2), 0, "Saruman", PlayerRole.GUEST, connected = true, ready = true),
                 Player(
                     0,
                     DwitchPlayerId(3),
                     0,
                     "Gimli",
                     PlayerRole.GUEST,
-                    PlayerConnectionState.CONNECTED,
+                    connected = true,
                     ready = false,
                     computerManaged = true
                 ),
-                Player(0, DwitchPlayerId(4), 0, "Boromir", PlayerRole.GUEST, PlayerConnectionState.DISCONNECTED, ready = true),
+                Player(0, DwitchPlayerId(4), 0, "Boromir", PlayerRole.GUEST, connected = false, ready = true),
                 Player(
                     0,
                     DwitchPlayerId(5),
                     0,
                     "Legolas",
                     PlayerRole.GUEST,
-                    PlayerConnectionState.CONNECTED,
+                    connected = true,
                     ready = true,
                     computerManaged = true
                 )

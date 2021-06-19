@@ -1,7 +1,6 @@
 package ch.qscqlmpa.dwitch.utils
 
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.model.Player
 
@@ -10,7 +9,7 @@ object TestEntityFactory {
     fun createHostPlayer(
         localId: Long = 10L,
         dwitchId: DwitchPlayerId = DwitchPlayerId(100),
-        connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
+        connected: Boolean = true,
         ready: Boolean = true
     ): Player {
         return Player(
@@ -19,7 +18,7 @@ object TestEntityFactory {
             1L,
             "Aragorn",
             PlayerRole.HOST,
-            connectionState,
+            connected,
             ready
         )
     }
@@ -27,7 +26,7 @@ object TestEntityFactory {
     fun createGuestPlayer1(
         localId: Long = 11L,
         dwitchId: DwitchPlayerId = DwitchPlayerId(101),
-        connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
+        connected: Boolean = true,
         ready: Boolean = true
     ): Player {
         return Player(
@@ -36,7 +35,7 @@ object TestEntityFactory {
             1L,
             "Boromir",
             PlayerRole.GUEST,
-            connectionState,
+            connected,
             ready
         )
     }
@@ -44,7 +43,7 @@ object TestEntityFactory {
     fun createGuestPlayer2(
         localId: Long = 12L,
         dwitchId: DwitchPlayerId = DwitchPlayerId(102),
-        connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
+        connected: Boolean = true,
         ready: Boolean = true
     ): Player {
         return Player(
@@ -53,7 +52,7 @@ object TestEntityFactory {
             1L,
             "Celeborn",
             PlayerRole.GUEST,
-            connectionState,
+            connected,
             ready
         )
     }
@@ -61,7 +60,7 @@ object TestEntityFactory {
     fun createGuestPlayer3(
         localId: Long = 13L,
         dwitchId: DwitchPlayerId = DwitchPlayerId(103),
-        connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
+        connected: Boolean = true,
         ready: Boolean = true
     ): Player {
         return Player(
@@ -70,7 +69,7 @@ object TestEntityFactory {
             1L,
             "Denethor",
             PlayerRole.GUEST,
-            connectionState,
+            connected,
             ready
         )
     }

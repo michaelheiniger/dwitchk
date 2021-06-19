@@ -7,17 +7,16 @@ import ch.qscqlmpa.dwitchengine.model.info.DwitchPlayerInfo
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 
 object GameInfoFactory {
 
     fun createGameDashboardInfo(
         gameInfo: DwitchGameInfo,
         localPlayerId: DwitchPlayerId,
-        localPlayerConnectionState: PlayerConnectionState
+        localPlayerConnected: Boolean
     ): GameDashboardInfo {
         val localPlayerInfo = gameInfo.playerInfos.getValue(localPlayerId)
-        val dashboardEnabled = localPlayerConnectionState == PlayerConnectionState.CONNECTED
+        val dashboardEnabled = localPlayerConnected
         val localPlayerIsCurrentPlayer = gameInfo.currentPlayerId == localPlayerId
         return GameDashboardInfo(
             gameInfo.playerInfos.values.map { p ->

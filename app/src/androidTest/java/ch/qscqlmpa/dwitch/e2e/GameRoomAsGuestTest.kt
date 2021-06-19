@@ -30,9 +30,6 @@ import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerOnboardingInfo
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
-import ch.qscqlmpa.dwitchmodel.player.PlayerRole
-import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
@@ -182,27 +179,5 @@ class GameRoomAsGuestTest : BaseGuestTest() {
         clientTestStub.serverSendsMessageToClient(message)
 
         return newRoundGameState
-    }
-
-    private fun hostSendsInitialWaitingRoomUpdate() {
-        val message = Message.WaitingRoomStateUpdateMessage(
-            listOf(
-                PlayerWr(
-                    PlayerGuestTest.Host.id,
-                    PlayerGuestTest.Host.name,
-                    PlayerRole.HOST,
-                    PlayerConnectionState.CONNECTED,
-                    ready = true
-                ),
-                PlayerWr(
-                    PlayerGuestTest.LocalGuest.id,
-                    PlayerGuestTest.LocalGuest.name,
-                    PlayerRole.GUEST,
-                    PlayerConnectionState.CONNECTED,
-                    ready = false
-                )
-            )
-        )
-        clientTestStub.serverSendsMessageToClient(message)
     }
 }

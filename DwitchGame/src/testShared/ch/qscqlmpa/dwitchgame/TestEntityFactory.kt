@@ -8,7 +8,6 @@ import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerOnboardingInfo
 import ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.model.Game
 import ch.qscqlmpa.dwitchstore.model.Player
@@ -27,35 +26,35 @@ object TestEntityFactory {
     fun createHostPlayer(
         localId: Long = 10L,
         dwitchId: DwitchPlayerId = DwitchPlayerId(100),
-        connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
+        connected: Boolean = true,
         ready: Boolean = true
     ): Player {
         return Player(
-            localId,
-            dwitchId,
-            1L,
-            "Aragorn",
-            PlayerRole.HOST,
-            connectionState,
-            ready
+            id = localId,
+            dwitchId = dwitchId,
+            gameLocalId = 1L,
+            name = "Aragorn",
+            playerRole = PlayerRole.HOST,
+            connected = connected,
+            ready = ready
         )
     }
 
     fun createGuestPlayer1(
         localId: Long = 11L,
         dwitchId: DwitchPlayerId = DwitchPlayerId(101),
-        connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
+        connected: Boolean = true,
         ready: Boolean = true,
         computerManaged: Boolean = false
     ): Player {
         return Player(
-            localId,
-            dwitchId,
-            1L,
-            "Boromir",
-            PlayerRole.GUEST,
-            connectionState,
-            ready,
+            id = localId,
+            dwitchId = dwitchId,
+            gameLocalId = 1L,
+            name = "Boromir",
+            playerRole = PlayerRole.GUEST,
+            connected = connected,
+            ready = ready,
             computerManaged = computerManaged
         )
     }
@@ -63,18 +62,18 @@ object TestEntityFactory {
     fun createGuestPlayer2(
         localId: Long = 12L,
         dwitchId: DwitchPlayerId = DwitchPlayerId(102),
-        connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
+        connected: Boolean = true,
         ready: Boolean = true,
         computerManaged: Boolean = false
     ): Player {
         return Player(
-            localId,
-            dwitchId,
-            1L,
-            "Celeborn",
-            PlayerRole.GUEST,
-            connectionState,
-            ready,
+            id = localId,
+            dwitchId = dwitchId,
+            gameLocalId = 1L,
+            name = "Celeborn",
+            playerRole = PlayerRole.GUEST,
+            connected = connected,
+            ready = ready,
             computerManaged = computerManaged
         )
     }
@@ -82,31 +81,31 @@ object TestEntityFactory {
     fun createGuestPlayer3(
         localId: Long = 13L,
         dwitchId: DwitchPlayerId = DwitchPlayerId(103),
-        connectionState: PlayerConnectionState = PlayerConnectionState.CONNECTED,
+        connected: Boolean = true,
         ready: Boolean = true,
         computerManaged: Boolean = false
     ): Player {
         return Player(
-            localId,
-            dwitchId,
-            1L,
-            "Denethor",
-            PlayerRole.GUEST,
-            connectionState,
-            ready,
+            id = localId,
+            dwitchId = dwitchId,
+            gameLocalId = 1L,
+            name = "Denethor",
+            playerRole = PlayerRole.GUEST,
+            connected = connected,
+            ready = ready,
             computerManaged = computerManaged
         )
     }
 
     fun createGameInWaitingRoom(localPlayerLocalId: Long = 10): Game {
         return Game(
-            1L,
-            DateTime.now(),
-            RoomType.WAITING_ROOM,
-            GameCommonId(65),
-            "Dwitch",
-            "",
-            localPlayerLocalId
+            id = 1L,
+            creationDate = DateTime.now(),
+            currentRoom = RoomType.WAITING_ROOM,
+            gameCommonId = GameCommonId(65),
+            name = "Dwitch",
+            gameState = "",
+            localPlayerLocalId = localPlayerLocalId
         )
     }
 

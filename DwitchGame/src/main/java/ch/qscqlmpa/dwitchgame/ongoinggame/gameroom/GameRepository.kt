@@ -50,7 +50,7 @@ internal class GameRepository @Inject constructor(
         return GameInfoFactory.createGameDashboardInfo(
             dwitchFactory.createDwitchEngine(gameState).getGameInfo(),
             localPlayer.dwitchId,
-            localPlayer.connectionState
+            localPlayer.connected
         )
     }
 

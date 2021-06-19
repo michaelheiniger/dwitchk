@@ -4,7 +4,6 @@ import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.dao.AppRoomDatabase
 import ch.qscqlmpa.dwitchstore.ingamestore.model.GameCommonIdAndCurrentRoom
@@ -121,22 +120,22 @@ internal class InGameStoreImpl constructor(
 
     override fun updatePlayer(
         dwitchPlayerId: DwitchPlayerId,
-        state: PlayerConnectionState,
+        connected: Boolean,
         ready: Boolean
     ): Int {
-        return playerDao.updatePlayer(dwitchPlayerId, state, ready)
+        return playerDao.updatePlayer(dwitchPlayerId, connected, ready)
     }
 
     override fun updatePlayerWithConnectionStateAndReady(
         playerLocalId: Long,
-        state: PlayerConnectionState,
+        connected: Boolean,
         ready: Boolean
     ): Int {
-        return playerDao.updatePlayerWithConnectionStateAndReady(playerLocalId, state, ready)
+        return playerDao.updatePlayerWithConnectionStateAndReady(playerLocalId, connected, ready)
     }
 
-    override fun updatePlayerWithConnectionState(playerLocalId: Long, state: PlayerConnectionState): Int {
-        return playerDao.updatePlayerWithConnectionState(playerLocalId, state)
+    override fun updatePlayerWithConnectionState(playerLocalId: Long, connected: Boolean): Int {
+        return playerDao.updatePlayerWithConnectionState(playerLocalId, connected)
     }
 
     override fun setAllPlayersToDisconnected(): Int {

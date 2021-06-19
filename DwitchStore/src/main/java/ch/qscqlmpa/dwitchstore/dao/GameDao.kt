@@ -4,7 +4,6 @@ import androidx.room.*
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.InsertGameResult
 import ch.qscqlmpa.dwitchstore.ingamestore.model.GameCommonIdAndCurrentRoom
@@ -97,10 +96,10 @@ internal abstract class GameDao(database: AppRoomDatabase) {
         val gameCommonId = GameCommonId(Date().time)
         val game = Game(
             id = 0,
-            DateTime.now(),
-            RoomType.WAITING_ROOM,
-            gameCommonId,
-            gameName,
+            creationDate = DateTime.now(),
+            currentRoom = RoomType.WAITING_ROOM,
+            gameCommonId = gameCommonId,
+            name = gameName,
             gameState = null,
             localPlayerLocalId = 0
         )
@@ -108,11 +107,11 @@ internal abstract class GameDao(database: AppRoomDatabase) {
 
         val player = Player(
             id = 0,
-            DwitchPlayerId(0),
-            gameLocalId,
-            hostPlayerName,
-            PlayerRole.HOST,
-            PlayerConnectionState.CONNECTED,
+            dwitchId = DwitchPlayerId(0),
+            gameLocalId = gameLocalId,
+            name = hostPlayerName,
+            playerRole = PlayerRole.HOST,
+            connected = true,
             ready = true
         )
         val playerLocalId = playerDao.insertPlayer(player)
@@ -146,10 +145,10 @@ internal abstract class GameDao(database: AppRoomDatabase) {
     private fun insertNewGuestGame(gameCommonId: GameCommonId, gameName: String, guestPlayerName: String): InsertGameResult {
         val game = Game(
             id = 0,
-            DateTime.now(),
-            RoomType.WAITING_ROOM,
-            gameCommonId,
-            gameName,
+            creationDate = DateTime.now(),
+            currentRoom = RoomType.WAITING_ROOM,
+            gameCommonId = gameCommonId,
+            name = gameName,
             gameState = null,
             localPlayerLocalId = 0
         )
@@ -157,11 +156,11 @@ internal abstract class GameDao(database: AppRoomDatabase) {
 
         val player = Player(
             id = 0,
-            DwitchPlayerId(0),
-            gameLocalId,
-            guestPlayerName,
-            PlayerRole.GUEST,
-            PlayerConnectionState.CONNECTED,
+            dwitchId = DwitchPlayerId(0),
+            gameLocalId = gameLocalId,
+            name = guestPlayerName,
+            playerRole = PlayerRole.GUEST,
+            connected = true,
             ready = false
         )
         val playerLocalId = playerDao.insertPlayer(player)

@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitchstore
 
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.model.Player
 import org.assertj.core.api.Assertions.assertThat
@@ -22,8 +21,13 @@ class PlayerRobot(val player: Player) {
         return this
     }
 
-    fun assertConnectionState(expectedValue: PlayerConnectionState): PlayerRobot {
-        assertThat(player.connectionState).isEqualTo(expectedValue)
+    fun assertConnected(): PlayerRobot {
+        assertThat(player.connected).isTrue
+        return this
+    }
+
+    fun assertDisconnected(): PlayerRobot {
+        assertThat(player.connected).isFalse
         return this
     }
 

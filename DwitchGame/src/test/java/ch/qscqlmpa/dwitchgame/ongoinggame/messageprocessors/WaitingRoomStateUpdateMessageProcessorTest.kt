@@ -5,7 +5,6 @@ import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMessageFactory
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.WaitingRoomStateUpdateMessageProcessor
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import ch.qscqlmpa.dwitchstore.model.Player
 import io.mockk.CapturingSlot
@@ -24,7 +23,7 @@ internal class WaitingRoomStateUpdateMessageProcessorTest : BaseMessageProcessor
     private val hostPlayer = TestEntityFactory.createHostPlayer()
     private val localGuestPlayer = TestEntityFactory.createGuestPlayer1()
     private val guest2Player = TestEntityFactory.createGuestPlayer2(ready = true)
-    private val guest3Player = TestEntityFactory.createGuestPlayer3(connectionState = PlayerConnectionState.CONNECTED)
+    private val guest3Player = TestEntityFactory.createGuestPlayer3(connected = true)
 
     @BeforeEach
     fun setup() {
@@ -64,23 +63,23 @@ internal class WaitingRoomStateUpdateMessageProcessorTest : BaseMessageProcessor
             HostMessageFactory.toPlayerWr(hostPlayer),
             HostMessageFactory.toPlayerWr(localGuestPlayer),
             HostMessageFactory.toPlayerWr(guest2Player).copy(ready = false),
-            HostMessageFactory.toPlayerWr(guest3Player).copy(connectionState = PlayerConnectionState.DISCONNECTED)
+            HostMessageFactory.toPlayerWr(guest3Player).copy(connected = false)
         )
 
         launchTest(upToDatePlayerList).test().assertComplete()
 
         verify {
             mockInGameStore.updatePlayerWithConnectionStateAndReady(
-                guest2Player.id,
-                PlayerConnectionState.CONNECTED,
-                false
+                playerLocalId = guest2Player.id,
+                connected = true,
+                ready = false
             )
         }
         verify {
             mockInGameStore.updatePlayerWithConnectionStateAndReady(
-                guest3Player.id,
-                PlayerConnectionState.DISCONNECTED,
-                true
+                playerLocalId = guest3Player.id,
+                connected = false,
+                ready = true
             )
         }
 
@@ -109,7 +108,7 @@ internal class WaitingRoomStateUpdateMessageProcessorTest : BaseMessageProcessor
         assertThat(argCap.captured[0].dwitchId).isEqualTo(guest2Player.dwitchId)
         assertThat(argCap.captured[0].name).isEqualTo(guest2Player.name)
         assertThat(argCap.captured[0].playerRole).isEqualTo(guest2Player.playerRole)
-        assertThat(argCap.captured[0].connectionState).isEqualTo(guest2Player.connectionState)
+        assertThat(argCap.captured[0].connected).isEqualTo(guest2Player.connected)
         assertThat(argCap.captured[0].ready).isEqualTo(guest2Player.ready)
 
         assertThat(argCap.captured[1].id).isEqualTo(0)
@@ -117,7 +116,7 @@ internal class WaitingRoomStateUpdateMessageProcessorTest : BaseMessageProcessor
         assertThat(argCap.captured[1].dwitchId).isEqualTo(guest3Player.dwitchId)
         assertThat(argCap.captured[1].name).isEqualTo(guest3Player.name)
         assertThat(argCap.captured[1].playerRole).isEqualTo(guest3Player.playerRole)
-        assertThat(argCap.captured[1].connectionState).isEqualTo(guest3Player.connectionState)
+        assertThat(argCap.captured[1].connected).isEqualTo(guest3Player.connected)
         assertThat(argCap.captured[1].ready).isEqualTo(guest3Player.ready)
 
         verify { mockInGameStore.getPlayersInWaitingRoom() }

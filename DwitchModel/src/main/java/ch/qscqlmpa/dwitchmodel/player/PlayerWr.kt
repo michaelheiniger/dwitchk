@@ -8,6 +8,6 @@ data class PlayerWr(
     val dwitchId: DwitchPlayerId,
     val name: String,
     val playerRole: PlayerRole,
-    val connectionState: PlayerConnectionState,
+    val connected: Boolean,
     val ready: Boolean
 )

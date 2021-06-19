@@ -2,7 +2,6 @@ package ch.qscqlmpa.dwitchgame.ongoinggame.waitingroom
 
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import io.mockk.every
 import io.reactivex.rxjava3.core.Flowable
@@ -20,12 +19,12 @@ class WaitingRoomPlayerRepositoryTest : BaseUnitTest() {
 
         private val host = TestEntityFactory.createHostPlayer()
         private val guest1 = TestEntityFactory.createGuestPlayer1(
-            connectionState = PlayerConnectionState.CONNECTED,
+            connected = true,
             ready = true,
             computerManaged = true
         )
         private val guest2 = TestEntityFactory.createGuestPlayer2(
-            connectionState = PlayerConnectionState.DISCONNECTED,
+            connected = false,
             ready = false,
             computerManaged = false
         )

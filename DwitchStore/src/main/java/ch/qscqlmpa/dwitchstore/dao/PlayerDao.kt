@@ -2,7 +2,6 @@ package ch.qscqlmpa.dwitchstore.dao
 
 import androidx.room.*
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.model.Player
 import io.reactivex.rxjava3.core.Flowable
@@ -20,12 +19,12 @@ internal interface PlayerDao {
     @Transaction
     fun insertNewGuestPlayer(gameLocalId: Long, name: String, computerManaged: Boolean): Long {
         val player = Player(
-            0,
-            DwitchPlayerId(0),
-            gameLocalId,
-            name,
-            PlayerRole.GUEST,
-            PlayerConnectionState.CONNECTED,
+            id = 0,
+            dwitchId = DwitchPlayerId(0),
+            gameLocalId = gameLocalId,
+            name = name,
+            playerRole = PlayerRole.GUEST,
+            connected = true,
             ready = false,
             computerManaged = computerManaged
         )
@@ -46,25 +45,25 @@ internal interface PlayerDao {
     @Query(
         """
             UPDATE Player 
-            SET connectionState = :state, ready = :ready
+            SET connected = :connected, ready = :ready
             WHERE dwitch_id = :dwitchPlayerId
             """
     )
-    fun updatePlayer(dwitchPlayerId: DwitchPlayerId, state: PlayerConnectionState, ready: Boolean): Int
+    fun updatePlayer(dwitchPlayerId: DwitchPlayerId, connected: Boolean, ready: Boolean): Int
 
-    @Query("UPDATE Player SET connectionState = :state, ready = :ready WHERE dwitch_id = :dwitchPlayerId")
-    fun updatePlayerWithStateAndReady(dwitchPlayerId: DwitchPlayerId, state: PlayerConnectionState, ready: Boolean): Int
+    @Query("UPDATE Player SET connected = :connected, ready = :ready WHERE dwitch_id = :dwitchPlayerId")
+    fun updatePlayerWithStateAndReady(dwitchPlayerId: DwitchPlayerId, connected: Boolean, ready: Boolean): Int
 
-    @Query("UPDATE Player SET connectionState = :state, ready = :ready WHERE id = :playerLocalId")
-    fun updatePlayerWithConnectionStateAndReady(playerLocalId: Long, state: PlayerConnectionState, ready: Boolean): Int
+    @Query("UPDATE Player SET connected = :connected, ready = :ready WHERE id = :playerLocalId")
+    fun updatePlayerWithConnectionStateAndReady(playerLocalId: Long, connected: Boolean, ready: Boolean): Int
 
-    @Query("UPDATE Player SET connectionState = :state WHERE id = :playerLocalId")
-    fun updatePlayerWithConnectionState(playerLocalId: Long, state: PlayerConnectionState): Int
+    @Query("UPDATE Player SET connected = :connected WHERE id = :playerLocalId")
+    fun updatePlayerWithConnectionState(playerLocalId: Long, connected: Boolean): Int
 
     @Query(
         """
             UPDATE Player
-            SET connectionState = 'DISCONNECTED'
+            SET connected = 'DISCONNECTED'
             WHERE game_local_id = :gameLocalId
             """
     )
@@ -195,7 +194,7 @@ internal interface PlayerDao {
     @Query(
         """
        UPDATE Player
-        SET connectionState = "DISCONNECTED", ready = 0
+        SET connected = "DISCONNECTED", ready = 0
         WHERE game_local_id = :gameId
         AND id != :localPlayerId
         """

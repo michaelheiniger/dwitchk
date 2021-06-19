@@ -12,7 +12,6 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMes
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messageprocessors.RejoinGameMessageProcessor
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchstore.ingamestore.model.GameCommonIdAndCurrentRoom
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -119,14 +118,14 @@ internal class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
     fun `Update player in store with connection state connected and ready state not ready when current room is waitingroom`() {
         launchTestWithSameGameCommonId(RoomType.WAITING_ROOM)
 
-        verify { mockInGameStore.updatePlayerWithConnectionStateAndReady(guestPlayerLocalId, PlayerConnectionState.CONNECTED, false) }
+        verify { mockInGameStore.updatePlayerWithConnectionStateAndReady(guestPlayerLocalId, connected = true, ready = false) }
     }
 
     @Test
     fun `Update player in store with connection state connected when current room is gameroom`() {
         launchTestWithSameGameCommonId(RoomType.GAME_ROOM)
 
-        verify { mockInGameStore.updatePlayerWithConnectionState(guestPlayerLocalId, PlayerConnectionState.CONNECTED) }
+        verify { mockInGameStore.updatePlayerWithConnectionState(guestPlayerLocalId, connected = true) }
     }
 
     @Test

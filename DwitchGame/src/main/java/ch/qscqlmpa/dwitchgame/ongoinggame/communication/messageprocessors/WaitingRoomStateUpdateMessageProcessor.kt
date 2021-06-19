@@ -58,7 +58,7 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
             playersToUpdate.forEach { (upToDatePlayer, playerOld) ->
                 store.updatePlayerWithConnectionStateAndReady(
                     playerOld.id,
-                    upToDatePlayer.connectionState,
+                    upToDatePlayer.connected,
                     upToDatePlayer.ready
                 )
             }
@@ -68,7 +68,7 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
     }
 
     private fun hasAnyRelevantAttributeChanged(playerOld: Player, upToDatePlayer: PlayerWr): Boolean {
-        return playerOld.ready != upToDatePlayer.ready || playerOld.connectionState != upToDatePlayer.connectionState
+        return playerOld.ready != upToDatePlayer.ready || playerOld.connected != upToDatePlayer.connected
     }
 
     private fun addNewPlayers(playersUpToDate: List<PlayerWr>, playersOld: List<Player>) {
@@ -87,7 +87,7 @@ internal class WaitingRoomStateUpdateMessageProcessor @Inject constructor(
                         0,
                         p.name,
                         p.playerRole,
-                        p.connectionState,
+                        p.connected,
                         p.ready
                     )
                 }

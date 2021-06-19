@@ -4,7 +4,6 @@ import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.ingamestore.model.GameCommonIdAndCurrentRoom
 import ch.qscqlmpa.dwitchstore.ingamestore.model.ResumeComputerPlayersInfo
@@ -41,9 +40,9 @@ interface InGameStore {
     fun updateLocalPlayerWithDwitchId(dwitchPlayerId: DwitchPlayerId): Int
     fun updateLocalPlayerWithReady(ready: Boolean): Int
     fun updatePlayerWithReady(dwitchPlayerId: DwitchPlayerId, ready: Boolean): Int
-    fun updatePlayer(dwitchPlayerId: DwitchPlayerId, state: PlayerConnectionState, ready: Boolean): Int
-    fun updatePlayerWithConnectionStateAndReady(playerLocalId: Long, state: PlayerConnectionState, ready: Boolean): Int
-    fun updatePlayerWithConnectionState(playerLocalId: Long, state: PlayerConnectionState): Int
+    fun updatePlayer(dwitchPlayerId: DwitchPlayerId, connected: Boolean, ready: Boolean): Int
+    fun updatePlayerWithConnectionStateAndReady(playerLocalId: Long, connected: Boolean, ready: Boolean): Int
+    fun updatePlayerWithConnectionState(playerLocalId: Long, connected: Boolean): Int
     fun setAllPlayersToDisconnected(): Int
 
     fun deletePlayers(playersLocalId: List<Long>): Int

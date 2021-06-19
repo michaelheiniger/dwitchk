@@ -2,7 +2,6 @@ package ch.qscqlmpa.dwitchstore.model
 
 import androidx.room.*
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import kotlinx.serialization.Serializable
 
@@ -26,7 +25,7 @@ data class Player(
     @ColumnInfo(name = "game_local_id") val gameLocalId: Long,
     val name: String,
     @ColumnInfo(name = "player_role") val playerRole: PlayerRole,
-    val connectionState: PlayerConnectionState,
+    val connected: Boolean,
     val ready: Boolean,
     @ColumnInfo(name = "computer_managed") val computerManaged: Boolean = false
 ) {

@@ -55,7 +55,7 @@ class HostMessageFactory @Inject constructor(private val store: InGameStore) {
         }
 
         fun toPlayerWr(player: Player): PlayerWr {
-            return PlayerWr(player.dwitchId, player.name, player.playerRole, player.connectionState, player.ready)
+            return PlayerWr(player.dwitchId, player.name, player.playerRole, player.connected, player.ready)
         }
 
         private fun createWaitingRoomStateUpdateMessage(playerList: List<Player>): EnvelopeToSend {

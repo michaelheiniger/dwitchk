@@ -11,7 +11,6 @@ import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.HostMes
 import ch.qscqlmpa.dwitchgame.ongoinggame.communication.messagefactories.MessageFactory
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import dagger.Lazy
 import io.reactivex.rxjava3.core.Completable
@@ -68,11 +67,11 @@ internal class RejoinGameMessageProcessor @Inject constructor(
     private fun updatePlayer(playerLocalId: Long, currentRoom: RoomType) {
         when (currentRoom) {
             RoomType.WAITING_ROOM -> store.updatePlayerWithConnectionStateAndReady(
-                playerLocalId,
-                PlayerConnectionState.CONNECTED,
+                playerLocalId = playerLocalId,
+                connected = true,
                 ready = false
             )
-            RoomType.GAME_ROOM -> store.updatePlayerWithConnectionState(playerLocalId, PlayerConnectionState.CONNECTED)
+            RoomType.GAME_ROOM -> store.updatePlayerWithConnectionState(playerLocalId, connected = true)
             else -> throw IllegalStateException("Current room is null !")
         }
     }
