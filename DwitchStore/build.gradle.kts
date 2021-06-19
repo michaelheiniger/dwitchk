@@ -37,8 +37,6 @@ dependencies {
     implementation(project(path = ":DwitchEngine"))
     implementation(project(path = ":DwitchModel"))
 
-    implementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlinVersion}") // Prevent compiler warning (implicit dependency)
-
     // Logging
     implementation("org.tinylog:tinylog-api-kotlin:2.4.0-M1")
 

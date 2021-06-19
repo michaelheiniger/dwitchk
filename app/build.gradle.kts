@@ -83,23 +83,31 @@ dependencies {
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlinVersion}")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlinVersion}") // Prevent compiler warning (implicit dependency)
 
-    // Android / UI
+    // Android
     implementation("androidx.appcompat:appcompat:1.3.0")
-    implementation("androidx.core:core-ktx:1.5.0")
-    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
     implementation("com.google.android.material:material:1.3.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
+
+    // ####### Jetpack Compose #######
+    implementation("androidx.compose.ui:ui:$composeVersion")
+    implementation("androidx.compose.ui:ui-tooling:$composeVersion")
+    implementation("androidx.compose.foundation:foundation:$composeVersion")
+    implementation("androidx.compose.material:material:$composeVersion")
+    implementation("androidx.compose.material:material-icons-core:$composeVersion")
+    implementation("androidx.compose.material:material-icons-extended:$composeVersion")
+    implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
+    implementation("androidx.compose.runtime:runtime-rxjava3:$composeVersion")
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha03")
+    implementation("androidx.activity:activity-compose:1.3.0-beta02")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
+    androidTestImplementation("androidx.compose.ui:ui-test:$composeVersion")
 
     // Dagger
     implementation("com.google.dagger:dagger-android-support:2.35.1")
     implementation("com.google.dagger:dagger-android:2.35.1")
     implementation("com.google.dagger:dagger:2.35.1")
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
-    implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
     kapt("com.google.dagger:dagger-android-processor:2.35.1")
     kapt("com.google.dagger:dagger-compiler:2.35.1")
     kaptAndroidTest("com.google.dagger:dagger-compiler:2.35.1")
@@ -125,12 +133,13 @@ dependencies {
     androidTestImplementation("androidx.test:core:1.3.0")
     androidTestImplementation("androidx.test:rules:1.3.0")
     androidTestImplementation("androidx.test:runner:1.3.0")
+    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
     androidTestUtil("androidx.test:orchestrator:1.4.0-beta02")
 
     // Espresso (needed for CounterIdlingResource)
     androidTestImplementation("androidx.test.espresso:espresso-contrib:3.3.0")
 
-    // To use androidx.arch.core.executor.testing.InstantTaskExecutorRule in ViewModel unit tests
+    // Required to use androidx.arch.core.executor.testing.InstantTaskExecutorRule in ViewModel unit tests
     testImplementation("android.arch.core:core-testing:1.1.1")
 
     // MockK
@@ -140,24 +149,6 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.19.0")
     androidTestImplementation("org.assertj:assertj-core:3.19.0")
 
-    // ####### Jetpack Compose #######
-    implementation("androidx.compose.ui:ui:$composeVersion")
-    implementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("androidx.compose.foundation:foundation:$composeVersion")
-    implementation("androidx.compose.material:material:$composeVersion")
-    implementation("androidx.compose.material:material-icons-core:$composeVersion")
-    implementation("androidx.compose.material:material-icons-extended:$composeVersion")
-    implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
-    implementation("androidx.compose.runtime:runtime-rxjava3:$composeVersion")
-    implementation("androidx.navigation:navigation-compose:2.4.0-alpha03")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
-    androidTestImplementation("androidx.compose.ui:ui-test:$composeVersion")
-
-    implementation("androidx.activity:activity-compose:1.3.0-beta02")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
-
     // Robolectric (for unit tests that log stuff)
     testImplementation("org.robolectric:robolectric:4.5.1")
-
-    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
 }
