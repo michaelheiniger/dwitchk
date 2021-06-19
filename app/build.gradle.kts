@@ -19,10 +19,6 @@ android {
         versionName = Versions.appVersionName
 
         testInstrumentationRunner = "ch.qscqlmpa.dwitch.app.CustomTestRunner"
-
-        // Clears the app state between instrumented tests (activities, DB, ...)
-        // Documentation: https://developer.android.com/training/testing/junit-runner
-        testInstrumentationRunnerArguments["clearPackageData"] = "true"
     }
 
     buildFeatures {
