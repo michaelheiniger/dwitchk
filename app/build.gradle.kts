@@ -154,7 +154,7 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test:$composeVersion")
 
     implementation("androidx.activity:activity-compose:1.3.0-beta02")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha06")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
 
     // Robolectric (for unit tests that log stuff)
     testImplementation("org.robolectric:robolectric:4.5.1")
