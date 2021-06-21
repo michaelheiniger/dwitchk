@@ -1,10 +1,47 @@
 package ch.qscqlmpa.dwitch
 
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
+import ch.qscqlmpa.dwitchmodel.player.PlayerRole
+import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 
-sealed class PlayerGuestTest(val name: String, val id: DwitchPlayerId) {
-    object Host : PlayerGuestTest("Aragorn", DwitchPlayerId(10))
-    object LocalGuest : PlayerGuestTest("Boromir", DwitchPlayerId(11))
-    object Guest2 : PlayerGuestTest("Celeborn", DwitchPlayerId(12))
-    object Guest3 : PlayerGuestTest("Denethor", DwitchPlayerId(13))
+sealed class PlayerGuestTest(val info: PlayerWr) {
+    object Host : PlayerGuestTest(
+        PlayerWr(
+            dwitchId = DwitchPlayerId(10),
+            name = "Aragorn",
+            playerRole = PlayerRole.HOST,
+            connected = true,
+            ready = true
+        )
+    )
+
+    object LocalGuest : PlayerGuestTest(
+        PlayerWr(
+            dwitchId = DwitchPlayerId(11),
+            name = "Boromir",
+            playerRole = PlayerRole.GUEST,
+            connected = true,
+            ready = true
+        )
+    )
+
+    object Guest2 : PlayerGuestTest(
+        PlayerWr(
+            dwitchId = DwitchPlayerId(12),
+            name = "Celeborn",
+            playerRole = PlayerRole.GUEST,
+            connected = true,
+            ready = true
+        )
+    )
+
+    object Guest3 : PlayerGuestTest(
+        PlayerWr(
+            dwitchId = DwitchPlayerId(13),
+            name = "Denethor",
+            playerRole = PlayerRole.GUEST,
+            connected = true,
+            ready = true
+        )
+    )
 }

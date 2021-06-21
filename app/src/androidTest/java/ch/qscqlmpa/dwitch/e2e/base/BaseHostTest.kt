@@ -65,7 +65,7 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
 
     protected fun guestDisconnects(identifier: PlayerHostTest) {
         incrementGameIdlingResource("Guest disconnects (${getGuest(identifier)})")
-        serverTestStub.disconnectFromServer(identifier)
+        serverTestStub.clientDisconnectsFromServer(identifier)
         val messageSent = waitForNextMessageSentByHost()
         assertThat(messageSent).isInstanceOf(Message.WaitingRoomStateUpdateMessage::class.java)
     }

@@ -20,6 +20,7 @@ class ConnectionGuestViewModel @Inject constructor(
     val connectionStatus get(): LiveData<GuestCommunicationState> = _communicationState
 
     fun reconnect() {
+        idlingResource.increment("Reconnection to the host (Comm state: connected)")
         gameFacade.connect()
     }
 

@@ -32,7 +32,7 @@ internal class WebsocketServerTestStub(
         return server.blockUntilMessageSentIsAvailable()
     }
 
-    override fun disconnectFromServer(guestIdentifier: PlayerHostTest) {
+    override fun clientDisconnectsFromServer(guestIdentifier: PlayerHostTest) {
         Completable.fromAction { server.onClose(getSocketForGuest(guestIdentifier), 1, "reason", remote = true) }
             .subscribeOn(Schedulers.io())
             .subscribe()

@@ -119,7 +119,7 @@ fun GameRoomHostBody(
     onReconnectClick: () -> Unit
 ) {
     val gameRules = remember { mutableStateOf(false) }
-    val showConfirmationDialog = remember { mutableStateOf(false) }
+    val showEndGameConfirmationDialog = remember { mutableStateOf(false) }
 
     Column(
         Modifier
@@ -131,7 +131,7 @@ fun GameRoomHostBody(
             navigationIcon = NavigationIcon(
                 icon = R.drawable.ic_baseline_exit_to_app_24,
                 contentDescription = R.string.end_game,
-                onClick = { showConfirmationDialog.value = true }),
+                onClick = { showEndGameConfirmationDialog.value = true }),
             actions = listOf(GameRules),
             onActionClick = { action ->
                 when (action) {
@@ -154,7 +154,8 @@ fun GameRoomHostBody(
                         dashboardInfo = screen.dashboardInfo,
                         onCardClick = onCardClick,
                         onPlayClick = onPlayClick,
-                        onPassClick = onPassClick
+                        onPassClick = onPassClick,
+                        onEndOrLeaveGameClick = { showEndGameConfirmationDialog.value = true }
                     )
                 }
                 is GameRoomScreen.EndOfRound -> {
@@ -182,16 +183,16 @@ fun GameRoomHostBody(
             ConnectionHostScreen(
                 status = connectionStatus,
                 onReconnectClick = onReconnectClick,
-                onAbortClick = { showConfirmationDialog.value = true }
+                onAbortClick = { showEndGameConfirmationDialog.value = true }
             )
         }
 
-        if (showConfirmationDialog.value) {
+        if (showEndGameConfirmationDialog.value) {
             ConfirmationDialog(
                 title = R.string.info_dialog_title,
                 text = R.string.host_ends_game_confirmation,
                 onConfirmClick = onEndGameConfirmClick,
-                onCancelClick = { showConfirmationDialog.value = false }
+                onCancelClick = { showEndGameConfirmationDialog.value = false }
             )
         }
     }

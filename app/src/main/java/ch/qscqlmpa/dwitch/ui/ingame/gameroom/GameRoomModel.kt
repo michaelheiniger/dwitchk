@@ -18,7 +18,9 @@ data class DashboardInfo(
     /**
      * Last card(s) played sitting on the table.
      */
-    val lastCardPlayed: PlayedCards?
+    val lastCardPlayed: PlayedCards?,
+
+    val waitingForPlayerReconnection: Boolean
 )
 
 data class LocalPlayerInfo(

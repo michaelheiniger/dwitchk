@@ -25,4 +25,5 @@ object UiTags {
     const val addComputerPlayer = "addComputerPlayer"
     const val gameRoomPlayersInfo = "gameRoomPlayersInfo"
     const val gameRulesInfo = "gameRulesInfo"
+    const val waitingDialogAbortBtn = "waitingDialogAbortBtn"
 }

@@ -3,7 +3,6 @@ package ch.qscqlmpa.dwitchgame.gamediscovery.network
 import org.tinylog.kotlin.Logger
 import java.net.SocketException
 import java.util.concurrent.LinkedBlockingQueue
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class TestNetworkAdapter @Inject internal constructor() : NetworkAdapter {
@@ -12,7 +11,7 @@ class TestNetworkAdapter @Inject internal constructor() : NetworkAdapter {
 
     fun setPacket(packet: Packet) {
         Logger.info { "Feed network adapter with packet $packet" }
-        blockingQueue.offer(packet, 5, TimeUnit.SECONDS)
+        blockingQueue.put(packet)
     }
 
     @Throws(SocketException::class)
@@ -23,7 +22,7 @@ class TestNetworkAdapter @Inject internal constructor() : NetworkAdapter {
     override fun receive(): Packet {
         Logger.info("receive...")
         try {
-            return blockingQueue.poll(5, TimeUnit.SECONDS)
+            return blockingQueue.take()
         } catch (e: InterruptedException) {
             throw SocketClosedException()
         }

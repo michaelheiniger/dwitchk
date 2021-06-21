@@ -23,7 +23,7 @@ internal class TestWebsocketClient constructor(
     private var isOpen: Boolean = false
     private var isClosed: Boolean = false
 
-    private val startEvent = LinkedBlockingQueue<OnStartEvent>(1)
+    private val startEvent = LinkedBlockingQueue<OnStartEvent>()
 
     override fun start() {
         Completable.fromAction {

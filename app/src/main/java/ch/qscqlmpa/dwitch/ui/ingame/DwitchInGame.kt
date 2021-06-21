@@ -79,6 +79,7 @@ private fun GameNavHost(
             WaitingRoomHostScreen(
                 vmFactory = vmFactory,
                 onNavigationEvent = { event ->
+                    println("navigation event: $event")
                     when (event) {
                         WaitingRoomHostDestination.NavigateToGameRoomScreen ->
                             navController.navigate(GameScreens.GameRoomHost.name)

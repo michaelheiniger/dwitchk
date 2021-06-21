@@ -5,7 +5,6 @@ import ch.qscqlmpa.dwitchcommunication.di.Qualifiers.HOST_PORT
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClientFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.client.test.ClientTestStub
-import ch.qscqlmpa.dwitchcommunication.websocket.client.test.TestWebsocketClient
 import ch.qscqlmpa.dwitchcommunication.websocket.client.test.TestWebsocketClientFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.client.test.WebsocketClientTestStub
 import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServerFactory
@@ -44,17 +43,12 @@ class TestWebsocketModule {
     internal fun bindServerTestStub(
         serverFactory: WebsocketServerFactory,
         serializerFactory: SerializerFactory
-    ): ServerTestStub {
-        return WebsocketServerTestStub(serverFactory.create() as TestWebsocketServer, serializerFactory)
-    }
+    ): ServerTestStub = WebsocketServerTestStub(serverFactory.create() as TestWebsocketServer, serializerFactory)
 
     @CommunicationScope
     @Provides
     internal fun bindClientTestStub(
         clientFactory: WebsocketClientFactory,
         serializerFactory: SerializerFactory
-    ): ClientTestStub {
-        val client = (clientFactory as TestWebsocketClientFactory).getInstance()
-        return WebsocketClientTestStub(client as TestWebsocketClient, serializerFactory)
-    }
+    ): ClientTestStub = WebsocketClientTestStub(clientFactory as TestWebsocketClientFactory, serializerFactory)
 }

@@ -38,7 +38,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
     }
 
     @Test
-    fun someGuestBecomesReady() {
+    fun aGuestBecomesReady() {
         goToWaitingRoom()
 
         guestJoinsGame(PlayerHostTest.Guest1)
@@ -111,6 +111,9 @@ class WaitingRoomAsHostTest : BaseHostTest() {
         testRule.assertPlayerInWr(PlayerHostTest.Guest2.name, getString(PLAYER_CONNECTED))
     }
 
+    //TODO: Find solution in WaitingRoomHostViewModel so that
+    // WaitingRoomHostScreen cannot navigate twice
+    // (which happens rarely but still sometimes making this test fail)
     @Test
     fun hostCancelsGame() {
         goToWaitingRoom()

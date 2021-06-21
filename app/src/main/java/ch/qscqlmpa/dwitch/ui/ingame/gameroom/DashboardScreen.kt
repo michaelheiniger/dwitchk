@@ -30,6 +30,7 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ResourceMapper
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.UiTags
+import ch.qscqlmpa.dwitch.ui.common.WaitingDialog
 import ch.qscqlmpa.dwitch.ui.ingame.PlayerHand
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
@@ -112,7 +113,8 @@ private fun DashboardScreenPreview() {
     val dashboardInfo = DashboardInfo(
         playersInfo = players,
         localPlayerInfo = localPlayerDashboard,
-        lastCardPlayed = PlayedCards(listOf(Card.Clubs8, Card.Spades8))
+        lastCardPlayed = PlayedCards(listOf(Card.Clubs8, Card.Spades8)),
+        waitingForPlayerReconnection = false
     )
 
     ActivityScreenContainer {
@@ -120,7 +122,8 @@ private fun DashboardScreenPreview() {
             dashboardInfo = dashboardInfo,
             onCardClick = {},
             onPlayClick = {},
-            onPassClick = {}
+            onPassClick = {},
+            onEndOrLeaveGameClick = {}
         )
     }
 }
@@ -131,7 +134,8 @@ fun DashboardScreen(
     dashboardInfo: DashboardInfo,
     onCardClick: (Card) -> Unit,
     onPlayClick: () -> Unit,
-    onPassClick: () -> Unit
+    onPassClick: () -> Unit,
+    onEndOrLeaveGameClick: () -> Unit
 ) {
     Column(
         Modifier
@@ -145,6 +149,14 @@ fun DashboardScreen(
         Controls(dashboardInfo, onPassClick = onPassClick, onPlayClick = onPlayClick)
         Spacer(Modifier.height(16.dp))
         PlayerHand(dashboardInfo.localPlayerInfo.cardsInHand, onCardClick = onCardClick)
+    }
+
+    if (dashboardInfo.waitingForPlayerReconnection) {
+        WaitingDialog(
+            text = R.string.waiting_for_disconnected_player,
+            abortLabel = R.string.leave_game,
+            onAbortClick = onEndOrLeaveGameClick
+        )
     }
 }
 
