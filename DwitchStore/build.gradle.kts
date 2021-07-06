@@ -69,12 +69,12 @@ dependencies {
     androidTestImplementation("org.assertj:assertj-core:3.19.0")
 
     // Android testing stuff
-    androidTestImplementation("androidx.test:core:1.3.0")
-    androidTestImplementation("androidx.test:core-ktx:1.3.0")
-    androidTestImplementation("androidx.test:runner:1.3.0")
-    androidTestImplementation("androidx.test:rules:1.3.0")
-    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.2")
-    androidTestUtil("androidx.test:orchestrator:1.4.0-beta02")
+    androidTestImplementation("androidx.test:core:1.4.0")
+    androidTestImplementation("androidx.test:core-ktx:1.4.0")
+    androidTestImplementation("androidx.test:runner:1.4.0")
+    androidTestImplementation("androidx.test:rules:1.4.0")
+    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.3")
+    androidTestUtil("androidx.test:orchestrator:1.4.0")
     testImplementation("android.arch.core:core-testing:1.1.1")
 
     // Joda time

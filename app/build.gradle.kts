@@ -6,7 +6,7 @@ plugins {
     id("kotlin-android")
 }
 
-val composeVersion = "1.0.0-beta09"
+val composeVersion = "1.0.0-rc01"
 
 android {
     compileSdk = Versions.compileSdkVersion
@@ -86,7 +86,7 @@ dependencies {
 
     // Android
     implementation("androidx.appcompat:appcompat:1.3.0")
-    implementation("com.google.android.material:material:1.3.0")
+    implementation("com.google.android.material:material:1.4.0")
     implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
 
     // ####### Jetpack Compose #######
@@ -98,8 +98,8 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
     implementation("androidx.compose.runtime:runtime-rxjava3:$composeVersion")
-    implementation("androidx.navigation:navigation-compose:2.4.0-alpha03")
-    implementation("androidx.activity:activity-compose:1.3.0-beta02")
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha04")
+    implementation("androidx.activity:activity-compose:1.3.0-rc01")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
     androidTestImplementation("androidx.compose.ui:ui-test:$composeVersion")
@@ -128,16 +128,16 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
 
     // Android testing stuff
-    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.2")
-    androidTestImplementation("androidx.test:core-ktx:1.3.0")
-    androidTestImplementation("androidx.test:core:1.3.0")
-    androidTestImplementation("androidx.test:rules:1.3.0")
-    androidTestImplementation("androidx.test:runner:1.3.0")
+    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.3")
+    androidTestImplementation("androidx.test:core-ktx:1.4.0")
+    androidTestImplementation("androidx.test:core:1.4.0")
+    androidTestImplementation("androidx.test:rules:1.4.0")
+    androidTestImplementation("androidx.test:runner:1.4.0")
     androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
-    androidTestUtil("androidx.test:orchestrator:1.4.0-beta02")
+    androidTestUtil("androidx.test:orchestrator:1.4.0")
 
     // Espresso (needed for CounterIdlingResource)
-    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.3.0")
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.4.0")
 
     // Required to use androidx.arch.core.executor.testing.InstantTaskExecutorRule in ViewModel unit tests
     testImplementation("android.arch.core:core-testing:1.1.1")
