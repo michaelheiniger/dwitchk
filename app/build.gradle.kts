@@ -6,7 +6,7 @@ plugins {
     id("kotlin-android")
 }
 
-val composeVersion = "1.0.0-rc01"
+val composeVersion = "1.0.0"
 
 android {
     compileSdk = Versions.compileSdkVersion
@@ -98,8 +98,8 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
     implementation("androidx.compose.runtime:runtime-rxjava3:$composeVersion")
-    implementation("androidx.navigation:navigation-compose:2.4.0-alpha04")
-    implementation("androidx.activity:activity-compose:1.3.0-rc01")
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha05")
+    implementation("androidx.activity:activity-compose:1.3.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
     androidTestImplementation("androidx.compose.ui:ui-test:$composeVersion")
