@@ -11,6 +11,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
@@ -91,11 +93,20 @@ fun HomeScreen(
     )
     if (viewModel.loading.observeAsState(false).value) LoadingDialog()
 
-    when (val navigation = viewModel.navigation.observeAsState().value) {
-        is HomeDestination.JoinNewGame -> onJoinNewGameEvent(navigation.game)
-        null -> {
-        } // Nothing to do
-        else -> onNavigateToGame()
+    val navigated = remember { mutableStateOf(false) }
+    if (!navigated.value) {
+        when (val navigation = viewModel.navigation.observeAsState().value) {
+            null -> {
+            } // Nothing to do
+            is HomeDestination.JoinNewGame -> {
+                onJoinNewGameEvent(navigation.game)
+                navigated.value = true
+            }
+            else -> {
+                onNavigateToGame()
+                navigated.value = true
+            }
+        }
     }
 }
 

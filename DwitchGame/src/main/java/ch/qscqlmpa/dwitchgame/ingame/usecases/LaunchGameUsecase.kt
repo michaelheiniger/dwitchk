@@ -18,7 +18,7 @@ internal class LaunchGameUsecase @Inject constructor(
 ) {
     fun launchGame(): Completable {
         return Completable.fromAction {
-            store.updateGameRoom(RoomType.GAME_ROOM)
+            store.updateCurrentRoom(RoomType.GAME_ROOM)
             hostGameLifecycleEventRepository.notify(HostGameLifecycleEvent.MovedToGameRoom)
             sendLaunchGameMessage()
         }

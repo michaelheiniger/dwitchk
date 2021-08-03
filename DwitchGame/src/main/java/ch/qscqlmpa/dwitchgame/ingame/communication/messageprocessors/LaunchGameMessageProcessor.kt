@@ -22,7 +22,7 @@ internal class LaunchGameMessageProcessor @Inject constructor(
         message as Message.LaunchGameMessage
 
         return Completable.fromAction {
-            store.updateGameRoom(RoomType.GAME_ROOM)
+            store.updateCurrentRoom(RoomType.GAME_ROOM)
             store.updateGameState(message.gameState)
             gameLifecycleEventRepository.notify(GuestGameLifecycleEvent.MovedToGameRoom)
             gameEventRepository.notify(GuestGameEvent.GameLaunched)

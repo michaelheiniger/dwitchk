@@ -1,7 +1,6 @@
 package ch.qscqlmpa.dwitchstore.store
 
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchstore.InsertGameResult
 import ch.qscqlmpa.dwitchstore.dao.AppRoomDatabase
 import ch.qscqlmpa.dwitchstore.model.Game
@@ -17,10 +16,6 @@ internal class StoreImpl @Inject constructor(private val appRoomDatabase: AppRoo
 
     override fun insertGameForGuest(gameName: String, gameCommonId: GameCommonId, guestPlayerName: String): InsertGameResult {
         return appRoomDatabase.gameDao().insertGameForGuest(gameName, gameCommonId, guestPlayerName)
-    }
-
-    override fun updateCurrentRoom(gameId: Long, room: RoomType) {
-        appRoomDatabase.gameDao().updateGameRoom(gameId, room)
     }
 
     override fun getGameCommonIdOfResumableGames(): Observable<List<GameCommonId>> {

@@ -16,7 +16,7 @@ internal class ChangeCurrentRoomService @Inject constructor(
 ) {
 
     fun moveToGameRoom() {
-        store.updateGameRoom(RoomType.GAME_ROOM)
+        store.updateCurrentRoom(RoomType.GAME_ROOM)
         when (store.getLocalPlayerRole()) {
             PlayerRole.HOST -> hostGameLifecycleEventRepository.notify(HostGameLifecycleEvent.MovedToGameRoom)
             PlayerRole.GUEST -> guestGameLifecycleEventRepository.notify(GuestGameLifecycleEvent.MovedToGameRoom)

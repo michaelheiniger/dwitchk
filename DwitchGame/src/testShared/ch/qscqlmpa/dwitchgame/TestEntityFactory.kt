@@ -7,7 +7,6 @@ import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerOnboardingInfo
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.model.Game
 import ch.qscqlmpa.dwitchstore.model.Player
@@ -101,7 +100,6 @@ object TestEntityFactory {
         return Game(
             id = 1L,
             creationDate = DateTime.now(),
-            currentRoom = RoomType.WAITING_ROOM,
             gameCommonId = GameCommonId(65),
             name = "Dwitch",
             gameState = "",

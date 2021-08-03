@@ -30,7 +30,7 @@ interface InGameStore {
 
     fun updateGameWithCommonId(gameCommonId: GameCommonId)
     fun deleteGame()
-    fun updateGameRoom(gameRoom: RoomType)
+    fun updateCurrentRoom(room: RoomType)
     fun updateGameState(gameState: DwitchGameState)
 
     // Player

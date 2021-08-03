@@ -1,7 +1,6 @@
 package ch.qscqlmpa.dwitchstore.store
 
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchstore.InsertGameResult
 import ch.qscqlmpa.dwitchstore.model.Game
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
@@ -16,8 +15,6 @@ interface Store {
         gameCommonId: GameCommonId,
         guestPlayerName: String
     ): InsertGameResult
-
-    fun updateCurrentRoom(gameId: Long, room: RoomType)
 
     fun getGameCommonIdOfResumableGames(): Observable<List<GameCommonId>>
 

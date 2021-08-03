@@ -2,7 +2,6 @@ package ch.qscqlmpa.dwitchstore
 
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.model.Game
 import ch.qscqlmpa.dwitchstore.model.Player
@@ -22,25 +21,12 @@ internal class GameDaoTest : BaseInstrumentedTest() {
     }
 
     @Test
-    fun updateGameRoom() {
-        val insertGameResult = gameDao.insertGameForHost(gameName, playerName)
-        val gameInserted = gameDao.getGame(insertGameResult.gameLocalId)
-        assertThat(gameInserted.currentRoom).isEqualTo(RoomType.WAITING_ROOM)
-
-        gameDao.updateGameRoom(insertGameResult.gameLocalId, RoomType.GAME_ROOM)
-
-        val gameTest = gameDao.getGame(insertGameResult.gameLocalId)
-        assertThat(gameTest.currentRoom).isEqualTo(RoomType.GAME_ROOM)
-    }
-
-    @Test
     fun testInsertGameForHost_createGame() {
         val insertGameResult = gameDao.insertGameForHost(gameName, playerName)
 
         val gameRef = Game(
             insertGameResult.gameLocalId,
             DateTime.now(),
-            RoomType.WAITING_ROOM,
             GameCommonId(0),
             gameName,
             null,
@@ -78,7 +64,6 @@ internal class GameDaoTest : BaseInstrumentedTest() {
         val gameRef = Game(
             insertGameResult.gameLocalId,
             DateTime.now(),
-            RoomType.WAITING_ROOM,
             GameCommonId(0),
             gameName,
             null,
@@ -133,7 +118,7 @@ internal class GameDaoTest : BaseInstrumentedTest() {
             // Goal is to have different values for game ID and player ID in the tests
             gameDaoTest.db.runInTransaction {
                 val gameId = gameDaoTest.gameDao.insertGame(
-                    Game(0, DateTime.now(), RoomType.WAITING_ROOM, GameCommonId(1), "", "", 1)
+                    Game(0, DateTime.now(), GameCommonId(1), "", "", 1)
                 )
                 val player1 = Player(
                     0,

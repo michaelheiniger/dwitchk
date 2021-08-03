@@ -54,7 +54,7 @@ internal abstract class BaseInstrumentedTest {
         gameLocalId = insertGameResult.gameLocalId
         players.forEach { p -> playerDao.insertPlayer(p.copy(gameLocalId = gameLocalId!!)) }
         localPlayerLocalId = insertGameResult.localPlayerLocalId
-        inGameStore = InGameStoreImpl(gameLocalId!!, localPlayerLocalId!!, db, serializerFactory)
+        inGameStore = InGameStoreImpl(db, gameLocalId!!, localPlayerLocalId!!, serializerFactory)
     }
 
     protected fun dudeWaitAMinute(seconds: Long = 1L) {

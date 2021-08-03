@@ -3,10 +3,8 @@ package ch.qscqlmpa.dwitchstore.dao
 import androidx.room.*
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.InsertGameResult
-import ch.qscqlmpa.dwitchstore.ingamestore.model.GameCommonIdAndCurrentRoom
 import ch.qscqlmpa.dwitchstore.model.Game
 import ch.qscqlmpa.dwitchstore.model.Player
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
@@ -37,15 +35,6 @@ internal abstract class GameDao(database: AppRoomDatabase) {
     @Query(
         """
         UPDATE Game
-        SET current_room=:gameRoom
-        WHERE id=:gameLocalId
-            """
-    )
-    abstract fun updateGameRoom(gameLocalId: Long, gameRoom: RoomType)
-
-    @Query(
-        """
-        UPDATE Game
         SET game_state=:gameState
         WHERE id=:gameLocalId
             """
@@ -55,8 +44,8 @@ internal abstract class GameDao(database: AppRoomDatabase) {
     @Query("SELECT * FROM Game WHERE id = :localId")
     abstract fun getGame(localId: Long): Game
 
-    @Query("SELECT game_common_id FROM Game WHERE id = :localId ")
-    abstract fun getGameCommonId(localId: Long): GameCommonId
+    @Query("SELECT game_common_id FROM Game WHERE id = :gameLocalId ")
+    abstract fun getGameCommonId(gameLocalId: Long): GameCommonId
 
     @Query("SELECT name FROM Game WHERE id = :localId ")
     abstract fun getGameName(localId: Long): String
@@ -66,9 +55,6 @@ internal abstract class GameDao(database: AppRoomDatabase) {
 
     @Query("SELECT * FROM Game WHERE id = :localId")
     abstract fun observeGame(localId: Long): Observable<Game>
-
-    @Query("SELECT current_room FROM Game WHERE id = :localId")
-    abstract fun observeGameCurrentRoom(localId: Long): Observable<RoomType>
 
     @Query(
         """
@@ -97,7 +83,6 @@ internal abstract class GameDao(database: AppRoomDatabase) {
         val game = Game(
             id = 0,
             creationDate = DateTime.now(),
-            currentRoom = RoomType.WAITING_ROOM,
             gameCommonId = gameCommonId,
             name = gameName,
             gameState = null,
@@ -146,7 +131,6 @@ internal abstract class GameDao(database: AppRoomDatabase) {
         val game = Game(
             id = 0,
             creationDate = DateTime.now(),
-            currentRoom = RoomType.WAITING_ROOM,
             gameCommonId = gameCommonId,
             name = gameName,
             gameState = null,
@@ -187,12 +171,4 @@ internal abstract class GameDao(database: AppRoomDatabase) {
     """
     )
     abstract fun getResumableGamesInfo(): Observable<List<ResumableGameInfo>>
-
-    @Query(
-        """
-        SELECT game_common_id, current_room FROM game
-        WHERE id = :gameLocalId
-    """
-    )
-    abstract fun getGameCommonIdAndCurrentRoom(gameLocalId: Long): GameCommonIdAndCurrentRoom
 }

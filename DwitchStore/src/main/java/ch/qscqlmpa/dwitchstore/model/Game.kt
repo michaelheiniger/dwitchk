@@ -2,7 +2,6 @@ package ch.qscqlmpa.dwitchstore.model
 
 import androidx.room.*
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import ch.qscqlmpa.dwitchmodel.game.RoomType
 import org.joda.time.DateTime
 
 @Entity(
@@ -25,8 +24,6 @@ data class Game(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
 
     @ColumnInfo(name = "creation_date") val creationDate: DateTime,
-
-    @ColumnInfo(name = "current_room") val currentRoom: RoomType,
 
     /**
      * ID of the game (unrelated to DB) common to all players

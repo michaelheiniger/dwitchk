@@ -46,6 +46,10 @@ dependencies {
     kapt("androidx.room:room-compiler:2.4.0-alpha04")
     testImplementation("androidx.room:room-testing:2.4.0-alpha04")
 
+    // RxJava
+    implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
+    implementation("com.jakewharton.rxrelay3:rxrelay:3.0.0")
+
     // Dagger
     implementation("com.google.dagger:dagger-android-support:2.35.1")
     implementation("com.google.dagger:dagger-android:2.35.1")

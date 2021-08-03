@@ -6,7 +6,10 @@ import androidx.room.TypeConverters
 import ch.qscqlmpa.dwitchstore.model.Game
 import ch.qscqlmpa.dwitchstore.model.Player
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
-import ch.qscqlmpa.dwitchstore.typeconverter.*
+import ch.qscqlmpa.dwitchstore.typeconverter.DateTypeConverter
+import ch.qscqlmpa.dwitchstore.typeconverter.GameCommonIdTypeConverter
+import ch.qscqlmpa.dwitchstore.typeconverter.PlayerDwitchIdTypeConverter
+import ch.qscqlmpa.dwitchstore.typeconverter.PlayerRoleTypeConverter
 
 @Database(
     entities = [
@@ -14,11 +17,10 @@ import ch.qscqlmpa.dwitchstore.typeconverter.*
         Player::class
     ],
     views = [ResumableGameInfo::class],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(
-    RoomTypeTypeConverter::class,
     PlayerRoleTypeConverter::class,
     PlayerDwitchIdTypeConverter::class,
     GameCommonIdTypeConverter::class,

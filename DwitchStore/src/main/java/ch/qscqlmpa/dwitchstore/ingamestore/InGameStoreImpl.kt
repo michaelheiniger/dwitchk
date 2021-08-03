@@ -11,13 +11,14 @@ import ch.qscqlmpa.dwitchstore.ingamestore.model.ResumeComputerPlayersInfo
 import ch.qscqlmpa.dwitchstore.model.Game
 import ch.qscqlmpa.dwitchstore.model.Player
 import ch.qscqlmpa.dwitchstore.util.SerializerFactory
+import com.jakewharton.rxrelay3.BehaviorRelay
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 
 internal class InGameStoreImpl constructor(
+    database: AppRoomDatabase,
     private val gameLocalId: Long,
     private val localPlayerLocalId: Long,
-    database: AppRoomDatabase,
     private val serializerFactory: SerializerFactory
 ) : InGameStore {
 
@@ -28,6 +29,7 @@ internal class InGameStoreImpl constructor(
     private val _gameName: String by lazy { gameDao.getGameName(gameLocalId) }
     private val _localDwitchPlayerId: DwitchPlayerId by lazy { playerDao.getPlayerDwitchId(localPlayerLocalId) }
     private val _localPlayerRole: PlayerRole by lazy { playerDao.getPlayerRole(localPlayerLocalId) }
+    private val _currentRoom: BehaviorRelay<RoomType> = BehaviorRelay.createDefault(RoomType.WAITING_ROOM)
 
     // Game
     override fun getGame(): Game {
@@ -43,11 +45,11 @@ internal class InGameStoreImpl constructor(
     }
 
     override fun getCurrentRoom(): RoomType {
-        return getGame().currentRoom
+        return _currentRoom.value
     }
 
     override fun observeCurrentRoom(): Observable<RoomType> {
-        return gameDao.observeGameCurrentRoom(gameLocalId)
+        return _currentRoom
     }
 
     override fun getGameState(): DwitchGameState {
@@ -69,7 +71,7 @@ internal class InGameStoreImpl constructor(
     }
 
     override fun getGameCommonIdAndCurrentRoom(): GameCommonIdAndCurrentRoom {
-        return gameDao.getGameCommonIdAndCurrentRoom(gameLocalId)
+        return GameCommonIdAndCurrentRoom(gameDao.getGameCommonId(gameLocalId), _currentRoom.value)
     }
 
     override fun getPlayerLocalId(dwitchId: DwitchPlayerId): Long? {
@@ -88,8 +90,8 @@ internal class InGameStoreImpl constructor(
         gameDao.deleteGame(gameLocalId)
     }
 
-    override fun updateGameRoom(gameRoom: RoomType) {
-        gameDao.updateGameRoom(gameLocalId, gameRoom)
+    override fun updateCurrentRoom(room: RoomType) {
+        _currentRoom.accept(room)
     }
 
     override fun updateGameState(gameState: DwitchGameState) {

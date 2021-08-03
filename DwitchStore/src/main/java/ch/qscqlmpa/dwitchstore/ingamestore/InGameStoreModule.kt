@@ -22,6 +22,6 @@ class InGameStoreModule(
     @InGameStoreScope
     @Provides
     internal fun provideInGameStore(database: AppRoomDatabase, serializerFactory: SerializerFactory): InGameStore {
-        return InGameStoreImpl(gameLocalId, localPlayerLocalId, database, serializerFactory)
+        return InGameStoreImpl(database, gameLocalId, localPlayerLocalId, serializerFactory)
     }
 }
