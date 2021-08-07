@@ -5,6 +5,7 @@ import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.java_websocket.WebSocket
+import org.tinylog.kotlin.Logger
 
 internal class WebsocketServerTestStub(
     private val server: TestWebsocketServer,
@@ -18,24 +19,33 @@ internal class WebsocketServerTestStub(
     override fun connectClientToServer(connectionInitiator: PlayerHostTest) {
         Completable.fromAction { server.onOpen(getSocketForGuest(connectionInitiator), handshake = null) }
             .subscribeOn(Schedulers.io())
-            .subscribe()
+            .subscribe(
+                {},
+                { error -> Logger.error(error) { "Error when connecting client to server." } }
+            )
     }
 
     override fun clientSendsMessageToServer(sender: PlayerHostTest, message: Message) {
         val messageSerialized = serializerFactory.serialize(message)
         Completable.fromAction { server.onMessage(getSocketForGuest(sender), messageSerialized) }
             .subscribeOn(Schedulers.io())
-            .subscribe()
+            .subscribe(
+                {},
+                { error -> Logger.error(error) { "Error when client sends message to server." } }
+            )
     }
 
     override fun blockUntilMessageSentIsAvailable(): String {
         return server.blockUntilMessageSentIsAvailable()
     }
 
-    override fun disconnectFromServer(guestIdentifier: PlayerHostTest) {
+    override fun clientDisconnectsFromServer(guestIdentifier: PlayerHostTest) {
         Completable.fromAction { server.onClose(getSocketForGuest(guestIdentifier), 1, "reason", remote = true) }
             .subscribeOn(Schedulers.io())
-            .subscribe()
+            .subscribe(
+                {},
+                { error -> Logger.error(error) { "Error when disconnecting client from server." } }
+            )
     }
 
     private fun getSocketForGuest(guestIdentifier: PlayerHostTest): WebSocket {

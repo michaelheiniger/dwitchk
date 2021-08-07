@@ -1,8 +1,8 @@
 package ch.qscqlmpa.dwitch.app
 
 import ch.qscqlmpa.dwitch.app.notifications.NotificationChannelFactory
-import ch.qscqlmpa.dwitch.ingame.OnGoingGameUiModule
-import ch.qscqlmpa.dwitch.ingame.OngoingGameUiComponent
+import ch.qscqlmpa.dwitch.ingame.InGameUiComponent
+import ch.qscqlmpa.dwitch.ingame.InGameUiModule
 import ch.qscqlmpa.dwitch.ingame.services.ServiceManager
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationComponent
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationModule
@@ -34,7 +34,7 @@ open class App : DaggerApplication() {
     private lateinit var appComponent: AppComponent
     var communicationComponent: CommunicationComponent? = null
     var inGameStoreComponent: InGameStoreComponent? = null
-    var ongoingGameUiComponent: OngoingGameUiComponent? = null
+    var inGameUiComponent: InGameUiComponent? = null
     var inGameComponent: InGameComponent? = null
 
     @Inject
@@ -63,7 +63,7 @@ open class App : DaggerApplication() {
         serviceManager.init()
     }
 
-    open fun startOngoingGame(
+    open fun createInGameComponents(
         playerRole: PlayerRole,
         roomType: RoomType,
         gameLocalId: Long,
@@ -90,8 +90,8 @@ open class App : DaggerApplication() {
                     communicationComponent!!
                 )
             )
-            ongoingGameUiComponent = appComponent.addOngoingGameUiComponent(
-                OnGoingGameUiModule(
+            inGameUiComponent = appComponent.addInGameUiComponent(
+                InGameUiModule(
                     inGameComponent!!.gameFacade,
                     inGameComponent!!.hostGameFacade,
                     inGameComponent!!.guestGameFacade,
@@ -109,6 +109,13 @@ open class App : DaggerApplication() {
         return inGameComponent
     }
 
+    fun destroyInGameComponents() {
+        Logger.debug { "destroyInGameComponents()" }
+        inGameUiComponent = null
+        inGameComponent = null
+        inGameStoreComponent = null
+    }
+
     fun hostFacade(): HostGameFacade {
         checkNotNull(inGameComponent) { "No on-going game component!" }
         return inGameComponent!!.hostGameFacade
@@ -121,17 +128,6 @@ open class App : DaggerApplication() {
 
     open fun homeFacade(): HomeFacade {
         return gameComponent.homeFacade
-    }
-
-    fun getGameUiComponent(): OngoingGameUiComponent? {
-        checkNotNull(inGameComponent) { "No on-going game ui component!" }
-        return ongoingGameUiComponent
-    }
-
-    fun stopOngoingGame() {
-        ongoingGameUiComponent = null
-        inGameComponent = null
-        inGameStoreComponent = null
     }
 
     private fun createNotificationChannels() {

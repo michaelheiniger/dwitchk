@@ -2,7 +2,6 @@ package ch.qscqlmpa.dwitchcommunication.websocket.server.test
 
 import ch.qscqlmpa.dwitchcommunication.Address
 import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommEvent
-import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerMessage
 import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServer
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
@@ -17,7 +16,6 @@ internal class TestWebsocketServer(
 ) : WebsocketServer {
 
     private val eventRelay = PublishRelay.create<ServerCommEvent>()
-    private val messageRelay = PublishRelay.create<ServerMessage>()
 
     private val messageSentOrBroadcastedRelay = LinkedBlockingQueue<String>()
 
@@ -44,8 +42,6 @@ internal class TestWebsocketServer(
 
     override fun observeEvents(): Observable<ServerCommEvent> = eventRelay
 
-    override fun observeMessages(): Observable<ServerMessage> = messageRelay
-
     fun onStart() = eventRelay.accept(ServerCommEvent.Started(Address(hostIpAddress, hostPort)))
 
     fun onOpen(conn: WebSocket?, handshake: ClientHandshake?) {
@@ -58,7 +54,7 @@ internal class TestWebsocketServer(
     fun onClose(conn: WebSocket?, code: Int, reason: String?, remote: Boolean) =
         eventRelay.accept(ServerCommEvent.ClientDisconnected(conn, code, reason, remote))
 
-    fun onMessage(conn: WebSocket?, message: String?) = messageRelay.accept(ServerMessage(conn, message))
+    fun onMessage(conn: WebSocket?, message: String?) = eventRelay.accept(ServerCommEvent.ServerMessage(conn, message))
 
     fun onError(conn: WebSocket?, ex: Exception?) = eventRelay.accept(ServerCommEvent.Error(conn, ex))
 

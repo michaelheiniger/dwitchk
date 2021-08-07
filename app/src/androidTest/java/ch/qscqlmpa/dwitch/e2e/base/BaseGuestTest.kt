@@ -11,31 +11,49 @@ import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.websocket.client.test.OnStartEvent
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchmodel.player.PlayerWr
-import org.assertj.core.api.Assertions.assertThat
 import org.tinylog.kotlin.Logger
 
 abstract class BaseGuestTest : BaseOnGoingGameTest() {
 
     protected val gameCommonId = GameCommonId(12345)
 
-    protected open fun goToWaitingRoom() {
+    protected fun goToWaitingRoomWithHostAndLocalGuest(localGuestConnected: Boolean = true) {
+        goToWaitingRoom(
+            PlayerGuestTest.Host.info,
+            PlayerGuestTest.LocalGuest.info.copy(connected = localGuestConnected, ready = false)
+        )
+    }
+
+    protected fun goToWaitingRoomWithHostAndAllGuests(
+        localGuestConnected: Boolean = true,
+        guest2Connected: Boolean = true,
+        guest3Connected: Boolean = true
+    ) {
+        goToWaitingRoom(
+            PlayerGuestTest.Host.info,
+            PlayerGuestTest.LocalGuest.info.copy(connected = localGuestConnected, ready = false),
+            PlayerGuestTest.Guest2.info.copy(connected = guest2Connected),
+            PlayerGuestTest.Guest3.info.copy(connected = guest3Connected)
+        )
+    }
+
+    private fun goToWaitingRoom(vararg players: PlayerWr) {
         advertiseGameToJoin()
 
         testRule.onNodeWithText(gameName, substring = true).performClick()
-        testRule.onNodeWithTag(UiTags.playerName).performTextReplacement(PlayerGuestTest.LocalGuest.name)
+        testRule.onNodeWithTag(UiTags.playerName).performTextReplacement(PlayerGuestTest.LocalGuest.info.name)
         testRule.onNodeWithText(getString(R.string.join_game)).performClick()
 
-        testRule.waitForIdle() // Can't hook on-going game dependencies before component is created
+        testRule.waitForIdle() // Can't hook in-game dependencies before components are created
         hookOngoingGameDependenciesForGuest()
-        connectClientToServer(OnStartEvent.Success)
 
-        val message = waitForNextMessageSentByLocalGuest()
-        assertThat(message).isInstanceOf(Message.JoinGameMessage::class.java)
+        connectClientToServer(OnStartEvent.Success)
+        incrementGameIdlingResource("Local player becomes connected (updates WR players list)")
+        waitForNextMessageSentByLocalGuest() as Message.JoinGameMessage
 
         hostSendsJoinGameAck()
-        hostSendsInitialWaitingRoomUpdate()
+        hostSendsPlayersState(*players)
 
         // Assert that the guest is indeed in the WaitingRoom
         testRule.assertTextIsDisplayedOnce(getString(R.string.players_in_waitingroom))
@@ -64,50 +82,23 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
     }
 
     protected fun hostSendsJoinGameAck() {
-        val message = Message.JoinGameAckMessage(gameCommonId, PlayerGuestTest.LocalGuest.id)
+        val message = Message.JoinGameAckMessage(gameCommonId, PlayerGuestTest.LocalGuest.info.dwitchId)
+        clientTestStub.serverSendsMessageToClient(message)
+    }
+
+    protected fun hostSendsRejoinGameAck() {
+        val message = Message.RejoinGameAckMessage(gameCommonId, PlayerGuestTest.LocalGuest.info.dwitchId)
         clientTestStub.serverSendsMessageToClient(message)
     }
 
     protected fun localPlayerToggleReadyCheckbox() {
         testRule.onNodeWithTag(UiTags.localPlayerReadyControl).performClick()
-        val playerReadyMessage = waitForNextMessageSentByLocalGuest()
-        assertThat(playerReadyMessage).isInstanceOf(Message.PlayerReadyMessage::class.java)
+        waitForNextMessageSentByLocalGuest() as Message.PlayerReadyMessage
     }
 
-    private fun hostSendsInitialWaitingRoomUpdate() {
-        incrementGameIdlingResource("Host sends initial state of WR players")
-        val message = Message.WaitingRoomStateUpdateMessage(
-            listOf(
-                PlayerWr(
-                    PlayerGuestTest.Host.id,
-                    PlayerGuestTest.Host.name,
-                    PlayerRole.HOST,
-                    connected = true,
-                    ready = true
-                ),
-                PlayerWr(
-                    PlayerGuestTest.LocalGuest.id,
-                    PlayerGuestTest.LocalGuest.name,
-                    PlayerRole.GUEST,
-                    connected = true,
-                    ready = false
-                ),
-                PlayerWr(
-                    PlayerGuestTest.Guest2.id,
-                    PlayerGuestTest.Guest2.name,
-                    PlayerRole.GUEST,
-                    connected = true,
-                    ready = true
-                ),
-                PlayerWr(
-                    PlayerGuestTest.Guest3.id,
-                    PlayerGuestTest.Guest3.name,
-                    PlayerRole.GUEST,
-                    connected = true,
-                    ready = true
-                )
-            )
-        )
+    private fun hostSendsPlayersState(vararg players: PlayerWr) {
+        incrementGameIdlingResource("Host sends state of players")
+        val message = Message.WaitingRoomStateUpdateMessage(listOf(*players))
         clientTestStub.serverSendsMessageToClient(message)
     }
 }

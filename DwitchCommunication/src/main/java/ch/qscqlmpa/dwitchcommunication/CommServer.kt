@@ -1,10 +1,9 @@
 package ch.qscqlmpa.dwitchcommunication
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.Recipient
-import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
+import ch.qscqlmpa.dwitchcommunication.websocket.ServerEvent
 import io.reactivex.rxjava3.core.Observable
 
 interface CommServer {
@@ -15,9 +14,7 @@ interface CommServer {
 
     fun sendMessage(message: Message, recipient: Recipient)
 
-    fun observeCommunicationEvents(): Observable<ServerCommunicationEvent>
-
-    fun observeReceivedMessages(): Observable<EnvelopeReceived>
+    fun observeEvents(): Observable<ServerEvent>
 
     fun closeConnectionWithClient(connectionId: ConnectionId)
 }

@@ -31,7 +31,10 @@ internal class GameRoomGuestViewModel @Inject constructor(
         disposableManager.add(facade.leaveGame()
             .observeOn(uiScheduler)
             .subscribe(
-                { _navigationCommand.value = GameRoomGuestDestination.NavigateToHomeScreen },
+                {
+                    Logger.info { "Left game successfully" }
+                    _navigationCommand.value = GameRoomGuestDestination.NavigateToHomeScreen
+                },
                 { error -> Logger.error(error) { "Error while leaving the game." } }
             )
         )
@@ -49,8 +52,10 @@ internal class GameRoomGuestViewModel @Inject constructor(
                 .doOnNext { event -> Logger.debug("Game event received: $event") }
                 .filter { event -> event is GuestGameEvent.GameOver }
                 .doOnNext { event -> idlingResource.decrement("Game event received ($event)") }
-                .doOnError { error -> Logger.error(error) { "Error while observing game events." } }
-                .subscribe { _gameOver.value = true }
+                .subscribe(
+                    { _gameOver.value = true },
+                    { error -> Logger.error(error) { "Error while observing game events." } }
+                )
         )
     }
 }

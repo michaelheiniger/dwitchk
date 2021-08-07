@@ -28,7 +28,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
     }
 
     @Test
-    fun guest1JoinsWaitingRoom() {
+    fun aGuestJoins() {
         goToWaitingRoom()
 
         guestJoinsGame(PlayerHostTest.Guest1)
@@ -38,7 +38,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
     }
 
     @Test
-    fun someGuestBecomesReady() {
+    fun aGuestBecomesReady() {
         goToWaitingRoom()
 
         guestJoinsGame(PlayerHostTest.Guest1)
@@ -53,7 +53,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
     }
 
     @Test
-    fun guest1LeavesGame() {
+    fun aGuestLeaves() {
         goToWaitingRoom()
 
         guestJoinsGame(PlayerHostTest.Guest1)
@@ -70,7 +70,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
     }
 
     @Test
-    fun hostKicksGuest1OffGame() {
+    fun hostKicksAGuestOffGame() {
         goToWaitingRoom()
 
         guestJoinsGame(PlayerHostTest.Guest1)
@@ -88,7 +88,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
     }
 
     @Test
-    fun guest1DisconnectsAndComesBackWaitingRoom() {
+    fun aGuestDisconnectsAndComesBack() {
         goToWaitingRoom()
 
         guestJoinsGame(PlayerHostTest.Guest1)
@@ -122,10 +122,7 @@ class WaitingRoomAsHostTest : BaseHostTest() {
             .performClick()
         testRule.clickOnDialogConfirmButton()
 
-        incrementGameIdlingResource("Communication server stopped.")
-
-        val messageSent = waitForNextMessageSentByHost()
-        assertThat(messageSent).isInstanceOf(Message.CancelGameMessage::class.java)
+        waitForNextMessageSentByHost() as Message.CancelGameMessage
 
         assertCurrentScreenIsHomeSreen()
     }

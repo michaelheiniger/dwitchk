@@ -23,6 +23,9 @@ internal abstract class GameDao(database: AppRoomDatabase) {
     @Update
     abstract fun updateGame(game: Game)
 
+    @Query("DELETE FROM Game WHERE marked_for_deletion = 1")
+    abstract fun deleteGamesMarkedForDeletion()
+
     @Query(
         """
         UPDATE Game
@@ -52,6 +55,9 @@ internal abstract class GameDao(database: AppRoomDatabase) {
 
     @Query("SELECT * FROM Game WHERE game_common_id = :gameCommonId")
     abstract fun getGame(gameCommonId: GameCommonId): Game?
+
+    @Query("SELECT local_player_id FROM Game WHERE id = :gameLocalId")
+    abstract fun getLocalPlayerId(gameLocalId: Long): Long
 
     @Query("SELECT * FROM Game WHERE id = :localId")
     abstract fun observeGame(localId: Long): Observable<Game>
@@ -121,11 +127,14 @@ internal abstract class GameDao(database: AppRoomDatabase) {
         }
     }
 
-    @Transaction
-    open fun deleteGame(gameLocalId: Long) {
-        playerDao.deletePlayers(gameLocalId)
-        deleteGameAndPlayers(gameLocalId)
-    }
+    @Query(
+        """
+        UPDATE Game
+        SET marked_for_deletion = 1
+        WHERE id = :gameLocalId
+        """
+    )
+    abstract fun markGameForDeletion(gameLocalId: Long)
 
     private fun insertNewGuestGame(gameCommonId: GameCommonId, gameName: String, guestPlayerName: String): InsertGameResult {
         val game = Game(

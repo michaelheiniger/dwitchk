@@ -13,10 +13,11 @@ object GameInfoFactory {
     fun createGameDashboardInfo(
         gameInfo: DwitchGameInfo,
         localPlayerId: DwitchPlayerId,
-        localPlayerConnected: Boolean
+        playersConnectionState: Map<DwitchPlayerId, Boolean>
     ): GameDashboardInfo {
         val localPlayerInfo = gameInfo.playerInfos.getValue(localPlayerId)
-        val dashboardEnabled = localPlayerConnected
+        val localPlayerIsConnected = playerIsConnected(playersConnectionState, localPlayerId)
+        val dashboardEnabled = localPlayerIsConnected
         val localPlayerIsCurrentPlayer = gameInfo.currentPlayerId == localPlayerId
         return GameDashboardInfo(
             gameInfo.playerInfos.values.map { p ->
@@ -32,7 +33,9 @@ object GameInfoFactory {
                 adjustCardItemSelectability(localPlayerInfo.cardsInHand, dashboardEnabled, localPlayerIsCurrentPlayer),
                 canPass = localPlayerIsCurrentPlayer && dashboardEnabled
             ),
-            lastCardPlayed = gameInfo.lastCardPlayed
+            lastCardPlayed = gameInfo.lastCardPlayed,
+            waitingForPlayerReconnection = playerIsDisconnected(playersConnectionState, gameInfo.currentPlayerId) &&
+                    gameInfo.currentPlayerId != localPlayerId && localPlayerIsConnected
         )
     }
 
@@ -44,6 +47,12 @@ object GameInfoFactory {
             playersInfo = playersInfo.map { p -> PlayerEndOfRoundInfo(p.name, p.rank) }
         )
     }
+
+    private fun playerIsConnected(playersConnectionState: Map<DwitchPlayerId, Boolean>, playerId: DwitchPlayerId) =
+        playersConnectionState.getValue(playerId)
+
+    private fun playerIsDisconnected(playersConnectionState: Map<DwitchPlayerId, Boolean>, playerId: DwitchPlayerId) =
+        !playerIsConnected(playersConnectionState, playerId)
 
     private fun adjustCardItemSelectability(
         cardItems: List<DwitchCardInfo>,
@@ -66,7 +75,12 @@ data class GameDashboardInfo(
     /**
      * Last card(s) played sitting on the table.
      */
-    val lastCardPlayed: PlayedCards?
+    val lastCardPlayed: PlayedCards?,
+
+    /**
+     * Indicates that another player is disconnected.
+     */
+    val waitingForPlayerReconnection: Boolean
 )
 
 data class PlayerInfo(

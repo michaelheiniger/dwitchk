@@ -15,15 +15,14 @@ import org.junit.jupiter.api.Test
 
 internal class CancelGameMessageProcessorTest : BaseMessageProcessorTest() {
 
-    private val gameLifecycleEventRepository = mockk<GuestGameLifecycleEventRepository>(relaxed = true)
-
     private val mockGameEventRepository = mockk<GuestGameEventRepository>(relaxed = true)
+    private val mockGuestGameLifecycleEventRepository = mockk<GuestGameLifecycleEventRepository>(relaxed = true)
 
     private lateinit var processor: GameCanceledMessageProcessor
 
     @BeforeEach
     fun setup() {
-        processor = GameCanceledMessageProcessor(mockInGameStore, gameLifecycleEventRepository, mockGameEventRepository)
+        processor = GameCanceledMessageProcessor(mockInGameStore, mockGameEventRepository, mockGuestGameLifecycleEventRepository)
     }
 
     @Test
@@ -35,9 +34,9 @@ internal class CancelGameMessageProcessorTest : BaseMessageProcessorTest() {
         processor.process(Message.CancelGameMessage, ConnectionId(0)).test().assertComplete()
 
         // Then
-        verify { mockInGameStore.deleteGame() }
+        verify { mockInGameStore.markGameForDeletion() }
         verify { mockGameEventRepository.notify(GuestGameEvent.GameCanceled) }
-        verify { gameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GuestLeftGame) }
+        verify { mockGuestGameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GameOver) }
     }
 
     @Test
@@ -50,6 +49,6 @@ internal class CancelGameMessageProcessorTest : BaseMessageProcessorTest() {
 
         // Then
         verify { mockGameEventRepository.notify(GuestGameEvent.GameCanceled) }
-        verify { gameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GuestLeftGame) }
+        verify { mockGuestGameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GameOver) }
     }
 }

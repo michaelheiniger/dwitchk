@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ingame.communication.guest.eventprocessors
 
-import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientCommunicationEvent
+import ch.qscqlmpa.dwitchcommunication.websocket.ClientEvent
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationStateRepository
@@ -18,11 +18,11 @@ internal class GuestConnectedToHostEventProcessor @Inject constructor(
     private val commStateRepository: GuestCommunicationStateRepository,
 ) : GuestCommunicationEventProcessor {
 
-    override fun process(event: ClientCommunicationEvent): Completable {
+    override fun process(event: ClientEvent.CommunicationEvent): Completable {
 
         Logger.debug { "Process ClientCommunicationEvent" }
 
-        event as ClientCommunicationEvent.ConnectedToHost
+        event as ClientEvent.CommunicationEvent.ConnectedToHost
 
         return Completable.fromAction {
             val game = store.getGame()

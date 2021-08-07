@@ -13,17 +13,17 @@ import javax.inject.Inject
 //TODO: Write tests
 internal class GameCanceledMessageProcessor @Inject constructor(
     private val store: InGameStore,
-    private val gameLifecycleEventRepository: GuestGameLifecycleEventRepository,
-    private val gameEventRepository: GuestGameEventRepository
+    private val gameEventRepository: GuestGameEventRepository,
+    private val gameLifecycleEventRepository: GuestGameLifecycleEventRepository
 ) : MessageProcessor {
 
     override fun process(message: Message, senderConnectionID: ConnectionId): Completable {
         return Completable.fromCallable {
             if (store.gameIsNew()) {
-                store.deleteGame()
+                store.markGameForDeletion()
             }
-            gameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GameCanceled)
             gameEventRepository.notify(GuestGameEvent.GameCanceled)
+            gameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GameOver)
         }
     }
 }

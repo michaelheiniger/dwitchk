@@ -1,8 +1,8 @@
 package ch.qscqlmpa.dwitch.app
 
 import android.app.Application
-import ch.qscqlmpa.dwitch.ingame.OnGoingGameUiModule
-import ch.qscqlmpa.dwitch.ingame.OngoingGameUiComponent
+import ch.qscqlmpa.dwitch.ingame.InGameUiComponent
+import ch.qscqlmpa.dwitch.ingame.InGameUiModule
 import ch.qscqlmpa.dwitch.service.AndroidServiceBindingModule
 import ch.qscqlmpa.dwitch.ui.home.HomeBindingModule
 import ch.qscqlmpa.dwitchgame.di.GameComponent
@@ -39,5 +39,5 @@ interface AppComponent : AndroidInjector<App> {
         fun build(): AppComponent
     }
 
-    fun addOngoingGameUiComponent(module: OnGoingGameUiModule): OngoingGameUiComponent
+    fun addInGameUiComponent(module: InGameUiModule): InGameUiComponent
 }

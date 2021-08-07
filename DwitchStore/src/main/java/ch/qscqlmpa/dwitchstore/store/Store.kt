@@ -16,6 +16,8 @@ interface Store {
         guestPlayerName: String
     ): InsertGameResult
 
+    fun deleteGamesMarkedForDeletion()
+
     fun getGameCommonIdOfResumableGames(): Observable<List<GameCommonId>>
 
     fun getResumableGamesInfo(): Observable<List<ResumableGameInfo>>
@@ -25,4 +27,6 @@ interface Store {
     fun getGame(gameCommonId: GameCommonId): Game?
 
     fun prepareGuestsForGameResume(gameId: Long)
+
+    fun preparePlayersForGameResume(gameId: Long)
 }

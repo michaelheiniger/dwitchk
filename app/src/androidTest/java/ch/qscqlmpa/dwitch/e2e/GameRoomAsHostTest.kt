@@ -1,14 +1,13 @@
 package ch.qscqlmpa.dwitch.e2e
 
-import ch.qscqlmpa.dwitch.PlayerGuestTest
-import ch.qscqlmpa.dwitch.R
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.onNodeWithTag
 import ch.qscqlmpa.dwitch.clickOnDialogConfirmButton
 import ch.qscqlmpa.dwitch.e2e.base.BaseHostTest
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertCardExchangeControlIsEnabled
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertCardExchangeControlIsHidden
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertCardOnTable
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertCardsInHand
-import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertEndOfRoundResult
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertGameRoomIsDisplayed
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertPlayerCanPassTurn
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.assertPlayerCannotPassTurn
@@ -20,6 +19,7 @@ import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.playCards
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.startNewRound
 import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.assertLaunchGameControlIsEnabled
 import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.launchGame
+import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.websocket.server.test.PlayerHostTest
 import ch.qscqlmpa.dwitchengine.ProdDwitchFactory
@@ -101,8 +101,9 @@ class GameRoomAsHostTest : BaseHostTest() {
         testRule.playCards(Card.Hearts5) // Local player plays its last card
         assertGameStateUpdatedMessageSent()
 
-        testRule.assertEndOfRoundResult(PlayerGuestTest.Host.name, getString(R.string.president_long))
-        testRule.assertEndOfRoundResult(PlayerGuestTest.LocalGuest.name, getString(R.string.asshole_long))
+        //TODO: Replace with PlayerHostTest or something like this
+//        testRule.assertEndOfRoundResult(PlayerGuestTest.Host.info.name, getString(R.string.president_long))
+//        testRule.assertEndOfRoundResult(PlayerGuestTest.LocalGuest.info.name, getString(R.string.asshole_long))
 
         testRule.endGame()
         testRule.clickOnDialogConfirmButton()
@@ -145,6 +146,21 @@ class GameRoomAsHostTest : BaseHostTest() {
 
         testRule.assertGameRoomIsDisplayed()
         testRule.assertCardsInHand(Card.Diamonds4, Card.Clubs10, Card.Spades6, Card.HeartsAce)
+    }
+
+    @Test
+    fun currentPlayerGetsDisconnected() {
+        rankForPlayer = mapOf(
+            DwitchPlayerId(1) to DwitchRank.President, // Host
+            DwitchPlayerId(2) to DwitchRank.Asshole // Guest starts to play
+        )
+
+        goToGameRoom()
+
+        incrementGameIdlingResource("Guest disconnects")
+        serverTestStub.clientDisconnectsFromServer(PlayerHostTest.Guest1)
+
+        testRule.onNodeWithTag(UiTags.waitingDialogAbortBtn).assertIsDisplayed()
     }
 
     private fun otherPlayerSendsCardExchangeMessage(cards: Set<Card>) {

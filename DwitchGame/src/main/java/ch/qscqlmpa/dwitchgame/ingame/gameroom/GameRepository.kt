@@ -18,13 +18,20 @@ internal class GameRepository @Inject constructor(
     private val dwitchFactory: DwitchFactory
 ) {
     private val gameData = Observable.combineLatest(
-        store.observeLocalPlayer().distinctUntilChanged(),
-        store.observeGameState().distinctUntilChanged(),
-        { localPlayer, gameState ->
+        store.observePlayersInWaitingRoom(),
+        store.observeLocalPlayer(),
+        store.observeGameState(),
+        { players, localPlayer, gameState ->
             when (gameState.phase) {
-                DwitchGamePhase.RoundIsBeginning -> DwitchState.RoundIsBeginning(createDashboardInfo(localPlayer, gameState))
+                DwitchGamePhase.RoundIsBeginning -> DwitchState.RoundIsBeginning(
+                    createDashboardInfo(
+                        localPlayer,
+                        players,
+                        gameState
+                    )
+                )
+                DwitchGamePhase.RoundIsOnGoing -> DwitchState.RoundIsOngoing(createDashboardInfo(localPlayer, players, gameState))
                 DwitchGamePhase.CardExchange -> getDataForCardExchange(localPlayer, gameState)
-                DwitchGamePhase.RoundIsOnGoing -> DwitchState.RoundIsOngoing(createDashboardInfo(localPlayer, gameState))
                 DwitchGamePhase.RoundIsOver -> DwitchState.EndOfRound(createEndOfRoundInfo(localPlayer, gameState))
             }
         }
@@ -46,11 +53,11 @@ internal class GameRepository @Inject constructor(
         return DwitchState.CardExchangeOnGoing
     }
 
-    private fun createDashboardInfo(localPlayer: Player, gameState: DwitchGameState): GameDashboardInfo {
+    private fun createDashboardInfo(localPlayer: Player, players: List<Player>, gameState: DwitchGameState): GameDashboardInfo {
         return GameInfoFactory.createGameDashboardInfo(
             dwitchFactory.createDwitchEngine(gameState).getGameInfo(),
             localPlayer.dwitchId,
-            localPlayer.connected
+            players.map { p -> p.dwitchId to p.connected }.toMap()
         )
     }
 

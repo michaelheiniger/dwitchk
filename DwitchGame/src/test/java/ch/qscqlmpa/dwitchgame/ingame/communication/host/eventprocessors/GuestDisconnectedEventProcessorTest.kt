@@ -4,7 +4,7 @@ import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreFactory
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
-import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
+import ch.qscqlmpa.dwitchcommunication.websocket.ServerEvent
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.LazyImpl
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
@@ -86,7 +86,7 @@ class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
     }
 
     private fun launchTest(guestConnectionId: ConnectionId): Completable {
-        return processor.process(ServerCommunicationEvent.ClientDisconnected(guestConnectionId))
+        return processor.process(ServerEvent.CommunicationEvent.ClientDisconnected(guestConnectionId))
     }
 
     private fun setupConnectionStore(): ConnectionId {

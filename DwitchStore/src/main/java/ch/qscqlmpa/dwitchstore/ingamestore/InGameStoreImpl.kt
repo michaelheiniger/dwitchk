@@ -12,7 +12,6 @@ import ch.qscqlmpa.dwitchstore.model.Game
 import ch.qscqlmpa.dwitchstore.model.Player
 import ch.qscqlmpa.dwitchstore.util.SerializerFactory
 import com.jakewharton.rxrelay3.BehaviorRelay
-import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 
 internal class InGameStoreImpl constructor(
@@ -68,6 +67,7 @@ internal class InGameStoreImpl constructor(
     override fun observeGameState(): Observable<DwitchGameState> {
         return gameDao.observeGame(gameLocalId)
             .map { game -> serializerFactory.unserializeGameState(game.gameState!!) }
+            .distinctUntilChanged()
     }
 
     override fun getGameCommonIdAndCurrentRoom(): GameCommonIdAndCurrentRoom {
@@ -86,8 +86,8 @@ internal class InGameStoreImpl constructor(
         gameDao.updateGameWithCommonId(gameLocalId, gameCommonId)
     }
 
-    override fun deleteGame() {
-        gameDao.deleteGame(gameLocalId)
+    override fun markGameForDeletion() {
+        gameDao.markGameForDeletion(gameLocalId)
     }
 
     override fun updateCurrentRoom(room: RoomType) {
@@ -157,7 +157,7 @@ internal class InGameStoreImpl constructor(
     }
 
     override fun observeLocalPlayer(): Observable<Player> {
-        return playerDao.observePlayer(localPlayerLocalId)
+        return playerDao.observePlayer(localPlayerLocalId).distinctUntilChanged()
     }
 
     override fun getLocalPlayerDwitchId(): DwitchPlayerId {
@@ -183,8 +183,11 @@ internal class InGameStoreImpl constructor(
     /**
      * Return the list of connected players sorted on the name ASC
      */
-    override fun observePlayersInWaitingRoom(): Flowable<List<Player>> {
+    override fun observePlayersInWaitingRoom(): Observable<List<Player>> {
         return playerDao.observePlayersInWaitingRoom(gameLocalId)
+            .distinctUntilChanged()
+            .onBackpressureLatest()
+            .toObservable()
     }
 
     override fun getPlayersInWaitingRoom(): List<Player> {

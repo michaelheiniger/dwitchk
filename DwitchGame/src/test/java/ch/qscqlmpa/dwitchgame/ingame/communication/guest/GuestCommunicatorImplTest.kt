@@ -2,13 +2,11 @@ package ch.qscqlmpa.dwitchgame.ingame.communication.guest
 
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchcommunication.CommClient
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientCommunicationEvent
+import ch.qscqlmpa.dwitchcommunication.websocket.ClientEvent
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.eventprocessors.GuestCommunicationEventDispatcher
-import ch.qscqlmpa.dwitchgame.ingame.communication.messageprocessors.MessageDispatcher
 import io.mockk.*
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -20,20 +18,17 @@ import org.junit.jupiter.api.Test
 class GuestCommunicatorImplTest : BaseUnitTest() {
 
     private val mockCommClient = mockk<CommClient>(relaxed = true)
-    private val mockMessageDispatcher = mockk<MessageDispatcher>(relaxed = true)
     private val mockCommunicationEventDispatcher = mockk<GuestCommunicationEventDispatcher>(relaxed = true)
     private val mockCommEventRepository = mockk<GuestCommunicationStateRepository>(relaxed = true)
 
     private lateinit var guestCommunicator: GuestCommunicator
 
-    private lateinit var communicationEventsSubject: PublishSubject<ClientCommunicationEvent>
-    private lateinit var receivedMessagesSubject: PublishSubject<EnvelopeReceived>
+    private lateinit var communicationEventsSubject: PublishSubject<ClientEvent>
 
     @BeforeEach
     fun setup() {
         guestCommunicator = GuestCommunicatorImpl(
             mockCommClient,
-            mockMessageDispatcher,
             mockCommunicationEventDispatcher,
             mockCommEventRepository,
             TestSchedulerFactory()
@@ -41,9 +36,6 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
 
         communicationEventsSubject = PublishSubject.create()
         every { mockCommClient.observeCommunicationEvents() } returns communicationEventsSubject
-
-        receivedMessagesSubject = PublishSubject.create()
-        every { mockCommClient.observeReceivedMessages() } returns receivedMessagesSubject
 
         every { mockCommunicationEventDispatcher.dispatch(any()) } returns Completable.complete()
     }
@@ -61,18 +53,15 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
         fun `Start communication client operations`() {
             // Given
             assertThat(communicationEventsSubject.hasObservers()).isFalse
-            assertThat(receivedMessagesSubject.hasObservers()).isFalse
 
             // When
             guestCommunicator.connect()
 
             // Then
             assertThat(communicationEventsSubject.hasObservers()).isTrue
-            assertThat(receivedMessagesSubject.hasObservers()).isTrue
 
             verifyOrder {
                 mockCommClient.observeCommunicationEvents()
-                mockCommClient.observeReceivedMessages()
                 mockCommClient.start()
             }
             confirmVerified(mockCommClient)
@@ -84,14 +73,14 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
             guestCommunicator.connect()
 
             // When
-            communicationEventsSubject.onNext(ClientCommunicationEvent.ConnectedToHost)
-            communicationEventsSubject.onNext(ClientCommunicationEvent.DisconnectedFromHost)
+            communicationEventsSubject.onNext(ClientEvent.CommunicationEvent.ConnectedToHost)
+            communicationEventsSubject.onNext(ClientEvent.CommunicationEvent.DisconnectedFromHost)
 
             // Then
-            val dispatchedEventCap = mutableListOf<ClientCommunicationEvent>()
+            val dispatchedEventCap = mutableListOf<ClientEvent.CommunicationEvent>()
             verify(exactly = 2) { mockCommunicationEventDispatcher.dispatch(capture(dispatchedEventCap)) }
-            assertThat(dispatchedEventCap[0]).isEqualTo(ClientCommunicationEvent.ConnectedToHost)
-            assertThat(dispatchedEventCap[1]).isEqualTo(ClientCommunicationEvent.DisconnectedFromHost)
+            assertThat(dispatchedEventCap[0]).isEqualTo(ClientEvent.CommunicationEvent.ConnectedToHost)
+            assertThat(dispatchedEventCap[1]).isEqualTo(ClientEvent.CommunicationEvent.DisconnectedFromHost)
             confirmVerified(mockCommunicationEventDispatcher)
         }
 
@@ -101,17 +90,17 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
             guestCommunicator.connect()
 
             // When
-            val messageReceived1 = mockk<EnvelopeReceived>()
-            val messageReceived2 = mockk<EnvelopeReceived>()
-            receivedMessagesSubject.onNext(messageReceived1)
-            receivedMessagesSubject.onNext(messageReceived2)
+            val messageReceived1 = mockk<ClientEvent.EnvelopeReceived>()
+            val messageReceived2 = mockk<ClientEvent.EnvelopeReceived>()
+            communicationEventsSubject.onNext(messageReceived1)
+            communicationEventsSubject.onNext(messageReceived2)
 
             // Then
-            val dispatchedMessageCap = mutableListOf<EnvelopeReceived>()
-            verify(exactly = 2) { mockMessageDispatcher.dispatch(capture(dispatchedMessageCap)) }
+            val dispatchedMessageCap = mutableListOf<ClientEvent.EnvelopeReceived>()
+            verify(exactly = 2) { mockCommunicationEventDispatcher.dispatch(capture(dispatchedMessageCap)) }
             assertThat(dispatchedMessageCap[0]).isEqualTo(messageReceived1)
             assertThat(dispatchedMessageCap[1]).isEqualTo(messageReceived2)
-            confirmVerified(mockMessageDispatcher)
+            confirmVerified(mockCommunicationEventDispatcher)
         }
     }
 
@@ -123,19 +112,16 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
             // Given
             guestCommunicator.connect()
             assertThat(communicationEventsSubject.hasObservers()).isTrue
-            assertThat(receivedMessagesSubject.hasObservers()).isTrue
 
             // When
             guestCommunicator.disconnect()
-            communicationEventsSubject.onNext(ClientCommunicationEvent.DisconnectedFromHost)
+            communicationEventsSubject.onNext(ClientEvent.CommunicationEvent.DisconnectedFromHost)
 
             // Then
             assertThat(communicationEventsSubject.hasObservers()).isFalse // Observed streams have been disposed.
-            assertThat(receivedMessagesSubject.hasObservers()).isFalse // Observed streams have been disposed.
 
             verifyOrder {
                 mockCommClient.observeCommunicationEvents()
-                mockCommClient.observeReceivedMessages()
                 mockCommClient.start()
                 mockCommClient.stop()
             }

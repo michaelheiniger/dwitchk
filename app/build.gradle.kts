@@ -4,6 +4,7 @@ plugins {
     kotlin("kapt")
     id("kotlin-parcelize")
     id("kotlin-android")
+    id("androidx.navigation.safeargs")
 }
 
 val composeVersion = "1.0.0"

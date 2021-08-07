@@ -10,14 +10,14 @@ import io.reactivex.rxjava3.core.Completable
 import javax.inject.Inject
 
 internal class GameOverMessageProcessor @Inject constructor(
-    private val gameLifecycleEventRepository: GuestGameLifecycleEventRepository,
-    private val gameEventRepository: GuestGameEventRepository
+    private val gameEventRepository: GuestGameEventRepository,
+    private val gameLifecycleEventRepository: GuestGameLifecycleEventRepository
 ) : MessageProcessor {
 
     override fun process(message: Message, senderConnectionID: ConnectionId): Completable {
         return Completable.fromAction {
-            gameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GameOver)
             gameEventRepository.notify(GuestGameEvent.GameOver)
+            gameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GameOver)
         }
     }
 }

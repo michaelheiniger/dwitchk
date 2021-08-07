@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ingame.communication.host.eventprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
-import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
+import ch.qscqlmpa.dwitchcommunication.websocket.ServerEvent
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ingame.usecases.ResumeComputerPlayersUsecase
@@ -17,9 +17,9 @@ internal class HostListeningForConnectionsEventProcessor @Inject constructor(
     private val resumeComputerPlayersUsecase: ResumeComputerPlayersUsecase
 ) : HostCommunicationEventProcessor {
 
-    override fun process(event: ServerCommunicationEvent): Completable {
+    override fun process(event: ServerEvent.CommunicationEvent): Completable {
 
-        event as ServerCommunicationEvent.ListeningForConnections
+        event as ServerEvent.CommunicationEvent.ListeningForConnections
 
         return Completable.fromAction {
             Logger.info { "Listening for connections..." }

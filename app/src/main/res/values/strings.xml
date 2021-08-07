@@ -184,4 +184,5 @@
         Breaking a special makes you automatically the Asshole. If another player breaks a special rule later in the same round, the it becomes the Asshole and the previous player becomes the Vice-Asshole and so on.
     </string>
     <string name="title_activity_home">Home</string>
+    <string name="waiting_for_disconnected_player">Waiting for player to reconnect</string>
 </resources>

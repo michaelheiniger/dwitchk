@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ingame.di.modules
 
-import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
+import ch.qscqlmpa.dwitchcommunication.websocket.ServerEvent
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.eventprocessors.*
 import ch.qscqlmpa.dwitchgame.ingame.di.HostCommunicationEventProcessorKey
 import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope
@@ -15,7 +15,7 @@ abstract class HostCommunicationEventProcessorModule {
     @OngoingGameScope
     @Binds
     @IntoMap
-    @HostCommunicationEventProcessorKey(ServerCommunicationEvent.ListeningForConnections::class)
+    @HostCommunicationEventProcessorKey(ServerEvent.CommunicationEvent.ListeningForConnections::class)
     internal abstract fun bindHostListeningForConnectionsEventProcessor(
         eventProcessor: HostListeningForConnectionsEventProcessor
     ): HostCommunicationEventProcessor
@@ -23,7 +23,7 @@ abstract class HostCommunicationEventProcessorModule {
     @OngoingGameScope
     @Binds
     @IntoMap
-    @HostCommunicationEventProcessorKey(ServerCommunicationEvent.NoLongerListeningForConnections::class)
+    @HostCommunicationEventProcessorKey(ServerEvent.CommunicationEvent.NoLongerListeningForConnections::class)
     internal abstract fun bindHostNoLongerListeningForConnectionsEventProcessor(
         eventProcessor: HostNoLongerListeningForConnectionsEventProcessor
     ): HostCommunicationEventProcessor
@@ -31,7 +31,7 @@ abstract class HostCommunicationEventProcessorModule {
     @OngoingGameScope
     @Binds
     @IntoMap
-    @HostCommunicationEventProcessorKey(ServerCommunicationEvent.ClientConnected::class)
+    @HostCommunicationEventProcessorKey(ServerEvent.CommunicationEvent.ClientConnected::class)
     internal abstract fun bindClientConnectedEventProcessor(
         eventProcessor: GuestConnectedEventProcessor
     ): HostCommunicationEventProcessor
@@ -39,7 +39,7 @@ abstract class HostCommunicationEventProcessorModule {
     @OngoingGameScope
     @Binds
     @IntoMap
-    @HostCommunicationEventProcessorKey(ServerCommunicationEvent.ClientDisconnected::class)
+    @HostCommunicationEventProcessorKey(ServerEvent.CommunicationEvent.ClientDisconnected::class)
     internal abstract fun bindClientDisconnectedEventProcessor(
         eventProcessor: GuestDisconnectedEventProcessor
     ): HostCommunicationEventProcessor
@@ -47,7 +47,7 @@ abstract class HostCommunicationEventProcessorModule {
     @OngoingGameScope
     @Binds
     @IntoMap
-    @HostCommunicationEventProcessorKey(ServerCommunicationEvent.ErrorListeningForConnections::class)
+    @HostCommunicationEventProcessorKey(ServerEvent.CommunicationEvent.ErrorListeningForConnections::class)
     internal abstract fun bindErrorListeningForConnections(
         eventProcessor: ErrorListeningForConnectionsEventProcessor
     ): HostCommunicationEventProcessor

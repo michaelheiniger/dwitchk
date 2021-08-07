@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ingame.communication.guest.eventprocessors
 
-import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientCommunicationEvent
+import ch.qscqlmpa.dwitchcommunication.websocket.ClientEvent
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationStateRepository
@@ -22,7 +22,7 @@ internal class GuestConnectionErrorEventProcessorTest : BaseUnitTest() {
 
     @Test
     fun `Notify that Guest communication state is now Error`() {
-        processorGuest.process(ClientCommunicationEvent.ConnectionError("Error"))
+        processorGuest.process(ClientEvent.CommunicationEvent.ConnectionError("Error"))
             .test().assertComplete()
 
         assertThat(commStateRepository.currentState().blockingFirst()).isEqualTo(GuestCommunicationState.Error)

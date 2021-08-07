@@ -10,5 +10,5 @@ interface ServerTestStub {
 
     fun blockUntilMessageSentIsAvailable(): String
 
-    fun disconnectFromServer(guestIdentifier: PlayerHostTest)
+    fun clientDisconnectsFromServer(guestIdentifier: PlayerHostTest)
 }

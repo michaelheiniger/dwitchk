@@ -52,7 +52,8 @@ class DashboardScreenTest : BaseUiUnitTest() {
                 canPass = false,
                 canPlay = true
             ),
-            lastCardPlayed = PlayedCards(Card.Hearts8)
+            lastCardPlayed = PlayedCards(Card.Hearts8),
+            waitingForPlayerReconnection = false
         )
         anyCardClicked = false
         playClicked = false
@@ -196,13 +197,23 @@ class DashboardScreenTest : BaseUiUnitTest() {
         assertThat(passClicked).isTrue
     }
 
+    @Test
+    fun waitingDialogIsShownWhenWaitingForAnotherPlayerToReconnect() {
+        dashboardInfo = dashboardInfo.copy(waitingForPlayerReconnection = true)
+
+        launchTest()
+
+        composeTestRule.onNodeWithTag(UiTags.waitingDialogAbortBtn).assertIsDisplayed()
+    }
+
     private fun launchTest() {
         launchTestWithContent {
             DashboardScreen(
                 dashboardInfo,
                 onCardClick = { anyCardClicked = true },
                 onPlayClick = { playClicked = true },
-                onPassClick = { passClicked = true }
+                onPassClick = { passClicked = true },
+                onEndOrLeaveGameClick = {},
             )
         }
     }

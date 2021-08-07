@@ -5,13 +5,11 @@ import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchcommunication.CommServer
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.Recipient
-import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
+import ch.qscqlmpa.dwitchcommunication.websocket.ServerEvent
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.eventprocessors.HostCommunicationEventDispatcher
-import ch.qscqlmpa.dwitchgame.ingame.communication.messageprocessors.MessageDispatcher
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -19,7 +17,6 @@ import org.tinylog.kotlin.Logger
 
 internal class HostCommunicatorImpl constructor(
     private val commServer: CommServer,
-    private val messageDispatcher: MessageDispatcher,
     private val communicationEventDispatcher: HostCommunicationEventDispatcher,
     private val communicationStateRepository: HostCommunicationStateRepository,
     private val schedulerFactory: SchedulerFactory
@@ -27,8 +24,8 @@ internal class HostCommunicatorImpl constructor(
 
     private val disposableManager = DisposableManager()
 
-    private val hostReceivedMessagesRelay = PublishRelay.create<EnvelopeReceived>()
-    private val hostCommunicationEventsRelay = PublishRelay.create<ServerCommunicationEvent>()
+    private val hostReceivedMessagesRelay = PublishRelay.create<ServerEvent.EnvelopeReceived>()
+    private val hostCommunicationEventsRelay = PublishRelay.create<ServerEvent.CommunicationEvent>()
     private val messagesToComputerPlayersRelay = PublishRelay.create<EnvelopeToSend>()
 
     private val hostConnectionId = ConnectionStore.hostConnectionId
@@ -38,7 +35,6 @@ internal class HostCommunicatorImpl constructor(
         Logger.info { "Start server" }
         communicationStateRepository.updateState(HostCommunicationState.Opening)
         observeCommunicationEvents()
-        observeReceivedMessages()
         commServer.start()
     }
 
@@ -61,15 +57,15 @@ internal class HostCommunicatorImpl constructor(
 
     override fun sendMessageToHost(message: Message) {
         Logger.info { "Send message to host: $message" }
-        hostReceivedMessagesRelay.accept(EnvelopeReceived(hostConnectionId, message))
+        hostReceivedMessagesRelay.accept(ServerEvent.EnvelopeReceived(hostConnectionId, message))
     }
 
     // ##### ComputerCommunicator #####
-    override fun sendMessageToHostFromComputerPlayer(envelope: EnvelopeReceived) {
+    override fun sendMessageToHostFromComputerPlayer(envelope: ServerEvent.EnvelopeReceived) {
         hostReceivedMessagesRelay.accept(envelope)
     }
 
-    override fun sendCommunicationEventFromComputerPlayer(event: ServerCommunicationEvent) {
+    override fun sendCommunicationEventFromComputerPlayer(event: ServerEvent.CommunicationEvent) {
         hostCommunicationEventsRelay.accept(event)
     }
 
@@ -82,20 +78,20 @@ internal class HostCommunicatorImpl constructor(
         disposableManager.add(
             Observable.merge(
                 listOf(
-                    commServer.observeCommunicationEvents(),
-                    hostCommunicationEventsRelay
+                    commServer.observeEvents(),
+                    hostCommunicationEventsRelay,
+                    hostReceivedMessagesRelay
                 )
-            ).flatMapCompletable { event ->
-                communicationEventDispatcher.dispatch(event)
-                    .subscribeOn(schedulerFactory.single())
-                    .doFinally {
-                        if (event is ServerCommunicationEvent.NoLongerListeningForConnections ||
-                            event is ServerCommunicationEvent.ErrorListeningForConnections
-                        ) {
-                            disposableManager.disposeAndReset()
-                        }
-                    }
-            }
+            )
+                .observeOn(schedulerFactory.single())
+                .flatMapCompletable { event ->
+                    Completable.merge(
+                        listOf(
+                            dispatchEvent(event),
+                            forwardMessageToGuestsIfNeeded(event)
+                        )
+                    )
+                }
                 .subscribe(
                     { Logger.debug { "Communication events stream completed" } },
                     { error -> Logger.error(error) { "Error while observing communication events" } }
@@ -103,30 +99,17 @@ internal class HostCommunicatorImpl constructor(
         )
     }
 
-    private fun observeReceivedMessages() {
-        disposableManager.add(
-            Observable.merge(
-                listOf(
-                    commServer.observeReceivedMessages(),
-                    hostReceivedMessagesRelay
-                )
-            ).flatMapCompletable { envelopeReceived ->
-                Completable.merge(
-                    listOf(
-                        dispatchReceivedMessage(envelopeReceived),
-                        forwardMessageToGuestsIfNeeded(envelopeReceived)
-                    )
-                )
-            }.subscribe(
-                { Logger.debug { "Received messages stream completed !" } },
-                { error -> Logger.error(error) { "Error while observing received messages" } }
-            )
-        )
+    private fun dispatchEvent(event: ServerEvent): Completable {
+        return communicationEventDispatcher.dispatch(event)
+            .doFinally {
+                if (
+                    event is ServerEvent.CommunicationEvent.NoLongerListeningForConnections ||
+                    event is ServerEvent.CommunicationEvent.ErrorListeningForConnections
+                ) {
+                    disposableManager.disposeAndReset()
+                }
+            }
     }
-
-    private fun dispatchReceivedMessage(envelopeReceived: EnvelopeReceived) =
-        messageDispatcher.dispatch(envelopeReceived)
-            .subscribeOn(schedulerFactory.single())
 
     private fun sendMessageToAllGuests(envelopeToSend: EnvelopeToSend) {
         Logger.info { "Send message to all guests: ${envelopeToSend.message}" }
@@ -151,15 +134,19 @@ internal class HostCommunicatorImpl constructor(
         }
     }
 
-    private fun forwardMessageToGuestsIfNeeded(envelopeReceived: EnvelopeReceived): Completable {
-        return Completable.fromAction {
-            when (envelopeReceived.message) {
-                is Message.GameStateUpdatedMessage -> {
-                    commServer.sendMessage(envelopeReceived.message, Recipient.All)
-                    messagesToComputerPlayersRelay.accept(EnvelopeToSend(Recipient.All, envelopeReceived.message))
+    private fun forwardMessageToGuestsIfNeeded(event: ServerEvent): Completable {
+        return when (event) {
+            is ServerEvent.EnvelopeReceived ->
+                Completable.fromAction {
+                    when (event.message) {
+                        is Message.GameStateUpdatedMessage -> {
+                            commServer.sendMessage(event.message, Recipient.All)
+                            messagesToComputerPlayersRelay.accept(EnvelopeToSend(Recipient.All, event.message))
+                        }
+                        else -> Completable.complete()
+                    }
                 }
-                else -> Completable.complete()
-            }
-        }.subscribeOn(schedulerFactory.io())
+            else -> Completable.complete()
+        } //.subscribeOn(schedulerFactory.io())
     }
 }

@@ -1,11 +1,10 @@
 package ch.qscqlmpa.dwitchgame.ingame.computerplayer
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.Recipient
-import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
+import ch.qscqlmpa.dwitchcommunication.websocket.ServerEvent
 import ch.qscqlmpa.dwitchengine.TestDwitchFactory
 import ch.qscqlmpa.dwitchengine.computerplayer.ComputerPlayerActionResult
 import ch.qscqlmpa.dwitchengine.computerplayer.DwitchComputerPlayerEngine
@@ -60,12 +59,12 @@ internal class ComputerPlayersManagerTest : BaseUnitTest() {
             verifyOrder {
                 mockCommunicator.observeMessagesForComputerPlayers()
                 mockCommunicator.sendCommunicationEventFromComputerPlayer(
-                    ServerCommunicationEvent.ClientConnected(
+                    ServerEvent.CommunicationEvent.ClientConnected(
                         player1.connectionId
                     )
                 )
                 mockCommunicator.sendMessageToHostFromComputerPlayer(
-                    EnvelopeReceived(
+                    ServerEvent.EnvelopeReceived(
                         player1.connectionId,
                         Message.JoinGameMessage("Computer 1", computerManaged = true)
                     )
@@ -86,14 +85,14 @@ internal class ComputerPlayersManagerTest : BaseUnitTest() {
             verify(exactly = 1) { mockCommunicator.observeMessagesForComputerPlayers() }
             verify(exactly = 1) {
                 mockCommunicator.sendCommunicationEventFromComputerPlayer(
-                    ServerCommunicationEvent.ClientConnected(
+                    ServerEvent.CommunicationEvent.ClientConnected(
                         player2.connectionId
                     )
                 )
             }
             verify(exactly = 1) {
                 mockCommunicator.sendMessageToHostFromComputerPlayer(
-                    EnvelopeReceived(
+                    ServerEvent.EnvelopeReceived(
                         player2.connectionId,
                         Message.JoinGameMessage("Computer 2", computerManaged = true)
                     )
@@ -114,14 +113,14 @@ internal class ComputerPlayersManagerTest : BaseUnitTest() {
             // Then it becomes ready
             verifyOrder {
                 mockCommunicator.sendMessageToHostFromComputerPlayer(
-                    EnvelopeReceived(
+                    ServerEvent.EnvelopeReceived(
                         player1.connectionId,
                         Message.PlayerReadyMessage(player1.dwitchId, ready = true)
                     )
                 )
 
                 mockCommunicator.sendMessageToHostFromComputerPlayer(
-                    EnvelopeReceived(
+                    ServerEvent.EnvelopeReceived(
                         player2.connectionId,
                         Message.PlayerReadyMessage(player2.dwitchId, ready = true)
                     )
@@ -144,12 +143,10 @@ internal class ComputerPlayersManagerTest : BaseUnitTest() {
             verifyOrder {
                 mockCommunicator.observeMessagesForComputerPlayers()
                 mockCommunicator.sendCommunicationEventFromComputerPlayer(
-                    ServerCommunicationEvent.ClientConnected(
-                        player1.connectionId
-                    )
+                    ServerEvent.CommunicationEvent.ClientConnected(player1.connectionId)
                 )
                 mockCommunicator.sendMessageToHostFromComputerPlayer(
-                    EnvelopeReceived(
+                    ServerEvent.EnvelopeReceived(
                         player1.connectionId,
                         Message.RejoinGameMessage(gameCommonId, player1.dwitchId)
                     )
@@ -170,14 +167,12 @@ internal class ComputerPlayersManagerTest : BaseUnitTest() {
             verify(exactly = 1) { mockCommunicator.observeMessagesForComputerPlayers() }
             verify(exactly = 1) {
                 mockCommunicator.sendCommunicationEventFromComputerPlayer(
-                    ServerCommunicationEvent.ClientConnected(
-                        player2.connectionId
-                    )
+                    ServerEvent.CommunicationEvent.ClientConnected(player2.connectionId)
                 )
             }
             verify(exactly = 1) {
                 mockCommunicator.sendMessageToHostFromComputerPlayer(
-                    EnvelopeReceived(
+                    ServerEvent.EnvelopeReceived(
                         player2.connectionId,
                         Message.RejoinGameMessage(gameCommonId, player2.dwitchId)
                     )
@@ -198,14 +193,14 @@ internal class ComputerPlayersManagerTest : BaseUnitTest() {
             // Then it becomes ready
             verifyOrder {
                 mockCommunicator.sendMessageToHostFromComputerPlayer(
-                    EnvelopeReceived(
+                    ServerEvent.EnvelopeReceived(
                         player1.connectionId,
                         Message.PlayerReadyMessage(player1.dwitchId, ready = true)
                     )
                 )
 
                 mockCommunicator.sendMessageToHostFromComputerPlayer(
-                    EnvelopeReceived(
+                    ServerEvent.EnvelopeReceived(
                         player2.connectionId,
                         Message.PlayerReadyMessage(player2.dwitchId, ready = true)
                     )
@@ -250,15 +245,25 @@ internal class ComputerPlayersManagerTest : BaseUnitTest() {
             addPlayerAndPerformFullOnboardingProcess(player4)
 
             // Then
-            val eventsSendToHost = mutableListOf<ServerCommunicationEvent>()
+            val eventsSendToHost = mutableListOf<ServerEvent.CommunicationEvent>()
             verify { mockCommunicator.sendCommunicationEventFromComputerPlayer(capture(eventsSendToHost)) }
-            assertThat((eventsSendToHost[0] as ServerCommunicationEvent.ClientConnected).connectionId).isEqualTo(player1.connectionId)
-            assertThat((eventsSendToHost[1] as ServerCommunicationEvent.ClientConnected).connectionId).isEqualTo(player2.connectionId)
-            assertThat((eventsSendToHost[2] as ServerCommunicationEvent.ClientConnected).connectionId).isEqualTo(player3.connectionId)
+            assertThat((eventsSendToHost[0] as ServerEvent.CommunicationEvent.ClientConnected).connectionId).isEqualTo(
+                player1.connectionId
+            )
+            assertThat((eventsSendToHost[1] as ServerEvent.CommunicationEvent.ClientConnected).connectionId).isEqualTo(
+                player2.connectionId
+            )
+            assertThat((eventsSendToHost[2] as ServerEvent.CommunicationEvent.ClientConnected).connectionId).isEqualTo(
+                player3.connectionId
+            )
 
             // Connection ID of player2 is recycled for the next player to be added
-            assertThat((eventsSendToHost[3] as ServerCommunicationEvent.ClientConnected).connectionId).isEqualTo(player2.connectionId)
-            assertThat((eventsSendToHost[4] as ServerCommunicationEvent.ClientConnected).connectionId).isEqualTo(player4.connectionId)
+            assertThat((eventsSendToHost[3] as ServerEvent.CommunicationEvent.ClientConnected).connectionId).isEqualTo(
+                player2.connectionId
+            )
+            assertThat((eventsSendToHost[4] as ServerEvent.CommunicationEvent.ClientConnected).connectionId).isEqualTo(
+                player4.connectionId
+            )
         }
 
         @Test
@@ -305,7 +310,7 @@ internal class ComputerPlayersManagerTest : BaseUnitTest() {
             messagesForComputerPlayersSubject.onNext(EnvelopeToSend(Recipient.All, Message.LaunchGameMessage(receivedGameState)))
 
             // Then
-            val messagesSent = mutableListOf<EnvelopeReceived>()
+            val messagesSent = mutableListOf<ServerEvent.EnvelopeReceived>()
             verify(exactly = 5) { mockCommunicator.sendMessageToHostFromComputerPlayer(capture(messagesSent)) }
             assertThat(messagesSent.size).isEqualTo(5)
             assertThat(messagesSent[0].message).isInstanceOf(Message.JoinGameMessage::class.java)
@@ -313,7 +318,7 @@ internal class ComputerPlayersManagerTest : BaseUnitTest() {
             assertThat(messagesSent[2].message).isInstanceOf(Message.JoinGameMessage::class.java)
             assertThat(messagesSent[3].message).isInstanceOf(Message.PlayerReadyMessage::class.java)
             assertThat(messagesSent[4]).isEqualTo(
-                EnvelopeReceived(
+                ServerEvent.EnvelopeReceived(
                     player1.connectionId,
                     Message.GameStateUpdatedMessage(updatedGameState)
                 )
@@ -331,7 +336,7 @@ internal class ComputerPlayersManagerTest : BaseUnitTest() {
             messagesForComputerPlayersSubject.onNext(EnvelopeToSend(Recipient.All, Message.LaunchGameMessage(receivedGameState)))
 
             // Then nothing is sent back to host
-            val messagesSent = mutableListOf<EnvelopeReceived>()
+            val messagesSent = mutableListOf<ServerEvent.EnvelopeReceived>()
             verify(exactly = 4) { mockCommunicator.sendMessageToHostFromComputerPlayer(capture(messagesSent)) }
             assertThat(messagesSent.size).isEqualTo(4)
             assertThat(messagesSent[0].message).isInstanceOf(Message.JoinGameMessage::class.java)
@@ -361,7 +366,7 @@ internal class ComputerPlayersManagerTest : BaseUnitTest() {
             )
 
             // Then
-            val messagesSent = mutableListOf<EnvelopeReceived>()
+            val messagesSent = mutableListOf<ServerEvent.EnvelopeReceived>()
             verify(exactly = 5) { mockCommunicator.sendMessageToHostFromComputerPlayer(capture(messagesSent)) }
             assertThat(messagesSent.size).isEqualTo(5)
             assertThat(messagesSent[0].message).isInstanceOf(Message.JoinGameMessage::class.java)
@@ -369,7 +374,7 @@ internal class ComputerPlayersManagerTest : BaseUnitTest() {
             assertThat(messagesSent[2].message).isInstanceOf(Message.JoinGameMessage::class.java)
             assertThat(messagesSent[3].message).isInstanceOf(Message.PlayerReadyMessage::class.java)
             assertThat(messagesSent[4]).isEqualTo(
-                EnvelopeReceived(
+                ServerEvent.EnvelopeReceived(
                     player1.connectionId,
                     Message.GameStateUpdatedMessage(updatedGameState)
                 )
@@ -392,7 +397,7 @@ internal class ComputerPlayersManagerTest : BaseUnitTest() {
             )
 
             // Then nothing is sent back to host
-            val messagesSent = mutableListOf<EnvelopeReceived>()
+            val messagesSent = mutableListOf<ServerEvent.EnvelopeReceived>()
             verify(exactly = 4) { mockCommunicator.sendMessageToHostFromComputerPlayer(capture(messagesSent)) }
             assertThat(messagesSent.size).isEqualTo(4)
             assertThat(messagesSent[0].message).isInstanceOf(Message.JoinGameMessage::class.java)

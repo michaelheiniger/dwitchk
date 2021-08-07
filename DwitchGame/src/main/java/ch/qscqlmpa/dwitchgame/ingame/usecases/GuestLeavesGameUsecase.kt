@@ -19,9 +19,9 @@ internal class GuestLeavesGameUsecase @Inject constructor(
             if (store.gameIsNew()) {
                 val message = GuestMessageFactory.createLeaveGameMessage(store.getLocalPlayerDwitchId())
                 communicator.sendMessageToHost(message)
-                store.deleteGame()
+                store.markGameForDeletion()
             }
-            gameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GuestLeftGame)
+            gameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GameOver)
         }
     }
 }

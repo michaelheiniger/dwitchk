@@ -14,24 +14,15 @@ import org.junit.jupiter.api.Test
 
 internal class GameOverMessageProcessorTest : BaseMessageProcessorTest() {
 
-    private val mockGameLifecycleEventRepository = mockk<GuestGameLifecycleEventRepository>(relaxed = true)
     private lateinit var gameEventRepository: GuestGameEventRepository
+    private val mockGuestGameLifecycleEventRepository = mockk<GuestGameLifecycleEventRepository>(relaxed = true)
 
     private lateinit var processor: GameOverMessageProcessor
 
     @BeforeEach
     fun setup() {
         gameEventRepository = GuestGameEventRepository()
-        processor = GameOverMessageProcessor(mockGameLifecycleEventRepository, gameEventRepository)
-    }
-
-    @Test
-    fun `Service is stopped`() {
-        // When
-        launchTest()
-
-        // Then
-        verify { mockGameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GameOver) }
+        processor = GameOverMessageProcessor(gameEventRepository, mockGuestGameLifecycleEventRepository)
     }
 
     @Test
@@ -45,6 +36,7 @@ internal class GameOverMessageProcessorTest : BaseMessageProcessorTest() {
 
         // Then
         testObserver.assertValue(GuestGameEvent.GameOver)
+        verify { mockGuestGameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GameOver) }
     }
 
     private fun launchTest() {

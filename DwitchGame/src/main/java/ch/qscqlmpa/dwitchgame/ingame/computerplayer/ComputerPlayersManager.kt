@@ -3,11 +3,10 @@ package ch.qscqlmpa.dwitchgame.ingame.computerplayer
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.Recipient
-import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
+import ch.qscqlmpa.dwitchcommunication.websocket.ServerEvent
 import ch.qscqlmpa.dwitchengine.DwitchFactory
 import ch.qscqlmpa.dwitchengine.computerplayer.DwitchComputerPlayerEngine
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
@@ -76,12 +75,12 @@ internal class ComputerPlayersManager @Inject constructor(
     }
 
     private fun connectPlayerToHost(connectionId: ConnectionId) {
-        communicator.sendCommunicationEventFromComputerPlayer(ServerCommunicationEvent.ClientConnected(connectionId))
+        communicator.sendCommunicationEventFromComputerPlayer(ServerEvent.CommunicationEvent.ClientConnected(connectionId))
     }
 
     private fun playerJoinsGame(connectionId: ConnectionId) {
         communicator.sendMessageToHostFromComputerPlayer(
-            EnvelopeReceived(
+            ServerEvent.EnvelopeReceived(
                 connectionId,
                 GuestMessageFactory.createJoinGameMessage(playerName = "Computer ${connectionId.value}", computerManaged = true)
             )
@@ -90,7 +89,7 @@ internal class ComputerPlayersManager @Inject constructor(
 
     private fun playerRejoinsGame(connectionId: ConnectionId, gameCommonId: GameCommonId, playerId: DwitchPlayerId) {
         communicator.sendMessageToHostFromComputerPlayer(
-            EnvelopeReceived(connectionId, GuestMessageFactory.createRejoinGameMessage(gameCommonId, playerId))
+            ServerEvent.EnvelopeReceived(connectionId, GuestMessageFactory.createRejoinGameMessage(gameCommonId, playerId))
         )
     }
 
@@ -124,12 +123,12 @@ internal class ComputerPlayersManager @Inject constructor(
 
     private fun sendPlayerReadyMessage(recipient: Recipient.Single, playerId: DwitchPlayerId) {
         val messageToSend = GuestMessageFactory.createPlayerReadyMessage(playerId, ready = true)
-        communicator.sendMessageToHostFromComputerPlayer(EnvelopeReceived(recipient.id, messageToSend))
+        communicator.sendMessageToHostFromComputerPlayer(ServerEvent.EnvelopeReceived(recipient.id, messageToSend))
     }
 
     private fun sendUpdatedGameState(playerId: DwitchPlayerId, gameStateUpdated: DwitchGameState) {
         communicator.sendMessageToHostFromComputerPlayer(
-            EnvelopeReceived(
+            ServerEvent.EnvelopeReceived(
                 dwitchIdConnectionIdMap.getValue(playerId),
                 MessageFactory.createGameStateUpdatedMessage(gameStateUpdated)
             )

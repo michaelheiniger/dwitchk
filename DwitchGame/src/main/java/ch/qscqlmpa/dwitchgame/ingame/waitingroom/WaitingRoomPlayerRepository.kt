@@ -1,27 +1,27 @@
 package ch.qscqlmpa.dwitchgame.ingame.waitingroom
 
+import ch.qscqlmpa.dwitchgame.ingame.communication.CommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import ch.qscqlmpa.dwitchstore.model.Player
-import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
 @OngoingGameScope
 internal class WaitingRoomPlayerRepository @Inject constructor(
     private val store: InGameStore,
-    private val localPlayerRole: PlayerRole
+    private val localPlayerRole: PlayerRole,
+    private val communicationStateRepository: CommunicationStateRepository
 ) {
 
     fun observePlayers(): Observable<List<PlayerWrUi>> {
-        return Flowable.combineLatest(
-            Flowable.fromCallable { store.gameIsNew() },
+        return Observable.combineLatest(
             store.observePlayersInWaitingRoom(),
-            { gameIsNew, players -> players.map { p -> toPlayerWrUi(p, gameIsNew) } }
+            communicationStateRepository.connected(),
+            Observable.fromCallable { store.gameIsNew() },
+            { players, localPlayerConnected, gameIsNew -> players.map { p -> toPlayerWrUi(p, localPlayerConnected, gameIsNew) } }
         )
-            .onBackpressureLatest()
-            .toObservable()
     }
 
     fun observeLocalPlayer(): Observable<PlayerWrUi> {
@@ -37,11 +37,11 @@ internal class WaitingRoomPlayerRepository @Inject constructor(
         }
     }
 
-    private fun toPlayerWrUi(player: Player, gameIsNew: Boolean): PlayerWrUi {
+    private fun toPlayerWrUi(player: Player, localPlayerConnected: Boolean, gameIsNew: Boolean): PlayerWrUi {
         return PlayerWrUi(
             id = player.id,
             name = player.name,
-            connected = player.connected,
+            connected = player.connected && localPlayerConnected,
             ready = player.ready,
             kickable = playerIsKickable(player, gameIsNew)
         )

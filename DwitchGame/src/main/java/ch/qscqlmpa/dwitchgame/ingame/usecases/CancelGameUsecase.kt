@@ -17,15 +17,10 @@ internal class CancelGameUsecase @Inject constructor(
     fun cancelGame(): Completable {
         return Completable.fromAction {
             if (store.gameIsNew()) {
-                store.deleteGame()
+                store.markGameForDeletion()
             }
-            sendCancelGameMessage()
-            gameLifecycleEventRepository.notify(HostGameLifecycleEvent.GameCanceled)
+            communicator.sendMessage(HostMessageFactory.createCancelGameMessage()) // Notify guests
+            gameLifecycleEventRepository.notify(HostGameLifecycleEvent.GameOver)
         }
-    }
-
-    private fun sendCancelGameMessage() {
-        val message = HostMessageFactory.createCancelGameMessage()
-        communicator.sendMessage(message)
     }
 }

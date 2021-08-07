@@ -6,7 +6,6 @@ import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicatorImpl
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.eventprocessors.GuestCommunicationEventDispatcher
-import ch.qscqlmpa.dwitchgame.ingame.communication.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope
 import dagger.Module
 import dagger.Provides
@@ -21,14 +20,12 @@ internal class GuestCommunicationModule {
         @Provides
         fun provideGuestCommunicator(
             commClient: CommClient,
-            messageDispatcher: MessageDispatcher,
             guestCommunicationEventDispatcher: GuestCommunicationEventDispatcher,
             communicationStateRepository: GuestCommunicationStateRepository,
             schedulerFactory: SchedulerFactory
         ): GuestCommunicator {
             return GuestCommunicatorImpl(
                 commClient,
-                messageDispatcher,
                 guestCommunicationEventDispatcher,
                 communicationStateRepository,
                 schedulerFactory

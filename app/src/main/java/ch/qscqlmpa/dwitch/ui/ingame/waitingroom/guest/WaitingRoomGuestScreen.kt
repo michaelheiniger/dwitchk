@@ -75,8 +75,7 @@ fun WaitingRoomGuestScreen(
         }
     }
 
-    val event = guestViewModel.navigation.observeAsState().value
-    if (event != null) onNavigationEvent(event)
+    Navigation(guestViewModel.navigation.value, onNavigationEvent = onNavigationEvent)
 
     val toolbarTitle = viewModel.toolbarTitle.observeAsState(toolbarDefaultTitle).value
     val players = viewModel.players.observeAsState(emptyList()).value
@@ -95,6 +94,11 @@ fun WaitingRoomGuestScreen(
         onGameCanceledAcknowledge = guestViewModel::acknowledgeGameCanceledEvent,
         onKickOffGameAcknowledge = guestViewModel::acknowledgeKickOffGame
     )
+}
+
+@Composable
+fun Navigation(destination: WaitingRoomGuestDestination, onNavigationEvent: (WaitingRoomGuestDestination) -> Unit) {
+    if (destination != WaitingRoomGuestDestination.CurrentScreen) onNavigationEvent(destination)
 }
 
 @Composable

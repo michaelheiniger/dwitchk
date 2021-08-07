@@ -67,9 +67,7 @@ class JoinNewGameViewModel @Inject constructor(
                 .observeOn(uiScheduler)
                 .doOnTerminate { _loading.value = false }
                 .subscribe(
-                    {
-                        _navigation.value = JoinNewGameDestination.NavigateToWaitingRoom
-                    },
+                    { _navigation.value = JoinNewGameDestination.NavigateToWaitingRoom },
                     { error -> Logger.error(error) { "Error while joining the game" } }
                 )
         )

@@ -1,11 +1,9 @@
 package ch.qscqlmpa.dwitchgame.ingame.communication.guest.eventprocessors
 
-import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientCommunicationEvent
+import ch.qscqlmpa.dwitchcommunication.websocket.ClientEvent
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationStateRepository
-import io.mockk.confirmVerified
-import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -19,7 +17,7 @@ internal class GuestDisconnectedFromHostEventProcessorTest : BaseUnitTest() {
     @BeforeEach
     fun setup() {
         commStateRepository = GuestCommunicationStateRepository()
-        processorGuest = GuestDisconnectedFromHostEventProcessor(mockInGameStore, commStateRepository)
+        processorGuest = GuestDisconnectedFromHostEventProcessor(commStateRepository)
     }
 
     @Test
@@ -29,15 +27,7 @@ internal class GuestDisconnectedFromHostEventProcessorTest : BaseUnitTest() {
         assertThat(commStateRepository.currentState().blockingFirst()).isEqualTo(GuestCommunicationState.Disconnected)
     }
 
-    @Test
-    fun `Set all other players' state to disconnected in store`() {
-        launchTest()
-
-        verify { mockInGameStore.setAllPlayersToDisconnected() }
-        confirmVerified(mockInGameStore)
-    }
-
     private fun launchTest() {
-        processorGuest.process(ClientCommunicationEvent.DisconnectedFromHost).test().assertComplete()
+        processorGuest.process(ClientEvent.CommunicationEvent.DisconnectedFromHost).test().assertComplete()
     }
 }

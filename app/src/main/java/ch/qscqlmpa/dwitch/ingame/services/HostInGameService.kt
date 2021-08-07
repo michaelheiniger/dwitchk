@@ -2,7 +2,6 @@ package ch.qscqlmpa.dwitch.ingame.services
 
 import android.content.Context
 import android.content.Intent
-import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GameCreatedInfo
@@ -21,7 +20,7 @@ class HostInGameService : BaseInGameService() {
 
         Logger.info { "Start service" }
         showNotification(RoomType.WAITING_ROOM)
-        app.startOngoingGame(
+        app.createInGameComponents(
             playerRole,
             RoomType.WAITING_ROOM,
             gameCreatedInfo.gameLocalId,
@@ -51,8 +50,9 @@ class HostInGameService : BaseInGameService() {
 
     override fun cleanUp() {
         app.hostFacade().stopServer()
-        (application as App).stopOngoingGame()
+        app.destroyInGameComponents()
         gameAdvertisingDisposable.dispose()
+        app.homeFacade().deleteGamesMarkedForDeletion().blockingSubscribe()
     }
 
     private fun advertiseGame(gameAdvertisingInfo: GameAdvertisingInfo) {

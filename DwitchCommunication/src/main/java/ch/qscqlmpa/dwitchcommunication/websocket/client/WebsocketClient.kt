@@ -16,14 +16,11 @@ internal interface WebsocketClient {
     fun isClosed(): Boolean
 
     fun observeEvents(): Observable<ClientCommEvent>
-
-    fun observeMessages(): Observable<ClientMessage>
 }
 
 internal sealed class ClientCommEvent {
     internal data class Connected(val handshake: ServerHandshake?) : ClientCommEvent()
     internal data class Disconnected(val code: Int, val reason: String?, val remote: Boolean) : ClientCommEvent()
     internal data class Error(val ex: Exception?) : ClientCommEvent()
+    internal data class ClientMessage(val ipAddress: String, val port: Int, val message: String?) : ClientCommEvent()
 }
-
-internal data class ClientMessage(val ipAddress: String, val port: Int, val message: String?)

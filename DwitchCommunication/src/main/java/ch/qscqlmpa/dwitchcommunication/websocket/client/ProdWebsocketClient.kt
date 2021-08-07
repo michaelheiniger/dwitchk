@@ -15,7 +15,6 @@ internal class ProdWebsocketClient constructor(
 ) : WebSocketClient(buildServerUri(destinationAddress, destinationPort)), WebsocketClient {
 
     private val eventRelay = PublishRelay.create<ClientCommEvent>()
-    private val messageRelay = PublishRelay.create<ClientMessage>()
 
     override fun start() {
         connect()
@@ -38,10 +37,6 @@ internal class ProdWebsocketClient constructor(
         return eventRelay
     }
 
-    override fun observeMessages(): Observable<ClientMessage> {
-        return messageRelay
-    }
-
     override fun onOpen(handshake: ServerHandshake?) {
         eventRelay.accept(ClientCommEvent.Connected(handshake))
     }
@@ -55,7 +50,7 @@ internal class ProdWebsocketClient constructor(
     }
 
     override fun onMessage(messageAsString: String?) {
-        messageRelay.accept(ClientMessage(destinationAddress, destinationPort, messageAsString))
+        eventRelay.accept(ClientCommEvent.ClientMessage(destinationAddress, destinationPort, messageAsString))
     }
 
     companion object {

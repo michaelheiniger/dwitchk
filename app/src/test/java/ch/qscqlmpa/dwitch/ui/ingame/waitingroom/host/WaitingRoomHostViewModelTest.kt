@@ -3,7 +3,6 @@ package ch.qscqlmpa.dwitch.ui.ingame.waitingroom.host
 import ch.qscqlmpa.dwitch.app.ProdIdlingResource
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
-import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.usecases.GameLaunchableEvent
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.WaitingRoomHostFacade
 import io.mockk.confirmVerified
@@ -27,8 +26,6 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
 
     private lateinit var viewModel: WaitingRoomHostViewModel
 
-    private lateinit var communicatorSubject: PublishSubject<HostCommunicationState>
-
     private lateinit var canGameBeLaunchedSubject: PublishSubject<GameLaunchableEvent>
 
     @Before
@@ -38,9 +35,7 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
 
         viewModel = WaitingRoomHostViewModel(mockFacade, Schedulers.trampoline(), ProdIdlingResource())
 
-        communicatorSubject = PublishSubject.create()
         canGameBeLaunchedSubject = PublishSubject.create()
-        every { mockFacade.observeCommunicationState() } returns communicatorSubject
         every { mockFacade.observeGameLaunchableEvents() } returns canGameBeLaunchedSubject
         viewModel.onStart()
     }

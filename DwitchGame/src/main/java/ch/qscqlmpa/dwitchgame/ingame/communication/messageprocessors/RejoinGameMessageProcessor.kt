@@ -48,7 +48,7 @@ internal class RejoinGameMessageProcessor @Inject constructor(
                 closeConnectionWithGuest(senderConnectionID)
                 return@fromAction
             }
-            sendUpdateMessage(currentRoom)
+            sendUpdateMessages(currentRoom)
         }
     }
 
@@ -76,12 +76,9 @@ internal class RejoinGameMessageProcessor @Inject constructor(
         }
     }
 
-    private fun sendUpdateMessage(currentRoom: RoomType) {
-        when (currentRoom) {
-            RoomType.WAITING_ROOM -> sendWaitingRoomStateUpdateMessage()
-            RoomType.GAME_ROOM -> sendGameStateUpdatedMessage()
-            else -> throw IllegalStateException("Current room is null !")
-        }
+    private fun sendUpdateMessages(currentRoom: RoomType) {
+        sendWaitingRoomStateUpdateMessage()
+        if (currentRoom == RoomType.GAME_ROOM) sendGameStateUpdatedMessage()
     }
 
     private fun sendWaitingRoomStateUpdateMessage() {

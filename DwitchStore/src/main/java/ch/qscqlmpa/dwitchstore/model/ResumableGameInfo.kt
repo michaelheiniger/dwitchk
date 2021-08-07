@@ -7,7 +7,7 @@ import org.joda.time.DateTime
 @DatabaseView(
     """
     SELECT g.id, g.creation_date as creationDate, g.name FROM game g
-    WHERE g.game_state is not null
+    WHERE g.game_state is not null AND g.marked_for_deletion = 0
 """
 )
 data class ResumableGameInfo(

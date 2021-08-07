@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ingame.communication.host.eventprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
-import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
+import ch.qscqlmpa.dwitchcommunication.websocket.ServerEvent
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchgame.ingame.communication.messagefactories.HostMessageFactory
@@ -19,9 +19,9 @@ internal class GuestDisconnectedEventProcessor @Inject constructor(
     private val communicatorLazy: Lazy<HostCommunicator>
 ) : HostCommunicationEventProcessor {
 
-    override fun process(event: ServerCommunicationEvent): Completable {
+    override fun process(event: ServerEvent.CommunicationEvent): Completable {
 
-        event as ServerCommunicationEvent.ClientDisconnected
+        event as ServerEvent.CommunicationEvent.ClientDisconnected
 
         if (event.connectionId != null) {
             return handleEventWhenConnectionIdIsKnown(event.connectionId!!)

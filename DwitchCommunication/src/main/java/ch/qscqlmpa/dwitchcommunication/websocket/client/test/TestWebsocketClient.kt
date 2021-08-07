@@ -1,7 +1,6 @@
 package ch.qscqlmpa.dwitchcommunication.websocket.client.test
 
 import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientCommEvent
-import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientMessage
 import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClient
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Completable
@@ -18,12 +17,11 @@ internal class TestWebsocketClient constructor(
 
     private val messagesSentQueue = LinkedBlockingQueue<String>()
     private val eventRelay = PublishRelay.create<ClientCommEvent>()
-    private val messageRelay = PublishRelay.create<ClientMessage>()
 
     private var isOpen: Boolean = false
     private var isClosed: Boolean = false
 
-    private val startEvent = LinkedBlockingQueue<OnStartEvent>(1)
+    private val startEvent = LinkedBlockingQueue<OnStartEvent>()
 
     override fun start() {
         Completable.fromAction {
@@ -39,7 +37,7 @@ internal class TestWebsocketClient constructor(
             )
     }
 
-    override fun stop() = onClose(1, "Connection closed manually", remote = true)
+    override fun stop() = onClose(1, "Connection closed manually", remote = false)
 
     override fun isOpen(): Boolean = isOpen
 
@@ -52,15 +50,14 @@ internal class TestWebsocketClient constructor(
 
     override fun observeEvents(): Observable<ClientCommEvent> = eventRelay
 
-    override fun observeMessages(): Observable<ClientMessage> = messageRelay
-
     fun onClose(code: Int, reason: String?, remote: Boolean) {
         eventRelay.accept(ClientCommEvent.Disconnected(code, reason, remote))
         isOpen = false
         isClosed = true
     }
 
-    fun onMessage(message: String) = messageRelay.accept(ClientMessage(destinationAddress, destinationPort, message))
+    fun onMessage(message: String) =
+        eventRelay.accept(ClientCommEvent.ClientMessage(destinationAddress, destinationPort, message))
 
     fun blockUntilMessageSentIsAvailable(): String = messagesSentQueue.take()
 

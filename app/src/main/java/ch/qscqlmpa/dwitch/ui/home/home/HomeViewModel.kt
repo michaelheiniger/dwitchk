@@ -1,14 +1,15 @@
 package ch.qscqlmpa.dwitch.ui.home.home
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.AppEventRepository
+import ch.qscqlmpa.dwitch.ingame.services.ServiceManager
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
-import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GuestGameLifecycleEvent
-import ch.qscqlmpa.dwitchgame.gamelifecycleevents.HostGameLifecycleEvent
 import ch.qscqlmpa.dwitchgame.home.HomeFacade
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
@@ -20,38 +21,28 @@ import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(
     private val appEventRepository: AppEventRepository,
-    homeFacade: HomeFacade,
+    private val homeFacade: HomeFacade,
     private val homeGuestFacade: HomeGuestFacade,
     private val homeHostFacade: HomeHostFacade,
-    private val uiScheduler: Scheduler
+    private val uiScheduler: Scheduler,
+    private val serviceManager: ServiceManager
 ) : BaseViewModel() {
 
     private val _loading = MutableLiveData<Boolean>()
-    private val _navigation = MutableLiveData<HomeDestination>()
+    private val _navigation = mutableStateOf<HomeDestination>(HomeDestination.CurrentScreen)
     private val _advertisedGames = MutableLiveData<LoadedData<List<AdvertisedGame>>>()
     private val _resumableGames = MutableLiveData<LoadedData<List<ResumableGameInfo>>>()
 
     val loading get(): LiveData<Boolean> = _loading
     val advertisedGames get(): LiveData<LoadedData<List<AdvertisedGame>>> = _advertisedGames
     val resumableGames get(): LiveData<LoadedData<List<ResumableGameInfo>>> = _resumableGames
-    val navigation get(): LiveData<HomeDestination> = _navigation
-
-    init {
-        when (homeFacade.lastHostGameEvent()) {
-            is HostGameLifecycleEvent.GameCreated,
-            HostGameLifecycleEvent.MovedToGameRoom -> HomeDestination.GameFragment
-            else -> null // Nothing to do
-        }?.also { _navigation.value = it }
-
-        when (homeFacade.lastGuestGameEvent()) {
-            is GuestGameLifecycleEvent.GameJoined,
-            GuestGameLifecycleEvent.MovedToGameRoom -> HomeDestination.GameFragment
-            else -> null // Nothing to do
-        }?.also { _navigation.value = it }
-    }
+    val navigation get(): State<HomeDestination> = _navigation
 
     init {
         Logger.debug { "Viewmodel lifecycle event: create HomeViewModel ($this)" }
+        if (homeFacade.gameRunning) {
+            _navigation.value = HomeDestination.GameFragment
+        }
     }
 
     override fun onStart() {
@@ -110,6 +101,11 @@ class HomeViewModel @Inject constructor(
                     { error -> Logger.error(error) { "Error while resuming game." } }
                 )
         )
+    }
+
+    fun navigatedFromGame() {
+        serviceManager.stopGuestService()
+        serviceManager.stopHostService()
     }
 
     override fun onCleared() {

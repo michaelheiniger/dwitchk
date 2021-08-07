@@ -9,6 +9,7 @@ import ch.qscqlmpa.dwitchgame.ingame.common.GuestGameFacade
 import ch.qscqlmpa.dwitchgame.ingame.common.GuestGameFacadeImpl
 import ch.qscqlmpa.dwitchgame.ingame.common.HostGameFacade
 import ch.qscqlmpa.dwitchgame.ingame.common.HostGameFacadeImpl
+import ch.qscqlmpa.dwitchgame.ingame.communication.CommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ingame.communication.GameCommunicator
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicator
@@ -135,5 +136,17 @@ class InGameModule(
         communicator: GuestCommunicator
     ): GuestGameFacade {
         return GuestGameFacadeImpl(communicator, guestCommunicationStateRepository)
+    }
+
+    @Provides
+    internal fun provideCommunicationStateRepository(
+        playerRole: PlayerRole,
+        guestCommunicationStateRepository: GuestCommunicationStateRepository,
+        hostCommunicationStateRepository: HostCommunicationStateRepository
+    ): CommunicationStateRepository {
+        return when (playerRole) {
+            PlayerRole.GUEST -> guestCommunicationStateRepository
+            PlayerRole.HOST -> hostCommunicationStateRepository
+        }
     }
 }

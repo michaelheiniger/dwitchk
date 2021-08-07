@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitch.app
 import ch.qscqlmpa.dwitch.DaggerTestAppComponent
 import ch.qscqlmpa.dwitch.TestAppComponent
 import ch.qscqlmpa.dwitch.TestIdlingResource
-import ch.qscqlmpa.dwitch.ingame.OnGoingGameUiModule
+import ch.qscqlmpa.dwitch.ingame.InGameUiModule
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationModule
 import ch.qscqlmpa.dwitchcommunication.di.DaggerTestCommunicationComponent
 import ch.qscqlmpa.dwitchgame.di.DaggerTestGameComponent
@@ -53,7 +53,7 @@ class TestApp : App() {
         return testAppComponent
     }
 
-    override fun startOngoingGame(
+    override fun createInGameComponents(
         playerRole: PlayerRole,
         roomType: RoomType,
         gameLocalId: Long,
@@ -82,8 +82,8 @@ class TestApp : App() {
                     communicationComponent!!
                 ),
             )
-            ongoingGameUiComponent = testAppComponent.addOngoingGameUiComponent(
-                OnGoingGameUiModule(
+            inGameUiComponent = testAppComponent.addInGameUiComponent(
+                InGameUiModule(
                     inGameComponent!!.gameFacade,
                     inGameComponent!!.hostGameFacade,
                     inGameComponent!!.guestGameFacade,

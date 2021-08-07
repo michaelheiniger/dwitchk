@@ -39,7 +39,8 @@ internal class DashboardScreenBuilderTest {
                 ),
             canPass = true
         ),
-        lastCardPlayed = PlayedCards(Card.Clubs4)
+        lastCardPlayed = PlayedCards(Card.Clubs4),
+        waitingForPlayerReconnection = false
     )
 
     @Before
@@ -53,6 +54,7 @@ internal class DashboardScreenBuilderTest {
         // Then the screen is properly built
         val dashboardInfo = dashboardScreenBuilder.screen.dashboardInfo
         assertThat(dashboardInfo.lastCardPlayed).isEqualTo(PlayedCards(Card.Clubs4))
+        assertThat(dashboardInfo.waitingForPlayerReconnection).isFalse
         assertThat(dashboardInfo.localPlayerInfo.canPlay).isFalse
         assertThat(dashboardInfo.localPlayerInfo.canPass).isTrue
         assertThat(dashboardInfo.localPlayerInfo.cardsInHand).containsExactlyInAnyOrder(

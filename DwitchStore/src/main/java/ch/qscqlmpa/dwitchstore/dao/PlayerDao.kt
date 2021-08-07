@@ -63,7 +63,7 @@ internal interface PlayerDao {
     @Query(
         """
             UPDATE Player
-            SET connected = 'DISCONNECTED'
+            SET connected = 0
             WHERE game_local_id = :gameLocalId
             """
     )
@@ -200,6 +200,15 @@ internal interface PlayerDao {
         """
     )
     fun prepareGuestsForGameResume(gameId: Long, localPlayerId: Long)
+
+    @Query(
+        """
+       UPDATE Player
+        SET connected = "DISCONNECTED", ready = 0
+        WHERE game_local_id = :gameId
+        """
+    )
+    fun preparePlayersForGameResume(gameId: Long)
 
     @Query(
         """

@@ -172,4 +172,5 @@
         Violer une règle spéciale propulse le joueur au rang de Trou-Du-Cul. Si un autre viole une règle spéciale plus tard dans le même tour, il devient le Trou-Du-Cul et le joueur prédédent devient Vice-Trou-Du-Cul et ainsi de suite.
     </string>
     <string name="title_activity_home">Accueil</string>
+    <string name="waiting_for_disconnected_player">En attente de reconnection d\'un joueur</string>
 </resources>

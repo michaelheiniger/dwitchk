@@ -1,7 +1,6 @@
 package ch.qscqlmpa.dwitchcommunication.websocket.server.test
 
 import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommEvent
-import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerMessage
 import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServer
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
@@ -13,7 +12,7 @@ internal class IntTestWebsocketServer constructor(
     @Suppress("UNUSED_PARAMETER") private val hostPort: Int
 ) : WebsocketServer {
 
-    private val onMessageRelay = PublishRelay.create<ServerMessage>()
+    private val onMessageRelay = PublishRelay.create<ServerCommEvent.ServerMessage>()
 
     private var connections = mutableListOf<WebSocket>()
 
@@ -41,10 +40,6 @@ internal class IntTestWebsocketServer constructor(
         throw NotImplementedError()
     }
 
-    override fun observeMessages(): Observable<ServerMessage> {
-        throw NotImplementedError()
-    }
-
     fun onStart() {
 //        onStartRelay.accept(OnStart(Address(hostAddress, hostPort)))
     }
@@ -66,7 +61,7 @@ internal class IntTestWebsocketServer constructor(
     }
 
     fun onMessage(conn: WebSocket?, message: String?) {
-        onMessageRelay.accept(ServerMessage(conn, message))
+        onMessageRelay.accept(ServerCommEvent.ServerMessage(conn, message))
     }
 
     fun onError(@Suppress("UNUSED_PARAMETER") conn: WebSocket?, @Suppress("UNUSED_PARAMETER") ex: Exception?) {

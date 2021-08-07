@@ -20,6 +20,7 @@ class ConnectionGuestViewModel @Inject constructor(
     val connectionStatus get(): LiveData<GuestCommunicationState> = _communicationState
 
     fun reconnect() {
+        idlingResource.increment("Reconnection to the host (Comm state: connected)")
         gameFacade.connect()
     }
 
@@ -34,11 +35,13 @@ class ConnectionGuestViewModel @Inject constructor(
             gameFacade.currentCommunicationState()
                 .distinctUntilChanged()
                 .observeOn(uiScheduler)
-                .doOnError { error -> Logger.error(error) { "Error while observing communication state." } }
-                .subscribe { state ->
-                    _communicationState.value = state
-                    idlingResource.decrement("Communication state updated ($state)")
-                }
+                .subscribe(
+                    { state ->
+                        _communicationState.value = state
+                        idlingResource.decrement("Communication state updated ($state)")
+                    },
+                    { error -> Logger.error(error) { "Error while observing communication state." } }
+                )
         )
     }
 }

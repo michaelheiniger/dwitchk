@@ -43,7 +43,12 @@ data class Game(
     /**
      * Id of the PlayerPersist record corresponding to the local player
      */
-    @ColumnInfo(name = "local_player_id") val localPlayerLocalId: Long
+    @ColumnInfo(name = "local_player_id") val localPlayerLocalId: Long,
+
+    /**
+     * Game must be ignored in the existing games list (i.e. to be resumed) and deleted at some point.
+     */
+    @ColumnInfo(name = "marked_for_deletion") val toDelete: Boolean = false
 ) {
     fun isNew(): Boolean {
         return gameState == null

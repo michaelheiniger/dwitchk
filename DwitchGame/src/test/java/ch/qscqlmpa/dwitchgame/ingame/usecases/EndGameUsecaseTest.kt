@@ -29,7 +29,7 @@ internal class EndGameUsecaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Broadcast GameOver message`() {
+    fun `Send GameOver message to all guests`() {
         launchTest()
 
         verify { mockCommunicator.sendMessage(EnvelopeToSend(Recipient.All, Message.GameOverMessage)) }

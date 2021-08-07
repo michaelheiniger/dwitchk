@@ -2,15 +2,19 @@ package ch.qscqlmpa.dwitchgame.ingame.waitingroom
 
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
+import ch.qscqlmpa.dwitchgame.ingame.communication.CommunicationStateRepository
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import io.mockk.every
-import io.reactivex.rxjava3.core.Flowable
+import io.mockk.mockk
+import io.reactivex.rxjava3.core.Observable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class WaitingRoomPlayerRepositoryTest : BaseUnitTest() {
+
+    private val communicationStateRepository = mockk<CommunicationStateRepository>(relaxed = true)
 
     private lateinit var repository: WaitingRoomPlayerRepository
 
@@ -31,9 +35,7 @@ class WaitingRoomPlayerRepositoryTest : BaseUnitTest() {
 
         @BeforeEach
         fun setup() {
-            every { mockInGameStore.observePlayersInWaitingRoom() } returns Flowable.just(
-                listOf(host, guest1, guest2)
-            )
+            every { mockInGameStore.observePlayersInWaitingRoom() } returns Observable.just(listOf(host, guest1, guest2))
             every { mockInGameStore.gameIsNew() } returns true
         }
 
@@ -134,6 +136,6 @@ class WaitingRoomPlayerRepositoryTest : BaseUnitTest() {
     }
 
     private fun createRepository(localPlayerRole: PlayerRole) {
-        repository = WaitingRoomPlayerRepository(mockInGameStore, localPlayerRole)
+        repository = WaitingRoomPlayerRepository(mockInGameStore, localPlayerRole, communicationStateRepository)
     }
 }

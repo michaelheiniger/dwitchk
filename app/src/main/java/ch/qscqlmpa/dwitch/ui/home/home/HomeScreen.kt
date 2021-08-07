@@ -11,8 +11,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
@@ -92,21 +90,25 @@ fun HomeScreen(
         onResumableGameClick = { game -> viewModel.resumeGame(game) }
     )
     if (viewModel.loading.observeAsState(false).value) LoadingDialog()
+    Navigation(
+        destination = viewModel.navigation.value,
+        onJoinNewGameEvent = onJoinNewGameEvent,
+        onNavigateToGame = onNavigateToGame
+    )
+}
 
-    val navigated = remember { mutableStateOf(false) }
-    if (!navigated.value) {
-        when (val navigation = viewModel.navigation.observeAsState().value) {
-            null -> {
-            } // Nothing to do
-            is HomeDestination.JoinNewGame -> {
-                onJoinNewGameEvent(navigation.game)
-                navigated.value = true
-            }
-            else -> {
-                onNavigateToGame()
-                navigated.value = true
-            }
+@Composable
+fun Navigation(
+    destination: HomeDestination,
+    onJoinNewGameEvent: (AdvertisedGame) -> Unit,
+    onNavigateToGame: () -> Unit
+) {
+    when (destination) {
+        HomeDestination.CurrentScreen -> {
+            // Nothing to do
         }
+        is HomeDestination.JoinNewGame -> onJoinNewGameEvent(destination.game)
+        else -> onNavigateToGame()
     }
 }
 
@@ -131,14 +133,22 @@ fun HomeBody(
                 .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
 
         ) {
-            Column(Modifier.fillMaxSize().weight(1f)) {
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .weight(1f)
+            ) {
                 AdvertisedGameContainer(advertisedGames, onJoinGameClick)
                 Spacer(Modifier.height(16.dp))
                 Row(horizontalArrangement = Arrangement.End) {
                     GameCreation(onCreateNewGameClick = onCreateNewGameClick)
                 }
             }
-            Column(Modifier.fillMaxSize().weight(1f)) {
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .weight(1f)
+            ) {
                 ResumableGamesContainer(resumableGames, onResumableGameClick)
             }
         }
@@ -149,7 +159,9 @@ fun HomeBody(
 private fun GameCreation(onCreateNewGameClick: () -> Unit) {
     Button(
         onClick = onCreateNewGameClick,
-        modifier = Modifier.fillMaxWidth().testTag(UiTags.createGame)
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(UiTags.createGame)
     ) { Text(stringResource(R.string.create_new_game)) }
 }
 
@@ -167,7 +179,9 @@ private fun AdvertisedGameContainer(
             text = stringResource(R.string.advertised_games),
             fontSize = 30.sp,
             color = MaterialTheme.colors.primary,
-            modifier = Modifier.fillMaxWidth().testTag(UiTags.advertisedGames)
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(UiTags.advertisedGames)
         )
         when (advertisedGames) {
             LoadedData.Loading -> ListeningForAdvertisedGames()
@@ -236,7 +250,9 @@ private fun ResumableGameTitle() {
         stringResource(R.string.resumable_games),
         fontSize = 32.sp,
         color = MaterialTheme.colors.primary,
-        modifier = Modifier.fillMaxWidth().testTag(UiTags.resumableGames)
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(UiTags.resumableGames)
     )
 }
 

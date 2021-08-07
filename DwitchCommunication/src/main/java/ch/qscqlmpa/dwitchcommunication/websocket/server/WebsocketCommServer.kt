@@ -6,10 +6,10 @@ import ch.qscqlmpa.dwitchcommunication.AddressType
 import ch.qscqlmpa.dwitchcommunication.CommServer
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreInternal
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.Recipient
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
+import ch.qscqlmpa.dwitchcommunication.websocket.ServerEvent
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
 import org.java_websocket.WebSocket
@@ -26,22 +26,18 @@ internal class WebsocketCommServer @Inject constructor(
 
     private lateinit var websocketServer: WebsocketServer
 
-    private val communicationEventsRelay = PublishRelay.create<ServerCommunicationEvent>()
-    private val messagesReceivedRelay = PublishRelay.create<EnvelopeReceived>()
+    private val communicationEventsRelay = PublishRelay.create<ServerEvent>()
 
     override fun start() {
         websocketServer = websocketServerFactory.create()
 
         disposableManager.add(
             websocketServer.observeEvents()
-                .concatMap(::processServerCommEvent)
-                .subscribe(communicationEventsRelay)
-        )
-
-        disposableManager.add(
-            websocketServer.observeMessages()
-                .concatMap(::processMessageEvents)
-                .subscribe(messagesReceivedRelay)
+                .concatMap(::processEvent)
+                .subscribe(
+                    communicationEventsRelay,
+                    { error -> Logger.error(error) { "Error while observing communication events." } }
+                )
         )
 
         websocketServer.start()
@@ -52,7 +48,7 @@ internal class WebsocketCommServer @Inject constructor(
         disposableManager.disposeAndReset()
 
         // The websocket server (See class WebSocketServer) implementation doesn't provide a "stop" callback.
-        communicationEventsRelay.accept(ServerCommunicationEvent.NoLongerListeningForConnections)
+        communicationEventsRelay.accept(ServerEvent.CommunicationEvent.NoLongerListeningForConnections)
     }
 
     override fun sendMessage(message: Message, recipient: Recipient) {
@@ -63,12 +59,8 @@ internal class WebsocketCommServer @Inject constructor(
         }
     }
 
-    override fun observeCommunicationEvents(): Observable<ServerCommunicationEvent> {
+    override fun observeEvents(): Observable<ServerEvent> {
         return communicationEventsRelay
-    }
-
-    override fun observeReceivedMessages(): Observable<EnvelopeReceived> {
-        return messagesReceivedRelay
     }
 
     override fun closeConnectionWithClient(connectionId: ConnectionId) {
@@ -106,42 +98,39 @@ internal class WebsocketCommServer @Inject constructor(
         websocketServer.sendBroadcast(serializedMessage)
     }
 
-    private fun processServerCommEvent(event: ServerCommEvent): Observable<ServerCommunicationEvent> {
+    private fun processEvent(event: ServerCommEvent): Observable<ServerEvent> {
         return when (event) {
             is ServerCommEvent.Started -> processStartedEvent()
             is ServerCommEvent.Error -> processErrorEvent(event)
             is ServerCommEvent.ClientConnected -> processClientConnectedEvent(event)
             is ServerCommEvent.ClientDisconnected -> processClientDisconnectedEvent(event)
+            is ServerCommEvent.ServerMessage -> processMessageEvents(event)
         }
     }
 
-    private fun processStartedEvent(): Observable<ServerCommunicationEvent> {
+    private fun processStartedEvent(): Observable<ServerEvent> {
         Logger.debug { "Server is now listening for connections" }
-        return Observable.just(ServerCommunicationEvent.ListeningForConnections)
+        return Observable.just(ServerEvent.CommunicationEvent.ListeningForConnections)
     }
 
-    private fun processClientConnectedEvent(clientConnectedEvent: ServerCommEvent.ClientConnected): Observable<ServerCommunicationEvent> {
+    private fun processClientConnectedEvent(clientConnectedEvent: ServerCommEvent.ClientConnected): Observable<ServerEvent> {
         return Observable.just(clientConnectedEvent)
             .filter { event ->
-                if (event.conn == null) {
-                    Logger.debug { "OnOpen event filtered because websocket is null" }
-                }
+                if (event.conn == null) Logger.debug { "OnOpen event filtered because websocket is null" }
                 event.conn != null
             }
             .map { event ->
                 val senderAddress = buildAddressFromConnection(event.conn!!)!!
                 val localConnectionId = connectionStore.addConnectionId(senderAddress)
                 Logger.debug { "Client connected $senderAddress (assign local connection ID $localConnectionId)" }
-                ServerCommunicationEvent.ClientConnected(localConnectionId)
+                ServerEvent.CommunicationEvent.ClientConnected(localConnectionId)
             }
     }
 
-    private fun processClientDisconnectedEvent(clientDisconnected: ServerCommEvent.ClientDisconnected): Observable<ServerCommunicationEvent> {
+    private fun processClientDisconnectedEvent(clientDisconnected: ServerCommEvent.ClientDisconnected): Observable<ServerEvent> {
         return Observable.just(clientDisconnected)
             .filter { event ->
-                if (event.conn == null) {
-                    Logger.debug { "OnClose event filtered because websocket is null" }
-                }
+                if (event.conn == null) Logger.debug { "OnClose event filtered because websocket is null" }
                 event.conn != null
             }
             .flatMap { event ->
@@ -149,22 +138,22 @@ internal class WebsocketCommServer @Inject constructor(
                 if (senderAddress != null) {
                     Logger.debug { "Client disconnected $senderAddress (details: $event)" }
                     val localConnectionId = connectionStore.getConnectionIdForAddress(senderAddress)
-                    Observable.just(ServerCommunicationEvent.ClientDisconnected(localConnectionId))
+                    Observable.just(ServerEvent.CommunicationEvent.ClientDisconnected(localConnectionId))
                 } else {
                     val missingConnections = findMissingConnections()
                     Logger.debug { "Client disconnected but no connection info provided. Inferred missing connections: $missingConnections" }
-                    Observable.fromIterable(missingConnections.map(ServerCommunicationEvent::ClientDisconnected))
+                    Observable.fromIterable(missingConnections.map(ServerEvent.CommunicationEvent::ClientDisconnected))
                 }
             }
     }
 
-    private fun processErrorEvent(event: ServerCommEvent.Error): Observable<ServerCommunicationEvent> {
+    private fun processErrorEvent(event: ServerCommEvent.Error): Observable<ServerEvent> {
         Logger.debug { "Communication error: $event" }
         connectionStore.clearStore()
-        return Observable.just(ServerCommunicationEvent.ErrorListeningForConnections(event.ex))
+        return Observable.just(ServerEvent.CommunicationEvent.ErrorListeningForConnections(event.ex))
     }
 
-    private fun processMessageEvents(serverMessage: ServerMessage): Observable<EnvelopeReceived> {
+    private fun processMessageEvents(serverMessage: ServerCommEvent.ServerMessage): Observable<ServerEvent> {
         return Observable.just(serverMessage)
             .filter { messageEvent ->
                 if (messageEvent.conn == null) {
@@ -182,7 +171,7 @@ internal class WebsocketCommServer @Inject constructor(
                     ?: throw IllegalStateException("Message received ${messageEvent.message} from $senderAddress has no connection ID")
 
                 Logger.info { "Message received ${messageEvent.message} from $senderAddress (connection ID $connectionId)" }
-                EnvelopeReceived(connectionId, message)
+                ServerEvent.EnvelopeReceived(connectionId, message)
             }
     }
 

@@ -70,7 +70,6 @@ internal class WaitingRoomHostViewModel @Inject constructor(
     }
 
     fun cancelGame() {
-        idlingResource.increment("Click to cancel game")
         disposableManager.add(
             facade.cancelGame()
                 .observeOn(uiScheduler)
@@ -89,8 +88,10 @@ internal class WaitingRoomHostViewModel @Inject constructor(
             facade.observeGameLaunchableEvents()
                 .observeOn(uiScheduler)
                 .map(::isGameLaunchable)
-                .doOnError { error -> Logger.error(error) { "Error while observing if game can be launched." } }
-                .subscribe { value -> _canGameBeLaunched.value = value }
+                .subscribe(
+                    { value -> _canGameBeLaunched.value = value },
+                    { error -> Logger.error(error) { "Error while observing if game can be launched." } }
+                )
         )
     }
 

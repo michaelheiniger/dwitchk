@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ingame.communication.guest.eventprocessors
 
 import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientCommunicationEvent
+import ch.qscqlmpa.dwitchcommunication.websocket.ClientEvent
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
@@ -65,7 +65,7 @@ class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
     }
 
     private fun launchTest() {
-        processorGuest.process(ClientCommunicationEvent.ConnectedToHost).test().assertComplete()
+        processorGuest.process(ClientEvent.CommunicationEvent.ConnectedToHost).test().assertComplete()
     }
 
     private fun assertCommunicationStateIsNowConnected() {

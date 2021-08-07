@@ -18,6 +18,10 @@ internal class StoreImpl @Inject constructor(private val appRoomDatabase: AppRoo
         return appRoomDatabase.gameDao().insertGameForGuest(gameName, gameCommonId, guestPlayerName)
     }
 
+    override fun deleteGamesMarkedForDeletion() {
+        appRoomDatabase.gameDao().deleteGamesMarkedForDeletion()
+    }
+
     override fun getGameCommonIdOfResumableGames(): Observable<List<GameCommonId>> {
         return appRoomDatabase.gameDao().getGameCommonIdOfResumableGames()
     }
@@ -34,8 +38,18 @@ internal class StoreImpl @Inject constructor(private val appRoomDatabase: AppRoo
         return appRoomDatabase.gameDao().getGame(gameCommonId)
     }
 
+    /**
+     * Intended to be used by the host to reset the local state of the guests when resuming a game.
+     */
     override fun prepareGuestsForGameResume(gameId: Long) {
-        val game = appRoomDatabase.gameDao().getGame(gameId)
-        appRoomDatabase.playerDao().prepareGuestsForGameResume(gameId, game.localPlayerLocalId)
+        val localPlayerLocalId = appRoomDatabase.gameDao().getLocalPlayerId(gameId)
+        appRoomDatabase.playerDao().prepareGuestsForGameResume(gameId, localPlayerLocalId)
+    }
+
+    /**
+     * Intended to be used by the guests to reset the local state of the players when joining a resumed game.
+     */
+    override fun preparePlayersForGameResume(gameId: Long) {
+        appRoomDatabase.playerDao().preparePlayersForGameResume(gameId)
     }
 }

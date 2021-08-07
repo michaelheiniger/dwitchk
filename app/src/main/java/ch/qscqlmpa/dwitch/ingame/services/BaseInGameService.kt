@@ -110,8 +110,8 @@ abstract class BaseInGameService : DaggerService() {
 
     private fun actionStopService() {
         Logger.info { "Stop service" }
-        stopSelf()
         cleanUp()
+        stopSelf()
     }
 
     companion object {

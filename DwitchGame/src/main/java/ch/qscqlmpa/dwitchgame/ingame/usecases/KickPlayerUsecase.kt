@@ -23,6 +23,7 @@ internal class KickPlayerUsecase @Inject constructor(
             val connectionId = connectionStore.getConnectionId(playerFromStore.dwitchId)
             if (connectionId != null) {
                 communicator.sendMessage(HostMessageFactory.createKickPlayerMessage(playerFromStore.dwitchId, connectionId))
+                communicator.closeConnectionWithClient(connectionId)
             } else {
                 Logger.warn { "Cannot send KickPlayerMessage: no connection ID found for player ${playerFromStore.dwitchId}" }
             }

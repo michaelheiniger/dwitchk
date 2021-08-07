@@ -9,7 +9,6 @@ import ch.qscqlmpa.dwitchstore.ingamestore.model.GameCommonIdAndCurrentRoom
 import ch.qscqlmpa.dwitchstore.ingamestore.model.ResumeComputerPlayersInfo
 import ch.qscqlmpa.dwitchstore.model.Game
 import ch.qscqlmpa.dwitchstore.model.Player
-import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 
 interface InGameStore {
@@ -29,7 +28,7 @@ interface InGameStore {
     fun getLocalPlayerRole(): PlayerRole
 
     fun updateGameWithCommonId(gameCommonId: GameCommonId)
-    fun deleteGame()
+    fun markGameForDeletion()
     fun updateCurrentRoom(room: RoomType)
     fun updateGameState(gameState: DwitchGameState)
 
@@ -59,7 +58,7 @@ interface InGameStore {
     /**
      * Return the list of connected players sorted on the name ASC
      */
-    fun observePlayersInWaitingRoom(): Flowable<List<Player>>
+    fun observePlayersInWaitingRoom(): Observable<List<Player>>
     fun getPlayersInWaitingRoom(): List<Player>
     fun getComputerPlayersToResume(): ResumeComputerPlayersInfo
 }

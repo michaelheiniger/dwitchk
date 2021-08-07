@@ -16,7 +16,6 @@ internal class ProdWebsocketServer constructor(
 ) : WebSocketServer(InetSocketAddress(listeningAddress, listeningPort)), WebsocketServer {
 
     private val eventRelay = PublishRelay.create<ServerCommEvent>()
-    private val messageRelay = PublishRelay.create<ServerMessage>()
 
     override fun start() {
         super.start()
@@ -40,10 +39,6 @@ internal class ProdWebsocketServer constructor(
         return eventRelay
     }
 
-    override fun observeMessages(): Observable<ServerMessage> {
-        return messageRelay
-    }
-
     override fun getConnections(): MutableCollection<WebSocket> {
         return super.getConnections()
     }
@@ -61,7 +56,7 @@ internal class ProdWebsocketServer constructor(
     }
 
     override fun onMessage(conn: WebSocket?, message: String?) {
-        messageRelay.accept(ServerMessage(conn, message))
+        eventRelay.accept(ServerCommEvent.ServerMessage(conn, message))
     }
 
     override fun onError(conn: WebSocket?, ex: Exception?) {

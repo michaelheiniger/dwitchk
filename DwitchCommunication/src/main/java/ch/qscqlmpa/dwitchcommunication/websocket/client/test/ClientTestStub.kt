@@ -8,6 +8,8 @@ interface ClientTestStub {
 
     fun serverSendsMessageToClient(message: Message)
 
+    fun serverClosesConnectionWithClient()
+
     fun breakConnectionWithServer()
 
     /**

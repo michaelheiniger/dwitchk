@@ -1,5 +1,8 @@
 package ch.qscqlmpa.dwitch.ui.ingame.waitingroom.guest
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
@@ -19,11 +22,11 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
     private val idlingResource: DwitchIdlingResource
 ) : BaseViewModel() {
 
-    private val _navigation = MutableLiveData<WaitingRoomGuestDestination>()
+    private val _navigation: MutableState<WaitingRoomGuestDestination> = mutableStateOf(WaitingRoomGuestDestination.CurrentScreen)
     private val _notifications = MutableLiveData<WaitingRoomGuestNotification>()
     private val _ready = MutableLiveData(UiCheckboxModel(enabled = false, checked = false))
 
-    val navigation get(): LiveData<WaitingRoomGuestDestination> = _navigation
+    val navigation get(): State<WaitingRoomGuestDestination> = _navigation
     val notifications get(): LiveData<WaitingRoomGuestNotification> = _notifications
     val ready get(): LiveData<UiCheckboxModel> = _ready
 
@@ -54,8 +57,6 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
     }
 
     fun leaveGame() {
-        idlingResource.increment("Click on leave game (WR state update)")
-        idlingResource.increment("Click on leave game (Communication state update)")
         disposableManager.add(
             facade.leaveGame()
                 .observeOn(uiScheduler)
@@ -102,8 +103,8 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
                 .subscribe { event ->
                     when (event) {
                         GuestGameEvent.GameCanceled -> _notifications.value = WaitingRoomGuestNotification.NotifyGameCanceled
-                        GuestGameEvent.KickedOffGame -> _notifications.value =
-                            WaitingRoomGuestNotification.NotifyPlayerKickedOffGame
+                        GuestGameEvent.KickedOffGame ->
+                            _notifications.value = WaitingRoomGuestNotification.NotifyPlayerKickedOffGame
                         GuestGameEvent.GameLaunched -> _navigation.value = WaitingRoomGuestDestination.NavigateToGameRoomScreen
                         GuestGameEvent.GameOver -> throw IllegalStateException("Event '$event' is not supposed to occur in WaitingRoom.")
                     }
@@ -113,6 +114,7 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
 }
 
 sealed class WaitingRoomGuestDestination {
+    object CurrentScreen : WaitingRoomGuestDestination()
     object NavigateToGameRoomScreen : WaitingRoomGuestDestination()
     object NavigateToHomeScreen : WaitingRoomGuestDestination()
 }

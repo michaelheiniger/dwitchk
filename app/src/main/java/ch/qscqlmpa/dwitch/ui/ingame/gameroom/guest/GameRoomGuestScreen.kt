@@ -121,7 +121,7 @@ fun GameRoomGuestBody(
     onReconnectClick: () -> Unit,
 ) {
     val gameRules = remember { mutableStateOf(false) }
-    val showConfirmationDialog = remember { mutableStateOf(false) }
+    val showLeaveGameConfirmationDialog = remember { mutableStateOf(false) }
 
     Column(
         Modifier
@@ -133,7 +133,7 @@ fun GameRoomGuestBody(
             navigationIcon = NavigationIcon(
                 icon = R.drawable.ic_baseline_exit_to_app_24,
                 contentDescription = R.string.leave_game,
-                onClick = { showConfirmationDialog.value = true }
+                onClick = { showLeaveGameConfirmationDialog.value = true }
             ),
             actions = emptyList(),
             onActionClick = { action ->
@@ -156,7 +156,8 @@ fun GameRoomGuestBody(
                     dashboardInfo = screen.dashboardInfo,
                     onCardClick = onCardClick,
                     onPlayClick = onPlayClick,
-                    onPassClick = onPassClick
+                    onPassClick = onPassClick,
+                    onEndOrLeaveGameClick = { showLeaveGameConfirmationDialog.value = true }
                 )
                 is GameRoomScreen.EndOfRound -> EndOfRoundScreen(screen.endOfRoundInfo)
                 is GameRoomScreen.CardExchange -> {
@@ -180,16 +181,16 @@ fun GameRoomGuestBody(
         ConnectionGuestScreen(
             status = connectionStatus,
             onReconnectClick = onReconnectClick,
-            onAbortClick = { showConfirmationDialog.value = true }
+            onAbortClick = { showLeaveGameConfirmationDialog.value = true }
         )
     }
 
-    if (showConfirmationDialog.value) {
+    if (showLeaveGameConfirmationDialog.value) {
         ConfirmationDialog(
             title = R.string.info_dialog_title,
             text = R.string.guest_leaves_game_confirmation,
             onConfirmClick = onLeaveGameConfirmClick,
-            onCancelClick = { showConfirmationDialog.value = false }
+            onCancelClick = { showLeaveGameConfirmationDialog.value = false }
         )
     }
 }

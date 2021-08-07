@@ -1,7 +1,6 @@
 package ch.qscqlmpa.dwitchcommunication.websocket.client.test
 
 import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientCommEvent
-import ch.qscqlmpa.dwitchcommunication.websocket.client.ClientMessage
 import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClient
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
@@ -32,10 +31,6 @@ internal class IntTestWebsocketClient constructor(
     private var isClosed: Boolean = false
 
     override fun observeEvents(): Observable<ClientCommEvent> {
-        throw NotImplementedError()
-    }
-
-    override fun observeMessages(): Observable<ClientMessage> {
         throw NotImplementedError()
     }
 

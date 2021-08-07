@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitchgame.ingame.communication.host.eventprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreFactory
-import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
+import ch.qscqlmpa.dwitchcommunication.websocket.ServerEvent
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationState
@@ -78,7 +78,7 @@ internal class HostListeningForConnectionsEventProcessorTest : BaseUnitTest() {
         every { mockInGameStore.gameIsNotNew() } returns true
 
         // When
-        processor.process(ServerCommunicationEvent.ListeningForConnections)
+        processor.process(ServerEvent.CommunicationEvent.ListeningForConnections)
             .doOnError { error -> Logger.error(error) { "Error" } }
             .test()
             .assertComplete()
@@ -89,6 +89,6 @@ internal class HostListeningForConnectionsEventProcessorTest : BaseUnitTest() {
     }
 
     private fun launchTest() {
-        processor.process(ServerCommunicationEvent.ListeningForConnections).test().assertComplete()
+        processor.process(ServerEvent.CommunicationEvent.ListeningForConnections).test().assertComplete()
     }
 }

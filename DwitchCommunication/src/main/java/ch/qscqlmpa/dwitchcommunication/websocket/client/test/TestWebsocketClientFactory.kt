@@ -9,7 +9,7 @@ internal class TestWebsocketClientFactory constructor(
 ) : WebsocketClientFactory {
 
     companion object {
-        private var INSTANCE: WebsocketClient? = null
+        private var INSTANCE: TestWebsocketClient? = null
     }
 
     override fun create(): WebsocketClient {
@@ -17,7 +17,7 @@ internal class TestWebsocketClientFactory constructor(
         return INSTANCE!!
     }
 
-    fun getInstance(): WebsocketClient {
+    fun getInstance(): TestWebsocketClient {
         return INSTANCE!!
     }
 }

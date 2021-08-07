@@ -14,7 +14,7 @@ import dagger.Provides
 
 @Suppress("unused")
 @Module
-class OnGoingGameUiModule(
+class InGameUiModule(
     private val gameFacade: GameFacade,
     private val hostGameFacade: HostGameFacade,
     private val guestGameFacade: GuestGameFacade,

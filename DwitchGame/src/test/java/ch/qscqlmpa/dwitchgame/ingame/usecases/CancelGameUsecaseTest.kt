@@ -41,7 +41,7 @@ class CancelGameUsecaseTest : BaseUnitTest() {
         usecase.cancelGame().test().assertComplete()
 
         // Then game canceled event is emitted
-        testObserver.assertValue(HostGameLifecycleEvent.GameCanceled)
+        testObserver.assertValue(HostGameLifecycleEvent.GameOver)
 
         // And guests are notified
         val cancelGameMessageWrapper = EnvelopeToSend(Recipient.All, Message.CancelGameMessage)
@@ -49,7 +49,7 @@ class CancelGameUsecaseTest : BaseUnitTest() {
         confirmVerified(mockCommunicator)
 
         // And game is deleted
-        verify { mockInGameStore.deleteGame() }
+        verify { mockInGameStore.markGameForDeletion() }
         verify { mockInGameStore.gameIsNew() }
         confirmVerified(mockInGameStore)
     }
@@ -65,7 +65,7 @@ class CancelGameUsecaseTest : BaseUnitTest() {
         usecase.cancelGame().test().assertComplete()
 
         // Then game canceled event is emitted
-        testObserver.assertValue(HostGameLifecycleEvent.GameCanceled)
+        testObserver.assertValue(HostGameLifecycleEvent.GameOver)
 
         // And guests are notified
         val cancelGameMessageWrapper = EnvelopeToSend(Recipient.All, Message.CancelGameMessage)

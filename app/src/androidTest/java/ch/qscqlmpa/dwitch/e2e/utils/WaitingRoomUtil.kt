@@ -11,13 +11,13 @@ object WaitingRoomUtil {
     const val PLAYER_DISCONNECTED = R.string.player_disconnected
 
     fun ComposeContentTestRule.assertPlayerInWr(name: String): SemanticsNodeInteraction {
-        return onNodeWithTag(name, useUnmergedTree = true)
+        return onNodeWithTag(name, useUnmergedTree = true).assertExists("Player $name is not in WR")
     }
 
     fun ComposeContentTestRule.assertPlayerInWr(name: String, ready: Boolean): SemanticsNodeInteraction {
         val sni = assertPlayerInWr(name)
         if (ready) sni.onChildren().filterToOne(hasText("Ready")) else sni.onChildren()
-            .filterToOne(hasText("Not ready")) // TODO: i18n proof
+            .filterToOne(hasText("Not ready"))// TODO: i18n proof
         return sni
     }
 

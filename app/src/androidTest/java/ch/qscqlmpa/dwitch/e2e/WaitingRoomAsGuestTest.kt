@@ -17,34 +17,34 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
 
     @Test
     fun goToWaitingRoomScreen() {
-        goToWaitingRoom()
+        goToWaitingRoomWithHostAndAllGuests()
 
-        testRule.assertPlayerInWr(PlayerGuestTest.Host.name, getString(PLAYER_CONNECTED))
-        testRule.assertPlayerInWr(PlayerGuestTest.LocalGuest.name, getString(PLAYER_CONNECTED))
-        testRule.assertPlayerInWr(PlayerGuestTest.Guest2.name, getString(PLAYER_CONNECTED))
-        testRule.assertPlayerInWr(PlayerGuestTest.Guest3.name, getString(PLAYER_CONNECTED))
+        testRule.assertPlayerInWr(PlayerGuestTest.Host.info.name, getString(PLAYER_CONNECTED))
+        testRule.assertPlayerInWr(PlayerGuestTest.LocalGuest.info.name, getString(PLAYER_CONNECTED))
+        testRule.assertPlayerInWr(PlayerGuestTest.Guest2.info.name, getString(PLAYER_CONNECTED))
+        testRule.assertPlayerInWr(PlayerGuestTest.Guest3.info.name, getString(PLAYER_CONNECTED))
     }
 
     @Test
     fun playerBecomesReady() {
-        goToWaitingRoom()
+        goToWaitingRoomWithHostAndAllGuests()
 
-        testRule.assertPlayerInWr(PlayerGuestTest.LocalGuest.name, ready = false)
+        testRule.assertPlayerInWr(PlayerGuestTest.LocalGuest.info.name, ready = false)
 
         localPlayerToggleReadyCheckbox()
         testRule.assertCheckboxChecked(UiTags.localPlayerReadyControl, checked = true)
-        testRule.assertPlayerInWr(PlayerGuestTest.LocalGuest.name, ready = true)
+        testRule.assertPlayerInWr(PlayerGuestTest.LocalGuest.info.name, ready = true)
 
         localPlayerToggleReadyCheckbox()
         testRule.assertCheckboxChecked(UiTags.localPlayerReadyControl, checked = false)
-        testRule.assertPlayerInWr(PlayerGuestTest.LocalGuest.name, ready = false)
+        testRule.assertPlayerInWr(PlayerGuestTest.LocalGuest.info.name, ready = false)
     }
 
     @Test
     fun playerLeavesGame() {
-        goToWaitingRoom()
+        goToWaitingRoomWithHostAndAllGuests()
 
-        testRule.assertPlayerInWr(PlayerGuestTest.LocalGuest.name, ready = false)
+        testRule.assertPlayerInWr(PlayerGuestTest.LocalGuest.info.name, ready = false)
 
         testRule.onNodeWithTag(UiTags.toolbarNavigationIcon).performClick()
         testRule.clickOnDialogConfirmButton()
@@ -54,21 +54,21 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
 
     @Test
     fun localPlayerGetsDisconnected() {
-        goToWaitingRoom()
+        goToWaitingRoomWithHostAndAllGuests()
 
-        testRule.assertPlayerInWr(PlayerGuestTest.Host.name, getString(PLAYER_CONNECTED))
-        testRule.assertPlayerInWr(PlayerGuestTest.LocalGuest.name, getString(PLAYER_CONNECTED))
-        testRule.assertPlayerInWr(PlayerGuestTest.Guest2.name, getString(PLAYER_CONNECTED))
-        testRule.assertPlayerInWr(PlayerGuestTest.Guest3.name, getString(PLAYER_CONNECTED))
+        testRule.assertPlayerInWr(PlayerGuestTest.Host.info.name, getString(PLAYER_CONNECTED))
+        testRule.assertPlayerInWr(PlayerGuestTest.LocalGuest.info.name, getString(PLAYER_CONNECTED))
+        testRule.assertPlayerInWr(PlayerGuestTest.Guest2.info.name, getString(PLAYER_CONNECTED))
+        testRule.assertPlayerInWr(PlayerGuestTest.Guest3.info.name, getString(PLAYER_CONNECTED))
 
         clientTestStub.breakConnectionWithServer()
-        incrementGameIdlingResource("Connection with host broken")
+        incrementGameIdlingResource("Connection with host broken: Communication state will be updated")
         incrementGameIdlingResource("Local player is disconnected so new WR players state")
 
-        testRule.assertPlayerInWr(PlayerGuestTest.Host.name, getString(PLAYER_DISCONNECTED))
-        testRule.assertPlayerInWr(PlayerGuestTest.LocalGuest.name, getString(PLAYER_DISCONNECTED))
-        testRule.assertPlayerInWr(PlayerGuestTest.Guest2.name, getString(PLAYER_DISCONNECTED))
-        testRule.assertPlayerInWr(PlayerGuestTest.Guest3.name, getString(PLAYER_DISCONNECTED))
+        testRule.assertPlayerInWr(PlayerGuestTest.Host.info.name, getString(PLAYER_DISCONNECTED))
+        testRule.assertPlayerInWr(PlayerGuestTest.LocalGuest.info.name, getString(PLAYER_DISCONNECTED))
+        testRule.assertPlayerInWr(PlayerGuestTest.Guest2.info.name, getString(PLAYER_DISCONNECTED))
+        testRule.assertPlayerInWr(PlayerGuestTest.Guest3.info.name, getString(PLAYER_DISCONNECTED))
 
         testRule.onNodeWithText(getString(R.string.disconnected_from_host))
         testRule.onNodeWithTag(UiTags.reconnect)
@@ -78,9 +78,10 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
 
     @Test
     fun gameCanceled() {
-        goToWaitingRoom()
+        goToWaitingRoomWithHostAndAllGuests()
 
         clientTestStub.serverSendsMessageToClient(Message.CancelGameMessage)
+        clientTestStub.serverClosesConnectionWithClient()
         incrementGameIdlingResource("Game canceled: WR players state will be updated")
         incrementGameIdlingResource("Game canceled: Communication state will be updated")
 
@@ -91,9 +92,10 @@ class WaitingRoomAsGuestTest : BaseGuestTest() {
 
     @Test
     fun playerKickedOffGame() {
-        goToWaitingRoom()
+        goToWaitingRoomWithHostAndAllGuests()
 
-        clientTestStub.serverSendsMessageToClient(Message.KickPlayerMessage(PlayerGuestTest.LocalGuest.id))
+        clientTestStub.serverSendsMessageToClient(Message.KickPlayerMessage(PlayerGuestTest.LocalGuest.info.dwitchId))
+        clientTestStub.serverClosesConnectionWithClient()
         incrementGameIdlingResource("Local player kicked off: WR players state will be updated")
         incrementGameIdlingResource("Local player kicked off: Communication state will be updated")
 

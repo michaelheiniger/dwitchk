@@ -57,7 +57,7 @@ abstract class BaseUiTest {
     private lateinit var storeComponent: TestStoreComponent
     private lateinit var gameComponent: TestGameComponent
 
-    private lateinit var ongoingGameComponent: TestInGameComponent
+    private lateinit var inGameComponent: TestInGameComponent
     private lateinit var communicationComponent: TestCommunicationComponent
 
     protected lateinit var networkAdapter: TestNetworkAdapter
@@ -115,12 +115,12 @@ abstract class BaseUiTest {
         cardsForPlayer: Map<DwitchPlayerId, Set<Card>>,
         rankForPlayer: Map<DwitchPlayerId, DwitchRank>
     ) {
-        (ongoingGameComponent.initialGameSetupFactory as DeterministicInitialGameSetupFactory)
+        (inGameComponent.initialGameSetupFactory as DeterministicInitialGameSetupFactory)
             .setInstance(DeterministicInitialGameSetup(cardsForPlayer, rankForPlayer))
     }
 
     protected fun initializeNewRoundCardDealer(cardsForPlayer: Map<DwitchPlayerId, Set<Card>>) {
-        (ongoingGameComponent.cardDealerFactory as DeterministicCardDealerFactory)
+        (inGameComponent.cardDealerFactory as DeterministicCardDealerFactory)
             .setInstance(DeterministicCardDealer(cardsForPlayer))
     }
 
@@ -137,7 +137,7 @@ abstract class BaseUiTest {
     }
 
     protected fun waitUntilGuestIsConnected() {
-        ongoingGameComponent.guestGameFacade.currentCommunicationState()
+        inGameComponent.guestGameFacade.currentCommunicationState()
             .filter { state -> state is GuestCommunicationState.Connected }
             .timeout(5, TimeUnit.SECONDS)
             .blockingFirst()
@@ -160,7 +160,7 @@ abstract class BaseUiTest {
     }
 
     private fun hookOngoingGameDependenciesCommon() {
-        ongoingGameComponent = app.inGameComponent as TestInGameComponent
+        inGameComponent = app.inGameComponent as TestInGameComponent
         inGameStore = app.inGameStoreComponent!!.inGameStore
         communicationComponent = app.communicationComponent as TestCommunicationComponent
     }

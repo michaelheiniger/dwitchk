@@ -43,7 +43,7 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
         serverTestStub.connectClientToServer(guest)
         incrementGameIdlingResource("Guest joins game ($guest)")
         serverTestStub.clientSendsMessageToServer(guest, GuestMessageFactory.createJoinGameMessage(guest.name))
-        assertGuestHasJoinedGame()
+        assertHostSendsMessageFollowingGuestJoiningGame()
 
         when (guest) {
             PlayerHostTest.Guest1 -> guest1 = inGameStore.getPlayer(PlayerHostTest.Guest1.name)!!
@@ -65,7 +65,7 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
 
     protected fun guestDisconnects(identifier: PlayerHostTest) {
         incrementGameIdlingResource("Guest disconnects (${getGuest(identifier)})")
-        serverTestStub.disconnectFromServer(identifier)
+        serverTestStub.clientDisconnectsFromServer(identifier)
         val messageSent = waitForNextMessageSentByHost()
         assertThat(messageSent).isInstanceOf(Message.WaitingRoomStateUpdateMessage::class.java)
     }
@@ -102,7 +102,7 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
         }
     }
 
-    private fun assertGuestHasJoinedGame() {
+    private fun assertHostSendsMessageFollowingGuestJoiningGame() {
         val messages = waitForNextNMessageSentByHost(2)
         assertThat(messages[0]).isInstanceOf(Message.JoinGameAckMessage::class.java)
         assertThat(messages[1]).isInstanceOf(Message.WaitingRoomStateUpdateMessage::class.java)

@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
+import org.tinylog.Logger
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -36,8 +37,14 @@ class GameFragment : Fragment() {
     }
 
     override fun onAttach(context: Context) {
-        (requireActivity().application as App).getGameUiComponent()!!.inject(this)
+        (requireActivity().application as App).inGameUiComponent!!.inject(this)
         super.onAttach(context)
+        Logger.debug { "attach GameFragment" }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Logger.debug { "detach GameFragment" }
     }
 
     companion object {

@@ -16,7 +16,7 @@ class GuestInGameService : BaseInGameService() {
 
         Logger.info { "Start service" }
         showNotification(RoomType.WAITING_ROOM)
-        app.startOngoingGame(
+        app.createInGameComponents(
             playerRole,
             RoomType.WAITING_ROOM,
             gameJoinedInfo.gameLocalId,
@@ -36,7 +36,8 @@ class GuestInGameService : BaseInGameService() {
 
     override fun cleanUp() {
         app.guestFacade().disconnect()
-        app.stopOngoingGame()
+        app.destroyInGameComponents()
+        app.homeFacade().deleteGamesMarkedForDeletion().blockingSubscribe()
     }
 
     companion object {

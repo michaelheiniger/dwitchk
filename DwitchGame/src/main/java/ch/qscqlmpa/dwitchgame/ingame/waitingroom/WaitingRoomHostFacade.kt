@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitchgame.ingame.waitingroom
 
-import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.usecases.GameLaunchableEvent
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -28,9 +27,4 @@ interface WaitingRoomHostFacade {
      * Tell whether the game can be launched. If so, it can be launched using [launchGame]
      */
     fun observeGameLaunchableEvents(): Observable<GameLaunchableEvent>
-
-    /**
-     * Tell what the current state of the host communication wise.
-     */
-    fun observeCommunicationState(): Observable<HostCommunicationState>
 }

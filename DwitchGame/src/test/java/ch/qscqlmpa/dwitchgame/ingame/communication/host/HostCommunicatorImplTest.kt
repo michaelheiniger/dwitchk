@@ -4,17 +4,15 @@ import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchcommunication.CommServer
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeReceived
 import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.Recipient
-import ch.qscqlmpa.dwitchcommunication.websocket.server.ServerCommunicationEvent
+import ch.qscqlmpa.dwitchcommunication.websocket.ServerEvent
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.eventprocessors.HostCommunicationEventDispatcher
-import ch.qscqlmpa.dwitchgame.ingame.communication.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.mockk.*
 import io.reactivex.rxjava3.core.Completable
@@ -27,7 +25,6 @@ import org.junit.jupiter.api.Test
 class HostCommunicatorImplTest : BaseUnitTest() {
 
     private val mockCommServer = mockk<CommServer>(relaxed = true)
-    private val mockMessageDispatcher = mockk<MessageDispatcher>(relaxed = true)
     private val mockCommunicationEventDispatcher = mockk<HostCommunicationEventDispatcher>(relaxed = true)
     private val mockCommEventRepository = mockk<HostCommunicationStateRepository>(relaxed = true)
     private val mockConnectionStore = mockk<ConnectionStore>(relaxed = true)
@@ -35,14 +32,13 @@ class HostCommunicatorImplTest : BaseUnitTest() {
     private lateinit var hostCommunicator: HostCommunicator
     private lateinit var computerCommunicator: ComputerCommunicator
 
-    private lateinit var communicationEventsSubject: PublishSubject<ServerCommunicationEvent>
-    private lateinit var receivedMessagesSubject: PublishSubject<EnvelopeReceived>
+    private lateinit var communicationEventsSubject: PublishSubject<ServerEvent>
+    private lateinit var receivedMessagesSubject: PublishSubject<ServerEvent.EnvelopeReceived>
 
     @BeforeEach
     fun setup() {
         hostCommunicator = HostCommunicatorImpl(
             mockCommServer,
-            mockMessageDispatcher,
             mockCommunicationEventDispatcher,
             mockCommEventRepository,
             TestSchedulerFactory()
@@ -50,10 +46,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
         computerCommunicator = hostCommunicator as HostCommunicatorImpl
 
         communicationEventsSubject = PublishSubject.create()
-        every { mockCommServer.observeCommunicationEvents() } returns communicationEventsSubject
-
-        receivedMessagesSubject = PublishSubject.create()
-        every { mockCommServer.observeReceivedMessages() } returns receivedMessagesSubject
+        every { mockCommServer.observeEvents() } returns communicationEventsSubject
 
         every { mockCommunicationEventDispatcher.dispatch(any()) } returns Completable.complete()
     }
@@ -75,8 +68,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
             assertThat(receivedMessagesSubject.hasObservers()).isTrue // Observe received messages
 
             verifyOrder {
-                mockCommServer.observeCommunicationEvents()
-                mockCommServer.observeReceivedMessages()
+                mockCommServer.observeEvents()
                 mockCommServer.start()
             }
             confirmVerified(mockCommServer)
@@ -88,14 +80,14 @@ class HostCommunicatorImplTest : BaseUnitTest() {
             hostCommunicator.startServer()
 
             // When
-            communicationEventsSubject.onNext(ServerCommunicationEvent.ListeningForConnections)
-            communicationEventsSubject.onNext(ServerCommunicationEvent.NoLongerListeningForConnections)
+            communicationEventsSubject.onNext(ServerEvent.CommunicationEvent.ListeningForConnections)
+            communicationEventsSubject.onNext(ServerEvent.CommunicationEvent.NoLongerListeningForConnections)
 
             // Then
-            val dispatchedEventCap = mutableListOf<ServerCommunicationEvent>()
+            val dispatchedEventCap = mutableListOf<ServerEvent.CommunicationEvent>()
             verify(exactly = 2) { mockCommunicationEventDispatcher.dispatch(capture(dispatchedEventCap)) }
-            assertThat(dispatchedEventCap[0]).isEqualTo(ServerCommunicationEvent.ListeningForConnections)
-            assertThat(dispatchedEventCap[1]).isEqualTo(ServerCommunicationEvent.NoLongerListeningForConnections)
+            assertThat(dispatchedEventCap[0]).isEqualTo(ServerEvent.CommunicationEvent.ListeningForConnections)
+            assertThat(dispatchedEventCap[1]).isEqualTo(ServerEvent.CommunicationEvent.NoLongerListeningForConnections)
             confirmVerified(mockCommunicationEventDispatcher)
         }
 
@@ -105,17 +97,19 @@ class HostCommunicatorImplTest : BaseUnitTest() {
             hostCommunicator.startServer()
 
             // When
-            val messageReceived1 = EnvelopeReceived(ConnectionId(1), Message.PlayerReadyMessage(DwitchPlayerId(12), true))
-            val messageReceived2 = EnvelopeReceived(ConnectionId(4), Message.PlayerReadyMessage(DwitchPlayerId(13), false))
+            val messageReceived1 =
+                ServerEvent.EnvelopeReceived(ConnectionId(1), Message.PlayerReadyMessage(DwitchPlayerId(12), true))
+            val messageReceived2 =
+                ServerEvent.EnvelopeReceived(ConnectionId(4), Message.PlayerReadyMessage(DwitchPlayerId(13), false))
             receivedMessagesSubject.onNext(messageReceived1)
             receivedMessagesSubject.onNext(messageReceived2)
 
             // Then
-            val dispatchedMessageCap = mutableListOf<EnvelopeReceived>()
-            verify(exactly = 2) { mockMessageDispatcher.dispatch(capture(dispatchedMessageCap)) }
+            val dispatchedMessageCap = mutableListOf<ServerEvent.EnvelopeReceived>()
+            verify(exactly = 2) { mockCommunicationEventDispatcher.dispatch(capture(dispatchedMessageCap)) }
             assertThat(dispatchedMessageCap[0]).isEqualTo(messageReceived1)
             assertThat(dispatchedMessageCap[1]).isEqualTo(messageReceived2)
-            confirmVerified(mockMessageDispatcher)
+            confirmVerified(mockCommunicationEventDispatcher)
         }
 
         @Test
@@ -127,8 +121,9 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
             // When
             val gameState = TestEntityFactory.createGameState()
-            val messageReceived1 = EnvelopeReceived(ConnectionId(1), Message.GameStateUpdatedMessage(gameState))
-            val messageReceived2 = EnvelopeReceived(ConnectionId(4), Message.PlayerReadyMessage(DwitchPlayerId(13), false))
+            val messageReceived1 = ServerEvent.EnvelopeReceived(ConnectionId(1), Message.GameStateUpdatedMessage(gameState))
+            val messageReceived2 =
+                ServerEvent.EnvelopeReceived(ConnectionId(4), Message.PlayerReadyMessage(DwitchPlayerId(13), false))
             receivedMessagesSubject.onNext(messageReceived1)
             receivedMessagesSubject.onNext(messageReceived2)
 
@@ -150,15 +145,14 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
             // When
             hostCommunicator.stopServer()
-            communicationEventsSubject.onNext(ServerCommunicationEvent.NoLongerListeningForConnections)
+            communicationEventsSubject.onNext(ServerEvent.CommunicationEvent.NoLongerListeningForConnections)
 
             // Then
             assertThat(communicationEventsSubject.hasObservers()).isFalse // Observed streams have been disposed
             assertThat(receivedMessagesSubject.hasObservers()).isFalse // Observed streams have been disposed
 
             verifyOrder {
-                mockCommServer.observeCommunicationEvents()
-                mockCommServer.observeReceivedMessages()
+                mockCommServer.observeEvents()
                 mockCommServer.start()
                 mockCommServer.stop()
             }
@@ -206,7 +200,14 @@ class HostCommunicatorImplTest : BaseUnitTest() {
             hostCommunicator.sendMessage(EnvelopeToSend(Recipient.Single(humanGuestConnectionId), messageToSend))
 
             // Then
-            verify(exactly = 0) { mockMessageDispatcher.dispatch(EnvelopeReceived(hostConnectionId, messageToSend)) }
+            verify(exactly = 0) {
+                mockCommunicationEventDispatcher.dispatch(
+                    ServerEvent.EnvelopeReceived(
+                        hostConnectionId,
+                        messageToSend
+                    )
+                )
+            }
             verify { mockCommServer.sendMessage(messageToSend, Recipient.Single(humanGuestConnectionId)) }
             messagesToComputerPlayers.assertEmpty()
         }
@@ -221,7 +222,14 @@ class HostCommunicatorImplTest : BaseUnitTest() {
             hostCommunicator.sendMessage(EnvelopeToSend(Recipient.Single(computerGuestConnectionId), messageToSend))
 
             // Then
-            verify(exactly = 0) { mockMessageDispatcher.dispatch(EnvelopeReceived(hostConnectionId, messageToSend)) }
+            verify(exactly = 0) {
+                mockCommunicationEventDispatcher.dispatch(
+                    ServerEvent.EnvelopeReceived(
+                        hostConnectionId,
+                        messageToSend
+                    )
+                )
+            }
             verify(exactly = 0) { mockCommServer.sendMessage(any(), any()) }
             messagesToComputerPlayers.assertValue(EnvelopeToSend(Recipient.Single(computerGuestConnectionId), messageToSend))
         }
@@ -237,7 +245,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
             hostCommunicator.sendMessage(EnvelopeToSend(Recipient.Single(hostConnectionId), messageToSend))
 
             // Then
-            verify { mockMessageDispatcher.dispatch(EnvelopeReceived(hostConnectionId, messageToSend)) }
+            verify { mockCommunicationEventDispatcher.dispatch(ServerEvent.EnvelopeReceived(hostConnectionId, messageToSend)) }
             verify(exactly = 0) { mockCommServer.sendMessage(messageToSend, any()) }
             messagesToComputerPlayers.assertEmpty()
         }
@@ -252,7 +260,14 @@ class HostCommunicatorImplTest : BaseUnitTest() {
             hostCommunicator.sendMessage(EnvelopeToSend(Recipient.All, messageToSend))
 
             // Then
-            verify(exactly = 0) { mockMessageDispatcher.dispatch(EnvelopeReceived(hostConnectionId, messageToSend)) }
+            verify(exactly = 0) {
+                mockCommunicationEventDispatcher.dispatch(
+                    ServerEvent.EnvelopeReceived(
+                        hostConnectionId,
+                        messageToSend
+                    )
+                )
+            }
             verify { mockCommServer.sendMessage(messageToSend, Recipient.All) }
             messagesToComputerPlayers.assertValue(EnvelopeToSend(Recipient.All, messageToSend))
         }
@@ -275,7 +290,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
             hostCommunicator.sendMessageToHost(messageToSend)
 
             // Then
-            verify { mockMessageDispatcher.dispatch(EnvelopeReceived(hostConnectionId, messageToSend)) }
+            verify { mockCommunicationEventDispatcher.dispatch(ServerEvent.EnvelopeReceived(hostConnectionId, messageToSend)) }
             verify(exactly = 0) { mockCommServer.sendMessage(messageToSend, any()) }
             messagesToComputerPlayers.assertEmpty()
         }
@@ -294,18 +309,18 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
             // When
             val messageReceived1 =
-                EnvelopeReceived(computerGuest1ConnectionId, Message.PlayerReadyMessage(DwitchPlayerId(12), true))
+                ServerEvent.EnvelopeReceived(computerGuest1ConnectionId, Message.PlayerReadyMessage(DwitchPlayerId(12), true))
             val messageReceived2 =
-                EnvelopeReceived(computerGuest2ConnectionId, Message.PlayerReadyMessage(DwitchPlayerId(13), false))
+                ServerEvent.EnvelopeReceived(computerGuest2ConnectionId, Message.PlayerReadyMessage(DwitchPlayerId(13), false))
             computerCommunicator.sendMessageToHostFromComputerPlayer(messageReceived1)
             computerCommunicator.sendMessageToHostFromComputerPlayer(messageReceived2)
 
             // Then
-            val dispatchedMessageCap = mutableListOf<EnvelopeReceived>()
-            verify(exactly = 2) { mockMessageDispatcher.dispatch(capture(dispatchedMessageCap)) }
+            val dispatchedMessageCap = mutableListOf<ServerEvent.EnvelopeReceived>()
+            verify(exactly = 2) { mockCommunicationEventDispatcher.dispatch(capture(dispatchedMessageCap)) }
             assertThat(dispatchedMessageCap[0]).isEqualTo(messageReceived1)
             assertThat(dispatchedMessageCap[1]).isEqualTo(messageReceived2)
-            confirmVerified(mockMessageDispatcher)
+            confirmVerified(mockCommunicationEventDispatcher)
         }
 
         @Test
@@ -317,8 +332,9 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
             // When
             val gameState = TestEntityFactory.createGameState()
-            val messageReceived1 = EnvelopeReceived(ConnectionId(1), Message.GameStateUpdatedMessage(gameState))
-            val messageReceived2 = EnvelopeReceived(ConnectionId(4), Message.PlayerReadyMessage(DwitchPlayerId(13), false))
+            val messageReceived1 = ServerEvent.EnvelopeReceived(ConnectionId(1), Message.GameStateUpdatedMessage(gameState))
+            val messageReceived2 =
+                ServerEvent.EnvelopeReceived(ConnectionId(4), Message.PlayerReadyMessage(DwitchPlayerId(13), false))
             computerCommunicator.sendMessageToHostFromComputerPlayer(messageReceived1)
             computerCommunicator.sendMessageToHostFromComputerPlayer(messageReceived2)
 
@@ -341,21 +357,29 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
             // When
             computerCommunicator.sendCommunicationEventFromComputerPlayer(
-                ServerCommunicationEvent.ClientConnected(
+                ServerEvent.CommunicationEvent.ClientConnected(
                     computerGuest1ConnectionId
                 )
             )
             computerCommunicator.sendCommunicationEventFromComputerPlayer(
-                ServerCommunicationEvent.ClientDisconnected(
+                ServerEvent.CommunicationEvent.ClientDisconnected(
                     computerGuest2ConnectionId
                 )
             )
 
             // Then
-            val dispatchedEventCap = mutableListOf<ServerCommunicationEvent>()
+            val dispatchedEventCap = mutableListOf<ServerEvent.CommunicationEvent>()
             verify(exactly = 2) { mockCommunicationEventDispatcher.dispatch(capture(dispatchedEventCap)) }
-            assertThat(dispatchedEventCap[0]).isEqualTo(ServerCommunicationEvent.ClientConnected(computerGuest1ConnectionId))
-            assertThat(dispatchedEventCap[1]).isEqualTo(ServerCommunicationEvent.ClientDisconnected(computerGuest2ConnectionId))
+            assertThat(dispatchedEventCap[0]).isEqualTo(
+                ServerEvent.CommunicationEvent.ClientConnected(
+                    computerGuest1ConnectionId
+                )
+            )
+            assertThat(dispatchedEventCap[1]).isEqualTo(
+                ServerEvent.CommunicationEvent.ClientDisconnected(
+                    computerGuest2ConnectionId
+                )
+            )
             confirmVerified(mockCommunicationEventDispatcher)
         }
     }

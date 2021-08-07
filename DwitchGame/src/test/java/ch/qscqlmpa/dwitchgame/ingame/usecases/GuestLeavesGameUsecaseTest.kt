@@ -15,8 +15,8 @@ import org.junit.jupiter.api.Test
 
 internal class GuestLeavesGameUsecaseTest : BaseUnitTest() {
 
-    private lateinit var gameLifecycleEventRepository: GuestGameLifecycleEventRepository
     private val mockCommunicator = mockk<GuestCommunicator>(relaxed = true)
+    private val mockGuestGameLifecycleEventRepository = mockk<GuestGameLifecycleEventRepository>(relaxed = true)
 
     private lateinit var guestLeavesGameUsecase: GuestLeavesGameUsecase
 
@@ -24,8 +24,7 @@ internal class GuestLeavesGameUsecaseTest : BaseUnitTest() {
 
     @BeforeEach
     fun setup() {
-        gameLifecycleEventRepository = GuestGameLifecycleEventRepository()
-        guestLeavesGameUsecase = GuestLeavesGameUsecase(mockInGameStore, gameLifecycleEventRepository, mockCommunicator)
+        guestLeavesGameUsecase = GuestLeavesGameUsecase(mockInGameStore, mockGuestGameLifecycleEventRepository, mockCommunicator)
 
         every { mockInGameStore.getLocalPlayerDwitchId() } returns playerDwitchId
     }
@@ -33,36 +32,32 @@ internal class GuestLeavesGameUsecaseTest : BaseUnitTest() {
     @Test
     fun `Local player (guest) is leaving the new game`() {
         every { mockInGameStore.gameIsNew() } returns true
-        val testObserver = gameLifecycleEventRepository.observeEvents().test()
-        testObserver.assertNoValues()
 
         launchTest()
-
-        testObserver.assertValue(GuestGameLifecycleEvent.GuestLeftGame)
 
         verify { mockCommunicator.sendMessageToHost(GuestMessageFactory.createLeaveGameMessage(playerDwitchId)) }
         confirmVerified(mockCommunicator)
 
         verify { mockInGameStore.gameIsNew() }
         verify { mockInGameStore.getLocalPlayerDwitchId() }
-        verify { mockInGameStore.deleteGame() }
+        verify { mockInGameStore.markGameForDeletion() }
         confirmVerified(mockInGameStore)
+
+        verify { mockGuestGameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GameOver) }
     }
 
     @Test
     fun `Local player (guest) is leaving the existing game`() {
         every { mockInGameStore.gameIsNew() } returns false
-        val testObserver = gameLifecycleEventRepository.observeEvents().test()
-        testObserver.assertNoValues()
 
         launchTest()
-
-        testObserver.assertValue(GuestGameLifecycleEvent.GuestLeftGame)
 
         confirmVerified(mockCommunicator)
 
         verify { mockInGameStore.gameIsNew() }
         confirmVerified(mockInGameStore)
+
+        verify { mockGuestGameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GameOver) }
     }
 
     private fun launchTest() {

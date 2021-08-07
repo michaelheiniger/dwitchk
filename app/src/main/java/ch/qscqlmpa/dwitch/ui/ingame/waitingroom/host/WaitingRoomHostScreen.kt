@@ -70,8 +70,12 @@ fun WaitingRoomHostScreen(
         }
     }
 
+    val navigated = remember { mutableStateOf(false) }
     val event = hostViewModel.navigation.observeAsState().value
-    if (event != null) onNavigationEvent(event)
+    if (event != null && !navigated.value) {
+        navigated.value = true
+        onNavigationEvent(event)
+    }
 
     val showConfirmationDialog = remember { mutableStateOf(false) }
 

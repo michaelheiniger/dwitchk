@@ -91,14 +91,18 @@ internal class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
     @Test
     fun `Send waitingroom state update message when rejoining player is found in store and current room is waitingroom`() {
         launchTestWithSameGameCommonId(RoomType.WAITING_ROOM)
+
         verify { mockHostCommunicator.sendMessage(mockWaitingRoomStateUpdateEnvelope) }
+        confirmVerified(mockHostCommunicator)
     }
 
     @Test
-    fun `Send game state update message when rejoining player is found in store and current room is gameroom`() {
+    fun `Send waitingroom state update and game state update messages when rejoining player is found in store and current room is gameroom`() {
         launchTestWithSameGameCommonId(RoomType.GAME_ROOM)
 
+        verify { mockHostCommunicator.sendMessage(mockWaitingRoomStateUpdateEnvelope) }
         verify { mockHostCommunicator.sendMessage(mockGameStateUpdateEnvelope) }
+        confirmVerified(mockHostCommunicator)
     }
 
     @Test

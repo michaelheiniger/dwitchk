@@ -1,15 +1,12 @@
 package ch.qscqlmpa.dwitchgame.ingame.waitingroom
 
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
-import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationState
-import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ingame.usecases.*
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
 internal class WaitingRoomHostFacadeImpl @Inject constructor(
-    private val communicationStateRepository: HostCommunicationStateRepository,
     private val gameLaunchableUsecase: GameLaunchableUsecase,
     private val addComputerPlayerUsecase: AddComputerPlayerUsecase,
     private val kickPlayerUsecase: KickPlayerUsecase,
@@ -35,10 +32,6 @@ internal class WaitingRoomHostFacadeImpl @Inject constructor(
     override fun kickPlayer(player: PlayerWrUi): Completable {
         return kickPlayerUsecase.kickPlayer(player)
             .subscribeOn(schedulerFactory.io())
-    }
-
-    override fun observeCommunicationState(): Observable<HostCommunicationState> {
-        return communicationStateRepository.currentState()
     }
 
     override fun observeGameLaunchableEvents(): Observable<GameLaunchableEvent> {

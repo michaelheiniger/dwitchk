@@ -43,7 +43,8 @@ class HomeViewModelTest : BaseViewModelUnitTest() {
             mockHomeFacade,
             mockHomeGuestFacade,
             mockHomeHostFacade,
-            Schedulers.trampoline()
+            Schedulers.trampoline(),
+            mockk()
         )
 
         advertisedGamesSubject = PublishSubject.create()

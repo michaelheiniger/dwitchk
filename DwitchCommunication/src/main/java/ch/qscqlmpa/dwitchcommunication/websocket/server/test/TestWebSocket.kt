@@ -6,6 +6,7 @@ import org.java_websocket.enums.Opcode
 import org.java_websocket.enums.ReadyState
 import org.java_websocket.framing.Framedata
 import org.java_websocket.protocols.IProtocol
+import org.tinylog.kotlin.Logger
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
 import javax.net.ssl.SSLSession
@@ -105,7 +106,7 @@ internal class TestWebSocket(private val remoteAddress: String, private val remo
     }
 
     override fun close() {
-        throw NotImplementedError()
+        Logger.info { "WebSocket (remoteAddress: $remoteAddress,  remotePort: $remotePort) close() called." }
     }
 
     override fun isClosed(): Boolean {

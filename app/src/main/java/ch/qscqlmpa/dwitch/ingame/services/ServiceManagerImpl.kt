@@ -18,36 +18,31 @@ class ServiceManagerImpl @Inject constructor(
         homeFacade.observeHostGameEvents().subscribe { event ->
             when (event) {
                 is HostGameLifecycleEvent.GameCreated -> startHostService(event.gameInfo)
-                HostGameLifecycleEvent.GameCanceled, HostGameLifecycleEvent.GameOver -> stopHostService()
                 HostGameLifecycleEvent.MovedToGameRoom -> goToHostGameRoom()
             }
         }
         homeFacade.observeGuestGameEvents().subscribe { event ->
             when (event) {
                 is GuestGameLifecycleEvent.GameJoined -> startGuestService(event.gameInfo)
-                GuestGameLifecycleEvent.KickedOffGame,
-                GuestGameLifecycleEvent.GuestLeftGame,
-                GuestGameLifecycleEvent.GameCanceled,
-                GuestGameLifecycleEvent.GameOver -> stopGuestService()
                 GuestGameLifecycleEvent.MovedToGameRoom -> goToGuestGameRoom()
             }
         }
+    }
+
+    override fun stopHostService() {
+        HostInGameService.stopService(context)
+    }
+
+    override fun stopGuestService() {
+        GuestInGameService.stopService(context)
     }
 
     private fun startHostService(gameCreatedInfo: GameCreatedInfo) {
         HostInGameService.startService(context, gameCreatedInfo)
     }
 
-    private fun stopHostService() {
-        HostInGameService.stopService(context)
-    }
-
     private fun startGuestService(gameJoinedInfo: GameJoinedInfo) {
         GuestInGameService.startService(context, gameJoinedInfo)
-    }
-
-    private fun stopGuestService() {
-        GuestInGameService.stopService(context)
     }
 
     private fun goToHostGameRoom() {
