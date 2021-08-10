@@ -44,26 +44,26 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
         Assume.assumeFalse("We are in debug variant", BuildConfig.DEBUG)
 
         // Given initial state, then join game control is disabled
-        assertThat(viewModel.createGameControl.value).isFalse
+        assertThat(viewModel.hostGameControlEnabled.value).isFalse
     }
 
     @Test
     fun `Create game control is enabled when player name and game name are not blank`() {
         viewModel.onPlayerNameChange("Arthur")
         viewModel.onGameNameChange("Table Ronde")
-        assertThat(viewModel.createGameControl.value).isTrue
+        assertThat(viewModel.hostGameControlEnabled.value).isTrue
 
         viewModel.onPlayerNameChange("Arthur")
         viewModel.onGameNameChange("")
-        assertThat(viewModel.createGameControl.value).isFalse
+        assertThat(viewModel.hostGameControlEnabled.value).isFalse
 
         viewModel.onPlayerNameChange("Arthur")
         viewModel.onGameNameChange("Table Ronde")
-        assertThat(viewModel.createGameControl.value).isTrue
+        assertThat(viewModel.hostGameControlEnabled.value).isTrue
 
         viewModel.onPlayerNameChange("")
         viewModel.onGameNameChange("Table Ronde")
-        assertThat(viewModel.createGameControl.value).isFalse
+        assertThat(viewModel.hostGameControlEnabled.value).isFalse
     }
 
     @Test

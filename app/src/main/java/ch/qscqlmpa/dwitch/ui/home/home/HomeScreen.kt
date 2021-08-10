@@ -10,7 +10,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
@@ -80,16 +79,14 @@ fun HomeScreen(
         onDispose { viewModel.onStop() }
     }
 
-    val advertisedGames = viewModel.advertisedGames.observeAsState(LoadedData.Loading)
-    val resumableGames = viewModel.resumableGames.observeAsState(LoadedData.Loading)
     HomeBody(
-        advertisedGames = advertisedGames.value,
-        resumableGames = resumableGames.value,
+        advertisedGames = viewModel.advertisedGames.value,
+        resumableGames = viewModel.resumableGames.value,
         onJoinGameClick = { game -> viewModel.joinGame(game) },
         onCreateNewGameClick = onCreateNewGameClick,
         onResumableGameClick = { game -> viewModel.resumeGame(game) }
     )
-    if (viewModel.loading.observeAsState(false).value) LoadingDialog()
+    if (viewModel.loading.value) LoadingDialog()
     Navigation(
         destination = viewModel.navigation.value,
         onJoinNewGameEvent = onJoinNewGameEvent,

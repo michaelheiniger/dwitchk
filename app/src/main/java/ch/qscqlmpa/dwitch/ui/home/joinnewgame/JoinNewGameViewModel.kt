@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.home.joinnewgame
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.AppEventRepository
@@ -19,12 +19,17 @@ class JoinNewGameViewModel @Inject constructor(
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val _navigation = MutableLiveData<JoinNewGameDestination>()
-    private val _loading = MutableLiveData<Boolean>()
-    private val _joinGameControl = MutableLiveData(false)
-    private val _playerName = MutableLiveData("")
+    private val _navigation = mutableStateOf<JoinNewGameDestination>(JoinNewGameDestination.CurrentScreen)
+    private val _loading = mutableStateOf(false)
+    private val _joinGameControl = mutableStateOf(false)
+    private val _playerName = mutableStateOf("")
 
     private lateinit var game: AdvertisedGame
+
+    val navigation get(): State<JoinNewGameDestination> = _navigation
+    val loading get(): State<Boolean> = _loading
+    val playerName get(): State<String> = _playerName
+    val joinGameControl get(): State<Boolean> = _joinGameControl
 
     init {
         if (BuildConfig.DEBUG) {
@@ -33,11 +38,6 @@ class JoinNewGameViewModel @Inject constructor(
         }
         Logger.debug { "Viewmodel lifecycle event: create JoinNewGameViewModel ($this)" }
     }
-
-    val navigationCommand get(): LiveData<JoinNewGameDestination> = _navigation
-    val loading get(): LiveData<Boolean> = _loading
-    val playerName get(): LiveData<String> = _playerName
-    val joinGameControl get(): LiveData<Boolean> = _joinGameControl
 
     //TODO: find better solution without side effet (i.e. assignment)
     fun getGame(ipAddress: String): AdvertisedGame {

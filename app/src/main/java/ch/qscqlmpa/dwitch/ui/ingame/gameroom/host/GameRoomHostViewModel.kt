@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.ingame.gameroom.host
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitchgame.ingame.gameroom.GameAction
 import ch.qscqlmpa.dwitchgame.ingame.gameroom.GameRoomHostFacade
@@ -16,8 +16,8 @@ internal class GameRoomHostViewModel @Inject constructor(
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val _navigationCommand = MutableLiveData<GameRoomHostDestination>()
-    val navigation get(): LiveData<GameRoomHostDestination> = _navigationCommand
+    private val _navigationCommand = mutableStateOf<GameRoomHostDestination>(GameRoomHostDestination.CurrentScreen)
+    val navigation get(): State<GameRoomHostDestination> = _navigationCommand
 
     fun startNewRound() {
         disposableManager.add(

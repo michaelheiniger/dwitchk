@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.home.hostnewgame
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.AppEventRepository
@@ -18,26 +18,26 @@ class HostNewGameViewModel @Inject constructor(
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val _navigation = MutableLiveData<HostNewGameDestination>()
-    private val _loading = MutableLiveData<Boolean>()
-    private val _createGameControl = MutableLiveData(false)
-    private val _playerName = MutableLiveData("")
-    private val _gameName = MutableLiveData("")
+    private val _navigation = mutableStateOf<HostNewGameDestination>(HostNewGameDestination.CurrentScreen)
+    private val _loading = mutableStateOf(false)
+    private val _hostGameControlEnabled = mutableStateOf(false)
+    private val _playerName = mutableStateOf("")
+    private val _gameName = mutableStateOf("")
 
     init {
         if (BuildConfig.DEBUG) {
-            _createGameControl.value = true
+            _hostGameControlEnabled.value = true
             _playerName.value = "Mirlick"
             _gameName.value = "Dwiiitch"
         }
         Logger.debug { "Viewmodel lifecycle event: create HostNewGameViewModel ($this)" }
     }
 
-    val navigation get(): LiveData<HostNewGameDestination> = _navigation
-    val loading get(): LiveData<Boolean> = _loading
-    val playerName get(): LiveData<String> = _playerName
-    val gameName get(): LiveData<String> = _gameName
-    val createGameControl get(): LiveData<Boolean> = _createGameControl
+    val navigation get(): State<HostNewGameDestination> = _navigation
+    val loading get(): State<Boolean> = _loading
+    val playerName get(): State<String> = _playerName
+    val gameName get(): State<String> = _gameName
+    val hostGameControlEnabled get(): State<Boolean> = _hostGameControlEnabled
 
     fun onPlayerNameChange(value: String) {
         _playerName.value = value
@@ -52,8 +52,8 @@ class HostNewGameViewModel @Inject constructor(
     fun hostGame() {
         val playerName = playerName.value
         val gameName = gameName.value
-        require(!playerName.isNullOrBlank()) { "Player name cannot be blank" }
-        require(!gameName.isNullOrBlank()) { "Game name cannot be blank" }
+        require(playerName.isNotBlank()) { "Player name cannot be blank" }
+        require(gameName.isNotBlank()) { "Game name cannot be blank" }
         _loading.value = true
         disposableManager.add(
             Completable.merge(
@@ -69,7 +69,7 @@ class HostNewGameViewModel @Inject constructor(
             )
                 .doOnTerminate { _loading.value = true }
                 .subscribe(
-                    { _navigation.setValue(HostNewGameDestination.NavigateToWaitingRoom) },
+                    { _navigation.value = HostNewGameDestination.NavigateToWaitingRoom },
                     { error -> Logger.error(error) { "Error while start hosting the game" } }
                 )
         )
@@ -81,6 +81,6 @@ class HostNewGameViewModel @Inject constructor(
     }
 
     private fun updateHostGameControl() {
-        _createGameControl.value = !playerName.value.isNullOrBlank() && !gameName.value.isNullOrBlank()
+        _hostGameControlEnabled.value = playerName.value.isNotBlank() && gameName.value.isNotBlank()
     }
 }

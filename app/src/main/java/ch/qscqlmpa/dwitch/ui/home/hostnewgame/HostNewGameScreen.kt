@@ -7,14 +7,12 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.DwitchTopBar
@@ -47,28 +45,19 @@ fun HostNewGameScreen(
         onDispose { viewModel.onStop() }
     }
 
-    when (viewModel.navigation.observeAsState().value) {
-        HostNewGameDestination.NavigateToWaitingRoom -> onHostGameClick()
-    }
+    Navigation(viewModel, onHostGameClick)
 
-    val initialPlayerName = if (BuildConfig.DEBUG) "Mirlick" else ""
-    val initialGameName = if (BuildConfig.DEBUG) "Dwiiitch !" else ""
-    val initialHostGameControl = BuildConfig.DEBUG
-    val playerName = viewModel.playerName.observeAsState(initialPlayerName).value
-    val gameName = viewModel.gameName.observeAsState(initialGameName).value
-    val hostGameControl = viewModel.createGameControl.observeAsState(initialHostGameControl).value
     HostNewGameBody(
-        playerName = playerName,
-        gameName = gameName,
-        hostGameControlEnabled = hostGameControl,
+        playerName = viewModel.playerName.value,
+        gameName = viewModel.gameName.value,
+        hostGameControlEnabled = viewModel.hostGameControlEnabled.value,
         onPlayerNameChange = { name -> viewModel.onPlayerNameChange(name) },
         onGameNameChange = { name -> viewModel.onGameNameChange(name) },
         onCreateGameClick = { viewModel.hostGame() },
         onBackClick = onBackClick
     )
-    if (viewModel.loading.observeAsState(false).value) LoadingDialog()
+    if (viewModel.loading.value) LoadingDialog()
 }
-
 
 @Composable
 fun HostNewGameBody(
@@ -126,3 +115,14 @@ fun HostNewGameBody(
         }
     }
 }
+
+@Composable
+private fun Navigation(viewModel: HostNewGameViewModel, onHostGameClick: () -> Unit) {
+    when (viewModel.navigation.value) {
+        HostNewGameDestination.CurrentScreen -> {
+            // Nothing to do
+        }
+        HostNewGameDestination.NavigateToWaitingRoom -> onHostGameClick()
+    }
+}
+

@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.ingame.waitingroom.host
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchgame.ingame.usecases.GameLaunchableEvent
@@ -17,13 +17,13 @@ internal class WaitingRoomHostViewModel @Inject constructor(
     private val idlingResource: DwitchIdlingResource
 ) : BaseViewModel() {
 
-    private val _navigation = MutableLiveData<WaitingRoomHostDestination>()
-    private val _loading = MutableLiveData(false)
-    private val _canGameBeLaunched = MutableLiveData(false)
+    private val _navigation = mutableStateOf<WaitingRoomHostDestination>(WaitingRoomHostDestination.CurrentScreen)
+    private val _loading = mutableStateOf(false)
+    private val _canGameBeLaunched = mutableStateOf(false)
 
-    val navigation get(): LiveData<WaitingRoomHostDestination> = _navigation
-    val loading get(): LiveData<Boolean> = _loading
-    val canGameBeLaunched get(): LiveData<Boolean> = _canGameBeLaunched
+    val navigation get(): State<WaitingRoomHostDestination> = _navigation
+    val loading get(): State<Boolean> = _loading
+    val canGameBeLaunched get(): State<Boolean> = _canGameBeLaunched
 
     override fun onStart() {
         super.onStart()

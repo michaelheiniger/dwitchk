@@ -1,10 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.ingame.waitingroom.guest
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
@@ -22,18 +19,18 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
     private val idlingResource: DwitchIdlingResource
 ) : BaseViewModel() {
 
-    private val _navigation: MutableState<WaitingRoomGuestDestination> = mutableStateOf(WaitingRoomGuestDestination.CurrentScreen)
-    private val _notifications = MutableLiveData<WaitingRoomGuestNotification>()
-    private val _ready = MutableLiveData(UiCheckboxModel(enabled = false, checked = false))
+    private val _navigation = mutableStateOf<WaitingRoomGuestDestination>(WaitingRoomGuestDestination.CurrentScreen)
+    private val _notifications = mutableStateOf<WaitingRoomGuestNotification>(WaitingRoomGuestNotification.None)
+    private val _ready = mutableStateOf(UiCheckboxModel(enabled = false, checked = false))
 
     val navigation get(): State<WaitingRoomGuestDestination> = _navigation
-    val notifications get(): LiveData<WaitingRoomGuestNotification> = _notifications
-    val ready get(): LiveData<UiCheckboxModel> = _ready
+    val notifications get(): State<WaitingRoomGuestNotification> = _notifications
+    val ready get(): State<UiCheckboxModel> = _ready
 
     override fun onStart() {
         super.onStart()
         localPlayerReadyState()
-        gameEventLiveData()
+        observeGameEvents()
     }
 
     fun updateReadyState(ready: Boolean) {
@@ -95,7 +92,7 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
             .doOnError { error -> Logger.error(error) { "Error while observing communication state." } }
     }
 
-    private fun gameEventLiveData() {
+    private fun observeGameEvents() {
         disposableManager.add(
             facade.observeGameEvents()
                 .observeOn(uiScheduler)
@@ -120,6 +117,7 @@ sealed class WaitingRoomGuestDestination {
 }
 
 sealed class WaitingRoomGuestNotification {
+    object None : WaitingRoomGuestNotification()
     object NotifyGameCanceled : WaitingRoomGuestNotification()
     object NotifyPlayerKickedOffGame : WaitingRoomGuestNotification()
 }

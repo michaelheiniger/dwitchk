@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.ingame.connection.guest
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchgame.ingame.common.GuestGameFacade
@@ -16,8 +16,8 @@ class ConnectionGuestViewModel @Inject constructor(
     private val idlingResource: DwitchIdlingResource
 ) : BaseViewModel() {
 
-    private val _communicationState = MutableLiveData<GuestCommunicationState>()
-    val connectionStatus get(): LiveData<GuestCommunicationState> = _communicationState
+    private val _communicationState = mutableStateOf<GuestCommunicationState>(GuestCommunicationState.Disconnected)
+    val connectionStatus get(): State<GuestCommunicationState> = _communicationState
 
     fun reconnect() {
         idlingResource.increment("Reconnection to the host (Comm state: connected)")

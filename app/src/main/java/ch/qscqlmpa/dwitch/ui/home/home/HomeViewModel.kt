@@ -2,8 +2,6 @@ package ch.qscqlmpa.dwitch.ui.home.home
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.AppEventRepository
 import ch.qscqlmpa.dwitch.ingame.services.ServiceManager
@@ -21,21 +19,21 @@ import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(
     private val appEventRepository: AppEventRepository,
-    private val homeFacade: HomeFacade,
+    homeFacade: HomeFacade,
     private val homeGuestFacade: HomeGuestFacade,
     private val homeHostFacade: HomeHostFacade,
     private val uiScheduler: Scheduler,
     private val serviceManager: ServiceManager
 ) : BaseViewModel() {
 
-    private val _loading = MutableLiveData<Boolean>()
+    private val _loading = mutableStateOf(false)
     private val _navigation = mutableStateOf<HomeDestination>(HomeDestination.CurrentScreen)
-    private val _advertisedGames = MutableLiveData<LoadedData<List<AdvertisedGame>>>()
-    private val _resumableGames = MutableLiveData<LoadedData<List<ResumableGameInfo>>>()
+    private val _advertisedGames = mutableStateOf<LoadedData<List<AdvertisedGame>>>(LoadedData.Loading)
+    private val _resumableGames = mutableStateOf<LoadedData<List<ResumableGameInfo>>>(LoadedData.Loading)
 
-    val loading get(): LiveData<Boolean> = _loading
-    val advertisedGames get(): LiveData<LoadedData<List<AdvertisedGame>>> = _advertisedGames
-    val resumableGames get(): LiveData<LoadedData<List<ResumableGameInfo>>> = _resumableGames
+    val loading get(): State<Boolean> = _loading
+    val advertisedGames get(): State<LoadedData<List<AdvertisedGame>>> = _advertisedGames
+    val resumableGames get(): State<LoadedData<List<ResumableGameInfo>>> = _resumableGames
     val navigation get(): State<HomeDestination> = _navigation
 
     init {

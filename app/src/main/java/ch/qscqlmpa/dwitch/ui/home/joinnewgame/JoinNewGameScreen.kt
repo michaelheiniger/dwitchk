@@ -7,7 +7,6 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -16,7 +15,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.DwitchTopBar
@@ -58,27 +56,19 @@ fun JoinNewGameScreen(
         onDispose { viewModel.onStop() }
     }
 
-    when (viewModel.navigationCommand.observeAsState().value) {
-        JoinNewGameDestination.NavigateToWaitingRoom -> onJoinGameClick()
-    }
+    Navigation(viewModel, onJoinGameClick)
 
-    val initialPlayerName = if (BuildConfig.DEBUG) "Mébène" else ""
-    val initialJoinGameControl = BuildConfig.DEBUG
-    val playerName = viewModel.playerName.observeAsState(initialPlayerName).value
-    val joinGameControl = viewModel.joinGameControl.observeAsState(initialJoinGameControl).value
-    val loading = viewModel.loading.observeAsState(false).value
     val game = remember { mutableStateOf(viewModel.getGame(gameIpAddress)) }
     JoinNewGameBody(
         gameName = game.value.gameName,
-        playerName = playerName,
-        joinGameControlEnabled = joinGameControl,
-        loading = loading,
+        playerName = viewModel.playerName.value,
+        joinGameControlEnabled = viewModel.joinGameControl.value,
+        loading = viewModel.loading.value,
         onPlayerNameChange = { name -> viewModel.onPlayerNameChange(name) },
         onJoinGameClick = { viewModel.joinGame() },
         onBackClick = onBackClick
     )
 }
-
 
 @Composable
 fun JoinNewGameBody(
@@ -127,5 +117,19 @@ fun JoinNewGameBody(
                 modifier = Modifier.fillMaxWidth()
             ) { Text(stringResource(R.string.join_game)) }
         }
+    }
+}
+
+
+@Composable
+private fun Navigation(
+    viewModel: JoinNewGameViewModel,
+    onJoinGameClick: () -> Unit
+) {
+    when (viewModel.navigation.value) {
+        JoinNewGameDestination.CurrentScreen -> {
+            // Nothing to do
+        }
+        JoinNewGameDestination.NavigateToWaitingRoom -> onJoinGameClick()
     }
 }

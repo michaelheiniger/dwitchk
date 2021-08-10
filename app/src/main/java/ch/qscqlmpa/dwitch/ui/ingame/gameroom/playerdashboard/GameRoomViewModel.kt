@@ -1,8 +1,9 @@
 package ch.qscqlmpa.dwitch.ui.ingame.gameroom.playerdashboard
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitch.ui.common.toolbarDefaultTitle
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.cardexchange.CardExchangeScreenBuilder
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.endofround.EndOfRoundManagerScreenBuilder
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.guest.GameRoomScreen
@@ -23,10 +24,10 @@ class GameRoomViewModel @Inject constructor(
 
     private lateinit var screenBuilder: GameRoomScreenBuilder
 
-    private val _screen = MutableLiveData<GameRoomScreen>()
-    private val _toolbarTitle = MutableLiveData<String>()
-    val screen get(): LiveData<GameRoomScreen> = _screen
-    val toolbarTitle get(): LiveData<String> = _toolbarTitle
+    private val _screen = mutableStateOf<GameRoomScreen>(GameRoomScreen.Loading)
+    private val _toolbarTitle = mutableStateOf(toolbarDefaultTitle)
+    val screen get(): State<GameRoomScreen> = _screen
+    val toolbarTitle get(): State<String> = _toolbarTitle
 
     init {
         loadGameName()

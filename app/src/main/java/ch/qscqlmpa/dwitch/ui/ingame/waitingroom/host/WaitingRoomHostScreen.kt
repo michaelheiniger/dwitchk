@@ -6,7 +6,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -70,26 +69,16 @@ fun WaitingRoomHostScreen(
         }
     }
 
-    val navigated = remember { mutableStateOf(false) }
-    val event = hostViewModel.navigation.observeAsState().value
-    if (event != null && !navigated.value) {
-        navigated.value = true
-        onNavigationEvent(event)
-    }
+    Navigation(hostViewModel, onNavigationEvent)
 
     val showConfirmationDialog = remember { mutableStateOf(false) }
 
-    val toolbarTitle = viewModel.toolbarTitle.observeAsState(toolbarDefaultTitle).value
-    val showAddComputerPlayer = viewModel.canComputerPlayersBeAdded.observeAsState(false).value
-    val players = viewModel.players.observeAsState(emptyList()).value
-    val launchGameEnabled = hostViewModel.canGameBeLaunched.observeAsState(false).value
-    val connectionStatus = connectionViewModel.connectionStatus.observeAsState().value
     WaitingRoomHostBody(
-        toolbarTitle = toolbarTitle,
-        showAddComputerPlayer = showAddComputerPlayer,
-        players = players,
-        launchGameEnabled = launchGameEnabled,
-        connectionStatus = connectionStatus,
+        toolbarTitle = viewModel.toolbarTitle.value,
+        showAddComputerPlayer = viewModel.canComputerPlayersBeAdded.value,
+        players = viewModel.players.value,
+        launchGameEnabled = hostViewModel.canGameBeLaunched.value,
+        connectionStatus = connectionViewModel.connectionStatus.value,
         onLaunchGameClick = hostViewModel::launchGame,
         onCancelGameClick = { showConfirmationDialog.value = true },
         onReconnectClick = connectionViewModel::reconnect,
@@ -104,7 +93,7 @@ fun WaitingRoomHostScreen(
             onCancelClick = { showConfirmationDialog.value = false }
         )
     }
-    if (hostViewModel.loading.observeAsState(false).value) LoadingDialog()
+    if (hostViewModel.loading.value) LoadingDialog()
 }
 
 @Composable
@@ -173,5 +162,18 @@ private fun HostControlScreen(
         ) {
             Text(stringResource(R.string.launch_game), color = Color.White)
         }
+    }
+}
+
+@Composable
+private fun Navigation(
+    hostViewModel: WaitingRoomHostViewModel,
+    onNavigationEvent: (WaitingRoomHostDestination) -> Unit
+) {
+    when (val dest = hostViewModel.navigation.value) {
+        WaitingRoomHostDestination.CurrentScreen -> {
+            // Nothing to do
+        }
+        else -> onNavigationEvent(dest)
     }
 }

@@ -8,7 +8,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -81,22 +80,18 @@ fun GameRoomHostScreen(
         }
     }
 
-    val event = hostViewModel.navigation.observeAsState().value
-    if (event != null) onNavigationEvent(event)
+    Navigation(hostViewModel, onNavigationEvent)
 
-    val toolbarTitle = playerViewModel.toolbarTitle.observeAsState(toolbarDefaultTitle).value
-    val screen = playerViewModel.screen.observeAsState().value
-    val connectionStatus = connectionViewModel.connectionStatus.observeAsState().value
     GameRoomHostBody(
-        toolbarTitle = toolbarTitle,
-        screen = screen,
+        toolbarTitle = playerViewModel.toolbarTitle.value,
+        screen = playerViewModel.screen.value,
         onCardClick = playerViewModel::onCardToPlayClick,
         onPlayClick = playerViewModel::onPlayClick,
         onPassClick = playerViewModel::onPassTurnClick,
         onCardToExchangeClick = playerViewModel::onCardToExchangeClick,
         onConfirmExchange = playerViewModel::confirmExchange,
         onStartNewRoundClick = hostViewModel::startNewRound,
-        connectionStatus = connectionStatus,
+        connectionStatus = connectionViewModel.connectionStatus.value,
         onEndGameConfirmClick = hostViewModel::endGame,
         onReconnectClick = connectionViewModel::reconnect
     )
@@ -195,5 +190,18 @@ fun GameRoomHostBody(
                 onCancelClick = { showEndGameConfirmationDialog.value = false }
             )
         }
+    }
+}
+
+@Composable
+private fun Navigation(
+    hostViewModel: GameRoomHostViewModel,
+    onNavigationEvent: (GameRoomHostDestination) -> Unit
+) {
+    when (val dest = hostViewModel.navigation.value) {
+        GameRoomHostDestination.CurrentScreen -> {
+            // Nothing to do
+        }
+        else -> onNavigationEvent(dest)
     }
 }

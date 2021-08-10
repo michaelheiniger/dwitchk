@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -79,19 +78,13 @@ fun GameRoomGuestScreen(
         }
     }
 
-    val event = guestViewModel.navigation.observeAsState().value
-    if (event != null) onNavigationEvent(event)
-
-    val toolbarTitle = playerViewModel.toolbarTitle.observeAsState(toolbarDefaultTitle).value
-    val screen = playerViewModel.screen.observeAsState().value
-    val connectionStatus = connectionViewModel.connectionStatus.observeAsState().value
-    val gameOver = guestViewModel.gameOver.observeAsState(false).value
+    Navigation(guestViewModel, onNavigationEvent)
 
     GameRoomGuestBody(
-        toolbarTitle = toolbarTitle,
-        screen = screen,
-        connectionStatus = connectionStatus,
-        showGameOver = gameOver,
+        toolbarTitle = playerViewModel.toolbarTitle.value,
+        screen = playerViewModel.screen.value,
+        connectionStatus = connectionViewModel.connectionStatus.value,
+        showGameOver = guestViewModel.gameOver.value,
         onCardClick = playerViewModel::onCardToPlayClick,
         onPlayClick = playerViewModel::onPlayClick,
         onPassClick = playerViewModel::onPassTurnClick,
@@ -192,5 +185,18 @@ fun GameRoomGuestBody(
             onConfirmClick = onLeaveGameConfirmClick,
             onCancelClick = { showLeaveGameConfirmationDialog.value = false }
         )
+    }
+}
+
+@Composable
+private fun Navigation(
+    guestViewModel: GameRoomGuestViewModel,
+    onNavigationEvent: (GameRoomGuestDestination) -> Unit
+) {
+    when (val dest = guestViewModel.navigation.value) {
+        GameRoomGuestDestination.CurrentScreen -> {
+            // Nothing to do
+        }
+        GameRoomGuestDestination.NavigateToHomeScreen -> onNavigationEvent(dest)
     }
 }

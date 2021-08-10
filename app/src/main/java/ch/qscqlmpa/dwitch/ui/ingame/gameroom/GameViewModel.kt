@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.ingame.gameroom
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.ingame.GameScreens
 import ch.qscqlmpa.dwitchgame.ingame.GameFacade
@@ -17,8 +17,8 @@ class GameViewModel @Inject constructor(
     uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val _startScreen = MutableLiveData<GameScreens>()
-    val startScreen get(): LiveData<GameScreens> = _startScreen
+    private val _startScreen = mutableStateOf<GameScreens>(GameScreens.Loading)
+    val startScreen get(): State<GameScreens> = _startScreen
 
     init {
         disposableManager.add(

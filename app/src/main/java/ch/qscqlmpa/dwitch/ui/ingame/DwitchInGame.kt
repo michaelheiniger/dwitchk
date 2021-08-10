@@ -5,7 +5,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -25,6 +24,7 @@ import ch.qscqlmpa.dwitch.ui.theme.DwitchTheme
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 
 sealed class GameScreens(val name: String) {
+    object Loading : GameScreens("loading")
     object WaitingRoomHost : GameScreens("waitingRoomHost")
     object WaitingRoomGuest : GameScreens("waitingRoomGuest")
     object GameRoomHost : GameScreens("gameRoomHost")
@@ -42,19 +42,16 @@ fun DwitchGame(
         val navController = rememberNavController()
         val viewModel = viewModel<GameViewModel>(factory = vmFactory)
 
-        val startScreen = viewModel.startScreen.observeAsState().value
-
         Scaffold { innerPadding ->
-            if (startScreen != null) {
-                GameNavHost(
+            when (val startScreen = viewModel.startScreen.value) {
+                GameScreens.Loading -> LoadingSpinner()
+                else -> GameNavHost(
                     vmFactory = vmFactory,
                     navController = navController,
                     startScreen = startScreen,
                     modifier = Modifier.padding(innerPadding),
                     navigateToHomeFragment = navigateToHomeFragment
                 )
-            } else {
-                LoadingSpinner()
             }
         }
     }

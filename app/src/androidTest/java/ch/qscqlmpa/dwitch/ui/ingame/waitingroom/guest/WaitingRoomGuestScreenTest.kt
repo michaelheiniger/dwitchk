@@ -67,7 +67,7 @@ class WaitingRoomGuestScreenTest : BaseUiUnitTest() {
                 toolbarTitle = "Dwiitch",
                 players = players,
                 ready = ready,
-                notification = null,
+                notification = WaitingRoomGuestNotification.None,
                 connectionStatus = GuestCommunicationState.Connected,
                 onReadyClick = {},
                 onLeaveConfirmClick = {},

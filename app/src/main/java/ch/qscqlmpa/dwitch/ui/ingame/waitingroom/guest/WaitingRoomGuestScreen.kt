@@ -7,7 +7,6 @@ import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -44,7 +43,7 @@ private fun WaitingRoomGuestScreenPlayerConnectedPreview() {
                 PlayerWrUi(3L, name = "Gimli", connected = false, ready = false, kickable = false)
             ),
             ready = UiCheckboxModel(enabled = false, checked = false),
-            notification = null,
+            notification = WaitingRoomGuestNotification.None,
             connectionStatus = GuestCommunicationState.Connected,
             onReadyClick = {},
             onLeaveConfirmClick = {},
@@ -77,17 +76,12 @@ fun WaitingRoomGuestScreen(
 
     Navigation(guestViewModel.navigation.value, onNavigationEvent = onNavigationEvent)
 
-    val toolbarTitle = viewModel.toolbarTitle.observeAsState(toolbarDefaultTitle).value
-    val players = viewModel.players.observeAsState(emptyList()).value
-    val readyControl = guestViewModel.ready.observeAsState(UiCheckboxModel(checked = false, enabled = false)).value
-    val connectionStatus = connectionViewModel.connectionStatus.observeAsState().value
-    val notification = guestViewModel.notifications.observeAsState().value
     WaitingRoomGuestBody(
-        toolbarTitle = toolbarTitle,
-        players = players,
-        ready = readyControl,
-        notification = notification,
-        connectionStatus = connectionStatus,
+        toolbarTitle = viewModel.toolbarTitle.value,
+        players = viewModel.players.value,
+        ready = guestViewModel.ready.value,
+        notification = guestViewModel.notifications.value,
+        connectionStatus = connectionViewModel.connectionStatus.value,
         onReadyClick = guestViewModel::updateReadyState,
         onLeaveConfirmClick = guestViewModel::leaveGame,
         onReconnectClick = connectionViewModel::reconnect,
@@ -106,7 +100,7 @@ fun WaitingRoomGuestBody(
     toolbarTitle: String,
     players: List<PlayerWrUi>,
     ready: UiCheckboxModel,
-    notification: WaitingRoomGuestNotification?,
+    notification: WaitingRoomGuestNotification,
     connectionStatus: GuestCommunicationState?,
     onReadyClick: (Boolean) -> Unit,
     onLeaveConfirmClick: () -> Unit,
@@ -161,7 +155,7 @@ fun WaitingRoomGuestBody(
                 onOkClick = onKickOffGameAcknowledge
             )
         }
-        else -> {
+        WaitingRoomGuestNotification.None -> {
             ConnectionGuestScreen(
                 status = connectionStatus,
                 onReconnectClick = onReconnectClick,

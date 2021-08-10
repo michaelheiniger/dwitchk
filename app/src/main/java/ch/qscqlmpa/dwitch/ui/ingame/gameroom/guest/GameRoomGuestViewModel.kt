@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.ingame.gameroom.guest
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchgame.ingame.gameevents.GuestGameEvent
@@ -17,10 +17,10 @@ internal class GameRoomGuestViewModel @Inject constructor(
     private val idlingResource: DwitchIdlingResource
 ) : BaseViewModel() {
 
-    private val _navigationCommand = MutableLiveData<GameRoomGuestDestination>()
-    private val _gameOver = MutableLiveData<Boolean>()
-    val navigation get(): LiveData<GameRoomGuestDestination> = _navigationCommand
-    val gameOver get(): LiveData<Boolean> = _gameOver
+    private val _navigationCommand = mutableStateOf<GameRoomGuestDestination>(GameRoomGuestDestination.CurrentScreen)
+    private val _gameOver = mutableStateOf(false)
+    val navigation get(): State<GameRoomGuestDestination> = _navigationCommand
+    val gameOver get(): State<Boolean> = _gameOver
 
     fun acknowledgeGameOver() {
         _gameOver.value = false
@@ -28,9 +28,10 @@ internal class GameRoomGuestViewModel @Inject constructor(
     }
 
     fun leaveGame() {
-        disposableManager.add(facade.leaveGame()
-            .observeOn(uiScheduler)
-            .subscribe(
+        disposableManager.add(
+            facade.leaveGame()
+                .observeOn(uiScheduler)
+                .subscribe(
                 {
                     Logger.info { "Left game successfully" }
                     _navigationCommand.value = GameRoomGuestDestination.NavigateToHomeScreen

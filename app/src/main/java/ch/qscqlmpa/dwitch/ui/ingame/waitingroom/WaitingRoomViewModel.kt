@@ -1,8 +1,9 @@
 package ch.qscqlmpa.dwitch.ui.ingame.waitingroom
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitch.ui.common.toolbarDefaultTitle
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.WaitingRoomFacade
@@ -16,13 +17,13 @@ class WaitingRoomViewModel @Inject constructor(
     private val idlingResource: DwitchIdlingResource
 ) : BaseViewModel() {
 
-    private val _toolbarTitle = MutableLiveData<String>()
-    private val _canComputerPlayersBeAdded = MutableLiveData<Boolean>()
-    private val _players = MutableLiveData<List<PlayerWrUi>>(emptyList())
+    private val _toolbarTitle = mutableStateOf(toolbarDefaultTitle)
+    private val _canComputerPlayersBeAdded = mutableStateOf(false)
+    private val _players = mutableStateOf<List<PlayerWrUi>>(emptyList())
 
-    val toolbarTitle get(): LiveData<String> = _toolbarTitle
-    val canComputerPlayersBeAdded get(): LiveData<Boolean> = _canComputerPlayersBeAdded
-    val players get(): LiveData<List<PlayerWrUi>> = _players
+    val toolbarTitle get(): State<String> = _toolbarTitle
+    val canComputerPlayersBeAdded get(): State<Boolean> = _canComputerPlayersBeAdded
+    val players get(): State<List<PlayerWrUi>> = _players
 
     init {
         loadGame()
