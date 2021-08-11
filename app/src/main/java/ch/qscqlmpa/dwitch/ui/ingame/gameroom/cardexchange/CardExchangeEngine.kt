@@ -54,8 +54,7 @@ class CardExchangeEngine(cardExchangeInfo: CardExchangeInfo) {
     }
 
     private fun addCardToExchange(card: Card) {
-        require(allowedCardValues.contains(card.name))
-        { "Card $card cannot be chosen because it has a too low value (allowed card values: $allowedCardValues)" }
+        require(allowedCardValues.contains(card.name)) { "Card $card cannot be chosen because it has a too low value (allowed card values: $allowedCardValues)" }
 
         allowedCardValues.remove(card.name)
         if (cardsSelected.size == numCardsToChoose) {

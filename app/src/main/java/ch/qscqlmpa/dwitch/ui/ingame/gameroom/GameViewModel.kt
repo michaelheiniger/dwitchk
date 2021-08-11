@@ -11,7 +11,6 @@ import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.Logger
 import javax.inject.Inject
 
-
 class GameViewModel @Inject constructor(
     private val gameFacade: GameFacade,
     uiScheduler: Scheduler

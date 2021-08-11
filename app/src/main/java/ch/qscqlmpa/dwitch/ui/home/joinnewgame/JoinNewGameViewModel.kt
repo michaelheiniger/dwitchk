@@ -39,7 +39,7 @@ class JoinNewGameViewModel @Inject constructor(
         Logger.debug { "Viewmodel lifecycle event: create JoinNewGameViewModel ($this)" }
     }
 
-    //TODO: find better solution without side effet (i.e. assignment)
+    // TODO: find better solution without side effet (i.e. assignment)
     fun getGame(ipAddress: String): AdvertisedGame {
         game = guestFacade.getAdvertisedGame(ipAddress)
         return game

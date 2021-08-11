@@ -16,7 +16,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import ch.qscqlmpa.dwitch.R
 
-
 data class NavigationIcon(
     val icon: Int,
     val contentDescription: Int,

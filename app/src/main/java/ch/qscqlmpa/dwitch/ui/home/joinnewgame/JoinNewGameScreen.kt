@@ -120,7 +120,6 @@ fun JoinNewGameBody(
     }
 }
 
-
 @Composable
 private fun Navigation(
     viewModel: JoinNewGameViewModel,

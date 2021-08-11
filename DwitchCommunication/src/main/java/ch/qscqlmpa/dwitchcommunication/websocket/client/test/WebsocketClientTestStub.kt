@@ -12,7 +12,6 @@ internal class WebsocketClientTestStub(
 
     override fun connectClientToServer(event: OnStartEvent) = client.putOnStartEvent(event)
 
-
     override fun serverSendsMessageToClient(message: Message) {
         val messageSerialized = serializerFactory.serialize(message)
         client.onMessage(messageSerialized)

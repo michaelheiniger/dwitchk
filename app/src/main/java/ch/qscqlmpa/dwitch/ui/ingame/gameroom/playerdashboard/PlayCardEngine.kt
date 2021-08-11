@@ -62,8 +62,7 @@ class PlayCardEngine(
     }
 
     private fun requireCardToHaveSameNameAsOtherSelectedCards(card: Card) {
-        require(cardsSelected.isEmpty() || cardsSelected.all { c -> c.name == card.name })
-        { "Card $card is not selectable: name is different than already selected card(s)." }
+        require(cardsSelected.isEmpty() || cardsSelected.all { c -> c.name == card.name }) { "Card $card is not selectable: name is different than already selected card(s)." }
     }
 
     private fun requireCardToBeSelectable(card: Card) {
@@ -71,8 +70,7 @@ class PlayCardEngine(
     }
 
     private fun requireNumberOfCardsSelectedToBeLessOrEqualToLastCardPlayedMultiplicity(card: Card, cardMultiplicity: Int) {
-        if (!cardsSelected.contains(card)) require(cardsSelected.size + 1 <= cardMultiplicity)
-        { "Cannot select more cards than multiplicity of last card played" }
+        if (!cardsSelected.contains(card)) require(cardsSelected.size + 1 <= cardMultiplicity) { "Cannot select more cards than multiplicity of last card played" }
     }
 
     private fun cardHasSameNameAsOtherSelectedCards(cardInfo: CardInfo) = cardInfo.card.name == nameOfSelectedCards()

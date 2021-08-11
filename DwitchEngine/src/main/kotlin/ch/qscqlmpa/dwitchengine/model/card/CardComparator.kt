@@ -66,4 +66,3 @@ class DwitchCardInfoValueAscComparator(joker: CardName = initialJoker) : Compara
         return comparator.compare(cardInfo2.card, cardInfo1.card)
     }
 }
-

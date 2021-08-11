@@ -60,6 +60,5 @@ internal class TestWebsocketServer(
 
     override fun getConnections(): Collection<WebSocket> = connections.toList()
 
-
     fun blockUntilMessageSentIsAvailable(): String = messageSentOrBroadcastedRelay.take()
 }

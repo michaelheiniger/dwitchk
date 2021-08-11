@@ -44,5 +44,4 @@ class GameInfoRobot(private val info: DwitchGameInfo) {
         assertThat(info.newRoundCanBeStarted).isEqualTo(canStartNewRound)
         return this
     }
-
 }

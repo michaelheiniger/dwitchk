@@ -101,7 +101,7 @@ class GameRoomAsHostTest : BaseHostTest() {
         testRule.playCards(Card.Hearts5) // Local player plays its last card
         assertGameStateUpdatedMessageSent()
 
-        //TODO: Replace with PlayerHostTest or something like this
+        // TODO: Replace with PlayerHostTest or something like this
 //        testRule.assertEndOfRoundResult(PlayerGuestTest.Host.info.name, getString(R.string.president_long))
 //        testRule.assertEndOfRoundResult(PlayerGuestTest.LocalGuest.info.name, getString(R.string.asshole_long))
 

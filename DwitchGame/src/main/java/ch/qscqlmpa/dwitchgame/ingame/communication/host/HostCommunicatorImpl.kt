@@ -147,6 +147,6 @@ internal class HostCommunicatorImpl constructor(
                     }
                 }
             else -> Completable.complete()
-        } //.subscribeOn(schedulerFactory.io())
+        } // .subscribeOn(schedulerFactory.io())
     }
 }

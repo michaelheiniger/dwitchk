@@ -10,7 +10,7 @@ import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import io.reactivex.rxjava3.core.Completable
 import javax.inject.Inject
 
-//TODO: Write tests
+// TODO: Write tests
 internal class GameCanceledMessageProcessor @Inject constructor(
     private val store: InGameStore,
     private val gameEventRepository: GuestGameEventRepository,

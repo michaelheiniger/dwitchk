@@ -17,7 +17,7 @@ object WaitingRoomUtil {
     fun ComposeContentTestRule.assertPlayerInWr(name: String, ready: Boolean): SemanticsNodeInteraction {
         val sni = assertPlayerInWr(name)
         if (ready) sni.onChildren().filterToOne(hasText("Ready")) else sni.onChildren()
-            .filterToOne(hasText("Not ready"))// TODO: i18n proof
+            .filterToOne(hasText("Not ready")) // TODO: i18n proof
         return sni
     }
 

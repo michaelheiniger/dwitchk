@@ -125,4 +125,3 @@ private fun Navigation(viewModel: HostNewGameViewModel, onHostGameClick: () -> U
         HostNewGameDestination.NavigateToWaitingRoom -> onHostGameClick()
     }
 }
-

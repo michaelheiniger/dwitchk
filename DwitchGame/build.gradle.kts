@@ -83,7 +83,6 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.19.0")
     androidTestImplementation("org.assertj:assertj-core:3.19.0")
 
-
     // AndroidJUnitRunner and JUnit Rules
     androidTestImplementation("androidx.test.ext:junit-ktx:1.1.3")
     androidTestImplementation("androidx.test:core-ktx:1.4.0")

@@ -56,7 +56,7 @@ class WaitingRoomViewModelTest : BaseViewModelUnitTest() {
         every { mockFacade.gameInfo() } returns Single.just(GameInfoUi("Dwiitch", gameIsNew = true))
         createViewModel()
 
-        //When
+        // When
         viewModel.onStart()
 
         // Then
@@ -69,7 +69,7 @@ class WaitingRoomViewModelTest : BaseViewModelUnitTest() {
         every { mockFacade.gameInfo() } returns Single.just(GameInfoUi("Dwiitch", gameIsNew = false))
         createViewModel()
 
-        //When
+        // When
         viewModel.onStart()
 
         // Then

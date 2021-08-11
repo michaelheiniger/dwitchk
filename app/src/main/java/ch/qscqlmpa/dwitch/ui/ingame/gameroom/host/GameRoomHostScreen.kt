@@ -32,7 +32,6 @@ import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationState
 
-
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Preview(
@@ -126,7 +125,8 @@ fun GameRoomHostBody(
             navigationIcon = NavigationIcon(
                 icon = R.drawable.ic_baseline_exit_to_app_24,
                 contentDescription = R.string.end_game,
-                onClick = { showEndGameConfirmationDialog.value = true }),
+                onClick = { showEndGameConfirmationDialog.value = true }
+            ),
             actions = listOf(GameRules),
             onActionClick = { action ->
                 when (action) {

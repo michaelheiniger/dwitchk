@@ -34,9 +34,8 @@ internal class DashboardScreenBuilderTest {
                 DwitchCardInfo(Card.Hearts2, selectable = true),
                 DwitchCardInfo(Card.ClubsAce, selectable = true),
                 DwitchCardInfo(Card.Spades2, selectable = true),
-                DwitchCardInfo(Card.DiamondsJack, selectable = true),
-
-                ),
+                DwitchCardInfo(Card.DiamondsJack, selectable = true)
+            ),
             canPass = true
         ),
         lastCardPlayed = PlayedCards(Card.Clubs4),

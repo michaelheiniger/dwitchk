@@ -98,7 +98,7 @@ fun CardItemDisplay(
             .clickable(
                 enabled = cardItem.selectable,
                 onClick = { onCardClick(cardItem.card) },
-                onClickLabel = "", //TODO
+                onClickLabel = "", // TODO
             )
             .testTag(cardItem.card.toString())
             .alpha(alpha)

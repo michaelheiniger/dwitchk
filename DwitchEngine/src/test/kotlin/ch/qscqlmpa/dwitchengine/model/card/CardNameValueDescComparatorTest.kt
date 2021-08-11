@@ -23,7 +23,6 @@ internal class CardNameValueDescComparatorTest {
         }
     }
 
-
     @Nested
     inner class CardValueComparator {
 

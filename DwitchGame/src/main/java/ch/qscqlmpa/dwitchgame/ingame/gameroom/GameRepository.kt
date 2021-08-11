@@ -55,7 +55,7 @@ internal class GameRepository @Inject constructor(
 
     private fun getDataForCardExchange(localPlayer: Player, gameState: DwitchGameState): DwitchState {
         val cardExchange = dwitchFactory.createDwitchEngine(gameState).getCardExchangeIfRequired(localPlayer.dwitchId)
-        return if (cardExchange != null) {// Local player needs to perform a card exchange
+        return if (cardExchange != null) { // Local player needs to perform a card exchange
             DwitchState.CardExchange(CardExchangeInfo(cardExchange, gameState.player(localPlayer.dwitchId).cardsInHand))
         } else DwitchState.CardExchangeOnGoing
     }

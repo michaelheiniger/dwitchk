@@ -69,7 +69,7 @@ internal class WebsocketCommServer @Inject constructor(
         if (address != null) {
             val senderSocket = websocketServer.getConnections().find { webSocket ->
                 webSocket.remoteSocketAddress.address.hostAddress == address.ipAddress &&
-                        webSocket.remoteSocketAddress.port == address.port
+                    webSocket.remoteSocketAddress.port == address.port
             }
             senderSocket?.close()
         }
@@ -85,7 +85,7 @@ internal class WebsocketCommServer @Inject constructor(
     private fun sendUnicastMessage(serializedMessage: String, recipientAddress: AddressType.Unicast) {
         val recipientSocket = websocketServer.getConnections().find { webSocket ->
             webSocket.remoteSocketAddress.address.hostAddress == recipientAddress.destination.ipAddress &&
-                    webSocket.remoteSocketAddress.port == recipientAddress.destination.port
+                webSocket.remoteSocketAddress.port == recipientAddress.destination.port
         }
         if (recipientSocket != null) {
             websocketServer.send(recipientSocket, serializedMessage)

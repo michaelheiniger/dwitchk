@@ -33,7 +33,7 @@ internal class JoinNewGameUsecaseTest : BaseUnitTest() {
     fun setup() {
         newGameUsecase = JoinNewGameUsecase(mockGameLifecycleEventRepository, mockStore)
         every { mockStore.insertGameForGuest(any(), any(), any()) } returns
-                InsertGameResult(gameLocalId, gameCommonId, gameName, localPlayerLocalId)
+            InsertGameResult(gameLocalId, gameCommonId, gameName, localPlayerLocalId)
     }
 
     @Test

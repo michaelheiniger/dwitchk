@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 
-
 @Preview(
     showBackground = true,
     backgroundColor = 0xFFFFFFFF
@@ -43,7 +42,6 @@ fun SmileyFaceCanvas(
 
     var currentState by remember { mutableStateOf(MyState.STATE_A) }
     val transition = updateTransition(currentState, label = "")
-
 
     val deltaXAnim = rememberInfiniteTransition()
 //    val anim = rememberTransformableState(
@@ -81,12 +79,14 @@ fun SmileyFaceCanvas(
         }
     }
     Column {
-        Button(onClick = {
-            currentState = when (currentState) {
-                MyState.STATE_A -> MyState.STATE_B
-                MyState.STATE_B -> MyState.STATE_A
+        Button(
+            onClick = {
+                currentState = when (currentState) {
+                    MyState.STATE_A -> MyState.STATE_B
+                    MyState.STATE_B -> MyState.STATE_A
+                }
             }
-        }) {
+        ) {
             Text("Salut")
         }
         Canvas(
@@ -107,7 +107,6 @@ fun SmileyFaceCanvas(
 //                val currentFloatValue = it[myFloatKey]
 //                println("Transition: $currentFloatValue")
 //            }
-
 
                 // Head
 //            drawCircle(

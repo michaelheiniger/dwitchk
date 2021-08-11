@@ -142,5 +142,3 @@ class WaitingRoomAsHostTest : BaseHostTest() {
         assertThat(messageSent2).isInstanceOf(Message.WaitingRoomStateUpdateMessage::class.java)
     }
 }
-
-

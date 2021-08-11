@@ -29,7 +29,7 @@ internal class HostNewGameUsecaseTest : BaseUnitTest() {
     fun setup() {
         hostNewGameUsecase = HostNewGameUsecase(mockGameLifecycleEventRepository, mockStore)
         every { mockStore.insertGameForHost(any(), any()) } returns
-                InsertGameResult(gameLocalId, gameCommonId, gameName, localPlayerLocalId)
+            InsertGameResult(gameLocalId, gameCommonId, gameName, localPlayerLocalId)
     }
 
     @Test

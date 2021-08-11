@@ -6,7 +6,7 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 
-//TODO: define dark color palette (i.e. different than light palette)
+// TODO: define dark color palette (i.e. different than light palette)
 private val DarkColorPalette = darkColors(
     primary = Blue500,
     primaryVariant = BlueDark,
