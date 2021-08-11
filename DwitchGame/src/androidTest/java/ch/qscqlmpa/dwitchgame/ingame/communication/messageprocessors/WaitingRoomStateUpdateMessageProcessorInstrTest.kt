@@ -10,7 +10,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 
-class WaitingRoomStateUpdateMessageProcessorTest : BaseInstrumentedTest() {
+class WaitingRoomStateUpdateMessageProcessorInstrTest : BaseInstrumentedTest() {
 
     private lateinit var processor: WaitingRoomStateUpdateMessageProcessor
 

@@ -11,7 +11,6 @@ import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.TestUtil
 import ch.qscqlmpa.dwitchgame.ingame.communication.messagefactories.MessageFactory
-import ch.qscqlmpa.dwitchgame.ingame.messageprocessors.BaseMessageProcessorTest
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

@@ -1,10 +1,9 @@
-package ch.qscqlmpa.dwitchgame.ingame.messageprocessors
+package ch.qscqlmpa.dwitchgame.ingame.communication.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.LazyImpl
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
-import ch.qscqlmpa.dwitchgame.ingame.communication.messageprocessors.PlayerReadyMessageProcessor
 import io.mockk.every
 import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable

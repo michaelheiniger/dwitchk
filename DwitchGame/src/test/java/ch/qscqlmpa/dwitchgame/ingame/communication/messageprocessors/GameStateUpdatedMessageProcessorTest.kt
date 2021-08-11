@@ -1,10 +1,9 @@
-package ch.qscqlmpa.dwitchgame.ingame.messageprocessors
+package ch.qscqlmpa.dwitchgame.ingame.communication.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
-import ch.qscqlmpa.dwitchgame.ingame.communication.messageprocessors.GameStateUpdatedMessageProcessor
 import ch.qscqlmpa.dwitchstore.model.Player
 import io.mockk.confirmVerified
 import io.mockk.every

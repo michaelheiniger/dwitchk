@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitchgame.ingame.messageprocessors
+package ch.qscqlmpa.dwitchgame.ingame.communication.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
@@ -7,7 +7,6 @@ import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchgame.TestUtil
-import ch.qscqlmpa.dwitchgame.ingame.communication.messageprocessors.JoinGameMessageProcessor
 import io.mockk.*
 import io.reactivex.rxjava3.core.Completable
 import org.assertj.core.api.Assertions.assertThat

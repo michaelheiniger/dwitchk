@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitchgame.ingame.messageprocessors
+package ch.qscqlmpa.dwitchgame.ingame.communication.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
@@ -9,7 +9,6 @@ import ch.qscqlmpa.dwitchcommunication.model.RejoinInfo
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.TestUtil
 import ch.qscqlmpa.dwitchgame.ingame.communication.messagefactories.HostMessageFactory
-import ch.qscqlmpa.dwitchgame.ingame.communication.messageprocessors.RejoinGameMessageProcessor
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchstore.ingamestore.model.GameCommonIdAndCurrentRoom

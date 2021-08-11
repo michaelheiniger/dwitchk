@@ -1,9 +1,8 @@
-package ch.qscqlmpa.dwitchgame.ingame.messageprocessors
+package ch.qscqlmpa.dwitchgame.ingame.communication.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
-import ch.qscqlmpa.dwitchgame.ingame.communication.messageprocessors.JoinGameAckMessageProcessor
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.mockk.every
 import io.mockk.verify

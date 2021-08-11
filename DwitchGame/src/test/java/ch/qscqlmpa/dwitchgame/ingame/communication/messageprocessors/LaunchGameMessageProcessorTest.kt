@@ -1,11 +1,10 @@
-package ch.qscqlmpa.dwitchgame.ingame.messageprocessors
+package ch.qscqlmpa.dwitchgame.ingame.communication.messageprocessors
 
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GuestGameLifecycleEvent
 import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GuestGameLifecycleEventRepository
-import ch.qscqlmpa.dwitchgame.ingame.communication.messageprocessors.LaunchGameMessageProcessor
 import ch.qscqlmpa.dwitchgame.ingame.gameevents.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ingame.gameevents.GuestGameEventRepository
 import io.mockk.mockk
