@@ -25,9 +25,9 @@ internal class GameRepository @Inject constructor(
             when (gameState.phase) {
                 DwitchGamePhase.RoundIsBeginning -> DwitchState.RoundIsBeginning(
                     createDashboardInfo(
-                        localPlayer,
-                        players,
-                        gameState
+                        localPlayer = localPlayer,
+                        players = players,
+                        gameState = gameState
                     )
                 )
                 DwitchGamePhase.RoundIsOnGoing -> DwitchState.RoundIsOngoing(createDashboardInfo(localPlayer, players, gameState))
@@ -45,24 +45,25 @@ internal class GameRepository @Inject constructor(
         return gameData.doOnNext { data -> Logger.debug { "GameData emitted: $data" } }
     }
 
-    private fun getDataForCardExchange(localPlayer: Player, gameState: DwitchGameState): DwitchState {
-        val cardExchange = dwitchFactory.createDwitchEngine(gameState).getCardExchangeIfRequired(localPlayer.dwitchId)
-        if (cardExchange != null) { // Local player needs to perform a card exchange
-            return DwitchState.CardExchange(CardExchangeInfo(cardExchange, gameState.player(localPlayer.dwitchId).cardsInHand))
-        }
-        return DwitchState.CardExchangeOnGoing
-    }
-
     private fun createDashboardInfo(localPlayer: Player, players: List<Player>, gameState: DwitchGameState): GameDashboardInfo {
         return GameInfoFactory.createGameDashboardInfo(
-            dwitchFactory.createDwitchEngine(gameState).getGameInfo(),
-            localPlayer.dwitchId,
-            players.map { p -> p.dwitchId to p.connected }.toMap()
+            gameInfo = dwitchFactory.createDwitchEngine(gameState).getGameInfo(),
+            localPlayerId = localPlayer.dwitchId,
+            playersConnected = players.map { p -> p.dwitchId to p.connected }.toMap()
         )
     }
 
+    private fun getDataForCardExchange(localPlayer: Player, gameState: DwitchGameState): DwitchState {
+        val cardExchange = dwitchFactory.createDwitchEngine(gameState).getCardExchangeIfRequired(localPlayer.dwitchId)
+        return if (cardExchange != null) {// Local player needs to perform a card exchange
+            DwitchState.CardExchange(CardExchangeInfo(cardExchange, gameState.player(localPlayer.dwitchId).cardsInHand))
+        } else DwitchState.CardExchangeOnGoing
+    }
+
     private fun createEndOfRoundInfo(localPlayer: Player, gameState: DwitchGameState): EndOfRoundInfo {
-        val playerInfos = dwitchFactory.createDwitchEngine(gameState).getGameInfo().playerInfos.values.toList()
-        return GameInfoFactory.createEndOfGameInfo(playerInfos, localPlayerIsHost = localPlayer.isHost)
+        return GameInfoFactory.createEndOfGameInfo(
+            gameInfo = dwitchFactory.createDwitchEngine(gameState).getGameInfo(),
+            localPlayerIsHost = localPlayer.isHost
+        )
     }
 }

@@ -3,7 +3,6 @@ package ch.qscqlmpa.dwitchgame.ingame.gameroom
 import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
 import ch.qscqlmpa.dwitchengine.model.info.DwitchGameInfo
-import ch.qscqlmpa.dwitchengine.model.info.DwitchPlayerInfo
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
@@ -13,10 +12,10 @@ object GameInfoFactory {
     fun createGameDashboardInfo(
         gameInfo: DwitchGameInfo,
         localPlayerId: DwitchPlayerId,
-        playersConnectionState: Map<DwitchPlayerId, Boolean>
+        playersConnected: Map<DwitchPlayerId, Boolean>
     ): GameDashboardInfo {
         val localPlayerInfo = gameInfo.playerInfos.getValue(localPlayerId)
-        val localPlayerIsConnected = playerIsConnected(playersConnectionState, localPlayerId)
+        val localPlayerIsConnected = playerIsConnected(playersConnected, localPlayerId)
         val dashboardEnabled = localPlayerIsConnected
         val localPlayerIsCurrentPlayer = gameInfo.currentPlayerId == localPlayerId
         return GameDashboardInfo(
@@ -34,17 +33,18 @@ object GameInfoFactory {
                 canPass = localPlayerIsCurrentPlayer && dashboardEnabled
             ),
             lastCardPlayed = gameInfo.lastCardPlayed,
-            waitingForPlayerReconnection = playerIsDisconnected(playersConnectionState, gameInfo.currentPlayerId) &&
-                    gameInfo.currentPlayerId != localPlayerId && localPlayerIsConnected
+            waitingForPlayerReconnection = playerIsDisconnected(playersConnected, gameInfo.currentPlayerId) &&
+                    gameInfo.currentPlayerId != localPlayerId &&
+                    localPlayerIsConnected
         )
     }
 
-    fun createEndOfGameInfo(playersInfo: List<DwitchPlayerInfo>, localPlayerIsHost: Boolean): EndOfRoundInfo {
+    fun createEndOfGameInfo(gameInfo: DwitchGameInfo, localPlayerIsHost: Boolean): EndOfRoundInfo {
         // Special case: "start new round" and "end game" should only be performed by the host for technical reasons.
         return EndOfRoundInfo(
-            canStartNewRound = localPlayerIsHost,
+            canStartNewRound = gameInfo.newRoundCanBeStarted && localPlayerIsHost,
             canEndGame = localPlayerIsHost,
-            playersInfo = playersInfo.map { p -> PlayerEndOfRoundInfo(p.name, p.rank) }
+            playersInfo = gameInfo.playerInfos.values.map { p -> PlayerEndOfRoundInfo(p.name, p.rank) }
         )
     }
 

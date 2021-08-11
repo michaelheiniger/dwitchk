@@ -39,4 +39,10 @@ class GameInfoRobot(private val info: DwitchGameInfo) {
         assertThat(info.playingOrder).containsExactly(*playerIds)
         return this
     }
+
+    fun assertNewRoundCanBeStarted(canStartNewRound: Boolean): GameInfoRobot {
+        assertThat(info.newRoundCanBeStarted).isEqualTo(canStartNewRound)
+        return this
+    }
+
 }

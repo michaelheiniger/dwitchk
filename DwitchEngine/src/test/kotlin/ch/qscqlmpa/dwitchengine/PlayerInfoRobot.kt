@@ -34,11 +34,6 @@ class PlayerInfoRobot(private val info: DwitchPlayerInfo) {
         return this
     }
 
-    fun assertCanStartNewRound(canStartNewRound: Boolean): PlayerInfoRobot {
-        assertThat(info.canStartNewRound).isEqualTo(canStartNewRound)
-        return this
-    }
-
     fun assertIsDwitched(): PlayerInfoRobot {
         assertThat(info.dwitched).isTrue
         return this

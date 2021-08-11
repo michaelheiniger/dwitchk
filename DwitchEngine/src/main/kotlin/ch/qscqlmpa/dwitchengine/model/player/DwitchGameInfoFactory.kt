@@ -22,7 +22,8 @@ internal class DwitchGameInfoFactory(val gameState: DwitchGameState) {
             gameState.joker,
             gameState.lastCardsPlayed(),
             gameState.cardsOnTable,
-            gameState.dwitchGameEvent
+            gameState.dwitchGameEvent,
+            roundIsOver()
         )
     }
 
@@ -31,7 +32,6 @@ internal class DwitchGameInfoFactory(val gameState: DwitchGameState) {
     }
 
     private fun playerInfo(player: DwitchPlayer): DwitchPlayerInfo {
-        val canStartNewRound = roundIsOver()
         return DwitchPlayerInfo(
             player.id,
             player.name,
@@ -39,8 +39,7 @@ internal class DwitchGameInfoFactory(val gameState: DwitchGameState) {
             player.status,
             player.dwitched,
             buildCardInHands(player),
-            canPlay(player),
-            canStartNewRound
+            canPlay(player)
         )
     }
 

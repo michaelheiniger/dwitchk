@@ -14,5 +14,6 @@ data class DwitchGameInfo(
     val joker: CardName,
     val lastCardPlayed: PlayedCards?,
     val cardsOnTable: List<PlayedCards>,
-    val dwitchGameEvent: DwitchGameEvent?
+    val dwitchGameEvent: DwitchGameEvent?,
+    val newRoundCanBeStarted: Boolean
 )
