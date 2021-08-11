@@ -12,7 +12,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-internal class CancelGameMessageProcessorTest : BaseMessageProcessorTest() {
+internal class GameCanceledMessageProcessorTest : BaseMessageProcessorTest() {
 
     private val mockGameEventRepository = mockk<GuestGameEventRepository>(relaxed = true)
     private val mockGameLifecycleEventRepository = mockk<GuestGameLifecycleEventRepository>(relaxed = true)
