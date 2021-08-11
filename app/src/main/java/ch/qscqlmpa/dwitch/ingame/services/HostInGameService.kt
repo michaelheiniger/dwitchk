@@ -25,7 +25,7 @@ class HostInGameService : BaseInGameService() {
             RoomType.WAITING_ROOM,
             gameCreatedInfo.gameLocalId,
             gameCreatedInfo.localPlayerLocalId,
-            gameCreatedInfo.gamePort,
+            LISTENING_PORT,
             "0.0.0.0"
         )
         app.hostFacade().startServer()
@@ -34,7 +34,7 @@ class HostInGameService : BaseInGameService() {
                 gameCreatedInfo.isNew,
                 gameCreatedInfo.gameCommonId,
                 gameCreatedInfo.gameName,
-                gameCreatedInfo.gamePort
+                LISTENING_PORT
             )
         )
 
@@ -65,6 +65,8 @@ class HostInGameService : BaseInGameService() {
     }
 
     companion object {
+
+        private const val LISTENING_PORT = 8889
 
         private const val EXTRA_GAME_CREATED_INFO = "GameCreatedInfo"
 

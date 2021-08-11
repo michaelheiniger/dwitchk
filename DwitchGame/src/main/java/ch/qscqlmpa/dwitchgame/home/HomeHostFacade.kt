@@ -6,9 +6,9 @@ import io.reactivex.rxjava3.core.Observable
 
 interface HomeHostFacade {
 
-    fun hostGame(gameName: String, playerName: String, gamePort: Int): Completable
+    fun hostGame(gameName: String, playerName: String): Completable
 
-    fun resumeGame(gameId: Long, gamePort: Int): Completable
+    fun resumeGame(gameId: Long): Completable
 
     fun resumableGames(): Observable<List<ResumableGameInfo>>
 }

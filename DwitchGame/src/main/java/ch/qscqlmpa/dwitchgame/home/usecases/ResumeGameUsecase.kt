@@ -12,15 +12,15 @@ internal class ResumeGameUsecase @Inject constructor(
     private val store: Store,
     private val hostGameLifecycleEventRepository: HostGameLifecycleEventRepository
 ) {
-    fun hostResumedGame(gameId: Long, gamePort: Int): Completable {
+    fun hostResumedGame(gameId: Long): Completable {
         return Completable.fromAction {
             val game = store.getGame(gameId)
             store.prepareGuestsForGameResume(gameId)
-            startHostService(game, gamePort)
+            startHostService(game)
         }
     }
 
-    private fun startHostService(game: Game, gamePort: Int) {
+    private fun startHostService(game: Game) {
         hostGameLifecycleEventRepository.notify(
             HostGameLifecycleEvent.GameCreated(
                 GameCreatedInfo(
@@ -28,8 +28,7 @@ internal class ResumeGameUsecase @Inject constructor(
                     game.id,
                     game.gameCommonId,
                     game.name,
-                    game.localPlayerLocalId,
-                    gamePort
+                    game.localPlayerLocalId
                 )
             )
         )

@@ -62,8 +62,7 @@ class HostNewGameViewModel @Inject constructor(
                         .filter { event -> event is AppEvent.ServiceStarted }
                         .firstElement()
                         .ignoreElement(),
-                    // TODO: Extract the port somewhere where it makes more sense
-                    hostFacade.hostGame(gameName, playerName, 8889)
+                    hostFacade.hostGame(gameName, playerName)
                         .observeOn(uiScheduler),
                 )
             )

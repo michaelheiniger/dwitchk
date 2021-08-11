@@ -30,12 +30,10 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
 
     private lateinit var viewModel: HostNewGameViewModel
 
-    private val gamePort = 8889
-
     @Before
     fun setup() {
         viewModel = HostNewGameViewModel(mockAppEventRepository, mockHostFacade, Schedulers.trampoline())
-        every { mockHostFacade.hostGame(any(), any(), any()) } returns Completable.complete()
+        every { mockHostFacade.hostGame(any(), any()) } returns Completable.complete()
     }
 
     @Test
@@ -79,7 +77,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
 
         // Then
         assertThat(viewModel.navigation.value).isEqualTo(HostNewGameDestination.NavigateToWaitingRoom)
-        verify { mockHostFacade.hostGame(gameName, playerName, gamePort) }
+        verify { mockHostFacade.hostGame(gameName, playerName) }
         confirmVerified(mockHostFacade)
     }
 

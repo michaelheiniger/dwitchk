@@ -11,10 +11,10 @@ internal class HostNewGameUsecase @Inject constructor(
     private val hostGameLifecycleEventRepository: HostGameLifecycleEventRepository,
     private val store: Store
 ) {
-    fun hostGame(gameName: String, playerName: String, gamePort: Int): Completable {
+    fun hostGame(gameName: String, playerName: String): Completable {
         return Completable.fromAction {
             val result = store.insertGameForHost(gameName, playerName)
-            hostGameLifecycleEventRepository.notify(HostGameLifecycleEvent.GameCreated(GameCreatedInfo(result, gamePort)))
+            hostGameLifecycleEventRepository.notify(HostGameLifecycleEvent.GameCreated(GameCreatedInfo(result)))
         }
     }
 }

@@ -9,10 +9,10 @@ import ch.qscqlmpa.dwitchstore.InsertGameResult
 import ch.qscqlmpa.dwitchstore.model.Game
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
-import javax.inject.Inject
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.WriteWith
 import org.tinylog.kotlin.Logger
+import javax.inject.Inject
 
 @GameScope
 internal class HostGameLifecycleEventRepository @Inject constructor() : EventRepository<HostGameLifecycleEvent>() {
@@ -76,18 +76,16 @@ data class GameCreatedInfo(
     val gameLocalId: Long,
     val gameCommonId: @WriteWith<GameCommonIdParceler>() GameCommonId,
     val gameName: String,
-    val localPlayerLocalId: Long,
-    val gamePort: Int
+    val localPlayerLocalId: Long
 ) : Parcelable {
 
-    constructor(insertGameResult: InsertGameResult, gamePort: Int) :
+    constructor(insertGameResult: InsertGameResult) :
         this(
             isNew = true,
             insertGameResult.gameLocalId,
             insertGameResult.gameCommonId,
             insertGameResult.gameName,
-            insertGameResult.localPlayerLocalId,
-            gamePort
+            insertGameResult.localPlayerLocalId
         )
 }
 

@@ -16,13 +16,13 @@ internal class HomeHostFacadeImpl @Inject constructor(
     private val schedulerFactory: SchedulerFactory
 ) : HomeHostFacade {
 
-    override fun hostGame(gameName: String, playerName: String, gamePort: Int): Completable {
-        return hostNewGameUsecase.hostGame(gameName, playerName, gamePort)
+    override fun hostGame(gameName: String, playerName: String): Completable {
+        return hostNewGameUsecase.hostGame(gameName, playerName)
             .subscribeOn(schedulerFactory.io())
     }
 
-    override fun resumeGame(gameId: Long, gamePort: Int): Completable {
-        return resumeGameUsecase.hostResumedGame(gameId, gamePort)
+    override fun resumeGame(gameId: Long): Completable {
+        return resumeGameUsecase.hostResumedGame(gameId)
             .subscribeOn(schedulerFactory.io())
     }
 

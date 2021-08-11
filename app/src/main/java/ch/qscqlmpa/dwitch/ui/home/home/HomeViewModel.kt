@@ -86,7 +86,7 @@ class HomeViewModel @Inject constructor(
                         .filter { event -> event is AppEvent.ServiceStarted }
                         .firstElement()
                         .ignoreElement(),
-                    homeHostFacade.resumeGame(resumableGameInfo.id, 8889) // TODO: Take from sharedpref ?
+                    homeHostFacade.resumeGame(resumableGameInfo.id)
                         .observeOn(uiScheduler)
                 )
             )

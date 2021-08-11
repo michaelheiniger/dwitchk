@@ -21,7 +21,6 @@ internal class HostNewGameUsecaseTest : BaseUnitTest() {
     private val gameLocalId = 1L
     private val gameCommonId = GameCommonId(123L)
     private val gameName = "Kaamelott"
-    private val gamePort = 8889
     private val localPlayerLocalId = 10L
     private val playerName = "Arthur"
 
@@ -51,8 +50,7 @@ internal class HostNewGameUsecaseTest : BaseUnitTest() {
                         gameLocalId,
                         gameCommonId,
                         gameName,
-                        localPlayerLocalId,
-                        gamePort
+                        localPlayerLocalId
                     )
                 )
             )
@@ -60,6 +58,6 @@ internal class HostNewGameUsecaseTest : BaseUnitTest() {
     }
 
     private fun launchTest() {
-        hostNewGameUsecase.hostGame(gameName, playerName, gamePort).test().assertComplete()
+        hostNewGameUsecase.hostGame(gameName, playerName).test().assertComplete()
     }
 }
