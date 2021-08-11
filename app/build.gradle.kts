@@ -23,8 +23,8 @@ android {
     }
 
     buildFeatures {
-        compose = true
-        viewBinding = true// Enables Jetpack Compose for this module
+        compose = true // Enables Jetpack Compose for this module
+        viewBinding = true
     }
 
     buildTypes {
