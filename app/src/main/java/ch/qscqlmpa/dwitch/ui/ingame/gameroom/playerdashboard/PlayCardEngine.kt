@@ -44,8 +44,8 @@ class PlayCardEngine(
                 cardsInHand.map { cardInfo ->
                     val atLeastOneMoreCardCanBeSelected = cardsSelected.size < lastCardPlayed.multiplicity
                     val selectable = cardInfo.selectable &&
-                            cardHasSameNameAsOtherSelectedCards(cardInfo) &&
-                            (atLeastOneMoreCardCanBeSelected || cardIsAlreadySelected(cardInfo))
+                        cardHasSameNameAsOtherSelectedCards(cardInfo) &&
+                        (atLeastOneMoreCardCanBeSelected || cardIsAlreadySelected(cardInfo))
                     CardInfo(cardInfo.card, selectable, cardIsAlreadySelected(cardInfo))
                 }
             }
@@ -69,7 +69,10 @@ class PlayCardEngine(
         require(cardsInHand.find { c -> c.card == card && c.selectable } != null) { "Card $card is no selectable." }
     }
 
-    private fun requireNumberOfCardsSelectedToBeLessOrEqualToLastCardPlayedMultiplicity(card: Card, cardMultiplicity: Int) {
+    private fun requireNumberOfCardsSelectedToBeLessOrEqualToLastCardPlayedMultiplicity(
+        card: Card,
+        cardMultiplicity: Int
+    ) {
         if (!cardsSelected.contains(card)) require(cardsSelected.size + 1 <= cardMultiplicity) { "Cannot select more cards than multiplicity of last card played" }
     }
 

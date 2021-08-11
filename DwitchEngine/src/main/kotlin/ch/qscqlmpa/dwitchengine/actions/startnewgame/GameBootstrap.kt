@@ -13,7 +13,10 @@ import ch.qscqlmpa.dwitchengine.rules.PlayingOrder
 
 internal object GameBootstrap {
 
-    fun createNewGame(playersInfo: List<DwitchPlayerOnboardingInfo>, initialGameSetup: InitialGameSetup): DwitchGameState {
+    fun createNewGame(
+        playersInfo: List<DwitchPlayerOnboardingInfo>,
+        initialGameSetup: InitialGameSetup
+    ): DwitchGameState {
         val players = playersInfo.map { p ->
             val rank = initialGameSetup.getRankForPlayer(p.id)
             DwitchPlayer(

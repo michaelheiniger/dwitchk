@@ -126,7 +126,6 @@ class StartNewRoundTest : EngineTestBase() {
         initialGameState = gameStateBuilder
             .addPlayerToGame(p1, DwitchPlayerStatus.Done, DwitchRank.Asshole, emptyList())
             .addPlayerToGame(p2, DwitchPlayerStatus.Done, DwitchRank.President, emptyList())
-
             // These two statements are mutually exclusive but the goal is to check the reset of their values.
             .setGameEvent(DwitchGameEvent.TableHasBeenCleared(PlayedCards(Card.Hearts2)))
             .setCardsdOnTable(PlayedCards(Card.Hearts5), PlayedCards(Card.Diamonds7), PlayedCards(Card.Hearts2))

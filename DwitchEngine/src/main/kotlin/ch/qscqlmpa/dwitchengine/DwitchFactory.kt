@@ -8,5 +8,8 @@ interface DwitchFactory {
 
     fun createDwitchEngine(gameState: DwitchGameState): DwitchEngine
 
-    fun createComputerPlayerEngine(gameState: DwitchGameState, computerPlayersId: Set<DwitchPlayerId>): DwitchComputerPlayerEngine
+    fun createComputerPlayerEngine(
+        gameState: DwitchGameState,
+        computerPlayersId: Set<DwitchPlayerId>
+    ): DwitchComputerPlayerEngine
 }

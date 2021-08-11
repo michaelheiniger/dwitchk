@@ -34,8 +34,8 @@ object GameInfoFactory {
             ),
             lastCardPlayed = gameInfo.lastCardPlayed,
             waitingForPlayerReconnection = playerIsDisconnected(playersConnected, gameInfo.currentPlayerId) &&
-                    gameInfo.currentPlayerId != localPlayerId &&
-                    localPlayerIsConnected
+                gameInfo.currentPlayerId != localPlayerId &&
+                localPlayerIsConnected
         )
     }
 
@@ -48,10 +48,16 @@ object GameInfoFactory {
         )
     }
 
-    private fun playerIsConnected(playersConnectionState: Map<DwitchPlayerId, Boolean>, playerId: DwitchPlayerId) =
+    private fun playerIsConnected(
+        playersConnectionState: Map<DwitchPlayerId, Boolean>,
+        playerId: DwitchPlayerId
+    ) =
         playersConnectionState.getValue(playerId)
 
-    private fun playerIsDisconnected(playersConnectionState: Map<DwitchPlayerId, Boolean>, playerId: DwitchPlayerId) =
+    private fun playerIsDisconnected(
+        playersConnectionState: Map<DwitchPlayerId, Boolean>,
+        playerId: DwitchPlayerId
+    ) =
         !playerIsConnected(playersConnectionState, playerId)
 
     private fun adjustCardItemSelectability(

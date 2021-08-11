@@ -9,8 +9,8 @@ import ch.qscqlmpa.dwitchstore.model.Game
 import ch.qscqlmpa.dwitchstore.model.Player
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import io.reactivex.rxjava3.core.Observable
-import org.joda.time.DateTime
 import java.util.*
+import org.joda.time.DateTime
 
 @Dao
 internal abstract class GameDao(database: AppRoomDatabase) {
@@ -118,7 +118,11 @@ internal abstract class GameDao(database: AppRoomDatabase) {
      * Room requires the method to be "open".
      */
     @Transaction
-    open fun insertGameForGuest(gameName: String, gameCommonId: GameCommonId, guestPlayerName: String): InsertGameResult {
+    open fun insertGameForGuest(
+        gameName: String,
+        gameCommonId: GameCommonId,
+        guestPlayerName: String
+    ): InsertGameResult {
         val existingGame = getGame(gameCommonId)
         return if (existingGame != null) {
             InsertGameResult(existingGame)
@@ -136,7 +140,11 @@ internal abstract class GameDao(database: AppRoomDatabase) {
     )
     abstract fun markGameForDeletion(gameLocalId: Long)
 
-    private fun insertNewGuestGame(gameCommonId: GameCommonId, gameName: String, guestPlayerName: String): InsertGameResult {
+    private fun insertNewGuestGame(
+        gameCommonId: GameCommonId,
+        gameName: String,
+        guestPlayerName: String
+    ): InsertGameResult {
         val game = Game(
             id = 0,
             creationDate = DateTime.now(),

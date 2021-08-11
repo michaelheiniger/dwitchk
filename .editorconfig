@@ -5,7 +5,10 @@ root = true
 # Comma-separated list of rules to disable (Since 0.34.0)
 # Note that rules in any ruleset other than the standard ruleset will need to be prefixed
 # by the ruleset identifier.
-disabled_rules = no-wildcard-imports
+#Note from Michael Heiniger: the rule "import-ordering" is disabled because it conflicts with the one from Android Studio.
+disabled_rules = no-wildcard-imports, import-ordering
+max_line_length = off
+
 
 # Defines the imports layout. The layout can be composed by the following symbols:
 # "*" - wildcard. There must be at least one entry of a single wildcard to match all other imports. Matches anything after a specified symbol/import as well.

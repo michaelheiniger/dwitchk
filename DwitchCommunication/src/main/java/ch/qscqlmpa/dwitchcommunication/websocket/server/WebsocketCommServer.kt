@@ -12,9 +12,9 @@ import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.ServerEvent
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
+import javax.inject.Inject
 import org.java_websocket.WebSocket
 import org.tinylog.kotlin.Logger
-import javax.inject.Inject
 
 internal class WebsocketCommServer @Inject constructor(
     private val websocketServerFactory: WebsocketServerFactory,
@@ -127,7 +127,9 @@ internal class WebsocketCommServer @Inject constructor(
             }
     }
 
-    private fun processClientDisconnectedEvent(clientDisconnected: ServerCommEvent.ClientDisconnected): Observable<ServerEvent> {
+    private fun processClientDisconnectedEvent(
+        clientDisconnected: ServerCommEvent.ClientDisconnected
+    ): Observable<ServerEvent> {
         return Observable.just(clientDisconnected)
             .filter { event ->
                 if (event.conn == null) Logger.debug { "OnClose event filtered because websocket is null" }
@@ -179,8 +181,8 @@ internal class WebsocketCommServer @Inject constructor(
         val remainingConnections = websocketServer.getConnections()
             .filter { ws ->
                 ws.remoteSocketAddress != null &&
-                        ws.remoteSocketAddress.address != null &&
-                        ws.remoteSocketAddress.address.hostAddress != null
+                    ws.remoteSocketAddress.address != null &&
+                    ws.remoteSocketAddress.address.hostAddress != null
             }
             .map(::Address)
         return connectionStore.findMissingConnections(remainingConnections)

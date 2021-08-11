@@ -9,10 +9,10 @@ import ch.qscqlmpa.dwitchstore.InsertGameResult
 import ch.qscqlmpa.dwitchstore.model.Game
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
+import javax.inject.Inject
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.WriteWith
 import org.tinylog.kotlin.Logger
-import javax.inject.Inject
 
 @GameScope
 internal class HostGameLifecycleEventRepository @Inject constructor() : EventRepository<HostGameLifecycleEvent>() {
@@ -81,14 +81,14 @@ data class GameCreatedInfo(
 ) : Parcelable {
 
     constructor(insertGameResult: InsertGameResult, gamePort: Int) :
-            this(
-                isNew = true,
-                insertGameResult.gameLocalId,
-                insertGameResult.gameCommonId,
-                insertGameResult.gameName,
-                insertGameResult.localPlayerLocalId,
-                gamePort
-            )
+        this(
+            isNew = true,
+            insertGameResult.gameLocalId,
+            insertGameResult.gameCommonId,
+            insertGameResult.gameName,
+            insertGameResult.localPlayerLocalId,
+            gamePort
+        )
 }
 
 @Parcelize
@@ -100,12 +100,12 @@ data class GameJoinedInfo(
 ) : Parcelable {
 
     constructor(insertGameResult: InsertGameResult, advertisedGame: AdvertisedGame) :
-            this(
-                insertGameResult.gameLocalId,
-                insertGameResult.localPlayerLocalId,
-                advertisedGame.gameIpAddress,
-                advertisedGame.gamePort
-            )
+        this(
+            insertGameResult.gameLocalId,
+            insertGameResult.localPlayerLocalId,
+            advertisedGame.gameIpAddress,
+            advertisedGame.gamePort
+        )
 
     constructor(game: Game, advertisedGame: AdvertisedGame) : this(
         game.id,

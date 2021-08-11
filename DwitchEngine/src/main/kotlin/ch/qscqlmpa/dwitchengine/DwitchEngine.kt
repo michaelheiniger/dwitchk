@@ -74,7 +74,10 @@ interface DwitchEngine {
          * and is not supposed to be read/written by clients of [DwitchEngine].
          * See [DwitchEngine.getGameInfo] for game info intended for UI.
          */
-        fun createNewGame(players: List<DwitchPlayerOnboardingInfo>, initialGameSetup: InitialGameSetup): DwitchGameState {
+        fun createNewGame(
+            players: List<DwitchPlayerOnboardingInfo>,
+            initialGameSetup: InitialGameSetup
+        ): DwitchGameState {
             Logger.debug { "Start new game, players:  $players, initial game setup: $initialGameSetup" }
             return GameBootstrap.createNewGame(players, initialGameSetup)
         }

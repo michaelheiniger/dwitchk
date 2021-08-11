@@ -8,4 +8,7 @@ interface DwitchComputerPlayerEngine {
     fun handleComputerPlayerAction(): List<ComputerPlayerActionResult>
 }
 
-data class ComputerPlayerActionResult(val dwitchId: DwitchPlayerId, val updatedGameState: DwitchGameState)
+data class ComputerPlayerActionResult(
+    val dwitchId: DwitchPlayerId,
+    val updatedGameState: DwitchGameState
+)

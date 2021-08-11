@@ -16,9 +16,9 @@ internal class CardExchangePerformer(
             }
             else -> {
                 state.cardsGivenUpByPresident().size == 2 &&
-                        state.cardsGivenUpByAsshole().size == 2 &&
-                        state.cardsGivenUpByVicePresident().size == 1 &&
-                        state.cardsGivenUpByViceAsshole().size == 1
+                    state.cardsGivenUpByAsshole().size == 2 &&
+                    state.cardsGivenUpByVicePresident().size == 1 &&
+                    state.cardsGivenUpByViceAsshole().size == 1
             }
         }
     }

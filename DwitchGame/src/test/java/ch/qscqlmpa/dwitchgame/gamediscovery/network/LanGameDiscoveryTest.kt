@@ -4,11 +4,11 @@ import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.mockk.mockk
 import io.mockk.verify
+import java.net.SocketException
 import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import org.junit.jupiter.api.Test
-import java.net.SocketException
 
 class LanGameDiscoveryTest : BaseUnitTest() {
 
@@ -26,10 +26,10 @@ class LanGameDiscoveryTest : BaseUnitTest() {
             .test()
             .assertValue { advertisedGame ->
                 isDateToday(advertisedGame.discoveryTimeAsString()) &&
-                        advertisedGame.gameName == "Kaamelott" &&
-                        advertisedGame.gameCommonId == GameCommonId(23) &&
-                        advertisedGame.gameIpAddress == "192.168.1.1" &&
-                        advertisedGame.gamePort == 8889
+                    advertisedGame.gameName == "Kaamelott" &&
+                    advertisedGame.gameCommonId == GameCommonId(23) &&
+                    advertisedGame.gameIpAddress == "192.168.1.1" &&
+                    advertisedGame.gamePort == 8889
             }
     }
 
