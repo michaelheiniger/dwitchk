@@ -16,7 +16,6 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.fail
-import org.junit.Assert.assertNull
 import org.junit.Assume
 import org.junit.Before
 import org.junit.Test
@@ -100,7 +99,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
         }
 
         // Then
-        assertNull(viewModel.navigation.value)
+        assertThat(viewModel.navigation.value).isEqualTo(HostNewGameDestination.CurrentScreen)
         confirmVerified(mockHostFacade)
     }
 
@@ -120,7 +119,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
         }
 
         // Then
-        assertNull(viewModel.navigation.value)
+        assertThat(viewModel.navigation.value).isEqualTo(HostNewGameDestination.CurrentScreen)
         confirmVerified(mockHostFacade)
     }
 }

@@ -32,12 +32,12 @@ class WaitingRoomViewModelTest : BaseViewModelUnitTest() {
 
         // When
         viewModel.onStart()
-        val players1 = mockk<List<PlayerWrUi>>()
+        val players1 = listOf<PlayerWrUi>(mockk())
         playersSubject.onNext(players1)
 
         // Then
         assertThat(viewModel.players.value).isEqualTo(players1)
-        val players2 = mockk<List<PlayerWrUi>>()
+        val players2 = listOf<PlayerWrUi>(mockk(), mockk())
         playersSubject.onNext(players2)
         assertThat(viewModel.players.value).isEqualTo(players2)
 
@@ -45,7 +45,7 @@ class WaitingRoomViewModelTest : BaseViewModelUnitTest() {
         viewModel.onStop()
 
         // Then the stream is no longer active so the players aren't updated
-        val players3 = mockk<List<PlayerWrUi>>()
+        val players3 = listOf<PlayerWrUi>(mockk(), mockk(), mockk())
         playersSubject.onNext(players3)
         assertThat(viewModel.players.value).isEqualTo(players2)
     }
