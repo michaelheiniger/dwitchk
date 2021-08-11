@@ -67,7 +67,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
 
         // When
         viewModel.onPlayerNameChange(playerName)
-        viewModel.getGame("192.168.1.1")
+        viewModel.gameName("192.168.1.1")
         viewModel.joinGame()
 
         // Then

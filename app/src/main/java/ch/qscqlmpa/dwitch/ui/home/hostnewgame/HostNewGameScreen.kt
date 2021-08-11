@@ -45,7 +45,7 @@ fun HostNewGameScreen(
         onDispose { viewModel.onStop() }
     }
 
-    Navigation(viewModel, onHostGameClick)
+    Navigation(viewModel.navigation.value, onHostGameClick)
 
     HostNewGameBody(
         playerName = viewModel.playerName.value,
@@ -117,8 +117,8 @@ fun HostNewGameBody(
 }
 
 @Composable
-private fun Navigation(viewModel: HostNewGameViewModel, onHostGameClick: () -> Unit) {
-    when (viewModel.navigation.value) {
+private fun Navigation(destination: HostNewGameDestination, onHostGameClick: () -> Unit) {
+    when (destination) {
         HostNewGameDestination.CurrentScreen -> {
             // Nothing to do
         }

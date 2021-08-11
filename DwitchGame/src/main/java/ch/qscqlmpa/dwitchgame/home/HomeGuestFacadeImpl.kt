@@ -20,7 +20,7 @@ internal class HomeGuestFacadeImpl @Inject constructor(
         return advertisedGameRepository.listenForAdvertisedGames()
     }
 
-    override fun getAdvertisedGame(ipAddress: String): AdvertisedGame {
+    override fun getAdvertisedGame(ipAddress: String): AdvertisedGame? {
         return advertisedGameRepository.getGame(ipAddress)
     }
 

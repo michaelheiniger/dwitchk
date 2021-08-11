@@ -78,7 +78,7 @@ fun GameRoomGuestScreen(
         }
     }
 
-    Navigation(guestViewModel, onNavigationEvent)
+    Navigation(guestViewModel.navigation.value, onNavigationEvent)
 
     GameRoomGuestBody(
         toolbarTitle = playerViewModel.toolbarTitle.value,
@@ -190,13 +190,13 @@ fun GameRoomGuestBody(
 
 @Composable
 private fun Navigation(
-    guestViewModel: GameRoomGuestViewModel,
+    destination: GameRoomGuestDestination,
     onNavigationEvent: (GameRoomGuestDestination) -> Unit
 ) {
-    when (val dest = guestViewModel.navigation.value) {
+    when (destination) {
         GameRoomGuestDestination.CurrentScreen -> {
             // Nothing to do
         }
-        GameRoomGuestDestination.NavigateToHomeScreen -> onNavigationEvent(dest)
+        GameRoomGuestDestination.NavigateToHomeScreen -> onNavigationEvent(destination)
     }
 }

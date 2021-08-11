@@ -79,7 +79,7 @@ fun GameRoomHostScreen(
         }
     }
 
-    Navigation(hostViewModel, onNavigationEvent)
+    Navigation(hostViewModel.navigation.value, onNavigationEvent)
 
     GameRoomHostBody(
         toolbarTitle = playerViewModel.toolbarTitle.value,
@@ -195,13 +195,13 @@ fun GameRoomHostBody(
 
 @Composable
 private fun Navigation(
-    hostViewModel: GameRoomHostViewModel,
+    destination: GameRoomHostDestination,
     onNavigationEvent: (GameRoomHostDestination) -> Unit
 ) {
-    when (val dest = hostViewModel.navigation.value) {
+    when (destination) {
         GameRoomHostDestination.CurrentScreen -> {
             // Nothing to do
         }
-        else -> onNavigationEvent(dest)
+        else -> onNavigationEvent(destination)
     }
 }

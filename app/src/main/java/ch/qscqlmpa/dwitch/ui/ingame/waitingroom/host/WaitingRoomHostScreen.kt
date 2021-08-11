@@ -69,7 +69,7 @@ fun WaitingRoomHostScreen(
         }
     }
 
-    Navigation(hostViewModel, onNavigationEvent)
+    Navigation(hostViewModel.navigation.value, onNavigationEvent)
 
     val showConfirmationDialog = remember { mutableStateOf(false) }
 
@@ -167,13 +167,13 @@ private fun HostControlScreen(
 
 @Composable
 private fun Navigation(
-    hostViewModel: WaitingRoomHostViewModel,
+    destination: WaitingRoomHostDestination,
     onNavigationEvent: (WaitingRoomHostDestination) -> Unit
 ) {
-    when (val dest = hostViewModel.navigation.value) {
+    when (destination) {
         WaitingRoomHostDestination.CurrentScreen -> {
             // Nothing to do
         }
-        else -> onNavigationEvent(dest)
+        else -> onNavigationEvent(destination)
     }
 }
