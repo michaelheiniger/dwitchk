@@ -47,12 +47,12 @@ class JoinNewGameViewModel @Inject constructor(
 
     fun onPlayerNameChange(value: String) {
         _playerName.value = value
-        _joinGameControl.value = !playerName.value.isNullOrBlank()
+        _joinGameControl.value = playerName.value.isNotBlank()
     }
 
     fun joinGame() {
         val playerName = playerName.value
-        require(!playerName.isNullOrBlank()) { "Player name cannot be blank" }
+        require(playerName.isNotBlank()) { "Player name cannot be blank" }
         _loading.value = true
         disposableManager.add(
             Completable.merge(
