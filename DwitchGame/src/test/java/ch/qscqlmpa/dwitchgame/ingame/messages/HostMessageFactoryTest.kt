@@ -8,7 +8,6 @@ import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchgame.ingame.communication.messagefactories.HostMessageFactory
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import ch.qscqlmpa.dwitchmodel.player.PlayerConnectionState
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import io.mockk.every
 import org.assertj.core.api.Assertions.assertThat
@@ -42,13 +41,13 @@ class HostMessageFactoryTest : BaseUnitTest() {
         assertThat(message.playerList[0].dwitchId).isEqualTo(DwitchPlayerId(100))
         assertThat(message.playerList[0].name).isEqualTo("Aragorn")
         assertThat(message.playerList[0].playerRole).isEqualTo(PlayerRole.HOST)
-        assertThat(message.playerList[0].connected).isEqualTo(PlayerConnectionState.CONNECTED)
+        assertThat(message.playerList[0].connected).isTrue
         assertThat(message.playerList[0].ready).isTrue
 
         assertThat(message.playerList[1].dwitchId).isEqualTo(DwitchPlayerId(101))
         assertThat(message.playerList[1].name).isEqualTo("Boromir")
         assertThat(message.playerList[1].playerRole).isEqualTo(PlayerRole.GUEST)
-        assertThat(message.playerList[1].connected).isEqualTo(PlayerConnectionState.DISCONNECTED)
+        assertThat(message.playerList[1].connected).isFalse
         assertThat(message.playerList[1].ready).isFalse
     }
 

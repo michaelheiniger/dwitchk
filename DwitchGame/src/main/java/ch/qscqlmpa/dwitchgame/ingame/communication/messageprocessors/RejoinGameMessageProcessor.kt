@@ -77,13 +77,9 @@ internal class RejoinGameMessageProcessor @Inject constructor(
     }
 
     private fun sendUpdateMessages(currentRoom: RoomType) {
-        sendWaitingRoomStateUpdateMessage()
-        if (currentRoom == RoomType.GAME_ROOM) sendGameStateUpdatedMessage()
-    }
-
-    private fun sendWaitingRoomStateUpdateMessage() {
         Logger.info { "Guest connected: send Waitingroom updated state to everyone." }
         sendMessage(hostMessageFactory.createWaitingRoomStateUpdateMessage())
+        if (currentRoom == RoomType.GAME_ROOM) sendGameStateUpdatedMessage()
     }
 
     private fun sendGameStateUpdatedMessage() {

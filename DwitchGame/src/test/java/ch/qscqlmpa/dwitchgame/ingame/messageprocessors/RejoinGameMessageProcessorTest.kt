@@ -93,7 +93,6 @@ internal class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
         launchTestWithSameGameCommonId(RoomType.WAITING_ROOM)
 
         verify { mockHostCommunicator.sendMessage(mockWaitingRoomStateUpdateEnvelope) }
-        confirmVerified(mockHostCommunicator)
     }
 
     @Test
@@ -102,7 +101,6 @@ internal class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
 
         verify { mockHostCommunicator.sendMessage(mockWaitingRoomStateUpdateEnvelope) }
         verify { mockHostCommunicator.sendMessage(mockGameStateUpdateEnvelope) }
-        confirmVerified(mockHostCommunicator)
     }
 
     @Test

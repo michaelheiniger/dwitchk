@@ -33,7 +33,6 @@ class HostCommunicatorImplTest : BaseUnitTest() {
     private lateinit var computerCommunicator: ComputerCommunicator
 
     private lateinit var communicationEventsSubject: PublishSubject<ServerEvent>
-    private lateinit var receivedMessagesSubject: PublishSubject<ServerEvent.EnvelopeReceived>
 
     @BeforeEach
     fun setup() {
@@ -58,14 +57,12 @@ class HostCommunicatorImplTest : BaseUnitTest() {
         fun `Start communication server operations`() {
             // Given
             assertThat(communicationEventsSubject.hasObservers()).isFalse
-            assertThat(receivedMessagesSubject.hasObservers()).isFalse
 
             // When
             hostCommunicator.startServer()
 
             // Then
             assertThat(communicationEventsSubject.hasObservers()).isTrue // Observe communication events
-            assertThat(receivedMessagesSubject.hasObservers()).isTrue // Observe received messages
 
             verifyOrder {
                 mockCommServer.observeEvents()
@@ -101,8 +98,8 @@ class HostCommunicatorImplTest : BaseUnitTest() {
                 ServerEvent.EnvelopeReceived(ConnectionId(1), Message.PlayerReadyMessage(DwitchPlayerId(12), true))
             val messageReceived2 =
                 ServerEvent.EnvelopeReceived(ConnectionId(4), Message.PlayerReadyMessage(DwitchPlayerId(13), false))
-            receivedMessagesSubject.onNext(messageReceived1)
-            receivedMessagesSubject.onNext(messageReceived2)
+            communicationEventsSubject.onNext(messageReceived1)
+            communicationEventsSubject.onNext(messageReceived2)
 
             // Then
             val dispatchedMessageCap = mutableListOf<ServerEvent.EnvelopeReceived>()
@@ -124,8 +121,8 @@ class HostCommunicatorImplTest : BaseUnitTest() {
             val messageReceived1 = ServerEvent.EnvelopeReceived(ConnectionId(1), Message.GameStateUpdatedMessage(gameState))
             val messageReceived2 =
                 ServerEvent.EnvelopeReceived(ConnectionId(4), Message.PlayerReadyMessage(DwitchPlayerId(13), false))
-            receivedMessagesSubject.onNext(messageReceived1)
-            receivedMessagesSubject.onNext(messageReceived2)
+            communicationEventsSubject.onNext(messageReceived1)
+            communicationEventsSubject.onNext(messageReceived2)
 
             // Then only GameStateUpdated message is forwarded, PlayerReadyMessage is not
             verify(exactly = 1) { mockCommServer.sendMessage(Message.GameStateUpdatedMessage(gameState), Recipient.All) }
@@ -141,7 +138,6 @@ class HostCommunicatorImplTest : BaseUnitTest() {
             // Given
             hostCommunicator.startServer()
             assertThat(communicationEventsSubject.hasObservers()).isTrue
-            assertThat(receivedMessagesSubject.hasObservers()).isTrue
 
             // When
             hostCommunicator.stopServer()
@@ -149,7 +145,6 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
             // Then
             assertThat(communicationEventsSubject.hasObservers()).isFalse // Observed streams have been disposed
-            assertThat(receivedMessagesSubject.hasObservers()).isFalse // Observed streams have been disposed
 
             verifyOrder {
                 mockCommServer.observeEvents()

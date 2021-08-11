@@ -73,6 +73,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.1")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.7.1")
+    testImplementation("junit:junit:4.13.2") // JUnit4 (For instrumented tests)
 
     // MockK
     androidTestImplementation("io.mockk:mockk-android:1.11.0")
@@ -82,8 +83,6 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.19.0")
     androidTestImplementation("org.assertj:assertj-core:3.19.0")
 
-    // JUnit4 (For instrumented tests)
-    testImplementation("junit:junit:4.13.2")
 
     // AndroidJUnitRunner and JUnit Rules
     androidTestImplementation("androidx.test.ext:junit-ktx:1.1.3")
@@ -93,4 +92,8 @@ dependencies {
     androidTestImplementation("androidx.test:runner:1.4.0")
     androidTestUtil("androidx.test:orchestrator:1.4.0")
     testImplementation("android.arch.core:core-testing:1.1.1")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

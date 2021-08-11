@@ -37,6 +37,7 @@ class WaitingRoomPlayerRepositoryTest : BaseUnitTest() {
         fun setup() {
             every { mockInGameStore.observePlayersInWaitingRoom() } returns Observable.just(listOf(host, guest1, guest2))
             every { mockInGameStore.gameIsNew() } returns true
+            every { communicationStateRepository.connected() } returns Observable.just(true)
         }
 
         @Test
@@ -132,6 +133,40 @@ class WaitingRoomPlayerRepositoryTest : BaseUnitTest() {
 
             assertThat(values[0][2].name).isEqualTo(guest2.name)
             assertThat(values[0][2].kickable).isFalse
+        }
+
+        @Test
+        fun `when local player is disconnected, then all players are seen as disconnected - guest`() {
+            createRepository(PlayerRole.GUEST)
+            every { communicationStateRepository.connected() } returns Observable.just(false)
+
+            val values = repository.observePlayers().test().values()
+
+            assertThat(values[0][0].name).isEqualTo(host.name)
+            assertThat(values[0][0].connected).isFalse
+
+            assertThat(values[0][1].name).isEqualTo(guest1.name)
+            assertThat(values[0][1].connected).isFalse
+
+            assertThat(values[0][2].name).isEqualTo(guest2.name)
+            assertThat(values[0][2].connected).isFalse
+        }
+
+        @Test
+        fun `when local player is disconnected, then all players are seen as disconnected - host`() {
+            createRepository(PlayerRole.HOST)
+            every { communicationStateRepository.connected() } returns Observable.just(false)
+
+            val values = repository.observePlayers().test().values()
+
+            assertThat(values[0][0].name).isEqualTo(host.name)
+            assertThat(values[0][0].connected).isFalse
+
+            assertThat(values[0][1].name).isEqualTo(guest1.name)
+            assertThat(values[0][1].connected).isFalse
+
+            assertThat(values[0][2].name).isEqualTo(guest2.name)
+            assertThat(values[0][2].connected).isFalse
         }
     }
 
