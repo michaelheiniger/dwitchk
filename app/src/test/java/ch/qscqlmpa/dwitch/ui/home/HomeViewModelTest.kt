@@ -62,8 +62,8 @@ class HomeViewModelTest : BaseViewModelUnitTest() {
         val list = listOf(AdvertisedGame(true, "Kaamelott", GameCommonId(1), "192.168.1.1", 8890, LocalTime.now()))
         advertisedGamesSubject.onNext(list)
 
-        assertThat(data.value!!).isInstanceOf(LoadedData.Success::class.java)
-        assertThat((data.value!! as LoadedData.Success).data).isEqualTo(list)
+        assertThat(data.value).isInstanceOf(LoadedData.Success::class.java)
+        assertThat((data.value as LoadedData.Success).data).isEqualTo(list)
 
         verify { mockHomeGuestFacade.listenForAdvertisedGames() }
     }
@@ -74,7 +74,7 @@ class HomeViewModelTest : BaseViewModelUnitTest() {
         advertisedGamesSubject.onError(Exception())
         val response = viewModel.advertisedGames
 
-        assertThat(response.value!!).isInstanceOf(LoadedData.Failed::class.java)
+        assertThat(response.value).isInstanceOf(LoadedData.Failed::class.java)
 
         verify { mockHomeGuestFacade.listenForAdvertisedGames() }
     }
@@ -100,8 +100,8 @@ class HomeViewModelTest : BaseViewModelUnitTest() {
         )
         resumableGamesSubject.onNext(list)
 
-        assertThat(data.value!!).isInstanceOf(LoadedData.Success::class.java)
-        assertThat((data.value!! as LoadedData.Success).data).isEqualTo(list)
+        assertThat(data.value).isInstanceOf(LoadedData.Success::class.java)
+        assertThat((data.value as LoadedData.Success).data).isEqualTo(list)
 
         verify { mockHomeGuestFacade.listenForAdvertisedGames() }
     }
@@ -112,7 +112,7 @@ class HomeViewModelTest : BaseViewModelUnitTest() {
         resumableGamesSubject.onError(Exception())
         val response = viewModel.resumableGames
 
-        assertThat(response.value!!).isInstanceOf(LoadedData.Failed::class.java)
+        assertThat(response.value).isInstanceOf(LoadedData.Failed::class.java)
 
         verify { mockHomeHostFacade.resumableGames() }
     }
