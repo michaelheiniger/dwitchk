@@ -28,7 +28,7 @@ abstract class BaseIntegrationTest {
     protected val gameIpAddress = "192.168.1.1"
     protected val gamePort = 8889
 
-//    protected val storeComponent: TestStoreComponent = DaggerTestStoreComponent.factory().create(TestStoreModule(context))
+    //    protected val storeComponent: TestStoreComponent = DaggerTestStoreComponent.factory().create(TestStoreModule(context))
     protected lateinit var storeComponent: TestStoreComponent
     protected lateinit var gameComponent: TestGameComponent
     protected var inGameStoreComponent: InGameStoreComponent? = null

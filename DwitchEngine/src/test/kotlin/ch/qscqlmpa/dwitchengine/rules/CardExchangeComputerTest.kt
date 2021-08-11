@@ -49,7 +49,14 @@ internal class CardExchangeComputerTest {
 
         val cardExchange = CardExchangeComputer.getCardExchange(playerId, DwitchRank.President, cards)
 
-        assertThat(cardExchange!!.allowedCardValues).containsExactlyInAnyOrder(CardName.Two, CardName.Two, CardName.Three, CardName.Ten, CardName.Ace, CardName.Five)
+        assertThat(cardExchange!!.allowedCardValues).containsExactlyInAnyOrder(
+            CardName.Two,
+            CardName.Two,
+            CardName.Three,
+            CardName.Ten,
+            CardName.Ace,
+            CardName.Five
+        )
     }
 
     @Test
@@ -58,7 +65,14 @@ internal class CardExchangeComputerTest {
 
         val cardExchange = CardExchangeComputer.getCardExchange(playerId, DwitchRank.VicePresident, cards)
 
-        assertThat(cardExchange!!.allowedCardValues).containsExactlyInAnyOrder(CardName.Two, CardName.Two, CardName.Three, CardName.Ten, CardName.Ace, CardName.Five)
+        assertThat(cardExchange!!.allowedCardValues).containsExactlyInAnyOrder(
+            CardName.Two,
+            CardName.Two,
+            CardName.Three,
+            CardName.Ten,
+            CardName.Ace,
+            CardName.Five
+        )
     }
 
     @Test

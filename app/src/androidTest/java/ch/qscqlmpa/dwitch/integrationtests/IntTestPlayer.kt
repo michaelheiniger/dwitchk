@@ -6,7 +6,7 @@ import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 
 abstract class IntTestPlayer {
 
-//    protected val appComponent: IntTestAppComponent = DaggerIntTestAppComponent.builder().build()
+    //    protected val appComponent: IntTestAppComponent = DaggerIntTestAppComponent.builder().build()
     protected var gameLocalId: Long? = null
 
     //    protected lateinit var ongoingGameComponent: IntTestOngoingGameComponent

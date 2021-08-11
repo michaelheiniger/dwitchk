@@ -32,12 +32,12 @@ internal class GameRoomGuestViewModel @Inject constructor(
             facade.leaveGame()
                 .observeOn(uiScheduler)
                 .subscribe(
-                {
-                    Logger.info { "Left game successfully" }
-                    _navigationCommand.value = GameRoomGuestDestination.NavigateToHomeScreen
-                },
-                { error -> Logger.error(error) { "Error while leaving the game." } }
-            )
+                    {
+                        Logger.info { "Left game successfully" }
+                        _navigationCommand.value = GameRoomGuestDestination.NavigateToHomeScreen
+                    },
+                    { error -> Logger.error(error) { "Error while leaving the game." } }
+                )
         )
     }
 

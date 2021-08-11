@@ -1,4 +1,5 @@
 package ch.qscqlmpa.dwitch.ui.ingame.gameroom
+
 import androidx.compose.animation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
