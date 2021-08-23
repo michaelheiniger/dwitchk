@@ -54,7 +54,6 @@ class GameRoomAsGuestTest : BaseGuestTest() {
         goToGameRoom()
     }
 
-    // FIXME
     @Test
     fun localPlayerDisconnectsAndReconnects() {
         goToGameRoom()
