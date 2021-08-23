@@ -48,15 +48,15 @@ dependencies {
 
     // RxJava
     implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
-    implementation("com.jakewharton.rxrelay3:rxrelay:3.0.0")
+    implementation("com.jakewharton.rxrelay3:rxrelay:3.0.1")
 
     // Dagger
-    implementation("com.google.dagger:dagger-android-support:2.35.1")
-    implementation("com.google.dagger:dagger-android:2.35.1")
-    implementation("com.google.dagger:dagger:2.35.1")
-    kapt("com.google.dagger:dagger-android-processor:2.35.1")
-    kapt("com.google.dagger:dagger-compiler:2.35.1")
-    kaptAndroidTest("com.google.dagger:dagger-compiler:2.35.1")
+    implementation("com.google.dagger:dagger-android-support:2.38.1")
+    implementation("com.google.dagger:dagger-android:2.38.1")
+    implementation("com.google.dagger:dagger:2.38.1")
+    kapt("com.google.dagger:dagger-android-processor:2.38.1")
+    kapt("com.google.dagger:dagger-compiler:2.38.1")
+    kaptAndroidTest("com.google.dagger:dagger-compiler:2.38.1")
 
     // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc")
@@ -65,12 +65,12 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
 
     // MockK
-    testImplementation("io.mockk:mockk:1.11.0")
-    androidTestImplementation("io.mockk:mockk-android:1.11.0")
+    testImplementation("io.mockk:mockk:1.12.0")
+    androidTestImplementation("io.mockk:mockk-android:1.12.0")
 
     // AssertJ
-    testImplementation("org.assertj:assertj-core:3.19.0")
-    androidTestImplementation("org.assertj:assertj-core:3.19.0")
+    testImplementation("org.assertj:assertj-core:3.20.2")
+    androidTestImplementation("org.assertj:assertj-core:3.20.2")
 
     // Android testing stuff
     androidTestImplementation("androidx.test:core:1.4.0")

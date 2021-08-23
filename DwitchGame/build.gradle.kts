@@ -51,16 +51,16 @@ dependencies {
     implementation("org.tinylog:tinylog-api-kotlin:2.4.0-M1")
 
     // Dagger
-    implementation("com.google.dagger:dagger:2.35.1")
-    kapt("com.google.dagger:dagger-compiler:2.35.1")
-    kaptAndroidTest("com.google.dagger:dagger-compiler:2.35.1")
+    implementation("com.google.dagger:dagger:2.38.1")
+    kapt("com.google.dagger:dagger-compiler:2.38.1")
+    kaptAndroidTest("com.google.dagger:dagger-compiler:2.38.1")
 
     // Logging
     implementation("org.tinylog:tinylog-api-kotlin:2.4.0-M1")
 
     // RxJava
     implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
-    implementation("com.jakewharton.rxrelay3:rxrelay:3.0.0")
+    implementation("com.jakewharton.rxrelay3:rxrelay:3.0.1")
 
     // Joda time
     implementation("joda-time:joda-time:2.10.10")
@@ -76,12 +76,12 @@ dependencies {
     testImplementation("junit:junit:4.13.2") // JUnit4 (For instrumented tests)
 
     // MockK
-    androidTestImplementation("io.mockk:mockk-android:1.11.0")
-    testImplementation("io.mockk:mockk:1.11.0")
+    androidTestImplementation("io.mockk:mockk-android:1.12.0")
+    testImplementation("io.mockk:mockk:1.12.0")
 
     // AssertJ
-    testImplementation("org.assertj:assertj-core:3.19.0")
-    androidTestImplementation("org.assertj:assertj-core:3.19.0")
+    testImplementation("org.assertj:assertj-core:3.20.2")
+    androidTestImplementation("org.assertj:assertj-core:3.20.2")
 
     // AndroidJUnitRunner and JUnit Rules
     androidTestImplementation("androidx.test.ext:junit-ktx:1.1.3")
