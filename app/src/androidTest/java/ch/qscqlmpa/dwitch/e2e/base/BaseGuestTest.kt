@@ -11,6 +11,7 @@ import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.websocket.client.test.OnStartEvent
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
+import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import org.tinylog.kotlin.Logger
 
@@ -49,7 +50,6 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
         hookOngoingGameDependenciesForGuest()
 
         connectClientToServer(OnStartEvent.Success)
-        incrementGameIdlingResource("Local player becomes connected (updates WR players list)")
         waitForNextMessageSentByLocalGuest() as Message.JoinGameMessage
 
         hostSendsJoinGameAck()
@@ -59,8 +59,10 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
         testRule.assertTextIsDisplayedOnce(getString(R.string.players_in_waitingroom))
     }
 
-    protected fun connectClientToServer(onStartEvent: OnStartEvent) {
-        incrementGameIdlingResource("Client connects to server (linked with comm state)")
+    protected fun connectClientToServer(onStartEvent: OnStartEvent, incrementIdlingResource: Boolean = false) {
+        // Must not increment when joining game from home screen because we wait for ack from host before joining WR
+        // Required when reconnecting since we are already in either WR or GR
+        if (incrementIdlingResource) incrementGameIdlingResource("Client connects to server (linked with comm state)")
         clientTestStub.connectClientToServer(onStartEvent)
     }
 
@@ -86,8 +88,8 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
         clientTestStub.serverSendsMessageToClient(message)
     }
 
-    protected fun hostSendsRejoinGameAck() {
-        val message = Message.RejoinGameAckMessage(gameCommonId, PlayerGuestTest.LocalGuest.info.dwitchId)
+    protected fun hostSendsRejoinGameAck_waitingRoom() {
+        val message = Message.RejoinGameAckMessage(gameCommonId, RoomType.WAITING_ROOM, PlayerGuestTest.LocalGuest.info.dwitchId)
         clientTestStub.serverSendsMessageToClient(message)
     }
 
@@ -97,7 +99,6 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
     }
 
     private fun hostSendsPlayersState(vararg players: PlayerWr) {
-        incrementGameIdlingResource("Host sends state of players")
         val message = Message.WaitingRoomStateUpdateMessage(listOf(*players))
         clientTestStub.serverSendsMessageToClient(message)
     }

@@ -4,9 +4,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.AppEventRepository
-import ch.qscqlmpa.dwitch.ingame.services.ServiceManager
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
+import ch.qscqlmpa.dwitchgame.common.GameAdvertisingFacade
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.home.HomeFacade
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
@@ -17,13 +17,13 @@ import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
-class HomeViewModel @Inject constructor(
+class HomeScreenViewModel @Inject constructor(
     private val appEventRepository: AppEventRepository,
-    homeFacade: HomeFacade,
+    private val gameAdvertisingFacade: GameAdvertisingFacade,
+    private val homeFacade: HomeFacade,
     private val homeGuestFacade: HomeGuestFacade,
     private val homeHostFacade: HomeHostFacade,
-    private val uiScheduler: Scheduler,
-    private val serviceManager: ServiceManager
+    private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
     private val _loading = mutableStateOf(false)
@@ -37,7 +37,7 @@ class HomeViewModel @Inject constructor(
     val navigation get(): State<HomeDestination> = _navigation
 
     init {
-        Logger.debug { "Viewmodel lifecycle event: create HomeViewModel ($this)" }
+        Logger.debug { "Viewmodel lifecycle event: create HomeScreenViewModel ($this)" }
         if (homeFacade.gameRunning) {
             _navigation.value = HomeDestination.GameFragment
         }
@@ -45,7 +45,7 @@ class HomeViewModel @Inject constructor(
 
     override fun onStart() {
         super.onStart()
-        listenForAdvertisedGames()
+        observeAdvertisedGames()
         observeResumableGames()
     }
 
@@ -101,19 +101,14 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    fun navigatedFromGame() {
-        serviceManager.stopGuestService()
-        serviceManager.stopHostService()
-    }
-
     override fun onCleared() {
         Logger.debug { "Viewmodel lifecycle event: clear HomeViewModel ($this)" }
         super.onCleared()
     }
 
-    private fun listenForAdvertisedGames() {
+    private fun observeAdvertisedGames() {
         disposableManager.add(
-            homeGuestFacade.listenForAdvertisedGames()
+            gameAdvertisingFacade.observeAdvertisedGames()
                 .observeOn(uiScheduler)
                 .map<LoadedData<List<AdvertisedGame>>> { games -> LoadedData.Success(games) }
                 .doOnError { error -> Logger.error(error) { "Error while observing advertised games." } }

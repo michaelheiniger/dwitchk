@@ -3,8 +3,10 @@ package ch.qscqlmpa.dwitchgame.ingame.communication.messageprocessors
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
+import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GuestGameLifecycleEventRepository
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.mockk.every
+import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
 import org.junit.jupiter.api.BeforeEach
@@ -14,12 +16,13 @@ internal class JoinGameAckMessageProcessorTest : BaseMessageProcessorTest() {
 
     private val gameCommonId = GameCommonId(1L)
     private val guestPlayerDwitchId = TestEntityFactory.createGuestPlayer1().dwitchId
+    private val mockGameLifecycleEventRepository = mockk<GuestGameLifecycleEventRepository>(relaxed = true)
 
     private lateinit var processor: JoinGameAckMessageProcessor
 
     @BeforeEach
     fun setup() {
-        processor = JoinGameAckMessageProcessor(mockInGameStore)
+        processor = JoinGameAckMessageProcessor(mockInGameStore, mockGameLifecycleEventRepository)
     }
 
     @Test

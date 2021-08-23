@@ -6,7 +6,6 @@ import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGameRepository
 import ch.qscqlmpa.dwitchgame.home.usecases.JoinNewGameUsecase
 import ch.qscqlmpa.dwitchgame.home.usecases.JoinResumedGameUsecase
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
 internal class HomeGuestFacadeImpl @Inject constructor(
@@ -15,10 +14,6 @@ internal class HomeGuestFacadeImpl @Inject constructor(
     private val joinResumedGameUsecase: JoinResumedGameUsecase,
     private val schedulerFactory: SchedulerFactory
 ) : HomeGuestFacade {
-
-    override fun listenForAdvertisedGames(): Observable<List<AdvertisedGame>> {
-        return advertisedGameRepository.listenForAdvertisedGames()
-    }
 
     override fun getAdvertisedGame(ipAddress: String): AdvertisedGame? {
         return advertisedGameRepository.getGame(ipAddress)

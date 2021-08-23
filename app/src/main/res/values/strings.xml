@@ -185,4 +185,6 @@
     </string>
     <string name="title_activity_home">Home</string>
     <string name="waiting_for_disconnected_player">Waiting for player to reconnect</string>
+    <string name="game_not_found_title">Error</string>
+    <string name="game_not_found_text">Game no longer available</string>
 </resources>

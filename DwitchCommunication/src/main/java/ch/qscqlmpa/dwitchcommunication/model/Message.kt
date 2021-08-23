@@ -4,6 +4,7 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
+import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import kotlinx.serialization.Serializable
 
@@ -16,8 +17,9 @@ sealed class Message {
     data class JoinGameAckMessage(val gameCommonId: GameCommonId, val playerId: DwitchPlayerId) : Message()
 
     @Serializable
-    data class RejoinGameAckMessage(val gameCommonId: GameCommonId, val playerId: DwitchPlayerId) : Message() {
-        constructor(rejoinInfo: RejoinInfo) : this(rejoinInfo.gameCommonId, rejoinInfo.dwitchPlayerId)
+    data class RejoinGameAckMessage(val gameCommonId: GameCommonId, val currentRoom: RoomType, val playerId: DwitchPlayerId) :
+        Message() {
+        constructor(rejoinInfo: RejoinInfo) : this(rejoinInfo.gameCommonId, rejoinInfo.currentRoom, rejoinInfo.dwitchPlayerId)
     }
 
     @Serializable

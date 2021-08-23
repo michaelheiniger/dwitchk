@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitchgame.gameadvertising.GameCommonIdParceler
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.WriteWith
-import org.joda.time.LocalTime
+import org.joda.time.LocalDateTime
 
 @Parcelize
 data class AdvertisedGame(
@@ -14,10 +14,10 @@ data class AdvertisedGame(
     val gameCommonId: @WriteWith<GameCommonIdParceler>() GameCommonId,
     val gameIpAddress: String,
     val gamePort: Int,
-    val discoveryTime: LocalTime = LocalTime.now()
+    val discoveryTime: LocalDateTime = LocalDateTime.now()
 ) : Parcelable {
 
     fun discoveryTimeAsString(): String {
-        return discoveryTime.toString("HH:mm:ss")
+        return discoveryTime.toString("dd.MM.yyyy HH:mm:ss")
     }
 }

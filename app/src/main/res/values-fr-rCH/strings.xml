@@ -155,7 +155,7 @@
     <string name="notify_host_you_are_ready_cd">Informer l\'hôte que tu es prêt(e)</string>
     <string name="notify_host_you_are_not_ready_cd">Informer l\'hôte que tu n\'es pas prêt(e)</string>
     <string name="current_screen_name_cd">Ecran actuel %1$s</string>
-    <string name="last_card_played_cd">Dernière carte jouée est  %1$s</string>
+    <string name="last_card_played_cd">Dernière(s) %1$d carte(s) jouée(s) est|sont %1$s</string>
     <string name="kick_player">Ejecter %1$s</string>
     <string name="you_have_been_kick">Tu as été éjecter par l\'hôte</string>
     <string name="table_is_empty_cd">La table est vide</string>
@@ -173,4 +173,6 @@
     </string>
     <string name="title_activity_home">Accueil</string>
     <string name="waiting_for_disconnected_player">En attente de reconnection d\'un joueur</string>
+    <string name="game_not_found_title">Error</string>
+    <string name="game_not_found_text">Game no longer available</string>
 </resources>

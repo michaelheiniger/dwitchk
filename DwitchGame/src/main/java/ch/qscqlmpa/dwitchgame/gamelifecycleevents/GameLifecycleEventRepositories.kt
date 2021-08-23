@@ -38,7 +38,10 @@ internal class GuestGameLifecycleEventRepository @Inject constructor() : EventRe
     override fun notify(event: GuestGameLifecycleEvent) {
         super.notify(event)
         _gameRunning = when (event) {
-            is GuestGameLifecycleEvent.GameJoined, GuestGameLifecycleEvent.MovedToGameRoom -> true
+            is GuestGameLifecycleEvent.GameSetUp,
+            GuestGameLifecycleEvent.GameJoined,
+            GuestGameLifecycleEvent.GameRejoined,
+            GuestGameLifecycleEvent.MovedToGameRoom -> true
             GuestGameLifecycleEvent.GameOver -> false
         }
     }
@@ -51,7 +54,9 @@ sealed class HostGameLifecycleEvent {
 }
 
 sealed class GuestGameLifecycleEvent {
-    data class GameJoined(val gameInfo: GameJoinedInfo) : GuestGameLifecycleEvent()
+    data class GameSetUp(val gameInfo: GameJoinedInfo) : GuestGameLifecycleEvent()
+    object GameJoined : GuestGameLifecycleEvent()
+    object GameRejoined : GuestGameLifecycleEvent()
     object MovedToGameRoom : GuestGameLifecycleEvent()
     object GameOver : GuestGameLifecycleEvent()
 }

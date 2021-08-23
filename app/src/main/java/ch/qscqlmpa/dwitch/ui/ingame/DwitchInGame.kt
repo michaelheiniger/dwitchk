@@ -5,6 +5,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -41,6 +42,10 @@ fun DwitchGame(
     DwitchTheme {
         val navController = rememberNavController()
         val viewModel = viewModel<GameViewModel>(factory = vmFactory)
+        DisposableEffect(key1 = viewModel) {
+            viewModel.onStart()
+            onDispose { viewModel.onStop() }
+        }
 
         Scaffold { innerPadding ->
             when (val startScreen = viewModel.startScreen.value) {
@@ -80,6 +85,9 @@ private fun GameNavHost(
                         WaitingRoomHostDestination.NavigateToGameRoomScreen ->
                             navController.navigate(GameScreens.GameRoomHost.name)
                         WaitingRoomHostDestination.NavigateToHomeScreen -> navigateToHomeFragment()
+                        WaitingRoomHostDestination.CurrentScreen -> {
+                            // Nothing to do
+                        }
                     }
                 }
             )
@@ -92,6 +100,9 @@ private fun GameNavHost(
                         WaitingRoomGuestDestination.NavigateToGameRoomScreen ->
                             navController.navigate(GameScreens.GameRoomGuest.name)
                         WaitingRoomGuestDestination.NavigateToHomeScreen -> navigateToHomeFragment()
+                        WaitingRoomGuestDestination.CurrentScreen -> {
+                            // Nothing to do
+                        }
                     }
                 }
             )
@@ -102,6 +113,9 @@ private fun GameNavHost(
                 onNavigationEvent = { event ->
                     when (event) {
                         GameRoomHostDestination.NavigateToHomeScreen -> navigateToHomeFragment()
+                        GameRoomHostDestination.CurrentScreen -> {
+                            // Nothing to do
+                        }
                     }
                 }
             )
@@ -112,6 +126,9 @@ private fun GameNavHost(
                 onNavigationEvent = { event ->
                     when (event) {
                         GameRoomGuestDestination.NavigateToHomeScreen -> navigateToHomeFragment()
+                        GameRoomGuestDestination.CurrentScreen -> {
+                            // Nothing to do
+                        }
                     }
                 }
             )

@@ -45,7 +45,6 @@ class HostInGameService : BaseInGameService() {
     override fun actionChangeRoomToGameRoom() {
         Logger.info { "Go to game room" }
         showNotification(RoomType.GAME_ROOM)
-        gameAdvertisingDisposable.dispose()
     }
 
     override fun cleanUp() {

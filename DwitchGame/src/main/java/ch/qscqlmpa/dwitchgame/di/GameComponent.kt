@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitchgame.di
 
+import ch.qscqlmpa.dwitchgame.common.GameAdvertisingFacade
 import ch.qscqlmpa.dwitchgame.di.modules.*
 import ch.qscqlmpa.dwitchgame.home.HomeFacade
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
@@ -13,7 +14,8 @@ import dagger.Component
     modules = [
         DwitchGameModule::class,
         StoreModule::class,
-        HomeModule::class,
+        HomeFacadeModule::class,
+        GameAdvertisingFacadeModule::class,
         GameDiscoveryModule::class,
         SerializationModule::class,
         SchedulersModule::class,
@@ -23,6 +25,7 @@ interface GameComponent {
     val homeFacade: HomeFacade
     val homeHostFacade: HomeHostFacade
     val homeGuestFacade: HomeGuestFacade
+    val gameAdvertisingFacade: GameAdvertisingFacade
 
     fun addInGameComponent(module: InGameModule): InGameComponent
 

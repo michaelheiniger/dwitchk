@@ -1,12 +1,15 @@
 package ch.qscqlmpa.dwitchgame.gamediscovery
 
+import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
+import ch.qscqlmpa.dwitchcommonutil.TimeProvider
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchgame.di.GameScope
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.store.Store
+import com.jakewharton.rxrelay3.BehaviorRelay
 import io.reactivex.rxjava3.core.Observable
-import org.joda.time.LocalTime
+import org.joda.time.LocalDateTime
 import org.tinylog.kotlin.Logger
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -16,6 +19,7 @@ internal class AdvertisedGameRepository @Inject constructor(
     private val store: Store,
     private val gameDiscovery: GameDiscovery,
     private val schedulerFactory: SchedulerFactory,
+    private val timeProvider: TimeProvider,
     private val idlingResource: DwitchIdlingResource
 ) {
 
@@ -23,31 +27,53 @@ internal class AdvertisedGameRepository @Inject constructor(
         const val GAME_AD_TIMEOUT_SEC = 4
     }
 
+    private val disposableManager = DisposableManager()
+    private val advertisedGamesRelay = BehaviorRelay.createDefault<List<AdvertisedGame>>(emptyList())
     private val advertisedGames = mutableMapOf<IpAddress, AdvertisedGame>() // Local cache surviving unsubscriptions
 
-    fun listenForAdvertisedGames(): Observable<List<AdvertisedGame>> {
+    fun startListeningForAdvertisedGames() {
         Logger.debug { "Start listening for advertised games..." }
-        return Observable.combineLatest(
-            resumableGames(),
-            advertisedGames(),
-            staleAdvertisementsCleaner(),
-            { existingGames, adGame, _ -> Pair(existingGames, adGame) }
+        disposableManager.add(
+            Observable.combineLatest(
+                resumableGames(),
+                advertisedGames(),
+                staleAdvertisementsCleaner(),
+                { existingGames, adGame, _ -> Pair(existingGames, adGame) }
+            )
+                // Filter resumable games
+                .filter { (resumableGames, adGame) -> adGame.isNew || resumableGames.contains(adGame.gameCommonId) }
+                .map { (_, adGame) -> adGame }
+                .doFinally {
+                    advertisedGamesRelay.accept(emptyList())
+                    advertisedGames.clear()
+                }
+                .subscribe(
+                    { adGame ->
+                        updateLocalMap(adGame)
+                        val list = advertisedGames.values.toList()
+                        advertisedGamesRelay.accept(list)
+                    },
+                    { error -> Logger.error(error) { "Error listening for advertised games" } }
+                )
         )
-            // Filter resumable games
-            .filter { (existingGames, adGame) -> adGame.isNew || existingGames.contains(adGame.gameCommonId) }
-            .map { (_, adGame) -> adGame }
-            .doOnNext { adGame -> Logger.trace { "Game discovered: $adGame" } }
-            .doOnNext { adGame -> updateLocalMap(adGame) }
-            .doFinally { Logger.debug { "Stop listening for advertised games" } }
-            .map { ArrayList(advertisedGames.values) }
     }
 
-    fun getGame(ipAddress: String): AdvertisedGame {
-        return advertisedGames.getValue(IpAddress(ipAddress))
+    fun stopListeningForAdvertisedGames() {
+        Logger.debug { "Stop listening for advertised games" }
+        disposableManager.disposeAndReset()
+    }
+
+    fun observeAdvertisedGames(): Observable<List<AdvertisedGame>> {
+        Logger.debug { "Observing advertised games..." }
+        return advertisedGamesRelay
+    }
+
+    fun getGame(ipAddress: String): AdvertisedGame? {
+        return advertisedGames[IpAddress(ipAddress)]
     }
 
     private fun resumableGames(): Observable<List<GameCommonId>> {
-        return store.getGameCommonIdOfResumableGames()
+        return store.observeGameCommonIdOfResumableGames()
             .subscribeOn(schedulerFactory.io())
     }
 
@@ -58,7 +84,7 @@ internal class AdvertisedGameRepository @Inject constructor(
     }
 
     private fun staleAdvertisementsCleaner(): Observable<Long> {
-        return Observable.interval(0L, GAME_AD_TIMEOUT_SEC.toLong(), TimeUnit.SECONDS)
+        return Observable.interval(0L, GAME_AD_TIMEOUT_SEC.toLong(), TimeUnit.SECONDS, schedulerFactory.timeScheduler())
             .subscribeOn(schedulerFactory.io())
     }
 
@@ -67,12 +93,14 @@ internal class AdvertisedGameRepository @Inject constructor(
         advertisedGames[IpAddress(advertisedGame.gameIpAddress)] = advertisedGame
 
         // Remove obsolete ads
-        val timeNow = LocalTime.now()
-        advertisedGames.filterValues { game -> adIsTooOld(timeNow, game) }.keys
+        val timeNow = timeProvider.now()
+        advertisedGames.filterValues { game -> advertisementIsTooOld(timeNow, game) }
+            .keys
             .forEach { ip -> advertisedGames.remove(ip) }
+        Logger.info { "advertisedGames: $advertisedGames" }
     }
 
-    private fun adIsTooOld(timeNow: LocalTime, game: AdvertisedGame): Boolean {
+    private fun advertisementIsTooOld(timeNow: LocalDateTime, game: AdvertisedGame): Boolean {
         return timeNow.minusSeconds(GAME_AD_TIMEOUT_SEC) > game.discoveryTime
     }
 

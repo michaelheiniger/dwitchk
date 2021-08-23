@@ -38,7 +38,7 @@ internal class RejoinGameMessageProcessor @Inject constructor(
                 return@fromAction
             }
 
-            val rejoinInfo = getRejoiningInfoIfPossible(currentGameCommonId, msg, senderConnectionID)
+            val rejoinInfo = getRejoiningInfoIfPossible(currentGameCommonId, currentRoom, msg, senderConnectionID)
             if (rejoinInfo != null) {
                 updatePlayer(rejoinInfo.playerLocalId, currentRoom)
                 connectionStore.pairConnectionWithPlayer(senderConnectionID, rejoinInfo.dwitchPlayerId)
@@ -54,12 +54,13 @@ internal class RejoinGameMessageProcessor @Inject constructor(
 
     private fun getRejoiningInfoIfPossible(
         currentGameCommonId: GameCommonId,
+        currentRoom: RoomType,
         msg: Message.RejoinGameMessage,
         senderConnectionID: ConnectionId
     ): RejoinInfo? {
         val playerRejoiningId = store.getPlayerLocalId(msg.dwitchPlayerId)
         if (playerRejoiningId != null) {
-            return RejoinInfo(currentGameCommonId, playerRejoiningId, msg.dwitchPlayerId, senderConnectionID)
+            return RejoinInfo(currentGameCommonId, currentRoom, playerRejoiningId, msg.dwitchPlayerId, senderConnectionID)
         }
         return null
     }

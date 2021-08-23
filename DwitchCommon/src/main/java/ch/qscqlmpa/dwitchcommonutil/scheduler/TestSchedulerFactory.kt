@@ -3,9 +3,13 @@ package ch.qscqlmpa.dwitchcommonutil.scheduler
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class TestSchedulerFactory : SchedulerFactory {
+class TestSchedulerFactory constructor() : SchedulerFactory {
 
     private lateinit var timeScheduler: Scheduler
+
+    constructor(timeScheduler: Scheduler) : this() {
+        this.timeScheduler = timeScheduler
+    }
 
     fun setTimeScheduler(timeScheduler: Scheduler) {
         this.timeScheduler = timeScheduler

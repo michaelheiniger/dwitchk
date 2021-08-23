@@ -4,7 +4,7 @@ import ch.qscqlmpa.dwitchgame.gameadvertising.SerializerFactory
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscovery
 import io.reactivex.rxjava3.core.Observable
-import org.joda.time.LocalTime
+import org.joda.time.LocalDateTime
 import org.tinylog.kotlin.Logger
 import java.net.SocketException
 import javax.inject.Inject
@@ -52,7 +52,7 @@ class LanGameDiscovery @Inject constructor(
             gameInfo.gameCommonId,
             packet.senderIpAddress,
             gameInfo.gamePort,
-            LocalTime.now()
+            LocalDateTime.now()
         )
     }
 }

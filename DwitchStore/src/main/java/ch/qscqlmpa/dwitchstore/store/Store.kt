@@ -18,7 +18,7 @@ interface Store {
 
     fun deleteGamesMarkedForDeletion()
 
-    fun getGameCommonIdOfResumableGames(): Observable<List<GameCommonId>>
+    fun observeGameCommonIdOfResumableGames(): Observable<List<GameCommonId>>
 
     fun getResumableGamesInfo(): Observable<List<ResumableGameInfo>>
 

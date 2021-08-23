@@ -11,7 +11,8 @@ import dagger.Component
     modules = [
         DwitchGameModule::class,
         StoreModule::class,
-        HomeModule::class,
+        HomeFacadeModule::class,
+        GameAdvertisingFacadeModule::class,
         TestGameDiscoveryModule::class,
         SerializationModule::class,
         SchedulersModule::class,

@@ -54,6 +54,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
         goToGameRoom()
     }
 
+    // FIXME
     @Test
     fun localPlayerDisconnectsAndReconnects() {
         goToGameRoom()
@@ -67,9 +68,9 @@ class GameRoomAsGuestTest : BaseGuestTest() {
         testRule.onNodeWithTag(UiTags.reconnect).assertIsDisplayed()
 
         testRule.onNodeWithTag(UiTags.reconnect).performClick()
-        connectClientToServer(OnStartEvent.Success)
+        connectClientToServer(OnStartEvent.Success, incrementIdlingResource = true)
         waitForNextMessageSentByLocalGuest() as Message.RejoinGameMessage
-        hostSendsRejoinGameAck()
+        hostSendsRejoinGameAck_waitingRoom()
         hostSendsHostAndLocalGuestState()
         hostSendsLastGameState()
 

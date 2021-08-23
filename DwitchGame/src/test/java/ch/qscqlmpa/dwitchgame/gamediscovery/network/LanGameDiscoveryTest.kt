@@ -4,11 +4,11 @@ import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.mockk.mockk
 import io.mockk.verify
-import java.net.SocketException
-import org.joda.time.LocalTime
+import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import org.junit.jupiter.api.Test
+import java.net.SocketException
 
 class LanGameDiscoveryTest : BaseUnitTest() {
 
@@ -44,8 +44,8 @@ class LanGameDiscoveryTest : BaseUnitTest() {
     }
 
     private fun isDateToday(date: String): Boolean {
-        val now = LocalTime.now()
-        val fmt: DateTimeFormatter = DateTimeFormat.forPattern("HH:mm")
+        val now = LocalDateTime.now()
+        val fmt: DateTimeFormatter = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm")
         return date.startsWith(fmt.print(now))
     }
 

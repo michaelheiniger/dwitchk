@@ -13,6 +13,7 @@ import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.ComputerCommunicator
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
+import ch.qscqlmpa.dwitchmodel.game.RoomType
 import io.mockk.*
 import io.reactivex.rxjava3.subjects.PublishSubject
 import org.assertj.core.api.Assertions.assertThat
@@ -418,7 +419,8 @@ internal class ComputerPlayersManagerTest : BaseUnitTest() {
     private fun serverSendsRejoinGameAckMessageToComputer(player: ComputerPlayer) {
         messagesForComputerPlayersSubject.onNext(
             EnvelopeToSend(
-                Recipient.Single(player.connectionId), Message.RejoinGameAckMessage(gameCommonId, player.dwitchId)
+                Recipient.Single(player.connectionId),
+                Message.RejoinGameAckMessage(gameCommonId, RoomType.WAITING_ROOM, player.dwitchId)
             )
         )
     }

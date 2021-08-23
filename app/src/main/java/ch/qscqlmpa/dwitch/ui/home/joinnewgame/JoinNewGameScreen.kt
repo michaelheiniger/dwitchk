@@ -7,8 +7,6 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -17,10 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
-import ch.qscqlmpa.dwitch.ui.common.DwitchTopBar
-import ch.qscqlmpa.dwitch.ui.common.LoadingDialog
-import ch.qscqlmpa.dwitch.ui.common.NavigationIcon
-import ch.qscqlmpa.dwitch.ui.common.UiTags
+import ch.qscqlmpa.dwitch.ui.common.*
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 
 @Preview(
@@ -56,16 +51,19 @@ fun JoinNewGameScreen(
         onDispose { viewModel.onStop() }
     }
 
-    Navigation(viewModel, onJoinGameClick)
+    Navigation(viewModel.navigation.value, onJoinGameClick, onBackClick)
+    Notification(
+        notification = viewModel.notification.value,
+        onGameNotFoundAcknowledge = viewModel::onGameNotFoundAcknowledge
+    )
 
-    val game = remember { mutableStateOf(viewModel.getGame(gameIpAddress)) }
     JoinNewGameBody(
-        gameName = game.value.gameName,
+        gameName = viewModel.gameName(gameIpAddress).value,
         playerName = viewModel.playerName.value,
-        joinGameControlEnabled = viewModel.joinGameControl.value,
+        joinGameControlEnabled = viewModel.joinGameControlEnabled.value,
         loading = viewModel.loading.value,
         onPlayerNameChange = { name -> viewModel.onPlayerNameChange(name) },
-        onJoinGameClick = { viewModel.joinGame() },
+        onJoinGameClick = { viewModel.joinGame(gameIpAddress) },
         onBackClick = onBackClick
     )
 }
@@ -122,13 +120,34 @@ fun JoinNewGameBody(
 
 @Composable
 private fun Navigation(
-    viewModel: JoinNewGameViewModel,
-    onJoinGameClick: () -> Unit
+    destination: JoinNewGameDestination,
+    onJoinGameClick: () -> Unit,
+    onNavigateToHomeScreen: () -> Unit
 ) {
-    when (viewModel.navigation.value) {
+    when (destination) {
         JoinNewGameDestination.CurrentScreen -> {
             // Nothing to do
         }
         JoinNewGameDestination.NavigateToWaitingRoom -> onJoinGameClick()
+        JoinNewGameDestination.NavigateToHomeScreen -> onNavigateToHomeScreen()
+    }
+}
+
+@Composable
+private fun Notification(
+    notification: JoinNewGameNotification,
+    onGameNotFoundAcknowledge: () -> Unit
+) {
+    when (notification) {
+        JoinNewGameNotification.None -> {
+            // Nothing to do
+        }
+        JoinNewGameNotification.GameNotFound -> {
+            InfoDialog(
+                title = R.string.game_not_found_title,
+                text = R.string.game_not_found_text,
+                onOkClick = onGameNotFoundAcknowledge
+            )
+        }
     }
 }

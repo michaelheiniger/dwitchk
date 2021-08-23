@@ -32,10 +32,8 @@ class GameAdvertisingTest : BaseUnitTest() {
 
     @BeforeEach
     fun setup() {
-        val testSchedulerFactory = TestSchedulerFactory()
         timeScheduler = TestScheduler()
-        testSchedulerFactory.setTimeScheduler(timeScheduler)
-        val gameAdvertising = GameAdvertisingImpl(serializerFactory, testSchedulerFactory, mockNetwork)
+        val gameAdvertising = GameAdvertisingImpl(serializerFactory, TestSchedulerFactory(timeScheduler), mockNetwork)
         hostGameFacade = HostGameFacadeImpl(mockCommunicationStateRepository, mockHostCommunicator, gameAdvertising)
     }
 

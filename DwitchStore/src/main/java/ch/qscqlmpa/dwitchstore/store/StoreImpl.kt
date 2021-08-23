@@ -22,7 +22,7 @@ internal class StoreImpl @Inject constructor(private val appRoomDatabase: AppRoo
         appRoomDatabase.gameDao().deleteGamesMarkedForDeletion()
     }
 
-    override fun getGameCommonIdOfResumableGames(): Observable<List<GameCommonId>> {
+    override fun observeGameCommonIdOfResumableGames(): Observable<List<GameCommonId>> {
         return appRoomDatabase.gameDao().getGameCommonIdOfResumableGames()
     }
 

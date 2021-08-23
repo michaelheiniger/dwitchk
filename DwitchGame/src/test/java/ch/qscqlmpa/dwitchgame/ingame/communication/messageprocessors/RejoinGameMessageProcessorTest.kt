@@ -62,6 +62,7 @@ internal class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
                 HostMessageFactory.createRejoinAckMessage(
                     RejoinInfo(
                         currentGameCommonId,
+                        RoomType.WAITING_ROOM,
                         guestPlayerLocalId,
                         guestPlayerDwitchId,
                         senderLocalConnectionId
@@ -78,6 +79,7 @@ internal class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
                 HostMessageFactory.createRejoinAckMessage(
                     RejoinInfo(
                         currentGameCommonId,
+                        RoomType.WAITING_ROOM,
                         guestPlayerLocalId,
                         guestPlayerDwitchId,
                         senderLocalConnectionId

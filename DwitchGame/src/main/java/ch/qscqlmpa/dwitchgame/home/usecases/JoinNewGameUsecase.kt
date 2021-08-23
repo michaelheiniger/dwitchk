@@ -12,10 +12,22 @@ internal class JoinNewGameUsecase @Inject constructor(
     private val guestGameLifecycleEventRepository: GuestGameLifecycleEventRepository,
     private val store: Store
 ) {
-    fun joinGame(advertisedGame: AdvertisedGame, playerName: String): Completable {
-        return Completable.fromAction {
-            val result = store.insertGameForGuest(advertisedGame.gameName, advertisedGame.gameCommonId, playerName)
-            guestGameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GameJoined(GameJoinedInfo(result, advertisedGame)))
-        }
+    fun joinGame(advertisedGame: AdvertisedGame, playerName: String): Completable = Completable.merge(
+        listOf(
+            createGame(advertisedGame, playerName),
+            waitForJoinAckFromHost()
+        )
+    )
+
+    private fun createGame(advertisedGame: AdvertisedGame, playerName: String) = Completable.fromAction {
+        val result = store.insertGameForGuest(advertisedGame.gameName, advertisedGame.gameCommonId, playerName)
+        guestGameLifecycleEventRepository.notify(
+            GuestGameLifecycleEvent.GameSetUp(GameJoinedInfo(result, advertisedGame))
+        )
     }
+
+    private fun waitForJoinAckFromHost() = guestGameLifecycleEventRepository.observeEvents()
+        .filter { event -> event is GuestGameLifecycleEvent.GameJoined || event is GuestGameLifecycleEvent.GameRejoined }
+        .firstElement()
+        .ignoreElement()
 }

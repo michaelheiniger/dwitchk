@@ -7,7 +7,7 @@ import dagger.Module
 
 @Suppress("unused")
 @Module
-abstract class HomeModule {
+abstract class HomeFacadeModule {
 
     @GameScope
     @Binds
@@ -15,9 +15,9 @@ abstract class HomeModule {
 
     @GameScope
     @Binds
-    internal abstract fun provideGuestFacade(facade: HomeGuestFacadeImpl): HomeGuestFacade
+    internal abstract fun provideHomeGuestFacade(facade: HomeGuestFacadeImpl): HomeGuestFacade
 
     @GameScope
     @Binds
-    internal abstract fun provideHostFacade(facade: HomeHostFacadeImpl): HomeHostFacade
+    internal abstract fun provideHomeHostFacade(facade: HomeHostFacadeImpl): HomeHostFacade
 }

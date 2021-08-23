@@ -73,7 +73,7 @@ fun HomeScreen(
     onJoinNewGameEvent: (AdvertisedGame) -> Unit,
     onNavigateToGame: () -> Unit
 ) {
-    val viewModel = viewModel<HomeViewModel>(factory = vmFactory)
+    val viewModel = viewModel<HomeScreenViewModel>(factory = vmFactory)
     DisposableEffect(key1 = viewModel) {
         viewModel.onStart()
         onDispose { viewModel.onStop() }

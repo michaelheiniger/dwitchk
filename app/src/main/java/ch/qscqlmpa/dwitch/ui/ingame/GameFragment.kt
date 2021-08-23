@@ -13,6 +13,9 @@ import androidx.navigation.fragment.findNavController
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
+import ch.qscqlmpa.dwitchgame.common.GameAdvertisingFacade
+import ch.qscqlmpa.dwitchgame.ingame.GameFacade
+import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import org.tinylog.Logger
 import javax.inject.Inject
 import javax.inject.Named
@@ -22,6 +25,12 @@ class GameFragment : Fragment() {
     @Named("game")
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
+
+    @Inject
+    lateinit var gameFacade: GameFacade
+
+    @Inject
+    lateinit var gameAdvertisingFacade: GameAdvertisingFacade
 
     @ExperimentalAnimationApi
     @ExperimentalFoundationApi
@@ -33,6 +42,20 @@ class GameFragment : Fragment() {
                     navigateToHomeFragment = { findNavController().navigate(R.id.action_GameFragment_to_HomeFragment) }
                 )
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (gameFacade.localPlayerRole == PlayerRole.GUEST) {
+            gameAdvertisingFacade.startListeningForAdvertisedGames()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (gameFacade.localPlayerRole == PlayerRole.GUEST) {
+            gameAdvertisingFacade.stopListeningForAdvertisedGames()
         }
     }
 

@@ -23,7 +23,7 @@ class ServiceManagerImpl @Inject constructor(
         }
         homeFacade.observeGuestGameEvents().subscribe { event ->
             when (event) {
-                is GuestGameLifecycleEvent.GameJoined -> startGuestService(event.gameInfo)
+                is GuestGameLifecycleEvent.GameSetUp -> startGuestService(event.gameInfo)
                 GuestGameLifecycleEvent.MovedToGameRoom -> goToGuestGameRoom()
             }
         }

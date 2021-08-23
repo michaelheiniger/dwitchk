@@ -6,13 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import ch.qscqlmpa.dwitch.R
+import ch.qscqlmpa.dwitch.ingame.services.ServiceManager
 import ch.qscqlmpa.dwitch.ui.DwitchHome
-import ch.qscqlmpa.dwitch.ui.home.home.HomeViewModel
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
+import ch.qscqlmpa.dwitchgame.common.GameAdvertisingFacade
 import dagger.android.support.DaggerFragment
 import org.tinylog.Logger
 import javax.inject.Inject
@@ -24,7 +24,11 @@ class HomeFragment : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
-    private val homeViewModel: HomeViewModel by viewModels { viewModelFactory }
+    @Inject
+    lateinit var serviceManager: ServiceManager
+
+    @Inject
+    lateinit var gameAdvertisingFacade: GameAdvertisingFacade
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return ComposeView(requireContext()).apply {
@@ -41,8 +45,19 @@ class HomeFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         val args: HomeFragmentArgs by navArgs()
         if (args.navigateFromGame) {
-            homeViewModel.navigatedFromGame()
+            serviceManager.stopGuestService()
+            serviceManager.stopHostService()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        gameAdvertisingFacade.startListeningForAdvertisedGames()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        gameAdvertisingFacade.stopListeningForAdvertisedGames()
     }
 
     override fun onAttach(context: Context) {

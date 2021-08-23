@@ -1,12 +1,12 @@
 package ch.qscqlmpa.dwitch.ui.home.joinnewgame
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.AppEventRepository
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Scheduler
@@ -21,36 +21,46 @@ class JoinNewGameViewModel @Inject constructor(
 
     private val _navigation = mutableStateOf<JoinNewGameDestination>(JoinNewGameDestination.CurrentScreen)
     private val _loading = mutableStateOf(false)
-    private val _joinGameControl = mutableStateOf(false)
+    private val _joinGameControlEnabled = mutableStateOf(false)
     private val _playerName = mutableStateOf("")
-
-    private lateinit var game: AdvertisedGame
+    private val _notification = mutableStateOf<JoinNewGameNotification>(JoinNewGameNotification.None)
 
     val navigation get(): State<JoinNewGameDestination> = _navigation
     val loading get(): State<Boolean> = _loading
     val playerName get(): State<String> = _playerName
-    val joinGameControl get(): State<Boolean> = _joinGameControl
+    val joinGameControlEnabled get(): State<Boolean> = _joinGameControlEnabled
+    val notification: State<JoinNewGameNotification> = _notification
 
     init {
         if (BuildConfig.DEBUG) {
-            _joinGameControl.value = true
+            _joinGameControlEnabled.value = true
             _playerName.value = "Mébène"
         }
         Logger.debug { "Viewmodel lifecycle event: create JoinNewGameViewModel ($this)" }
     }
 
-    // TODO: find better solution without side effet (i.e. assignment)
-    fun getGame(ipAddress: String): AdvertisedGame {
-        game = guestFacade.getAdvertisedGame(ipAddress)
-        return game
+    fun gameName(ipAddress: String): State<String> {
+        val game = guestFacade.getAdvertisedGame(ipAddress)
+        if (game == null) _notification.value = JoinNewGameNotification.GameNotFound
+        return derivedStateOf { game?.gameName ?: "" }
     }
 
     fun onPlayerNameChange(value: String) {
         _playerName.value = value
-        _joinGameControl.value = playerName.value.isNotBlank()
+        _joinGameControlEnabled.value = playerName.value.isNotBlank()
     }
 
-    fun joinGame() {
+    fun onGameNotFoundAcknowledge() {
+        _navigation.value = JoinNewGameDestination.NavigateToHomeScreen
+    }
+
+    fun joinGame(ipAddress: String) {
+        val game = guestFacade.getAdvertisedGame(ipAddress)
+        if (game == null) {
+            _notification.value = JoinNewGameNotification.GameNotFound
+            return
+        }
+
         val playerName = playerName.value
         require(playerName.isNotBlank()) { "Player name cannot be blank" }
         _loading.value = true
@@ -77,4 +87,9 @@ class JoinNewGameViewModel @Inject constructor(
         Logger.debug { "Viewmodel lifecycle event: clear JoinNewGameViewModel ($this)" }
         super.onCleared()
     }
+}
+
+sealed class JoinNewGameNotification {
+    object None : JoinNewGameNotification()
+    object GameNotFound : JoinNewGameNotification()
 }
