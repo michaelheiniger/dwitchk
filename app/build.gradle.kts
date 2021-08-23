@@ -149,5 +149,5 @@ dependencies {
     androidTestImplementation("org.assertj:assertj-core:3.20.2")
 
     // Robolectric (for unit tests that log stuff)
-    testImplementation("org.robolectric:robolectric:4.6.1")
+    testImplementation("org.robolectric:robolectric:4.5.1") // v4.6.1 produces weird error
 }
