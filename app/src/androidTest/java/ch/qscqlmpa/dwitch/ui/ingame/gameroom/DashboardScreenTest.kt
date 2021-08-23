@@ -176,7 +176,7 @@ class DashboardScreenTest : BaseUiUnitTest() {
     }
 
     @Test
-    fun cannotPassWhenControlIsHidden() {
+    fun cannotPassWhenControlIsDisabled() {
         dashboardInfo = dashboardInfo.copy(localPlayerInfo = dashboardInfo.localPlayerInfo.copy(canPass = false))
 
         launchTest()
