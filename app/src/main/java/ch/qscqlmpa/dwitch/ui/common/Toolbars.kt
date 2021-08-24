@@ -27,7 +27,7 @@ const val toolbarDefaultTitle = "Dwitch"
 sealed class MenuAction(@DrawableRes val icon: Int, @StringRes val contentDescription: Int, val tag: String)
 
 private object TestMenuAction1 : MenuAction(R.drawable.ic_outline_info_24, R.string.game_rules_info_content, "testmenuaction1")
-private object TestMenuAction2 : MenuAction(R.drawable.clubs_2, R.string.game_rules_info_content, "testmenuaction2")
+private object TestMenuAction2 : MenuAction(R.mipmap.clubs_2, R.string.game_rules_info_content, "testmenuaction2")
 
 object GameRules : MenuAction(
     icon = R.drawable.ic_outline_info_24,

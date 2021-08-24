@@ -1,7 +1,5 @@
 <resources>
     <string name="asshole_long">Trou-Du-Cul</string>
-    <string name="asshole_short">TDC</string>
-    <string name="card">Carte</string>
     <string name="card_name_ace">As</string>
     <string name="card_name_jack">Valet</string>
     <string name="card_name_king">Roi</string>
@@ -31,7 +29,6 @@
     <string name="advertised_games">Parties</string>
     <string name="resume_game">Reprendre partie</string>
     <string name="neutral_long">Neutre</string>
-    <string name="neutral_short">N</string>
     <string name="back_to_home_screen">Retour à la Taverne</string>
     <string name="nga_game_name_tv">Nom de la partie</string>
     <string name="join_game">Allons y, fidèles compagnons de la Comté !</string>
@@ -48,7 +45,6 @@
     <string name="player_disconnected">Déconnecté :/</string>
     <string name="players">Joueurs</string>
     <string name="president_long">Président</string>
-    <string name="president_short">P</string>
     <string name="ready">Prêt</string>
     <string name="reconnect">Se reconnecter</string>
     <string name="round_is_beginning">Le tour a commencé !</string>
@@ -57,9 +53,7 @@
     <string name="stop_game_service">Stop service</string>
     <string name="table_cards">Cartes sur la table</string>
     <string name="vice_asshole_long">Vice-Trou-Du-Cul</string>
-    <string name="vice_asshole_short">VTDC</string>
     <string name="vice_president_long">Vice-Président</string>
-    <string name="vice_president_short">VP</string>
     <string name="waitingroom_notification_message">En attente de bros</string>
     <string name="players_in_waitingroom">Joueurs</string>
     <string name="cancel_game">Annuler partie</string>
@@ -155,7 +149,7 @@
     <string name="notify_host_you_are_ready_cd">Informer l\'hôte que tu es prêt(e)</string>
     <string name="notify_host_you_are_not_ready_cd">Informer l\'hôte que tu n\'es pas prêt(e)</string>
     <string name="current_screen_name_cd">Ecran actuel %1$s</string>
-    <string name="last_card_played_cd">Dernière(s) %1$d carte(s) jouée(s) est|sont %1$s</string>
+    <string name="last_card_played_cd">Dernière(s) %1$d carte(s) jouée(s) est|sont %2$s</string>
     <string name="kick_player">Ejecter %1$s</string>
     <string name="you_have_been_kick">Tu as été éjecter par l\'hôte</string>
     <string name="table_is_empty_cd">La table est vide</string>

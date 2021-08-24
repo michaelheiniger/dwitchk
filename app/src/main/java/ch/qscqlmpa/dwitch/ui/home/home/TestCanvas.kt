@@ -63,7 +63,7 @@ fun SmileyFaceCanvas(
 //        )
 //    )
 
-    val image = ImageBitmap.Companion.imageResource(R.drawable.spades_ace)
+    val image = ImageBitmap.Companion.imageResource(R.mipmap.spades_ace)
 
     val imageWidth = transition.animateFloat(label = "") {
         when (it) {

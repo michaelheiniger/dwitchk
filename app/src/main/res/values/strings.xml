@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">Dwitch</string>
     <string name="asshole_long">Asshole</string>
-    <string name="asshole_short">A</string>
-    <string name="card">Card</string>
     <string name="card_name_ace">Ace</string>
     <string name="card_name_blank" translatable="false">Blank</string>
     <string name="card_name_eight" translatable="false">8</string>
@@ -46,7 +44,6 @@
     <string name="no_game_discovered">No game discovered</string>
     <string name="resume_game">Resume game</string>
     <string name="neutral_long">Neutral</string>
-    <string name="neutral_short">N</string>
     <string name="back_to_home_screen">Back to the tavern</string>
     <string name="nga_game_name_tv">Game name</string>
     <string name="join_game">Let\'s go !</string>
@@ -64,7 +61,6 @@
     <string name="player_disconnected">Disconnected, damn !</string>
     <string name="players">Mates</string>
     <string name="president_long">President</string>
-    <string name="president_short">P</string>
     <string name="ready">Ready</string>
     <string name="reconnect">Reconnect</string>
     <string name="round_is_beginning">Round has begun !</string>
@@ -73,9 +69,7 @@
     <string name="stop_game_service">Stop service</string>
     <string name="table_cards">Table cards</string>
     <string name="vice_asshole_long">Vice-Asshole</string>
-    <string name="vice_asshole_short">VA</string>
     <string name="vice_president_long">Vice-President</string>
-    <string name="vice_president_short">VP</string>
     <string name="waitingroom_notification_message">Waiting for other mates</string>
     <string name="players_in_waitingroom">Bros</string>
     <string name="cancel_game">Cancel game</string>

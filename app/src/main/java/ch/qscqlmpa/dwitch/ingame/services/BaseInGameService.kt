@@ -70,7 +70,7 @@ abstract class BaseInGameService : DaggerService() {
         val notificationBuilder = NotificationCompat.Builder(this, DEFAULT_CHANNEL_ID)
             .setContentIntent(pendingIntent)
             .setOngoing(true)
-            .setSmallIcon(R.drawable.spades_ace)
+            .setSmallIcon(R.mipmap.spades_ace)
             .setContentTitle(getText(R.string.notification_title))
             .setContentText(getText(notificationMessage))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

@@ -62,10 +62,6 @@ android {
         kotlinCompilerExtensionVersion = composeVersion
     }
 
-    lint {
-        isAbortOnError = false
-    }
-
     // To prevent the error message (AndroidTest): " 2 files found with path 'META-INF/AL2.0' from inputs: ..."
     packagingOptions {
         resources.excludes.add("META-INF/AL2.0")
@@ -89,6 +85,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.3.1")
     implementation("com.google.android.material:material:1.4.0")
     implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
+    implementation("androidx.fragment:fragment-ktx:1.3.6")
 
     // ####### Jetpack Compose #######
     implementation("androidx.compose.ui:ui:$composeVersion")
