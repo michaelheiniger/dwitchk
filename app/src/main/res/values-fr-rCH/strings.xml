@@ -10,10 +10,10 @@
     <string name="card_suit_spades">Piques</string>
     <string name="cards_in_hand">Cartes en mains</string>
     <string name="confirm_cards_to_exchange">Echanger</string>
-    <string name="choose_one_card_to_exchange">Choisis une carte à échanger</string>
-    <string name="choose_two_cards_to_exchange">Choisis deux cartes à échanger</string>
-    <string name="connected_to_host">Connecté wouhouh !</string>
-    <string name="disconnected_from_host">Déconnecté: ah damned !</string>
+    <string name="choose_one_card_to_exchange">Choisi une carte à échanger</string>
+    <string name="choose_two_cards_to_exchange">Choisi deux cartes à échanger</string>
+    <string name="connected_to_host">Connecté, wouhouh !</string>
+    <string name="disconnected_from_host">Déconnecté, ah damned !</string>
     <string name="game_canceled_by_host">Partie annulée par l\'hôte</string>
     <string name="game_over">Partie terminée, see ya bro !</string>
     <string name="gameroom_notification_message">Partie en cours</string>
@@ -36,12 +36,12 @@
     <string name="not_listening_for_guests">Pas prêt à accueillir d\'autres joueurs</string>
     <string name="not_ready">Pas prêt</string>
     <string name="notification_title">Dwitch</string>
-    <string name="ok">Si tu l\'dis, meuf</string>
+    <string name="ok">Ok, técole</string>
     <string name="last_card_played">Dernière carte jouée</string>
     <string name="pass_turn">Passer</string>
     <string name="play_card">Jouer</string>
     <string name="start_new_round">Nouveau tour</string>
-    <string name="player_connected">Connecté wouh !</string>
+    <string name="player_connected">Connecté =)</string>
     <string name="player_disconnected">Déconnecté :/</string>
     <string name="players">Joueurs</string>
     <string name="president_long">Président</string>
@@ -154,7 +154,7 @@
     <string name="you_have_been_kick">Tu as été éjecter par l\'hôte</string>
     <string name="table_is_empty_cd">La table est vide</string>
     <string name="game_rules_info_cd">Règles du jeu</string>
-    <string name="game_rules_info_title">Games rules</string>
+    <string name="game_rules_info_title">Règles du jeu</string>
     <string name="game_rules_info_content">
         Les cartes jouées doivent avoir une valeur égale ou plus haute que les dernières cartes jouées.\n
         Cartes triées par valeur (ordre croissant): 3, 4, 5, 6, 7, 8, 9, 10, Vallet, Reine, Roi, As, 2 (Joker)\n
@@ -167,6 +167,6 @@
     </string>
     <string name="title_activity_home">Accueil</string>
     <string name="waiting_for_disconnected_player">En attente de reconnection d\'un joueur</string>
-    <string name="game_not_found_title">Error</string>
-    <string name="game_not_found_text">Game no longer available</string>
+    <string name="game_not_found_title">Erreur</string>
+    <string name="game_not_found_text">Partie plus disponnible</string>
 </resources>
