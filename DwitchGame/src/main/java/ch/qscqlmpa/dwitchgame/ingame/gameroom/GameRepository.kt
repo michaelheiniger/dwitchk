@@ -20,22 +20,21 @@ internal class GameRepository @Inject constructor(
     private val gameData = Observable.combineLatest(
         store.observePlayersInWaitingRoom(),
         store.observeLocalPlayer(),
-        store.observeGameState(),
-        { players, localPlayer, gameState ->
-            when (gameState.phase) {
-                DwitchGamePhase.RoundIsBeginning -> DwitchState.RoundIsBeginning(
-                    createDashboardInfo(
-                        localPlayer = localPlayer,
-                        players = players,
-                        gameState = gameState
-                    )
+        store.observeGameState()
+    ) { players, localPlayer, gameState ->
+        when (gameState.phase) {
+            DwitchGamePhase.RoundIsBeginning -> DwitchState.RoundIsBeginning(
+                createDashboardInfo(
+                    localPlayer = localPlayer,
+                    players = players,
+                    gameState = gameState
                 )
-                DwitchGamePhase.RoundIsOnGoing -> DwitchState.RoundIsOngoing(createDashboardInfo(localPlayer, players, gameState))
-                DwitchGamePhase.CardExchange -> getDataForCardExchange(localPlayer, gameState)
-                DwitchGamePhase.RoundIsOver -> DwitchState.EndOfRound(createEndOfRoundInfo(localPlayer, gameState))
-            }
+            )
+            DwitchGamePhase.RoundIsOnGoing -> DwitchState.RoundIsOngoing(createDashboardInfo(localPlayer, players, gameState))
+            DwitchGamePhase.CardExchange -> getDataForCardExchange(localPlayer, gameState)
+            DwitchGamePhase.RoundIsOver -> DwitchState.EndOfRound(createEndOfRoundInfo(localPlayer, gameState))
         }
-    )
+    }
 
     fun getGameName(): Single<String> {
         return Single.fromCallable { store.getGameName() }
