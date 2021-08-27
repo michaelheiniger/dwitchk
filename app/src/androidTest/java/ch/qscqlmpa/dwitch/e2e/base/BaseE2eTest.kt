@@ -40,7 +40,7 @@ import org.junit.runner.RunWith
 import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
-abstract class BaseUiTest {
+abstract class BaseE2eTest {
 
     @get:Rule
     val testRule = createAndroidComposeRule<HomeActivity>()

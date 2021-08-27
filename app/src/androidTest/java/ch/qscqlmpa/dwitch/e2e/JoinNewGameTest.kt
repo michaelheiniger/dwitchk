@@ -3,12 +3,12 @@ package ch.qscqlmpa.dwitch.e2e
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.e2e.base.BaseUiTest
+import ch.qscqlmpa.dwitch.e2e.base.BaseE2eTest
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import org.junit.Test
 
-class JoinNewGameTest : BaseUiTest() {
+class JoinNewGameTest : BaseE2eTest() {
 
     @Test
     fun guestMustProvideANameToJoinTheGame() {

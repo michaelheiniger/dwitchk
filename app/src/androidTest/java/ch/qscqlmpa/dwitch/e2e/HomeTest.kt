@@ -1,11 +1,11 @@
 package ch.qscqlmpa.dwitch.e2e
 
 import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
-import ch.qscqlmpa.dwitch.e2e.base.BaseUiTest
+import ch.qscqlmpa.dwitch.e2e.base.BaseE2eTest
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import org.junit.Test
 
-class HomeTest : BaseUiTest() {
+class HomeTest : BaseE2eTest() {
 
     @Test
     fun screenIsDisplayed() {
