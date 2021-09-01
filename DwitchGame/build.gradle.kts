@@ -65,7 +65,7 @@ dependencies {
     // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc")
 
-    // Properties file reading lib
+    // Properties file reading lib (https://github.com/sksamuel/hoplite
     implementation("com.sksamuel.hoplite:hoplite-core:1.4.7")
     implementation("com.sksamuel.hoplite:hoplite-yaml:1.4.7")
 
