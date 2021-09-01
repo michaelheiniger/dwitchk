@@ -47,9 +47,6 @@ dependencies {
     implementation(project(path = ":DwitchCommunication"))
     implementation(project(path = ":DwitchCommon"))
 
-    // Logging
-    implementation("org.tinylog:tinylog-api-kotlin:2.4.0-M1")
-
     // Dagger
     implementation("com.google.dagger:dagger:2.38.1")
     kapt("com.google.dagger:dagger-compiler:2.38.1")
@@ -67,6 +64,10 @@ dependencies {
 
     // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc")
+
+    // Properties file reading lib
+    implementation("com.sksamuel.hoplite:hoplite-core:1.4.7")
+    implementation("com.sksamuel.hoplite:hoplite-yaml:1.4.7")
 
     // JUnit5
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")

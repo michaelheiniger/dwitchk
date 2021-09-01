@@ -1,0 +1,5 @@
+gameAdvertising:
+  port: 8888
+
+communication:
+  waitForJoinOrRejoinAckTimeout: 2 # seconds

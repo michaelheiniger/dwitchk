@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitchgame.gameadvertising
 
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
+import ch.qscqlmpa.dwitchgame.common.ApplicationConfigRepository
 import ch.qscqlmpa.dwitchgame.gameadvertising.network.Network
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -9,13 +10,15 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 internal class GameAdvertisingImpl @Inject constructor(
+    applicationConfigRepository: ApplicationConfigRepository,
     private val serializerFactory: SerializerFactory,
     private val schedulerFactory: SchedulerFactory,
     private val network: Network
 ) : GameAdvertising {
 
+    private val destinationPort = applicationConfigRepository.config.gameAdvertising.port
+
     companion object {
-        private const val DESTINATION_PORT = 8888
         private const val DELAY_BEFORE_FIRST_AD_SECONDS: Long = 0
         private const val ADVERTISING_PERIOD_SECONDS: Long = 2
     }
@@ -24,7 +27,7 @@ internal class GameAdvertisingImpl @Inject constructor(
         Logger.info { "Advertise game: $gameAdvertisingInfo" }
         return advertisingScheduler()
             .subscribeOn(schedulerFactory.timeScheduler())
-            .doOnNext { network.sendAdvertisement(DESTINATION_PORT, gameInfoAsStr(gameAdvertisingInfo)) }
+            .doOnNext { network.sendAdvertisement(destinationPort, gameInfoAsStr(gameAdvertisingInfo)) }
             .doFinally { Logger.info { "Game no longer advertised." } }
             .ignoreElements()
     }

@@ -1,6 +1,8 @@
 package ch.qscqlmpa.dwitchgame.home.usecases
 
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
+import ch.qscqlmpa.dwitchgame.common.ApplicationConfigRepository
+import ch.qscqlmpa.dwitchgame.common.testApplicationConfig
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GameJoinedInfo
 import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GuestGameLifecycleEvent
@@ -17,6 +19,7 @@ import org.junit.jupiter.api.Test
 
 internal class JoinNewGameUsecaseTest : BaseUnitTest() {
 
+    private val mockApplicationConfigRepository = mockk<ApplicationConfigRepository>(relaxed = true)
     private val mockGameLifecycleEventRepository = mockk<GuestGameLifecycleEventRepository>(relaxed = true)
 
     private lateinit var newGameUsecase: JoinNewGameUsecase
@@ -37,9 +40,11 @@ internal class JoinNewGameUsecaseTest : BaseUnitTest() {
         gameLifecycleEventSubject = PublishSubject.create()
         every { mockGameLifecycleEventRepository.observeEvents() } returns gameLifecycleEventSubject
 
-        newGameUsecase = JoinNewGameUsecase(mockGameLifecycleEventRepository, mockStore)
+        every { mockApplicationConfigRepository.config } returns testApplicationConfig()
+
+        newGameUsecase = JoinNewGameUsecase(mockApplicationConfigRepository, mockGameLifecycleEventRepository, mockStore)
         every { mockStore.insertGameForGuest(any(), any(), any()) } returns
-            InsertGameResult(gameLocalId, gameCommonId, gameName, localPlayerLocalId)
+                InsertGameResult(gameLocalId, gameCommonId, gameName, localPlayerLocalId)
     }
 
     @Test

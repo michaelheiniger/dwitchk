@@ -2,6 +2,8 @@ package ch.qscqlmpa.dwitchgame.api
 
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
+import ch.qscqlmpa.dwitchgame.common.ApplicationConfigRepository
+import ch.qscqlmpa.dwitchgame.common.testApplicationConfig
 import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertisingImpl
 import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.gameadvertising.network.Network
@@ -10,6 +12,7 @@ import ch.qscqlmpa.dwitchgame.ingame.common.HostGameFacadeImpl
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.rxjava3.schedulers.TestScheduler
@@ -19,21 +22,26 @@ import java.util.concurrent.TimeUnit
 
 class GameAdvertisingTest : BaseUnitTest() {
 
+    private val mockApplicationConfigRepository = mockk<ApplicationConfigRepository>(relaxed = true)
     private val mockCommunicationStateRepository = mockk<HostCommunicationStateRepository>(relaxed = true)
     private val mockNetwork = mockk<Network>(relaxed = true)
     private val mockHostCommunicator = mockk<HostCommunicator>(relaxed = true)
 
     private lateinit var hostGameFacade: HostGameFacade
-
     private lateinit var timeScheduler: TestScheduler
-
     private val expectedAdvertising =
         "{\"isNew\":true,\"gameCommonId\":{\"value\":1},\"gameName\":\"gameName\",\"gamePort\":8889}"
 
     @BeforeEach
     fun setup() {
+        every { mockApplicationConfigRepository.config } returns testApplicationConfig()
         timeScheduler = TestScheduler()
-        val gameAdvertising = GameAdvertisingImpl(serializerFactory, TestSchedulerFactory(timeScheduler), mockNetwork)
+        val gameAdvertising = GameAdvertisingImpl(
+            mockApplicationConfigRepository,
+            serializerFactory,
+            TestSchedulerFactory(timeScheduler),
+            mockNetwork
+        )
         hostGameFacade = HostGameFacadeImpl(mockCommunicationStateRepository, mockHostCommunicator, gameAdvertising)
     }
 

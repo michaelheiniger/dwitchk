@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitchgame.home.usecases
 
+import ch.qscqlmpa.dwitchgame.common.ApplicationConfigRepository
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GameJoinedInfo
 import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GuestGameLifecycleEvent
@@ -10,6 +11,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 internal class JoinNewGameUsecase @Inject constructor(
+    private val applicationConfigRepository: ApplicationConfigRepository,
     private val guestGameLifecycleEventRepository: GuestGameLifecycleEventRepository,
     private val store: Store
 ) {
@@ -30,6 +32,6 @@ internal class JoinNewGameUsecase @Inject constructor(
     private fun waitForJoinAckFromHost() = guestGameLifecycleEventRepository.observeEvents()
         .filter { event -> event is GuestGameLifecycleEvent.GameJoined || event is GuestGameLifecycleEvent.GameRejoined }
         .firstElement()
-        .timeout(2, TimeUnit.SECONDS)
         .ignoreElement()
+        .timeout(applicationConfigRepository.config.communication.waitForJoinOrRejoinAckTimeout, TimeUnit.SECONDS)
 }

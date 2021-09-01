@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitchgame.gamediscovery.network
 
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
+import ch.qscqlmpa.dwitchgame.common.ApplicationConfigRepository
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.mockk.mockk
 import io.mockk.verify
@@ -12,6 +13,10 @@ import java.net.SocketException
 
 class LanGameDiscoveryTest : BaseUnitTest() {
 
+    private val mockApplicationConfigRepository = mockk<ApplicationConfigRepository>(relaxed = true)
+
+    private lateinit var gameDiscovery: LanGameDiscovery
+
     companion object {
         const val gameAd1 = "{\"isNew\":true,\"gameCommonId\":{\"value\":23},\"gameName\":\"Kaamelott\",\"gamePort\":8889}"
         const val gameAd2 = "{\"isNew\":true,\"gameCommonId\":{\"value\":54},\"gameName\":\"LOTR\",\"gamePort\":8890}"
@@ -19,28 +24,39 @@ class LanGameDiscoveryTest : BaseUnitTest() {
 
     @Test
     fun `should emit advertised games when subscribing to stream`() {
-        val gameDiscovery = LanGameDiscovery(serializerFactory, TestNetworkAdapter())
+        // Given
+        createLanGameDiscovery(TestNetworkAdapter())
 
-        gameDiscovery.listenForAdvertisedGames()
+        // When
+        val testObserver = gameDiscovery.listenForAdvertisedGames()
             .take(1)
             .test()
-            .assertValue { advertisedGame ->
-                isDateToday(advertisedGame.discoveryTimeAsString()) &&
+
+        // Then
+        testObserver.assertValue { advertisedGame ->
+            isDateToday(advertisedGame.discoveryTimeAsString()) &&
                     advertisedGame.gameName == "Kaamelott" &&
                     advertisedGame.gameCommonId == GameCommonId(23) &&
                     advertisedGame.gameIpAddress == "192.168.1.1" &&
                     advertisedGame.gamePort == 8889
-            }
+        }
     }
 
     @Test
     fun `should dispose NetworkAdapter resources when stream is disposed`() {
+        // Given
         val networkAdapter = mockk<NetworkAdapter>(relaxed = true)
+        createLanGameDiscovery(networkAdapter)
 
-        val gameDiscovery = LanGameDiscovery(serializerFactory, networkAdapter)
+        // When
         gameDiscovery.listenForAdvertisedGames().test().dispose()
 
+        // Then
         verify { networkAdapter.close() }
+    }
+
+    private fun createLanGameDiscovery(networkAdapter: NetworkAdapter) {
+        gameDiscovery = LanGameDiscovery(mockApplicationConfigRepository, serializerFactory, networkAdapter)
     }
 
     private fun isDateToday(date: String): Boolean {

@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitchgame.gamediscovery.network
 
+import ch.qscqlmpa.dwitchgame.common.ApplicationConfigRepository
 import ch.qscqlmpa.dwitchgame.gameadvertising.SerializerFactory
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscovery
@@ -9,19 +10,19 @@ import org.tinylog.kotlin.Logger
 import java.net.SocketException
 import javax.inject.Inject
 
-class LanGameDiscovery @Inject constructor(
+internal class LanGameDiscovery @Inject constructor(
+    applicationConfigRepository: ApplicationConfigRepository,
     private val serializerFactory: SerializerFactory,
     private val networkAdapter: NetworkAdapter
 ) : GameDiscovery {
 
+    private val listeningPort = applicationConfigRepository.config.gameAdvertising.port
     private var isListening = true
 
     override fun listenForAdvertisedGames(): Observable<AdvertisedGame> {
 
         Logger.info { "Listen for advertised games..." }
         isListening = true
-
-        val listeningPort = 8888
 
         return Observable.create { observer ->
             try {
