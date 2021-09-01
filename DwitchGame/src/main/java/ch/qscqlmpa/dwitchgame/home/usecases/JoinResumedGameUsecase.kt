@@ -6,6 +6,7 @@ import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GuestGameLifecycleEvent
 import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GuestGameLifecycleEventRepository
 import ch.qscqlmpa.dwitchstore.store.Store
 import io.reactivex.rxjava3.core.Completable
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 internal class JoinResumedGameUsecase @Inject constructor(
@@ -22,11 +23,12 @@ internal class JoinResumedGameUsecase @Inject constructor(
     private fun prepareGame(advertisedGame: AdvertisedGame) = Completable.fromAction {
         val game = store.getGame(advertisedGame.gameCommonId)!!
         store.preparePlayersForGameResume(game.id)
-        guestGameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GameSetUp(GameJoinedInfo(game, advertisedGame)))
+        guestGameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GameSetup(GameJoinedInfo(game, advertisedGame)))
     }
 
     private fun waitForRejoinAckFromHost() = guestGameLifecycleEventRepository.observeEvents()
         .filter { event -> event is GuestGameLifecycleEvent.GameJoined || event is GuestGameLifecycleEvent.GameRejoined }
         .firstElement()
+        .timeout(2, TimeUnit.SECONDS)
         .ignoreElement()
 }

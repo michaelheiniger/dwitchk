@@ -1,11 +1,15 @@
 package ch.qscqlmpa.dwitch.ui.home
 
 import ch.qscqlmpa.dwitch.app.AppEventRepository
+import ch.qscqlmpa.dwitch.ingame.services.ServiceManager
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
+import ch.qscqlmpa.dwitch.ui.Destination
+import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
-import ch.qscqlmpa.dwitch.ui.home.home.HomeScreenViewModel
+import ch.qscqlmpa.dwitch.ui.home.home.HomeViewModel
 import ch.qscqlmpa.dwitchgame.common.GameAdvertisingFacade
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
+import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GameState
 import ch.qscqlmpa.dwitchgame.home.HomeFacade
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
@@ -21,33 +25,32 @@ import org.joda.time.DateTime
 import org.joda.time.LocalDateTime
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
-@Config(manifest = Config.NONE) // Prevent missing AndroidManifest log
-@RunWith(RobolectricTestRunner::class) // Needed because of logging
-class HomeScreenViewModelTest : BaseViewModelUnitTest() {
+class HomeViewModelTest : BaseViewModelUnitTest() {
 
     private val mockAppEventRepository = mockk<AppEventRepository>(relaxed = true)
+    private val mockServiceManager = mockk<ServiceManager>(relaxed = true)
     private val mockGameAdvertisingFacade = mockk<GameAdvertisingFacade>(relaxed = true)
     private val mockHomeFacade = mockk<HomeFacade>(relaxed = true)
     private val mockHomeGuestFacade = mockk<HomeGuestFacade>(relaxed = true)
     private val mockHomeHostFacade = mockk<HomeHostFacade>(relaxed = true)
+    private val mockNavigationBridge = mockk<NavigationBridge>(relaxed = true)
 
-    private lateinit var screenViewModel: HomeScreenViewModel
+    private lateinit var viewModel: HomeViewModel
 
     private lateinit var advertisedGamesSubject: PublishSubject<List<AdvertisedGame>>
     private lateinit var resumableGamesSubject: PublishSubject<List<ResumableGameInfo>>
 
     @Before
     fun setup() {
-        screenViewModel = HomeScreenViewModel(
+        viewModel = HomeViewModel(
             mockAppEventRepository,
+            mockServiceManager,
             mockGameAdvertisingFacade,
             mockHomeFacade,
             mockHomeGuestFacade,
             mockHomeHostFacade,
+            mockNavigationBridge,
             Schedulers.trampoline()
         )
 
@@ -59,35 +62,36 @@ class HomeScreenViewModelTest : BaseViewModelUnitTest() {
     }
 
     @Test
-    fun `should emit advertised games - succeed`() {
-        screenViewModel.onStart()
-        val data = screenViewModel.advertisedGames
+    fun `should emit advertised games when successfully fetched`() {
+        // Given
+        viewModel.onStart()
 
+        // When
         val list = listOf(AdvertisedGame(true, "Kaamelott", GameCommonId(1), "192.168.1.1", 8890, LocalDateTime.now()))
         advertisedGamesSubject.onNext(list)
 
-        assertThat(data.value).isInstanceOf(LoadedData.Success::class.java)
-        assertThat((data.value as LoadedData.Success).data).isEqualTo(list)
-
-        verify { mockGameAdvertisingFacade.observeAdvertisedGames() }
+        // Then
+        assertThat((viewModel.advertisedGames.value as LoadedData.Success).data).isEqualTo(list)
     }
 
     @Test
-    fun `should emit loading advertised games - failed`() {
-        screenViewModel.onStart()
+    fun `should emit error when an error occurred while fetching advertised games`() {
+        // Given
+        viewModel.onStart()
+
+        // When
         advertisedGamesSubject.onError(Exception())
-        val response = screenViewModel.advertisedGames
 
-        assertThat(response.value).isInstanceOf(LoadedData.Failed::class.java)
-
-        verify { mockGameAdvertisingFacade.observeAdvertisedGames() }
+        // Then
+        assertThat(viewModel.advertisedGames.value).isInstanceOf(LoadedData.Failed::class.java)
     }
 
     @Test
-    fun `should emit loading resumable games - succeed`() {
-        screenViewModel.onStart()
-        val data = screenViewModel.resumableGames
+    fun `should emit resumable games when successfully fetched`() {
+        // Given
+        viewModel.onStart()
 
+        // When
         val list = listOf(
             ResumableGameInfo(
                 1,
@@ -104,20 +108,57 @@ class HomeScreenViewModelTest : BaseViewModelUnitTest() {
         )
         resumableGamesSubject.onNext(list)
 
-        assertThat(data.value).isInstanceOf(LoadedData.Success::class.java)
-        assertThat((data.value as LoadedData.Success).data).isEqualTo(list)
-
-        verify { mockGameAdvertisingFacade.observeAdvertisedGames() }
+        // Then
+        assertThat((viewModel.resumableGames.value as LoadedData.Success).data).isEqualTo(list)
     }
 
     @Test
-    fun `should emit loading resumable games - failed`() {
-        screenViewModel.onStart()
+    fun `should emit error when an error occurred while fetching resumable games`() {
+        // Given
+        viewModel.onStart()
+
+        // When
         resumableGamesSubject.onError(Exception())
-        val response = screenViewModel.resumableGames
 
-        assertThat(response.value).isInstanceOf(LoadedData.Failed::class.java)
+        // Then
+        assertThat(viewModel.resumableGames.value).isInstanceOf(LoadedData.Failed::class.java)
+    }
 
-        verify { mockHomeHostFacade.resumableGames() }
+    @Test
+    fun `should do nothing when no game is started`() {
+        // Given
+        every { mockHomeFacade.gameState } returns GameState.NotStarted
+
+        // When
+        viewModel.onStart()
+
+        // Then
+        verify(exactly = 0) { mockServiceManager.stop() }
+        verify(exactly = 0) { mockNavigationBridge.navigate(any()) }
+    }
+
+    @Test
+    fun `should navigate to InGame destination when a game is running`() {
+        // Given
+        every { mockHomeFacade.gameState } returns GameState.Running
+
+        // When
+        viewModel.onStart()
+
+        // Then
+        verify { mockNavigationBridge.navigate(Destination.HomeScreens.InGame) }
+    }
+
+    @Test
+    fun `should stop service when game is over`() {
+        // Given
+        every { mockHomeFacade.gameState } returns GameState.Over
+
+        // When
+        viewModel.onStart()
+
+        // Then
+        verify { mockServiceManager.stop() }
+        verify(exactly = 0) { mockNavigationBridge.navigate(any()) }
     }
 }

@@ -44,13 +44,13 @@ open class App : DaggerApplication() {
         storeComponent = DaggerStoreComponent.factory().create(StoreModule(this))
 
         gameComponent = DaggerGameComponent.factory().create(
-            DwitchGameModule(ProdIdlingResource()),
+            DwitchGameModule(StubIdlingResource()),
             ch.qscqlmpa.dwitchgame.di.modules.StoreModule(storeComponent.store)
         )
 
         appComponent = DaggerAppComponent.builder()
             .application(this)
-            .applicationModule(ApplicationModule(this, ProdIdlingResource()))
+            .applicationModule(ApplicationModule(this, StubIdlingResource()))
             .gameComponent(gameComponent)
             .build()
         return appComponent
@@ -60,7 +60,6 @@ open class App : DaggerApplication() {
         super.onCreate()
 
         createNotificationChannels()
-        serviceManager.init()
     }
 
     open fun createInGameComponents(
@@ -76,7 +75,7 @@ open class App : DaggerApplication() {
             inGameStoreComponent = storeComponent.addInGameStoreComponent(InGameStoreModule(gameLocalId, localPlayerLocalId))
 
             communicationComponent = DaggerCommunicationComponent.factory()
-                .create(CommunicationModule(hostIpAddress, hostPort, ProdIdlingResource()))
+                .create(CommunicationModule(hostIpAddress, hostPort, StubIdlingResource()))
 
             inGameComponent = gameComponent.addInGameComponent(
                 InGameModule(

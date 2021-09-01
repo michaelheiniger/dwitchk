@@ -4,7 +4,8 @@ import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.AppEventRepository
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameDestination
+import ch.qscqlmpa.dwitch.ui.Destination
+import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameViewModel
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
 import io.mockk.confirmVerified
@@ -19,50 +20,61 @@ import org.assertj.core.api.Assertions.fail
 import org.junit.Assume
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
-@Config(manifest = Config.NONE) // Prevent missing AndroidManifest log
-@RunWith(RobolectricTestRunner::class) // Needed because of logging
 class HostNewGameViewModelTest : BaseViewModelUnitTest() {
 
     private val mockAppEventRepository = mockk<AppEventRepository>(relaxed = true)
     private val mockHostFacade = mockk<HomeHostFacade>(relaxed = true)
+    private val mockNavigationBridge = mockk<NavigationBridge>(relaxed = true)
 
     private lateinit var viewModel: HostNewGameViewModel
 
     @Before
     fun setup() {
-        viewModel = HostNewGameViewModel(mockAppEventRepository, mockHostFacade, Schedulers.trampoline())
+        viewModel = HostNewGameViewModel(
+            mockAppEventRepository,
+            mockHostFacade,
+            mockk(relaxed = true),
+            mockNavigationBridge,
+            Schedulers.trampoline()
+        )
         every { mockHostFacade.hostGame(any(), any()) } returns Completable.complete()
     }
 
     @Test
-    fun `Create game control is initially disabled`() {
+    fun `should initially prevent creating the game`() {
         Assume.assumeFalse("We are in debug variant", BuildConfig.DEBUG)
 
-        // Given initial state, then join game control is disabled
-        assertThat(viewModel.hostGameControlEnabled.value).isFalse
+        // Given initial state, then the game may not be created
+        assertThat(viewModel.canGameBeCreated.value).isFalse
     }
 
     @Test
     fun `Create game control is enabled when player name and game name are not blank`() {
+        // Given initial state
+
+        // When a player and game name are set
         viewModel.onPlayerNameChange("Arthur")
         viewModel.onGameNameChange("Table Ronde")
-        assertThat(viewModel.hostGameControlEnabled.value).isTrue
 
-        viewModel.onPlayerNameChange("Arthur")
+        // Then the game can be created
+        assertThat(viewModel.canGameBeCreated.value).isTrue
+
+        // When the game name is blank
         viewModel.onGameNameChange("")
-        assertThat(viewModel.hostGameControlEnabled.value).isFalse
+
+        // Then the game cannot be created
+        assertThat(viewModel.canGameBeCreated.value).isFalse
 
         viewModel.onPlayerNameChange("Arthur")
         viewModel.onGameNameChange("Table Ronde")
-        assertThat(viewModel.hostGameControlEnabled.value).isTrue
+        assertThat(viewModel.canGameBeCreated.value).isTrue
 
+        // When the player name is blank
         viewModel.onPlayerNameChange("")
-        viewModel.onGameNameChange("Table Ronde")
-        assertThat(viewModel.hostGameControlEnabled.value).isFalse
+
+        // Then the game cannot be created
+        assertThat(viewModel.canGameBeCreated.value).isFalse
     }
 
     @Test
@@ -78,7 +90,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
         viewModel.hostGame()
 
         // Then
-        assertThat(viewModel.navigation.value).isEqualTo(HostNewGameDestination.NavigateToWaitingRoom)
+        verify { mockNavigationBridge.navigate(Destination.HomeScreens.InGame) }
         verify { mockHostFacade.hostGame(gameName, playerName) }
         confirmVerified(mockHostFacade)
     }
@@ -99,7 +111,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
         }
 
         // Then
-        assertThat(viewModel.navigation.value).isEqualTo(HostNewGameDestination.CurrentScreen)
+        verify(exactly = 0) { mockNavigationBridge.navigate(any()) }
         confirmVerified(mockHostFacade)
     }
 
@@ -119,7 +131,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
         }
 
         // Then
-        assertThat(viewModel.navigation.value).isEqualTo(HostNewGameDestination.CurrentScreen)
+        verify(exactly = 0) { mockNavigationBridge.navigate(any()) }
         confirmVerified(mockHostFacade)
     }
 }

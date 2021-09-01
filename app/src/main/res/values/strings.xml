@@ -181,4 +181,6 @@
     <string name="waiting_for_disconnected_player">Waiting for player to reconnect</string>
     <string name="game_not_found_title">Error</string>
     <string name="game_not_found_text">Game no longer available</string>
+    <string name="dialog_error_title">Error</string>
+    <string name="error_joining_game_text">Error joining game</string>
 </resources>

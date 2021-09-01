@@ -8,9 +8,6 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class HomeBindingModule {
 
-    @ContributesAndroidInjector(modules = [])
-    abstract fun contributeHomeActivity(): HomeActivity
-
     @ContributesAndroidInjector(modules = [HomeViewModelBindingModule::class])
-    abstract fun contributeHomeFragment(): HomeFragment
+    abstract fun contributeHomeActivity(): HomeActivity
 }

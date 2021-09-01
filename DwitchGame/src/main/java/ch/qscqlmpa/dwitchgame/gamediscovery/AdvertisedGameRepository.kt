@@ -12,6 +12,7 @@ import io.reactivex.rxjava3.core.Observable
 import org.joda.time.LocalDateTime
 import org.tinylog.kotlin.Logger
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 @GameScope
@@ -30,16 +31,24 @@ internal class AdvertisedGameRepository @Inject constructor(
     private val disposableManager = DisposableManager()
     private val advertisedGamesRelay = BehaviorRelay.createDefault<List<AdvertisedGame>>(emptyList())
     private val advertisedGames = mutableMapOf<IpAddress, AdvertisedGame>() // Local cache surviving unsubscriptions
+    private var listeningForAds = AtomicBoolean(false)
 
+    /**
+     * Listen for advertised games and store them in the repository until they become obsolete.
+     * This method is idempotent.
+     */
     fun startListeningForAdvertisedGames() {
+        if (listeningForAds.get()) {
+            return // for idempotency
+        } else listeningForAds.set(true)
+
         Logger.debug { "Start listening for advertised games..." }
         disposableManager.add(
             Observable.combineLatest(
                 resumableGames(),
                 advertisedGames(),
-                staleAdvertisementsCleaner(),
-                { existingGames, adGame, _ -> Pair(existingGames, adGame) }
-            )
+                staleAdvertisementsCleaner()
+            ) { existingGames, adGame, _ -> Pair(existingGames, adGame) }
                 // Filter resumable games
                 .filter { (resumableGames, adGame) -> adGame.isNew || resumableGames.contains(adGame.gameCommonId) }
                 .map { (_, adGame) -> adGame }
@@ -58,11 +67,22 @@ internal class AdvertisedGameRepository @Inject constructor(
         )
     }
 
+    /**
+     * Stop listen for advertised games and clears the store of game ads.
+     * This method is idempotent.
+     */
     fun stopListeningForAdvertisedGames() {
+        if (!listeningForAds.get()) {
+            return // for idempotency
+        } else listeningForAds.set(false)
+
         Logger.debug { "Stop listening for advertised games" }
         disposableManager.disposeAndReset()
     }
 
+    /**
+     * Stream the list of advertised games in the repository.
+     */
     fun observeAdvertisedGames(): Observable<List<AdvertisedGame>> {
         Logger.debug { "Observing advertised games..." }
         return advertisedGamesRelay

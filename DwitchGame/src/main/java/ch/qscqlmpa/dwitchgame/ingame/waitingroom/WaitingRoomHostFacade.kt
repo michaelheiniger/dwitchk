@@ -19,7 +19,7 @@ interface WaitingRoomHostFacade {
     fun cancelGame(): Completable
 
     /**
-     * Kick player off the game.
+     * Kick player off the game. Can either be a human or computer player.
      */
     fun kickPlayer(player: PlayerWrUi): Completable
 

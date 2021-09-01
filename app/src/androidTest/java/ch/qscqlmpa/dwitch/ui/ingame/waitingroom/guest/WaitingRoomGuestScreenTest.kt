@@ -29,11 +29,14 @@ class WaitingRoomGuestScreenTest : BaseUiUnitTest() {
 
     @Test
     fun localPlayerIsReady() {
+        // Given
         ready = UiCheckboxModel(enabled = true, checked = true)
         connectionStatus = GuestCommunicationState.Connected
 
+        //When
         launchTest()
 
+        // Then
         composeTestRule.onNodeWithTag(UiTags.localPlayerReadyControl, useUnmergedTree = true)
             .assertIsEnabled()
             .assertIsDisplayed()
@@ -46,11 +49,14 @@ class WaitingRoomGuestScreenTest : BaseUiUnitTest() {
 
     @Test
     fun localPlayerIsNotReady() {
+        // Given
         ready = UiCheckboxModel(enabled = true, checked = false)
         connectionStatus = GuestCommunicationState.Connected
 
+        //When
         launchTest()
 
+        // Then
         composeTestRule.onNodeWithTag(UiTags.localPlayerReadyControl, useUnmergedTree = true)
             .assertIsEnabled()
             .assertIsDisplayed()
@@ -68,7 +74,7 @@ class WaitingRoomGuestScreenTest : BaseUiUnitTest() {
                 players = players,
                 ready = ready,
                 notification = WaitingRoomGuestNotification.None,
-                connectionStatus = GuestCommunicationState.Connected,
+                connectionState = GuestCommunicationState.Connected,
                 onReadyClick = {},
                 onLeaveConfirmClick = {},
                 onReconnectClick = {},

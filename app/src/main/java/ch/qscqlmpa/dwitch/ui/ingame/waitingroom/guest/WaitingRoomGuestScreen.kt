@@ -44,7 +44,7 @@ private fun WaitingRoomGuestScreenPlayerConnectedPreview() {
             ),
             ready = UiCheckboxModel(enabled = false, checked = false),
             notification = WaitingRoomGuestNotification.None,
-            connectionStatus = GuestCommunicationState.Connected,
+            connectionState = GuestCommunicationState.Connected,
             onReadyClick = {},
             onLeaveConfirmClick = {},
             onReconnectClick = {},
@@ -55,10 +55,7 @@ private fun WaitingRoomGuestScreenPlayerConnectedPreview() {
 }
 
 @Composable
-fun WaitingRoomGuestScreen(
-    vmFactory: ViewModelFactory,
-    onNavigationEvent: (WaitingRoomGuestDestination) -> Unit
-) {
+fun WaitingRoomGuestScreen(vmFactory: ViewModelFactory) {
     val viewModel = viewModel<WaitingRoomViewModel>(factory = vmFactory)
     val guestViewModel = viewModel<WaitingRoomGuestViewModel>(factory = vmFactory)
     val connectionViewModel = viewModel<ConnectionGuestViewModel>(factory = vmFactory)
@@ -74,25 +71,18 @@ fun WaitingRoomGuestScreen(
         }
     }
 
-    Navigation(guestViewModel.navigation.value, onNavigationEvent = onNavigationEvent)
-
     WaitingRoomGuestBody(
         toolbarTitle = viewModel.toolbarTitle.value,
         players = viewModel.players.value,
         ready = guestViewModel.ready.value,
         notification = guestViewModel.notifications.value,
-        connectionStatus = connectionViewModel.connectionStatus.value,
+        connectionState = connectionViewModel.connectionState.value,
         onReadyClick = guestViewModel::updateReadyState,
         onLeaveConfirmClick = guestViewModel::leaveGame,
         onReconnectClick = connectionViewModel::reconnect,
-        onGameCanceledAcknowledge = guestViewModel::acknowledgeGameCanceledEvent,
+        onGameCanceledAcknowledge = guestViewModel::acknowledgeGameCanceled,
         onKickOffGameAcknowledge = guestViewModel::acknowledgeKickOffGame
     )
-}
-
-@Composable
-fun Navigation(destination: WaitingRoomGuestDestination, onNavigationEvent: (WaitingRoomGuestDestination) -> Unit) {
-    if (destination != WaitingRoomGuestDestination.CurrentScreen) onNavigationEvent(destination)
 }
 
 @Composable
@@ -101,7 +91,7 @@ fun WaitingRoomGuestBody(
     players: List<PlayerWrUi>,
     ready: UiCheckboxModel,
     notification: WaitingRoomGuestNotification,
-    connectionStatus: GuestCommunicationState?,
+    connectionState: GuestCommunicationState?,
     onReadyClick: (Boolean) -> Unit,
     onLeaveConfirmClick: () -> Unit,
     onReconnectClick: () -> Unit,
@@ -157,7 +147,7 @@ fun WaitingRoomGuestBody(
         }
         WaitingRoomGuestNotification.None -> {
             ConnectionGuestScreen(
-                status = connectionStatus,
+                state = connectionState,
                 onReconnectClick = onReconnectClick,
                 onAbortClick = { showConfirmationDialog.value = true }
             )

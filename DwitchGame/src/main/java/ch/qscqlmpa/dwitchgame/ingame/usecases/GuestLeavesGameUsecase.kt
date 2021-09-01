@@ -13,7 +13,6 @@ internal class GuestLeavesGameUsecase @Inject constructor(
     private val gameLifecycleEventRepository: GuestGameLifecycleEventRepository,
     private val communicator: GuestCommunicator
 ) {
-
     fun leaveGame(): Completable {
         return Completable.fromAction {
             if (store.gameIsNew()) {

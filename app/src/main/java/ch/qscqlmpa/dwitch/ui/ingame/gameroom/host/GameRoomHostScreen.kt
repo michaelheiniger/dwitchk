@@ -60,10 +60,7 @@ fun GameRoomHostScreenPreview() {
 @ExperimentalFoundationApi
 @ExperimentalAnimationApi
 @Composable
-fun GameRoomHostScreen(
-    vmFactory: ViewModelFactory,
-    onNavigationEvent: (GameRoomHostDestination) -> Unit
-) {
+fun GameRoomHostScreen(vmFactory: ViewModelFactory) {
     val playerViewModel = viewModel<GameRoomViewModel>(factory = vmFactory)
     val hostViewModel = viewModel<GameRoomHostViewModel>(factory = vmFactory)
     val connectionViewModel = viewModel<ConnectionHostViewModel>(factory = vmFactory)
@@ -78,8 +75,6 @@ fun GameRoomHostScreen(
             connectionViewModel.onStop()
         }
     }
-
-    Navigation(hostViewModel.navigation.value, onNavigationEvent)
 
     GameRoomHostBody(
         toolbarTitle = playerViewModel.toolbarTitle.value,
@@ -190,18 +185,5 @@ fun GameRoomHostBody(
                 onCancelClick = { showEndGameConfirmationDialog.value = false }
             )
         }
-    }
-}
-
-@Composable
-private fun Navigation(
-    destination: GameRoomHostDestination,
-    onNavigationEvent: (GameRoomHostDestination) -> Unit
-) {
-    when (destination) {
-        GameRoomHostDestination.CurrentScreen -> {
-            // Nothing to do
-        }
-        else -> onNavigationEvent(destination)
     }
 }

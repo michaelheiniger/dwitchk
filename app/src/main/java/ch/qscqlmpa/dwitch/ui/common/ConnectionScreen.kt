@@ -39,7 +39,7 @@ private fun CommunicationHostScreenPreview() {
 private fun CommunicationGuestScreenPreview() {
     ActivityScreenContainer {
         ConnectionGuestScreen(
-            status = GuestCommunicationState.Error,
+            state = GuestCommunicationState.Error,
             onReconnectClick = {},
             onAbortClick = {}
         )
@@ -70,11 +70,11 @@ fun ConnectionHostScreen(
 
 @Composable
 fun ConnectionGuestScreen(
-    status: GuestCommunicationState?,
+    state: GuestCommunicationState?,
     onReconnectClick: () -> Unit,
     onAbortClick: () -> Unit
 ) {
-    val connectionInfo = when (status) {
+    val connectionInfo = when (state) {
         GuestCommunicationState.Connecting -> ConnectionInfo(R.string.guest_connecting, connecting = true)
         GuestCommunicationState.Disconnected -> ConnectionInfo(R.string.disconnected_from_host, connecting = false)
         GuestCommunicationState.Error -> ConnectionInfo(R.string.guest_connection_error, connecting = false)

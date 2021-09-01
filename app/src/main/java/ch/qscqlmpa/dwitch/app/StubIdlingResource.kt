@@ -2,7 +2,7 @@ package ch.qscqlmpa.dwitch.app
 
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 
-class ProdIdlingResource : DwitchIdlingResource {
+class StubIdlingResource : DwitchIdlingResource {
     override fun isIdleNow(): Boolean {
         return true
     }

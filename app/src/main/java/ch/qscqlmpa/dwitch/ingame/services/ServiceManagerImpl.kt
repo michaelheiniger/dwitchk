@@ -10,30 +10,46 @@ import javax.inject.Inject
 
 class ServiceManagerImpl @Inject constructor(
     private val context: Context,
-    private val homeFacade: HomeFacade
+    homeFacade: HomeFacade
 ) : ServiceManager {
 
-    override fun init() {
+    private var gameOverHost: Boolean = false
+    private var gameOverGuest: Boolean = false
+
+    init {
         // Observables have the lifecycle of the application
         homeFacade.observeHostGameEvents().subscribe { event ->
             when (event) {
-                is HostGameLifecycleEvent.GameCreated -> startHostService(event.gameInfo)
+                is HostGameLifecycleEvent.GameSetup -> startHostService(event.gameInfo)
                 HostGameLifecycleEvent.MovedToGameRoom -> goToHostGameRoom()
+                HostGameLifecycleEvent.GameOver -> gameOverHost = true
             }
         }
         homeFacade.observeGuestGameEvents().subscribe { event ->
             when (event) {
-                is GuestGameLifecycleEvent.GameSetUp -> startGuestService(event.gameInfo)
+                is GuestGameLifecycleEvent.GameSetup -> startGuestService(event.gameInfo)
                 GuestGameLifecycleEvent.MovedToGameRoom -> goToGuestGameRoom()
+                GuestGameLifecycleEvent.GameOver -> gameOverGuest = true
             }
         }
     }
 
-    override fun stopHostService() {
+    override fun stop() {
+        if (gameOverHost) {
+            gameOverHost = false
+            stopHostService()
+        }
+        if (gameOverGuest) {
+            gameOverGuest = false
+            stopGuestService()
+        }
+    }
+
+    private fun stopHostService() {
         HostInGameService.stopService(context)
     }
 
-    override fun stopGuestService() {
+    private fun stopGuestService() {
         GuestInGameService.stopService(context)
     }
 

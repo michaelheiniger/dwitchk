@@ -45,9 +45,9 @@ internal class JoinNewGameUsecaseTest : BaseUnitTest() {
     @Test
     fun `should wait for join ACK from Host`() {
         // Given
+        val testObserver = newGameUsecase.joinGame(advertisedGame, playerName).test().assertNotComplete()
 
         // When
-        val testObserver = newGameUsecase.joinGame(advertisedGame, playerName).test()
         gameLifecycleEventSubject.onNext(GuestGameLifecycleEvent.GameJoined)
 
         // Then
@@ -57,9 +57,9 @@ internal class JoinNewGameUsecaseTest : BaseUnitTest() {
     @Test
     fun `should wait for rejoin ACK from Host`() {
         // Given
+        val testObserver = newGameUsecase.joinGame(advertisedGame, playerName).test().assertNotComplete()
 
         // When
-        val testObserver = newGameUsecase.joinGame(advertisedGame, playerName).test()
         gameLifecycleEventSubject.onNext(GuestGameLifecycleEvent.GameRejoined)
 
         // Then
@@ -67,8 +67,8 @@ internal class JoinNewGameUsecaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `should create game in store`() {
-        // Given
+    fun `should insert game in store`() {
+        // Given (nothing to do)
 
         // When
         newGameUsecase.joinGame(advertisedGame, playerName).test()
@@ -79,8 +79,8 @@ internal class JoinNewGameUsecaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `should emit _game created_ game lifecycle event`() {
-        // Given
+    fun `should notify that game has been setup`() {
+        // Given (nothing to do)
 
         // When
         newGameUsecase.joinGame(advertisedGame, playerName).test()
@@ -89,7 +89,7 @@ internal class JoinNewGameUsecaseTest : BaseUnitTest() {
         // Then
         verify {
             mockGameLifecycleEventRepository.notify(
-                GuestGameLifecycleEvent.GameSetUp(GameJoinedInfo(gameLocalId, localPlayerLocalId, gameIpAddress, gamePort))
+                GuestGameLifecycleEvent.GameSetup(GameJoinedInfo(gameLocalId, localPlayerLocalId, gameIpAddress, gamePort))
             )
         }
     }

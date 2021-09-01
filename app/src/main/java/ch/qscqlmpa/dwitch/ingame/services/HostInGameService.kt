@@ -51,7 +51,7 @@ class HostInGameService : BaseInGameService() {
         app.hostFacade().stopServer()
         app.destroyInGameComponents()
         gameAdvertisingDisposable.dispose()
-        app.homeFacade().deleteGamesMarkedForDeletion().blockingSubscribe()
+        app.homeFacade().reset().blockingSubscribe()
     }
 
     private fun advertiseGame(gameAdvertisingInfo: GameAdvertisingInfo) {

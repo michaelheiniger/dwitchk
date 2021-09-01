@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.home
 
 import androidx.lifecycle.ViewModel
-import ch.qscqlmpa.dwitch.ui.home.home.HomeScreenViewModel
+import ch.qscqlmpa.dwitch.ui.home.home.HomeViewModel
 import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameViewModel
 import ch.qscqlmpa.dwitch.ui.home.joinnewgame.JoinNewGameViewModel
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
@@ -21,8 +21,8 @@ abstract class HomeViewModelBindingModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(HomeScreenViewModel::class)
-    abstract fun bindMainActivityViewModel(screenViewModel: HomeScreenViewModel): ViewModel
+    @ViewModelKey(HomeViewModel::class)
+    abstract fun bindMainActivityViewModel(viewModel: HomeViewModel): ViewModel
 
     @Binds
     @IntoMap

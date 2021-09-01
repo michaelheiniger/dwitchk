@@ -17,7 +17,7 @@ class ConnectionGuestViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _communicationState = mutableStateOf<GuestCommunicationState>(GuestCommunicationState.Disconnected)
-    val connectionStatus get(): State<GuestCommunicationState> = _communicationState
+    val connectionState get(): State<GuestCommunicationState> = _communicationState
 
     fun reconnect() {
         idlingResource.increment("Reconnection to the host (Comm state: connected)")
@@ -33,7 +33,6 @@ class ConnectionGuestViewModel @Inject constructor(
         idlingResource.increment("Initial communication state")
         this.disposableManager.add(
             gameFacade.currentCommunicationState()
-                .distinctUntilChanged()
                 .observeOn(uiScheduler)
                 .subscribe(
                     { state ->

@@ -40,9 +40,7 @@ fun HostNewGameScreenPreview() {
 @Composable
 fun JoinNewGameScreen(
     vmFactory: ViewModelFactory,
-    gameIpAddress: String,
-    onJoinGameClick: () -> Unit,
-    onBackClick: () -> Unit
+    gameIpAddress: String
 ) {
     val viewModel = viewModel<JoinNewGameViewModel>(factory = vmFactory)
 
@@ -51,7 +49,6 @@ fun JoinNewGameScreen(
         onDispose { viewModel.onStop() }
     }
 
-    Navigation(viewModel.navigation.value, onJoinGameClick, onBackClick)
     Notification(
         notification = viewModel.notification.value,
         onGameNotFoundAcknowledge = viewModel::onGameNotFoundAcknowledge
@@ -60,11 +57,11 @@ fun JoinNewGameScreen(
     JoinNewGameBody(
         gameName = viewModel.gameName(gameIpAddress).value,
         playerName = viewModel.playerName.value,
-        joinGameControlEnabled = viewModel.joinGameControlEnabled.value,
+        joinGameControlEnabled = viewModel.canJoinGame.value,
         loading = viewModel.loading.value,
-        onPlayerNameChange = { name -> viewModel.onPlayerNameChange(name) },
+        onPlayerNameChange = viewModel::onPlayerNameChange,
         onJoinGameClick = { viewModel.joinGame(gameIpAddress) },
-        onBackClick = onBackClick
+        onBackClick = viewModel::onBackClick
     )
 }
 
@@ -119,21 +116,6 @@ fun JoinNewGameBody(
 }
 
 @Composable
-private fun Navigation(
-    destination: JoinNewGameDestination,
-    onJoinGameClick: () -> Unit,
-    onNavigateToHomeScreen: () -> Unit
-) {
-    when (destination) {
-        JoinNewGameDestination.CurrentScreen -> {
-            // Nothing to do
-        }
-        JoinNewGameDestination.NavigateToWaitingRoom -> onJoinGameClick()
-        JoinNewGameDestination.NavigateToHomeScreen -> onNavigateToHomeScreen()
-    }
-}
-
-@Composable
 private fun Notification(
     notification: JoinNewGameNotification,
     onGameNotFoundAcknowledge: () -> Unit
@@ -147,6 +129,13 @@ private fun Notification(
                 title = R.string.game_not_found_title,
                 text = R.string.game_not_found_text,
                 onOkClick = onGameNotFoundAcknowledge
+            )
+        }
+        JoinNewGameNotification.ErrorJoiningGame -> {
+            InfoDialog(
+                title = R.string.dialog_error_title,
+                text = R.string.error_joining_game_text,
+                onOkClick = {} // Nothing to do
             )
         }
     }

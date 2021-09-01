@@ -24,6 +24,7 @@ class GuestInGameService : BaseInGameService() {
             gameJoinedInfo.gamePort,
             gameJoinedInfo.gameIpAddress
         )
+        idlingResource.decrement("Dagger InGame component created")
         app.guestFacade().connect()
         Logger.info { "Service started" }
         notifyServiceStarted()
@@ -37,7 +38,7 @@ class GuestInGameService : BaseInGameService() {
     override fun cleanUp() {
         app.guestFacade().disconnect()
         app.destroyInGameComponents()
-        app.homeFacade().deleteGamesMarkedForDeletion().blockingSubscribe()
+        app.homeFacade().reset().blockingSubscribe()
     }
 
     companion object {

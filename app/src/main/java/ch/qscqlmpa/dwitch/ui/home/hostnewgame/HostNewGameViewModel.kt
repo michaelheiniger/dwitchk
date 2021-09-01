@@ -5,7 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.AppEventRepository
+import ch.qscqlmpa.dwitch.ui.Destination
+import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitchgame.common.GameAdvertisingFacade
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Scheduler
@@ -15,10 +18,11 @@ import javax.inject.Inject
 class HostNewGameViewModel @Inject constructor(
     private val appEventRepository: AppEventRepository,
     private val hostFacade: HomeHostFacade,
+    private val gameAdvertisingFacade: GameAdvertisingFacade,
+    private val navigationBridge: NavigationBridge,
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val _navigation = mutableStateOf<HostNewGameDestination>(HostNewGameDestination.CurrentScreen)
     private val _loading = mutableStateOf(false)
     private val _hostGameControlEnabled = mutableStateOf(false)
     private val _playerName = mutableStateOf("")
@@ -33,11 +37,10 @@ class HostNewGameViewModel @Inject constructor(
         Logger.debug { "Viewmodel lifecycle event: create HostNewGameViewModel ($this)" }
     }
 
-    val navigation get(): State<HostNewGameDestination> = _navigation
     val loading get(): State<Boolean> = _loading
     val playerName get(): State<String> = _playerName
     val gameName get(): State<String> = _gameName
-    val hostGameControlEnabled get(): State<Boolean> = _hostGameControlEnabled
+    val canGameBeCreated get(): State<Boolean> = _hostGameControlEnabled
 
     fun onPlayerNameChange(value: String) {
         _playerName.value = value
@@ -47,6 +50,10 @@ class HostNewGameViewModel @Inject constructor(
     fun onGameNameChange(value: String) {
         _gameName.value = value
         updateHostGameControl()
+    }
+
+    fun onBackClick() {
+        navigationBridge.navigateBack()
     }
 
     fun hostGame() {
@@ -68,10 +75,15 @@ class HostNewGameViewModel @Inject constructor(
             )
                 .doOnTerminate { _loading.value = true }
                 .subscribe(
-                    { _navigation.value = HostNewGameDestination.NavigateToWaitingRoom },
+                    { navigationBridge.navigate(Destination.HomeScreens.InGame) },
                     { error -> Logger.error(error) { "Error while start hosting the game" } }
                 )
         )
+    }
+
+    override fun onStart() {
+        super.onStart()
+        gameAdvertisingFacade.stopListeningForAdvertisedGames()
     }
 
     override fun onCleared() {

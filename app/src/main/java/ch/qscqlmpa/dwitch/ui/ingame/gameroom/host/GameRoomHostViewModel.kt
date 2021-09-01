@@ -1,8 +1,9 @@
 package ch.qscqlmpa.dwitch.ui.ingame.gameroom.host
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+import ch.qscqlmpa.dwitch.ui.Destination
+import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitchgame.common.GameAdvertisingFacade
 import ch.qscqlmpa.dwitchgame.ingame.gameroom.GameAction
 import ch.qscqlmpa.dwitchgame.ingame.gameroom.GameRoomHostFacade
 import ch.qscqlmpa.dwitchgame.ingame.gameroom.PlayerFacade
@@ -13,11 +14,10 @@ import javax.inject.Inject
 internal class GameRoomHostViewModel @Inject constructor(
     private val facade: GameRoomHostFacade,
     private val dashboardFacade: PlayerFacade,
+    private val gameAdvertisingFacade: GameAdvertisingFacade,
+    private val navigationBridge: NavigationBridge,
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
-
-    private val _navigationCommand = mutableStateOf<GameRoomHostDestination>(GameRoomHostDestination.CurrentScreen)
-    val navigation get(): State<GameRoomHostDestination> = _navigationCommand
 
     fun startNewRound() {
         disposableManager.add(
@@ -37,10 +37,15 @@ internal class GameRoomHostViewModel @Inject constructor(
                 .subscribe(
                     {
                         Logger.debug { "Game ended successfully." }
-                        _navigationCommand.value = GameRoomHostDestination.NavigateToHomeScreen
+                        navigationBridge.navigate(Destination.HomeScreens.Home)
                     },
                     { error -> Logger.error(error) { "Error while ending game." } }
                 )
         )
+    }
+
+    override fun onStart() {
+        super.onStart()
+        gameAdvertisingFacade.stopListeningForAdvertisedGames()
     }
 }

@@ -24,7 +24,7 @@ internal class GuestCommunicationStateRepository @Inject constructor() : Communi
     private val relay = BehaviorRelay.createDefault<GuestCommunicationState>(GuestCommunicationState.Disconnected)
 
     fun currentState(): Observable<GuestCommunicationState> {
-        return relay
+        return relay.distinctUntilChanged()
     }
 
     fun updateState(state: GuestCommunicationState) {

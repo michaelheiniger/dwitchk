@@ -1,9 +1,10 @@
 package ch.qscqlmpa.dwitch.ui.home.joinnewgame
 
 import ch.qscqlmpa.dwitch.BuildConfig
-import ch.qscqlmpa.dwitch.app.AppEvent
-import ch.qscqlmpa.dwitch.app.AppEventRepository
+import ch.qscqlmpa.dwitch.app.StubIdlingResource
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
+import ch.qscqlmpa.dwitch.ui.Destination
+import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
@@ -12,23 +13,17 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.fail
 import org.junit.Assume
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
-@Config(manifest = Config.NONE)
-@RunWith(RobolectricTestRunner::class)
 class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
 
-    private val mockAppEventRepository = mockk<AppEventRepository>(relaxed = true)
     private val mockGuestFacade = mockk<HomeGuestFacade>(relaxed = true)
+    private val mockNavigationBridge = mockk<NavigationBridge>(relaxed = true)
 
     private lateinit var viewModel: JoinNewGameViewModel
 
@@ -37,58 +32,69 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
 
     @Before
     fun setup() {
-        viewModel = JoinNewGameViewModel(mockAppEventRepository, mockGuestFacade, Schedulers.trampoline())
+        viewModel = JoinNewGameViewModel(
+            mockGuestFacade,
+            mockNavigationBridge,
+            Schedulers.trampoline(),
+            StubIdlingResource()
+        )
         every { mockGuestFacade.joinGame(any(), any()) } returns Completable.complete()
         every { mockGuestFacade.getAdvertisedGame(gameIpAddress) } returns advertisedGame
     }
 
     @Test
-    fun `Join game control is initially disabled`() {
+    fun `The game cannot be joined initially`() {
         Assume.assumeFalse("We are in debug variant", BuildConfig.DEBUG)
 
-        // Given initial state, then join game control is disabled
-        assertThat(viewModel.joinGameControlEnabled.value).isEqualTo(false)
+        // Given initial state, then the game cannot be joined
+        assertThat(viewModel.canJoinGame.value).isEqualTo(false)
     }
 
     @Test
-    fun `Join game control is enabled when player name is not blank`() {
-        viewModel.onPlayerNameChange("Arthur")
-        assertThat(viewModel.joinGameControlEnabled.value).isEqualTo(true)
+    fun `The game can be joined when player name is not blank`() {
+        // Given initial state
 
+        // When a player name is set
+        viewModel.onPlayerNameChange("Arthur")
+
+        // Then the game can be joined
+        assertThat(viewModel.canJoinGame.value).isEqualTo(true)
+
+        // When the player name is erased
         viewModel.onPlayerNameChange("")
-        assertThat(viewModel.joinGameControlEnabled.value).isEqualTo(false)
 
+        // Then the game cannot be joined
+        assertThat(viewModel.canJoinGame.value).isEqualTo(false)
+
+        // When the player name is set
         viewModel.onPlayerNameChange("Arthur")
-        assertThat(viewModel.joinGameControlEnabled.value).isEqualTo(true)
+
+        // Then the game can be joined
+        assertThat(viewModel.canJoinGame.value).isEqualTo(true)
     }
 
     @Test
-    fun `Navigate to the WaitingRoom when game is successfully created`() {
+    fun `Navigate to InGame when game is successfully joined`() {
         // Given
         val playerName = "Arthur"
-        every { mockAppEventRepository.observeEvents() } returns Observable.just(AppEvent.ServiceStarted)
+        viewModel.onPlayerNameChange(playerName)
         every { mockGuestFacade.joinGame(any(), any()) } returns Completable.complete()
 
         // When
-        viewModel.onPlayerNameChange(playerName)
         viewModel.joinGame(gameIpAddress)
 
         // Then
-        assertThat(viewModel.navigation.value).isEqualTo(JoinNewGameDestination.NavigateToWaitingRoom)
-        verify { mockGuestFacade.getAdvertisedGame(any()) }
+        verify { mockNavigationBridge.navigate(Destination.HomeScreens.InGame) }
         verify { mockGuestFacade.joinGame(advertisedGame, playerName) }
-        confirmVerified(mockGuestFacade)
     }
 
     @Test
     fun `Display notification when game cannot be found (eg advertising has stopped) `() {
         // Given
-        val playerName = "Arthur"
-        every { mockAppEventRepository.observeEvents() } returns Observable.just(AppEvent.ServiceStarted)
+        viewModel.onPlayerNameChange("Arthur")
         every { mockGuestFacade.getAdvertisedGame(gameIpAddress) } returns null
 
         // When
-        viewModel.onPlayerNameChange(playerName)
         viewModel.joinGame(gameIpAddress)
 
         // Then
@@ -101,16 +107,15 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
     fun `Navigate to the HomeScreen when game not found notification is acknowledged`() {
         // Given
         val playerName = "Arthur"
-        every { mockAppEventRepository.observeEvents() } returns Observable.just(AppEvent.ServiceStarted)
+        viewModel.onPlayerNameChange(playerName)
         every { mockGuestFacade.getAdvertisedGame(gameIpAddress) } returns null
+        viewModel.joinGame(gameIpAddress)
 
         // When
-        viewModel.onPlayerNameChange(playerName)
-        viewModel.joinGame(gameIpAddress)
         viewModel.onGameNotFoundAcknowledge()
 
         // Then
-        assertThat(viewModel.navigation.value).isEqualTo(JoinNewGameDestination.NavigateToHomeScreen)
+        verify { mockNavigationBridge.navigate(Destination.HomeScreens.Home) }
         verify { mockGuestFacade.getAdvertisedGame(any()) }
         confirmVerified(mockGuestFacade)
     }
@@ -119,6 +124,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
     fun `An error is thrown if the player name is not set when joining the game`() {
         // Given
         viewModel.onPlayerNameChange("")
+        every { mockGuestFacade.joinGame(any(), any()) } returns Completable.complete()
 
         // When the required data is not provided, the "create game" control is supposed to be disabled.
         // Hence the user should not be able to launch the game creation
@@ -130,7 +136,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
         }
 
         // Then
-        assertThat(viewModel.navigation.value).isEqualTo(JoinNewGameDestination.CurrentScreen)
+        verify(exactly = 0) { mockNavigationBridge.navigate(any()) }
         verify { mockGuestFacade.getAdvertisedGame(any()) }
         confirmVerified(mockGuestFacade)
     }

@@ -30,6 +30,7 @@ class WaitingRoomViewModel @Inject constructor(
     }
 
     override fun onStart() {
+        super.onStart()
         playersInWaitingRoom()
     }
 

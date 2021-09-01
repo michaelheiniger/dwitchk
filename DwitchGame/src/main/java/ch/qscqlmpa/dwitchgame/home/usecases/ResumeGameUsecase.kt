@@ -22,7 +22,7 @@ internal class ResumeGameUsecase @Inject constructor(
 
     private fun startHostService(game: Game) {
         hostGameLifecycleEventRepository.notify(
-            HostGameLifecycleEvent.GameCreated(
+            HostGameLifecycleEvent.GameSetup(
                 GameCreatedInfo(
                     game.isNew(),
                     game.id,

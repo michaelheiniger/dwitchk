@@ -33,11 +33,7 @@ fun HostNewGameScreenPreview() {
 }
 
 @Composable
-fun HostNewGameScreen(
-    vmFactory: ViewModelFactory,
-    onHostGameClick: () -> Unit,
-    onBackClick: () -> Unit
-) {
+fun HostNewGameScreen(vmFactory: ViewModelFactory) {
     val viewModel = viewModel<HostNewGameViewModel>(factory = vmFactory)
 
     DisposableEffect(key1 = viewModel) {
@@ -45,16 +41,14 @@ fun HostNewGameScreen(
         onDispose { viewModel.onStop() }
     }
 
-    Navigation(viewModel.navigation.value, onHostGameClick)
-
     HostNewGameBody(
         playerName = viewModel.playerName.value,
         gameName = viewModel.gameName.value,
-        hostGameControlEnabled = viewModel.hostGameControlEnabled.value,
-        onPlayerNameChange = { name -> viewModel.onPlayerNameChange(name) },
-        onGameNameChange = { name -> viewModel.onGameNameChange(name) },
-        onCreateGameClick = { viewModel.hostGame() },
-        onBackClick = onBackClick
+        hostGameControlEnabled = viewModel.canGameBeCreated.value,
+        onPlayerNameChange = viewModel::onPlayerNameChange,
+        onGameNameChange = viewModel::onGameNameChange,
+        onCreateGameClick = viewModel::hostGame,
+        onBackClick = viewModel::onBackClick
     )
     if (viewModel.loading.value) LoadingDialog()
 }
@@ -113,15 +107,5 @@ fun HostNewGameBody(
                 modifier = Modifier.fillMaxWidth()
             ) { Text(stringResource(R.string.host_game)) }
         }
-    }
-}
-
-@Composable
-private fun Navigation(destination: HostNewGameDestination, onHostGameClick: () -> Unit) {
-    when (destination) {
-        HostNewGameDestination.CurrentScreen -> {
-            // Nothing to do
-        }
-        HostNewGameDestination.NavigateToWaitingRoom -> onHostGameClick()
     }
 }

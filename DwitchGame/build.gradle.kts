@@ -73,7 +73,6 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.1")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.7.1")
-    testImplementation("junit:junit:4.13.2") // JUnit4 (For instrumented tests)
 
     // MockK
     androidTestImplementation("io.mockk:mockk-android:1.12.0")

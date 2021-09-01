@@ -16,11 +16,13 @@ import org.junit.Test
 
 class HomeScreenTest : BaseUiUnitTest() {
 
+    private lateinit var notification: HomeNotification
     private lateinit var advertisedGames: LoadedData<List<AdvertisedGame>>
     private lateinit var resumableGames: LoadedData<List<ResumableGameInfo>>
 
     @Before
     fun setup() {
+        notification = HomeNotification.None
         advertisedGames = LoadedData.Loading
         resumableGames = LoadedData.Loading
     }
@@ -118,9 +120,22 @@ class HomeScreenTest : BaseUiUnitTest() {
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.loading_resumable_games_failed))
     }
 
+    @Test
+    fun errorJoiningGame() {
+        // Given
+
+        // When
+        notification = HomeNotification.ErrorJoiningGame
+        launchTest()
+
+        // Then
+        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.error_joining_game_text))
+    }
+
     private fun launchTest() {
         launchTestWithContent {
             HomeBody(
+                notification,
                 advertisedGames,
                 resumableGames,
                 onCreateNewGameClick = {},

@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ingame
 
-import ch.qscqlmpa.dwitch.ui.ingame.GameFragment
 import ch.qscqlmpa.dwitch.ui.ingame.GameViewModelBindingModule
+import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import dagger.Subcomponent
 
 @GameUiScope
@@ -12,5 +12,5 @@ import dagger.Subcomponent
     ]
 )
 interface InGameUiComponent {
-    fun inject(fragment: GameFragment)
+    val viewModelFactory: ViewModelFactory
 }

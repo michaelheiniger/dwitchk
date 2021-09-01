@@ -4,31 +4,30 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.BuildConfig
-import ch.qscqlmpa.dwitch.app.AppEvent
-import ch.qscqlmpa.dwitch.app.AppEventRepository
+import ch.qscqlmpa.dwitch.ui.Destination
+import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 class JoinNewGameViewModel @Inject constructor(
-    private val appEventRepository: AppEventRepository,
     private val guestFacade: HomeGuestFacade,
-    private val uiScheduler: Scheduler
+    private val navigationBridge: NavigationBridge,
+    private val uiScheduler: Scheduler,
+    private val idlingResource: DwitchIdlingResource
 ) : BaseViewModel() {
 
-    private val _navigation = mutableStateOf<JoinNewGameDestination>(JoinNewGameDestination.CurrentScreen)
     private val _loading = mutableStateOf(false)
     private val _joinGameControlEnabled = mutableStateOf(false)
     private val _playerName = mutableStateOf("")
     private val _notification = mutableStateOf<JoinNewGameNotification>(JoinNewGameNotification.None)
 
-    val navigation get(): State<JoinNewGameDestination> = _navigation
     val loading get(): State<Boolean> = _loading
     val playerName get(): State<String> = _playerName
-    val joinGameControlEnabled get(): State<Boolean> = _joinGameControlEnabled
+    val canJoinGame get(): State<Boolean> = _joinGameControlEnabled
     val notification: State<JoinNewGameNotification> = _notification
 
     init {
@@ -51,10 +50,11 @@ class JoinNewGameViewModel @Inject constructor(
     }
 
     fun onGameNotFoundAcknowledge() {
-        _navigation.value = JoinNewGameDestination.NavigateToHomeScreen
+        navigationBridge.navigate(Destination.HomeScreens.Home)
     }
 
     fun joinGame(ipAddress: String) {
+        idlingResource.increment("Joining game: wait for Dagger InGame component to be created")
         val game = guestFacade.getAdvertisedGame(ipAddress)
         if (game == null) {
             _notification.value = JoinNewGameNotification.GameNotFound
@@ -65,20 +65,15 @@ class JoinNewGameViewModel @Inject constructor(
         require(playerName.isNotBlank()) { "Player name cannot be blank" }
         _loading.value = true
         disposableManager.add(
-            Completable.merge(
-                listOf(
-                    appEventRepository.observeEvents()
-                        .filter { event -> event is AppEvent.ServiceStarted }
-                        .firstElement()
-                        .ignoreElement(),
-                    guestFacade.joinGame(game, playerName)
-                )
-            )
+            guestFacade.joinGame(game, playerName)
                 .observeOn(uiScheduler)
                 .doOnTerminate { _loading.value = false }
                 .subscribe(
-                    { _navigation.value = JoinNewGameDestination.NavigateToWaitingRoom },
-                    { error -> Logger.error(error) { "Error while joining the game" } }
+                    { navigationBridge.navigate(Destination.HomeScreens.InGame) },
+                    { error ->
+                        _notification.value = JoinNewGameNotification.ErrorJoiningGame
+                        Logger.error(error) { "Error while joining the game" }
+                    }
                 )
         )
     }
@@ -87,9 +82,14 @@ class JoinNewGameViewModel @Inject constructor(
         Logger.debug { "Viewmodel lifecycle event: clear JoinNewGameViewModel ($this)" }
         super.onCleared()
     }
+
+    fun onBackClick() {
+        navigationBridge.navigateBack()
+    }
 }
 
 sealed class JoinNewGameNotification {
     object None : JoinNewGameNotification()
     object GameNotFound : JoinNewGameNotification()
+    object ErrorJoiningGame : JoinNewGameNotification()
 }

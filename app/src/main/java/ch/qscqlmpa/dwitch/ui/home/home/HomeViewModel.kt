@@ -4,10 +4,14 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.AppEventRepository
+import ch.qscqlmpa.dwitch.ingame.services.ServiceManager
+import ch.qscqlmpa.dwitch.ui.Destination
+import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
 import ch.qscqlmpa.dwitchgame.common.GameAdvertisingFacade
 import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
+import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GameState
 import ch.qscqlmpa.dwitchgame.home.HomeFacade
 import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
 import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
@@ -17,61 +21,53 @@ import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
-class HomeScreenViewModel @Inject constructor(
+class HomeViewModel @Inject constructor(
     private val appEventRepository: AppEventRepository,
+    private val serviceManager: ServiceManager,
     private val gameAdvertisingFacade: GameAdvertisingFacade,
     private val homeFacade: HomeFacade,
     private val homeGuestFacade: HomeGuestFacade,
     private val homeHostFacade: HomeHostFacade,
+    private val navigationBridge: NavigationBridge,
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
     private val _loading = mutableStateOf(false)
-    private val _navigation = mutableStateOf<HomeDestination>(HomeDestination.CurrentScreen)
     private val _advertisedGames = mutableStateOf<LoadedData<List<AdvertisedGame>>>(LoadedData.Loading)
     private val _resumableGames = mutableStateOf<LoadedData<List<ResumableGameInfo>>>(LoadedData.Loading)
+    private val _notification = mutableStateOf<HomeNotification>(HomeNotification.None)
 
     val loading get(): State<Boolean> = _loading
     val advertisedGames get(): State<LoadedData<List<AdvertisedGame>>> = _advertisedGames
     val resumableGames get(): State<LoadedData<List<ResumableGameInfo>>> = _resumableGames
-    val navigation get(): State<HomeDestination> = _navigation
+    val notification: State<HomeNotification> = _notification
 
     init {
         Logger.debug { "Viewmodel lifecycle event: create HomeScreenViewModel ($this)" }
-        if (homeFacade.gameRunning) {
-            _navigation.value = HomeDestination.GameFragment
-        }
     }
 
-    override fun onStart() {
-        super.onStart()
-        observeAdvertisedGames()
-        observeResumableGames()
+    fun createNewGame() {
+        navigationBridge.navigate(Destination.HomeScreens.HostNewGame)
     }
 
     fun joinGame(game: AdvertisedGame) {
         if (game.isNew) {
-            _navigation.value = HomeDestination.JoinNewGame(game)
+            navigationBridge.navigate(Destination.HomeScreens.JoinNewGame(game.gameIpAddress))
         } else {
             _loading.value = true
             disposableManager.add(
-                Completable.merge(
-                    listOf(
-                        appEventRepository.observeEvents()
-                            .filter { event -> event is AppEvent.ServiceStarted }
-                            .firstElement()
-                            .ignoreElement(),
-                        homeGuestFacade.joinResumedGame(game)
-                            .observeOn(uiScheduler)
-                    )
-                )
+                homeGuestFacade.joinResumedGame(game)
+                    .observeOn(uiScheduler)
                     .doOnTerminate { _loading.value = false }
                     .subscribe(
                         {
                             Logger.info { "Game resumed successfully." }
-                            _navigation.value = HomeDestination.GameFragment
+                            navigationBridge.navigate(Destination.HomeScreens.InGame)
                         },
-                        { error -> Logger.error(error) { "Error while resuming game." } }
+                        { error ->
+                            _notification.value = HomeNotification.ErrorJoiningGame
+                            Logger.error(error) { "Error while resuming game." }
+                        }
                     )
             )
         }
@@ -94,16 +90,37 @@ class HomeScreenViewModel @Inject constructor(
                 .subscribe(
                     {
                         Logger.info { "Game resumed successfully." }
-                        _navigation.value = HomeDestination.GameFragment
+                        navigationBridge.navigate(Destination.HomeScreens.InGame)
                     },
                     { error -> Logger.error(error) { "Error while resuming game." } }
                 )
         )
     }
 
+    override fun onStart() {
+        super.onStart()
+        gameAdvertisingFacade.startListeningForAdvertisedGames()
+        observeAdvertisedGames()
+        observeResumableGames()
+        reactToGameState()
+    }
+
     override fun onCleared() {
         Logger.debug { "Viewmodel lifecycle event: clear HomeViewModel ($this)" }
         super.onCleared()
+    }
+
+    private fun reactToGameState() {
+        when (homeFacade.gameState) {
+            GameState.NotStarted -> {
+                // Nothing to do
+            }
+            GameState.Running -> {
+                Logger.debug { "Game is running: navigate to ${Destination.HomeScreens.InGame}" }
+                navigationBridge.navigate(Destination.HomeScreens.InGame)
+            }
+            GameState.Over -> serviceManager.stop()
+        }
     }
 
     private fun observeAdvertisedGames() {
@@ -128,3 +145,9 @@ class HomeScreenViewModel @Inject constructor(
         )
     }
 }
+
+sealed class HomeNotification {
+    object None : HomeNotification()
+    object ErrorJoiningGame : HomeNotification()
+}
+

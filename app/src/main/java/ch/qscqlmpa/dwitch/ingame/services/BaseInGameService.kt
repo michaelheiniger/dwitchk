@@ -13,6 +13,7 @@ import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.AppEventRepository
 import ch.qscqlmpa.dwitch.app.notifications.NotificationChannelFactory.DEFAULT_CHANNEL_ID
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants
+import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import dagger.android.DaggerService
@@ -20,6 +21,9 @@ import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 abstract class BaseInGameService : DaggerService() {
+
+    @Inject
+    lateinit var idlingResource: DwitchIdlingResource
 
     @Inject
     lateinit var appEventRepository: AppEventRepository

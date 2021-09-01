@@ -169,4 +169,6 @@
     <string name="waiting_for_disconnected_player">En attente de reconnection d\'un joueur</string>
     <string name="game_not_found_title">Erreur</string>
     <string name="game_not_found_text">Partie plus disponnible</string>
+    <string name="dialog_error_title">Erreur</string>
+    <string name="error_joining_game_text">Erreur lors de la tentative de rejoindre la partie</string>
 </resources>

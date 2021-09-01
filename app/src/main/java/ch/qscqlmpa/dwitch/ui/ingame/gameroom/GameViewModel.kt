@@ -1,9 +1,8 @@
 package ch.qscqlmpa.dwitch.ui.ingame.gameroom
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+import ch.qscqlmpa.dwitch.ui.Destination
+import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitch.ui.ingame.GameScreens
 import ch.qscqlmpa.dwitchgame.ingame.GameFacade
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
@@ -13,32 +12,33 @@ import javax.inject.Inject
 
 class GameViewModel @Inject constructor(
     private val gameFacade: GameFacade,
-    uiScheduler: Scheduler
+    private val navigationBridge: NavigationBridge,
+    private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
-    private val _startScreen = mutableStateOf<GameScreens>(GameScreens.Loading)
-    val startScreen get(): State<GameScreens> = _startScreen
-
-    init {
+    override fun onStart() {
+        super.onStart()
         disposableManager.add(
             gameFacade.observeCurrentRoom()
+                .take(1)
                 .observeOn(uiScheduler)
+                .map(::determineDestination)
                 .subscribe(
-                    { room -> _startScreen.value = determineStartScreen(room) },
+                    { destination -> navigationBridge.navigate(destination) },
                     { error -> Logger.error(error) { "Error while fetching current room" } }
                 )
         )
     }
 
-    private fun determineStartScreen(currentRoom: RoomType) =
+    private fun determineDestination(currentRoom: RoomType) =
         when (currentRoom) {
             RoomType.WAITING_ROOM -> when (gameFacade.localPlayerRole) {
-                PlayerRole.GUEST -> GameScreens.WaitingRoomGuest
-                PlayerRole.HOST -> GameScreens.WaitingRoomHost
+                PlayerRole.GUEST -> Destination.GameScreens.WaitingRoomGuest
+                PlayerRole.HOST -> Destination.GameScreens.WaitingRoomHost
             }
             RoomType.GAME_ROOM -> when (gameFacade.localPlayerRole) {
-                PlayerRole.GUEST -> GameScreens.GameRoomGuest
-                PlayerRole.HOST -> GameScreens.GameRoomHost
+                PlayerRole.GUEST -> Destination.GameScreens.GameRoomGuest
+                PlayerRole.HOST -> Destination.GameScreens.GameRoomHost
             }
         }
 }

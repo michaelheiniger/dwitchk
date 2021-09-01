@@ -2,8 +2,11 @@ package ch.qscqlmpa.dwitch.ui.ingame.gameroom.guest
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import ch.qscqlmpa.dwitch.ui.Destination
+import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
+import ch.qscqlmpa.dwitchgame.common.GameAdvertisingFacade
 import ch.qscqlmpa.dwitchgame.ingame.gameevents.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ingame.gameroom.GameRoomGuestFacade
 import io.reactivex.rxjava3.core.Scheduler
@@ -12,18 +15,18 @@ import javax.inject.Inject
 
 internal class GameRoomGuestViewModel @Inject constructor(
     private val facade: GameRoomGuestFacade,
+    private val gameAdvertisingFacade: GameAdvertisingFacade,
+    private val navigationBridge: NavigationBridge,
     private val uiScheduler: Scheduler,
     private val idlingResource: DwitchIdlingResource
 ) : BaseViewModel() {
 
-    private val _navigationCommand = mutableStateOf<GameRoomGuestDestination>(GameRoomGuestDestination.CurrentScreen)
     private val _gameOver = mutableStateOf(false)
-    val navigation get(): State<GameRoomGuestDestination> = _navigationCommand
     val gameOver get(): State<Boolean> = _gameOver
 
     fun acknowledgeGameOver() {
         _gameOver.value = false
-        _navigationCommand.value = GameRoomGuestDestination.NavigateToHomeScreen
+        goToHomeScreen()
     }
 
     fun leaveGame() {
@@ -33,7 +36,7 @@ internal class GameRoomGuestViewModel @Inject constructor(
                 .subscribe(
                     {
                         Logger.info { "Left game successfully" }
-                        _navigationCommand.value = GameRoomGuestDestination.NavigateToHomeScreen
+                        goToHomeScreen()
                     },
                     { error -> Logger.error(error) { "Error while leaving the game." } }
                 )
@@ -42,7 +45,12 @@ internal class GameRoomGuestViewModel @Inject constructor(
 
     override fun onStart() {
         super.onStart()
+        gameAdvertisingFacade.startListeningForAdvertisedGames()
         observeGameEvent()
+    }
+
+    private fun goToHomeScreen() {
+        navigationBridge.navigate(Destination.HomeScreens.Home)
     }
 
     private fun observeGameEvent() {

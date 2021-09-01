@@ -33,20 +33,28 @@ internal class HostNewGameUsecaseTest : BaseUnitTest() {
 
     @Test
     fun `should create game in store`() {
-        launchTest()
+        // Given initial state (nothing to setup)
 
+        // When
+        hostNewGameUsecase.hostGame(gameName, playerName).test().assertComplete()
+
+        // Then
         verify { mockStore.insertGameForHost(gameName, playerName) }
     }
 
     @Test
-    fun `should start service`() {
-        launchTest()
+    fun `should notify that the game has been setup`() {
+        // Given initial state (nothing to setup)
 
+        // When
+        hostNewGameUsecase.hostGame(gameName, playerName).test().assertComplete()
+
+        // Then
         verify {
             mockGameLifecycleEventRepository.notify(
-                HostGameLifecycleEvent.GameCreated(
+                HostGameLifecycleEvent.GameSetup(
                     GameCreatedInfo(
-                        true,
+                        isNew = true,
                         gameLocalId,
                         gameCommonId,
                         gameName,
@@ -55,9 +63,5 @@ internal class HostNewGameUsecaseTest : BaseUnitTest() {
                 )
             )
         }
-    }
-
-    private fun launchTest() {
-        hostNewGameUsecase.hostGame(gameName, playerName).test().assertComplete()
     }
 }

@@ -15,46 +15,63 @@ import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 @GameScope
-internal class HostGameLifecycleEventRepository @Inject constructor() : EventRepository<HostGameLifecycleEvent>() {
-    private var _gameRunning: Boolean = false
+internal class GameStateRepository @Inject constructor(
+    hostGameLifecycleEventRepository: HostGameLifecycleEventRepository,
+    guestGameLifecycleEventRepository: GuestGameLifecycleEventRepository
+) {
+    private var _state: GameState = GameState.NotStarted
+    val state: GameState = _state
 
-    val gameRunning: Boolean get() = _gameRunning
+    init {
+        hostGameLifecycleEventRepository.observeEvents().subscribe(
+            { event ->
+                _state = when (event) {
+                    is HostGameLifecycleEvent.GameSetup,
+                    HostGameLifecycleEvent.MovedToGameRoom -> GameState.Running
+                    HostGameLifecycleEvent.GameOver -> GameState.Over
+                }
+            },
+            { error -> Logger.error(error) { "Error while observing host game lifecycle events" } }
+        )
+        guestGameLifecycleEventRepository.observeEvents().subscribe(
+            { event ->
+                _state = when (event) {
+                    is GuestGameLifecycleEvent.GameSetup,
+                    GuestGameLifecycleEvent.GameJoined,
+                    GuestGameLifecycleEvent.GameRejoined,
+                    GuestGameLifecycleEvent.MovedToGameRoom -> GameState.Running
+                    GuestGameLifecycleEvent.GameOver -> GameState.Over
+                }
+            },
+            { error -> Logger.error(error) { "Error while observing host game lifecycle events" } }
+        )
+    }
 
-    override fun notify(event: HostGameLifecycleEvent) {
-        super.notify(event)
-        _gameRunning = when (event) {
-            is HostGameLifecycleEvent.GameCreated, HostGameLifecycleEvent.MovedToGameRoom -> true
-            HostGameLifecycleEvent.GameOver -> false
-        }
+    fun reset() {
+        _state = GameState.NotStarted
     }
 }
 
 @GameScope
-internal class GuestGameLifecycleEventRepository @Inject constructor() : EventRepository<GuestGameLifecycleEvent>() {
-    private var _gameRunning: Boolean = false
+internal class HostGameLifecycleEventRepository @Inject constructor() : EventRepository<HostGameLifecycleEvent>()
 
-    val gameRunning: Boolean get() = _gameRunning
+@GameScope
+internal class GuestGameLifecycleEventRepository @Inject constructor() : EventRepository<GuestGameLifecycleEvent>()
 
-    override fun notify(event: GuestGameLifecycleEvent) {
-        super.notify(event)
-        _gameRunning = when (event) {
-            is GuestGameLifecycleEvent.GameSetUp,
-            GuestGameLifecycleEvent.GameJoined,
-            GuestGameLifecycleEvent.GameRejoined,
-            GuestGameLifecycleEvent.MovedToGameRoom -> true
-            GuestGameLifecycleEvent.GameOver -> false
-        }
-    }
+sealed class GameState {
+    object NotStarted : GameState()
+    object Running : GameState()
+    object Over : GameState()
 }
 
 sealed class HostGameLifecycleEvent {
-    data class GameCreated(val gameInfo: GameCreatedInfo) : HostGameLifecycleEvent()
+    data class GameSetup(val gameInfo: GameCreatedInfo) : HostGameLifecycleEvent()
     object MovedToGameRoom : HostGameLifecycleEvent()
     object GameOver : HostGameLifecycleEvent()
 }
 
 sealed class GuestGameLifecycleEvent {
-    data class GameSetUp(val gameInfo: GameJoinedInfo) : GuestGameLifecycleEvent()
+    data class GameSetup(val gameInfo: GameJoinedInfo) : GuestGameLifecycleEvent()
     object GameJoined : GuestGameLifecycleEvent()
     object GameRejoined : GuestGameLifecycleEvent()
     object MovedToGameRoom : GuestGameLifecycleEvent()
@@ -69,7 +86,7 @@ internal abstract class EventRepository<T> {
         return eventRelay
     }
 
-    open fun notify(event: T) {
+    fun notify(event: T) {
         Logger.debug { "Notify of event: $event" }
         eventRelay.accept(event)
     }
@@ -85,13 +102,13 @@ data class GameCreatedInfo(
 ) : Parcelable {
 
     constructor(insertGameResult: InsertGameResult) :
-        this(
-            isNew = true,
-            insertGameResult.gameLocalId,
-            insertGameResult.gameCommonId,
-            insertGameResult.gameName,
-            insertGameResult.localPlayerLocalId
-        )
+            this(
+                isNew = true,
+                insertGameResult.gameLocalId,
+                insertGameResult.gameCommonId,
+                insertGameResult.gameName,
+                insertGameResult.localPlayerLocalId
+            )
 }
 
 @Parcelize
@@ -103,12 +120,12 @@ data class GameJoinedInfo(
 ) : Parcelable {
 
     constructor(insertGameResult: InsertGameResult, advertisedGame: AdvertisedGame) :
-        this(
-            insertGameResult.gameLocalId,
-            insertGameResult.localPlayerLocalId,
-            advertisedGame.gameIpAddress,
-            advertisedGame.gamePort
-        )
+            this(
+                insertGameResult.gameLocalId,
+                insertGameResult.localPlayerLocalId,
+                advertisedGame.gameIpAddress,
+                advertisedGame.gamePort
+            )
 
     constructor(game: Game, advertisedGame: AdvertisedGame) : this(
         game.id,

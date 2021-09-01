@@ -19,9 +19,8 @@ internal class WaitingRoomPlayerRepository @Inject constructor(
         return Observable.combineLatest(
             store.observePlayersInWaitingRoom(),
             communicationStateRepository.connected(),
-            Observable.fromCallable { store.gameIsNew() },
-            { players, localPlayerConnected, gameIsNew -> players.map { p -> toPlayerWrUi(p, localPlayerConnected, gameIsNew) } }
-        )
+            Observable.fromCallable { store.gameIsNew() }
+        ) { players, localPlayerConnected, gameIsNew -> players.map { p -> toPlayerWrUi(p, localPlayerConnected, gameIsNew) } }
     }
 
     fun observeLocalPlayer(): Observable<PlayerWrUi> {

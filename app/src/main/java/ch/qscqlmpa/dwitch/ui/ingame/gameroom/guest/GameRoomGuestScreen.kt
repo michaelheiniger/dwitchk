@@ -59,10 +59,7 @@ fun GameRoomHostScreenPreview() {
 @ExperimentalFoundationApi
 @ExperimentalAnimationApi
 @Composable
-fun GameRoomGuestScreen(
-    vmFactory: ViewModelFactory,
-    onNavigationEvent: (GameRoomGuestDestination) -> Unit
-) {
+fun GameRoomGuestScreen(vmFactory: ViewModelFactory) {
     val playerViewModel = viewModel<GameRoomViewModel>(factory = vmFactory)
     val guestViewModel = viewModel<GameRoomGuestViewModel>(factory = vmFactory)
     val connectionViewModel = viewModel<ConnectionGuestViewModel>(factory = vmFactory)
@@ -78,12 +75,10 @@ fun GameRoomGuestScreen(
         }
     }
 
-    Navigation(guestViewModel.navigation.value, onNavigationEvent)
-
     GameRoomGuestBody(
         toolbarTitle = playerViewModel.toolbarTitle.value,
         screen = playerViewModel.screen.value,
-        connectionStatus = connectionViewModel.connectionStatus.value,
+        connectionStatus = connectionViewModel.connectionState.value,
         showGameOver = guestViewModel.gameOver.value,
         onCardClick = playerViewModel::onCardToPlayClick,
         onPlayClick = playerViewModel::onPlayClick,
@@ -172,7 +167,7 @@ fun GameRoomGuestBody(
         GameOverDialog(onGameOverAcknowledge = onGameOverAcknowledge)
     } else {
         ConnectionGuestScreen(
-            status = connectionStatus,
+            state = connectionStatus,
             onReconnectClick = onReconnectClick,
             onAbortClick = { showLeaveGameConfirmationDialog.value = true }
         )
@@ -185,18 +180,5 @@ fun GameRoomGuestBody(
             onConfirmClick = onLeaveGameConfirmClick,
             onCancelClick = { showLeaveGameConfirmationDialog.value = false }
         )
-    }
-}
-
-@Composable
-private fun Navigation(
-    destination: GameRoomGuestDestination,
-    onNavigationEvent: (GameRoomGuestDestination) -> Unit
-) {
-    when (destination) {
-        GameRoomGuestDestination.CurrentScreen -> {
-            // Nothing to do
-        }
-        GameRoomGuestDestination.NavigateToHomeScreen -> onNavigationEvent(destination)
     }
 }

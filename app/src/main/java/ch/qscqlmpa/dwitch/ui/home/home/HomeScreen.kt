@@ -57,6 +57,7 @@ fun HomeScreenPreview() {
     )
     ActivityScreenContainer {
         HomeBody(
+            notification = HomeNotification.None,
             advertisedGames = advertisedGame,
             resumableGames = resumableGameResponse,
             onCreateNewGameClick = {},
@@ -68,55 +69,34 @@ fun HomeScreenPreview() {
 
 @Composable
 fun HomeScreen(
-    vmFactory: ViewModelFactory,
-    onCreateNewGameClick: () -> Unit,
-    onJoinNewGameEvent: (AdvertisedGame) -> Unit,
-    onNavigateToGame: () -> Unit
+    vmFactory: ViewModelFactory
 ) {
-    val viewModel = viewModel<HomeScreenViewModel>(factory = vmFactory)
-    DisposableEffect(key1 = viewModel) {
+    val viewModel = viewModel<HomeViewModel>(factory = vmFactory)
+    DisposableEffect(viewModel) {
         viewModel.onStart()
         onDispose { viewModel.onStop() }
     }
-
     HomeBody(
+        notification = viewModel.notification.value,
         advertisedGames = viewModel.advertisedGames.value,
         resumableGames = viewModel.resumableGames.value,
-        onJoinGameClick = { game -> viewModel.joinGame(game) },
-        onCreateNewGameClick = onCreateNewGameClick,
+        onCreateNewGameClick = viewModel::createNewGame,
+        onJoinGameClick = viewModel::joinGame,
         onResumableGameClick = { game -> viewModel.resumeGame(game) }
     )
     if (viewModel.loading.value) LoadingDialog()
-    Navigation(
-        destination = viewModel.navigation.value,
-        onJoinNewGameEvent = onJoinNewGameEvent,
-        onNavigateToGame = onNavigateToGame
-    )
-}
-
-@Composable
-fun Navigation(
-    destination: HomeDestination,
-    onJoinNewGameEvent: (AdvertisedGame) -> Unit,
-    onNavigateToGame: () -> Unit
-) {
-    when (destination) {
-        HomeDestination.CurrentScreen -> {
-            // Nothing to do
-        }
-        is HomeDestination.JoinNewGame -> onJoinNewGameEvent(destination.game)
-        else -> onNavigateToGame()
-    }
 }
 
 @Composable
 fun HomeBody(
+    notification: HomeNotification,
     advertisedGames: LoadedData<List<AdvertisedGame>>,
     resumableGames: LoadedData<List<ResumableGameInfo>>,
     onCreateNewGameClick: () -> Unit,
     onJoinGameClick: (AdvertisedGame) -> Unit,
     onResumableGameClick: (ResumableGameInfo) -> Unit
 ) {
+    Notification(notification = notification)
     Column(
         Modifier
             .fillMaxSize()
@@ -269,6 +249,22 @@ private fun ResumableGames(
                         .fillMaxWidth()
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun Notification(notification: HomeNotification) {
+    when (notification) {
+        HomeNotification.None -> {
+            // Nothing to do
+        }
+        HomeNotification.ErrorJoiningGame -> {
+            InfoDialog(
+                title = R.string.dialog_error_title,
+                text = R.string.error_joining_game_text,
+                onOkClick = {} // Nothing to do
+            )
         }
     }
 }

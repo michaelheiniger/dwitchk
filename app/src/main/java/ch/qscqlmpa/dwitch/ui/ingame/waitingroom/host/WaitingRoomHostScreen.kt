@@ -50,10 +50,7 @@ private fun WaitingRoomHostScreenPreview() {
 }
 
 @Composable
-fun WaitingRoomHostScreen(
-    vmFactory: ViewModelFactory,
-    onNavigationEvent: (WaitingRoomHostDestination) -> Unit
-) {
+fun WaitingRoomHostScreen(vmFactory: ViewModelFactory) {
     val viewModel = viewModel<WaitingRoomViewModel>(factory = vmFactory)
     val hostViewModel = viewModel<WaitingRoomHostViewModel>(factory = vmFactory)
     val connectionViewModel = viewModel<ConnectionHostViewModel>(factory = vmFactory)
@@ -68,8 +65,6 @@ fun WaitingRoomHostScreen(
             connectionViewModel.onStop()
         }
     }
-
-    Navigation(hostViewModel.navigation.value, onNavigationEvent)
 
     val showConfirmationDialog = remember { mutableStateOf(false) }
 
@@ -162,18 +157,5 @@ private fun HostControlScreen(
         ) {
             Text(stringResource(R.string.launch_game), color = Color.White)
         }
-    }
-}
-
-@Composable
-private fun Navigation(
-    destination: WaitingRoomHostDestination,
-    onNavigationEvent: (WaitingRoomHostDestination) -> Unit
-) {
-    when (destination) {
-        WaitingRoomHostDestination.CurrentScreen -> {
-            // Nothing to do
-        }
-        else -> onNavigationEvent(destination)
     }
 }

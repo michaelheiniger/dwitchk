@@ -1,41 +1,50 @@
 package ch.qscqlmpa.dwitch
 
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import ch.qscqlmpa.dwitch.databinding.ActivityHomeBinding
+import ch.qscqlmpa.dwitch.app.App
+import ch.qscqlmpa.dwitch.ingame.services.ServiceManager
+import ch.qscqlmpa.dwitch.ui.Dwitch
+import ch.qscqlmpa.dwitch.ui.NavigationBridge
+import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
+import ch.qscqlmpa.dwitchgame.common.GameAdvertisingFacade
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
+import javax.inject.Named
 
 class HomeActivity : AppCompatActivity(), HasAndroidInjector {
 
-    //    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityHomeBinding
+    @Named("home")
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    @Inject
+    lateinit var serviceManager: ServiceManager
+
+    @Inject
+    lateinit var gameAdvertisingFacade: GameAdvertisingFacade
+
+    @Inject
+    lateinit var navigationBridge: NavigationBridge
 
     @Inject
     lateinit var androidInjector: DispatchingAndroidInjector<Any>
 
-    override fun androidInjector(): AndroidInjector<Any> {
-        return androidInjector
-    }
+    override fun androidInjector(): AndroidInjector<Any> = androidInjector
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-
-        binding = ActivityHomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-//        val navController = findNavController(R.id.nav_host_fragment_content_home)
-
-//        appBarConfiguration = AppBarConfiguration(navController.graph)
-//        setupActionBarWithNavController(navController, appBarConfiguration)
+        setContent {
+            Dwitch(
+                vmFactory = viewModelFactory,
+                inGameVmFactory = { (application as App).inGameUiComponent!!.viewModelFactory },
+                navigationBridge = navigationBridge
+            )
+        }
     }
-
-//    override fun onSupportNavigateUp(): Boolean {
-//        val navController = findNavController(R.id.nav_host_fragment_content_home)
-//        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-//    }
 }

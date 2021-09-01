@@ -15,7 +15,7 @@ internal class WaitingRoomGuestFacadeImpl @Inject constructor(
     private val communicationStateRepository: GuestCommunicationStateRepository,
     private val playerReadyUsecase: PlayerReadyUsecase,
     private val guestLeavesGameUsecase: GuestLeavesGameUsecase,
-    private val wrPlayerRepository: WaitingRoomPlayerRepository,
+    private val playerRepository: WaitingRoomPlayerRepository,
     private val gameEventRepository: GuestGameEventRepository,
     private val schedulerFactory: SchedulerFactory
 ) : WaitingRoomGuestFacade {
@@ -35,7 +35,7 @@ internal class WaitingRoomGuestFacadeImpl @Inject constructor(
     }
 
     override fun observeLocalPlayerReadyState(): Observable<Boolean> {
-        return wrPlayerRepository.observeLocalPlayer()
+        return playerRepository.observeLocalPlayer()
             .map(PlayerWrUi::ready)
             .subscribeOn(schedulerFactory.io())
     }
