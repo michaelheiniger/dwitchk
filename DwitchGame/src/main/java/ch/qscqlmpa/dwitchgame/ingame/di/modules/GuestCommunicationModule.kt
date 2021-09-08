@@ -1,35 +1,60 @@
 package ch.qscqlmpa.dwitchgame.ingame.di.modules
 
-import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
-import ch.qscqlmpa.dwitchcommunication.CommClient
-import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationStateRepository
+import ch.qscqlmpa.dwitchcommunication.websocket.ClientEvent
+import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationFacade
+import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationFacadeImpl
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicatorImpl
-import ch.qscqlmpa.dwitchgame.ingame.communication.guest.eventprocessors.GuestCommunicationEventDispatcher
+import ch.qscqlmpa.dwitchgame.ingame.communication.guest.eventprocessors.*
+import ch.qscqlmpa.dwitchgame.ingame.di.GuestCommunicationEventProcessorKey
 import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
+import dagger.multibindings.IntoMap
 
 @Suppress("unused")
 @Module
-internal class GuestCommunicationModule {
+internal abstract class GuestCommunicationModule {
 
-    companion object {
+    @OngoingGameScope
+    @Binds
+    internal abstract fun provideGuestCommunicationFacade(facade: GuestCommunicationFacadeImpl): GuestCommunicationFacade
 
-        @OngoingGameScope
-        @Provides
-        fun provideGuestCommunicator(
-            commClient: CommClient,
-            guestCommunicationEventDispatcher: GuestCommunicationEventDispatcher,
-            communicationStateRepository: GuestCommunicationStateRepository,
-            schedulerFactory: SchedulerFactory
-        ): GuestCommunicator {
-            return GuestCommunicatorImpl(
-                commClient,
-                guestCommunicationEventDispatcher,
-                communicationStateRepository,
-                schedulerFactory
-            )
-        }
-    }
+    @OngoingGameScope
+    @Binds
+    internal abstract fun provideGuestCommunicator(communicator: GuestCommunicatorImpl): GuestCommunicator
+
+
+    // ##### GuestCommunicationEventProcessor implementations #####
+    @OngoingGameScope
+    @Binds
+    @IntoMap
+    @GuestCommunicationEventProcessorKey(ClientEvent.CommunicationEvent.ConnectedToHost::class)
+    internal abstract fun bindConnectedToHostEventProcessor(
+        eventProcessorGuest: GuestConnectedToHostEventProcessor
+    ): GuestCommunicationEventProcessor
+
+    @OngoingGameScope
+    @Binds
+    @IntoMap
+    @GuestCommunicationEventProcessorKey(ClientEvent.CommunicationEvent.DisconnectedFromHost::class)
+    internal abstract fun bindDisconnectedFromHostEventProcessor(
+        eventProcessorGuest: GuestDisconnectedFromHostEventProcessor
+    ): GuestCommunicationEventProcessor
+
+    @OngoingGameScope
+    @Binds
+    @IntoMap
+    @GuestCommunicationEventProcessorKey(ClientEvent.CommunicationEvent.ConnectionError::class)
+    internal abstract fun bindConnectionErrorEventProcessor(
+        eventProcessorGuest: GuestConnectionErrorEventProcessor
+    ): GuestCommunicationEventProcessor
+
+    @OngoingGameScope
+    @Binds
+    @IntoMap
+    @GuestCommunicationEventProcessorKey(ClientEvent.CommunicationEvent.Stopped::class)
+    internal abstract fun bindStoppedEventProcessor(
+        eventProcessorGuest: GuestStoppedEventProcessor
+    ): GuestCommunicationEventProcessor
 }

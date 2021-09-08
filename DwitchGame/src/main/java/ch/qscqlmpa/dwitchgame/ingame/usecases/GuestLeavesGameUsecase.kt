@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ingame.usecases
 
-import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GuestGameLifecycleEvent
-import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GuestGameLifecycleEventRepository
+import ch.qscqlmpa.dwitchgame.gamelifecycle.GuestGameLifecycleEvent
+import ch.qscqlmpa.dwitchgame.gamelifecycle.GuestGameLifecycleEventRepository
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitchgame.ingame.communication.messagefactories.GuestMessageFactory
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore

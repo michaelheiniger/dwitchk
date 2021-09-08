@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.di
 
 import ch.qscqlmpa.dwitchgame.di.modules.*
-import ch.qscqlmpa.dwitchgame.gamediscovery.network.NetworkAdapter
+import ch.qscqlmpa.dwitchgame.gamediscovery.lan.network.NetworkAdapter
 import ch.qscqlmpa.dwitchgame.ingame.di.TestInGameComponent
 import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameModule
 import dagger.Component
@@ -11,8 +11,9 @@ import dagger.Component
     modules = [
         DwitchGameModule::class,
         StoreModule::class,
-        HomeFacadeModule::class,
-        GameAdvertisingFacadeModule::class,
+        GameFacadeModule::class,
+        GameLifecycleModule::class,
+        GameAdvertisingModule::class,
         TestGameDiscoveryModule::class,
         SerializationModule::class,
         SchedulersModule::class,

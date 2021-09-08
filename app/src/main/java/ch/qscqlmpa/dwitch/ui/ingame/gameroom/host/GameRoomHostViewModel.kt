@@ -3,18 +3,18 @@ package ch.qscqlmpa.dwitch.ui.ingame.gameroom.host
 import ch.qscqlmpa.dwitch.ui.Destination
 import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitchgame.common.GameAdvertisingFacade
+import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
+import ch.qscqlmpa.dwitchgame.ingame.InGameHostFacade
 import ch.qscqlmpa.dwitchgame.ingame.gameroom.GameAction
-import ch.qscqlmpa.dwitchgame.ingame.gameroom.GameRoomHostFacade
 import ch.qscqlmpa.dwitchgame.ingame.gameroom.PlayerFacade
 import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 internal class GameRoomHostViewModel @Inject constructor(
-    private val facade: GameRoomHostFacade,
+    private val facadeIn: InGameHostFacade,
     private val dashboardFacade: PlayerFacade,
-    private val gameAdvertisingFacade: GameAdvertisingFacade,
+    private val gameDiscoveryFacade: GameDiscoveryFacade,
     private val navigationBridge: NavigationBridge,
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
@@ -32,7 +32,7 @@ internal class GameRoomHostViewModel @Inject constructor(
 
     fun endGame() {
         disposableManager.add(
-            facade.endGame()
+            facadeIn.endGame()
                 .observeOn(uiScheduler)
                 .subscribe(
                     {
@@ -46,6 +46,6 @@ internal class GameRoomHostViewModel @Inject constructor(
 
     override fun onStart() {
         super.onStart()
-        gameAdvertisingFacade.stopListeningForAdvertisedGames()
+        gameDiscoveryFacade.stopListeningForAdvertisedGames()
     }
 }

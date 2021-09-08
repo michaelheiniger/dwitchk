@@ -1,48 +1,68 @@
 package ch.qscqlmpa.dwitchgame.ingame.di.modules
 
-import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
-import ch.qscqlmpa.dwitchcommunication.CommServer
-import ch.qscqlmpa.dwitchgame.ingame.communication.host.ComputerCommunicator
-import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationStateRepository
-import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicator
-import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicatorImpl
-import ch.qscqlmpa.dwitchgame.ingame.communication.host.eventprocessors.HostCommunicationEventDispatcher
+import ch.qscqlmpa.dwitchcommunication.websocket.ServerEvent
+import ch.qscqlmpa.dwitchgame.ingame.communication.host.*
+import ch.qscqlmpa.dwitchgame.ingame.communication.host.eventprocessors.*
+import ch.qscqlmpa.dwitchgame.ingame.di.HostCommunicationEventProcessorKey
 import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
+import dagger.multibindings.IntoMap
 
 @Suppress("unused")
 @Module
-internal class HostCommunicationModule {
+internal abstract class HostCommunicationModule {
 
-    companion object {
+    @OngoingGameScope
+    @Binds
+    internal abstract fun provideCommunicationFacade(facade: HostCommunicationFacadeImpl): HostCommunicationFacade
 
-        @OngoingGameScope
-        @Provides
-        fun provideHostCommunicatorImpl(
-            commServer: CommServer,
-            hostCommunicationEventDispatcher: HostCommunicationEventDispatcher,
-            communicationStateRepository: HostCommunicationStateRepository,
-            schedulerFactory: SchedulerFactory
-        ): HostCommunicatorImpl {
-            return HostCommunicatorImpl(
-                commServer,
-                hostCommunicationEventDispatcher,
-                communicationStateRepository,
-                schedulerFactory
-            )
-        }
+    @OngoingGameScope
+    @Binds
+    internal abstract fun provideCommunicator(hostCommunicatorImpl: HostCommunicatorImpl): HostCommunicator
 
-        @OngoingGameScope
-        @Provides
-        fun provideHostCommunicator(hostCommunicatorImpl: HostCommunicatorImpl): HostCommunicator {
-            return hostCommunicatorImpl
-        }
+    @OngoingGameScope
+    @Binds
+    internal abstract fun provideComputerCommunicator(hostCommunicatorImpl: HostCommunicatorImpl): ComputerCommunicator
 
-        @OngoingGameScope
-        @Provides
-        fun provideComputerCommClient(hostCommunicatorImpl: HostCommunicatorImpl): ComputerCommunicator {
-            return hostCommunicatorImpl
-        }
-    }
+    // ##### HostCommunicationEventProcessor implementations #####
+    @OngoingGameScope
+    @Binds
+    @IntoMap
+    @HostCommunicationEventProcessorKey(ServerEvent.CommunicationEvent.ListeningForConnections::class)
+    internal abstract fun bindHostListeningForConnectionsEventProcessor(
+        eventProcessor: HostListeningForConnectionsEventProcessor
+    ): HostCommunicationEventProcessor
+
+    @OngoingGameScope
+    @Binds
+    @IntoMap
+    @HostCommunicationEventProcessorKey(ServerEvent.CommunicationEvent.NoLongerListeningForConnections::class)
+    internal abstract fun bindHostNoLongerListeningForConnectionsEventProcessor(
+        eventProcessor: HostNoLongerListeningForConnectionsEventProcessor
+    ): HostCommunicationEventProcessor
+
+    @OngoingGameScope
+    @Binds
+    @IntoMap
+    @HostCommunicationEventProcessorKey(ServerEvent.CommunicationEvent.ClientConnected::class)
+    internal abstract fun bindClientConnectedEventProcessor(
+        eventProcessor: GuestConnectedEventProcessor
+    ): HostCommunicationEventProcessor
+
+    @OngoingGameScope
+    @Binds
+    @IntoMap
+    @HostCommunicationEventProcessorKey(ServerEvent.CommunicationEvent.ClientDisconnected::class)
+    internal abstract fun bindClientDisconnectedEventProcessor(
+        eventProcessor: GuestDisconnectedEventProcessor
+    ): HostCommunicationEventProcessor
+
+    @OngoingGameScope
+    @Binds
+    @IntoMap
+    @HostCommunicationEventProcessorKey(ServerEvent.CommunicationEvent.ErrorListeningForConnections::class)
+    internal abstract fun bindErrorListeningForConnections(
+        eventProcessor: ErrorListeningForConnectionsEventProcessor
+    ): HostCommunicationEventProcessor
 }

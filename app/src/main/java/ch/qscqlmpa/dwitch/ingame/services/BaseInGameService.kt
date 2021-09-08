@@ -9,7 +9,6 @@ import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.HomeActivity
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
-import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.AppEventRepository
 import ch.qscqlmpa.dwitch.app.notifications.NotificationChannelFactory.DEFAULT_CHANNEL_ID
 import ch.qscqlmpa.dwitch.common.CommonExtraConstants
@@ -85,10 +84,6 @@ abstract class BaseInGameService : DaggerService() {
         }
 
         startForeground(NOTIFICATION_ID, notificationBuilder.build())
-    }
-
-    protected fun notifyServiceStarted() {
-        appEventRepository.notify(AppEvent.ServiceStarted)
     }
 
     private fun buildNotificationIntent(): Intent {

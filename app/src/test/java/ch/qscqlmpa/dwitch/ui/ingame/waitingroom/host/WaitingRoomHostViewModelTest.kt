@@ -5,6 +5,7 @@ import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.Destination
 import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
+import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchgame.ingame.usecases.GameLaunchableEvent
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.WaitingRoomHostFacade
 import io.mockk.every
@@ -19,7 +20,8 @@ import org.junit.Test
 
 class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
 
-    private val mockFacade = mockk<WaitingRoomHostFacade>(relaxed = true)
+    private val mockWaitingRoomHostFacade = mockk<WaitingRoomHostFacade>(relaxed = true)
+    private val gameDiscoveryFacade = mockk<GameDiscoveryFacade>(relaxed = true)
     private val mockNavigationBridge = mockk<NavigationBridge>(relaxed = true)
 
     private lateinit var viewModel: WaitingRoomHostViewModel
@@ -86,7 +88,7 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
         // Given
         createViewModel()
         viewModel.onStart()
-        every { mockFacade.launchGame() } returns Completable.complete()
+        every { mockWaitingRoomHostFacade.launchGame() } returns Completable.complete()
         canGameBeLaunchedSubject.onNext(GameLaunchableEvent.GameIsReadyToBeLaunched)
 
         // When
@@ -94,7 +96,7 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
 
         // Then
         verify { mockNavigationBridge.navigate(Destination.GameScreens.GameRoomHost) }
-        verify { mockFacade.launchGame() }
+        verify { mockWaitingRoomHostFacade.launchGame() }
     }
 
     @Test
@@ -102,14 +104,14 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
         // Given
         createViewModel()
         viewModel.onStart()
-        every { mockFacade.cancelGame() } returns Completable.complete()
+        every { mockWaitingRoomHostFacade.cancelGame() } returns Completable.complete()
 
         // When
         viewModel.cancelGame()
 
         // Then
         verify { mockNavigationBridge.navigate(Destination.HomeScreens.Home) }
-        verify { mockFacade.cancelGame() }
+        verify { mockWaitingRoomHostFacade.cancelGame() }
     }
 
     private fun createViewModel() {
@@ -117,14 +119,14 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
         schedulerFactory.setTimeScheduler(TestScheduler())
 
         viewModel = WaitingRoomHostViewModel(
-            mockFacade,
-            gameAdvertisingFacade = mockk(relaxed = true),
+            mockWaitingRoomHostFacade,
+            gameDiscoveryFacade,
             mockNavigationBridge,
             Schedulers.trampoline(),
             StubIdlingResource()
         )
 
         canGameBeLaunchedSubject = PublishSubject.create()
-        every { mockFacade.observeGameLaunchableEvents() } returns canGameBeLaunchedSubject
+        every { mockWaitingRoomHostFacade.observeGameLaunchableEvents() } returns canGameBeLaunchedSubject
     }
 }

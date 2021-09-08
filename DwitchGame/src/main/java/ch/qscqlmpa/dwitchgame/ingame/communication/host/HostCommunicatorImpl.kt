@@ -10,12 +10,15 @@ import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.model.Recipient
 import ch.qscqlmpa.dwitchcommunication.websocket.ServerEvent
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.eventprocessors.HostCommunicationEventDispatcher
+import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import org.tinylog.kotlin.Logger
+import javax.inject.Inject
 
-internal class HostCommunicatorImpl constructor(
+@OngoingGameScope
+internal class HostCommunicatorImpl @Inject constructor(
     private val commServer: CommServer,
     private val communicationEventDispatcher: HostCommunicationEventDispatcher,
     private val communicationStateRepository: HostCommunicationStateRepository,

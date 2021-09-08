@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitch.ui.ingame.gameroom
 import ch.qscqlmpa.dwitch.ui.Destination
 import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitchgame.ingame.GameFacade
+import ch.qscqlmpa.dwitchgame.ingame.GameFacadeToRename
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import io.reactivex.rxjava3.core.Scheduler
@@ -11,7 +11,7 @@ import org.tinylog.Logger
 import javax.inject.Inject
 
 class GameViewModel @Inject constructor(
-    private val gameFacade: GameFacade,
+    private val gameFacadeToRename: GameFacadeToRename,
     private val navigationBridge: NavigationBridge,
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
@@ -19,7 +19,7 @@ class GameViewModel @Inject constructor(
     override fun onStart() {
         super.onStart()
         disposableManager.add(
-            gameFacade.observeCurrentRoom()
+            gameFacadeToRename.observeCurrentRoom()
                 .take(1)
                 .observeOn(uiScheduler)
                 .map(::determineDestination)
@@ -32,11 +32,11 @@ class GameViewModel @Inject constructor(
 
     private fun determineDestination(currentRoom: RoomType) =
         when (currentRoom) {
-            RoomType.WAITING_ROOM -> when (gameFacade.localPlayerRole) {
+            RoomType.WAITING_ROOM -> when (gameFacadeToRename.localPlayerRole) {
                 PlayerRole.GUEST -> Destination.GameScreens.WaitingRoomGuest
                 PlayerRole.HOST -> Destination.GameScreens.WaitingRoomHost
             }
-            RoomType.GAME_ROOM -> when (gameFacade.localPlayerRole) {
+            RoomType.GAME_ROOM -> when (gameFacadeToRename.localPlayerRole) {
                 PlayerRole.GUEST -> Destination.GameScreens.GameRoomGuest
                 PlayerRole.HOST -> Destination.GameScreens.GameRoomHost
             }

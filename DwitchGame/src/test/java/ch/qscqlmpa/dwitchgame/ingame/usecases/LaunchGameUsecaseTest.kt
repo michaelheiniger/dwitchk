@@ -4,8 +4,8 @@ import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
-import ch.qscqlmpa.dwitchgame.gamelifecycleevents.HostGameLifecycleEvent
-import ch.qscqlmpa.dwitchgame.gamelifecycleevents.HostGameLifecycleEventRepository
+import ch.qscqlmpa.dwitchgame.gamelifecycle.HostGameLifecycleEvent
+import ch.qscqlmpa.dwitchgame.gamelifecycle.HostGameLifecycleEventRepository
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchgame.ingame.services.GameInitializerService
 import io.mockk.*

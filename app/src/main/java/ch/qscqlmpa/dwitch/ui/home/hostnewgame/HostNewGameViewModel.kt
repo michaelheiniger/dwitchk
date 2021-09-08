@@ -8,8 +8,8 @@ import ch.qscqlmpa.dwitch.app.AppEventRepository
 import ch.qscqlmpa.dwitch.ui.Destination
 import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitchgame.common.GameAdvertisingFacade
-import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
+import ch.qscqlmpa.dwitchgame.game.GameFacade
+import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
@@ -17,8 +17,8 @@ import javax.inject.Inject
 
 class HostNewGameViewModel @Inject constructor(
     private val appEventRepository: AppEventRepository,
-    private val hostFacade: HomeHostFacade,
-    private val gameAdvertisingFacade: GameAdvertisingFacade,
+    private val gameFacade: GameFacade,
+    private val gameDiscoveryFacade: GameDiscoveryFacade,
     private val navigationBridge: NavigationBridge,
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
@@ -69,7 +69,7 @@ class HostNewGameViewModel @Inject constructor(
                         .filter { event -> event is AppEvent.ServiceStarted }
                         .firstElement()
                         .ignoreElement(),
-                    hostFacade.hostGame(gameName, playerName)
+                    gameFacade.hostGame(gameName, playerName)
                         .observeOn(uiScheduler),
                 )
             )
@@ -83,7 +83,7 @@ class HostNewGameViewModel @Inject constructor(
 
     override fun onStart() {
         super.onStart()
-        gameAdvertisingFacade.stopListeningForAdvertisedGames()
+        gameDiscoveryFacade.stopListeningForAdvertisedGames()
     }
 
     override fun onCleared() {

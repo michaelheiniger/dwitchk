@@ -9,15 +9,14 @@ import dagger.Subcomponent
 @Subcomponent(
     modules = [
         InGameModule::class,
+        InGameHostModule::class,
+        InGameGuestModule::class,
         WaitingRoomModule::class,
         GameRoomModule::class,
-        TestGameModule::class,
+        TestDwitchModule::class,
         MessageProcessorModule::class,
-        GuestCommunicationEventProcessorModule::class,
-        HostCommunicationEventProcessorModule::class,
         GuestCommunicationModule::class,
         HostCommunicationModule::class,
-        GameAdvertisingModule::class
     ]
 )
 interface TestInGameComponent : InGameComponent {

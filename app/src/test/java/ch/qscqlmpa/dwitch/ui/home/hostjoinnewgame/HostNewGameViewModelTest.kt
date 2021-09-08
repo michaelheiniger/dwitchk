@@ -3,11 +3,12 @@ package ch.qscqlmpa.dwitch.ui.home.hostjoinnewgame
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.AppEventRepository
+import ch.qscqlmpa.dwitch.app.ServiceIdentifier
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.Destination
 import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameViewModel
-import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
+import ch.qscqlmpa.dwitchgame.game.GameFacade
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
@@ -24,7 +25,7 @@ import org.junit.Test
 class HostNewGameViewModelTest : BaseViewModelUnitTest() {
 
     private val mockAppEventRepository = mockk<AppEventRepository>(relaxed = true)
-    private val mockHostFacade = mockk<HomeHostFacade>(relaxed = true)
+    private val mockGameFacade = mockk<GameFacade>(relaxed = true)
     private val mockNavigationBridge = mockk<NavigationBridge>(relaxed = true)
 
     private lateinit var viewModel: HostNewGameViewModel
@@ -33,12 +34,12 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
     fun setup() {
         viewModel = HostNewGameViewModel(
             mockAppEventRepository,
-            mockHostFacade,
+            mockGameFacade,
             mockk(relaxed = true),
             mockNavigationBridge,
             Schedulers.trampoline()
         )
-        every { mockHostFacade.hostGame(any(), any()) } returns Completable.complete()
+        every { mockGameFacade.hostGame(any(), any()) } returns Completable.complete()
     }
 
     @Test
@@ -82,7 +83,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
         // Given
         val playerName = "Arthur"
         val gameName = "Table Ronde"
-        every { mockAppEventRepository.observeEvents() } returns Observable.just(AppEvent.ServiceStarted)
+        every { mockAppEventRepository.observeEvents() } returns Observable.just(AppEvent.ServiceStarted(ServiceIdentifier.Host))
 
         // When
         viewModel.onPlayerNameChange(playerName)
@@ -91,8 +92,8 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
 
         // Then
         verify { mockNavigationBridge.navigate(Destination.HomeScreens.InGame) }
-        verify { mockHostFacade.hostGame(gameName, playerName) }
-        confirmVerified(mockHostFacade)
+        verify { mockGameFacade.hostGame(gameName, playerName) }
+        confirmVerified(mockGameFacade)
     }
 
     @Test
@@ -112,7 +113,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
 
         // Then
         verify(exactly = 0) { mockNavigationBridge.navigate(any()) }
-        confirmVerified(mockHostFacade)
+        confirmVerified(mockGameFacade)
     }
 
     @Test
@@ -132,6 +133,6 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
 
         // Then
         verify(exactly = 0) { mockNavigationBridge.navigate(any()) }
-        confirmVerified(mockHostFacade)
+        confirmVerified(mockGameFacade)
     }
 }

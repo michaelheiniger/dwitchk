@@ -10,12 +10,12 @@ import ch.qscqlmpa.dwitchcommunication.di.DaggerCommunicationComponent
 import ch.qscqlmpa.dwitchgame.di.DaggerGameComponent
 import ch.qscqlmpa.dwitchgame.di.GameComponent
 import ch.qscqlmpa.dwitchgame.di.modules.DwitchGameModule
-import ch.qscqlmpa.dwitchgame.home.HomeFacade
-import ch.qscqlmpa.dwitchgame.ingame.common.GuestGameFacade
-import ch.qscqlmpa.dwitchgame.ingame.common.HostGameFacade
+import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertisingFacade
+import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleFacade
+import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationFacade
+import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationFacade
 import ch.qscqlmpa.dwitchgame.ingame.di.InGameComponent
 import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameModule
-import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.DaggerStoreComponent
 import ch.qscqlmpa.dwitchstore.StoreComponent
@@ -64,7 +64,6 @@ open class App : DaggerApplication() {
 
     open fun createInGameComponents(
         playerRole: PlayerRole,
-        roomType: RoomType,
         gameLocalId: Long,
         localPlayerLocalId: Long,
         hostPort: Int,
@@ -80,7 +79,6 @@ open class App : DaggerApplication() {
             inGameComponent = gameComponent.addInGameComponent(
                 InGameModule(
                     playerRole,
-                    roomType,
                     gameLocalId,
                     localPlayerLocalId,
                     hostPort,
@@ -91,14 +89,14 @@ open class App : DaggerApplication() {
             )
             inGameUiComponent = appComponent.addInGameUiComponent(
                 InGameUiModule(
-                    inGameComponent!!.gameFacade,
-                    inGameComponent!!.hostGameFacade,
-                    inGameComponent!!.guestGameFacade,
+                    inGameComponent!!.gameFacadeToRename,
+                    inGameComponent!!.hostCommunicationFacade,
+                    inGameComponent!!.guestCommunicationFacade,
                     inGameComponent!!.waitingRoomFacade,
                     inGameComponent!!.waitingRoomHostFacade,
                     inGameComponent!!.waitingRoomGuestFacade,
-                    inGameComponent!!.gameRoomHostFacade,
-                    inGameComponent!!.gameRoomGuestFacade,
+                    inGameComponent!!.inGameHostFacade,
+                    inGameComponent!!.inGameGuestFacade,
                     inGameComponent!!.playerFacade
                 )
             )
@@ -115,19 +113,21 @@ open class App : DaggerApplication() {
         inGameStoreComponent = null
     }
 
-    fun hostFacade(): HostGameFacade {
-        checkNotNull(inGameComponent) { "No on-going game component!" }
-        return inGameComponent!!.hostGameFacade
-    }
+    open val gameLifecycleFacade get(): GameLifecycleFacade = gameComponent.gameLifecycleFacade
 
-    fun guestFacade(): GuestGameFacade {
-        checkNotNull(inGameComponent) { "No on-going game component!" }
-        return inGameComponent!!.guestGameFacade
-    }
+    open val gameAdvertisingFacade get(): GameAdvertisingFacade = gameComponent.gameAdvertisingFacade
 
-    open fun homeFacade(): HomeFacade {
-        return gameComponent.homeFacade
-    }
+    val hostCommunicationFacade
+        get(): HostCommunicationFacade {
+            checkNotNull(inGameComponent) { "No in-game component" }
+            return inGameComponent!!.hostCommunicationFacade
+        }
+
+    val guestCommunicationFacade
+        get(): GuestCommunicationFacade {
+            checkNotNull(inGameComponent) { "No in-game component" }
+            return inGameComponent!!.guestCommunicationFacade
+        }
 
     private fun createNotificationChannels() {
         NotificationChannelFactory.createDefaultNotificationChannel(this)

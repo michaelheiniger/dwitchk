@@ -1,10 +1,10 @@
 package ch.qscqlmpa.dwitch.ingame
 
-import ch.qscqlmpa.dwitchgame.ingame.GameFacade
-import ch.qscqlmpa.dwitchgame.ingame.common.GuestGameFacade
-import ch.qscqlmpa.dwitchgame.ingame.common.HostGameFacade
-import ch.qscqlmpa.dwitchgame.ingame.gameroom.GameRoomGuestFacade
-import ch.qscqlmpa.dwitchgame.ingame.gameroom.GameRoomHostFacade
+import ch.qscqlmpa.dwitchgame.ingame.GameFacadeToRename
+import ch.qscqlmpa.dwitchgame.ingame.InGameGuestFacade
+import ch.qscqlmpa.dwitchgame.ingame.InGameHostFacade
+import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationFacade
+import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationFacade
 import ch.qscqlmpa.dwitchgame.ingame.gameroom.PlayerFacade
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.WaitingRoomFacade
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.WaitingRoomGuestFacade
@@ -15,30 +15,30 @@ import dagger.Provides
 @Suppress("unused")
 @Module
 class InGameUiModule(
-    private val gameFacade: GameFacade,
-    private val hostGameFacade: HostGameFacade,
-    private val guestGameFacade: GuestGameFacade,
+    private val gameFacadeToRename: GameFacadeToRename,
+    private val hostCommunicationFacade: HostCommunicationFacade,
+    private val guestCommunicationFacade: GuestCommunicationFacade,
     private val waitingRoomFacade: WaitingRoomFacade,
     private val waitingRoomHostFacade: WaitingRoomHostFacade,
     private val waitingRoomGuestFacade: WaitingRoomGuestFacade,
-    private val gameRoomHostFacade: GameRoomHostFacade,
-    private val gameRoomGuestFacade: GameRoomGuestFacade,
+    private val inGameHostFacade: InGameHostFacade,
+    private val inGameGuestFacade: InGameGuestFacade,
     private val playerFacade: PlayerFacade
 ) {
 
     @Provides
-    fun provideHostFacade(): HostGameFacade {
-        return hostGameFacade
+    fun provideHostFacade(): HostCommunicationFacade {
+        return hostCommunicationFacade
     }
 
     @Provides
-    fun provideGuestFacade(): GuestGameFacade {
-        return guestGameFacade
+    fun provideGuestFacade(): GuestCommunicationFacade {
+        return guestCommunicationFacade
     }
 
     @Provides
-    fun provideGameFacade(): GameFacade {
-        return gameFacade
+    fun provideGameFacade(): GameFacadeToRename {
+        return gameFacadeToRename
     }
 
     @Provides
@@ -57,13 +57,13 @@ class InGameUiModule(
     }
 
     @Provides
-    fun provideGameRoomHostFacade(): GameRoomHostFacade {
-        return gameRoomHostFacade
+    fun provideGameRoomHostFacade(): InGameHostFacade {
+        return inGameHostFacade
     }
 
     @Provides
-    fun provideGameRoomGuestFacade(): GameRoomGuestFacade {
-        return gameRoomGuestFacade
+    fun provideGameRoomGuestFacade(): InGameGuestFacade {
+        return inGameGuestFacade
     }
 
     @Provides

@@ -5,6 +5,9 @@ import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.Destination
 import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
+import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
+import ch.qscqlmpa.dwitchgame.ingame.InGameGuestFacade
+import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationFacade
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.gameevents.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.WaitingRoomGuestFacade
@@ -19,7 +22,10 @@ import org.junit.Test
 
 class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
 
-    private val mockFacade = mockk<WaitingRoomGuestFacade>(relaxed = true)
+    private val mockWaitingRoomGuestFacade = mockk<WaitingRoomGuestFacade>(relaxed = true)
+    private val communicationFacade = mockk<GuestCommunicationFacade>(relaxed = true)
+    private val inGameGuestFacade = mockk<InGameGuestFacade>(relaxed = true)
+    private val gameDiscoveryFacade = mockk<GameDiscoveryFacade>(relaxed = true)
     private val mockNavigationBridge = mockk<NavigationBridge>(relaxed = true)
 
     private lateinit var viewModel: WaitingRoomGuestViewModel
@@ -122,7 +128,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
 
         // Then
         verify { mockNavigationBridge.navigate(Destination.HomeScreens.Home) }
-        verify { mockFacade.leaveGame() }
+        verify { inGameGuestFacade.leaveGame() }
     }
 
     @Test
@@ -195,8 +201,10 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
 
     private fun createViewModel() {
         viewModel = WaitingRoomGuestViewModel(
-            mockFacade,
-            gameAdvertisingFacade = mockk(relaxed = true),
+            mockWaitingRoomGuestFacade,
+            communicationFacade,
+            inGameGuestFacade,
+            gameDiscoveryFacade,
             mockNavigationBridge,
             Schedulers.trampoline(),
             StubIdlingResource()
@@ -206,10 +214,10 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         localPlayerReadyStateSubject = PublishSubject.create()
         gameEventSubject = PublishSubject.create()
 
-        every { mockFacade.observeCommunicationState() } returns communicationStateSubject
-        every { mockFacade.observeLocalPlayerReadyState() } returns localPlayerReadyStateSubject
-        every { mockFacade.observeGameEvents() } returns gameEventSubject
-        every { mockFacade.leaveGame() } returns Completable.complete()
+        every { communicationFacade.currentCommunicationState() } returns communicationStateSubject
+        every { mockWaitingRoomGuestFacade.observeLocalPlayerReadyState() } returns localPlayerReadyStateSubject
+        every { inGameGuestFacade.observeGameEvents() } returns gameEventSubject
+        every { inGameGuestFacade.leaveGame() } returns Completable.complete()
     }
 
 }

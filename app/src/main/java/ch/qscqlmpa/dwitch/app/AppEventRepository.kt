@@ -5,8 +5,13 @@ import io.reactivex.rxjava3.core.Observable
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
+sealed class ServiceIdentifier {
+    object Host : ServiceIdentifier()
+    object Guest : ServiceIdentifier()
+}
+
 sealed class AppEvent {
-    object ServiceStarted : AppEvent()
+    data class ServiceStarted(val serviceIdentifier: ServiceIdentifier) : AppEvent()
 }
 
 @AppScope

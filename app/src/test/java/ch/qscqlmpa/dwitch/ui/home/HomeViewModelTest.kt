@@ -7,12 +7,11 @@ import ch.qscqlmpa.dwitch.ui.Destination
 import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
 import ch.qscqlmpa.dwitch.ui.home.home.HomeViewModel
-import ch.qscqlmpa.dwitchgame.common.GameAdvertisingFacade
-import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
-import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GameState
-import ch.qscqlmpa.dwitchgame.home.HomeFacade
-import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
-import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
+import ch.qscqlmpa.dwitchgame.game.GameFacade
+import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
+import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
+import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleFacade
+import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleState
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import io.mockk.every
@@ -30,10 +29,9 @@ class HomeViewModelTest : BaseViewModelUnitTest() {
 
     private val mockAppEventRepository = mockk<AppEventRepository>(relaxed = true)
     private val mockServiceManager = mockk<ServiceManager>(relaxed = true)
-    private val mockGameAdvertisingFacade = mockk<GameAdvertisingFacade>(relaxed = true)
-    private val mockHomeFacade = mockk<HomeFacade>(relaxed = true)
-    private val mockHomeGuestFacade = mockk<HomeGuestFacade>(relaxed = true)
-    private val mockHomeHostFacade = mockk<HomeHostFacade>(relaxed = true)
+    private val mockGameDiscoveryFacade = mockk<GameDiscoveryFacade>(relaxed = true)
+    private val mockGameLifecycleFacade = mockk<GameLifecycleFacade>(relaxed = true)
+    private val mockGameFacade = mockk<GameFacade>(relaxed = true)
     private val mockNavigationBridge = mockk<NavigationBridge>(relaxed = true)
 
     private lateinit var viewModel: HomeViewModel
@@ -46,19 +44,18 @@ class HomeViewModelTest : BaseViewModelUnitTest() {
         viewModel = HomeViewModel(
             mockAppEventRepository,
             mockServiceManager,
-            mockGameAdvertisingFacade,
-            mockHomeFacade,
-            mockHomeGuestFacade,
-            mockHomeHostFacade,
+            mockGameDiscoveryFacade,
+            mockGameLifecycleFacade,
+            mockGameFacade,
             mockNavigationBridge,
             Schedulers.trampoline()
         )
 
         advertisedGamesSubject = PublishSubject.create()
-        every { mockGameAdvertisingFacade.observeAdvertisedGames() } returns advertisedGamesSubject
+        every { mockGameDiscoveryFacade.observeAdvertisedGames() } returns advertisedGamesSubject
 
         resumableGamesSubject = PublishSubject.create()
-        every { mockHomeHostFacade.resumableGames() } returns resumableGamesSubject
+        every { mockGameFacade.resumableGames() } returns resumableGamesSubject
     }
 
     @Test
@@ -127,7 +124,7 @@ class HomeViewModelTest : BaseViewModelUnitTest() {
     @Test
     fun `should do nothing when no game is started`() {
         // Given
-        every { mockHomeFacade.gameState } returns GameState.NotStarted
+        every { mockGameLifecycleFacade.currentLifecycleState } returns GameLifecycleState.NotStarted
 
         // When
         viewModel.onStart()
@@ -140,7 +137,7 @@ class HomeViewModelTest : BaseViewModelUnitTest() {
     @Test
     fun `should navigate to InGame destination when a game is running`() {
         // Given
-        every { mockHomeFacade.gameState } returns GameState.Running
+        every { mockGameLifecycleFacade.currentLifecycleState } returns GameLifecycleState.Running
 
         // When
         viewModel.onStart()
@@ -152,7 +149,7 @@ class HomeViewModelTest : BaseViewModelUnitTest() {
     @Test
     fun `should stop service when game is over`() {
         // Given
-        every { mockHomeFacade.gameState } returns GameState.Over
+        every { mockGameLifecycleFacade.currentLifecycleState } returns GameLifecycleState.Over
 
         // When
         viewModel.onStart()

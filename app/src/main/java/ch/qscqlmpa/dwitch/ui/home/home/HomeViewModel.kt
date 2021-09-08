@@ -9,12 +9,11 @@ import ch.qscqlmpa.dwitch.ui.Destination
 import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
-import ch.qscqlmpa.dwitchgame.common.GameAdvertisingFacade
-import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
-import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GameState
-import ch.qscqlmpa.dwitchgame.home.HomeFacade
-import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
-import ch.qscqlmpa.dwitchgame.home.HomeHostFacade
+import ch.qscqlmpa.dwitchgame.game.GameFacade
+import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
+import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
+import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleFacade
+import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleState
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Scheduler
@@ -24,10 +23,9 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val appEventRepository: AppEventRepository,
     private val serviceManager: ServiceManager,
-    private val gameAdvertisingFacade: GameAdvertisingFacade,
-    private val homeFacade: HomeFacade,
-    private val homeGuestFacade: HomeGuestFacade,
-    private val homeHostFacade: HomeHostFacade,
+    private val gameDiscoveryFacade: GameDiscoveryFacade,
+    private val gameLifecycleFacade: GameLifecycleFacade,
+    private val gameFacade: GameFacade,
     private val navigationBridge: NavigationBridge,
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
@@ -56,7 +54,7 @@ class HomeViewModel @Inject constructor(
         } else {
             _loading.value = true
             disposableManager.add(
-                homeGuestFacade.joinResumedGame(game)
+                gameFacade.joinResumedGame(game)
                     .observeOn(uiScheduler)
                     .doOnTerminate { _loading.value = false }
                     .subscribe(
@@ -82,7 +80,7 @@ class HomeViewModel @Inject constructor(
                         .filter { event -> event is AppEvent.ServiceStarted }
                         .firstElement()
                         .ignoreElement(),
-                    homeHostFacade.resumeGame(resumableGameInfo.id)
+                    gameFacade.resumeGame(resumableGameInfo.id)
                         .observeOn(uiScheduler)
                 )
             )
@@ -99,7 +97,7 @@ class HomeViewModel @Inject constructor(
 
     override fun onStart() {
         super.onStart()
-        gameAdvertisingFacade.startListeningForAdvertisedGames()
+        gameDiscoveryFacade.startListeningForAdvertisedGames()
         observeAdvertisedGames()
         observeResumableGames()
         reactToGameState()
@@ -111,21 +109,21 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun reactToGameState() {
-        when (homeFacade.gameState) {
-            GameState.NotStarted -> {
+        when (gameLifecycleFacade.currentLifecycleState) {
+            GameLifecycleState.NotStarted -> {
                 // Nothing to do
             }
-            GameState.Running -> {
+            GameLifecycleState.Running -> {
                 Logger.debug { "Game is running: navigate to ${Destination.HomeScreens.InGame}" }
                 navigationBridge.navigate(Destination.HomeScreens.InGame)
             }
-            GameState.Over -> serviceManager.stop()
+            GameLifecycleState.Over -> serviceManager.stop()
         }
     }
 
     private fun observeAdvertisedGames() {
         disposableManager.add(
-            gameAdvertisingFacade.observeAdvertisedGames()
+            gameDiscoveryFacade.observeAdvertisedGames()
                 .observeOn(uiScheduler)
                 .map<LoadedData<List<AdvertisedGame>>> { games -> LoadedData.Success(games) }
                 .doOnError { error -> Logger.error(error) { "Error while observing advertised games." } }
@@ -136,7 +134,7 @@ class HomeViewModel @Inject constructor(
 
     private fun observeResumableGames() {
         disposableManager.add(
-            homeHostFacade.resumableGames()
+            gameFacade.resumableGames()
                 .observeOn(uiScheduler)
                 .map<LoadedData<List<ResumableGameInfo>>> { games -> LoadedData.Success(games) }
                 .doOnError { error -> Logger.error(error) { "Error while fetching existing games." } }

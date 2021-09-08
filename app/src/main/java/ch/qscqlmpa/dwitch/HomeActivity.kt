@@ -8,7 +8,7 @@ import ch.qscqlmpa.dwitch.ingame.services.ServiceManager
 import ch.qscqlmpa.dwitch.ui.Dwitch
 import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
-import ch.qscqlmpa.dwitchgame.common.GameAdvertisingFacade
+import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -26,7 +26,7 @@ class HomeActivity : AppCompatActivity(), HasAndroidInjector {
     lateinit var serviceManager: ServiceManager
 
     @Inject
-    lateinit var gameAdvertisingFacade: GameAdvertisingFacade
+    lateinit var gameDiscoveryFacade: GameDiscoveryFacade
 
     @Inject
     lateinit var navigationBridge: NavigationBridge

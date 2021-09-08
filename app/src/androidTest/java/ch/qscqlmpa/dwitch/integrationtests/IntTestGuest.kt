@@ -1,11 +1,8 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
-import ch.qscqlmpa.dwitchgame.ingame.gameroom.GameRoomGuestFacade
 
 class IntTestGuest : IntTestPlayer() {
-
-    private lateinit var gameRoomGuestFacade: GameRoomGuestFacade
 
     //    private val guestLocalId: Long
     lateinit var playerId: DwitchPlayerId

@@ -4,13 +4,10 @@ import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.common.ApplicationConfigRepository
 import ch.qscqlmpa.dwitchgame.common.testApplicationConfig
+import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertising
 import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertisingImpl
 import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.gameadvertising.network.Network
-import ch.qscqlmpa.dwitchgame.ingame.common.HostGameFacade
-import ch.qscqlmpa.dwitchgame.ingame.common.HostGameFacadeImpl
-import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationStateRepository
-import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.mockk.every
 import io.mockk.mockk
@@ -23,12 +20,11 @@ import java.util.concurrent.TimeUnit
 class GameAdvertisingTest : BaseUnitTest() {
 
     private val mockApplicationConfigRepository = mockk<ApplicationConfigRepository>(relaxed = true)
-    private val mockCommunicationStateRepository = mockk<HostCommunicationStateRepository>(relaxed = true)
     private val mockNetwork = mockk<Network>(relaxed = true)
-    private val mockHostCommunicator = mockk<HostCommunicator>(relaxed = true)
-
-    private lateinit var hostGameFacade: HostGameFacade
     private lateinit var timeScheduler: TestScheduler
+
+    private lateinit var gameAdvertising: GameAdvertising
+
     private val expectedAdvertising =
         "{\"isNew\":true,\"gameCommonId\":{\"value\":1},\"gameName\":\"gameName\",\"gamePort\":8889}"
 
@@ -36,20 +32,19 @@ class GameAdvertisingTest : BaseUnitTest() {
     fun setup() {
         every { mockApplicationConfigRepository.config } returns testApplicationConfig()
         timeScheduler = TestScheduler()
-        val gameAdvertising = GameAdvertisingImpl(
+        gameAdvertising = GameAdvertisingImpl(
             mockApplicationConfigRepository,
+            mockNetwork,
             serializerFactory,
-            TestSchedulerFactory(timeScheduler),
-            mockNetwork
+            TestSchedulerFactory(timeScheduler)
         )
-        hostGameFacade = HostGameFacadeImpl(mockCommunicationStateRepository, mockHostCommunicator, gameAdvertising)
     }
 
     @Test
     fun `Advertise game immediately`() {
         // When
         val gameAdvertisingInfo = GameAdvertisingInfo(true, GameCommonId(1), "gameName", 8889)
-        hostGameFacade.advertiseGame(gameAdvertisingInfo).test()
+        gameAdvertising.advertiseGame(gameAdvertisingInfo).test()
         timeScheduler.advanceTimeTo(0, TimeUnit.SECONDS)
 
         // Then
@@ -60,7 +55,7 @@ class GameAdvertisingTest : BaseUnitTest() {
     fun `Advertise game every 2 seconds until stream is disposed`() {
         // When
         val gameAdvertisingInfo = GameAdvertisingInfo(true, GameCommonId(1), "gameName", 8889)
-        val testObserver = hostGameFacade.advertiseGame(gameAdvertisingInfo).test()
+        val testObserver = gameAdvertising.advertiseGame(gameAdvertisingInfo).test()
 
         // Then
         timeScheduler.advanceTimeTo(2, TimeUnit.SECONDS)

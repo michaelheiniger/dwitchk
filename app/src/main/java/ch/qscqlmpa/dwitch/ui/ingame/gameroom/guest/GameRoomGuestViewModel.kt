@@ -6,16 +6,16 @@ import ch.qscqlmpa.dwitch.ui.Destination
 import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
-import ch.qscqlmpa.dwitchgame.common.GameAdvertisingFacade
+import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
+import ch.qscqlmpa.dwitchgame.ingame.InGameGuestFacade
 import ch.qscqlmpa.dwitchgame.ingame.gameevents.GuestGameEvent
-import ch.qscqlmpa.dwitchgame.ingame.gameroom.GameRoomGuestFacade
 import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 internal class GameRoomGuestViewModel @Inject constructor(
-    private val facade: GameRoomGuestFacade,
-    private val gameAdvertisingFacade: GameAdvertisingFacade,
+    private val inGameGuestFacade: InGameGuestFacade,
+    private val gameDiscoveryFacade: GameDiscoveryFacade,
     private val navigationBridge: NavigationBridge,
     private val uiScheduler: Scheduler,
     private val idlingResource: DwitchIdlingResource
@@ -31,7 +31,7 @@ internal class GameRoomGuestViewModel @Inject constructor(
 
     fun leaveGame() {
         disposableManager.add(
-            facade.leaveGame()
+            inGameGuestFacade.leaveGame()
                 .observeOn(uiScheduler)
                 .subscribe(
                     {
@@ -45,7 +45,7 @@ internal class GameRoomGuestViewModel @Inject constructor(
 
     override fun onStart() {
         super.onStart()
-        gameAdvertisingFacade.startListeningForAdvertisedGames()
+        gameDiscoveryFacade.startListeningForAdvertisedGames()
         observeGameEvent()
     }
 
@@ -55,7 +55,7 @@ internal class GameRoomGuestViewModel @Inject constructor(
 
     private fun observeGameEvent() {
         disposableManager.add(
-            facade.observeGameEvents()
+            inGameGuestFacade.observeGameEvents()
                 .observeOn(uiScheduler)
                 .doOnNext { event -> Logger.debug("Game event received: $event") }
                 .filter { event -> event is GuestGameEvent.GameOver }

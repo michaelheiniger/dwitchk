@@ -6,7 +6,7 @@ import ch.qscqlmpa.dwitch.ui.Destination
 import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
-import ch.qscqlmpa.dwitchgame.common.GameAdvertisingFacade
+import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchgame.ingame.usecases.GameLaunchableEvent
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.WaitingRoomHostFacade
@@ -15,8 +15,8 @@ import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 internal class WaitingRoomHostViewModel @Inject constructor(
-    private val facade: WaitingRoomHostFacade,
-    private val gameAdvertisingFacade: GameAdvertisingFacade,
+    private val waitingRoomHostFacade: WaitingRoomHostFacade,
+    private val gameDiscoveryFacade: GameDiscoveryFacade,
     private val navigationBridge: NavigationBridge,
     private val uiScheduler: Scheduler,
     private val idlingResource: DwitchIdlingResource
@@ -30,7 +30,7 @@ internal class WaitingRoomHostViewModel @Inject constructor(
 
     fun addComputerPlayer() {
         disposableManager.add(
-            facade.addComputerPlayer()
+            waitingRoomHostFacade.addComputerPlayer()
                 .observeOn(uiScheduler)
                 .subscribe(
                     {},
@@ -42,7 +42,7 @@ internal class WaitingRoomHostViewModel @Inject constructor(
     fun kickPlayer(player: PlayerWrUi) {
         idlingResource.increment("Click to kick a player")
         disposableManager.add(
-            facade.kickPlayer(player)
+            waitingRoomHostFacade.kickPlayer(player)
                 .observeOn(uiScheduler)
                 .subscribe(
                     { Logger.info { "Player kicked successfully ($player)" } },
@@ -54,7 +54,7 @@ internal class WaitingRoomHostViewModel @Inject constructor(
     fun launchGame() {
         _loading.value = true
         disposableManager.add(
-            facade.launchGame()
+            waitingRoomHostFacade.launchGame()
                 .observeOn(uiScheduler)
                 .doOnTerminate { _loading.value = false }
                 .subscribe(
@@ -69,7 +69,7 @@ internal class WaitingRoomHostViewModel @Inject constructor(
 
     fun cancelGame() {
         disposableManager.add(
-            facade.cancelGame()
+            waitingRoomHostFacade.cancelGame()
                 .observeOn(uiScheduler)
                 .subscribe(
                     {
@@ -83,13 +83,13 @@ internal class WaitingRoomHostViewModel @Inject constructor(
 
     override fun onStart() {
         super.onStart()
-        gameAdvertisingFacade.stopListeningForAdvertisedGames()
+        gameDiscoveryFacade.stopListeningForAdvertisedGames()
         canGameBeLaunched()
     }
 
     private fun canGameBeLaunched() {
         disposableManager.add(
-            facade.observeGameLaunchableEvents()
+            waitingRoomHostFacade.observeGameLaunchableEvents()
                 .observeOn(uiScheduler)
                 .map(::isGameLaunchable)
                 .subscribe(

@@ -11,9 +11,9 @@ import javax.inject.Inject
 
 internal class GameAdvertisingImpl @Inject constructor(
     applicationConfigRepository: ApplicationConfigRepository,
+    private val network: Network,
     private val serializerFactory: SerializerFactory,
-    private val schedulerFactory: SchedulerFactory,
-    private val network: Network
+    private val schedulerFactory: SchedulerFactory
 ) : GameAdvertising {
 
     private val destinationPort = applicationConfigRepository.config.gameAdvertising.port

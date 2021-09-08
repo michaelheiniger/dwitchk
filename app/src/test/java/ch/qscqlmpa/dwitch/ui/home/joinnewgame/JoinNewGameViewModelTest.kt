@@ -5,10 +5,10 @@ import ch.qscqlmpa.dwitch.app.StubIdlingResource
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.Destination
 import ch.qscqlmpa.dwitch.ui.NavigationBridge
-import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
-import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
+import ch.qscqlmpa.dwitchgame.game.GameFacade
+import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
+import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
-import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -22,7 +22,8 @@ import org.junit.Test
 
 class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
 
-    private val mockGuestFacade = mockk<HomeGuestFacade>(relaxed = true)
+    private val mockGameFacade = mockk<GameFacade>(relaxed = true)
+    private val mockGameDiscoveryFacade = mockk<GameDiscoveryFacade>(relaxed = true)
     private val mockNavigationBridge = mockk<NavigationBridge>(relaxed = true)
 
     private lateinit var viewModel: JoinNewGameViewModel
@@ -33,13 +34,14 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
     @Before
     fun setup() {
         viewModel = JoinNewGameViewModel(
-            mockGuestFacade,
+            mockGameFacade,
+            mockGameDiscoveryFacade,
             mockNavigationBridge,
             Schedulers.trampoline(),
             StubIdlingResource()
         )
-        every { mockGuestFacade.joinGame(any(), any()) } returns Completable.complete()
-        every { mockGuestFacade.getAdvertisedGame(gameIpAddress) } returns advertisedGame
+        every { mockGameFacade.joinGame(any(), any()) } returns Completable.complete()
+        every { mockGameDiscoveryFacade.getAdvertisedGame(gameIpAddress) } returns advertisedGame
     }
 
     @Test
@@ -78,29 +80,28 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
         // Given
         val playerName = "Arthur"
         viewModel.onPlayerNameChange(playerName)
-        every { mockGuestFacade.joinGame(any(), any()) } returns Completable.complete()
+        every { mockGameFacade.joinGame(any(), any()) } returns Completable.complete()
 
         // When
         viewModel.joinGame(gameIpAddress)
 
         // Then
         verify { mockNavigationBridge.navigate(Destination.HomeScreens.InGame) }
-        verify { mockGuestFacade.joinGame(advertisedGame, playerName) }
+        verify { mockGameFacade.joinGame(advertisedGame, playerName) }
     }
 
     @Test
     fun `Display notification when game cannot be found (eg advertising has stopped) `() {
         // Given
         viewModel.onPlayerNameChange("Arthur")
-        every { mockGuestFacade.getAdvertisedGame(gameIpAddress) } returns null
+        every { mockGameDiscoveryFacade.getAdvertisedGame(gameIpAddress) } returns null
 
         // When
         viewModel.joinGame(gameIpAddress)
 
         // Then
         assertThat(viewModel.notification.value).isEqualTo(JoinNewGameNotification.GameNotFound)
-        verify { mockGuestFacade.getAdvertisedGame(any()) }
-        confirmVerified(mockGuestFacade)
+        verify { mockGameDiscoveryFacade.getAdvertisedGame(any()) }
     }
 
     @Test
@@ -108,7 +109,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
         // Given
         val playerName = "Arthur"
         viewModel.onPlayerNameChange(playerName)
-        every { mockGuestFacade.getAdvertisedGame(gameIpAddress) } returns null
+        every { mockGameDiscoveryFacade.getAdvertisedGame(gameIpAddress) } returns null
         viewModel.joinGame(gameIpAddress)
 
         // When
@@ -116,15 +117,14 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
 
         // Then
         verify { mockNavigationBridge.navigate(Destination.HomeScreens.Home) }
-        verify { mockGuestFacade.getAdvertisedGame(any()) }
-        confirmVerified(mockGuestFacade)
+        verify { mockGameDiscoveryFacade.getAdvertisedGame(any()) }
     }
 
     @Test
     fun `An error is thrown if the player name is not set when joining the game`() {
         // Given
         viewModel.onPlayerNameChange("")
-        every { mockGuestFacade.joinGame(any(), any()) } returns Completable.complete()
+        every { mockGameFacade.joinGame(any(), any()) } returns Completable.complete()
 
         // When the required data is not provided, the "create game" control is supposed to be disabled.
         // Hence the user should not be able to launch the game creation
@@ -137,7 +137,6 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
 
         // Then
         verify(exactly = 0) { mockNavigationBridge.navigate(any()) }
-        verify { mockGuestFacade.getAdvertisedGame(any()) }
-        confirmVerified(mockGuestFacade)
+        verify { mockGameDiscoveryFacade.getAdvertisedGame(any()) }
     }
 }

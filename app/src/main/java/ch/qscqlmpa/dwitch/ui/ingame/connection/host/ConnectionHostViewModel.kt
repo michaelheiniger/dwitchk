@@ -4,14 +4,14 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
-import ch.qscqlmpa.dwitchgame.ingame.common.HostGameFacade
+import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationFacade
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationState
 import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 class ConnectionHostViewModel @Inject constructor(
-    private val gameFacade: HostGameFacade,
+    private val communicationFacade: HostCommunicationFacade,
     private val uiScheduler: Scheduler,
     private val idlingResource: DwitchIdlingResource
 ) : BaseViewModel() {
@@ -20,7 +20,7 @@ class ConnectionHostViewModel @Inject constructor(
     val connectionStatus get(): State<HostCommunicationState> = _connectionStatus
 
     fun reconnect() {
-        gameFacade.startServer()
+        communicationFacade.startServer()
     }
 
     override fun onStart() {
@@ -31,7 +31,7 @@ class ConnectionHostViewModel @Inject constructor(
     private fun currentCommunicationState() {
         idlingResource.increment("Initial communication state")
         this.disposableManager.add(
-            gameFacade.currentCommunicationState()
+            communicationFacade.currentCommunicationState()
                 .observeOn(uiScheduler)
                 .doOnError { error -> Logger.error(error) { "Error while observing communication state." } }
                 .subscribe { state ->

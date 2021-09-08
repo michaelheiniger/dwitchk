@@ -1,14 +1,14 @@
 package ch.qscqlmpa.dwitch.integrationtests
 
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
-import ch.qscqlmpa.dwitchgame.ingame.gameroom.GameRoomHostFacade
+import ch.qscqlmpa.dwitchgame.ingame.InGameHostFacade
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 
 class IntTestHost(
     private val gameName: String
 ) : IntTestPlayer() {
 
-    private lateinit var gameRoomHostFacade: GameRoomHostFacade
+    private lateinit var inGameHostFacade: InGameHostFacade
 
     private var hostLocalId: Long? = null
     lateinit var playerId: DwitchPlayerId
@@ -45,7 +45,7 @@ class IntTestHost(
 //    }
 
     fun endGame() {
-        gameRoomHostFacade.endGame().blockingSubscribe()
+        inGameHostFacade.endGame().blockingSubscribe()
     }
 
     fun assertGameOverReceived() {

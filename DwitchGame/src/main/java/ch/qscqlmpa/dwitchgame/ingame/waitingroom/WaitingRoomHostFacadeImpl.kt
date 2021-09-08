@@ -19,8 +19,8 @@ internal class WaitingRoomHostFacadeImpl @Inject constructor(
         return addComputerPlayerUsecase.addPlayer()
     }
 
-    override fun launchGame(): Completable {
-        return launchGameUsecase.launchGame()
+    override fun kickPlayer(player: PlayerWrUi): Completable {
+        return kickPlayerUsecase.kickPlayer(player)
             .subscribeOn(schedulerFactory.io())
     }
 
@@ -29,13 +29,13 @@ internal class WaitingRoomHostFacadeImpl @Inject constructor(
             .subscribeOn(schedulerFactory.io())
     }
 
-    override fun kickPlayer(player: PlayerWrUi): Completable {
-        return kickPlayerUsecase.kickPlayer(player)
+    override fun observeGameLaunchableEvents(): Observable<GameLaunchableEvent> {
+        return gameLaunchableUsecase.gameCanBeLaunched()
             .subscribeOn(schedulerFactory.io())
     }
 
-    override fun observeGameLaunchableEvents(): Observable<GameLaunchableEvent> {
-        return gameLaunchableUsecase.gameCanBeLaunched()
+    override fun launchGame(): Completable {
+        return launchGameUsecase.launchGame()
             .subscribeOn(schedulerFactory.io())
     }
 }

@@ -4,24 +4,17 @@ import ch.qscqlmpa.dwitchcommunication.CommClient
 import ch.qscqlmpa.dwitchcommunication.CommServer
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationComponent
-import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertising
-import ch.qscqlmpa.dwitchgame.ingame.common.GuestGameFacade
-import ch.qscqlmpa.dwitchgame.ingame.common.GuestGameFacadeImpl
-import ch.qscqlmpa.dwitchgame.ingame.common.HostGameFacade
-import ch.qscqlmpa.dwitchgame.ingame.common.HostGameFacadeImpl
 import ch.qscqlmpa.dwitchgame.ingame.communication.CommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ingame.communication.GameCommunicator
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicator
-import ch.qscqlmpa.dwitchgame.ingame.di.OnGoingGameQualifiers.CURRENT_ROOM
 import ch.qscqlmpa.dwitchgame.ingame.di.OnGoingGameQualifiers.GAME_LOCAL_ID
 import ch.qscqlmpa.dwitchgame.ingame.di.OnGoingGameQualifiers.HOST_IP_ADDRESS
 import ch.qscqlmpa.dwitchgame.ingame.di.OnGoingGameQualifiers.HOST_PORT
 import ch.qscqlmpa.dwitchgame.ingame.di.OnGoingGameQualifiers.LOCAL_PLAYER_LOCAL_ID
 import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope
-import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import dagger.Module
@@ -32,7 +25,6 @@ import javax.inject.Named
 @Module
 class InGameModule(
     private val playerRole: PlayerRole,
-    private val roomType: RoomType,
     private val gameLocalId: Long,
     private val localPlayerLocalId: Long,
     private val hostPort: Int,
@@ -85,13 +77,6 @@ class InGameModule(
         return localPlayerLocalId
     }
 
-    @Named(CURRENT_ROOM)
-    @OngoingGameScope
-    @Provides
-    fun provideCurrentRoom(): RoomType {
-        return roomType
-    }
-
     @Named(HOST_PORT)
     @OngoingGameScope
     @Provides
@@ -106,7 +91,6 @@ class InGameModule(
         return hostIpAddress
     }
 
-    @OngoingGameScope
     @Provides
     internal fun provideGameCommunicator(
         playerRole: PlayerRole,
@@ -117,25 +101,6 @@ class InGameModule(
             PlayerRole.GUEST -> guestCommunicator
             PlayerRole.HOST -> hostCommunicator
         }
-    }
-
-    @OngoingGameScope
-    @Provides
-    internal fun provideHostFacade(
-        hostCommunicationStateRepository: HostCommunicationStateRepository,
-        communicator: HostCommunicator,
-        gameAdvertising: GameAdvertising
-    ): HostGameFacade {
-        return HostGameFacadeImpl(hostCommunicationStateRepository, communicator, gameAdvertising)
-    }
-
-    @OngoingGameScope
-    @Provides
-    internal fun provideGuestFacade(
-        guestCommunicationStateRepository: GuestCommunicationStateRepository,
-        communicator: GuestCommunicator
-    ): GuestGameFacade {
-        return GuestGameFacadeImpl(communicator, guestCommunicationStateRepository)
     }
 
     @Provides

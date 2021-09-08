@@ -6,9 +6,12 @@ import ch.qscqlmpa.dwitchcommunication.CommClient
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.websocket.ClientEvent
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.eventprocessors.GuestCommunicationEventDispatcher
+import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope
 import org.tinylog.kotlin.Logger
+import javax.inject.Inject
 
-internal class GuestCommunicatorImpl constructor(
+@OngoingGameScope
+internal class GuestCommunicatorImpl @Inject constructor(
     private val commClient: CommClient,
     private val communicationEventDispatcher: GuestCommunicationEventDispatcher,
     private val communicationStateRepository: GuestCommunicationStateRepository,

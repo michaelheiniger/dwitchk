@@ -1,48 +1,67 @@
 package ch.qscqlmpa.dwitch.ingame.services
 
 import android.content.Context
-import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GameCreatedInfo
-import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GameJoinedInfo
-import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GuestGameLifecycleEvent
-import ch.qscqlmpa.dwitchgame.gamelifecycleevents.HostGameLifecycleEvent
-import ch.qscqlmpa.dwitchgame.home.HomeFacade
+import ch.qscqlmpa.dwitch.app.AppEvent
+import ch.qscqlmpa.dwitch.app.AppEventRepository
+import ch.qscqlmpa.dwitch.app.ServiceIdentifier
+import ch.qscqlmpa.dwitchgame.gamelifecycle.*
+import org.tinylog.Logger
 import javax.inject.Inject
 
 class ServiceManagerImpl @Inject constructor(
     private val context: Context,
-    homeFacade: HomeFacade
+    appEventRepository: AppEventRepository,
+    gameLifecycleFacade: GameLifecycleFacade
 ) : ServiceManager {
 
-    private var gameOverHost: Boolean = false
-    private var gameOverGuest: Boolean = false
+    private var runningService: ServiceIdentifier? = null
 
     init {
         // Observables have the lifecycle of the application
-        homeFacade.observeHostGameEvents().subscribe { event ->
-            when (event) {
-                is HostGameLifecycleEvent.GameSetup -> startHostService(event.gameInfo)
-                HostGameLifecycleEvent.MovedToGameRoom -> goToHostGameRoom()
-                HostGameLifecycleEvent.GameOver -> gameOverHost = true
-            }
-        }
-        homeFacade.observeGuestGameEvents().subscribe { event ->
-            when (event) {
-                is GuestGameLifecycleEvent.GameSetup -> startGuestService(event.gameInfo)
-                GuestGameLifecycleEvent.MovedToGameRoom -> goToGuestGameRoom()
-                GuestGameLifecycleEvent.GameOver -> gameOverGuest = true
-            }
-        }
+        appEventRepository.observeEvents().subscribe(
+            { event ->
+                when (event) {
+                    is AppEvent.ServiceStarted -> runningService = event.serviceIdentifier
+                }
+            },
+            { error -> Logger.error(error) { "Error while observing app events." } }
+        )
+
+        gameLifecycleFacade.observeHostEvents().subscribe(
+            { event ->
+                when (event) {
+                    is HostGameLifecycleEvent.GameSetup -> startHostService(event.gameInfo)
+                    HostGameLifecycleEvent.MovedToGameRoom -> goToHostGameRoom()
+                    else -> {
+                        // Nothing to do
+                    }
+                }
+            },
+            { error -> Logger.error(error) { "Error while observing host events." } }
+        )
+        gameLifecycleFacade.observeGuestEvents().subscribe(
+            { event ->
+                when (event) {
+                    is GuestGameLifecycleEvent.GameSetup -> startGuestService(event.gameInfo)
+                    GuestGameLifecycleEvent.MovedToGameRoom -> goToGuestGameRoom()
+                    else -> {
+                        // Nothing to do
+                    }
+                }
+            },
+            { error -> Logger.error(error) { "Error while observing guest events." } }
+        )
     }
 
     override fun stop() {
-        if (gameOverHost) {
-            gameOverHost = false
-            stopHostService()
+        when (runningService) {
+            ServiceIdentifier.Guest -> stopGuestService()
+            ServiceIdentifier.Host -> stopHostService()
+            else -> {
+                Logger.warn { "stop() has been called when neither the guest nor the host service is running." }
+            }
         }
-        if (gameOverGuest) {
-            gameOverGuest = false
-            stopGuestService()
-        }
+        runningService = null
     }
 
     private fun stopHostService() {

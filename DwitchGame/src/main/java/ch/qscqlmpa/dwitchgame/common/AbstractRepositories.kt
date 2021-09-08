@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitchgame.common
 
+import com.jakewharton.rxrelay3.BehaviorRelay
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
 import org.tinylog.kotlin.Logger
@@ -7,22 +8,15 @@ import java.util.concurrent.atomic.AtomicReference
 
 internal abstract class CachedEventRepository<T> {
 
-    private val eventRelay = PublishRelay.create<T>()
-
-    private var lastEvent: T? = null
+    private val eventRelay = BehaviorRelay.create<T>()
 
     fun observeEvents(): Observable<T> {
         Logger.debug { "Observing events..." }
         return eventRelay
     }
 
-    fun lastEvent(): T? {
-        return lastEvent
-    }
-
     fun notify(event: T) {
         Logger.debug { "Notify of event: $event" }
-        lastEvent = event
         eventRelay.accept(event)
     }
 }

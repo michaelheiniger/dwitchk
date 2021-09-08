@@ -2,9 +2,11 @@ package ch.qscqlmpa.dwitch.ingame.services
 
 import android.content.Context
 import android.content.Intent
+import ch.qscqlmpa.dwitch.app.AppEvent
+import ch.qscqlmpa.dwitch.app.ServiceIdentifier
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertisingInfo
-import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GameCreatedInfo
+import ch.qscqlmpa.dwitchgame.gamelifecycle.GameCreatedInfo
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import org.tinylog.kotlin.Logger
@@ -22,13 +24,12 @@ class HostInGameService : BaseInGameService() {
         showNotification(RoomType.WAITING_ROOM)
         app.createInGameComponents(
             playerRole,
-            RoomType.WAITING_ROOM,
             gameCreatedInfo.gameLocalId,
             gameCreatedInfo.localPlayerLocalId,
             LISTENING_PORT,
             "0.0.0.0"
         )
-        app.hostFacade().startServer()
+        app.hostCommunicationFacade.startServer()
         advertiseGame(
             GameAdvertisingInfo(
                 gameCreatedInfo.isNew,
@@ -48,15 +49,19 @@ class HostInGameService : BaseInGameService() {
     }
 
     override fun cleanUp() {
-        app.hostFacade().stopServer()
+        app.hostCommunicationFacade.stopServer()
         app.destroyInGameComponents()
         gameAdvertisingDisposable.dispose()
-        app.homeFacade().reset().blockingSubscribe()
+        app.gameLifecycleFacade.cleanUpGameResources().blockingSubscribe()
+    }
+
+    private fun notifyServiceStarted() {
+        appEventRepository.notify(AppEvent.ServiceStarted(ServiceIdentifier.Host))
     }
 
     private fun advertiseGame(gameAdvertisingInfo: GameAdvertisingInfo) {
         gameAdvertisingDisposable.add(
-            app.hostFacade().advertiseGame(gameAdvertisingInfo).subscribe(
+            app.gameAdvertisingFacade.advertiseGame(gameAdvertisingInfo).subscribe(
                 {},
                 { error -> Logger.error(error) { "Error while advertising the game." } }
             )

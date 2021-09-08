@@ -25,7 +25,7 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.*
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
-import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGame
+import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import org.joda.time.DateTime

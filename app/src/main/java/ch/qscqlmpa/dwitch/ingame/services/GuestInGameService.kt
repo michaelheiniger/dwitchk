@@ -2,7 +2,9 @@ package ch.qscqlmpa.dwitch.ingame.services
 
 import android.content.Context
 import android.content.Intent
-import ch.qscqlmpa.dwitchgame.gamelifecycleevents.GameJoinedInfo
+import ch.qscqlmpa.dwitch.app.AppEvent
+import ch.qscqlmpa.dwitch.app.ServiceIdentifier
+import ch.qscqlmpa.dwitchgame.gamelifecycle.GameJoinedInfo
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import org.tinylog.kotlin.Logger
@@ -18,14 +20,13 @@ class GuestInGameService : BaseInGameService() {
         showNotification(RoomType.WAITING_ROOM)
         app.createInGameComponents(
             playerRole,
-            RoomType.WAITING_ROOM,
             gameJoinedInfo.gameLocalId,
             gameJoinedInfo.localPlayerLocalId,
             gameJoinedInfo.gamePort,
             gameJoinedInfo.gameIpAddress
         )
         idlingResource.decrement("Dagger InGame component created")
-        app.guestFacade().connect()
+        app.guestCommunicationFacade.connect()
         Logger.info { "Service started" }
         notifyServiceStarted()
     }
@@ -36,9 +37,13 @@ class GuestInGameService : BaseInGameService() {
     }
 
     override fun cleanUp() {
-        app.guestFacade().disconnect()
+        app.guestCommunicationFacade.disconnect()
         app.destroyInGameComponents()
-        app.homeFacade().reset().blockingSubscribe()
+        app.gameLifecycleFacade.cleanUpGameResources().blockingSubscribe()
+    }
+
+    private fun notifyServiceStarted() {
+        appEventRepository.notify(AppEvent.ServiceStarted(ServiceIdentifier.Guest))
     }
 
     companion object {

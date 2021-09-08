@@ -8,13 +8,15 @@ import ch.qscqlmpa.dwitch.ui.Destination
 import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
-import ch.qscqlmpa.dwitchgame.home.HomeGuestFacade
+import ch.qscqlmpa.dwitchgame.game.GameFacade
+import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 class JoinNewGameViewModel @Inject constructor(
-    private val guestFacade: HomeGuestFacade,
+    private val gameFacade: GameFacade,
+    private val gameDiscoveryFacade: GameDiscoveryFacade,
     private val navigationBridge: NavigationBridge,
     private val uiScheduler: Scheduler,
     private val idlingResource: DwitchIdlingResource
@@ -39,7 +41,7 @@ class JoinNewGameViewModel @Inject constructor(
     }
 
     fun gameName(ipAddress: String): State<String> {
-        val game = guestFacade.getAdvertisedGame(ipAddress)
+        val game = gameDiscoveryFacade.getAdvertisedGame(ipAddress)
         if (game == null) _notification.value = JoinNewGameNotification.GameNotFound
         return derivedStateOf { game?.gameName ?: "" }
     }
@@ -55,7 +57,7 @@ class JoinNewGameViewModel @Inject constructor(
 
     fun joinGame(ipAddress: String) {
         idlingResource.increment("Joining game: wait for Dagger InGame component to be created")
-        val game = guestFacade.getAdvertisedGame(ipAddress)
+        val game = gameDiscoveryFacade.getAdvertisedGame(ipAddress)
         if (game == null) {
             _notification.value = JoinNewGameNotification.GameNotFound
             return
@@ -65,7 +67,7 @@ class JoinNewGameViewModel @Inject constructor(
         require(playerName.isNotBlank()) { "Player name cannot be blank" }
         _loading.value = true
         disposableManager.add(
-            guestFacade.joinGame(game, playerName)
+            gameFacade.joinGame(game, playerName)
                 .observeOn(uiScheduler)
                 .doOnTerminate { _loading.value = false }
                 .subscribe(

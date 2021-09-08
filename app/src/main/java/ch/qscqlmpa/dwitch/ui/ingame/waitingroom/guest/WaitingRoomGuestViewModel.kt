@@ -7,7 +7,9 @@ import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
-import ch.qscqlmpa.dwitchgame.common.GameAdvertisingFacade
+import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
+import ch.qscqlmpa.dwitchgame.ingame.InGameGuestFacade
+import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationFacade
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.gameevents.GuestGameEvent
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.WaitingRoomGuestFacade
@@ -17,8 +19,10 @@ import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 internal class WaitingRoomGuestViewModel @Inject constructor(
-    private val facade: WaitingRoomGuestFacade,
-    private val gameAdvertisingFacade: GameAdvertisingFacade,
+    private val waitingRoomGuestFacade: WaitingRoomGuestFacade,
+    private val guestCommunicationFacade: GuestCommunicationFacade,
+    private val inGameGuestFacade: InGameGuestFacade,
+    private val gameDiscoveryFacade: GameDiscoveryFacade,
     private val navigationBridge: NavigationBridge,
     private val uiScheduler: Scheduler,
     private val idlingResource: DwitchIdlingResource
@@ -33,7 +37,7 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
     fun updateReadyState(ready: Boolean) {
         idlingResource.increment("Click on ready")
         disposableManager.add(
-            facade.updateReadyState(ready)
+            waitingRoomGuestFacade.updateReadyState(ready)
                 .observeOn(uiScheduler)
                 .subscribe(
                     { Logger.info { "Update ready state successfully" } },
@@ -44,7 +48,7 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
 
     fun leaveGame() {
         disposableManager.add(
-            facade.leaveGame()
+            inGameGuestFacade.leaveGame()
                 .observeOn(uiScheduler)
                 .subscribe(
                     {
@@ -66,7 +70,7 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
 
     override fun onStart() {
         super.onStart()
-        gameAdvertisingFacade.startListeningForAdvertisedGames()
+        gameDiscoveryFacade.startListeningForAdvertisedGames()
         localPlayerReadyState()
         observeGameEvents()
     }
@@ -78,7 +82,7 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
     private fun localPlayerReadyState() {
         disposableManager.add(
             Observable.combineLatest(
-                facade.observeLocalPlayerReadyState(),
+                waitingRoomGuestFacade.observeLocalPlayerReadyState(),
                 currentCommunicationState()
             ) { playerReady, connectionState ->
                 when (connectionState) {
@@ -95,13 +99,13 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
     }
 
     private fun currentCommunicationState(): Observable<GuestCommunicationState> {
-        return facade.observeCommunicationState()
+        return guestCommunicationFacade.currentCommunicationState()
             .doOnError { error -> Logger.error(error) { "Error while observing communication state." } }
     }
 
     private fun observeGameEvents() {
         disposableManager.add(
-            facade.observeGameEvents()
+            inGameGuestFacade.observeGameEvents()
                 .observeOn(uiScheduler)
                 .doOnError { error -> Logger.error(error) { "Error while observing game events." } }
                 .subscribe { event ->

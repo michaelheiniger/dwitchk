@@ -25,8 +25,8 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchgame.di.TestGameComponent
-import ch.qscqlmpa.dwitchgame.gamediscovery.network.Packet
-import ch.qscqlmpa.dwitchgame.gamediscovery.network.TestNetworkAdapter
+import ch.qscqlmpa.dwitchgame.gamediscovery.lan.network.Packet
+import ch.qscqlmpa.dwitchgame.gamediscovery.lan.network.TestNetworkAdapter
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.di.TestInGameComponent
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
@@ -137,14 +137,14 @@ abstract class BaseE2eTest {
     }
 
     protected fun waitUntilGuestIsConnected() {
-        inGameComponent.guestGameFacade.currentCommunicationState()
+        inGameComponent.guestCommunicationFacade.currentCommunicationState()
             .filter { state -> state is GuestCommunicationState.Connected }
             .timeout(5, TimeUnit.SECONDS)
             .blockingFirst()
     }
 
     protected fun waitForServiceToBeStarted() {
-        app.appEventRepository().observeEvents().filter { event -> event is AppEvent.ServiceStarted }.blockingFirst()
+        app.appEventRepository.observeEvents().filter { event -> event is AppEvent.ServiceStarted }.blockingFirst()
     }
 
     protected fun hookOngoingGameDependenciesForHost() {

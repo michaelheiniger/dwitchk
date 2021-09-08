@@ -10,10 +10,10 @@ import ch.qscqlmpa.dwitchgame.di.DaggerTestGameComponent
 import ch.qscqlmpa.dwitchgame.di.TestGameComponent
 import ch.qscqlmpa.dwitchgame.di.modules.DwitchGameModule
 import ch.qscqlmpa.dwitchgame.di.modules.StoreModule
-import ch.qscqlmpa.dwitchgame.home.HomeFacade
+import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertisingFacade
+import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleFacade
 import ch.qscqlmpa.dwitchgame.ingame.di.InGameComponent
 import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameModule
-import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.DaggerTestStoreComponent
 import ch.qscqlmpa.dwitchstore.TestStoreComponent
@@ -55,7 +55,6 @@ class TestApp : App() {
 
     override fun createInGameComponents(
         playerRole: PlayerRole,
-        roomType: RoomType,
         gameLocalId: Long,
         localPlayerLocalId: Long,
         hostPort: Int,
@@ -73,7 +72,6 @@ class TestApp : App() {
             inGameComponent = testGameComponent.addTestInGameComponent(
                 InGameModule(
                     playerRole,
-                    roomType,
                     gameLocalId,
                     localPlayerLocalId,
                     hostPort,
@@ -84,14 +82,14 @@ class TestApp : App() {
             )
             inGameUiComponent = testAppComponent.addInGameUiComponent(
                 InGameUiModule(
-                    inGameComponent!!.gameFacade,
-                    inGameComponent!!.hostGameFacade,
-                    inGameComponent!!.guestGameFacade,
+                    inGameComponent!!.gameFacadeToRename,
+                    inGameComponent!!.hostCommunicationFacade,
+                    inGameComponent!!.guestCommunicationFacade,
                     inGameComponent!!.waitingRoomFacade,
                     inGameComponent!!.waitingRoomHostFacade,
                     inGameComponent!!.waitingRoomGuestFacade,
-                    inGameComponent!!.gameRoomHostFacade,
-                    inGameComponent!!.gameRoomGuestFacade,
+                    inGameComponent!!.inGameHostFacade,
+                    inGameComponent!!.inGameGuestFacade,
                     inGameComponent!!.playerFacade
                 )
             )
@@ -102,11 +100,9 @@ class TestApp : App() {
         return inGameComponent
     }
 
-    override fun homeFacade(): HomeFacade {
-        return testGameComponent.homeFacade
-    }
+    override val gameLifecycleFacade get(): GameLifecycleFacade = testGameComponent.gameLifecycleFacade
 
-    fun appEventRepository(): AppEventRepository {
-        return testAppComponent.appEventRepository
-    }
+    override val gameAdvertisingFacade: GameAdvertisingFacade get() = testGameComponent.gameAdvertisingFacade
+
+    val appEventRepository get(): AppEventRepository = testAppComponent.appEventRepository
 }
