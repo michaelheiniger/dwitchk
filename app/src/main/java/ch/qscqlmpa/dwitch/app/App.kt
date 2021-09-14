@@ -27,6 +27,7 @@ import dagger.android.DaggerApplication
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
+//TODO: For first production release, disable crashlytics and add opt-in in settings. See https://firebase.google.com/docs/crashlytics/customize-crash-reports?authuser=0&platform=android
 open class App : DaggerApplication() {
 
     private lateinit var storeComponent: StoreComponent

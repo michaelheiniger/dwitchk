@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "99767414345",
+    "project_id": "dwitch-game",
+    "storage_bucket": "dwitch-game.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:99767414345:android:4c767b10f7b9a8890d1998",
+        "android_client_info": {
+          "package_name": "ch.qscqlmpa.dwitch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "99767414345-k9s8kkbq620g7p276ab1dkvdfv1c96kl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_GmPCRnD8lttpcMZAKHpELMna7uB2qNw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "99767414345-k9s8kkbq620g7p276ab1dkvdfv1c96kl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

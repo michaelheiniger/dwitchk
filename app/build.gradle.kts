@@ -5,6 +5,8 @@ plugins {
     id("kotlin-parcelize")
     id("kotlin-android")
     id("androidx.navigation.safeargs")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 val composeVersion = "1.0.0"
@@ -145,4 +147,8 @@ dependencies {
 
     // Robolectric (for unit tests that log stuff)
     testImplementation("org.robolectric:robolectric:4.5.1") // v4.6.1 produces weird error
+
+    implementation(platform("com.google.firebase:firebase-bom:28.4.1"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
 }
