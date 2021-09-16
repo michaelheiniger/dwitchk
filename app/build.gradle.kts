@@ -101,12 +101,13 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test:$composeVersion")
 
     // Dagger
-    implementation("com.google.dagger:dagger-android-support:2.38.1")
-    implementation("com.google.dagger:dagger-android:2.38.1")
-    implementation("com.google.dagger:dagger:2.38.1")
-    kapt("com.google.dagger:dagger-android-processor:2.38.1")
-    kapt("com.google.dagger:dagger-compiler:2.38.1")
-    kaptAndroidTest("com.google.dagger:dagger-compiler:2.38.1")
+    val daggerVersion = "2.38.1"
+    implementation("com.google.dagger:dagger-android-support:$daggerVersion")
+    implementation("com.google.dagger:dagger-android:$daggerVersion")
+    implementation("com.google.dagger:dagger:$daggerVersion")
+    kapt("com.google.dagger:dagger-android-processor:$daggerVersion")
+    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
+    kaptAndroidTest("com.google.dagger:dagger-compiler:$daggerVersion")
 
     // Logging
     implementation("org.tinylog:tinylog-api-kotlin:2.2.1")

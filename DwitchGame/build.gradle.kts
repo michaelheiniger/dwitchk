@@ -48,9 +48,10 @@ dependencies {
     implementation(project(path = ":DwitchCommon"))
 
     // Dagger
-    implementation("com.google.dagger:dagger:2.38.1")
-    kapt("com.google.dagger:dagger-compiler:2.38.1")
-    kaptAndroidTest("com.google.dagger:dagger-compiler:2.38.1")
+    val daggerVersion = "2.38.1"
+    implementation("com.google.dagger:dagger:$daggerVersion")
+    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
+    kaptAndroidTest("com.google.dagger:dagger-compiler:$daggerVersion")
 
     // Logging
     implementation("org.tinylog:tinylog-api-kotlin:2.4.0-M1")
@@ -70,18 +71,21 @@ dependencies {
     implementation("com.sksamuel.hoplite:hoplite-yaml:1.4.7")
 
     // JUnit5
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.7.1")
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.7.1")
+    val jUnit5Version = "5.7.1"
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$jUnit5Version")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jUnit5Version")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:$jUnit5Version")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:$jUnit5Version")
 
     // MockK
-    androidTestImplementation("io.mockk:mockk-android:1.12.0")
-    testImplementation("io.mockk:mockk:1.12.0")
+    val mockkVersion = "1.12.0"
+    androidTestImplementation("io.mockk:mockk-android:$mockkVersion")
+    testImplementation("io.mockk:mockk:$mockkVersion")
 
     // AssertJ
-    testImplementation("org.assertj:assertj-core:3.20.2")
-    androidTestImplementation("org.assertj:assertj-core:3.20.2")
+    val assertJVersion = "3.20.2"
+    testImplementation("org.assertj:assertj-core:$assertJVersion")
+    androidTestImplementation("org.assertj:assertj-core:$assertJVersion")
 
     // AndroidJUnitRunner and JUnit Rules
     androidTestImplementation("androidx.test.ext:junit-ktx:1.1.3")

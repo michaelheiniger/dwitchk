@@ -14,8 +14,9 @@ dependencies {
     implementation("org.tinylog:tinylog-api-kotlin:2.4.0-M1")
 
     // Dagger
-    implementation("com.google.dagger:dagger:2.38.1")
-    kapt("com.google.dagger:dagger-compiler:2.38.1")
+    val daggerVersion = "2.38.1"
+    implementation("com.google.dagger:dagger:$daggerVersion")
+    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
 
     // RxJava
     implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")

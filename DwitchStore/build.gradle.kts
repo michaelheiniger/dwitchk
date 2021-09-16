@@ -41,22 +41,24 @@ dependencies {
     implementation("org.tinylog:tinylog-api-kotlin:2.4.0-M1")
 
     // Room database
-    implementation("androidx.room:room-runtime:2.4.0-alpha04")
-    implementation("androidx.room:room-rxjava3:2.4.0-alpha04")
-    kapt("androidx.room:room-compiler:2.4.0-alpha04")
-    testImplementation("androidx.room:room-testing:2.4.0-alpha04")
+    val roomVersion = "2.4.0-alpha04"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-rxjava3:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+    testImplementation("androidx.room:room-testing:$roomVersion")
 
     // RxJava
     implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
     implementation("com.jakewharton.rxrelay3:rxrelay:3.0.1")
 
     // Dagger
-    implementation("com.google.dagger:dagger-android-support:2.38.1")
-    implementation("com.google.dagger:dagger-android:2.38.1")
-    implementation("com.google.dagger:dagger:2.38.1")
-    kapt("com.google.dagger:dagger-android-processor:2.38.1")
-    kapt("com.google.dagger:dagger-compiler:2.38.1")
-    kaptAndroidTest("com.google.dagger:dagger-compiler:2.38.1")
+    val daggerVersion = "2.38.1"
+    implementation("com.google.dagger:dagger-android-support:$daggerVersion")
+    implementation("com.google.dagger:dagger-android:$daggerVersion")
+    implementation("com.google.dagger:dagger:$daggerVersion")
+    kapt("com.google.dagger:dagger-android-processor:$daggerVersion")
+    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
+    kaptAndroidTest("com.google.dagger:dagger-compiler:$daggerVersion")
 
     // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc")
@@ -65,20 +67,22 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
 
     // MockK
-    testImplementation("io.mockk:mockk:1.12.0")
-    androidTestImplementation("io.mockk:mockk-android:1.12.0")
+    val mockkVersion = "1.12.0"
+    testImplementation("io.mockk:mockk:$mockkVersion")
+    androidTestImplementation("io.mockk:mockk-android:$mockkVersion")
 
     // AssertJ
-    testImplementation("org.assertj:assertj-core:3.20.2")
-    androidTestImplementation("org.assertj:assertj-core:3.20.2")
+    val assertJVersion = "3.20.2"
+    testImplementation("org.assertj:assertj-core:$assertJVersion")
+    androidTestImplementation("org.assertj:assertj-core:$assertJVersion")
 
     // Android testing stuff
     androidTestImplementation("androidx.test:core:1.4.0")
     androidTestImplementation("androidx.test:core-ktx:1.4.0")
     androidTestImplementation("androidx.test:runner:1.4.0")
     androidTestImplementation("androidx.test:rules:1.4.0")
-    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.3")
     androidTestUtil("androidx.test:orchestrator:1.4.0")
+    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.3")
     testImplementation("android.arch.core:core-testing:1.1.1")
 
     // Joda time
