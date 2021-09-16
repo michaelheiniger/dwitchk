@@ -1,0 +1,187 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 4,
+    "identityHash": "93b5a1ad1ef58d53db35cc27c0a0e7e1",
+    "entities": [
+      {
+        "tableName": "game",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `creation_date` TEXT NOT NULL, `game_common_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `game_state` TEXT, `local_player_id` INTEGER NOT NULL, `marked_for_deletion` INTEGER NOT NULL, FOREIGN KEY(`local_player_id`) REFERENCES `player`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "creationDate",
+            "columnName": "creation_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gameCommonId",
+            "columnName": "game_common_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gameState",
+            "columnName": "game_state",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "localPlayerLocalId",
+            "columnName": "local_player_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "toDelete",
+            "columnName": "marked_for_deletion",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_game_local_player_id",
+            "unique": true,
+            "columnNames": [
+              "local_player_id"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_game_local_player_id` ON `${TABLE_NAME}` (`local_player_id`)"
+          },
+          {
+            "name": "index_game_game_common_id",
+            "unique": true,
+            "columnNames": [
+              "game_common_id"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_game_game_common_id` ON `${TABLE_NAME}` (`game_common_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "player",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "local_player_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "player",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dwitch_id` INTEGER NOT NULL, `game_local_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `player_role` TEXT NOT NULL, `connected` INTEGER NOT NULL, `ready` INTEGER NOT NULL, `computer_managed` INTEGER NOT NULL, FOREIGN KEY(`game_local_id`) REFERENCES `game`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dwitchId",
+            "columnName": "dwitch_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gameLocalId",
+            "columnName": "game_local_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "playerRole",
+            "columnName": "player_role",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "connected",
+            "columnName": "connected",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ready",
+            "columnName": "ready",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "computerManaged",
+            "columnName": "computer_managed",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_player_game_local_id",
+            "unique": false,
+            "columnNames": [
+              "game_local_id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_player_game_local_id` ON `${TABLE_NAME}` (`game_local_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "game",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "game_local_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [
+      {
+        "viewName": "ResumableGameInfo",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT g.id, g.creation_date as creationDate, g.name FROM game g\n    WHERE g.game_state is not null AND g.marked_for_deletion = 0"
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '93b5a1ad1ef58d53db35cc27c0a0e7e1')"
+    ]
+  }
+}
