@@ -54,10 +54,6 @@ android {
 
     kotlinOptions {
         jvmTarget = "11"
-        freeCompilerArgs = listOf(
-            "-P",
-            "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true"
-        )
     }
 
     composeOptions {
