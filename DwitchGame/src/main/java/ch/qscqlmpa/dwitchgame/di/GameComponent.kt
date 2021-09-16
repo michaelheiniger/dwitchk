@@ -5,8 +5,10 @@ import ch.qscqlmpa.dwitchgame.game.GameFacade
 import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertisingFacade
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleFacade
-import ch.qscqlmpa.dwitchgame.ingame.di.InGameComponent
-import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameModule
+import ch.qscqlmpa.dwitchgame.ingame.di.InGameGuestComponent
+import ch.qscqlmpa.dwitchgame.ingame.di.InGameHostComponent
+import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameGuestModule
+import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameHostModule
 import dagger.Component
 
 @GameScope
@@ -28,7 +30,8 @@ interface GameComponent {
     val gameDiscoveryFacade: GameDiscoveryFacade
     val gameAdvertisingFacade: GameAdvertisingFacade
 
-    fun addInGameComponent(module: InGameModule): InGameComponent
+    fun addInGameHostComponent(module: InGameHostModule): InGameHostComponent
+    fun addInGameGuestComponent(module: InGameGuestModule): InGameGuestComponent
 
     @Component.Factory
     interface Factory {

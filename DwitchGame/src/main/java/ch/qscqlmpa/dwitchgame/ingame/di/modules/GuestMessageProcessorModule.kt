@@ -10,13 +10,7 @@ import dagger.multibindings.IntoMap
 
 @Suppress("unused")
 @Module
-abstract class MessageProcessorModule {
-
-    @OngoingGameScope
-    @Binds
-    @IntoMap
-    @MessageProcessorKey(Message.JoinGameMessage::class)
-    internal abstract fun bindPlayerJoinMessageProcessor(messageProcessor: JoinGameMessageProcessor): MessageProcessor
+abstract class GuestMessageProcessorModule {
 
     @OngoingGameScope
     @Binds
@@ -27,26 +21,8 @@ abstract class MessageProcessorModule {
     @OngoingGameScope
     @Binds
     @IntoMap
-    @MessageProcessorKey(Message.RejoinGameMessage::class)
-    internal abstract fun bindRejoinGameMessageProcessor(messageProcessor: RejoinGameMessageProcessor): MessageProcessor
-
-    @OngoingGameScope
-    @Binds
-    @IntoMap
     @MessageProcessorKey(Message.RejoinGameAckMessage::class)
     internal abstract fun bindRejoinGameAckMessageProcessor(messageProcessor: RejoinGameAckMessageProcessor): MessageProcessor
-
-    @OngoingGameScope
-    @Binds
-    @IntoMap
-    @MessageProcessorKey(Message.LeaveGameMessage::class)
-    internal abstract fun bindLeaveGameMessageProcessor(messageProcessor: LeaveGameMessageProcessor): MessageProcessor
-
-    @OngoingGameScope
-    @Binds
-    @IntoMap
-    @MessageProcessorKey(Message.PlayerReadyMessage::class)
-    internal abstract fun bindPlayerReadyMessageProcessor(messageProcessor: PlayerReadyMessageProcessor): MessageProcessor
 
     @OngoingGameScope
     @Binds
@@ -83,10 +59,4 @@ abstract class MessageProcessorModule {
     @IntoMap
     @MessageProcessorKey(Message.GameOverMessage::class)
     internal abstract fun bindGameOverMessageProcessor(messageProcessor: GameOverMessageProcessor): MessageProcessor
-
-    @OngoingGameScope
-    @Binds
-    @IntoMap
-    @MessageProcessorKey(Message.CardsForExchangeMessage::class)
-    internal abstract fun bindCardsForExchangeMessageProcessor(messageProcessor: CardsForExchangeMessageProcessor): MessageProcessor
 }

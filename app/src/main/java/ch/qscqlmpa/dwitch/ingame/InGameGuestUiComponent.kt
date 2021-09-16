@@ -1,16 +1,16 @@
 package ch.qscqlmpa.dwitch.ingame
 
-import ch.qscqlmpa.dwitch.ui.ingame.GameViewModelBindingModule
+import ch.qscqlmpa.dwitch.ui.ingame.GuestGameViewModelBindingModule
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import dagger.Subcomponent
 
 @GameUiScope
 @Subcomponent(
     modules = [
-        InGameUiModule::class,
-        GameViewModelBindingModule::class
+        InGameGuestUiModule::class,
+        GuestGameViewModelBindingModule::class
     ]
 )
-interface InGameUiComponent {
+interface InGameGuestUiComponent {
     val viewModelFactory: ViewModelFactory
 }

@@ -3,7 +3,8 @@ package ch.qscqlmpa.dwitch.app
 import ch.qscqlmpa.dwitch.DaggerTestAppComponent
 import ch.qscqlmpa.dwitch.TestAppComponent
 import ch.qscqlmpa.dwitch.TestIdlingResource
-import ch.qscqlmpa.dwitch.ingame.InGameUiModule
+import ch.qscqlmpa.dwitch.ingame.InGameGuestUiModule
+import ch.qscqlmpa.dwitch.ingame.InGameHostUiModule
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationModule
 import ch.qscqlmpa.dwitchcommunication.di.DaggerTestCommunicationComponent
 import ch.qscqlmpa.dwitchgame.di.DaggerTestGameComponent
@@ -12,8 +13,8 @@ import ch.qscqlmpa.dwitchgame.di.modules.DwitchGameModule
 import ch.qscqlmpa.dwitchgame.di.modules.StoreModule
 import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertisingFacade
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleFacade
-import ch.qscqlmpa.dwitchgame.ingame.di.InGameComponent
-import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameModule
+import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameGuestModule
+import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameHostModule
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.DaggerTestStoreComponent
 import ch.qscqlmpa.dwitchstore.TestStoreComponent
@@ -59,45 +60,64 @@ class TestApp : App() {
         localPlayerLocalId: Long,
         hostPort: Int,
         hostIpAddress: String
-    ): InGameComponent? {
+    ) {
         Logger.debug { "startOngoingGame()" }
-        if (inGameComponent == null) {
-            inGameStoreComponent = testStoreComponent.addInGameStoreComponent(
-                InGameStoreModule(gameLocalId, localPlayerLocalId)
-            )
+        inGameStoreComponent = testStoreComponent.addInGameStoreComponent(
+            InGameStoreModule(gameLocalId, localPlayerLocalId)
+        )
 
-            communicationComponent = DaggerTestCommunicationComponent.factory()
-                .create(CommunicationModule(hostIpAddress, hostPort, gameIdlingResource))
+        communicationComponent = DaggerTestCommunicationComponent.factory()
+            .create(CommunicationModule(hostIpAddress, hostPort, gameIdlingResource))
 
-            inGameComponent = testGameComponent.addTestInGameComponent(
-                InGameModule(
-                    playerRole,
-                    gameLocalId,
-                    localPlayerLocalId,
-                    hostPort,
-                    hostIpAddress,
-                    inGameStoreComponent!!.inGameStore,
-                    communicationComponent!!
-                ),
-            )
-            inGameUiComponent = testAppComponent.addInGameUiComponent(
-                InGameUiModule(
-                    inGameComponent!!.gameFacadeToRename,
-                    inGameComponent!!.hostCommunicationFacade,
-                    inGameComponent!!.guestCommunicationFacade,
-                    inGameComponent!!.waitingRoomFacade,
-                    inGameComponent!!.waitingRoomHostFacade,
-                    inGameComponent!!.waitingRoomGuestFacade,
-                    inGameComponent!!.inGameHostFacade,
-                    inGameComponent!!.inGameGuestFacade,
-                    inGameComponent!!.playerFacade
+        when (playerRole) {
+            PlayerRole.GUEST -> {
+                inGameGuestComponent = testGameComponent.addTestInGameGuestComponent(
+                    InGameGuestModule(
+                        gameLocalId,
+                        localPlayerLocalId,
+                        hostPort,
+                        hostIpAddress,
+                        inGameStoreComponent!!.inGameStore,
+                        communicationComponent!!.commClient,
+                        communicationComponent!!.connectionStore
+                    )
                 )
-            )
-            testAppEventRelay.accept(TestAppEvent.GameCreated)
-        } else {
-            Logger.warn { "startOngoingGame() called when a game is already on-going." }
+                inGameGuestUiComponent = testAppComponent.addInGameGuestUiComponent(
+                    InGameGuestUiModule(
+                        inGameGuestComponent!!.gameFacadeToRename,
+                        inGameGuestComponent!!.guestCommunicationFacade,
+                        inGameGuestComponent!!.waitingRoomFacade,
+                        inGameGuestComponent!!.waitingRoomGuestFacade,
+                        inGameGuestComponent!!.inGameGuestFacade,
+                        inGameGuestComponent!!.playerFacade
+                    )
+                )
+                inGameViewModelFactory = inGameGuestUiComponent!!.viewModelFactory
+            }
+            PlayerRole.HOST -> {
+                inGameHostComponent = testGameComponent.addTestInGameHostComponent(
+                    InGameHostModule(
+                        gameLocalId,
+                        localPlayerLocalId,
+                        inGameStoreComponent!!.inGameStore,
+                        communicationComponent!!.commServer,
+                        communicationComponent!!.connectionStore,
+                    )
+                )
+                inGameHostUiComponent = testAppComponent.addInGameHostUiComponent(
+                    InGameHostUiModule(
+                        inGameHostComponent!!.gameFacadeToRename,
+                        inGameHostComponent!!.hostCommunicationFacade,
+                        inGameHostComponent!!.waitingRoomFacade,
+                        inGameHostComponent!!.waitingRoomHostFacade,
+                        inGameHostComponent!!.inGameHostFacade,
+                        inGameHostComponent!!.playerFacade
+                    )
+                )
+                inGameViewModelFactory = inGameHostUiComponent!!.viewModelFactory
+            }
         }
-        return inGameComponent
+        testAppEventRelay.accept(TestAppEvent.GameCreated)
     }
 
     override val gameLifecycleFacade get(): GameLifecycleFacade = testGameComponent.gameLifecycleFacade

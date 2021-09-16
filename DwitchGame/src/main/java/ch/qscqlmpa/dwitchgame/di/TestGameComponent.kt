@@ -2,8 +2,10 @@ package ch.qscqlmpa.dwitchgame.di
 
 import ch.qscqlmpa.dwitchgame.di.modules.*
 import ch.qscqlmpa.dwitchgame.gamediscovery.lan.network.NetworkAdapter
-import ch.qscqlmpa.dwitchgame.ingame.di.TestInGameComponent
-import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameModule
+import ch.qscqlmpa.dwitchgame.ingame.di.TestInGameGuestComponent
+import ch.qscqlmpa.dwitchgame.ingame.di.TestInGameHostComponent
+import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameGuestModule
+import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameHostModule
 import dagger.Component
 
 @GameScope
@@ -23,7 +25,8 @@ interface TestGameComponent : GameComponent {
 
     val networkListener: NetworkAdapter
 
-    fun addTestInGameComponent(module: InGameModule): TestInGameComponent
+    fun addTestInGameHostComponent(module: InGameHostModule): TestInGameHostComponent
+    fun addTestInGameGuestComponent(module: InGameGuestModule): TestInGameGuestComponent
 
     @Component.Factory
     interface Factory {

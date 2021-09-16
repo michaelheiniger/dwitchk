@@ -1,14 +1,11 @@
 package ch.qscqlmpa.dwitch.ui.ingame
 
 import androidx.lifecycle.ViewModel
-import ch.qscqlmpa.dwitch.ui.ingame.connection.guest.ConnectionGuestViewModel
 import ch.qscqlmpa.dwitch.ui.ingame.connection.host.ConnectionHostViewModel
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.GameViewModel
-import ch.qscqlmpa.dwitch.ui.ingame.gameroom.guest.GameRoomGuestViewModel
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.host.GameRoomHostViewModel
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.playerdashboard.GameRoomViewModel
 import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.WaitingRoomViewModel
-import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.guest.WaitingRoomGuestViewModel
 import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.host.WaitingRoomHostViewModel
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelKey
@@ -19,7 +16,7 @@ import javax.inject.Named
 
 @Suppress("unused")
 @Module
-abstract class GameViewModelBindingModule {
+abstract class HostGameViewModelBindingModule {
 
     @Named("game")
     @Binds
@@ -29,11 +26,6 @@ abstract class GameViewModelBindingModule {
     @IntoMap
     @ViewModelKey(WaitingRoomViewModel::class)
     internal abstract fun bindWaitingRoomActivityViewModel(viewModel: WaitingRoomViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(WaitingRoomGuestViewModel::class)
-    internal abstract fun bindWaitingRoomGuestViewModel(viewModel: WaitingRoomGuestViewModel): ViewModel
 
     @Binds
     @IntoMap
@@ -47,11 +39,6 @@ abstract class GameViewModelBindingModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(GameRoomGuestViewModel::class)
-    internal abstract fun bindGameRoomGuestViewModel(viewModel: GameRoomGuestViewModel): ViewModel
-
-    @Binds
-    @IntoMap
     @ViewModelKey(GameRoomHostViewModel::class)
     internal abstract fun bindGameRoomHostViewModel(viewModel: GameRoomHostViewModel): ViewModel
 
@@ -59,11 +46,6 @@ abstract class GameViewModelBindingModule {
     @IntoMap
     @ViewModelKey(GameRoomViewModel::class)
     abstract fun bindPlayerDashboardViewModel(viewModel: GameRoomViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(ConnectionGuestViewModel::class)
-    abstract fun bindConnectionGuestViewModel(viewModel: ConnectionGuestViewModel): ViewModel
 
     @Binds
     @IntoMap

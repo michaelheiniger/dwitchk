@@ -42,7 +42,7 @@ class HomeActivity : AppCompatActivity(), HasAndroidInjector {
         setContent {
             Dwitch(
                 vmFactory = viewModelFactory,
-                inGameVmFactory = { (application as App).inGameUiComponent!!.viewModelFactory },
+                inGameVmFactory = { (application as App).inGameViewModelFactory!! },
                 navigationBridge = navigationBridge
             )
         }
