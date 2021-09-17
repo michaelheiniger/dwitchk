@@ -4,6 +4,7 @@ import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
 import ch.qscqlmpa.dwitch.e2e.base.BaseE2eTest
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import org.junit.Test
+import java.util.*
 
 class HomeTest : BaseE2eTest() {
 
@@ -22,7 +23,7 @@ class HomeTest : BaseE2eTest() {
         advertiseGame(
             isNew = true,
             gameName = "Game 1",
-            gameCommonId = GameCommonId(23),
+            gameCommonId = GameCommonId(UUID.randomUUID()),
             gamePort = 8890,
             senderIpAddress = "192.168.1.1",
             senderPort = 2454
@@ -33,7 +34,7 @@ class HomeTest : BaseE2eTest() {
         advertiseGame(
             isNew = true,
             gameName = "Game 2",
-            gameCommonId = GameCommonId(65),
+            gameCommonId = GameCommonId(UUID.randomUUID()),
             gamePort = 8891,
             senderIpAddress = "192.168.1.2",
             senderPort = 6543

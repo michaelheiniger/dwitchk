@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitchgame.gamediscovery
 
 import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
+import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.reactivex.rxjava3.core.Observable
 
 interface GameDiscoveryFacade {
@@ -25,8 +26,8 @@ interface GameDiscoveryFacade {
     fun observeAdvertisedGames(): Observable<List<AdvertisedGame>>
 
     /**
-     * Get advertised game using its IP address.
+     * Get advertised game using its game common ID.
      * Returns null if the advertisement is obsolete.
      */
-    fun getAdvertisedGame(ipAddress: String): AdvertisedGame?
+    fun getAdvertisedGame(gameCommonId: GameCommonId): AdvertisedGame?
 }

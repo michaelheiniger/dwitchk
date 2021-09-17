@@ -18,6 +18,7 @@ import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.*
 
 internal class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
 
@@ -33,7 +34,7 @@ internal class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
     private lateinit var mockWaitingRoomStateUpdateEnvelope: EnvelopeToSend
     private lateinit var mockGameStateUpdateEnvelope: EnvelopeToSend
 
-    private val currentGameCommonId = GameCommonId(1)
+    private val currentGameCommonId = GameCommonId(UUID.randomUUID())
 
     @BeforeEach
     fun setup() {
@@ -202,7 +203,7 @@ internal class RejoinGameMessageProcessorTest : BaseMessageProcessorTest() {
     }
 
     private fun launchTestWithOtherGameCommonId(currentRoom: RoomType) {
-        val otherGameCommonId = GameCommonId(12343)
+        val otherGameCommonId = GameCommonId(UUID.randomUUID())
         every { mockInGameStore.getGameCommonIdAndCurrentRoom() } returns GameCommonIdAndCurrentRoom(
             currentGameCommonId,
             currentRoom

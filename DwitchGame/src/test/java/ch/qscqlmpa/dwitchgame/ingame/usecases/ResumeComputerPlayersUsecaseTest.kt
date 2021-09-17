@@ -8,6 +8,7 @@ import ch.qscqlmpa.dwitchstore.ingamestore.model.ResumeComputerPlayersInfo
 import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.*
 
 class ResumeComputerPlayersUsecaseTest : BaseUnitTest() {
 
@@ -23,7 +24,7 @@ class ResumeComputerPlayersUsecaseTest : BaseUnitTest() {
     @Test
     fun `computer players are resumed`() {
         val playersId = listOf(DwitchPlayerId(1), DwitchPlayerId(2))
-        val gameCommonId = GameCommonId(324)
+        val gameCommonId = GameCommonId(UUID.randomUUID())
         every { mockInGameStore.getComputerPlayersToResume() } returns ResumeComputerPlayersInfo(gameCommonId, playersId)
         every { mockComputer.resumeExistingPlayer(any(), any()) } just runs
 

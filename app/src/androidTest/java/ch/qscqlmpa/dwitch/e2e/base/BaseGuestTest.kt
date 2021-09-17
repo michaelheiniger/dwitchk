@@ -14,10 +14,11 @@ import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerWr
 import org.tinylog.kotlin.Logger
+import java.util.*
 
 abstract class BaseGuestTest : BaseOnGoingGameTest() {
 
-    protected val gameCommonId = GameCommonId(12345)
+    protected val gameCommonId = GameCommonId(UUID.randomUUID())
 
     protected fun goToWaitingRoomWithHostAndLocalGuest(localGuestConnected: Boolean = true) {
         goToWaitingRoom(

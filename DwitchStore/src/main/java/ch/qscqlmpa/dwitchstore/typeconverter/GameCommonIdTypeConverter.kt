@@ -2,17 +2,18 @@ package ch.qscqlmpa.dwitchstore.typeconverter
 
 import androidx.room.TypeConverter
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
+import java.util.*
 
 object GameCommonIdTypeConverter {
     @JvmStatic
     @TypeConverter
-    fun fromGameCommonId(gameCommonId: GameCommonId): Long {
-        return gameCommonId.value
+    fun fromGameCommonId(gameCommonId: GameCommonId): String {
+        return gameCommonId.value.toString()
     }
 
     @JvmStatic
     @TypeConverter
-    fun fromLong(id: Long): GameCommonId {
-        return GameCommonId(id)
+    fun fromLong(uuidAsString: String): GameCommonId {
+        return GameCommonId(UUID.fromString(uuidAsString))
     }
 }

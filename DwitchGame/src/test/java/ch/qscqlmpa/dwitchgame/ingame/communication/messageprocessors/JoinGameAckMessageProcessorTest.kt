@@ -11,10 +11,11 @@ import io.mockk.verify
 import io.reactivex.rxjava3.core.Completable
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.*
 
 internal class JoinGameAckMessageProcessorTest : BaseMessageProcessorTest() {
 
-    private val gameCommonId = GameCommonId(1L)
+    private val gameCommonId = GameCommonId(UUID.randomUUID())
     private val guestPlayerDwitchId = TestEntityFactory.createGuestPlayer1().dwitchId
     private val mockGameLifecycleEventRepository = mockk<GuestGameLifecycleEventRepository>(relaxed = true)
 

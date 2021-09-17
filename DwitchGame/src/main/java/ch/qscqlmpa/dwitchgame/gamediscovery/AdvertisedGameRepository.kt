@@ -31,7 +31,7 @@ internal class AdvertisedGameRepository @Inject constructor(
 
     private val disposableManager = DisposableManager()
     private val advertisedGamesRelay = BehaviorRelay.createDefault<List<AdvertisedGame>>(emptyList())
-    private val advertisedGames = mutableMapOf<IpAddress, AdvertisedGame>() // Local cache surviving unsubscriptions
+    private val advertisedGames = mutableMapOf<GameCommonId, AdvertisedGame>() // Local cache surviving unsubscriptions
     private var listeningForAds = AtomicBoolean(false)
 
     /**
@@ -89,8 +89,8 @@ internal class AdvertisedGameRepository @Inject constructor(
         return advertisedGamesRelay
     }
 
-    fun getGame(ipAddress: String): AdvertisedGame? {
-        return advertisedGames[IpAddress(ipAddress)]
+    fun getGame(gameCommonId: GameCommonId): AdvertisedGame? {
+        return advertisedGames[gameCommonId]
     }
 
     private fun resumableGames(): Observable<List<GameCommonId>> {
@@ -111,19 +111,17 @@ internal class AdvertisedGameRepository @Inject constructor(
 
     private fun updateLocalMap(advertisedGame: AdvertisedGame) {
         // Add new ad
-        advertisedGames[IpAddress(advertisedGame.gameIpAddress)] = advertisedGame
+        advertisedGames[advertisedGame.gameCommonId] = advertisedGame
 
         // Remove obsolete ads
         val timeNow = timeProvider.now()
         advertisedGames.filterValues { game -> advertisementIsTooOld(timeNow, game) }
             .keys
-            .forEach { ip -> advertisedGames.remove(ip) }
+            .forEach { gameCommonId -> advertisedGames.remove(gameCommonId) }
         Logger.info { "advertisedGames: $advertisedGames" }
     }
 
     private fun advertisementIsTooOld(timeNow: LocalDateTime, game: AdvertisedGame): Boolean {
         return timeNow.minusSeconds(GAME_AD_TIMEOUT_SEC) > game.discoveryTime
     }
-
-    private data class IpAddress(val value: String)
 }

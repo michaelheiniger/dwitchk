@@ -19,6 +19,7 @@ import org.assertj.core.api.Assertions.fail
 import org.junit.Assume
 import org.junit.Before
 import org.junit.Test
+import java.util.*
 
 class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
 
@@ -28,8 +29,8 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
 
     private lateinit var viewModel: JoinNewGameViewModel
 
-    private val gameIpAddress = "192.168.1.1"
-    private val advertisedGame = AdvertisedGame(true, "Table Ronde", GameCommonId(1), gameIpAddress, 8889)
+    private val gameCommonId = GameCommonId(UUID.randomUUID())
+    private val advertisedGame = AdvertisedGame(true, "Table Ronde", gameCommonId, "192.168.1.1", 8889)
 
     @Before
     fun setup() {
@@ -41,12 +42,13 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
             StubIdlingResource()
         )
         every { mockGameFacade.joinGame(any(), any()) } returns Completable.complete()
-        every { mockGameDiscoveryFacade.getAdvertisedGame(gameIpAddress) } returns advertisedGame
+        every { mockGameDiscoveryFacade.getAdvertisedGame(gameCommonId) } returns advertisedGame
     }
 
     @Test
     fun `The game cannot be joined initially`() {
         Assume.assumeFalse("We are in debug variant", BuildConfig.DEBUG)
+        viewModel.loadGame(gameCommonId)
 
         // Given initial state, then the game cannot be joined
         assertThat(viewModel.canJoinGame.value).isEqualTo(false)
@@ -79,11 +81,12 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
     fun `Navigate to InGame when game is successfully joined`() {
         // Given
         val playerName = "Arthur"
+        viewModel.loadGame(gameCommonId)
         viewModel.onPlayerNameChange(playerName)
         every { mockGameFacade.joinGame(any(), any()) } returns Completable.complete()
 
         // When
-        viewModel.joinGame(gameIpAddress)
+        viewModel.joinGame()
 
         // Then
         verify { mockNavigationBridge.navigate(Destination.HomeScreens.InGame) }
@@ -93,11 +96,12 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
     @Test
     fun `Display notification when game cannot be found (eg advertising has stopped) `() {
         // Given
+        viewModel.loadGame(gameCommonId)
         viewModel.onPlayerNameChange("Arthur")
-        every { mockGameDiscoveryFacade.getAdvertisedGame(gameIpAddress) } returns null
+        every { mockGameDiscoveryFacade.getAdvertisedGame(gameCommonId) } returns null
 
         // When
-        viewModel.joinGame(gameIpAddress)
+        viewModel.joinGame()
 
         // Then
         assertThat(viewModel.notification.value).isEqualTo(JoinNewGameNotification.GameNotFound)
@@ -108,9 +112,10 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
     fun `Navigate to the HomeScreen when game not found notification is acknowledged`() {
         // Given
         val playerName = "Arthur"
+        viewModel.loadGame(gameCommonId)
         viewModel.onPlayerNameChange(playerName)
-        every { mockGameDiscoveryFacade.getAdvertisedGame(gameIpAddress) } returns null
-        viewModel.joinGame(gameIpAddress)
+        every { mockGameDiscoveryFacade.getAdvertisedGame(gameCommonId) } returns null
+        viewModel.joinGame()
 
         // When
         viewModel.onGameNotFoundAcknowledge()
@@ -123,13 +128,14 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
     @Test
     fun `An error is thrown if the player name is not set when joining the game`() {
         // Given
+        viewModel.loadGame(gameCommonId)
         viewModel.onPlayerNameChange("")
         every { mockGameFacade.joinGame(any(), any()) } returns Completable.complete()
 
         // When the required data is not provided, the "create game" control is supposed to be disabled.
         // Hence the user should not be able to launch the game creation
         try {
-            viewModel.joinGame(gameIpAddress)
+            viewModel.joinGame()
             fail("Must throw error when player name is not set")
         } catch (e: IllegalArgumentException) {
             // Nothing to do

@@ -9,8 +9,8 @@ import ch.qscqlmpa.dwitchstore.model.Game
 import ch.qscqlmpa.dwitchstore.model.Player
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import io.reactivex.rxjava3.core.Observable
-import java.util.*
 import org.joda.time.DateTime
+import java.util.*
 
 @Dao
 internal abstract class GameDao(database: AppRoomDatabase) {
@@ -85,7 +85,7 @@ internal abstract class GameDao(database: AppRoomDatabase) {
      */
     @Transaction
     open fun insertGameForHost(gameName: String, hostPlayerName: String): InsertGameResult {
-        val gameCommonId = GameCommonId(Date().time)
+        val gameCommonId = GameCommonId(UUID.randomUUID())
         val game = Game(
             id = 0,
             creationDate = DateTime.now(),

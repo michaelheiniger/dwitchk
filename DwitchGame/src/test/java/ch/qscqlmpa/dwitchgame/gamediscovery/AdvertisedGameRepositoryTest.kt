@@ -15,6 +15,7 @@ import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 internal class AdvertisedGameRepositoryTest : BaseUnitTest() {
@@ -32,7 +33,7 @@ internal class AdvertisedGameRepositoryTest : BaseUnitTest() {
     private val advertisedNewGame1 = AdvertisedGame(
         isNew = true,
         gameName = "LOTR",
-        gameCommonId = GameCommonId(1),
+        gameCommonId = GameCommonId(UUID.randomUUID()),
         gameIpAddress = "192.168.178.45",
         gamePort = 8889,
         LocalDateTime.parse("26.07.1989 10:00:00", dtf)
@@ -41,7 +42,7 @@ internal class AdvertisedGameRepositoryTest : BaseUnitTest() {
     private val advertisedNewGame2 = AdvertisedGame(
         isNew = true,
         gameName = "SG-1",
-        gameCommonId = GameCommonId(2),
+        gameCommonId = GameCommonId(UUID.randomUUID()),
         gameIpAddress = "192.168.178.67",
         gamePort = 8890,
         LocalDateTime.parse("26.07.1989 10:00:02", dtf)
@@ -50,7 +51,7 @@ internal class AdvertisedGameRepositoryTest : BaseUnitTest() {
     private val advertisedExistingGame1 = AdvertisedGame(
         isNew = false,
         gameName = "GOT",
-        gameCommonId = GameCommonId(3),
+        gameCommonId = GameCommonId(UUID.randomUUID()),
         gameIpAddress = "192.168.178.46",
         gamePort = 8888,
         LocalDateTime.parse("26.07.1989 10:00:00", dtf)
@@ -59,7 +60,7 @@ internal class AdvertisedGameRepositoryTest : BaseUnitTest() {
     private val advertisedExistingGame2 = AdvertisedGame(
         isNew = false,
         gameName = "SG Atlantis",
-        gameCommonId = GameCommonId(4),
+        gameCommonId = GameCommonId(UUID.randomUUID()),
         gameIpAddress = "192.168.178.68",
         gamePort = 8891,
         LocalDateTime.parse("26.07.1989 10:00:02", dtf)
@@ -90,8 +91,8 @@ internal class AdvertisedGameRepositoryTest : BaseUnitTest() {
         setCurrentTime(10, 0, 1)
         timeScheduler.advanceTimeTo(0, TimeUnit.SECONDS)
 
-        assertThat(repository.getGame(advertisedNewGame1.gameIpAddress)).isNull()
-        assertThat(repository.getGame(advertisedExistingGame1.gameIpAddress)).isNull()
+        assertThat(repository.getGame(advertisedNewGame1.gameCommonId)).isNull()
+        assertThat(repository.getGame(advertisedExistingGame1.gameCommonId)).isNull()
 
         // When
         resumableGamesSubject.onNext(listOf(advertisedExistingGame1.gameCommonId))
@@ -99,8 +100,8 @@ internal class AdvertisedGameRepositoryTest : BaseUnitTest() {
         gameDiscoveredSubject.onNext(advertisedExistingGame1)
 
         // Then
-        assertThat(repository.getGame(advertisedNewGame1.gameIpAddress)).isNotNull
-        assertThat(repository.getGame(advertisedExistingGame1.gameIpAddress)).isNotNull
+        assertThat(repository.getGame(advertisedNewGame1.gameCommonId)).isNotNull
+        assertThat(repository.getGame(advertisedExistingGame1.gameCommonId)).isNotNull
     }
 
     @Test
@@ -164,8 +165,8 @@ internal class AdvertisedGameRepositoryTest : BaseUnitTest() {
         testObserver.assertValueAt(0, emptyList())
         testObserver.assertValueAt(1, listOf(advertisedNewGame1))
         testObserver.assertValueAt(2, listOf(advertisedNewGame1, advertisedExistingGame1))
-        assertThat(repository.getGame(advertisedNewGame1.gameIpAddress)).isEqualTo(advertisedNewGame1)
-        assertThat(repository.getGame(advertisedExistingGame1.gameIpAddress)).isEqualTo(advertisedExistingGame1)
+        assertThat(repository.getGame(advertisedNewGame1.gameCommonId)).isEqualTo(advertisedNewGame1)
+        assertThat(repository.getGame(advertisedExistingGame1.gameCommonId)).isEqualTo(advertisedExistingGame1)
 
         // When stop listening (and time hasn't changed)
         repository.stopListeningForAdvertisedGames()
@@ -173,8 +174,8 @@ internal class AdvertisedGameRepositoryTest : BaseUnitTest() {
         // Then
         testObserver.assertValueAt(3, emptyList())
         testObserver.assertValueCount(4)
-        assertThat(repository.getGame(advertisedNewGame1.gameIpAddress)).isNull()
-        assertThat(repository.getGame(advertisedExistingGame1.gameIpAddress)).isNull()
+        assertThat(repository.getGame(advertisedNewGame1.gameCommonId)).isNull()
+        assertThat(repository.getGame(advertisedExistingGame1.gameCommonId)).isNull()
     }
 
     @Test

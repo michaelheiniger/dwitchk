@@ -29,6 +29,7 @@ import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import org.joda.time.DateTime
+import java.util.*
 
 @Preview(
     showBackground = true,
@@ -38,9 +39,9 @@ import org.joda.time.DateTime
 fun HomeScreenPreview() {
     val advertisedGame = LoadedData.Success(
         listOf(
-            AdvertisedGame(false, "Game 1", GameCommonId(1), "192.168.1.1", 8889),
-            AdvertisedGame(false, "Game 2", GameCommonId(2), "192.168.1.2", 8889),
-            AdvertisedGame(false, "Game 3", GameCommonId(3), "192.168.1.3", 8889)
+            AdvertisedGame(false, "Game 1", GameCommonId(UUID.randomUUID()), "192.168.1.1", 8889),
+            AdvertisedGame(false, "Game 2", GameCommonId(UUID.randomUUID()), "192.168.1.2", 8889),
+            AdvertisedGame(false, "Game 3", GameCommonId(UUID.randomUUID()), "192.168.1.3", 8889)
         )
     )
 

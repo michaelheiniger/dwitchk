@@ -12,6 +12,7 @@ import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import org.junit.jupiter.api.Test
 import java.net.SocketException
+import java.util.*
 
 class LanGameDiscoveryTest : BaseUnitTest() {
 
@@ -20,8 +21,11 @@ class LanGameDiscoveryTest : BaseUnitTest() {
     private lateinit var gameDiscovery: LanGameDiscovery
 
     companion object {
-        const val gameAd1 = "{\"isNew\":true,\"gameCommonId\":{\"value\":23},\"gameName\":\"Kaamelott\",\"gamePort\":8889}"
-        const val gameAd2 = "{\"isNew\":true,\"gameCommonId\":{\"value\":54},\"gameName\":\"LOTR\",\"gamePort\":8890}"
+        const val gameCommonId = "a06ef013-5788-4fd4-adad-aa90a2da8c7c"
+        const val gameAd1 =
+            "{\"isNew\":true,\"gameCommonId\":{\"value\":\"$gameCommonId\"},\"gameName\":\"Kaamelott\",\"gamePort\":8889}"
+        const val gameAd2 =
+            "{\"isNew\":true,\"gameCommonId\":{\"value\":\"$gameCommonId\"},\"gameName\":\"LOTR\",\"gamePort\":8890}"
     }
 
     @Test
@@ -38,7 +42,7 @@ class LanGameDiscoveryTest : BaseUnitTest() {
         testObserver.assertValue { advertisedGame ->
             isDateToday(advertisedGame.discoveryTimeAsString()) &&
                     advertisedGame.gameName == "Kaamelott" &&
-                    advertisedGame.gameCommonId == GameCommonId(23) &&
+                    advertisedGame.gameCommonId == GameCommonId(UUID.fromString(gameCommonId)) &&
                     advertisedGame.gameIpAddress == "192.168.1.1" &&
                     advertisedGame.gamePort == 8889
         }

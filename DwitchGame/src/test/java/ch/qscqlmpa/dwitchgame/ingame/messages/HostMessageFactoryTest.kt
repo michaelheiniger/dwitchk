@@ -13,6 +13,7 @@ import io.mockk.every
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.*
 
 class HostMessageFactoryTest : BaseUnitTest() {
 
@@ -53,7 +54,7 @@ class HostMessageFactoryTest : BaseUnitTest() {
 
     @Test
     fun createJoinAckMessage() {
-        val gameCommonId = GameCommonId(123L)
+        val gameCommonId = GameCommonId(UUID.randomUUID())
         val localConnectionId = ConnectionId(3)
         val playerDwitchId = DwitchPlayerId(2)
 

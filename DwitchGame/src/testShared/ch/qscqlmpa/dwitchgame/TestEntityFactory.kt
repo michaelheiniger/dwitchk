@@ -11,6 +11,7 @@ import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.model.Game
 import ch.qscqlmpa.dwitchstore.model.Player
 import org.joda.time.DateTime
+import java.util.*
 
 object TestEntityFactory {
 
@@ -100,7 +101,7 @@ object TestEntityFactory {
         return Game(
             id = 1L,
             creationDate = DateTime.now(),
-            gameCommonId = GameCommonId(65),
+            gameCommonId = GameCommonId(UUID.randomUUID()),
             name = "Dwitch",
             gameState = "",
             localPlayerLocalId = localPlayerLocalId

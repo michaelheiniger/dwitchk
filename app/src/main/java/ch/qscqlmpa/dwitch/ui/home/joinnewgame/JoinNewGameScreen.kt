@@ -17,6 +17,7 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.*
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
+import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 
 @Preview(
     showBackground = true,
@@ -40,12 +41,13 @@ fun HostNewGameScreenPreview() {
 @Composable
 fun JoinNewGameScreen(
     vmFactory: ViewModelFactory,
-    gameIpAddress: String
+    gameCommonId: GameCommonId
 ) {
     val viewModel = viewModel<JoinNewGameViewModel>(factory = vmFactory)
 
     DisposableEffect(key1 = viewModel) {
         viewModel.onStart()
+        viewModel.loadGame(gameCommonId)
         onDispose { viewModel.onStop() }
     }
 
@@ -55,12 +57,12 @@ fun JoinNewGameScreen(
     )
 
     JoinNewGameBody(
-        gameName = viewModel.gameName(gameIpAddress).value,
+        gameName = viewModel.gameName.value,
         playerName = viewModel.playerName.value,
         joinGameControlEnabled = viewModel.canJoinGame.value,
         loading = viewModel.loading.value,
         onPlayerNameChange = viewModel::onPlayerNameChange,
-        onJoinGameClick = { viewModel.joinGame(gameIpAddress) },
+        onJoinGameClick = { viewModel.joinGame() },
         onBackClick = viewModel::onBackClick
     )
 }

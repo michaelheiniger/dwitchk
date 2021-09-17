@@ -25,7 +25,7 @@ class NavigationBridge @Inject constructor() {
     }
 
     fun navigate(destination: Destination) {
-        Logger.debug { "navigate to ${destination.name}" }
+        Logger.debug { "navigate to ${destination.routeName}" }
         _command.value = NavigationCommand.Navigate(destination)
     }
 }

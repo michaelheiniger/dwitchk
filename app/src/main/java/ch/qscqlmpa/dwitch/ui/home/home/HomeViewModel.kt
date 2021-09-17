@@ -50,7 +50,7 @@ class HomeViewModel @Inject constructor(
 
     fun joinGame(game: AdvertisedGame) {
         if (game.isNew) {
-            navigationBridge.navigate(Destination.HomeScreens.JoinNewGame(game.gameIpAddress))
+            navigationBridge.navigate(Destination.HomeScreens.JoinNewGame(game.gameCommonId))
         } else {
             _loading.value = true
             disposableManager.add(

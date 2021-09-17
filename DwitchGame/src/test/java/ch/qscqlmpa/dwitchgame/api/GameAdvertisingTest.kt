@@ -15,6 +15,7 @@ import io.mockk.verify
 import io.reactivex.rxjava3.schedulers.TestScheduler
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class GameAdvertisingTest : BaseUnitTest() {
@@ -25,8 +26,9 @@ class GameAdvertisingTest : BaseUnitTest() {
 
     private lateinit var gameAdvertising: GameAdvertising
 
+    private val gameCommonId = "a06ef013-5788-4fd4-adad-aa90a2da8c7c"
     private val expectedAdvertising =
-        "{\"isNew\":true,\"gameCommonId\":{\"value\":1},\"gameName\":\"gameName\",\"gamePort\":8889}"
+        "{\"isNew\":true,\"gameCommonId\":\"$gameCommonId\",\"gameName\":\"gameName\",\"gamePort\":8889}"
 
     @BeforeEach
     fun setup() {
@@ -43,7 +45,7 @@ class GameAdvertisingTest : BaseUnitTest() {
     @Test
     fun `Advertise game immediately`() {
         // When
-        val gameAdvertisingInfo = GameAdvertisingInfo(true, GameCommonId(1), "gameName", 8889)
+        val gameAdvertisingInfo = GameAdvertisingInfo(true, GameCommonId(UUID.fromString(gameCommonId)), "gameName", 8889)
         gameAdvertising.advertiseGame(gameAdvertisingInfo).test()
         timeScheduler.advanceTimeTo(0, TimeUnit.SECONDS)
 
@@ -54,7 +56,7 @@ class GameAdvertisingTest : BaseUnitTest() {
     @Test
     fun `Advertise game every 2 seconds until stream is disposed`() {
         // When
-        val gameAdvertisingInfo = GameAdvertisingInfo(true, GameCommonId(1), "gameName", 8889)
+        val gameAdvertisingInfo = GameAdvertisingInfo(true, GameCommonId(UUID.fromString(gameCommonId)), "gameName", 8889)
         val testObserver = gameAdvertising.advertiseGame(gameAdvertisingInfo).test()
 
         // Then

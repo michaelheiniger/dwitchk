@@ -11,6 +11,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.*
 
 internal class HostNewGameUsecaseTest : BaseUnitTest() {
 
@@ -19,7 +20,7 @@ internal class HostNewGameUsecaseTest : BaseUnitTest() {
     private lateinit var hostNewGameUsecase: HostNewGameUsecase
 
     private val gameLocalId = 1L
-    private val gameCommonId = GameCommonId(123L)
+    private val gameCommonId = GameCommonId(UUID.randomUUID())
     private val gameName = "Kaamelott"
     private val localPlayerLocalId = 10L
     private val playerName = "Arthur"

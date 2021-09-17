@@ -13,6 +13,7 @@ import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import org.joda.time.DateTime
 import org.junit.Before
 import org.junit.Test
+import java.util.*
 
 class HomeScreenTest : BaseUiUnitTest() {
 
@@ -31,9 +32,9 @@ class HomeScreenTest : BaseUiUnitTest() {
     fun advertisedGamesAreSuccesfullyDisplayed() {
         advertisedGames = LoadedData.Success(
             listOf(
-                AdvertisedGame(false, "Game 1", GameCommonId(1), "192.168.1.1", 8889),
-                AdvertisedGame(false, "Game 2", GameCommonId(2), "192.168.1.2", 8889),
-                AdvertisedGame(false, "Game 3", GameCommonId(3), "192.168.1.3", 8889)
+                AdvertisedGame(false, "Game 1", GameCommonId(UUID.randomUUID()), "192.168.1.1", 8889),
+                AdvertisedGame(false, "Game 2", GameCommonId(UUID.randomUUID()), "192.168.1.2", 8889),
+                AdvertisedGame(false, "Game 3", GameCommonId(UUID.randomUUID()), "192.168.1.3", 8889)
             )
         )
 

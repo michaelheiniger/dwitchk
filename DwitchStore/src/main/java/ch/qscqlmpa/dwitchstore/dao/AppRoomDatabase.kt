@@ -17,7 +17,7 @@ import ch.qscqlmpa.dwitchstore.typeconverter.PlayerRoleTypeConverter
         Player::class
     ],
     views = [ResumableGameInfo::class],
-    version = 4,
+    version = 5,
     exportSchema = true
 )
 @TypeConverters(

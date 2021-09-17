@@ -16,6 +16,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import org.joda.time.LocalDateTime
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.*
 
 internal class JoinNewGameUsecaseTest : BaseUnitTest() {
 
@@ -25,7 +26,7 @@ internal class JoinNewGameUsecaseTest : BaseUnitTest() {
     private lateinit var newGameUsecase: JoinNewGameUsecase
 
     private val gameLocalId = 1L
-    private val gameCommonId = GameCommonId(123L)
+    private val gameCommonId = GameCommonId(UUID.randomUUID())
     private val gameName = "Kaamelott"
     private val gamePort = 8889
     private val localPlayerLocalId = 10L

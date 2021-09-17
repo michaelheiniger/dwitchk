@@ -12,6 +12,7 @@ import ch.qscqlmpa.dwitchstore.store.TestStoreModule
 import org.junit.After
 import org.junit.Before
 import org.junit.runner.RunWith
+import java.util.*
 
 /**
  * Note: The tests are executed on the AndroidJUnitRunner which has only one thread: subscribeOn()/observeOn() have no effect.
@@ -30,7 +31,8 @@ abstract class BaseInstrumentedTest {
     @Before
     fun setupStore() {
         storeComponent = DaggerTestStoreComponent.factory().create(TestStoreModule(context))
-        val insertGameResult = storeComponent.store.insertGameForGuest(gameName, GameCommonId(1), localPlayerName)
+        val insertGameResult =
+            storeComponent.store.insertGameForGuest(gameName, GameCommonId(UUID.randomUUID()), localPlayerName)
         val inGameStoreComponent = storeComponent.addInGameStoreComponent(
             InGameStoreModule(insertGameResult.gameLocalId, insertGameResult.localPlayerLocalId)
         )

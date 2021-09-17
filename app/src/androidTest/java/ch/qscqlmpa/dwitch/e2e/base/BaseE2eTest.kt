@@ -110,7 +110,7 @@ abstract class BaseE2eTest {
         senderPort: Int
     ) {
         val ad =
-            "{\"isNew\": $isNew, \"gameCommonId\":{\"value\":${gameCommonId.value}},\"gameName\":\"$gameName\",\"gamePort\":$gamePort}"
+            "{\"isNew\": $isNew, \"gameCommonId\":\"${gameCommonId.value}\",\"gameName\":\"$gameName\",\"gamePort\":$gamePort}"
         incrementGameIdlingResource("Advertise game $ad")
         networkAdapter.setPacket(Packet(ad, senderIpAddress, senderPort))
     }

@@ -20,6 +20,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import java.util.*
 
 internal class ComputerPlayersManagerTest : BaseUnitTest() {
 
@@ -30,7 +31,7 @@ internal class ComputerPlayersManagerTest : BaseUnitTest() {
     private lateinit var computerPlayersManager: ComputerPlayersManager
 
     private lateinit var messagesForComputerPlayersSubject: PublishSubject<EnvelopeToSend>
-    private val gameCommonId = GameCommonId(1)
+    private val gameCommonId = GameCommonId(UUID.randomUUID())
     private val player1 = ComputerPlayer(ConnectionId(1), DwitchPlayerId(1))
     private val player2 = ComputerPlayer(ConnectionId(2), DwitchPlayerId(2))
     private val player3 = ComputerPlayer(ConnectionId(3), DwitchPlayerId(3))

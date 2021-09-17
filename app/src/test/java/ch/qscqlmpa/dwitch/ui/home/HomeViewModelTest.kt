@@ -24,6 +24,7 @@ import org.joda.time.DateTime
 import org.joda.time.LocalDateTime
 import org.junit.Before
 import org.junit.Test
+import java.util.*
 
 class HomeViewModelTest : BaseViewModelUnitTest() {
 
@@ -64,7 +65,16 @@ class HomeViewModelTest : BaseViewModelUnitTest() {
         viewModel.onStart()
 
         // When
-        val list = listOf(AdvertisedGame(true, "Kaamelott", GameCommonId(1), "192.168.1.1", 8890, LocalDateTime.now()))
+        val list = listOf(
+            AdvertisedGame(
+                true,
+                "Kaamelott",
+                GameCommonId(UUID.randomUUID()),
+                "192.168.1.1",
+                8890,
+                LocalDateTime.now()
+            )
+        )
         advertisedGamesSubject.onNext(list)
 
         // Then

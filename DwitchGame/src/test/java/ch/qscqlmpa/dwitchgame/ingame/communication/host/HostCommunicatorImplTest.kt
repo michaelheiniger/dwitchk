@@ -21,6 +21,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import java.util.*
 
 class HostCommunicatorImplTest : BaseUnitTest() {
 
@@ -188,7 +189,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
         @Test
         fun `Send message to a specific human guest`() {
             // Given
-            val messageToSend = Message.JoinGameAckMessage(GameCommonId(124), DwitchPlayerId(45))
+            val messageToSend = Message.JoinGameAckMessage(GameCommonId(UUID.randomUUID()), DwitchPlayerId(45))
 
             // When
             val messagesToComputerPlayers = computerCommunicator.observeMessagesForComputerPlayers().test()
@@ -210,7 +211,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
         @Test
         fun `Send message to a specific computer guest`() {
             // Given
-            val messageToSend = Message.JoinGameAckMessage(GameCommonId(124), DwitchPlayerId(45))
+            val messageToSend = Message.JoinGameAckMessage(GameCommonId(UUID.randomUUID()), DwitchPlayerId(45))
 
             // When
             val messagesToComputerPlayers = computerCommunicator.observeMessagesForComputerPlayers().test()

@@ -7,6 +7,7 @@ import ch.qscqlmpa.dwitch.e2e.base.BaseE2eTest
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import org.junit.Test
+import java.util.*
 
 class JoinNewGameTest : BaseE2eTest() {
 
@@ -56,7 +57,7 @@ class JoinNewGameTest : BaseE2eTest() {
         advertiseGame(
             isNew = true,
             gameName = "Kaamelott",
-            gameCommonId = GameCommonId(23),
+            gameCommonId = GameCommonId(UUID.randomUUID()),
             gamePort = 8890,
             senderIpAddress = "192.168.1.1",
             senderPort = 2454
@@ -67,7 +68,7 @@ class JoinNewGameTest : BaseE2eTest() {
         advertiseGame(
             isNew = true,
             gameName = "Les Bronzés",
-            gameCommonId = GameCommonId(65),
+            gameCommonId = GameCommonId(UUID.randomUUID()),
             gamePort = 8891,
             senderIpAddress = "192.168.1.2",
             senderPort = 6543
