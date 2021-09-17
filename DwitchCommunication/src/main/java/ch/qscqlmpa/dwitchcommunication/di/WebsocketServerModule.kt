@@ -1,7 +1,5 @@
 package ch.qscqlmpa.dwitchcommunication.di
 
-import ch.qscqlmpa.dwitchcommunication.websocket.client.ProdWebsocketClientFactory
-import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClientFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.server.ProdWebsocketServerFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServerFactory
 import dagger.Module
@@ -10,7 +8,7 @@ import javax.inject.Named
 
 @Suppress("unused")
 @Module
-internal class WebsocketModule {
+internal class WebsocketServerModule {
 
     @CommunicationScope
     @Provides
@@ -19,14 +17,5 @@ internal class WebsocketModule {
         @Named(Qualifiers.HOST_PORT) hostPort: Int
     ): WebsocketServerFactory {
         return ProdWebsocketServerFactory(hostIpAddress, hostPort)
-    }
-
-    @CommunicationScope
-    @Provides
-    internal fun bindWebsocketClient(
-        @Named(Qualifiers.HOST_IP_ADDRESS) hostIpAddress: String,
-        @Named(Qualifiers.HOST_PORT) hostPort: Int
-    ): WebsocketClientFactory {
-        return ProdWebsocketClientFactory(hostIpAddress, hostPort)
     }
 }

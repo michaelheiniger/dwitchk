@@ -23,4 +23,3 @@ object GameCommonIdSerializer : KSerializer<GameCommonId> {
         return GameCommonId(UUID.fromString(decoder.decodeString()))
     }
 }
-

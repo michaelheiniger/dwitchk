@@ -6,8 +6,8 @@ import ch.qscqlmpa.dwitch.app.ApplicationModule
 import ch.qscqlmpa.dwitch.app.SchedulersModule
 import ch.qscqlmpa.dwitch.ingame.InGameGuestUiModule
 import ch.qscqlmpa.dwitch.ingame.InGameHostUiModule
+import ch.qscqlmpa.dwitch.ingame.TestInGameGuestUiComponent
 import ch.qscqlmpa.dwitch.ingame.TestInGameHostUiComponent
-import ch.qscqlmpa.dwitch.ingame.TestInGameUiGuestComponent
 import ch.qscqlmpa.dwitch.service.AndroidServiceBindingModule
 import ch.qscqlmpa.dwitch.ui.home.HomeBindingModule
 import ch.qscqlmpa.dwitch.ui.home.HomeViewModelBindingModule
@@ -29,5 +29,5 @@ import dagger.android.AndroidInjectionModule
 )
 interface TestAppComponent : AppComponent {
     override fun addInGameHostUiComponent(moduleHost: InGameHostUiModule): TestInGameHostUiComponent
-    override fun addInGameGuestUiComponent(moduleHost: InGameGuestUiModule): TestInGameUiGuestComponent
+    override fun addInGameGuestUiComponent(moduleHost: InGameGuestUiModule): TestInGameGuestUiComponent
 }

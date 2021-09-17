@@ -22,12 +22,9 @@ class HostInGameService : BaseInGameService() {
 
         Logger.info { "Start service" }
         showNotification(RoomType.WAITING_ROOM)
-        app.createInGameComponents(
-            playerRole,
+        app.createInGameHostComponents(
             gameCreatedInfo.gameLocalId,
-            gameCreatedInfo.localPlayerLocalId,
-            LISTENING_PORT,
-            "0.0.0.0"
+            gameCreatedInfo.localPlayerLocalId
         )
         app.hostCommunicationFacade.startServer()
         advertiseGame(
@@ -35,7 +32,7 @@ class HostInGameService : BaseInGameService() {
                 gameCreatedInfo.isNew,
                 gameCreatedInfo.gameCommonId,
                 gameCreatedInfo.gameName,
-                LISTENING_PORT
+                ADVERTISING_DEST_PORT
             )
         )
 
@@ -70,7 +67,7 @@ class HostInGameService : BaseInGameService() {
 
     companion object {
 
-        private const val LISTENING_PORT = 8889
+        private const val ADVERTISING_DEST_PORT = 8889
 
         private const val EXTRA_GAME_CREATED_INFO = "GameCreatedInfo"
 

@@ -17,20 +17,20 @@ abstract class HomeViewModelBindingModule {
 
     @Named("home")
     @Binds
-    internal abstract fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelFactory
+    internal abstract fun provideViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelFactory
 
     @Binds
     @IntoMap
     @ViewModelKey(HomeViewModel::class)
-    abstract fun bindMainActivityViewModel(viewModel: HomeViewModel): ViewModel
+    abstract fun provideHomeViewModel(viewModel: HomeViewModel): ViewModel
 
     @Binds
     @IntoMap
     @ViewModelKey(HostNewGameViewModel::class)
-    abstract fun bindHostNewGameActivityViewModel(viewModel: HostNewGameViewModel): ViewModel
+    abstract fun provideHostNewGameViewModel(viewModel: HostNewGameViewModel): ViewModel
 
     @Binds
     @IntoMap
     @ViewModelKey(JoinNewGameViewModel::class)
-    abstract fun bindJoinNewGameActivityViewModel(viewModel: JoinNewGameViewModel): ViewModel
+    abstract fun provideJoinNewGameViewModel(viewModel: JoinNewGameViewModel): ViewModel
 }

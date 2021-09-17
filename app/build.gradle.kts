@@ -4,7 +4,6 @@ plugins {
     kotlin("kapt")
     id("kotlin-parcelize")
     id("kotlin-android")
-    id("androidx.navigation.safeargs")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
 }
@@ -26,7 +25,6 @@ android {
 
     buildFeatures {
         compose = true // Enables Jetpack Compose for this module
-        viewBinding = true
     }
 
     buildTypes {

@@ -7,27 +7,13 @@ import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClientFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.client.test.ClientTestStub
 import ch.qscqlmpa.dwitchcommunication.websocket.client.test.TestWebsocketClientFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.client.test.WebsocketClientTestStub
-import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServerFactory
-import ch.qscqlmpa.dwitchcommunication.websocket.server.test.ServerTestStub
-import ch.qscqlmpa.dwitchcommunication.websocket.server.test.TestWebsocketServer
-import ch.qscqlmpa.dwitchcommunication.websocket.server.test.TestWebsocketServerFactory
-import ch.qscqlmpa.dwitchcommunication.websocket.server.test.WebsocketServerTestStub
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
 
 @Suppress("unused")
 @Module
-class TestWebsocketModule {
-
-    @CommunicationScope
-    @Provides
-    internal fun bindTestWebsocketServerFactory(
-        @Named(HOST_IP_ADDRESS) hostIpAddress: String,
-        @Named(HOST_PORT) hostPort: Int
-    ): WebsocketServerFactory {
-        return TestWebsocketServerFactory(hostIpAddress, hostPort)
-    }
+class TestWebsocketClientModule {
 
     @CommunicationScope
     @Provides
@@ -37,13 +23,6 @@ class TestWebsocketModule {
     ): WebsocketClientFactory {
         return TestWebsocketClientFactory(hostIpAddress, hostPort)
     }
-
-    @CommunicationScope
-    @Provides
-    internal fun bindServerTestStub(
-        serverFactory: WebsocketServerFactory,
-        serializerFactory: SerializerFactory
-    ): ServerTestStub = WebsocketServerTestStub(serverFactory.create() as TestWebsocketServer, serializerFactory)
 
     @CommunicationScope
     @Provides

@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchgame.base
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import ch.qscqlmpa.dwitchcommunication.di.CommunicationComponent
+import ch.qscqlmpa.dwitchcommunication.di.CommunicationHostComponent
 import ch.qscqlmpa.dwitchgame.di.TestGameComponent
 import ch.qscqlmpa.dwitchgame.ingame.di.TestInGameHostComponent
 import ch.qscqlmpa.dwitchstore.DaggerTestStoreComponent
@@ -32,7 +32,7 @@ abstract class BaseIntegrationTest {
     protected lateinit var storeComponent: TestStoreComponent
     protected lateinit var gameComponent: TestGameComponent
     protected var inGameStoreComponent: InGameStoreComponent? = null
-    protected var communicationComponent: CommunicationComponent? = null
+    protected var communicationComponent: CommunicationHostComponent? = null
     protected var ongoingGameComponent: TestInGameHostComponent? = null
 
     protected lateinit var inGameStore: InGameStore

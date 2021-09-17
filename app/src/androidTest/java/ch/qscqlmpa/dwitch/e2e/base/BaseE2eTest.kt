@@ -13,7 +13,8 @@ import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.TestApp
 import ch.qscqlmpa.dwitch.e2e.DisableAnimationsRule
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
-import ch.qscqlmpa.dwitchcommunication.di.TestCommunicationComponent
+import ch.qscqlmpa.dwitchcommunication.di.TestCommunicationGuestComponent
+import ch.qscqlmpa.dwitchcommunication.di.TestCommunicationHostComponent
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.client.test.ClientTestStub
 import ch.qscqlmpa.dwitchcommunication.websocket.server.test.ServerTestStub
@@ -62,7 +63,8 @@ abstract class BaseE2eTest {
     private lateinit var inGameComponent: TestInGameComponent
     private lateinit var inGameHostComponent: TestInGameHostComponent
     private lateinit var inGameGuestComponent: TestInGameGuestComponent
-    private lateinit var communicationComponent: TestCommunicationComponent
+    private lateinit var communicationHostComponent: TestCommunicationHostComponent
+    private lateinit var communicationGuestComponent: TestCommunicationGuestComponent
 
     protected lateinit var networkAdapter: TestNetworkAdapter
 
@@ -153,23 +155,24 @@ abstract class BaseE2eTest {
 
     protected fun hookOngoingGameDependenciesForHost() {
         hookOngoingGameDependenciesCommon()
+        communicationHostComponent = app.communicationHostComponent as TestCommunicationHostComponent
         inGameHostComponent = app.inGameHostComponent as TestInGameHostComponent
         inGameComponent = inGameHostComponent
-        commSerializerFactory = communicationComponent.serializerFactory
-        serverTestStub = communicationComponent.serverTestStub
+        commSerializerFactory = communicationHostComponent.serializerFactory
+        serverTestStub = communicationHostComponent.serverTestStub
     }
 
     protected fun hookOngoingGameDependenciesForGuest() {
         hookOngoingGameDependenciesCommon()
+        communicationGuestComponent = app.communicationGuestComponent as TestCommunicationGuestComponent
         inGameGuestComponent = app.inGameGuestComponent as TestInGameGuestComponent
         inGameComponent = inGameGuestComponent
-        commSerializerFactory = communicationComponent.serializerFactory
-        clientTestStub = communicationComponent.clientTestStub.get()
+        commSerializerFactory = communicationGuestComponent.serializerFactory
+        clientTestStub = communicationGuestComponent.clientTestStub.get()
     }
 
     private fun hookOngoingGameDependenciesCommon() {
         inGameStore = app.inGameStoreComponent!!.inGameStore
-        communicationComponent = app.communicationComponent as TestCommunicationComponent
     }
 }
 

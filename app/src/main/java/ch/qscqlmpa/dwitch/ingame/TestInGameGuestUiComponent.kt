@@ -10,4 +10,4 @@ import dagger.Subcomponent
         GuestGameViewModelBindingModule::class
     ]
 )
-interface TestInGameUiGuestComponent : InGameGuestUiComponent
+interface TestInGameGuestUiComponent : InGameGuestUiComponent

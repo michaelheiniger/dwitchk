@@ -5,8 +5,10 @@ import ch.qscqlmpa.dwitch.TestAppComponent
 import ch.qscqlmpa.dwitch.TestIdlingResource
 import ch.qscqlmpa.dwitch.ingame.InGameGuestUiModule
 import ch.qscqlmpa.dwitch.ingame.InGameHostUiModule
-import ch.qscqlmpa.dwitchcommunication.di.CommunicationModule
-import ch.qscqlmpa.dwitchcommunication.di.DaggerTestCommunicationComponent
+import ch.qscqlmpa.dwitchcommunication.di.CommunicationGuestModule
+import ch.qscqlmpa.dwitchcommunication.di.CommunicationHostModule
+import ch.qscqlmpa.dwitchcommunication.di.DaggerTestCommunicationGuestComponent
+import ch.qscqlmpa.dwitchcommunication.di.DaggerTestCommunicationHostComponent
 import ch.qscqlmpa.dwitchgame.di.DaggerTestGameComponent
 import ch.qscqlmpa.dwitchgame.di.TestGameComponent
 import ch.qscqlmpa.dwitchgame.di.modules.DwitchGameModule
@@ -15,7 +17,6 @@ import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertisingFacade
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleFacade
 import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameGuestModule
 import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameHostModule
-import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.DaggerTestStoreComponent
 import ch.qscqlmpa.dwitchstore.TestStoreComponent
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreModule
@@ -54,8 +55,42 @@ class TestApp : App() {
         return testAppComponent
     }
 
-    override fun createInGameComponents(
-        playerRole: PlayerRole,
+    override fun createInGameHostComponents(
+        gameLocalId: Long,
+        localPlayerLocalId: Long
+    ) {
+        Logger.debug { "startOngoingGame()" }
+        inGameStoreComponent = testStoreComponent.addInGameStoreComponent(
+            InGameStoreModule(gameLocalId, localPlayerLocalId)
+        )
+
+        communicationHostComponent = DaggerTestCommunicationHostComponent.factory()
+            .create(CommunicationHostModule("0.0.0.0", 8889, gameIdlingResource))
+
+        inGameHostComponent = testGameComponent.addTestInGameHostComponent(
+            InGameHostModule(
+                gameLocalId,
+                localPlayerLocalId,
+                inGameStoreComponent!!.inGameStore,
+                communicationHostComponent!!.commServer,
+                communicationHostComponent!!.connectionStore,
+            )
+        )
+        inGameHostUiComponent = testAppComponent.addInGameHostUiComponent(
+            InGameHostUiModule(
+                inGameHostComponent!!.gameFacadeToRename,
+                inGameHostComponent!!.hostCommunicationFacade,
+                inGameHostComponent!!.waitingRoomFacade,
+                inGameHostComponent!!.waitingRoomHostFacade,
+                inGameHostComponent!!.inGameHostFacade,
+                inGameHostComponent!!.playerFacade
+            )
+        )
+        inGameViewModelFactory = inGameHostUiComponent!!.viewModelFactory
+        testAppEventRelay.accept(TestAppEvent.GameCreated)
+    }
+
+    override fun createInGameGuestComponents(
         gameLocalId: Long,
         localPlayerLocalId: Long,
         hostPort: Int,
@@ -66,57 +101,31 @@ class TestApp : App() {
             InGameStoreModule(gameLocalId, localPlayerLocalId)
         )
 
-        communicationComponent = DaggerTestCommunicationComponent.factory()
-            .create(CommunicationModule(hostIpAddress, hostPort, gameIdlingResource))
+        communicationGuestComponent = DaggerTestCommunicationGuestComponent.factory()
+            .create(CommunicationGuestModule(hostIpAddress, hostPort, gameIdlingResource))
 
-        when (playerRole) {
-            PlayerRole.GUEST -> {
-                inGameGuestComponent = testGameComponent.addTestInGameGuestComponent(
-                    InGameGuestModule(
-                        gameLocalId,
-                        localPlayerLocalId,
-                        hostPort,
-                        hostIpAddress,
-                        inGameStoreComponent!!.inGameStore,
-                        communicationComponent!!.commClient,
-                        communicationComponent!!.connectionStore
-                    )
-                )
-                inGameGuestUiComponent = testAppComponent.addInGameGuestUiComponent(
-                    InGameGuestUiModule(
-                        inGameGuestComponent!!.gameFacadeToRename,
-                        inGameGuestComponent!!.guestCommunicationFacade,
-                        inGameGuestComponent!!.waitingRoomFacade,
-                        inGameGuestComponent!!.waitingRoomGuestFacade,
-                        inGameGuestComponent!!.inGameGuestFacade,
-                        inGameGuestComponent!!.playerFacade
-                    )
-                )
-                inGameViewModelFactory = inGameGuestUiComponent!!.viewModelFactory
-            }
-            PlayerRole.HOST -> {
-                inGameHostComponent = testGameComponent.addTestInGameHostComponent(
-                    InGameHostModule(
-                        gameLocalId,
-                        localPlayerLocalId,
-                        inGameStoreComponent!!.inGameStore,
-                        communicationComponent!!.commServer,
-                        communicationComponent!!.connectionStore,
-                    )
-                )
-                inGameHostUiComponent = testAppComponent.addInGameHostUiComponent(
-                    InGameHostUiModule(
-                        inGameHostComponent!!.gameFacadeToRename,
-                        inGameHostComponent!!.hostCommunicationFacade,
-                        inGameHostComponent!!.waitingRoomFacade,
-                        inGameHostComponent!!.waitingRoomHostFacade,
-                        inGameHostComponent!!.inGameHostFacade,
-                        inGameHostComponent!!.playerFacade
-                    )
-                )
-                inGameViewModelFactory = inGameHostUiComponent!!.viewModelFactory
-            }
-        }
+        inGameGuestComponent = testGameComponent.addTestInGameGuestComponent(
+            InGameGuestModule(
+                gameLocalId,
+                localPlayerLocalId,
+                hostPort,
+                hostIpAddress,
+                inGameStoreComponent!!.inGameStore,
+                communicationGuestComponent!!.commClient,
+                communicationGuestComponent!!.connectionStore
+            )
+        )
+        inGameGuestUiComponent = testAppComponent.addInGameGuestUiComponent(
+            InGameGuestUiModule(
+                inGameGuestComponent!!.gameFacadeToRename,
+                inGameGuestComponent!!.guestCommunicationFacade,
+                inGameGuestComponent!!.waitingRoomFacade,
+                inGameGuestComponent!!.waitingRoomGuestFacade,
+                inGameGuestComponent!!.inGameGuestFacade,
+                inGameGuestComponent!!.playerFacade
+            )
+        )
+        inGameViewModelFactory = inGameGuestUiComponent!!.viewModelFactory
         testAppEventRelay.accept(TestAppEvent.GameCreated)
     }
 

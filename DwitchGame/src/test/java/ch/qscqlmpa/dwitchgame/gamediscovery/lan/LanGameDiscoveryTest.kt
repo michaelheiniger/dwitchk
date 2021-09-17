@@ -23,9 +23,9 @@ class LanGameDiscoveryTest : BaseUnitTest() {
     companion object {
         const val gameCommonId = "a06ef013-5788-4fd4-adad-aa90a2da8c7c"
         const val gameAd1 =
-            "{\"isNew\":true,\"gameCommonId\":{\"value\":\"$gameCommonId\"},\"gameName\":\"Kaamelott\",\"gamePort\":8889}"
+            "{\"isNew\":true,\"gameCommonId\":\"$gameCommonId\",\"gameName\":\"Kaamelott\",\"gamePort\":8889}"
         const val gameAd2 =
-            "{\"isNew\":true,\"gameCommonId\":{\"value\":\"$gameCommonId\"},\"gameName\":\"LOTR\",\"gamePort\":8890}"
+            "{\"isNew\":true,\"gameCommonId\":\"$gameCommonId\",\"gameName\":\"LOTR\",\"gamePort\":8890}"
     }
 
     @Test

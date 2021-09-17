@@ -96,12 +96,11 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
     @Test
     fun `Display notification when game cannot be found (eg advertising has stopped) `() {
         // Given
-        viewModel.loadGame(gameCommonId)
         viewModel.onPlayerNameChange("Arthur")
         every { mockGameDiscoveryFacade.getAdvertisedGame(gameCommonId) } returns null
 
         // When
-        viewModel.joinGame()
+        viewModel.loadGame(gameCommonId)
 
         // Then
         assertThat(viewModel.notification.value).isEqualTo(JoinNewGameNotification.GameNotFound)

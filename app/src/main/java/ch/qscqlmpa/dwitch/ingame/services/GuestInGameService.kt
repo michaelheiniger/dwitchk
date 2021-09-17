@@ -18,8 +18,7 @@ class GuestInGameService : BaseInGameService() {
 
         Logger.info { "Start service" }
         showNotification(RoomType.WAITING_ROOM)
-        app.createInGameComponents(
-            playerRole,
+        app.createInGameGuestComponents(
             gameJoinedInfo.gameLocalId,
             gameJoinedInfo.localPlayerLocalId,
             gameJoinedInfo.gamePort,

@@ -20,35 +20,35 @@ abstract class HostGameViewModelBindingModule {
 
     @Named("game")
     @Binds
-    abstract fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelFactory
+    abstract fun provideViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelFactory
 
     @Binds
     @IntoMap
     @ViewModelKey(WaitingRoomViewModel::class)
-    internal abstract fun bindWaitingRoomActivityViewModel(viewModel: WaitingRoomViewModel): ViewModel
+    internal abstract fun provideWaitingRoomViewModel(viewModel: WaitingRoomViewModel): ViewModel
 
     @Binds
     @IntoMap
     @ViewModelKey(WaitingRoomHostViewModel::class)
-    internal abstract fun bindWaitingRoomHostViewModel(viewModel: WaitingRoomHostViewModel): ViewModel
+    internal abstract fun provideWaitingRoomHostViewModel(viewModel: WaitingRoomHostViewModel): ViewModel
 
     @Binds
     @IntoMap
     @ViewModelKey(GameViewModel::class)
-    abstract fun bindGameViewModel(viewModel: GameViewModel): ViewModel
+    abstract fun provideGameViewModel(viewModel: GameViewModel): ViewModel
 
     @Binds
     @IntoMap
     @ViewModelKey(GameRoomHostViewModel::class)
-    internal abstract fun bindGameRoomHostViewModel(viewModel: GameRoomHostViewModel): ViewModel
+    internal abstract fun provideGameRoomHostViewModel(viewModel: GameRoomHostViewModel): ViewModel
 
     @Binds
     @IntoMap
     @ViewModelKey(GameRoomViewModel::class)
-    abstract fun bindPlayerDashboardViewModel(viewModel: GameRoomViewModel): ViewModel
+    abstract fun providePlayerDashboardViewModel(viewModel: GameRoomViewModel): ViewModel
 
     @Binds
     @IntoMap
     @ViewModelKey(ConnectionHostViewModel::class)
-    abstract fun bindConnectionHostViewModel(viewModel: ConnectionHostViewModel): ViewModel
+    abstract fun provideConnectionHostViewModel(viewModel: ConnectionHostViewModel): ViewModel
 }
