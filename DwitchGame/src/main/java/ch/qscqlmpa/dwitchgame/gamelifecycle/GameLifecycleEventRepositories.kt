@@ -19,13 +19,13 @@ internal class GameStateRepository @Inject constructor(
     hostGameLifecycleEventRepository: HostGameLifecycleEventRepository,
     guestGameLifecycleEventRepository: GuestGameLifecycleEventRepository
 ) {
-    private var _Lifecycle_state: GameLifecycleState = GameLifecycleState.NotStarted
-    val lifecycleState: GameLifecycleState = _Lifecycle_state
+    private var _lifecycleState: GameLifecycleState = GameLifecycleState.NotStarted
+    val lifecycleState get(): GameLifecycleState = _lifecycleState
 
     init {
         hostGameLifecycleEventRepository.observeEvents().subscribe(
             { event ->
-                _Lifecycle_state = when (event) {
+                _lifecycleState = when (event) {
                     is HostGameLifecycleEvent.GameSetup,
                     HostGameLifecycleEvent.MovedToGameRoom -> GameLifecycleState.Running
                     HostGameLifecycleEvent.GameOver -> GameLifecycleState.Over
@@ -35,7 +35,7 @@ internal class GameStateRepository @Inject constructor(
         )
         guestGameLifecycleEventRepository.observeEvents().subscribe(
             { event ->
-                _Lifecycle_state = when (event) {
+                _lifecycleState = when (event) {
                     is GuestGameLifecycleEvent.GameSetup,
                     GuestGameLifecycleEvent.GameJoined,
                     GuestGameLifecycleEvent.GameRejoined,
@@ -48,7 +48,7 @@ internal class GameStateRepository @Inject constructor(
     }
 
     fun reset() {
-        _Lifecycle_state = GameLifecycleState.NotStarted
+        _lifecycleState = GameLifecycleState.NotStarted
     }
 }
 
