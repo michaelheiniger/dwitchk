@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitchgame.ingame.di.modules
 
 import ch.qscqlmpa.dwitchcommunication.CommClient
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
+import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.ingame.InGameGuestFacade
 import ch.qscqlmpa.dwitchgame.ingame.InGameGuestFacadeImpl
 import ch.qscqlmpa.dwitchgame.ingame.communication.CommunicationStateRepository
@@ -20,8 +21,7 @@ import javax.inject.Named
 class InGameGuestModule(
     private val gameLocalId: Long,
     private val localPlayerLocalId: Long,
-    private val hostPort: Int,
-    private val hostIpAddress: String,
+    private val advertisedGame: AdvertisedGame,
     private val inGameStore: InGameStore,
     private val commClient: CommClient,
     private val connectionStore: ConnectionStore
@@ -71,18 +71,11 @@ class InGameGuestModule(
         return localPlayerLocalId
     }
 
-    @Named(OnGoingGameQualifiers.HOST_PORT)
+    @Named(OnGoingGameQualifiers.ADVERTISED_GAME)
     @OngoingGameScope
     @Provides
-    fun provideHostPort(): Int {
-        return hostPort
-    }
-
-    @Named(OnGoingGameQualifiers.HOST_IP_ADDRESS)
-    @OngoingGameScope
-    @Provides
-    fun provideHostIpAddress(): String {
-        return hostIpAddress
+    fun provideAdvertisedGame(): AdvertisedGame {
+        return advertisedGame
     }
 
     @Provides

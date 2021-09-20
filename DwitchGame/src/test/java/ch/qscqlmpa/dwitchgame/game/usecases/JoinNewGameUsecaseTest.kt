@@ -95,7 +95,7 @@ internal class JoinNewGameUsecaseTest : BaseUnitTest() {
         // Then
         verify {
             mockGameLifecycleEventRepository.notify(
-                GuestGameLifecycleEvent.GameSetup(GameJoinedInfo(gameLocalId, localPlayerLocalId, gameIpAddress, gamePort))
+                GuestGameLifecycleEvent.GameSetup(GameJoinedInfo(gameLocalId, localPlayerLocalId, advertisedGame))
             )
         }
     }

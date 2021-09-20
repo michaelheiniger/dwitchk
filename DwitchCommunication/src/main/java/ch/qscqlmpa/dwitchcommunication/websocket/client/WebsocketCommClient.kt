@@ -22,8 +22,8 @@ internal class WebsocketCommClient @Inject constructor(
 
     private val communicationEventRelay = PublishRelay.create<ClientEvent>()
 
-    override fun start() {
-        websocketClient = websocketClientFactory.create()
+    override fun start(ipAddress: String, port: Int) {
+        websocketClient = websocketClientFactory.create(ipAddress, port)
 
         disposableManager.add(
             websocketClient.observeEvents()

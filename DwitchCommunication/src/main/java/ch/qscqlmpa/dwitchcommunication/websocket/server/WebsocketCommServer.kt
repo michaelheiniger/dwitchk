@@ -12,9 +12,9 @@ import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.ServerEvent
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
-import javax.inject.Inject
 import org.java_websocket.WebSocket
 import org.tinylog.kotlin.Logger
+import javax.inject.Inject
 
 internal class WebsocketCommServer @Inject constructor(
     private val websocketServerFactory: WebsocketServerFactory,
@@ -28,8 +28,8 @@ internal class WebsocketCommServer @Inject constructor(
 
     private val communicationEventsRelay = PublishRelay.create<ServerEvent>()
 
-    override fun start() {
-        websocketServer = websocketServerFactory.create()
+    override fun start(ipAddress: String, port: Int) {
+        websocketServer = websocketServerFactory.create(ipAddress, port)
 
         disposableManager.add(
             websocketServer.observeEvents()

@@ -35,6 +35,9 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
     private lateinit var communicationEventsSubject: PublishSubject<ServerEvent>
 
+    private val ipAddress = "0.0.0.0"
+    private val port = 8889
+
     @BeforeEach
     fun setup() {
         hostCommunicator = HostCommunicatorImpl(
@@ -67,7 +70,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
             verifyOrder {
                 mockCommServer.observeEvents()
-                mockCommServer.start()
+                mockCommServer.start(ipAddress, port)
             }
             confirmVerified(mockCommServer)
         }
@@ -149,7 +152,7 @@ class HostCommunicatorImplTest : BaseUnitTest() {
 
             verifyOrder {
                 mockCommServer.observeEvents()
-                mockCommServer.start()
+                mockCommServer.start(ipAddress, port)
                 mockCommServer.stop()
             }
             confirmVerified(mockCommServer)

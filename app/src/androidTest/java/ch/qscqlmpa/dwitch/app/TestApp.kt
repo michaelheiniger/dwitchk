@@ -13,6 +13,7 @@ import ch.qscqlmpa.dwitchgame.di.DaggerTestGameComponent
 import ch.qscqlmpa.dwitchgame.di.TestGameComponent
 import ch.qscqlmpa.dwitchgame.di.modules.DwitchGameModule
 import ch.qscqlmpa.dwitchgame.di.modules.StoreModule
+import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertisingFacade
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleFacade
 import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameGuestModule
@@ -65,7 +66,7 @@ class TestApp : App() {
         )
 
         communicationHostComponent = DaggerTestCommunicationHostComponent.factory()
-            .create(CommunicationHostModule("0.0.0.0", 8889, gameIdlingResource))
+            .create(CommunicationHostModule(gameIdlingResource))
 
         inGameHostComponent = testGameComponent.addTestInGameHostComponent(
             InGameHostModule(
@@ -93,8 +94,7 @@ class TestApp : App() {
     override fun createInGameGuestComponents(
         gameLocalId: Long,
         localPlayerLocalId: Long,
-        hostPort: Int,
-        hostIpAddress: String
+        advertisedGame: AdvertisedGame
     ) {
         Logger.debug { "startOngoingGame()" }
         inGameStoreComponent = testStoreComponent.addInGameStoreComponent(
@@ -102,14 +102,13 @@ class TestApp : App() {
         )
 
         communicationGuestComponent = DaggerTestCommunicationGuestComponent.factory()
-            .create(CommunicationGuestModule(hostIpAddress, hostPort, gameIdlingResource))
+            .create(CommunicationGuestModule(gameIdlingResource))
 
         inGameGuestComponent = testGameComponent.addTestInGameGuestComponent(
             InGameGuestModule(
                 gameLocalId,
                 localPlayerLocalId,
-                hostPort,
-                hostIpAddress,
+                advertisedGame,
                 inGameStoreComponent!!.inGameStore,
                 communicationGuestComponent!!.commClient,
                 communicationGuestComponent!!.connectionStore

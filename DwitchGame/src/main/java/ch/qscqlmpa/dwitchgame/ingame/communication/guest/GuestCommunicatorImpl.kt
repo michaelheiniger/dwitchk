@@ -5,13 +5,17 @@ import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchcommunication.CommClient
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.websocket.ClientEvent
+import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.eventprocessors.GuestCommunicationEventDispatcher
+import ch.qscqlmpa.dwitchgame.ingame.di.OnGoingGameQualifiers
 import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
+import javax.inject.Named
 
 @OngoingGameScope
 internal class GuestCommunicatorImpl @Inject constructor(
+    @Named(OnGoingGameQualifiers.ADVERTISED_GAME) private val initialAdvertisedGame: AdvertisedGame,
     private val commClient: CommClient,
     private val communicationEventDispatcher: GuestCommunicationEventDispatcher,
     private val communicationStateRepository: GuestCommunicationStateRepository,
@@ -20,11 +24,15 @@ internal class GuestCommunicatorImpl @Inject constructor(
 
     private val disposableManager = DisposableManager()
 
-    override fun connect() {
+    override fun connect(advertisedGame: AdvertisedGame) {
         Logger.info { "Connect to host" }
         communicationStateRepository.updateState(GuestCommunicationState.Connecting)
         observeCommunicationEvents()
-        commClient.start()
+        commClient.start(advertisedGame.gameIpAddress, advertisedGame.gamePort)
+    }
+
+    override fun connect() {
+        connect(initialAdvertisedGame)
     }
 
     override fun disconnect() {

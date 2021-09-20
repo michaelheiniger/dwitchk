@@ -6,7 +6,9 @@ import ch.qscqlmpa.dwitchcommunication.model.Message
 import ch.qscqlmpa.dwitchcommunication.websocket.ClientEvent
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
+import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.eventprocessors.GuestCommunicationEventDispatcher
+import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.mockk.*
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -14,6 +16,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import java.util.*
 
 class GuestCommunicatorImplTest : BaseUnitTest() {
 
@@ -25,9 +28,18 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
 
     private lateinit var communicationEventsSubject: PublishSubject<ClientEvent>
 
+    private val advertisedGame = AdvertisedGame(
+        isNew = true,
+        gameName = "LOTR",
+        gameCommonId = GameCommonId(UUID.randomUUID()),
+        gameIpAddress = "192.168.1.2",
+        gamePort = 8889,
+    )
+
     @BeforeEach
     fun setup() {
         guestCommunicator = GuestCommunicatorImpl(
+            advertisedGame,
             mockCommClient,
             mockCommunicationEventDispatcher,
             mockCommEventRepository,
@@ -62,7 +74,7 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
 
             verifyOrder {
                 mockCommClient.observeCommunicationEvents()
-                mockCommClient.start()
+                mockCommClient.start(advertisedGame.gameIpAddress, advertisedGame.gamePort)
             }
             confirmVerified(mockCommClient)
         }
@@ -122,7 +134,7 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
 
             verifyOrder {
                 mockCommClient.observeCommunicationEvents()
-                mockCommClient.start()
+                mockCommClient.start(advertisedGame.gameIpAddress, advertisedGame.gamePort)
                 mockCommClient.stop()
             }
             confirmVerified(mockCommClient)

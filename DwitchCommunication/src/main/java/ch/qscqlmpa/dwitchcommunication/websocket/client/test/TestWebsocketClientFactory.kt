@@ -3,17 +3,14 @@ package ch.qscqlmpa.dwitchcommunication.websocket.client.test
 import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClient
 import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClientFactory
 
-internal class TestWebsocketClientFactory constructor(
-    private val hostIpAddress: String,
-    private val hostPort: Int
-) : WebsocketClientFactory {
+internal class TestWebsocketClientFactory : WebsocketClientFactory {
 
     companion object {
         private var INSTANCE: TestWebsocketClient? = null
     }
 
-    override fun create(): WebsocketClient {
-        INSTANCE = TestWebsocketClient(hostIpAddress, hostPort)
+    override fun create(ipAddress: String, port: Int): WebsocketClient {
+        INSTANCE = TestWebsocketClient(ipAddress, port)
         return INSTANCE!!
     }
 

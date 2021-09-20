@@ -1,11 +1,10 @@
 package ch.qscqlmpa.dwitchcommunication.websocket.client
 
-internal class ProdWebsocketClientFactory constructor(
-    private val hostIpAddress: String,
-    private val hostPort: Int,
-) : WebsocketClientFactory {
+import javax.inject.Inject
 
-    override fun create(): WebsocketClient {
-        return ProdWebsocketClient(hostIpAddress, hostPort)
+internal class ProdWebsocketClientFactory @Inject constructor() : WebsocketClientFactory {
+
+    override fun create(ipAddress: String, port: Int): WebsocketClient {
+        return ProdWebsocketClient(ipAddress, port)
     }
 }

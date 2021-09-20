@@ -21,8 +21,7 @@ class GuestInGameService : BaseInGameService() {
         app.createInGameGuestComponents(
             gameJoinedInfo.gameLocalId,
             gameJoinedInfo.localPlayerLocalId,
-            gameJoinedInfo.gamePort,
-            gameJoinedInfo.gameIpAddress
+            gameJoinedInfo.advertisedGame
         )
         idlingResource.decrement("Dagger InGame component created")
         app.guestCommunicationFacade.connect()

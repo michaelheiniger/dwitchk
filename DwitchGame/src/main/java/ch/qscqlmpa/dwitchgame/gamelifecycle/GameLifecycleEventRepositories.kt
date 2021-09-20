@@ -116,22 +116,19 @@ data class GameCreatedInfo(
 data class GameJoinedInfo(
     val gameLocalId: Long,
     val localPlayerLocalId: Long,
-    val gameIpAddress: String,
-    val gamePort: Int
+    val advertisedGame: AdvertisedGame
 ) : Parcelable {
 
     constructor(insertGameResult: InsertGameResult, advertisedGame: AdvertisedGame) :
             this(
                 insertGameResult.gameLocalId,
                 insertGameResult.localPlayerLocalId,
-                advertisedGame.gameIpAddress,
-                advertisedGame.gamePort
+                advertisedGame
             )
 
     constructor(game: Game, advertisedGame: AdvertisedGame) : this(
         game.id,
         game.localPlayerLocalId,
-        advertisedGame.gameIpAddress,
-        advertisedGame.gamePort
+        advertisedGame
     )
 }

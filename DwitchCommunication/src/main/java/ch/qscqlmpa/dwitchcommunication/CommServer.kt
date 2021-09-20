@@ -8,7 +8,7 @@ import io.reactivex.rxjava3.core.Observable
 
 interface CommServer {
 
-    fun start()
+    fun start(ipAddress: String, port: Int)
 
     fun stop()
 

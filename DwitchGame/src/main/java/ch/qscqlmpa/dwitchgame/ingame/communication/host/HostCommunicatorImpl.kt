@@ -38,7 +38,7 @@ internal class HostCommunicatorImpl @Inject constructor(
         Logger.info { "Start server" }
         communicationStateRepository.updateState(HostCommunicationState.Opening)
         observeCommunicationEvents()
-        commServer.start()
+        commServer.start("0.0.0.0", 8889)
     }
 
     override fun stopServer() {
@@ -150,6 +150,6 @@ internal class HostCommunicatorImpl @Inject constructor(
                     }
                 }
             else -> Completable.complete()
-        } // .subscribeOn(schedulerFactory.io())
+        }
     }
 }

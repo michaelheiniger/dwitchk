@@ -16,6 +16,7 @@ import ch.qscqlmpa.dwitchcommunication.di.DaggerCommunicationHostComponent
 import ch.qscqlmpa.dwitchgame.di.DaggerGameComponent
 import ch.qscqlmpa.dwitchgame.di.GameComponent
 import ch.qscqlmpa.dwitchgame.di.modules.DwitchGameModule
+import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertisingFacade
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleFacade
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationFacade
@@ -82,7 +83,7 @@ open class App : DaggerApplication() {
         inGameStoreComponent = storeComponent.addInGameStoreComponent(InGameStoreModule(gameLocalId, localPlayerLocalId))
 
         communicationHostComponent = DaggerCommunicationHostComponent.factory()
-            .create(CommunicationHostModule("0.0.0.0", 8889, StubIdlingResource()))
+            .create(CommunicationHostModule(StubIdlingResource()))
 
         inGameHostComponent = gameComponent.addInGameHostComponent(
             InGameHostModule(
@@ -109,21 +110,19 @@ open class App : DaggerApplication() {
     open fun createInGameGuestComponents(
         gameLocalId: Long,
         localPlayerLocalId: Long,
-        hostPort: Int,
-        hostIpAddress: String
+        advertisedGame: AdvertisedGame
     ) {
         Logger.debug { "createInGameGuestComponents()" }
         inGameStoreComponent = storeComponent.addInGameStoreComponent(InGameStoreModule(gameLocalId, localPlayerLocalId))
 
         communicationGuestComponent = DaggerCommunicationGuestComponent.factory()
-            .create(CommunicationGuestModule(hostIpAddress, hostPort, StubIdlingResource()))
+            .create(CommunicationGuestModule(StubIdlingResource()))
 
         inGameGuestComponent = gameComponent.addInGameGuestComponent(
             InGameGuestModule(
                 gameLocalId,
                 localPlayerLocalId,
-                hostPort,
-                hostIpAddress,
+                advertisedGame,
                 inGameStoreComponent!!.inGameStore,
                 communicationGuestComponent!!.commClient,
                 communicationGuestComponent!!.connectionStore
