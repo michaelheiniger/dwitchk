@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchcommunication.di
 
-import ch.qscqlmpa.dwitchcommunication.websocket.server.ProdWebsocketServerFactory
-import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServerFactory
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.server.ProdWebsocketServerFactory
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.server.WebsocketServerFactory
 import dagger.Binds
 import dagger.Module
 

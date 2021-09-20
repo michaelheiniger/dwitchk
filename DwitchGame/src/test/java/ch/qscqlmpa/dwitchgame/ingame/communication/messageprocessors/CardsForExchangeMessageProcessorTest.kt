@@ -1,9 +1,9 @@
 package ch.qscqlmpa.dwitchgame.ingame.communication.messageprocessors
 
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
-import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchcommunication.model.Recipient
+import ch.qscqlmpa.dwitchcommunication.ingame.connectionstore.ConnectionId
+import ch.qscqlmpa.dwitchcommunication.ingame.model.EnvelopeToSend
+import ch.qscqlmpa.dwitchcommunication.ingame.model.Message
+import ch.qscqlmpa.dwitchcommunication.ingame.model.Recipient
 import ch.qscqlmpa.dwitchengine.DwitchEngine
 import ch.qscqlmpa.dwitchengine.TestDwitchFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card

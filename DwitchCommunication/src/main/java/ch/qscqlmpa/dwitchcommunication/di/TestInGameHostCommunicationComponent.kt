@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchcommunication.di
 
-import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
-import ch.qscqlmpa.dwitchcommunication.websocket.server.test.ServerTestStub
+import ch.qscqlmpa.dwitchcommunication.ingame.InGameSerializerFactory
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.server.test.ServerTestStub
 import dagger.Component
 
 @InGameCommunicationScope
@@ -14,7 +14,7 @@ import dagger.Component
 interface TestInGameHostCommunicationComponent : InGameHostCommunicationComponent {
 
     val serverTestStub: ServerTestStub
-    val serializerFactory: SerializerFactory
+    val serializerFactory: InGameSerializerFactory
 
     @Component.Factory
     interface Factory {

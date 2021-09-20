@@ -15,9 +15,9 @@ import ch.qscqlmpa.dwitch.e2e.DisableAnimationsRule
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommunication.di.TestInGameGuestCommunicationComponent
 import ch.qscqlmpa.dwitchcommunication.di.TestInGameHostCommunicationComponent
-import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
-import ch.qscqlmpa.dwitchcommunication.websocket.client.test.ClientTestStub
-import ch.qscqlmpa.dwitchcommunication.websocket.server.test.ServerTestStub
+import ch.qscqlmpa.dwitchcommunication.ingame.InGameSerializerFactory
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.client.test.ClientTestStub
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.server.test.ServerTestStub
 import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealer
 import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealerFactory
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
@@ -71,7 +71,7 @@ abstract class BaseE2eTest {
     private lateinit var store: Store
     protected lateinit var inGameStore: InGameStore
 
-    protected lateinit var commSerializerFactory: SerializerFactory
+    protected lateinit var commSerializerFactory: InGameSerializerFactory
 
     protected lateinit var serverTestStub: ServerTestStub
     protected lateinit var clientTestStub: ClientTestStub

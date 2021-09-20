@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ingame.di
 
-import ch.qscqlmpa.dwitchcommunication.websocket.ServerEvent
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.ServerEvent
 import dagger.MapKey
 import kotlin.reflect.KClass
 

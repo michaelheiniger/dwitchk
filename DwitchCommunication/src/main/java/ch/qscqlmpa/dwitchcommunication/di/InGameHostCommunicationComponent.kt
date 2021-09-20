@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchcommunication.di
 
-import ch.qscqlmpa.dwitchcommunication.CommServer
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
+import ch.qscqlmpa.dwitchcommunication.ingame.CommServer
+import ch.qscqlmpa.dwitchcommunication.ingame.connectionstore.ConnectionStore
 import dagger.Component
 
 @InGameCommunicationScope

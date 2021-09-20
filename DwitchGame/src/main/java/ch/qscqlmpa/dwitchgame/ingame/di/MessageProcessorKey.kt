@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ingame.di
 
-import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchcommunication.ingame.model.Message
 import dagger.MapKey
 import kotlin.reflect.KClass
 

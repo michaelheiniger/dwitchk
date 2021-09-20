@@ -19,8 +19,8 @@ import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.confirmCardExchange
 import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.playCards
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitch.utils.TestEntityFactory
-import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchcommunication.websocket.client.test.OnStartEvent
+import ch.qscqlmpa.dwitchcommunication.ingame.model.Message
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.client.test.OnStartEvent
 import ch.qscqlmpa.dwitchengine.DwitchEngine.Companion.createNewGame
 import ch.qscqlmpa.dwitchengine.ProdDwitchFactory
 import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealer

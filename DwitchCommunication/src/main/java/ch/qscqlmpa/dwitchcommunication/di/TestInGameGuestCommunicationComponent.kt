@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchcommunication.di
 
-import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
-import ch.qscqlmpa.dwitchcommunication.websocket.client.test.ClientTestStub
+import ch.qscqlmpa.dwitchcommunication.ingame.InGameSerializerFactory
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.client.test.ClientTestStub
 import dagger.Component
 import dagger.Lazy
 
@@ -15,7 +15,7 @@ import dagger.Lazy
 interface TestInGameGuestCommunicationComponent : InGameGuestCommunicationComponent {
 
     val clientTestStub: Lazy<ClientTestStub>
-    val serializerFactory: SerializerFactory
+    val serializerFactory: InGameSerializerFactory
 
     @Component.Factory
     interface Factory {

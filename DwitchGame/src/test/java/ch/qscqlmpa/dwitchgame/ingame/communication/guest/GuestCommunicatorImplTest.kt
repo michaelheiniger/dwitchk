@@ -1,9 +1,9 @@
 package ch.qscqlmpa.dwitchgame.ingame.communication.guest
 
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
-import ch.qscqlmpa.dwitchcommunication.CommClient
-import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchcommunication.websocket.ClientEvent
+import ch.qscqlmpa.dwitchcommunication.ingame.CommClient
+import ch.qscqlmpa.dwitchcommunication.ingame.model.Message
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.ClientEvent
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame

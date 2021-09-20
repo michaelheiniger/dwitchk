@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ingame.usecases
 
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
-import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchcommunication.ingame.model.EnvelopeToSend
+import ch.qscqlmpa.dwitchcommunication.ingame.model.Message
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.gamelifecycle.HostGameLifecycleEvent

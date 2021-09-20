@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ingame.communication.messagefactories
 
-import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchcommunication.ingame.model.Message
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 

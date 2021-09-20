@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ingame.communication.guest
 
-import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchcommunication.ingame.model.Message
 import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject

@@ -1,8 +1,8 @@
 package ch.qscqlmpa.dwitchgame.ingame.messages
 
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
-import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchcommunication.model.Recipient
+import ch.qscqlmpa.dwitchcommunication.ingame.connectionstore.ConnectionId
+import ch.qscqlmpa.dwitchcommunication.ingame.model.Message
+import ch.qscqlmpa.dwitchcommunication.ingame.model.Recipient
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.TestEntityFactory

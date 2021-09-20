@@ -1,12 +1,12 @@
 package ch.qscqlmpa.dwitchgame.ingame.computerplayer
 
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
-import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchcommunication.model.Recipient
-import ch.qscqlmpa.dwitchcommunication.websocket.ServerEvent
+import ch.qscqlmpa.dwitchcommunication.ingame.connectionstore.ConnectionId
+import ch.qscqlmpa.dwitchcommunication.ingame.connectionstore.ConnectionStore
+import ch.qscqlmpa.dwitchcommunication.ingame.model.EnvelopeToSend
+import ch.qscqlmpa.dwitchcommunication.ingame.model.Message
+import ch.qscqlmpa.dwitchcommunication.ingame.model.Recipient
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.ServerEvent
 import ch.qscqlmpa.dwitchengine.DwitchFactory
 import ch.qscqlmpa.dwitchengine.computerplayer.DwitchComputerPlayerEngine
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState

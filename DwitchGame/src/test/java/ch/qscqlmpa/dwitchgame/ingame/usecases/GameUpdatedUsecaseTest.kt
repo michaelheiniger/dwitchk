@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ingame.usecases
 
-import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchcommunication.ingame.model.Message
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
 import ch.qscqlmpa.dwitchgame.ingame.communication.GameCommunicator

@@ -2,9 +2,9 @@ package ch.qscqlmpa.dwitchgame.ingame.communication.guest
 
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
-import ch.qscqlmpa.dwitchcommunication.CommClient
-import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchcommunication.websocket.ClientEvent
+import ch.qscqlmpa.dwitchcommunication.ingame.CommClient
+import ch.qscqlmpa.dwitchcommunication.ingame.model.Message
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.ClientEvent
 import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.eventprocessors.GuestCommunicationEventDispatcher
 import ch.qscqlmpa.dwitchgame.ingame.di.OnGoingGameQualifiers

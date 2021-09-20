@@ -20,8 +20,8 @@ import ch.qscqlmpa.dwitch.e2e.utils.GameRoomUiUtil.startNewRound
 import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.assertLaunchGameControlIsEnabled
 import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.launchGame
 import ch.qscqlmpa.dwitch.ui.common.UiTags
-import ch.qscqlmpa.dwitchcommunication.model.Message
-import ch.qscqlmpa.dwitchcommunication.websocket.server.test.PlayerHostTest
+import ch.qscqlmpa.dwitchcommunication.ingame.model.Message
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.server.test.PlayerHostTest
 import ch.qscqlmpa.dwitchengine.ProdDwitchFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.PlayedCards

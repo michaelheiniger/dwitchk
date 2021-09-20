@@ -1,11 +1,11 @@
 package ch.qscqlmpa.dwitchcommunication.di
 
-import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
-import ch.qscqlmpa.dwitchcommunication.websocket.server.WebsocketServerFactory
-import ch.qscqlmpa.dwitchcommunication.websocket.server.test.ServerTestStub
-import ch.qscqlmpa.dwitchcommunication.websocket.server.test.TestWebsocketServer
-import ch.qscqlmpa.dwitchcommunication.websocket.server.test.TestWebsocketServerFactory
-import ch.qscqlmpa.dwitchcommunication.websocket.server.test.WebsocketServerTestStub
+import ch.qscqlmpa.dwitchcommunication.ingame.InGameSerializerFactory
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.server.WebsocketServerFactory
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.server.test.ServerTestStub
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.server.test.TestWebsocketServer
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.server.test.TestWebsocketServerFactory
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.server.test.WebsocketServerTestStub
 import dagger.Module
 import dagger.Provides
 
@@ -23,6 +23,6 @@ class TestWebsocketServerModule {
     @Provides
     internal fun bindServerTestStub(
         serverFactory: WebsocketServerFactory,
-        serializerFactory: SerializerFactory
+        serializerFactory: InGameSerializerFactory
     ): ServerTestStub = WebsocketServerTestStub(serverFactory.create("0.0.0.0", 8889) as TestWebsocketServer, serializerFactory)
 }

@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ingame.di.modules
 
-import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchcommunication.ingame.model.Message
 import ch.qscqlmpa.dwitchgame.ingame.communication.messageprocessors.*
 import ch.qscqlmpa.dwitchgame.ingame.di.MessageProcessorKey
 import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope

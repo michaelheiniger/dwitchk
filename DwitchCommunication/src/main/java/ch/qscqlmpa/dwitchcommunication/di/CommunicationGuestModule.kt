@@ -1,13 +1,13 @@
 package ch.qscqlmpa.dwitchcommunication.di
 
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
-import ch.qscqlmpa.dwitchcommunication.CommClient
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreImpl
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStoreInternal
-import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
-import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketClientFactory
-import ch.qscqlmpa.dwitchcommunication.websocket.client.WebsocketCommClient
+import ch.qscqlmpa.dwitchcommunication.ingame.CommClient
+import ch.qscqlmpa.dwitchcommunication.ingame.InGameSerializerFactory
+import ch.qscqlmpa.dwitchcommunication.ingame.connectionstore.ConnectionStore
+import ch.qscqlmpa.dwitchcommunication.ingame.connectionstore.ConnectionStoreImpl
+import ch.qscqlmpa.dwitchcommunication.ingame.connectionstore.ConnectionStoreInternal
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.client.WebsocketClientFactory
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.client.WebsocketCommClient
 import dagger.Module
 import dagger.Provides
 import kotlinx.serialization.json.Json
@@ -21,7 +21,7 @@ class CommunicationGuestModule(
     @Provides
     internal fun provideCommClient(
         websocketClientFactory: WebsocketClientFactory,
-        serializerFactory: SerializerFactory
+        serializerFactory: InGameSerializerFactory
     ): CommClient {
         return WebsocketCommClient(websocketClientFactory, serializerFactory)
     }

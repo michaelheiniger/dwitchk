@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ingame.gameroom
 
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
-import ch.qscqlmpa.dwitchcommunication.model.Message
+import ch.qscqlmpa.dwitchcommunication.ingame.model.Message
 import ch.qscqlmpa.dwitchgame.ingame.communication.GameCommunicator
 import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope
 import io.reactivex.rxjava3.core.Completable

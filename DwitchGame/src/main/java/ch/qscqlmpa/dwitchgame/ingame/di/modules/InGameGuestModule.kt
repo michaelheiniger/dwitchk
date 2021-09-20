@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ingame.di.modules
 
-import ch.qscqlmpa.dwitchcommunication.CommClient
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
+import ch.qscqlmpa.dwitchcommunication.ingame.CommClient
+import ch.qscqlmpa.dwitchcommunication.ingame.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.ingame.InGameGuestFacade
 import ch.qscqlmpa.dwitchgame.ingame.InGameGuestFacadeImpl

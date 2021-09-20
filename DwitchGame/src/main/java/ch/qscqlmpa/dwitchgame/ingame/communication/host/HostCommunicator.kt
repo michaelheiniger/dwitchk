@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ingame.communication.host
 
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionId
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
+import ch.qscqlmpa.dwitchcommunication.ingame.connectionstore.ConnectionId
+import ch.qscqlmpa.dwitchcommunication.ingame.model.EnvelopeToSend
 import ch.qscqlmpa.dwitchgame.ingame.communication.GameCommunicator
 
 internal interface HostCommunicator : GameCommunicator {

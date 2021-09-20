@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ingame.di.modules
 
-import ch.qscqlmpa.dwitchcommunication.websocket.ClientEvent
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.ClientEvent
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationFacade
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationFacadeImpl
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicator
@@ -23,7 +23,6 @@ internal abstract class GuestCommunicationModule {
     @OngoingGameScope
     @Binds
     internal abstract fun provideGuestCommunicator(communicator: GuestCommunicatorImpl): GuestCommunicator
-
 
     // ##### GuestCommunicationEventProcessor implementations #####
     @OngoingGameScope

@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.ingame.communication.host
 
-import ch.qscqlmpa.dwitchcommunication.model.EnvelopeToSend
-import ch.qscqlmpa.dwitchcommunication.websocket.ServerEvent
+import ch.qscqlmpa.dwitchcommunication.ingame.model.EnvelopeToSend
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.ServerEvent
 import io.reactivex.rxjava3.core.Observable
 
 interface ComputerCommunicator {

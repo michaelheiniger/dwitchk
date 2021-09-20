@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ingame.communication.host.eventprocessors
 
-import ch.qscqlmpa.dwitchcommunication.websocket.ServerEvent
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.ServerEvent
 import ch.qscqlmpa.dwitchgame.ingame.communication.messageprocessors.MessageDispatcher
 import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope
 import io.reactivex.rxjava3.core.Completable

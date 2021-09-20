@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ingame.usecases
 
-import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
+import ch.qscqlmpa.dwitchcommunication.ingame.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicator
 import ch.qscqlmpa.dwitchgame.ingame.communication.messagefactories.HostMessageFactory
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.PlayerWrUi
