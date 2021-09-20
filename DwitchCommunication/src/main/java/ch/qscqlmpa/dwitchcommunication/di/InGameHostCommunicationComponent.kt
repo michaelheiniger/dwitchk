@@ -4,7 +4,7 @@ import ch.qscqlmpa.dwitchcommunication.CommServer
 import ch.qscqlmpa.dwitchcommunication.connectionstore.ConnectionStore
 import dagger.Component
 
-@CommunicationScope
+@InGameCommunicationScope
 @Component(
     modules = [
         CommunicationHostModule::class,

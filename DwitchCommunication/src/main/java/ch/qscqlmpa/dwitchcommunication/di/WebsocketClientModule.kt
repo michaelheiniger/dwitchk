@@ -9,7 +9,7 @@ import dagger.Module
 @Module
 internal abstract class WebsocketClientModule {
 
-    @CommunicationScope
+    @InGameCommunicationScope
     @Binds
     internal abstract fun bindWebsocketClient(factory: ProdWebsocketClientFactory): WebsocketClientFactory
 }

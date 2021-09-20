@@ -4,7 +4,7 @@ import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.server.test.ServerTestStub
 import dagger.Component
 
-@CommunicationScope
+@InGameCommunicationScope
 @Component(
     modules = [
         CommunicationHostModule::class,

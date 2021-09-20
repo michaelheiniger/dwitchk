@@ -1,11 +1,11 @@
 package ch.qscqlmpa.dwitchcommunication.utils
 
-import ch.qscqlmpa.dwitchcommunication.di.CommunicationScope
+import ch.qscqlmpa.dwitchcommunication.di.InGameCommunicationScope
 import ch.qscqlmpa.dwitchcommunication.model.Message
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
-@CommunicationScope
+@InGameCommunicationScope
 class SerializerFactory @Inject constructor(private val json: Json) {
 
     // Serialize

@@ -17,7 +17,7 @@ import kotlinx.serialization.json.Json
 class CommunicationHostModule(
     private val idlingResource: DwitchIdlingResource
 ) {
-    @CommunicationScope
+    @InGameCommunicationScope
     @Provides
     internal fun provideCommServer(
         websocketServerFactory: WebsocketServerFactory,
@@ -27,31 +27,31 @@ class CommunicationHostModule(
         return WebsocketCommServer(websocketServerFactory, serializerFactory, connectionStore)
     }
 
-    @CommunicationScope
+    @InGameCommunicationScope
     @Provides
     fun provideJsonSerializer(): Json {
         return Json.Default
     }
 
-    @CommunicationScope
+    @InGameCommunicationScope
     @Provides
     internal fun provideConnectionStoreImpl(): ConnectionStoreImpl {
         return ConnectionStoreImpl()
     }
 
-    @CommunicationScope
+    @InGameCommunicationScope
     @Provides
     internal fun provideConnectionStoreInternal(connectionStore: ConnectionStoreImpl): ConnectionStoreInternal {
         return connectionStore
     }
 
-    @CommunicationScope
+    @InGameCommunicationScope
     @Provides
     internal fun provideConnectionStore(connectionStore: ConnectionStoreImpl): ConnectionStore {
         return connectionStore
     }
 
-    @CommunicationScope
+    @InGameCommunicationScope
     @Provides
     fun providesIdlingResource(): DwitchIdlingResource {
         return idlingResource

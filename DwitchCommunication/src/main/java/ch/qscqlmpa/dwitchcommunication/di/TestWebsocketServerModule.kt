@@ -13,13 +13,13 @@ import dagger.Provides
 @Module
 class TestWebsocketServerModule {
 
-    @CommunicationScope
+    @InGameCommunicationScope
     @Provides
     internal fun bindTestWebsocketServerFactory(): WebsocketServerFactory {
         return TestWebsocketServerFactory()
     }
 
-    @CommunicationScope
+    @InGameCommunicationScope
     @Provides
     internal fun bindServerTestStub(
         serverFactory: WebsocketServerFactory,

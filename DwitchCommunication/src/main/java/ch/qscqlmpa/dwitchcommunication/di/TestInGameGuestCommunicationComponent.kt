@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitchcommunication.websocket.client.test.ClientTestStub
 import dagger.Component
 import dagger.Lazy
 
-@CommunicationScope
+@InGameCommunicationScope
 @Component(
     modules = [
         CommunicationGuestModule::class,
