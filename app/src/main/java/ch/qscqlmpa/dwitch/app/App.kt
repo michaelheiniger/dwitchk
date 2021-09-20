@@ -7,12 +7,12 @@ import ch.qscqlmpa.dwitch.ingame.InGameHostUiComponent
 import ch.qscqlmpa.dwitch.ingame.InGameHostUiModule
 import ch.qscqlmpa.dwitch.ingame.services.ServiceManager
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
-import ch.qscqlmpa.dwitchcommunication.di.CommunicationGuestComponent
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationGuestModule
-import ch.qscqlmpa.dwitchcommunication.di.CommunicationHostComponent
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationHostModule
-import ch.qscqlmpa.dwitchcommunication.di.DaggerCommunicationGuestComponent
-import ch.qscqlmpa.dwitchcommunication.di.DaggerCommunicationHostComponent
+import ch.qscqlmpa.dwitchcommunication.di.DaggerInGameGuestCommunicationComponent
+import ch.qscqlmpa.dwitchcommunication.di.DaggerInGameHostCommunicationComponent
+import ch.qscqlmpa.dwitchcommunication.di.InGameGuestCommunicationComponent
+import ch.qscqlmpa.dwitchcommunication.di.InGameHostCommunicationComponent
 import ch.qscqlmpa.dwitchgame.di.DaggerGameComponent
 import ch.qscqlmpa.dwitchgame.di.GameComponent
 import ch.qscqlmpa.dwitchgame.di.modules.DwitchGameModule
@@ -35,14 +35,16 @@ import dagger.android.DaggerApplication
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
-//TODO: For first production release, disable crashlytics and add opt-in in settings. See https://firebase.google.com/docs/crashlytics/customize-crash-reports?authuser=0&platform=android
+// TODO: For first production release, disable crashlytics and add opt-in in settings. See https://firebase.google.com/docs/crashlytics/customize-crash-reports?authuser=0&platform=android
 open class App : DaggerApplication() {
 
     private lateinit var storeComponent: StoreComponent
     private lateinit var gameComponent: GameComponent
     private lateinit var appComponent: AppComponent
-    var communicationHostComponent: CommunicationHostComponent? = null
-    var communicationGuestComponent: CommunicationGuestComponent? = null
+//    private lateinit var communicationComponent: CommunicationComponent
+
+    var inGameHostCommunicationComponent: InGameHostCommunicationComponent? = null
+    var inGameGuestCommunicationComponent: InGameGuestCommunicationComponent? = null
     var inGameStoreComponent: InGameStoreComponent? = null
     var inGameHostUiComponent: InGameHostUiComponent? = null
     var inGameGuestUiComponent: InGameGuestUiComponent? = null
@@ -82,7 +84,7 @@ open class App : DaggerApplication() {
         Logger.debug { "createInGameHostComponents()" }
         inGameStoreComponent = storeComponent.addInGameStoreComponent(InGameStoreModule(gameLocalId, localPlayerLocalId))
 
-        communicationHostComponent = DaggerCommunicationHostComponent.factory()
+        inGameHostCommunicationComponent = DaggerInGameHostCommunicationComponent.factory()
             .create(CommunicationHostModule(StubIdlingResource()))
 
         inGameHostComponent = gameComponent.addInGameHostComponent(
@@ -90,8 +92,8 @@ open class App : DaggerApplication() {
                 gameLocalId,
                 localPlayerLocalId,
                 inGameStoreComponent!!.inGameStore,
-                communicationHostComponent!!.commServer,
-                communicationHostComponent!!.connectionStore,
+                inGameHostCommunicationComponent!!.commServer,
+                inGameHostCommunicationComponent!!.connectionStore,
             )
         )
         inGameHostUiComponent = appComponent.addInGameHostUiComponent(
@@ -115,7 +117,7 @@ open class App : DaggerApplication() {
         Logger.debug { "createInGameGuestComponents()" }
         inGameStoreComponent = storeComponent.addInGameStoreComponent(InGameStoreModule(gameLocalId, localPlayerLocalId))
 
-        communicationGuestComponent = DaggerCommunicationGuestComponent.factory()
+        inGameGuestCommunicationComponent = DaggerInGameGuestCommunicationComponent.factory()
             .create(CommunicationGuestModule(StubIdlingResource()))
 
         inGameGuestComponent = gameComponent.addInGameGuestComponent(
@@ -124,8 +126,8 @@ open class App : DaggerApplication() {
                 localPlayerLocalId,
                 advertisedGame,
                 inGameStoreComponent!!.inGameStore,
-                communicationGuestComponent!!.commClient,
-                communicationGuestComponent!!.connectionStore
+                inGameGuestCommunicationComponent!!.commClient,
+                inGameGuestCommunicationComponent!!.connectionStore
             )
         )
         inGameGuestUiComponent = appComponent.addInGameGuestUiComponent(

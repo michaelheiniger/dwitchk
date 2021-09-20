@@ -7,8 +7,8 @@ import ch.qscqlmpa.dwitch.ingame.InGameGuestUiModule
 import ch.qscqlmpa.dwitch.ingame.InGameHostUiModule
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationGuestModule
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationHostModule
-import ch.qscqlmpa.dwitchcommunication.di.DaggerTestCommunicationGuestComponent
-import ch.qscqlmpa.dwitchcommunication.di.DaggerTestCommunicationHostComponent
+import ch.qscqlmpa.dwitchcommunication.di.DaggerTestInGameGuestCommunicationComponent
+import ch.qscqlmpa.dwitchcommunication.di.DaggerTestInGameHostCommunicationComponent
 import ch.qscqlmpa.dwitchgame.di.DaggerTestGameComponent
 import ch.qscqlmpa.dwitchgame.di.TestGameComponent
 import ch.qscqlmpa.dwitchgame.di.modules.DwitchGameModule
@@ -65,7 +65,7 @@ class TestApp : App() {
             InGameStoreModule(gameLocalId, localPlayerLocalId)
         )
 
-        communicationHostComponent = DaggerTestCommunicationHostComponent.factory()
+        inGameHostCommunicationComponent = DaggerTestInGameHostCommunicationComponent.factory()
             .create(CommunicationHostModule(gameIdlingResource))
 
         inGameHostComponent = testGameComponent.addTestInGameHostComponent(
@@ -73,8 +73,8 @@ class TestApp : App() {
                 gameLocalId,
                 localPlayerLocalId,
                 inGameStoreComponent!!.inGameStore,
-                communicationHostComponent!!.commServer,
-                communicationHostComponent!!.connectionStore,
+                inGameHostCommunicationComponent!!.commServer,
+                inGameHostCommunicationComponent!!.connectionStore,
             )
         )
         inGameHostUiComponent = testAppComponent.addInGameHostUiComponent(
@@ -101,7 +101,7 @@ class TestApp : App() {
             InGameStoreModule(gameLocalId, localPlayerLocalId)
         )
 
-        communicationGuestComponent = DaggerTestCommunicationGuestComponent.factory()
+        inGameGuestCommunicationComponent = DaggerTestInGameGuestCommunicationComponent.factory()
             .create(CommunicationGuestModule(gameIdlingResource))
 
         inGameGuestComponent = testGameComponent.addTestInGameGuestComponent(
@@ -110,8 +110,8 @@ class TestApp : App() {
                 localPlayerLocalId,
                 advertisedGame,
                 inGameStoreComponent!!.inGameStore,
-                communicationGuestComponent!!.commClient,
-                communicationGuestComponent!!.connectionStore
+                inGameGuestCommunicationComponent!!.commClient,
+                inGameGuestCommunicationComponent!!.connectionStore
             )
         )
         inGameGuestUiComponent = testAppComponent.addInGameGuestUiComponent(

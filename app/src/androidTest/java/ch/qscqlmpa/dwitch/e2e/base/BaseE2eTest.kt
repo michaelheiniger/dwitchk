@@ -13,8 +13,8 @@ import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.TestApp
 import ch.qscqlmpa.dwitch.e2e.DisableAnimationsRule
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
-import ch.qscqlmpa.dwitchcommunication.di.TestCommunicationGuestComponent
-import ch.qscqlmpa.dwitchcommunication.di.TestCommunicationHostComponent
+import ch.qscqlmpa.dwitchcommunication.di.TestInGameGuestCommunicationComponent
+import ch.qscqlmpa.dwitchcommunication.di.TestInGameHostCommunicationComponent
 import ch.qscqlmpa.dwitchcommunication.utils.SerializerFactory
 import ch.qscqlmpa.dwitchcommunication.websocket.client.test.ClientTestStub
 import ch.qscqlmpa.dwitchcommunication.websocket.server.test.ServerTestStub
@@ -63,8 +63,8 @@ abstract class BaseE2eTest {
     private lateinit var inGameComponent: TestInGameComponent
     private lateinit var inGameHostComponent: TestInGameHostComponent
     private lateinit var inGameGuestComponent: TestInGameGuestComponent
-    private lateinit var communicationHostComponent: TestCommunicationHostComponent
-    private lateinit var communicationGuestComponent: TestCommunicationGuestComponent
+    private lateinit var communicationHostComponent: TestInGameHostCommunicationComponent
+    private lateinit var communicationGuestComponent: TestInGameGuestCommunicationComponent
 
     protected lateinit var networkAdapter: TestNetworkAdapter
 
@@ -155,7 +155,7 @@ abstract class BaseE2eTest {
 
     protected fun hookOngoingGameDependenciesForHost() {
         hookOngoingGameDependenciesCommon()
-        communicationHostComponent = app.communicationHostComponent as TestCommunicationHostComponent
+        communicationHostComponent = app.inGameHostCommunicationComponent as TestInGameHostCommunicationComponent
         inGameHostComponent = app.inGameHostComponent as TestInGameHostComponent
         inGameComponent = inGameHostComponent
         commSerializerFactory = communicationHostComponent.serializerFactory
@@ -164,7 +164,7 @@ abstract class BaseE2eTest {
 
     protected fun hookOngoingGameDependenciesForGuest() {
         hookOngoingGameDependenciesCommon()
-        communicationGuestComponent = app.communicationGuestComponent as TestCommunicationGuestComponent
+        communicationGuestComponent = app.inGameGuestCommunicationComponent as TestInGameGuestCommunicationComponent
         inGameGuestComponent = app.inGameGuestComponent as TestInGameGuestComponent
         inGameComponent = inGameGuestComponent
         commSerializerFactory = communicationGuestComponent.serializerFactory

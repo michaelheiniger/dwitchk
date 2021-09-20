@@ -11,12 +11,12 @@ import dagger.Component
         WebsocketServerModule::class
     ]
 )
-interface CommunicationHostComponent {
+interface InGameHostCommunicationComponent {
     val commServer: CommServer
     val connectionStore: ConnectionStore
 
     @Component.Factory
     interface Factory {
-        fun create(module: CommunicationHostModule): CommunicationHostComponent
+        fun create(module: CommunicationHostModule): InGameHostCommunicationComponent
     }
 }

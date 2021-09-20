@@ -12,13 +12,13 @@ import dagger.Lazy
         TestWebsocketClientModule::class
     ]
 )
-interface TestCommunicationGuestComponent : CommunicationGuestComponent {
+interface TestInGameGuestCommunicationComponent : InGameGuestCommunicationComponent {
 
     val clientTestStub: Lazy<ClientTestStub>
     val serializerFactory: SerializerFactory
 
     @Component.Factory
     interface Factory {
-        fun create(module: CommunicationGuestModule): TestCommunicationGuestComponent
+        fun create(module: CommunicationGuestModule): TestInGameGuestCommunicationComponent
     }
 }

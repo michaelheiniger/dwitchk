@@ -11,13 +11,13 @@ import dagger.Component
         TestWebsocketServerModule::class
     ]
 )
-interface TestCommunicationHostComponent : CommunicationHostComponent {
+interface TestInGameHostCommunicationComponent : InGameHostCommunicationComponent {
 
     val serverTestStub: ServerTestStub
     val serializerFactory: SerializerFactory
 
     @Component.Factory
     interface Factory {
-        fun create(module: CommunicationHostModule): TestCommunicationHostComponent
+        fun create(module: CommunicationHostModule): TestInGameHostCommunicationComponent
     }
 }
