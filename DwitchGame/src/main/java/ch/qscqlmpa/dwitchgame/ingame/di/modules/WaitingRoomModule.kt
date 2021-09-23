@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ingame.di.modules
 
-import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope
+import ch.qscqlmpa.dwitchgame.ingame.di.InGameScope
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.*
 import dagger.Binds
 import dagger.Module
@@ -9,15 +9,15 @@ import dagger.Module
 @Module
 abstract class WaitingRoomModule {
 
-    @OngoingGameScope
+    @InGameScope
     @Binds
     internal abstract fun provideWaitingRoomGuestFacade(facade: WaitingRoomGuestFacadeImpl): WaitingRoomGuestFacade
 
-    @OngoingGameScope
+    @InGameScope
     @Binds
     internal abstract fun provideWaitingRoomHostFacade(facade: WaitingRoomHostFacadeImpl): WaitingRoomHostFacade
 
-    @OngoingGameScope
+    @InGameScope
     @Binds
     internal abstract fun provideWaitingRoomFacade(facade: WaitingRoomFacadeImpl): WaitingRoomFacade
 }

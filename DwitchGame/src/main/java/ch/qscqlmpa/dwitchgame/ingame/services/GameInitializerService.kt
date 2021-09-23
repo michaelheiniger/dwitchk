@@ -7,6 +7,7 @@ import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerOnboardingInfo
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import javax.inject.Inject
 
+// TODO: Merge with LaunchGameUsecase
 internal class GameInitializerService @Inject constructor(
     private val store: InGameStore,
     private val initialGameSetupFactory: InitialGameSetupFactory

@@ -7,7 +7,7 @@ import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicatorImpl
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.eventprocessors.*
 import ch.qscqlmpa.dwitchgame.ingame.di.GuestCommunicationEventProcessorKey
-import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope
+import ch.qscqlmpa.dwitchgame.ingame.di.InGameScope
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -16,16 +16,16 @@ import dagger.multibindings.IntoMap
 @Module
 internal abstract class GuestCommunicationModule {
 
-    @OngoingGameScope
+    @InGameScope
     @Binds
     internal abstract fun provideGuestCommunicationFacade(facade: GuestCommunicationFacadeImpl): GuestCommunicationFacade
 
-    @OngoingGameScope
+    @InGameScope
     @Binds
     internal abstract fun provideGuestCommunicator(communicator: GuestCommunicatorImpl): GuestCommunicator
 
     // ##### GuestCommunicationEventProcessor implementations #####
-    @OngoingGameScope
+    @InGameScope
     @Binds
     @IntoMap
     @GuestCommunicationEventProcessorKey(ClientEvent.CommunicationEvent.ConnectedToHost::class)
@@ -33,7 +33,7 @@ internal abstract class GuestCommunicationModule {
         eventProcessorGuest: GuestConnectedToHostEventProcessor
     ): GuestCommunicationEventProcessor
 
-    @OngoingGameScope
+    @InGameScope
     @Binds
     @IntoMap
     @GuestCommunicationEventProcessorKey(ClientEvent.CommunicationEvent.DisconnectedFromHost::class)
@@ -41,7 +41,7 @@ internal abstract class GuestCommunicationModule {
         eventProcessorGuest: GuestDisconnectedFromHostEventProcessor
     ): GuestCommunicationEventProcessor
 
-    @OngoingGameScope
+    @InGameScope
     @Binds
     @IntoMap
     @GuestCommunicationEventProcessorKey(ClientEvent.CommunicationEvent.ConnectionError::class)
@@ -49,7 +49,7 @@ internal abstract class GuestCommunicationModule {
         eventProcessorGuest: GuestConnectionErrorEventProcessor
     ): GuestCommunicationEventProcessor
 
-    @OngoingGameScope
+    @InGameScope
     @Binds
     @IntoMap
     @GuestCommunicationEventProcessorKey(ClientEvent.CommunicationEvent.Stopped::class)

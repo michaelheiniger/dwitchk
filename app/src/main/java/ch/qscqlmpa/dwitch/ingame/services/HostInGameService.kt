@@ -5,7 +5,6 @@ import android.content.Intent
 import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.ServiceIdentifier
 import ch.qscqlmpa.dwitchcommonutil.DisposableManager
-import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameCreatedInfo
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
@@ -27,14 +26,8 @@ class HostInGameService : BaseInGameService() {
             gameCreatedInfo.localPlayerLocalId
         )
         app.hostCommunicationFacade.startServer()
-        advertiseGame(
-            GameAdvertisingInfo(
-                gameCreatedInfo.isNew,
-                gameCreatedInfo.gameCommonId,
-                gameCreatedInfo.gameName,
-                ADVERTISING_DEST_PORT
-            )
-        )
+        advertiseGame()
+        advertiseGame()
 
         Logger.info { "Service started" }
         notifyServiceStarted()
@@ -56,9 +49,9 @@ class HostInGameService : BaseInGameService() {
         appEventRepository.notify(AppEvent.ServiceStarted(ServiceIdentifier.Host))
     }
 
-    private fun advertiseGame(gameAdvertisingInfo: GameAdvertisingInfo) {
+    private fun advertiseGame() {
         gameAdvertisingDisposable.add(
-            app.gameAdvertisingFacade.advertiseGame(gameAdvertisingInfo).subscribe(
+            app.gameAdvertisingFacade.advertiseGame().subscribe(
                 {},
                 { error -> Logger.error(error) { "Error while advertising the game." } }
             )
@@ -66,8 +59,6 @@ class HostInGameService : BaseInGameService() {
     }
 
     companion object {
-
-        private const val ADVERTISING_DEST_PORT = 8889
 
         private const val EXTRA_GAME_CREATED_INFO = "GameCreatedInfo"
 

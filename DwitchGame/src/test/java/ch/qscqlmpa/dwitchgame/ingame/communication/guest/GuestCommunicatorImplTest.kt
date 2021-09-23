@@ -1,12 +1,12 @@
 package ch.qscqlmpa.dwitchgame.ingame.communication.guest
 
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
+import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchcommunication.ingame.CommClient
 import ch.qscqlmpa.dwitchcommunication.ingame.model.Message
 import ch.qscqlmpa.dwitchcommunication.ingame.websocket.ClientEvent
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
-import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.eventprocessors.GuestCommunicationEventDispatcher
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.mockk.*
@@ -28,7 +28,7 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
 
     private lateinit var communicationEventsSubject: PublishSubject<ClientEvent>
 
-    private val advertisedGame = AdvertisedGame(
+    private val advertisedGame = GameAdvertisingInfo(
         isNew = true,
         gameName = "LOTR",
         gameCommonId = GameCommonId(UUID.randomUUID()),

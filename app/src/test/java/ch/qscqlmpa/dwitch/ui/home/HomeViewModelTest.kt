@@ -7,8 +7,8 @@ import ch.qscqlmpa.dwitch.ui.Destination
 import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
 import ch.qscqlmpa.dwitch.ui.home.home.HomeViewModel
+import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.game.GameFacade
-import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleFacade
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleState
@@ -37,7 +37,7 @@ class HomeViewModelTest : BaseViewModelUnitTest() {
 
     private lateinit var viewModel: HomeViewModel
 
-    private lateinit var advertisedGamesSubject: PublishSubject<List<AdvertisedGame>>
+    private lateinit var advertisedGamesSubject: PublishSubject<List<GameAdvertisingInfo>>
     private lateinit var resumableGamesSubject: PublishSubject<List<ResumableGameInfo>>
 
     @Before
@@ -66,7 +66,7 @@ class HomeViewModelTest : BaseViewModelUnitTest() {
 
         // When
         val list = listOf(
-            AdvertisedGame(
+            GameAdvertisingInfo(
                 true,
                 "Kaamelott",
                 GameCommonId(UUID.randomUUID()),

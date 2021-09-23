@@ -4,8 +4,9 @@ import ch.qscqlmpa.dwitchcommonutil.DisposableManager
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommonutil.TimeProvider
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
+import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
+import ch.qscqlmpa.dwitchcommunication.gamediscovery.GameDiscovery
 import ch.qscqlmpa.dwitchgame.di.GameScope
-import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.store.Store
 import com.jakewharton.rxrelay3.BehaviorRelay
@@ -30,8 +31,8 @@ internal class AdvertisedGameRepository @Inject constructor(
     }
 
     private val disposableManager = DisposableManager()
-    private val advertisedGamesRelay = BehaviorRelay.createDefault<List<AdvertisedGame>>(emptyList())
-    private val advertisedGames = mutableMapOf<GameCommonId, AdvertisedGame>() // Local cache surviving unsubscriptions
+    private val advertisedGamesRelay = BehaviorRelay.createDefault<List<GameAdvertisingInfo>>(emptyList())
+    private val advertisedGames = mutableMapOf<GameCommonId, GameAdvertisingInfo>() // Local cache surviving unsubscriptions
     private var listeningForAds = AtomicBoolean(false)
 
     /**
@@ -84,12 +85,12 @@ internal class AdvertisedGameRepository @Inject constructor(
     /**
      * Stream the list of advertised games in the repository.
      */
-    fun observeAdvertisedGames(): Observable<List<AdvertisedGame>> {
+    fun observeAdvertisedGames(): Observable<List<GameAdvertisingInfo>> {
         Logger.debug { "Observing advertised games..." }
         return advertisedGamesRelay
     }
 
-    fun getGame(gameCommonId: GameCommonId): AdvertisedGame? {
+    fun getGame(gameCommonId: GameCommonId): GameAdvertisingInfo? {
         return advertisedGames[gameCommonId]
     }
 
@@ -98,7 +99,7 @@ internal class AdvertisedGameRepository @Inject constructor(
             .subscribeOn(schedulerFactory.io())
     }
 
-    private fun advertisedGames(): Observable<AdvertisedGame> {
+    private fun advertisedGames(): Observable<GameAdvertisingInfo> {
         return gameDiscovery.listenForAdvertisedGames()
             .doOnNext { game -> idlingResource.decrement("Advertised game received ($game)") }
             .subscribeOn(schedulerFactory.io())
@@ -109,7 +110,7 @@ internal class AdvertisedGameRepository @Inject constructor(
             .subscribeOn(schedulerFactory.io())
     }
 
-    private fun updateLocalMap(advertisedGame: AdvertisedGame) {
+    private fun updateLocalMap(advertisedGame: GameAdvertisingInfo) {
         // Add new ad
         advertisedGames[advertisedGame.gameCommonId] = advertisedGame
 
@@ -121,7 +122,7 @@ internal class AdvertisedGameRepository @Inject constructor(
         Logger.info { "advertisedGames: $advertisedGames" }
     }
 
-    private fun advertisementIsTooOld(timeNow: LocalDateTime, game: AdvertisedGame): Boolean {
+    private fun advertisementIsTooOld(timeNow: LocalDateTime, game: GameAdvertisingInfo): Boolean {
         return timeNow.minusSeconds(GAME_AD_TIMEOUT_SEC) > game.discoveryTime
     }
 }

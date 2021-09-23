@@ -1,8 +1,40 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm")
-    id("java-library")
+    id("com.android.library")
+    kotlin("android")
     kotlin("kapt")
     kotlin("plugin.serialization")
+    id("kotlin-parcelize")
+}
+
+android {
+    compileSdk = Versions.compileSdkVersion
+    buildToolsVersion = Versions.buildToolsVersion
+    defaultConfig {
+        minSdk = Versions.minSdkVersion
+        targetSdk = Versions.targetSdkVersion
+        Versions.appVersionCode
+        Versions.appVersionName
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
+    }
+
+    buildTypes {
+        named("release") {
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            ) // ktlint-disable max-line-length
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = "11"
+    }
 }
 
 dependencies {
@@ -27,9 +59,34 @@ dependencies {
 
     // Java-WebSocket
     implementation("org.java-websocket:Java-WebSocket:1.5.2")
+
+    // Properties file reading lib (https://github.com/sksamuel/hoplite
+    implementation("com.sksamuel.hoplite:hoplite-core:1.4.7")
+    implementation("com.sksamuel.hoplite:hoplite-yaml:1.4.7")
+
+    // Joda time
+    implementation("joda-time:joda-time:2.10.10")
+
+    // JUnit5
+    val junitVersion = "5.7.1"
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
+
+    // AssertJ
+    testImplementation("org.assertj:assertj-core:3.20.2")
+
+    // MockK
+    val mockkVersion = "1.12.0"
+    androidTestImplementation("io.mockk:mockk-android:$mockkVersion")
+    testImplementation("io.mockk:mockk:$mockkVersion")
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

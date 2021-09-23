@@ -3,13 +3,13 @@ package ch.qscqlmpa.dwitchgame.ingame.gameroom
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchcommunication.ingame.model.Message
 import ch.qscqlmpa.dwitchgame.ingame.communication.GameCommunicator
-import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope
+import ch.qscqlmpa.dwitchgame.ingame.di.InGameScope
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
-@OngoingGameScope
+@InGameScope
 internal class PlayerFacadeImpl @Inject constructor(
     private val gameCommunicator: GameCommunicator,
     private val gameRepository: GameRepository,

@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchgame.ingame.gameroom
 import ch.qscqlmpa.dwitchengine.DwitchFactory
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
-import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope
+import ch.qscqlmpa.dwitchgame.ingame.di.InGameScope
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import ch.qscqlmpa.dwitchstore.ingamestore.model.CardExchangeInfo
 import ch.qscqlmpa.dwitchstore.model.Player
@@ -12,7 +12,7 @@ import io.reactivex.rxjava3.core.Single
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
-@OngoingGameScope
+@InGameScope
 internal class GameRepository @Inject constructor(
     private val store: InGameStore,
     private val dwitchFactory: DwitchFactory

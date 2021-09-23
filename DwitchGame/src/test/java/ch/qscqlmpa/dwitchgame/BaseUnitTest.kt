@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame
 
-import ch.qscqlmpa.dwitchgame.gameadvertising.SerializerFactory
+import ch.qscqlmpa.dwitchcommunication.common.SerializerFactory
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import ch.qscqlmpa.dwitchstore.store.Store
 import io.mockk.clearAllMocks

@@ -9,7 +9,7 @@ import ch.qscqlmpa.dwitchgame.ingame.waitingroom.WaitingRoomFacade
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.WaitingRoomGuestFacade
 import dagger.Subcomponent
 
-@OngoingGameScope
+@InGameScope
 @Subcomponent(
     modules = [
         InGameGuestModule::class,

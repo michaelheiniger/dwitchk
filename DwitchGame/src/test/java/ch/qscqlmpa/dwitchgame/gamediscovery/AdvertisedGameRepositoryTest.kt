@@ -3,8 +3,9 @@ package ch.qscqlmpa.dwitchgame.gamediscovery
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommonutil.TestTimeProvider
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
+import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
+import ch.qscqlmpa.dwitchcommunication.gamediscovery.GameDiscovery
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
-import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.mockk.every
 import io.mockk.mockk
@@ -25,12 +26,12 @@ internal class AdvertisedGameRepositoryTest : BaseUnitTest() {
     private lateinit var timeScheduler: TestScheduler
     private lateinit var repository: AdvertisedGameRepository
 
-    private lateinit var gameDiscoveredSubject: PublishSubject<AdvertisedGame>
+    private lateinit var gameDiscoveredSubject: PublishSubject<GameAdvertisingInfo>
     private lateinit var resumableGamesSubject: PublishSubject<List<GameCommonId>>
 
     private val dtf = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm:ss")
 
-    private val advertisedNewGame1 = AdvertisedGame(
+    private val advertisedNewGame1 = GameAdvertisingInfo(
         isNew = true,
         gameName = "LOTR",
         gameCommonId = GameCommonId(UUID.randomUUID()),
@@ -39,7 +40,7 @@ internal class AdvertisedGameRepositoryTest : BaseUnitTest() {
         LocalDateTime.parse("26.07.1989 10:00:00", dtf)
     )
 
-    private val advertisedNewGame2 = AdvertisedGame(
+    private val advertisedNewGame2 = GameAdvertisingInfo(
         isNew = true,
         gameName = "SG-1",
         gameCommonId = GameCommonId(UUID.randomUUID()),
@@ -48,7 +49,7 @@ internal class AdvertisedGameRepositoryTest : BaseUnitTest() {
         LocalDateTime.parse("26.07.1989 10:00:02", dtf)
     )
 
-    private val advertisedExistingGame1 = AdvertisedGame(
+    private val advertisedExistingGame1 = GameAdvertisingInfo(
         isNew = false,
         gameName = "GOT",
         gameCommonId = GameCommonId(UUID.randomUUID()),
@@ -57,7 +58,7 @@ internal class AdvertisedGameRepositoryTest : BaseUnitTest() {
         LocalDateTime.parse("26.07.1989 10:00:00", dtf)
     )
 
-    private val advertisedExistingGame2 = AdvertisedGame(
+    private val advertisedExistingGame2 = GameAdvertisingInfo(
         isNew = false,
         gameName = "SG Atlantis",
         gameCommonId = GameCommonId(UUID.randomUUID()),

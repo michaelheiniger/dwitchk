@@ -1,16 +1,13 @@
 package ch.qscqlmpa.dwitchgame.gamelifecycle
 
 import android.os.Parcelable
+import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.di.GameScope
-import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
-import ch.qscqlmpa.dwitchgame.gameadvertising.GameCommonIdParceler
-import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.InsertGameResult
 import ch.qscqlmpa.dwitchstore.model.Game
 import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.WriteWith
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
@@ -72,7 +69,6 @@ internal abstract class EventRepository<T> {
     }
 }
 
-
 sealed class GameLifecycleState {
     object NotStarted : GameLifecycleState()
     object Running : GameLifecycleState()
@@ -95,38 +91,32 @@ sealed class GuestGameLifecycleEvent {
 
 @Parcelize
 data class GameCreatedInfo(
-    val isNew: Boolean,
     val gameLocalId: Long,
-    val gameCommonId: @WriteWith<GameCommonIdParceler>() GameCommonId,
-    val gameName: String,
     val localPlayerLocalId: Long
 ) : Parcelable {
 
     constructor(insertGameResult: InsertGameResult) :
-            this(
-                isNew = true,
-                insertGameResult.gameLocalId,
-                insertGameResult.gameCommonId,
-                insertGameResult.gameName,
-                insertGameResult.localPlayerLocalId
-            )
+        this(
+            insertGameResult.gameLocalId,
+            insertGameResult.localPlayerLocalId
+        )
 }
 
 @Parcelize
 data class GameJoinedInfo(
     val gameLocalId: Long,
     val localPlayerLocalId: Long,
-    val advertisedGame: AdvertisedGame
+    val advertisedGame: GameAdvertisingInfo
 ) : Parcelable {
 
-    constructor(insertGameResult: InsertGameResult, advertisedGame: AdvertisedGame) :
-            this(
-                insertGameResult.gameLocalId,
-                insertGameResult.localPlayerLocalId,
-                advertisedGame
-            )
+    constructor(insertGameResult: InsertGameResult, advertisedGame: GameAdvertisingInfo) :
+        this(
+            insertGameResult.gameLocalId,
+            insertGameResult.localPlayerLocalId,
+            advertisedGame
+        )
 
-    constructor(game: Game, advertisedGame: AdvertisedGame) : this(
+    constructor(game: Game, advertisedGame: GameAdvertisingInfo) : this(
         game.id,
         game.localPlayerLocalId,
         advertisedGame

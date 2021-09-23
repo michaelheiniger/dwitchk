@@ -6,7 +6,7 @@ import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealerFactory
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetupFactory
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetupFactory
-import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope
+import ch.qscqlmpa.dwitchgame.ingame.di.InGameScope
 import ch.qscqlmpa.dwitchgame.ingame.gameroom.PlayerFacade
 import ch.qscqlmpa.dwitchgame.ingame.gameroom.PlayerFacadeImpl
 import dagger.Binds
@@ -17,25 +17,25 @@ import dagger.Provides
 @Module
 abstract class TestDwitchModule {
 
-    @OngoingGameScope
+    @InGameScope
     @Binds
     internal abstract fun provideGameDashbordFacade(facade: PlayerFacadeImpl): PlayerFacade
 
     companion object {
 
-        @OngoingGameScope
+        @InGameScope
         @Provides
         fun provideCardDealerFactory(): CardDealerFactory {
             return DeterministicCardDealerFactory()
         }
 
-        @OngoingGameScope
+        @InGameScope
         @Provides
         fun provideInitialGameSetupFactory(): InitialGameSetupFactory {
             return DeterministicInitialGameSetupFactory()
         }
 
-        @OngoingGameScope
+        @InGameScope
         @Provides
         internal fun provideDwitchEngineFactory(): DwitchFactory {
             return ProdDwitchFactory()

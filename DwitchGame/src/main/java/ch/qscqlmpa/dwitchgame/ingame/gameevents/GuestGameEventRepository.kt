@@ -1,8 +1,8 @@
 package ch.qscqlmpa.dwitchgame.ingame.gameevents
 
 import ch.qscqlmpa.dwitchgame.common.CachedEventRepository
-import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope
+import ch.qscqlmpa.dwitchgame.ingame.di.InGameScope
 import javax.inject.Inject
 
-@OngoingGameScope
+@InGameScope
 internal class GuestGameEventRepository @Inject constructor() : CachedEventRepository<GuestGameEvent>()

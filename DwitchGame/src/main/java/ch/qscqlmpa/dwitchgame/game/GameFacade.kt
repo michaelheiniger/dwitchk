@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.game
 
-import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
+import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -31,11 +31,11 @@ interface GameFacade {
      * @param advertisedGame info of the game to join
      * @param playerName name of the local player
      */
-    fun joinGame(advertisedGame: AdvertisedGame, playerName: String): Completable
+    fun joinGame(advertisedGame: GameAdvertisingInfo, playerName: String): Completable
 
     /**
      * Join an existing game (see [resumeGame]) hosted by another player. The local player joins as a guest.
      * @param advertisedGame info of the game to join
      */
-    fun joinResumedGame(advertisedGame: AdvertisedGame): Completable
+    fun joinResumedGame(advertisedGame: GameAdvertisingInfo): Completable
 }

@@ -5,8 +5,8 @@ import ch.qscqlmpa.dwitch.app.StubIdlingResource
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.Destination
 import ch.qscqlmpa.dwitch.ui.NavigationBridge
+import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.game.GameFacade
-import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.mockk.every
@@ -30,7 +30,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
     private lateinit var viewModel: JoinNewGameViewModel
 
     private val gameCommonId = GameCommonId(UUID.randomUUID())
-    private val advertisedGame = AdvertisedGame(true, "Table Ronde", gameCommonId, "192.168.1.1", 8889)
+    private val advertisedGame = GameAdvertisingInfo(true, "Table Ronde", gameCommonId, "192.168.1.1", 8889)
 
     @Before
     fun setup() {

@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitchgame.ingame.di
 import ch.qscqlmpa.dwitchgame.ingame.di.modules.*
 import dagger.Subcomponent
 
-@OngoingGameScope
+@InGameScope
 @Subcomponent(
     modules = [
         InGameGuestModule::class,
@@ -14,5 +14,4 @@ import dagger.Subcomponent
         GuestCommunicationModule::class,
     ]
 )
-interface TestInGameGuestComponent : InGameGuestComponent, TestInGameComponent {
-}
+interface TestInGameGuestComponent : InGameGuestComponent, TestInGameComponent

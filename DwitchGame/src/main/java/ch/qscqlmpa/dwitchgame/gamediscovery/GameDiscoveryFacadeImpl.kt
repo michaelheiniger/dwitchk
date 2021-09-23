@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.gamediscovery
 
-import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
+import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
@@ -17,11 +17,11 @@ internal class GameDiscoveryFacadeImpl @Inject constructor(
         advertisedGameRepository.stopListeningForAdvertisedGames()
     }
 
-    override fun observeAdvertisedGames(): Observable<List<AdvertisedGame>> {
+    override fun observeAdvertisedGames(): Observable<List<GameAdvertisingInfo>> {
         return advertisedGameRepository.observeAdvertisedGames()
     }
 
-    override fun getAdvertisedGame(gameCommonId: GameCommonId): AdvertisedGame? {
+    override fun getAdvertisedGame(gameCommonId: GameCommonId): GameAdvertisingInfo? {
         return advertisedGameRepository.getGame(gameCommonId)
     }
 }

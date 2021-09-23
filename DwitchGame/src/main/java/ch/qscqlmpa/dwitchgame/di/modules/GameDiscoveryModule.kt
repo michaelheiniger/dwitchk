@@ -1,27 +1,27 @@
 package ch.qscqlmpa.dwitchgame.di.modules
 
+import ch.qscqlmpa.dwitchcommunication.gamediscovery.GameDiscovery
 import ch.qscqlmpa.dwitchgame.di.GameScope
-import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscovery
+import ch.qscqlmpa.dwitchgame.gamediscovery.AdvertisedGameRepository
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacadeImpl
-import ch.qscqlmpa.dwitchgame.gamediscovery.lan.LanGameDiscovery
-import ch.qscqlmpa.dwitchgame.gamediscovery.lan.network.NetworkAdapter
-import ch.qscqlmpa.dwitchgame.gamediscovery.lan.network.udp.UdpNetworkAdapter
-import dagger.Binds
 import dagger.Module
+import dagger.Provides
 
 @Suppress("unused")
 @Module
-abstract class GameDiscoveryModule {
-
-    @Binds
-    internal abstract fun provideNetworkAdapter(networkListener: UdpNetworkAdapter): NetworkAdapter
+class GameDiscoveryModule(
+    private val gameDiscovery: GameDiscovery
+) {
+    @GameScope
+    @Provides
+    internal fun provideGameDiscovery(): GameDiscovery {
+        return gameDiscovery
+    }
 
     @GameScope
-    @Binds
-    internal abstract fun provideGameDiscovery(gameDiscovery: LanGameDiscovery): GameDiscovery
-
-    @GameScope
-    @Binds
-    internal abstract fun provideGameDiscoveryFacade(facade: GameDiscoveryFacadeImpl): GameDiscoveryFacade
+    @Provides
+    internal fun provideGameDiscoveryFacade(advertisedGameRepository: AdvertisedGameRepository): GameDiscoveryFacade {
+        return GameDiscoveryFacadeImpl(advertisedGameRepository)
+    }
 }

@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ingame.communication.guest
 
-import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
+import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import io.reactivex.rxjava3.core.Observable
 
 interface GuestCommunicationFacade {
@@ -13,7 +13,7 @@ interface GuestCommunicationFacade {
     /**
      * Connects to the server using provided advertised game.
      */
-    fun connect(advertisedGame: AdvertisedGame)
+    fun connect(advertisedGame: GameAdvertisingInfo)
 
     /**
      * Disconnects from the server.

@@ -14,6 +14,7 @@ class GuestInGameService : BaseInGameService() {
     override val playerRole = PlayerRole.GUEST
 
     override fun actionStartService(intent: Intent) {
+
         val gameJoinedInfo = intent.getParcelableExtra<GameJoinedInfo>(EXTRA_GAME_JOINED_INFO)!!
 
         Logger.info { "Start service" }

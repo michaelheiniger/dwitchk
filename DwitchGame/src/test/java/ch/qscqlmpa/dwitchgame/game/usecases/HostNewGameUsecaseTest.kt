@@ -55,10 +55,7 @@ internal class HostNewGameUsecaseTest : BaseUnitTest() {
             mockGameLifecycleEventRepository.notify(
                 HostGameLifecycleEvent.GameSetup(
                     GameCreatedInfo(
-                        isNew = true,
                         gameLocalId,
-                        gameCommonId,
-                        gameName,
                         localPlayerLocalId
                     )
                 )

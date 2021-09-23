@@ -13,8 +13,11 @@ import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.TestApp
 import ch.qscqlmpa.dwitch.e2e.DisableAnimationsRule
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
+import ch.qscqlmpa.dwitchcommunication.di.TestCommunicationComponent
 import ch.qscqlmpa.dwitchcommunication.di.TestInGameGuestCommunicationComponent
 import ch.qscqlmpa.dwitchcommunication.di.TestInGameHostCommunicationComponent
+import ch.qscqlmpa.dwitchcommunication.gamediscovery.lan.network.Packet
+import ch.qscqlmpa.dwitchcommunication.gamediscovery.lan.network.TestNetworkAdapter
 import ch.qscqlmpa.dwitchcommunication.ingame.InGameSerializerFactory
 import ch.qscqlmpa.dwitchcommunication.ingame.websocket.client.test.ClientTestStub
 import ch.qscqlmpa.dwitchcommunication.ingame.websocket.server.test.ServerTestStub
@@ -26,8 +29,6 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchgame.di.TestGameComponent
-import ch.qscqlmpa.dwitchgame.gamediscovery.lan.network.Packet
-import ch.qscqlmpa.dwitchgame.gamediscovery.lan.network.TestNetworkAdapter
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.di.TestInGameComponent
 import ch.qscqlmpa.dwitchgame.ingame.di.TestInGameGuestComponent
@@ -57,6 +58,7 @@ abstract class BaseE2eTest {
 
     private lateinit var res: Resources
 
+    private lateinit var communicationComponent: TestCommunicationComponent
     private lateinit var storeComponent: TestStoreComponent
     private lateinit var gameComponent: TestGameComponent
 
@@ -87,10 +89,11 @@ abstract class BaseE2eTest {
         gameIdlingResource = IdlingResourceAdapter(app.gameIdlingResource)
         testRule.registerIdlingResource(gameIdlingResource)
 
-        gameComponent = app.testGameComponent
+        communicationComponent = app.testCommunicationComponent
         storeComponent = app.testStoreComponent
+        gameComponent = app.testGameComponent
         store = storeComponent.store
-        networkAdapter = gameComponent.networkListener as TestNetworkAdapter
+        networkAdapter = communicationComponent.networkListener as TestNetworkAdapter
     }
 
     @After
@@ -108,13 +111,13 @@ abstract class BaseE2eTest {
         gameName: String,
         gameCommonId: GameCommonId,
         gamePort: Int,
-        senderIpAddress: String,
+        gameIpAddress: String,
         senderPort: Int
     ) {
         val ad =
-            "{\"isNew\": $isNew, \"gameCommonId\":\"${gameCommonId.value}\",\"gameName\":\"$gameName\",\"gamePort\":$gamePort}"
+            "{\"isNew\": $isNew, \"gameCommonId\":\"${gameCommonId.value}\",\"gameName\":\"$gameName\", \"gameIpAddress\":\"$gameIpAddress\", \"gamePort\":$gamePort}"
         incrementGameIdlingResource("Advertise game $ad")
-        networkAdapter.setPacket(Packet(ad, senderIpAddress, senderPort))
+        networkAdapter.setPacket(Packet(ad, gameIpAddress, senderPort))
     }
 
     protected fun initializeInitialGameSetup(

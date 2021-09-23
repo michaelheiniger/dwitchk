@@ -73,7 +73,7 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
             gameName = gameName,
             gameCommonId = gameCommonId,
             gamePort = 8890,
-            senderIpAddress = "192.168.1.1",
+            gameIpAddress = "192.168.1.1",
             senderPort = 2454
         )
     }

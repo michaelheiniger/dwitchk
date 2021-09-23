@@ -1,13 +1,13 @@
 package ch.qscqlmpa.dwitchgame.ingame.communication.host
 
 import ch.qscqlmpa.dwitchgame.ingame.communication.CommunicationStateRepository
-import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope
+import ch.qscqlmpa.dwitchgame.ingame.di.InGameScope
 import com.jakewharton.rxrelay3.BehaviorRelay
 import io.reactivex.rxjava3.core.Observable
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
-@OngoingGameScope
+@InGameScope
 internal class HostCommunicationStateRepository @Inject constructor() : CommunicationStateRepository {
 
     override fun connected(): Observable<Boolean> = relay.map { state ->

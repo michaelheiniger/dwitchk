@@ -25,7 +25,7 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.*
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
-import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
+import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import org.joda.time.DateTime
@@ -39,9 +39,9 @@ import java.util.*
 fun HomeScreenPreview() {
     val advertisedGame = LoadedData.Success(
         listOf(
-            AdvertisedGame(false, "Game 1", GameCommonId(UUID.randomUUID()), "192.168.1.1", 8889),
-            AdvertisedGame(false, "Game 2", GameCommonId(UUID.randomUUID()), "192.168.1.2", 8889),
-            AdvertisedGame(false, "Game 3", GameCommonId(UUID.randomUUID()), "192.168.1.3", 8889)
+            GameAdvertisingInfo(false, "Game 1", GameCommonId(UUID.randomUUID()), "192.168.1.1", 8889),
+            GameAdvertisingInfo(false, "Game 2", GameCommonId(UUID.randomUUID()), "192.168.1.2", 8889),
+            GameAdvertisingInfo(false, "Game 3", GameCommonId(UUID.randomUUID()), "192.168.1.3", 8889)
         )
     )
 
@@ -91,10 +91,10 @@ fun HomeScreen(
 @Composable
 fun HomeBody(
     notification: HomeNotification,
-    advertisedGames: LoadedData<List<AdvertisedGame>>,
+    advertisedGames: LoadedData<List<GameAdvertisingInfo>>,
     resumableGames: LoadedData<List<ResumableGameInfo>>,
     onCreateNewGameClick: () -> Unit,
-    onJoinGameClick: (AdvertisedGame) -> Unit,
+    onJoinGameClick: (GameAdvertisingInfo) -> Unit,
     onResumableGameClick: (ResumableGameInfo) -> Unit
 ) {
     Notification(notification = notification)
@@ -145,8 +145,8 @@ private fun GameCreation(onCreateNewGameClick: () -> Unit) {
 
 @Composable
 private fun AdvertisedGameContainer(
-    advertisedGames: LoadedData<List<AdvertisedGame>>,
-    onJoinGameClick: (AdvertisedGame) -> Unit
+    advertisedGames: LoadedData<List<GameAdvertisingInfo>>,
+    onJoinGameClick: (GameAdvertisingInfo) -> Unit
 ) {
     Column(
         Modifier
@@ -171,8 +171,8 @@ private fun AdvertisedGameContainer(
 
 @Composable
 private fun AdvertisedGames(
-    advertisedGames: List<AdvertisedGame>,
-    onJoinGameClick: (AdvertisedGame) -> Unit
+    advertisedGames: List<GameAdvertisingInfo>,
+    onJoinGameClick: (GameAdvertisingInfo) -> Unit
 ) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
 

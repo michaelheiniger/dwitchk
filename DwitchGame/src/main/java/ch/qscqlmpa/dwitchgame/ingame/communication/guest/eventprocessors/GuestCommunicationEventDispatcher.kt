@@ -2,13 +2,13 @@ package ch.qscqlmpa.dwitchgame.ingame.communication.guest.eventprocessors
 
 import ch.qscqlmpa.dwitchcommunication.ingame.websocket.ClientEvent
 import ch.qscqlmpa.dwitchgame.ingame.communication.messageprocessors.MessageDispatcher
-import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope
+import ch.qscqlmpa.dwitchgame.ingame.di.InGameScope
 import io.reactivex.rxjava3.core.Completable
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 import javax.inject.Provider
 
-@OngoingGameScope
+@InGameScope
 internal class GuestCommunicationEventDispatcher @Inject constructor(
     private val eventProcessors: @JvmSuppressWildcards Map<Class<out ClientEvent.CommunicationEvent>, Provider<GuestCommunicationEventProcessor>>,
     private val messageDispatcher: MessageDispatcher

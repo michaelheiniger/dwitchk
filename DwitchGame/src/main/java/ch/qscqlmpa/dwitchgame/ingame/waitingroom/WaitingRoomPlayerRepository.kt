@@ -1,14 +1,14 @@
 package ch.qscqlmpa.dwitchgame.ingame.waitingroom
 
 import ch.qscqlmpa.dwitchgame.ingame.communication.CommunicationStateRepository
-import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope
+import ch.qscqlmpa.dwitchgame.ingame.di.InGameScope
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import ch.qscqlmpa.dwitchstore.model.Player
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
-@OngoingGameScope
+@InGameScope
 internal class WaitingRoomPlayerRepository @Inject constructor(
     private val store: InGameStore,
     private val localPlayerRole: PlayerRole,

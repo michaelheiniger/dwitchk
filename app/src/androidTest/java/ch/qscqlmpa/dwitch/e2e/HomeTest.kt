@@ -25,7 +25,7 @@ class HomeTest : BaseE2eTest() {
             gameName = "Game 1",
             gameCommonId = GameCommonId(UUID.randomUUID()),
             gamePort = 8890,
-            senderIpAddress = "192.168.1.1",
+            gameIpAddress = "192.168.1.1",
             senderPort = 2454
         )
     }
@@ -36,7 +36,7 @@ class HomeTest : BaseE2eTest() {
             gameName = "Game 2",
             gameCommonId = GameCommonId(UUID.randomUUID()),
             gamePort = 8891,
-            senderIpAddress = "192.168.1.2",
+            gameIpAddress = "192.168.1.2",
             senderPort = 6543
         )
     }

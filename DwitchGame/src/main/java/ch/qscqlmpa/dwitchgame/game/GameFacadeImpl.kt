@@ -1,11 +1,11 @@
 package ch.qscqlmpa.dwitchgame.game
 
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
+import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.game.usecases.HostNewGameUsecase
 import ch.qscqlmpa.dwitchgame.game.usecases.JoinNewGameUsecase
 import ch.qscqlmpa.dwitchgame.game.usecases.JoinResumedGameUsecase
 import ch.qscqlmpa.dwitchgame.game.usecases.ResumeGameUsecase
-import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import ch.qscqlmpa.dwitchstore.store.Store
 import io.reactivex.rxjava3.core.Completable
@@ -36,12 +36,12 @@ internal class GameFacadeImpl @Inject constructor(
             .subscribeOn(schedulerFactory.io())
     }
 
-    override fun joinGame(advertisedGame: AdvertisedGame, playerName: String): Completable {
+    override fun joinGame(advertisedGame: GameAdvertisingInfo, playerName: String): Completable {
         return joinNewGameUsecase.joinGame(advertisedGame, playerName)
             .subscribeOn(schedulerFactory.io())
     }
 
-    override fun joinResumedGame(advertisedGame: AdvertisedGame): Completable {
+    override fun joinResumedGame(advertisedGame: GameAdvertisingInfo): Completable {
         return joinResumedGameUsecase.joinResumedGame(advertisedGame)
             .subscribeOn(schedulerFactory.io())
     }

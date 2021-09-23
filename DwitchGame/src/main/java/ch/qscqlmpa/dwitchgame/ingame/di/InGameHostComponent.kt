@@ -4,12 +4,13 @@ import ch.qscqlmpa.dwitchgame.ingame.GameFacadeToRename
 import ch.qscqlmpa.dwitchgame.ingame.InGameHostFacade
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationFacade
 import ch.qscqlmpa.dwitchgame.ingame.di.modules.*
+import ch.qscqlmpa.dwitchgame.ingame.gameadvertising.GameAdvertisingFacade
 import ch.qscqlmpa.dwitchgame.ingame.gameroom.PlayerFacade
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.WaitingRoomFacade
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.WaitingRoomHostFacade
 import dagger.Subcomponent
 
-@OngoingGameScope
+@InGameScope
 @Subcomponent(
     modules = [
         InGameHostModule::class,
@@ -21,6 +22,7 @@ import dagger.Subcomponent
     ]
 )
 interface InGameHostComponent {
+    val gameAdvertisingFacade: GameAdvertisingFacade
     val gameFacadeToRename: GameFacadeToRename
     val hostCommunicationFacade: HostCommunicationFacade
     val waitingRoomFacade: WaitingRoomFacade

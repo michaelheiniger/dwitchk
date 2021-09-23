@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchgame.game.usecases
 
+import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.common.ApplicationConfigRepository
-import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameJoinedInfo
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GuestGameLifecycleEvent
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GuestGameLifecycleEventRepository
@@ -15,14 +15,14 @@ internal class JoinResumedGameUsecase @Inject constructor(
     private val applicationConfigRepository: ApplicationConfigRepository,
     private val guestGameLifecycleEventRepository: GuestGameLifecycleEventRepository
 ) {
-    fun joinResumedGame(advertisedGame: AdvertisedGame): Completable = Completable.merge(
+    fun joinResumedGame(advertisedGame: GameAdvertisingInfo): Completable = Completable.merge(
         listOf(
             prepareGame(advertisedGame),
             waitForRejoinAckFromHost()
         )
     )
 
-    private fun prepareGame(advertisedGame: AdvertisedGame) = Completable.fromAction {
+    private fun prepareGame(advertisedGame: GameAdvertisingInfo) = Completable.fromAction {
         val game = store.getGame(advertisedGame.gameCommonId)!!
         store.preparePlayersForGameResume(game.id)
         guestGameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GameSetup(GameJoinedInfo(game, advertisedGame)))

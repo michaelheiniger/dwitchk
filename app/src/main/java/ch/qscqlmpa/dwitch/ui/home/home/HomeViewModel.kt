@@ -9,8 +9,8 @@ import ch.qscqlmpa.dwitch.ui.Destination
 import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
+import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.game.GameFacade
-import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleFacade
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleState
@@ -31,12 +31,12 @@ class HomeViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _loading = mutableStateOf(false)
-    private val _advertisedGames = mutableStateOf<LoadedData<List<AdvertisedGame>>>(LoadedData.Loading)
+    private val _advertisedGames = mutableStateOf<LoadedData<List<GameAdvertisingInfo>>>(LoadedData.Loading)
     private val _resumableGames = mutableStateOf<LoadedData<List<ResumableGameInfo>>>(LoadedData.Loading)
     private val _notification = mutableStateOf<HomeNotification>(HomeNotification.None)
 
     val loading get(): State<Boolean> = _loading
-    val advertisedGames get(): State<LoadedData<List<AdvertisedGame>>> = _advertisedGames
+    val advertisedGames get(): State<LoadedData<List<GameAdvertisingInfo>>> = _advertisedGames
     val resumableGames get(): State<LoadedData<List<ResumableGameInfo>>> = _resumableGames
     val notification: State<HomeNotification> = _notification
 
@@ -48,7 +48,7 @@ class HomeViewModel @Inject constructor(
         navigationBridge.navigate(Destination.HomeScreens.HostNewGame)
     }
 
-    fun joinGame(game: AdvertisedGame) {
+    fun joinGame(game: GameAdvertisingInfo) {
         if (game.isNew) {
             navigationBridge.navigate(Destination.HomeScreens.JoinNewGame(game.gameCommonId))
         } else {
@@ -125,7 +125,7 @@ class HomeViewModel @Inject constructor(
         disposableManager.add(
             gameDiscoveryFacade.observeAdvertisedGames()
                 .observeOn(uiScheduler)
-                .map<LoadedData<List<AdvertisedGame>>> { games -> LoadedData.Success(games) }
+                .map<LoadedData<List<GameAdvertisingInfo>>> { games -> LoadedData.Success(games) }
                 .doOnError { error -> Logger.error(error) { "Error while observing advertised games." } }
                 .onErrorReturn { LoadedData.Failed }
                 .subscribe { response -> _advertisedGames.value = response }
@@ -148,4 +148,3 @@ sealed class HomeNotification {
     object None : HomeNotification()
     object ErrorJoiningGame : HomeNotification()
 }
-

@@ -24,10 +24,7 @@ internal class ResumeGameUsecase @Inject constructor(
         hostGameLifecycleEventRepository.notify(
             HostGameLifecycleEvent.GameSetup(
                 GameCreatedInfo(
-                    game.isNew(),
                     game.id,
-                    game.gameCommonId,
-                    game.name,
                     game.localPlayerLocalId
                 )
             )

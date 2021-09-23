@@ -1,9 +1,9 @@
 package ch.qscqlmpa.dwitchgame.game.usecases
 
+import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.common.ApplicationConfigRepository
 import ch.qscqlmpa.dwitchgame.common.testApplicationConfig
-import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameJoinedInfo
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GuestGameLifecycleEvent
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GuestGameLifecycleEventRepository
@@ -31,7 +31,7 @@ internal class JoinNewGameUsecaseTest : BaseUnitTest() {
     private val gamePort = 8889
     private val localPlayerLocalId = 10L
     private val gameIpAddress = "192.168.1.1"
-    private val advertisedGame = AdvertisedGame(true, gameName, gameCommonId, gameIpAddress, gamePort, LocalDateTime.now())
+    private val advertisedGame = GameAdvertisingInfo(true, gameName, gameCommonId, gameIpAddress, gamePort, LocalDateTime.now())
     private val playerName = "Lancelot"
 
     private lateinit var gameLifecycleEventSubject: PublishSubject<GuestGameLifecycleEvent>
@@ -45,7 +45,7 @@ internal class JoinNewGameUsecaseTest : BaseUnitTest() {
 
         newGameUsecase = JoinNewGameUsecase(mockApplicationConfigRepository, mockGameLifecycleEventRepository, mockStore)
         every { mockStore.insertGameForGuest(any(), any(), any()) } returns
-                InsertGameResult(gameLocalId, gameCommonId, gameName, localPlayerLocalId)
+            InsertGameResult(gameLocalId, gameCommonId, gameName, localPlayerLocalId)
     }
 
     @Test

@@ -8,8 +8,8 @@ import ch.qscqlmpa.dwitch.ui.Destination
 import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
+import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.game.GameFacade
-import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.reactivex.rxjava3.core.Scheduler
@@ -27,7 +27,7 @@ class JoinNewGameViewModel @Inject constructor(
     private val _loading = mutableStateOf(false)
     private val _joinGameControlEnabled = mutableStateOf(false)
     private val _playerName = mutableStateOf("")
-    private val _game = mutableStateOf<AdvertisedGame?>(null)
+    private val _game = mutableStateOf<GameAdvertisingInfo?>(null)
     private val _notification = mutableStateOf<JoinNewGameNotification>(JoinNewGameNotification.None)
 
     val loading get(): State<Boolean> = _loading

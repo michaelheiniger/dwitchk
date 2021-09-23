@@ -4,7 +4,7 @@ import ch.qscqlmpa.dwitchcommunication.ingame.websocket.ServerEvent
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.*
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.eventprocessors.*
 import ch.qscqlmpa.dwitchgame.ingame.di.HostCommunicationEventProcessorKey
-import ch.qscqlmpa.dwitchgame.ingame.di.OngoingGameScope
+import ch.qscqlmpa.dwitchgame.ingame.di.InGameScope
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -13,20 +13,20 @@ import dagger.multibindings.IntoMap
 @Module
 internal abstract class HostCommunicationModule {
 
-    @OngoingGameScope
+    @InGameScope
     @Binds
     internal abstract fun provideCommunicationFacade(facade: HostCommunicationFacadeImpl): HostCommunicationFacade
 
-    @OngoingGameScope
+    @InGameScope
     @Binds
     internal abstract fun provideCommunicator(hostCommunicatorImpl: HostCommunicatorImpl): HostCommunicator
 
-    @OngoingGameScope
+    @InGameScope
     @Binds
     internal abstract fun provideComputerCommunicator(hostCommunicatorImpl: HostCommunicatorImpl): ComputerCommunicator
 
     // ##### HostCommunicationEventProcessor implementations #####
-    @OngoingGameScope
+    @InGameScope
     @Binds
     @IntoMap
     @HostCommunicationEventProcessorKey(ServerEvent.CommunicationEvent.ListeningForConnections::class)
@@ -34,7 +34,7 @@ internal abstract class HostCommunicationModule {
         eventProcessor: HostListeningForConnectionsEventProcessor
     ): HostCommunicationEventProcessor
 
-    @OngoingGameScope
+    @InGameScope
     @Binds
     @IntoMap
     @HostCommunicationEventProcessorKey(ServerEvent.CommunicationEvent.NoLongerListeningForConnections::class)
@@ -42,7 +42,7 @@ internal abstract class HostCommunicationModule {
         eventProcessor: HostNoLongerListeningForConnectionsEventProcessor
     ): HostCommunicationEventProcessor
 
-    @OngoingGameScope
+    @InGameScope
     @Binds
     @IntoMap
     @HostCommunicationEventProcessorKey(ServerEvent.CommunicationEvent.ClientConnected::class)
@@ -50,7 +50,7 @@ internal abstract class HostCommunicationModule {
         eventProcessor: GuestConnectedEventProcessor
     ): HostCommunicationEventProcessor
 
-    @OngoingGameScope
+    @InGameScope
     @Binds
     @IntoMap
     @HostCommunicationEventProcessorKey(ServerEvent.CommunicationEvent.ClientDisconnected::class)
@@ -58,7 +58,7 @@ internal abstract class HostCommunicationModule {
         eventProcessor: GuestDisconnectedEventProcessor
     ): HostCommunicationEventProcessor
 
-    @OngoingGameScope
+    @InGameScope
     @Binds
     @IntoMap
     @HostCommunicationEventProcessorKey(ServerEvent.CommunicationEvent.ErrorListeningForConnections::class)

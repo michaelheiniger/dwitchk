@@ -7,17 +7,12 @@ import ch.qscqlmpa.dwitch.ingame.InGameHostUiComponent
 import ch.qscqlmpa.dwitch.ingame.InGameHostUiModule
 import ch.qscqlmpa.dwitch.ingame.services.ServiceManager
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
-import ch.qscqlmpa.dwitchcommunication.di.CommunicationGuestModule
-import ch.qscqlmpa.dwitchcommunication.di.CommunicationHostModule
-import ch.qscqlmpa.dwitchcommunication.di.DaggerInGameGuestCommunicationComponent
-import ch.qscqlmpa.dwitchcommunication.di.DaggerInGameHostCommunicationComponent
-import ch.qscqlmpa.dwitchcommunication.di.InGameGuestCommunicationComponent
-import ch.qscqlmpa.dwitchcommunication.di.InGameHostCommunicationComponent
+import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
+import ch.qscqlmpa.dwitchcommunication.di.*
 import ch.qscqlmpa.dwitchgame.di.DaggerGameComponent
 import ch.qscqlmpa.dwitchgame.di.GameComponent
 import ch.qscqlmpa.dwitchgame.di.modules.DwitchGameModule
-import ch.qscqlmpa.dwitchgame.gameadvertising.AdvertisedGame
-import ch.qscqlmpa.dwitchgame.gameadvertising.GameAdvertisingFacade
+import ch.qscqlmpa.dwitchgame.di.modules.GameDiscoveryModule
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleFacade
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationFacade
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationFacade
@@ -25,6 +20,7 @@ import ch.qscqlmpa.dwitchgame.ingame.di.InGameGuestComponent
 import ch.qscqlmpa.dwitchgame.ingame.di.InGameHostComponent
 import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameGuestModule
 import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameHostModule
+import ch.qscqlmpa.dwitchgame.ingame.gameadvertising.GameAdvertisingFacade
 import ch.qscqlmpa.dwitchstore.DaggerStoreComponent
 import ch.qscqlmpa.dwitchstore.StoreComponent
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreComponent
@@ -41,7 +37,7 @@ open class App : DaggerApplication() {
     private lateinit var storeComponent: StoreComponent
     private lateinit var gameComponent: GameComponent
     private lateinit var appComponent: AppComponent
-//    private lateinit var communicationComponent: CommunicationComponent
+    private lateinit var communicationComponent: CommunicationComponent
 
     var inGameHostCommunicationComponent: InGameHostCommunicationComponent? = null
     var inGameGuestCommunicationComponent: InGameGuestCommunicationComponent? = null
@@ -56,11 +52,15 @@ open class App : DaggerApplication() {
     lateinit var serviceManager: ServiceManager
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+
+        communicationComponent = DaggerCommunicationComponent.factory().create(CommunicationModule(this))
+
         storeComponent = DaggerStoreComponent.factory().create(StoreModule(this))
 
         gameComponent = DaggerGameComponent.factory().create(
             DwitchGameModule(StubIdlingResource()),
-            ch.qscqlmpa.dwitchgame.di.modules.StoreModule(storeComponent.store)
+            ch.qscqlmpa.dwitchgame.di.modules.StoreModule(storeComponent.store),
+            GameDiscoveryModule(communicationComponent.gameDiscovery)
         )
 
         appComponent = DaggerAppComponent.builder()
@@ -91,9 +91,10 @@ open class App : DaggerApplication() {
             InGameHostModule(
                 gameLocalId,
                 localPlayerLocalId,
+                communicationComponent.gameAdvertiser,
                 inGameStoreComponent!!.inGameStore,
                 inGameHostCommunicationComponent!!.commServer,
-                inGameHostCommunicationComponent!!.connectionStore,
+                inGameHostCommunicationComponent!!.connectionStore
             )
         )
         inGameHostUiComponent = appComponent.addInGameHostUiComponent(
@@ -112,7 +113,7 @@ open class App : DaggerApplication() {
     open fun createInGameGuestComponents(
         gameLocalId: Long,
         localPlayerLocalId: Long,
-        advertisedGame: AdvertisedGame
+        advertisedGame: GameAdvertisingInfo
     ) {
         Logger.debug { "createInGameGuestComponents()" }
         inGameStoreComponent = storeComponent.addInGameStoreComponent(InGameStoreModule(gameLocalId, localPlayerLocalId))
@@ -155,7 +156,7 @@ open class App : DaggerApplication() {
 
     open val gameLifecycleFacade get(): GameLifecycleFacade = gameComponent.gameLifecycleFacade
 
-    open val gameAdvertisingFacade get(): GameAdvertisingFacade = gameComponent.gameAdvertisingFacade
+    val gameAdvertisingFacade get(): GameAdvertisingFacade = inGameHostComponent!!.gameAdvertisingFacade
 
     val hostCommunicationFacade
         get(): HostCommunicationFacade {
