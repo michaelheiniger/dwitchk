@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 @CommunicationScope
 internal class ApplicationConfigRepository @Inject constructor() {
-    val config: ApplicationConfig = ConfigLoader().loadConfigOrThrow("/application.yaml")
+    val config: ApplicationConfig = ConfigLoader().loadConfigOrThrow("/communication-config.yaml")
 }
 
 internal data class GameAdvertising(val port: Int)

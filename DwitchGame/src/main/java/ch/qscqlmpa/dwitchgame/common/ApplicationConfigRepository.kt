@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 @GameScope
 internal class ApplicationConfigRepository @Inject constructor() {
-    val config: ApplicationConfig = ConfigLoader().loadConfigOrThrow("/application.yaml")
+    val config: ApplicationConfig = ConfigLoader().loadConfigOrThrow("/game-config.yaml")
 }
 
 internal data class Communication(val waitForJoinOrRejoinAckTimeout: Long)

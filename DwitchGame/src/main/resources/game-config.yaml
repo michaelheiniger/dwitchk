@@ -1,3 +1,2 @@
-
 communication:
   waitForJoinOrRejoinAckTimeout: 5 # seconds
