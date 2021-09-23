@@ -6,5 +6,5 @@ import io.reactivex.rxjava3.core.Observable
 
 interface GameAdvertisingFacade {
     fun advertiseGame(): Completable
-    fun observeSerializedGameAdvertisingInfo(): Observable<AdvertisingInfo>
+    fun observeAdvertisingInfo(): Observable<AdvertisingInfo>
 }

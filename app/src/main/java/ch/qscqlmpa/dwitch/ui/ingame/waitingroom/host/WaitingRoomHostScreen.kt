@@ -1,6 +1,8 @@
 package ch.qscqlmpa.dwitch.ui.ingame.waitingroom.host
 
+import android.graphics.Bitmap
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -8,8 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,6 +28,8 @@ import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.WaitingRoomViewModel
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.PlayerWrUi
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.qrcode.QRCodeWriter
 
 @Preview(
     showBackground = true,
@@ -31,6 +37,9 @@ import ch.qscqlmpa.dwitchgame.ingame.waitingroom.PlayerWrUi
 )
 @Composable
 private fun WaitingRoomHostScreenPreview() {
+
+    val qrCode = buildSampleQrCode()
+
     ActivityScreenContainer {
         WaitingRoomHostBody(
             toolbarTitle = "Dwiiitch",
@@ -40,6 +49,7 @@ private fun WaitingRoomHostScreenPreview() {
                 PlayerWrUi(2L, "Boromir", connected = true, ready = false, kickable = true),
                 PlayerWrUi(3L, "Gimli", connected = false, ready = false, kickable = true)
             ),
+            gameQrCode = qrCode,
             launchGameEnabled = false,
             connectionStatus = HostCommunicationState.Error,
             onLaunchGameClick = {},
@@ -72,6 +82,7 @@ fun WaitingRoomHostScreen(vmFactory: ViewModelFactory) {
         toolbarTitle = viewModel.toolbarTitle.value,
         showAddComputerPlayer = viewModel.canComputerPlayersBeAdded.value,
         players = viewModel.players.value,
+        gameQrCode = hostViewModel.gameQrCode.value,
         launchGameEnabled = hostViewModel.canGameBeLaunched.value,
         connectionStatus = connectionViewModel.connectionStatus.value,
         onLaunchGameClick = hostViewModel::launchGame,
@@ -96,6 +107,7 @@ fun WaitingRoomHostBody(
     toolbarTitle: String,
     showAddComputerPlayer: Boolean,
     players: List<PlayerWrUi>,
+    gameQrCode: Bitmap?,
     launchGameEnabled: Boolean,
     connectionStatus: HostCommunicationState?,
     onLaunchGameClick: () -> Unit,
@@ -132,6 +144,18 @@ fun WaitingRoomHostBody(
                 launchGameEnabled = launchGameEnabled,
                 onLaunchGameClick = onLaunchGameClick
             )
+            if (gameQrCode != null) {
+                Text(
+                    text = stringResource(R.string.game_ad_qr_code_hint),
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+                Image(
+                    bitmap = gameQrCode.asImageBitmap(),
+                    contentDescription = "Game advertisement QR Code",
+                    modifier = Modifier.align(Alignment.CenterHorizontally).size(100.dp)
+                )
+            }
+
             Spacer(Modifier.height(16.dp))
             ConnectionHostScreen(
                 status = connectionStatus,
@@ -158,4 +182,19 @@ private fun HostControlScreen(
             Text(stringResource(R.string.launch_game), color = Color.White)
         }
     }
+}
+
+private fun buildSampleQrCode(): Bitmap? {
+    val content = "https://www.github.com/michaelheiniger/dwitchk"
+    val writer = QRCodeWriter()
+    val bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512)
+    val width = bitMatrix.width
+    val height = bitMatrix.height
+    val qrCode = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+    for (x in 0 until width) {
+        for (y in 0 until height) {
+            qrCode.setPixel(x, y, if (bitMatrix.get(x, y)) android.graphics.Color.BLACK else android.graphics.Color.WHITE)
+        }
+    }
+    return qrCode
 }

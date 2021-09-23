@@ -1,15 +1,21 @@
 package ch.qscqlmpa.dwitch.ui.ingame.waitingroom.host
 
+import android.graphics.Bitmap
+import android.graphics.Color
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.ui.Destination
 import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
+import ch.qscqlmpa.dwitchcommunication.gameadvertising.AdvertisingInfo
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
+import ch.qscqlmpa.dwitchgame.ingame.gameadvertising.GameAdvertisingFacade
 import ch.qscqlmpa.dwitchgame.ingame.usecases.GameLaunchableEvent
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.WaitingRoomHostFacade
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.qrcode.QRCodeWriter
 import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
@@ -17,6 +23,7 @@ import javax.inject.Inject
 internal class WaitingRoomHostViewModel @Inject constructor(
     private val waitingRoomHostFacade: WaitingRoomHostFacade,
     private val gameDiscoveryFacade: GameDiscoveryFacade,
+    private val gameAdvertisingFacade: GameAdvertisingFacade,
     private val navigationBridge: NavigationBridge,
     private val uiScheduler: Scheduler,
     private val idlingResource: DwitchIdlingResource
@@ -24,9 +31,15 @@ internal class WaitingRoomHostViewModel @Inject constructor(
 
     private val _loading = mutableStateOf(false)
     private val _canGameBeLaunched = mutableStateOf(false)
+    private val _gameQrCode = mutableStateOf<Bitmap?>(null)
 
     val loading get(): State<Boolean> = _loading
     val canGameBeLaunched get(): State<Boolean> = _canGameBeLaunched
+    val gameQrCode get(): State<Bitmap?> = _gameQrCode
+
+    init {
+        gameConnectionInfoQrCode()
+    }
 
     fun addComputerPlayer() {
         disposableManager.add(
@@ -81,6 +94,22 @@ internal class WaitingRoomHostViewModel @Inject constructor(
         )
     }
 
+    private fun gameConnectionInfoQrCode() {
+        disposableManager.add(
+            gameAdvertisingFacade.observeAdvertisingInfo()
+                .observeOn(uiScheduler)
+                .subscribe(
+                    { info ->
+                        when (info) {
+                            is AdvertisingInfo.Info -> _gameQrCode.value = buildQrCodeBitmap(info.serializedAd)
+                            AdvertisingInfo.NoInfoAvailable -> _gameQrCode.value = null
+                        }
+                    },
+                    { error -> Logger.error(error) { "Error while loading game advertising info" } }
+                )
+        )
+    }
+
     override fun onStart() {
         super.onStart()
         gameDiscoveryFacade.stopListeningForAdvertisedGames()
@@ -100,4 +129,18 @@ internal class WaitingRoomHostViewModel @Inject constructor(
     }
 
     private fun isGameLaunchable(event: GameLaunchableEvent) = event.launchable
+
+    private fun buildQrCodeBitmap(qrCodeContent: String): Bitmap {
+        val writer = QRCodeWriter()
+        val bitMatrix = writer.encode(qrCodeContent, BarcodeFormat.QR_CODE, 512, 512)
+        val width = bitMatrix.width
+        val height = bitMatrix.height
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+        for (x in 0 until width) {
+            for (y in 0 until height) {
+                bitmap.setPixel(x, y, if (bitMatrix.get(x, y)) Color.BLACK else Color.WHITE)
+            }
+        }
+        return bitmap
+    }
 }

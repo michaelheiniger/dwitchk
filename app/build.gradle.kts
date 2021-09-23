@@ -146,4 +146,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:28.4.1"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
+
+    // QR code
+    implementation("com.google.zxing:core:3.4.0")
 }

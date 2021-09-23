@@ -171,4 +171,5 @@
     <string name="game_not_found_text">Partie plus disponnible</string>
     <string name="dialog_error_title">Erreur</string>
     <string name="error_joining_game_text">Erreur lors de la tentative de rejoindre la partie</string>
+    <string name="game_ad_qr_code_hint">Scan to join this game</string>
 </resources>

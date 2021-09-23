@@ -3,6 +3,7 @@ package ch.qscqlmpa.dwitch.ingame
 import ch.qscqlmpa.dwitchgame.ingame.GameFacadeToRename
 import ch.qscqlmpa.dwitchgame.ingame.InGameHostFacade
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationFacade
+import ch.qscqlmpa.dwitchgame.ingame.gameadvertising.GameAdvertisingFacade
 import ch.qscqlmpa.dwitchgame.ingame.gameroom.PlayerFacade
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.WaitingRoomFacade
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.WaitingRoomHostFacade
@@ -13,6 +14,7 @@ import dagger.Provides
 @Module
 class InGameHostUiModule(
     private val gameFacadeToRename: GameFacadeToRename,
+    private val gameAdvertisingFacade: GameAdvertisingFacade,
     private val hostCommunicationFacade: HostCommunicationFacade,
     private val waitingRoomFacade: WaitingRoomFacade,
     private val waitingRoomHostFacade: WaitingRoomHostFacade,
@@ -21,13 +23,18 @@ class InGameHostUiModule(
 ) {
 
     @Provides
-    fun provideHostFacade(): HostCommunicationFacade {
-        return hostCommunicationFacade
+    fun provideGameFacade(): GameFacadeToRename {
+        return gameFacadeToRename
     }
 
     @Provides
-    fun provideGameFacade(): GameFacadeToRename {
-        return gameFacadeToRename
+    fun provideGameAdvertisingFacade(): GameAdvertisingFacade {
+        return gameAdvertisingFacade
+    }
+
+    @Provides
+    fun provideHostFacade(): HostCommunicationFacade {
+        return hostCommunicationFacade
     }
 
     @Provides

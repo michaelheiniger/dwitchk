@@ -10,6 +10,6 @@ interface GameAdvertiser {
 }
 
 sealed class AdvertisingInfo {
-    data class Info(val info: String) : AdvertisingInfo()
+    data class Info(val serializedAd: String) : AdvertisingInfo()
     object NoInfoAvailable : AdvertisingInfo()
 }

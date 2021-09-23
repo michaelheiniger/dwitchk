@@ -18,7 +18,7 @@ internal class GameAdvertisingFacadeImpl @Inject constructor(
     private val schedulerFactory: SchedulerFactory
 ) : GameAdvertisingFacade {
 
-    override fun observeSerializedGameAdvertisingInfo(): Observable<AdvertisingInfo> {
+    override fun observeAdvertisingInfo(): Observable<AdvertisingInfo> {
         return fetchGameInfo()
             .subscribeOn(schedulerFactory.io())
             .flatMapObservable(gameAdvertiser::observeSerializedGameAdvertisingInfo)

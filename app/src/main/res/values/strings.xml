@@ -183,4 +183,5 @@
     <string name="game_not_found_text">Game no longer available</string>
     <string name="dialog_error_title">Error</string>
     <string name="error_joining_game_text">Error joining game</string>
+    <string name="game_ad_qr_code_hint">Scan to join this game</string>
 </resources>

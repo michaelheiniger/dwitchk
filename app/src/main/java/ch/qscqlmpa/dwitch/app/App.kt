@@ -100,6 +100,7 @@ open class App : DaggerApplication() {
         inGameHostUiComponent = appComponent.addInGameHostUiComponent(
             InGameHostUiModule(
                 inGameHostComponent!!.gameFacadeToRename,
+                inGameHostComponent!!.gameAdvertisingFacade,
                 inGameHostComponent!!.hostCommunicationFacade,
                 inGameHostComponent!!.waitingRoomFacade,
                 inGameHostComponent!!.waitingRoomHostFacade,
