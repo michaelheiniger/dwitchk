@@ -35,6 +35,7 @@ internal class PlayCard(
 
             setLocalPlayerWaitingIfCannotPlay(newCurrentPlayer)
 
+            @Suppress("ComplexCondition") // Don't know how to simplify...
             if (playCardState.cardPlayedIsJoker() ||
                 newCurrentPlayer.id == playCardState.currentPlayerId() ||
                 (playCardState.currentPlayerIsDone() && playCardState.exactlyOneOtherPlayerCanPlay())

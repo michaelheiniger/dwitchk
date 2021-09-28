@@ -2,9 +2,9 @@ package ch.qscqlmpa.dwitchengine.utils
 
 object CollectionUtil {
 
-    fun <T> List<T>.shiftRightByN(N: Int): List<T> {
+    fun <T> List<T>.shiftRightByN(n: Int): List<T> {
         val newList = ArrayList(this)
-        var shift = N
+        var shift = n
         if (shift > size) shift %= size
         this.forEachIndexed { index, value ->
             val newIndex = (index + (size + shift)) % size

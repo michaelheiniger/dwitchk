@@ -20,6 +20,7 @@ import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
+@Suppress("LongParameterList")
 class HomeViewModel @Inject constructor(
     private val appEventRepository: AppEventRepository,
     private val serviceManager: ServiceManager,

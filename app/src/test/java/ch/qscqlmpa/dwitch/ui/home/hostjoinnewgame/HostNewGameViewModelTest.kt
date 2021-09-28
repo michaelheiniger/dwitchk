@@ -96,6 +96,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
         confirmVerified(mockGameFacade)
     }
 
+    @Suppress("SwallowedException")
     @Test
     fun `An error is thrown if the player name is not set when hosting the game`() {
         // Given
@@ -116,6 +117,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
         confirmVerified(mockGameFacade)
     }
 
+    @Suppress("SwallowedException")
     @Test
     fun `An error is thrown if the game name is not set when hosting the game`() {
         // Given

@@ -22,6 +22,7 @@ internal class LanGameDiscovery @Inject constructor(
     private val listeningPort = applicationConfigRepository.config.gameAdvertising.port
     private var isListening = true
 
+    @Suppress("SwallowedException")
     override fun listenForAdvertisedGames(): Observable<GameAdvertisingInfo> {
         Logger.info { "Listen for advertised games..." }
         isListening = true

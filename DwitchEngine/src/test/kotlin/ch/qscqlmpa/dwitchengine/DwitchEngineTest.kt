@@ -56,6 +56,7 @@ internal class DwitchEngineTest {
      * 4) Player 4 -> Neutral
      * 5) Player 3 -> Vice-Asshole
      */
+    @Suppress("LongMethod")
     @Test
     fun `Play whole round with 5 players`() {
         val p1 = setOf(Card.Diamonds2, Card.Diamonds3, Card.Diamonds5)

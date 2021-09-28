@@ -7,9 +7,8 @@ import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
 internal class GameFacadeToRenameImpl @Inject constructor(
-    private val _localPlayerRole: PlayerRole,
+    override val localPlayerRole: PlayerRole,
     private val store: InGameStore
 ) : GameFacadeToRename {
-    override val localPlayerRole: PlayerRole get() = _localPlayerRole
     override fun observeCurrentRoom(): Observable<RoomType> = store.observeCurrentRoom()
 }

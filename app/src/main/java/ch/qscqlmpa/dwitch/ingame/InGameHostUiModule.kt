@@ -10,7 +10,7 @@ import ch.qscqlmpa.dwitchgame.ingame.waitingroom.WaitingRoomHostFacade
 import dagger.Module
 import dagger.Provides
 
-@Suppress("unused")
+@Suppress("unused", "LongParameterList")
 @Module
 class InGameHostUiModule(
     private val gameFacadeToRename: GameFacadeToRename,

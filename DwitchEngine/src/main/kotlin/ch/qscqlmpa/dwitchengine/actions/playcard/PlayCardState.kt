@@ -60,12 +60,9 @@ internal class PlayCardState(
     fun cardPlayedIsJoker() = cardsPlayed.name == currentGameState.joker
 
     fun getLastActivePlayer(): DwitchPlayerId {
-        if (currentGameState.activePlayers.size != 2) {
-            throw IllegalStateException("There must be exactly two remaining active players at this step: local player and another one.")
-        }
-
+        require(currentGameState.activePlayers.size == 2)
         return currentGameState.activePlayers.find { id -> id != currentGameState.currentPlayerId }
-            ?: throw IllegalStateException()
+            ?: throw IllegalStateException("There must be exactly two remaining active players at this step: local player and another one.")
     }
 
     fun computeRanks(penultimatePlayerId: DwitchPlayerId, lastPlayerId: DwitchPlayerId): Map<DwitchPlayerId, DwitchRank> {

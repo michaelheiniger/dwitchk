@@ -6,6 +6,7 @@ import ch.qscqlmpa.dwitch.ui.Destination
 import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
+import ch.qscqlmpa.dwitchgame.ingame.gameadvertising.GameAdvertisingFacade
 import ch.qscqlmpa.dwitchgame.ingame.usecases.GameLaunchableEvent
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.WaitingRoomHostFacade
 import io.mockk.every
@@ -21,7 +22,8 @@ import org.junit.Test
 class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
 
     private val mockWaitingRoomHostFacade = mockk<WaitingRoomHostFacade>(relaxed = true)
-    private val gameDiscoveryFacade = mockk<GameDiscoveryFacade>(relaxed = true)
+    private val mockGameAdvertisingFacade = mockk<GameAdvertisingFacade>(relaxed = true)
+    private val mockGameDiscoveryFacade = mockk<GameDiscoveryFacade>(relaxed = true)
     private val mockNavigationBridge = mockk<NavigationBridge>(relaxed = true)
 
     private lateinit var viewModel: WaitingRoomHostViewModel
@@ -120,7 +122,8 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
 
         viewModel = WaitingRoomHostViewModel(
             mockWaitingRoomHostFacade,
-            gameDiscoveryFacade,
+            mockGameDiscoveryFacade,
+            mockGameAdvertisingFacade,
             mockNavigationBridge,
             Schedulers.trampoline(),
             StubIdlingResource()

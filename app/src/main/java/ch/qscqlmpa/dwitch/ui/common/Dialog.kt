@@ -17,6 +17,7 @@ import androidx.compose.ui.window.DialogProperties
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 
+@Suppress("UnusedPrivateMember")
 @Preview(
     showBackground = true,
     backgroundColor = 0xFFFFFFFF

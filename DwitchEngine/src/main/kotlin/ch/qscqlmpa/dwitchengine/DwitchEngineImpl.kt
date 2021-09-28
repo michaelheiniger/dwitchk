@@ -93,6 +93,7 @@ internal class DwitchEngineImpl(private val currentGameState: DwitchGameState) :
         return gameStateUpdated
     }
 
+    @Suppress("ReturnCount")
     override fun getCardExchangeIfRequired(playerId: DwitchPlayerId): DwitchCardExchange? {
         if (currentGameState.phase != DwitchGamePhase.CardExchange) {
             return null

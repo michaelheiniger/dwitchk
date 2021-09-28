@@ -18,6 +18,7 @@ import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
+@Suppress("LongParameterList")
 internal class WaitingRoomGuestViewModel @Inject constructor(
     private val waitingRoomGuestFacade: WaitingRoomGuestFacade,
     private val guestCommunicationFacade: GuestCommunicationFacade,

@@ -6,13 +6,10 @@ import kotlinx.serialization.json.Json
 
 @Suppress("unused")
 @Module
-internal abstract class SerializationModule {
+internal class SerializationModule {
 
-    companion object {
-
-        @Provides
-        fun provideKotlinxJson(): Json {
-            return Json.Default
-        }
+    @Provides
+    fun provideKotlinxJson(): Json {
+        return Json.Default
     }
 }

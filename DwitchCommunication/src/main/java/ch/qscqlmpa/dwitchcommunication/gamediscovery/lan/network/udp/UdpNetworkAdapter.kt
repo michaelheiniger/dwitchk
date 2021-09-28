@@ -18,6 +18,7 @@ internal class UdpNetworkAdapter @Inject constructor() : NetworkAdapter {
         receiveSocket = DatagramSocket(listeningPort)
     }
 
+    @Suppress("SwallowedException")
     override fun receive(): Packet {
         val receiveData = ByteArray(1024)
         val receivePacket = DatagramPacket(receiveData, receiveData.size)

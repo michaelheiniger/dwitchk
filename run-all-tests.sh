@@ -2,4 +2,6 @@
 
 ./gradlew clean check
 
+./gradlew test
+
 ./gradlew connectedDebugAndroidTest

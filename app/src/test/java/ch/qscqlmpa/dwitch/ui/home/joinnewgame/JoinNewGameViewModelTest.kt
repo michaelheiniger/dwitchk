@@ -124,6 +124,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
         verify { mockGameDiscoveryFacade.getAdvertisedGame(any()) }
     }
 
+    @Suppress("SwallowedException")
     @Test
     fun `An error is thrown if the player name is not set when joining the game`() {
         // Given

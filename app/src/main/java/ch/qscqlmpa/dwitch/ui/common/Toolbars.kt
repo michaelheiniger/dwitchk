@@ -22,7 +22,7 @@ data class NavigationIcon(
     val onClick: () -> Unit = {}
 )
 
-const val toolbarDefaultTitle = "Dwitch"
+const val TOOLBAR_DEFAULT_TITLE = "Dwitch"
 
 sealed class MenuAction(@DrawableRes val icon: Int, @StringRes val contentDescription: Int, val tag: String)
 

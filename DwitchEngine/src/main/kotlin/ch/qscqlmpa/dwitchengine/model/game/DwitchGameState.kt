@@ -74,6 +74,7 @@ data class DwitchGameState(
             .map { id -> player(id) }
     }
 
+    @Suppress("ThrowsCount")
     private fun performSanityChecks() {
         playersDoneForRound.forEach { id ->
             if (activePlayers.contains(id)) {

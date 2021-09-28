@@ -1,5 +1,6 @@
 plugins {
     id("org.jlleitschuh.gradle.ktlint-idea") version Versions.ktlintGradlePluginVersion
+    id("io.gitlab.arturbosch.detekt").version(Versions.detektVersion)
 }
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
@@ -28,6 +29,11 @@ allprojects {
         mavenCentral()
     }
     apply(plugin = ("org.jlleitschuh.gradle.ktlint"))
+    apply(plugin = ("io.gitlab.arturbosch.detekt"))
+}
+
+dependencies {
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:${Versions.detektVersion}")
 }
 
 tasks.register<Delete>("clean") {
@@ -37,4 +43,24 @@ tasks.register<Delete>("clean") {
 ktlint {
     debug.set(true)
     verbose.set(true)
+}
+
+detekt {
+    toolVersion = Versions.detektVersion
+    config = files("config/detekt/detekt.yml")
+
+    reports {
+        xml {
+            enabled = true
+            destination = file("reports/detekt-report.xml")
+        }
+        html {
+            enabled = true
+            destination = file("reports/detekt-report.html")
+        }
+        txt {
+            enabled = true
+            destination = file("reports/detekt-report.txt")
+        }
+    }
 }

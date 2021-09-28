@@ -27,6 +27,7 @@ object ResourceMapper {
         }
     }
 
+    @Suppress("ComplexMethod")
     fun getImageResource(card: Card): Int {
         return when (card) {
             Card.Clubs2 -> R.mipmap.clubs_2
@@ -85,6 +86,7 @@ object ResourceMapper {
         }
     }
 
+    @Suppress("ComplexMethod")
     fun getContentDescriptionResource(name: CardName): Int {
         return when (name) {
             CardName.Ace -> R.string.ace_content_description
@@ -104,6 +106,7 @@ object ResourceMapper {
         }
     }
 
+    @Suppress("ComplexMethod")
     fun getContentDescriptionResource(card: Card): Int {
         return when (card) {
             Card.Clubs2 -> R.string.clubs_2_content_description

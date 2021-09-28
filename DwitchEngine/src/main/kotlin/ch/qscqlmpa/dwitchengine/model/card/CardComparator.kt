@@ -5,6 +5,7 @@ import ch.qscqlmpa.dwitchengine.rules.initialJoker
 
 class CardNameValueDescComparator(private val joker: CardName = initialJoker) : Comparator<CardName> {
 
+    @Suppress("ReturnCount")
     override fun compare(cardName1: CardName, cardName2: CardName): Int {
 
         // Joker has highest value

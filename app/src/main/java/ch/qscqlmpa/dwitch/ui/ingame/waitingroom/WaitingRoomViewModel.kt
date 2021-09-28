@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitch.ui.ingame.waitingroom
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitch.ui.common.toolbarDefaultTitle
+import ch.qscqlmpa.dwitch.ui.common.TOOLBAR_DEFAULT_TITLE
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.PlayerWrUi
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.WaitingRoomFacade
@@ -17,7 +17,7 @@ class WaitingRoomViewModel @Inject constructor(
     private val idlingResource: DwitchIdlingResource
 ) : BaseViewModel() {
 
-    private val _toolbarTitle = mutableStateOf(toolbarDefaultTitle)
+    private val _toolbarTitle = mutableStateOf(TOOLBAR_DEFAULT_TITLE)
     private val _canComputerPlayersBeAdded = mutableStateOf(false)
     private val _players = mutableStateOf<List<PlayerWrUi>>(emptyList())
 

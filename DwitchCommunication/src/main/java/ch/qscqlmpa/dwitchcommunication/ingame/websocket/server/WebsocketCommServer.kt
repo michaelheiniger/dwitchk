@@ -191,7 +191,7 @@ internal class WebsocketCommServer @Inject constructor(
     private fun buildAddressFromConnection(conn: WebSocket): Address? {
         if (conn.remoteSocketAddress != null) {
             return Address(
-                conn.remoteSocketAddress.address.hostAddress,
+                conn.remoteSocketAddress.address.hostAddress ?: "",
                 conn.remoteSocketAddress.port
             )
         }

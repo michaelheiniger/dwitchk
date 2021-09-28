@@ -148,6 +148,8 @@ private fun DwitchNavHost(
     }
 }
 
+@Suppress("LongMethod", "ComplexMethod", "NestedBlockDepth")
+@Composable
 private fun Navigation(
     navigationBridge: NavigationBridge,
     navController: NavHostController

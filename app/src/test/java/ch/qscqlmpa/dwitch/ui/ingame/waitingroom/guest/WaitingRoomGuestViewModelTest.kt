@@ -178,7 +178,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         createViewModel()
         viewModel.onStart()
 
-        //When
+        // When
         gameEventSubject.onNext(GuestGameEvent.KickedOffGame)
         viewModel.acknowledgeKickOffGame()
 
@@ -219,5 +219,4 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         every { inGameGuestFacade.observeGameEvents() } returns gameEventSubject
         every { inGameGuestFacade.leaveGame() } returns Completable.complete()
     }
-
 }

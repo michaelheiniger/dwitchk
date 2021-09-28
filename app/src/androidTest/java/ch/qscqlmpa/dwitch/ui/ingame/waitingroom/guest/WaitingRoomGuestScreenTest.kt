@@ -33,7 +33,7 @@ class WaitingRoomGuestScreenTest : BaseUiUnitTest() {
         ready = UiCheckboxModel(enabled = true, checked = true)
         connectionStatus = GuestCommunicationState.Connected
 
-        //When
+        // When
         launchTest()
 
         // Then
@@ -53,7 +53,7 @@ class WaitingRoomGuestScreenTest : BaseUiUnitTest() {
         ready = UiCheckboxModel(enabled = true, checked = false)
         connectionStatus = GuestCommunicationState.Connected
 
-        //When
+        // When
         launchTest()
 
         // Then
