@@ -25,7 +25,7 @@ class HostInGameService : BaseInGameService() {
             gameCreatedInfo.gameLocalId,
             gameCreatedInfo.localPlayerLocalId
         )
-        app.hostCommunicationFacade.startServer()
+        app.hostCommunicationFacade!!.startServer()
         advertiseGame()
         advertiseGame()
 
@@ -39,7 +39,7 @@ class HostInGameService : BaseInGameService() {
     }
 
     override fun cleanUp() {
-        app.hostCommunicationFacade.stopServer()
+        app.hostCommunicationFacade?.stopServer()
         app.destroyInGameComponents()
         gameAdvertisingDisposable.dispose()
         app.gameLifecycleFacade.cleanUpGameResources().blockingSubscribe()

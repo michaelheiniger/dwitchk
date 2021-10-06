@@ -53,6 +53,15 @@ class JoinNewGameViewModel @Inject constructor(
         }
     }
 
+    fun loadGame(qrCodeContent: String) {
+        val game = gameDiscoveryFacade.getAdvertisedGame(qrCodeContent)
+        if (game != null) {
+            _game.value = game
+        } else {
+            _notification.value = JoinNewGameNotification.GameNotFound
+        }
+    }
+
     fun onPlayerNameChange(value: String) {
         _playerName.value = value
         _joinGameControlEnabled.value = playerName.value.isNotBlank()

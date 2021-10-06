@@ -51,7 +51,7 @@ dependencies {
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")
 
     // RxJava
-    implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
+    api("io.reactivex.rxjava3:rxkotlin:3.0.1")
     implementation("com.jakewharton.rxrelay3:rxrelay:3.0.1")
 
     // Serialization
@@ -71,7 +71,6 @@ dependencies {
     val junitVersion = "5.7.1"
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
 
     // AssertJ
     testImplementation("org.assertj:assertj-core:3.20.2")

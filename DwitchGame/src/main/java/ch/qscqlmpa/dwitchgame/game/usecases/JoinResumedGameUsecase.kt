@@ -23,7 +23,8 @@ internal class JoinResumedGameUsecase @Inject constructor(
     )
 
     private fun prepareGame(advertisedGame: GameAdvertisingInfo) = Completable.fromAction {
-        val game = store.getGame(advertisedGame.gameCommonId)!!
+        val game = store.getGame(advertisedGame.gameCommonId)
+            ?: throw IllegalArgumentException("Game cannot be found: $advertisedGame (is player a member of this game ?)")
         store.preparePlayersForGameResume(game.id)
         guestGameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GameSetup(GameJoinedInfo(game, advertisedGame)))
     }

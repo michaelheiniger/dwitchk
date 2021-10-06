@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera.any" />
 
     <application
         android:name=".app.App"
@@ -14,12 +17,18 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.Dwitch">
         <activity
+            android:name=".ui.qrcode.QrCodeScannerActivity"
+            android:exported="true"
+            android:label="@string/title_activity_qr_code_scanner"
+            android:theme="@style/Theme.Dwitch.NoActionBar" />
+        <activity
             android:name=".HomeActivity"
             android:exported="true"
             android:label="@string/title_activity_home"
             android:theme="@style/Theme.Dwitch.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

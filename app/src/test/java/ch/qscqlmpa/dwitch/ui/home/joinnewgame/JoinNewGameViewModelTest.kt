@@ -21,6 +21,7 @@ import org.junit.Before
 import org.junit.Test
 import java.util.*
 
+// TODO: Add tests for cases where the loaded game is froma QR code.
 class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
 
     private val mockGameFacade = mockk<GameFacade>(relaxed = true)
@@ -31,6 +32,8 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
 
     private val gameCommonId = GameCommonId(UUID.randomUUID())
     private val advertisedGame = GameAdvertisingInfo(true, "Table Ronde", gameCommonId, "192.168.1.1", 8889)
+    private val qrCodeContent =
+        "{\"isNew\": true, \"gameCommonId\":\"${gameCommonId.value}\",\"gameName\":\"Table Ronde\", \"gameIpAddress\":\"192.168.1.1\", \"gamePort\":8889}"
 
     @Before
     fun setup() {
@@ -43,15 +46,26 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
         )
         every { mockGameFacade.joinGame(any(), any()) } returns Completable.complete()
         every { mockGameDiscoveryFacade.getAdvertisedGame(gameCommonId) } returns advertisedGame
+        every { mockGameDiscoveryFacade.getAdvertisedGame(qrCodeContent) } returns advertisedGame
     }
 
-    @Test
-    fun `The game cannot be joined initially`() {
+    private fun gameCannotBeJoinedInitially(loadGame: () -> Unit) {
         Assume.assumeFalse("We are in debug variant", BuildConfig.DEBUG)
-        viewModel.loadGame(gameCommonId)
+        // TODO: call viewModel.start() ? --> do in all VM tests
+        loadGame()
 
         // Given initial state, then the game cannot be joined
         assertThat(viewModel.canJoinGame.value).isEqualTo(false)
+    }
+
+    @Test
+    fun `The game cannot be joined initially - advertised game`() {
+        gameCannotBeJoinedInitially { viewModel.loadGame(gameCommonId) }
+    }
+
+    @Test
+    fun `The game cannot be joined initially - QR code`() {
+        gameCannotBeJoinedInitially { viewModel.loadGame(qrCodeContent) }
     }
 
     @Test
@@ -104,7 +118,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
 
         // Then
         assertThat(viewModel.notification.value).isEqualTo(JoinNewGameNotification.GameNotFound)
-        verify { mockGameDiscoveryFacade.getAdvertisedGame(any()) }
+        verify { mockGameDiscoveryFacade.getAdvertisedGame(any<GameCommonId>()) }
     }
 
     @Test
@@ -121,7 +135,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
 
         // Then
         verify { mockNavigationBridge.navigate(Destination.HomeScreens.Home) }
-        verify { mockGameDiscoveryFacade.getAdvertisedGame(any()) }
+        verify { mockGameDiscoveryFacade.getAdvertisedGame(any<GameCommonId>()) }
     }
 
     @Suppress("SwallowedException")
@@ -143,6 +157,6 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
 
         // Then
         verify(exactly = 0) { mockNavigationBridge.navigate(any()) }
-        verify { mockGameDiscoveryFacade.getAdvertisedGame(any()) }
+        verify { mockGameDiscoveryFacade.getAdvertisedGame(any<GameCommonId>()) }
     }
 }

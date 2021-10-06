@@ -1,6 +1,7 @@
 plugins {
     id("org.jlleitschuh.gradle.ktlint-idea") version Versions.ktlintGradlePluginVersion
     id("io.gitlab.arturbosch.detekt").version(Versions.detektVersion)
+    id("com.autonomousapps.dependency-analysis").version("0.78.0")
 }
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.

@@ -168,7 +168,7 @@ fun GameRoomHostBody(
                     )
                 }
                 is GameRoomScreen.CardExchangeOnGoing -> CardExchangeOnGoing()
-                null -> LoadingSpinner()
+                else -> LoadingSpinner()
             }
             ConnectionHostScreen(
                 status = connectionStatus,
@@ -179,7 +179,7 @@ fun GameRoomHostBody(
 
         if (showEndGameConfirmationDialog.value) {
             ConfirmationDialog(
-                title = R.string.info_dialog_title,
+                title = R.string.dialog_info_title,
                 text = R.string.host_ends_game_confirmation,
                 onConfirmClick = onEndGameConfirmClick,
                 onCancelClick = { showEndGameConfirmationDialog.value = false }

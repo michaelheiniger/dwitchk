@@ -93,7 +93,7 @@ fun WaitingRoomHostScreen(vmFactory: ViewModelFactory) {
     )
     if (showConfirmationDialog.value) {
         ConfirmationDialog(
-            title = R.string.info_dialog_title,
+            title = R.string.dialog_info_title,
             text = R.string.host_cancel_game_confirmation,
             onConfirmClick = { hostViewModel.cancelGame() },
             onCancelClick = { showConfirmationDialog.value = false }
@@ -184,7 +184,7 @@ private fun HostControlScreen(
     }
 }
 
-private fun buildSampleQrCode(): Bitmap? {
+fun buildSampleQrCode(): Bitmap? {
     val content = "https://www.github.com/michaelheiniger/dwitchk"
     val writer = QRCodeWriter()
     val bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512)

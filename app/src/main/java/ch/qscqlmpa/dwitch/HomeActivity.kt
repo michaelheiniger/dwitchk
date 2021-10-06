@@ -1,8 +1,8 @@
 package ch.qscqlmpa.dwitch
 
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.ingame.services.ServiceManager
 import ch.qscqlmpa.dwitch.ui.Dwitch
@@ -16,7 +16,7 @@ import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Named
 
-class HomeActivity : AppCompatActivity(), HasAndroidInjector {
+class HomeActivity : ComponentActivity(), HasAndroidInjector {
 
     @Named("home")
     @Inject

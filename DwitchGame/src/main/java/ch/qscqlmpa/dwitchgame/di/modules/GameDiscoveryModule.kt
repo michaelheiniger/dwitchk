@@ -22,6 +22,6 @@ class GameDiscoveryModule(
     @GameScope
     @Provides
     internal fun provideGameDiscoveryFacade(advertisedGameRepository: AdvertisedGameRepository): GameDiscoveryFacade {
-        return GameDiscoveryFacadeImpl(advertisedGameRepository)
+        return GameDiscoveryFacadeImpl(advertisedGameRepository, gameDiscovery)
     }
 }

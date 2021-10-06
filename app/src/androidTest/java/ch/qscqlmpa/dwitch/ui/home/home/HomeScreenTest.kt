@@ -141,7 +141,8 @@ class HomeScreenTest : BaseUiUnitTest() {
                 resumableGames,
                 onCreateNewGameClick = {},
                 onJoinGameClick = {},
-                onResumableGameClick = {}
+                onResumableGameClick = {},
+                onQrCodeScan = {}
             )
         }
     }

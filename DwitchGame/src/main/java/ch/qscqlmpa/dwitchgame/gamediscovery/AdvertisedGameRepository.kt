@@ -119,7 +119,7 @@ internal class AdvertisedGameRepository @Inject constructor(
         advertisedGames.filterValues { game -> advertisementIsTooOld(timeNow, game) }
             .keys
             .forEach { gameCommonId -> advertisedGames.remove(gameCommonId) }
-        Logger.info { "advertisedGames: $advertisedGames" }
+        Logger.trace { "advertisedGames: $advertisedGames" }
     }
 
     private fun advertisementIsTooOld(timeNow: LocalDateTime, game: GameAdvertisingInfo): Boolean {

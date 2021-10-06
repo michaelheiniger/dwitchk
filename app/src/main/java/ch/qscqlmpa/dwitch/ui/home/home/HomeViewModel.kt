@@ -53,22 +53,7 @@ class HomeViewModel @Inject constructor(
         if (game.isNew) {
             navigationBridge.navigate(Destination.HomeScreens.JoinNewGame(game.gameCommonId))
         } else {
-            _loading.value = true
-            disposableManager.add(
-                gameFacade.joinResumedGame(game)
-                    .observeOn(uiScheduler)
-                    .doOnTerminate { _loading.value = false }
-                    .subscribe(
-                        {
-                            Logger.info { "Game resumed successfully." }
-                            navigationBridge.navigate(Destination.HomeScreens.InGame)
-                        },
-                        { error ->
-                            _notification.value = HomeNotification.ErrorJoiningGame
-                            Logger.error(error) { "Error while resuming game." }
-                        }
-                    )
-            )
+            joinExistingGame(game)
         }
     }
 
@@ -107,6 +92,40 @@ class HomeViewModel @Inject constructor(
     override fun onCleared() {
         Logger.debug { "Viewmodel lifecycle event: clear HomeViewModel ($this)" }
         super.onCleared()
+    }
+
+    fun load(qrCodeContent: String?) {
+        Logger.debug { "load qr code content: $qrCodeContent" }
+        if (qrCodeContent != null) {
+            val game = gameDiscoveryFacade.getAdvertisedGame(qrCodeContent)
+            if (game != null) {
+                if (game.isNew) {
+                    navigationBridge.navigate(Destination.HomeScreens.JoinNewGameWithQRCode(qrCodeContent))
+                } else {
+                    joinExistingGame(game)
+                }
+            }
+        }
+    }
+
+    private fun joinExistingGame(game: GameAdvertisingInfo) {
+        require(!game.isNew)
+        _loading.value = true
+        disposableManager.add(
+            gameFacade.joinResumedGame(game)
+                .observeOn(uiScheduler)
+                .doOnTerminate { _loading.value = false }
+                .subscribe(
+                    {
+                        Logger.info { "Game resumed successfully." }
+                        navigationBridge.navigate(Destination.HomeScreens.InGame)
+                    },
+                    { error ->
+                        _notification.value = HomeNotification.ErrorJoiningGame
+                        Logger.error(error) { "Error while joining resumed game." }
+                    }
+                )
+        )
     }
 
     private fun reactToGameState() {

@@ -160,15 +160,13 @@ open class App : DaggerApplication() {
     val gameAdvertisingFacade get(): GameAdvertisingFacade = inGameHostComponent!!.gameAdvertisingFacade
 
     val hostCommunicationFacade
-        get(): HostCommunicationFacade {
-            checkNotNull(inGameHostComponent) { "No in-game component" }
-            return inGameHostComponent!!.hostCommunicationFacade
+        get(): HostCommunicationFacade? {
+            return inGameHostComponent?.hostCommunicationFacade
         }
 
     val guestCommunicationFacade
-        get(): GuestCommunicationFacade {
-            checkNotNull(inGameGuestComponent) { "No in-game component" }
-            return inGameGuestComponent!!.guestCommunicationFacade
+        get(): GuestCommunicationFacade? {
+            return inGameGuestComponent?.guestCommunicationFacade
         }
 
     private fun createNotificationChannels() {

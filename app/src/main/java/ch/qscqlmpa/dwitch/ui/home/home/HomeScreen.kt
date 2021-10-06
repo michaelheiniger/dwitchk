@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.home.home
 
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -7,9 +8,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
@@ -24,6 +28,8 @@ import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.*
+import ch.qscqlmpa.dwitch.ui.qrcode.QrCodeScanResult
+import ch.qscqlmpa.dwitch.ui.qrcode.ScanQrCodeResultContract
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
@@ -63,7 +69,8 @@ fun HomeScreenPreview() {
             resumableGames = resumableGameResponse,
             onCreateNewGameClick = {},
             onJoinGameClick = {},
-            onResumableGameClick = {}
+            onResumableGameClick = {},
+            onQrCodeScan = {}
         )
     }
 }
@@ -77,13 +84,15 @@ fun HomeScreen(
         viewModel.onStart()
         onDispose { viewModel.onStop() }
     }
+
     HomeBody(
         notification = viewModel.notification.value,
         advertisedGames = viewModel.advertisedGames.value,
         resumableGames = viewModel.resumableGames.value,
         onCreateNewGameClick = viewModel::createNewGame,
         onJoinGameClick = viewModel::joinGame,
-        onResumableGameClick = { game -> viewModel.resumeGame(game) }
+        onResumableGameClick = { game -> viewModel.resumeGame(game) },
+        onQrCodeScan = { qrCodeContent -> viewModel.load(qrCodeContent) }
     )
     if (viewModel.loading.value) LoadingDialog()
 }
@@ -95,7 +104,8 @@ fun HomeBody(
     resumableGames: LoadedData<List<ResumableGameInfo>>,
     onCreateNewGameClick: () -> Unit,
     onJoinGameClick: (GameAdvertisingInfo) -> Unit,
-    onResumableGameClick: (ResumableGameInfo) -> Unit
+    onResumableGameClick: (ResumableGameInfo) -> Unit,
+    onQrCodeScan: (String) -> Unit
 ) {
     Notification(notification = notification)
     Column(
@@ -118,7 +128,9 @@ fun HomeBody(
             ) {
                 AdvertisedGameContainer(advertisedGames, onJoinGameClick)
                 Spacer(Modifier.height(16.dp))
-                Row(horizontalArrangement = Arrangement.End) {
+                Column(Modifier.fillMaxSize()) {
+                    JoinGameWithQrCode(onQrCodeScan = onQrCodeScan)
+                    Spacer(Modifier.height(16.dp))
                     GameCreation(onCreateNewGameClick = onCreateNewGameClick)
                 }
             }
@@ -131,6 +143,34 @@ fun HomeBody(
             }
         }
     }
+}
+
+@Composable
+private fun JoinGameWithQrCode(onQrCodeScan: (String) -> Unit) {
+    val result = remember { mutableStateOf<QrCodeScanResult>(QrCodeScanResult.NoResult) }
+    val launcher = rememberLauncherForActivityResult(ScanQrCodeResultContract()) { scanResult -> result.value = scanResult }
+
+    when (val value = result.value) {
+        QrCodeScanResult.NoResult -> {
+        } // Nothing to do
+        QrCodeScanResult.Error -> {
+            InfoDialog(
+                title = R.string.dialog_error_title,
+                text = R.string.error_scanning_qr_code,
+                onOkClick = {
+                    result.value = QrCodeScanResult.NoResult
+                }
+            )
+        }
+        is QrCodeScanResult.Success -> onQrCodeScan(value.qrCodeContent)
+    }
+
+    OutlinedButton(
+        onClick = { launcher.launch(Unit) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(UiTags.joinGameQrCode)
+    ) { Text(stringResource(R.string.join_game_with_qr_code)) }
 }
 
 @Composable

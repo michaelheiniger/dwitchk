@@ -37,7 +37,7 @@ import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
     backgroundColor = 0xFFFFFFFF
 )
 @Composable
-fun GameRoomHostScreenPreview() {
+fun GameRoomGuestScreenPreview() {
     ActivityScreenContainer {
         GameRoomGuestBody(
             toolbarTitle = "Dwiitch",
@@ -123,7 +123,7 @@ fun GameRoomGuestBody(
                 contentDescription = R.string.leave_game,
                 onClick = { showLeaveGameConfirmationDialog.value = true }
             ),
-            actions = emptyList(),
+            actions = listOf(GameRules),
             onActionClick = { action ->
                 when (action) {
                     GameRules -> gameRules.value = true
@@ -158,7 +158,7 @@ fun GameRoomGuestBody(
                     )
                 }
                 is GameRoomScreen.CardExchangeOnGoing -> CardExchangeOnGoing()
-                null -> LoadingSpinner()
+                else -> LoadingSpinner()
             }
         }
     }
@@ -175,7 +175,7 @@ fun GameRoomGuestBody(
 
     if (showLeaveGameConfirmationDialog.value) {
         ConfirmationDialog(
-            title = R.string.info_dialog_title,
+            title = R.string.dialog_info_title,
             text = R.string.guest_leaves_game_confirmation,
             onConfirmClick = onLeaveGameConfirmClick,
             onCancelClick = { showLeaveGameConfirmationDialog.value = false }

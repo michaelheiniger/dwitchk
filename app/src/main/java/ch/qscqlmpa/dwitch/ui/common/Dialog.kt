@@ -26,7 +26,7 @@ import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 private fun InfoDialogPreview() {
     ActivityScreenContainer {
         InfoDialog(
-            title = R.string.info_dialog_title,
+            title = R.string.dialog_info_title,
             text = R.string.game_canceled_by_host,
             onOkClick = {}
         )

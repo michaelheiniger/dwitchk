@@ -64,7 +64,7 @@
     <string name="no_resumable_games">Aucune partie à reprendre</string>
     <string name="guest_connecting">Connection…</string>
     <string name="host_connecting">Connection…</string>
-    <string name="info_dialog_title">Info</string>
+    <string name="dialog_info_title">Info</string>
     <string name="end_of_round_screen_title">Round terminé !</string>
     <string name="player_status_done">Terminé</string>
     <string name="player_status_playing">Joueur actuel</string>
@@ -172,4 +172,10 @@
     <string name="dialog_error_title">Erreur</string>
     <string name="error_joining_game_text">Erreur lors de la tentative de rejoindre la partie</string>
     <string name="game_ad_qr_code_hint">Scan to join this game</string>
+    <string name="title_activity_qr_code_scanner">QrCodeScannerActivity</string>
+    <string name="join_game_with_qr_code">Join game with QR code</string>
+    <string name="error_scanning_qr_code">Error scanning QR code</string>
+    <string name="scan_qr_code_hint">Scan QR code displayed on the Host\'s screen to join the game</string>
+    <string name="camera_permission_denied">Cannot scan QR code because camera permission is denied</string>
+    <string name="qr_code_camera_permission_hint">Camera permission is required to scan QR code of a game</string>
 </resources>

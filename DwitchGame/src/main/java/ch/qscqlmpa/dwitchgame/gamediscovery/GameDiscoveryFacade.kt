@@ -30,4 +30,9 @@ interface GameDiscoveryFacade {
      * Returns null if the advertisement is obsolete.
      */
     fun getAdvertisedGame(gameCommonId: GameCommonId): GameAdvertisingInfo?
+
+    /**
+     * Get advertised game from the content of the serialized QR code.
+     */
+    fun getAdvertisedGame(qrCodeContent: String): GameAdvertisingInfo?
 }

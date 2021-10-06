@@ -8,7 +8,7 @@ plugins {
     id("com.google.firebase.crashlytics")
 }
 
-val composeVersion = "1.0.0"
+val composeVersion = "1.0.3"
 
 android {
     compileSdk = Versions.compileSdkVersion
@@ -24,14 +24,18 @@ android {
     }
 
     buildFeatures {
-        compose = true // Enables Jetpack Compose for this module
+        compose = true
+        viewBinding = true
     }
 
     buildTypes {
         named("release") {
             isMinifyEnabled = true // Enables code shrinking, obfuscation, and optimization
 
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
@@ -82,15 +86,19 @@ dependencies {
     implementation("com.google.android.material:material:1.4.0")
 
     // ####### Jetpack Compose #######
+    implementation("androidx.activity:activity-ktx:1.3.1")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
+    implementation("androidx.compose.ui:ui-viewbinding:$composeVersion")
+    implementation("androidx.activity:activity-compose:$composeVersion")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.material:material-icons-core:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha06")
-    implementation("androidx.activity:activity-compose:1.3.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0-beta01")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.1")
+    implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
     androidTestImplementation("androidx.compose.ui:ui-test:$composeVersion")
 
@@ -148,5 +156,9 @@ dependencies {
     implementation("com.google.firebase:firebase-crashlytics-ktx")
 
     // QR code
-    implementation("com.google.zxing:core:3.4.0")
+    val cameraxVersion = "1.0.0-beta07"
+    implementation("androidx.camera:camera-camera2:$cameraxVersion")
+    implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
+    implementation("androidx.camera:camera-view:1.0.0-alpha14")
+    implementation("com.google.zxing:core:3.4.1")
 }

@@ -16,7 +16,8 @@ import androidx.navigation.navOptions
 import androidx.navigation.navigation
 import ch.qscqlmpa.dwitch.ui.home.home.HomeScreen
 import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameScreen
-import ch.qscqlmpa.dwitch.ui.home.joinnewgame.JoinNewGameScreen
+import ch.qscqlmpa.dwitch.ui.home.joinnewgame.gamead.JoinNewGameWithGameAdScreen
+import ch.qscqlmpa.dwitch.ui.home.joinnewgame.qrcode.JoinNewGameWithQRCodeScreen
 import ch.qscqlmpa.dwitch.ui.ingame.LoadingSpinner
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.GameViewModel
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.guest.GameRoomGuestScreen
@@ -57,6 +58,16 @@ sealed class Destination(
             }
         }
 
+        data class JoinNewGameWithQRCode(val qrCodeContent: String) : HomeScreens(routeName) {
+            companion object {
+                const val routeName = "joinNewGameWithQrCode/{qrCodeContent}"
+            }
+
+            override fun toConcreteRoute(): String {
+                return "joinNewGameWithQrCode/$qrCodeContent"
+            }
+        }
+
         object InGame : HomeScreens("inGame")
     }
 
@@ -85,7 +96,7 @@ fun Dwitch(
                 vmFactory = vmFactory,
                 getInGameVmFactory = inGameVmFactory,
                 navController = navController,
-                modifier = Modifier.padding(innerPadding),
+                modifier = Modifier.padding(innerPadding)
             )
         }
     }
@@ -113,9 +124,16 @@ private fun DwitchNavHost(
         }
         composable(route = Destination.HomeScreens.JoinNewGame.routeName) { entry ->
             val gameCommonId = GameCommonId(UUID.fromString(entry.arguments?.getString("gameCommonId")!!))
-            JoinNewGameScreen(
+            JoinNewGameWithGameAdScreen(
                 vmFactory = vmFactory,
                 gameCommonId = gameCommonId
+            )
+        }
+        composable(route = Destination.HomeScreens.JoinNewGameWithQRCode.routeName) { entry ->
+            val qrCodeContent = entry.arguments?.getString("qrCodeContent")!!
+            JoinNewGameWithQRCodeScreen(
+                vmFactory = vmFactory,
+                qrCodeContent = qrCodeContent
             )
         }
 
@@ -166,6 +184,7 @@ private fun Navigation(
                     Destination.HomeScreens.Home.routeName -> {
                         when (newDest) {
                             is Destination.HomeScreens.JoinNewGame,
+                            is Destination.HomeScreens.JoinNewGameWithQRCode,
                             Destination.HomeScreens.HostNewGame -> navController.navigate(newDest.toConcreteRoute())
                             Destination.HomeScreens.InGame -> {
                                 navController.navigate(
@@ -181,7 +200,8 @@ private fun Navigation(
                         }
                     }
                     Destination.HomeScreens.HostNewGame.routeName,
-                    Destination.HomeScreens.JoinNewGame.routeName -> {
+                    Destination.HomeScreens.JoinNewGame.routeName,
+                    Destination.HomeScreens.JoinNewGameWithQRCode.routeName -> {
                         when (newDest) {
                             Destination.HomeScreens.Home -> navController.navigate(newDest.toConcreteRoute())
                             Destination.HomeScreens.InGame -> {

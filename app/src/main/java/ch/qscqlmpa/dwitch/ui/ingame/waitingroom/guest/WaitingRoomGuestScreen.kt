@@ -133,14 +133,14 @@ fun WaitingRoomGuestBody(
     when (notification) {
         WaitingRoomGuestNotification.NotifyGameCanceled -> {
             InfoDialog(
-                title = R.string.info_dialog_title,
+                title = R.string.dialog_info_title,
                 text = R.string.game_canceled_by_host,
                 onOkClick = onGameCanceledAcknowledge
             )
         }
         WaitingRoomGuestNotification.NotifyPlayerKickedOffGame -> {
             InfoDialog(
-                title = R.string.info_dialog_title,
+                title = R.string.dialog_info_title,
                 text = R.string.you_have_been_kick,
                 onOkClick = onKickOffGameAcknowledge
             )
@@ -155,7 +155,7 @@ fun WaitingRoomGuestBody(
     }
     if (showConfirmationDialog.value) {
         ConfirmationDialog(
-            title = R.string.info_dialog_title,
+            title = R.string.dialog_info_title,
             text = R.string.guest_leaves_game_confirmation,
             onConfirmClick = onLeaveConfirmClick,
             onCancelClick = { showConfirmationDialog.value = false }

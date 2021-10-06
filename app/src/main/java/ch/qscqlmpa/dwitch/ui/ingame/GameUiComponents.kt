@@ -34,7 +34,7 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 @Composable
 fun GameOverDialog(onGameOverAcknowledge: () -> Unit) {
     InfoDialog(
-        title = R.string.info_dialog_title,
+        title = R.string.dialog_info_title,
         text = R.string.game_over,
         onOkClick = onGameOverAcknowledge
     )

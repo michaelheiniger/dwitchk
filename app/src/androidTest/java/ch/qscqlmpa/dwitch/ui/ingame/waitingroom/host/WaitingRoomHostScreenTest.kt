@@ -14,6 +14,7 @@ class WaitingRoomHostScreenTest : BaseUiUnitTest() {
     private lateinit var players: List<PlayerWrUi>
     private var launchGameEnabled = false
     private lateinit var connectionState: HostCommunicationState
+    private val gameQrCode = buildSampleQrCode()
 
     @Before
     fun setup() {
@@ -57,6 +58,7 @@ class WaitingRoomHostScreenTest : BaseUiUnitTest() {
                 toolbarTitle = "Dwiitch",
                 showAddComputerPlayer = true,
                 players,
+                gameQrCode = gameQrCode,
                 launchGameEnabled,
                 connectionState,
                 onAddComputerPlayer = {},
