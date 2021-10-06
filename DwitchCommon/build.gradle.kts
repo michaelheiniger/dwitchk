@@ -6,7 +6,7 @@ plugins {
 dependencies {
 
     // RxJava
-    api("io.reactivex.rxjava3:rxkotlin:3.0.1")
+    api("io.reactivex.rxjava3:rxjava:3.0.6")
 
     // Joda time
     api("joda-time:joda-time:2.10.10")

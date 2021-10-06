@@ -86,25 +86,19 @@ dependencies {
     implementation("com.google.android.material:material:1.4.0")
 
     // ####### Jetpack Compose #######
-    implementation("androidx.activity:activity-ktx:1.3.1")
     implementation("androidx.compose.ui:ui:$composeVersion")
-    implementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("androidx.compose.ui:ui-viewbinding:$composeVersion")
+    implementation("androidx.compose.ui:ui-tooling:$composeVersion") // Required despite what's dependency-analysis (README) is saying
     implementation("androidx.activity:activity-compose:$composeVersion")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
-    implementation("androidx.compose.material:material-icons-core:$composeVersion")
-    implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha06")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0-beta01")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0-rc01")
     implementation("androidx.constraintlayout:constraintlayout:2.1.1")
-    implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
     androidTestImplementation("androidx.compose.ui:ui-test:$composeVersion")
 
     // Dagger
     val daggerVersion = "2.38.1"
-    implementation("com.google.dagger:dagger-android-support:$daggerVersion")
     implementation("com.google.dagger:dagger-android:$daggerVersion")
     implementation("com.google.dagger:dagger:$daggerVersion")
     kapt("com.google.dagger:dagger-android-processor:$daggerVersion")
@@ -118,7 +112,6 @@ dependencies {
     // RxJava
     implementation("com.jakewharton.rxrelay3:rxrelay:3.0.1")
     implementation("io.reactivex.rxjava3:rxandroid:3.0.0")
-    implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
 
     // Joda time
     implementation("joda-time:joda-time:2.10.10")
@@ -157,7 +150,6 @@ dependencies {
 
     // QR code
     val cameraxVersion = "1.0.0-beta07"
-    implementation("androidx.camera:camera-camera2:$cameraxVersion")
     implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
     implementation("androidx.camera:camera-view:1.0.0-alpha14")
     implementation("com.google.zxing:core:3.4.1")

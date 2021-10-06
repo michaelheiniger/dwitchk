@@ -9,3 +9,7 @@
 Play (one of the many variants of) the card game President with your friends, each with its Android device connected to a common WLAN.
 
 **Under development**
+
+
+
+Gradle plugin used for dependency analysis: https://github.com/autonomousapps/dependency-analysis-android-gradle-plugin

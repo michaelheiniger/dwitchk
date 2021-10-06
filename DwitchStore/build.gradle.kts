@@ -43,29 +43,24 @@ android {
 }
 
 dependencies {
-    implementation(project(path = ":DwitchEngine"))
-    implementation(project(path = ":DwitchModel"))
+    api(project(path = ":DwitchEngine"))
+    api(project(path = ":DwitchModel"))
 
     // Logging
     implementation("org.tinylog:tinylog-api-kotlin:2.4.0-M1")
 
     // Room database
     val roomVersion = "2.4.0-alpha04"
-    implementation("androidx.room:room-runtime:$roomVersion")
+    api("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-rxjava3:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
-    testImplementation("androidx.room:room-testing:$roomVersion")
 
     // RxJava
-    implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
     implementation("com.jakewharton.rxrelay3:rxrelay:3.0.1")
 
     // Dagger
     val daggerVersion = "2.38.1"
-    implementation("com.google.dagger:dagger-android-support:$daggerVersion")
-    implementation("com.google.dagger:dagger-android:$daggerVersion")
-    implementation("com.google.dagger:dagger:$daggerVersion")
-    kapt("com.google.dagger:dagger-android-processor:$daggerVersion")
+    api("com.google.dagger:dagger:$daggerVersion")
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")
     kaptAndroidTest("com.google.dagger:dagger-compiler:$daggerVersion")
 
@@ -82,7 +77,6 @@ dependencies {
 
     // AssertJ
     val assertJVersion = "3.20.2"
-    testImplementation("org.assertj:assertj-core:$assertJVersion")
     androidTestImplementation("org.assertj:assertj-core:$assertJVersion")
 
     // Android testing stuff
@@ -95,5 +89,5 @@ dependencies {
     testImplementation("android.arch.core:core-testing:1.1.1")
 
     // Joda time
-    implementation("joda-time:joda-time:2.10.10")
+    api("joda-time:joda-time:2.10.10")
 }

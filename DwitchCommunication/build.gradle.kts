@@ -38,20 +38,19 @@ android {
 }
 
 dependencies {
-    implementation(project(path = ":DwitchCommon"))
-    implementation(project(path = ":DwitchEngine"))
-    implementation(project(path = ":DwitchModel"))
+    api(project(path = ":DwitchCommon"))
+    api(project(path = ":DwitchEngine"))
+    api(project(path = ":DwitchModel"))
 
     // Logging
     implementation("org.tinylog:tinylog-api-kotlin:2.4.0-M1")
 
     // Dagger
     val daggerVersion = "2.38.1"
-    implementation("com.google.dagger:dagger:$daggerVersion")
+    api("com.google.dagger:dagger:$daggerVersion")
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")
 
     // RxJava
-    api("io.reactivex.rxjava3:rxkotlin:3.0.1")
     implementation("com.jakewharton.rxrelay3:rxrelay:3.0.1")
 
     // Serialization
@@ -65,7 +64,7 @@ dependencies {
     implementation("com.sksamuel.hoplite:hoplite-yaml:1.4.7")
 
     // Joda time
-    implementation("joda-time:joda-time:2.10.10")
+    api("joda-time:joda-time:2.10.10")
 
     // JUnit5
     val junitVersion = "5.7.1"

@@ -22,7 +22,10 @@ android {
     buildTypes {
         named("release") {
             isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -41,15 +44,15 @@ android {
 }
 
 dependencies {
-    implementation(project(path = ":DwitchEngine"))
-    implementation(project(path = ":DwitchModel"))
-    implementation(project(path = ":DwitchStore"))
-    implementation(project(path = ":DwitchCommunication"))
-    implementation(project(path = ":DwitchCommon"))
+    api(project(path = ":DwitchEngine"))
+    api(project(path = ":DwitchModel"))
+    api(project(path = ":DwitchStore"))
+    api(project(path = ":DwitchCommunication"))
+    api(project(path = ":DwitchCommon"))
 
     // Dagger
     val daggerVersion = "2.38.1"
-    implementation("com.google.dagger:dagger:$daggerVersion")
+    api("com.google.dagger:dagger:$daggerVersion")
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")
     kaptAndroidTest("com.google.dagger:dagger-compiler:$daggerVersion")
 
@@ -57,7 +60,6 @@ dependencies {
     implementation("org.tinylog:tinylog-api-kotlin:2.4.0-M1")
 
     // RxJava
-    implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
     implementation("com.jakewharton.rxrelay3:rxrelay:3.0.1")
 
     // Joda time
@@ -74,7 +76,6 @@ dependencies {
     val jUnit5Version = "5.7.1"
     testImplementation("org.junit.jupiter:junit-jupiter-api:$jUnit5Version")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jUnit5Version")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:$jUnit5Version")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:$jUnit5Version")
 
     // MockK
