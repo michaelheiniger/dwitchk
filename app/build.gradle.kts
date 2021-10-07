@@ -150,6 +150,7 @@ dependencies {
 
     // QR code
     val cameraxVersion = "1.0.0-beta07"
+    implementation("androidx.camera:camera-camera2:$cameraxVersion") // Required despite what's dependency-analysis (README) is saying
     implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
     implementation("androidx.camera:camera-view:1.0.0-alpha14")
     implementation("com.google.zxing:core:3.4.1")
