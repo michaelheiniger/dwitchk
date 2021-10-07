@@ -34,7 +34,9 @@ import ch.qscqlmpa.dwitch.ui.qrcode.QrCodeScannerActivity.Companion.RESULT_OK
 import ch.qscqlmpa.dwitch.ui.theme.DwitchTheme
 import com.google.common.util.concurrent.ListenableFuture
 import org.tinylog.kotlin.Logger
+import java.util.*
 import java.util.concurrent.ExecutionException
+import kotlin.streams.toList
 
 class QrCodeScannerActivity : AppCompatActivity() {
 
@@ -119,10 +121,11 @@ class QrCodeScannerActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_CAMERA) {
-            if (grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.isNotEmpty() && Arrays.stream(grantResults).toList().contains(PackageManager.PERMISSION_GRANTED)) {
+                permissionDenied.value = false
                 startCamera()
             } else {
-                permissionDenied.value = true
+                cancel()
             }
         }
     }
