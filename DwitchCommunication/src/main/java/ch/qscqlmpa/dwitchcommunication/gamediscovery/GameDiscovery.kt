@@ -5,5 +5,5 @@ import io.reactivex.rxjava3.core.Observable
 
 interface GameDiscovery {
     fun listenForAdvertisedGames(): Observable<GameAdvertisingInfo>
-    fun getGameAdvertisingInfoFromQrCode(qrCodeContent: String): GameAdvertisingInfo?
+    fun deserializeGameAdvertisingInfo(str: String): GameAdvertisingInfo?
 }

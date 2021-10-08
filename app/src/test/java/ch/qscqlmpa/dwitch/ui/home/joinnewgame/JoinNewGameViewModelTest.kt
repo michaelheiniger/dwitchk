@@ -46,7 +46,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
         )
         every { mockGameFacade.joinGame(any(), any()) } returns Completable.complete()
         every { mockGameDiscoveryFacade.getAdvertisedGame(gameCommonId) } returns advertisedGame
-        every { mockGameDiscoveryFacade.getAdvertisedGame(qrCodeContent) } returns advertisedGame
+        every { mockGameDiscoveryFacade.deserializeGameAdvertisingInfo(qrCodeContent) } returns advertisedGame
     }
 
     private fun gameCannotBeJoinedInitially(loadGame: () -> Unit) {

@@ -2,6 +2,7 @@ package ch.qscqlmpa.dwitchgame.gamediscovery
 
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
+import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 
 interface GameDiscoveryFacade {
@@ -32,7 +33,8 @@ interface GameDiscoveryFacade {
     fun getAdvertisedGame(gameCommonId: GameCommonId): GameAdvertisingInfo?
 
     /**
-     * Get advertised game from the content of the serialized QR code.
+     * Get serialized advertised game.
+     *
      */
-    fun getAdvertisedGame(qrCodeContent: String): GameAdvertisingInfo?
+    fun deserializeGameAdvertisingInfo(str: String): GameAdvertisingInfo?
 }

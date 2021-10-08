@@ -97,7 +97,7 @@ class HomeViewModel @Inject constructor(
     fun load(qrCodeContent: String?) {
         Logger.debug { "load qr code content: $qrCodeContent" }
         if (qrCodeContent != null) {
-            val game = gameDiscoveryFacade.getAdvertisedGame(qrCodeContent)
+            val game = gameDiscoveryFacade.deserializeGameAdvertisingInfo(qrCodeContent)
             if (game != null) {
                 if (game.isNew) {
                     navigationBridge.navigate(Destination.HomeScreens.JoinNewGameWithQRCode(qrCodeContent))

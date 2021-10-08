@@ -7,8 +7,9 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Size
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContract
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
@@ -17,6 +18,7 @@ import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
@@ -32,20 +34,24 @@ import ch.qscqlmpa.dwitch.ui.common.YesNoDialog
 import ch.qscqlmpa.dwitch.ui.qrcode.QrCodeScannerActivity.Companion.RESULT_CANCELLED
 import ch.qscqlmpa.dwitch.ui.qrcode.QrCodeScannerActivity.Companion.RESULT_OK
 import ch.qscqlmpa.dwitch.ui.theme.DwitchTheme
+import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
+import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import com.google.common.util.concurrent.ListenableFuture
+import dagger.android.AndroidInjection
 import org.tinylog.kotlin.Logger
-import java.util.*
 import java.util.concurrent.ExecutionException
-import kotlin.streams.toList
+import javax.inject.Inject
 
-class QrCodeScannerActivity : AppCompatActivity() {
+class QrCodeScannerActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var gameDiscoveryFacade: GameDiscoveryFacade
 
     companion object {
         const val RESULT_OK = 0
         const val RESULT_ERROR = 1
         const val RESULT_CANCELLED = 2
         const val QR_CODE_CONTENT_EXTRA = "qr-code-content-extra"
-        private const val PERMISSION_REQUEST_CAMERA = 0
     }
 
     private lateinit var previewView: PreviewView
@@ -53,10 +59,43 @@ class QrCodeScannerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityQrCodeScannerBinding
 
-    private var permissionDenied = mutableStateOf(false)
+    private var showPermissionDenied = mutableStateOf(false)
     private var showPermissionHint = mutableStateOf(false)
+    private var showQrCodeNotFound = mutableStateOf(false)
+
+    private lateinit var imageAnalysis: ImageAnalysis
+
+    private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+        if (isGranted) {
+            showPermissionDenied.value = false
+            startCamera()
+        } else cancel()
+    }
+
+    private val imageAnalyzer = QRCodeImageAnalyzer(
+        object : QRCodeFoundListener<GameAdvertisingInfo> {
+            override fun onQRCodeFound(data: GameAdvertisingInfo) {
+                Logger.debug { "QR-code found: $data" }
+                imageAnalysis.clearAnalyzer()
+
+                val intentResult = Intent()
+                intentResult.putExtra(QR_CODE_CONTENT_EXTRA, data)
+                setResult(RESULT_OK, intentResult)
+                finish()
+            }
+
+            override fun qrCodeNotFound() {
+                Logger.debug { "QR-code not found" }
+                imageAnalysis.clearAnalyzer()
+                showQrCodeNotFound.value = true
+            }
+        },
+        qrCodeContentConverter = gameDiscoveryFacade::deserializeGameAdvertisingInfo
+    )
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
 
         binding = ActivityQrCodeScannerBinding.inflate(layoutInflater)
@@ -77,7 +116,7 @@ class QrCodeScannerActivity : AppCompatActivity() {
 
         binding.composeViewBottom.setContent {
             DwitchTheme {
-                if (permissionDenied.value) {
+                if (showPermissionDenied.value) {
                     YesNoDialog(
                         text = R.string.camera_permission_denied,
                         onNoClick = { cancel() },
@@ -91,6 +130,14 @@ class QrCodeScannerActivity : AppCompatActivity() {
                         onOkClick = { performCameraPermissionRequest() }
                     )
                 }
+                if (showQrCodeNotFound.value) {
+                    YesNoDialog(
+                        text = R.string.qr_code_contains_no_game_ad,
+                        onNoClick = { cancel() },
+                        onYesClick = { setImageAnalyzer() }
+                    )
+
+                }
             }
         }
 
@@ -98,12 +145,13 @@ class QrCodeScannerActivity : AppCompatActivity() {
         requestCamera()
     }
 
-    private fun performCameraPermissionRequest() {
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(Manifest.permission.CAMERA),
-            PERMISSION_REQUEST_CAMERA
-        )
+    override fun onBackPressed() {
+        cancel()
+    }
+
+    private fun cancel() {
+        setResult(RESULT_CANCELLED)
+        finish()
     }
 
     private fun requestCamera() {
@@ -113,26 +161,19 @@ class QrCodeScannerActivity : AppCompatActivity() {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
                 showPermissionHint.value = true
             } else {
-                permissionDenied.value = true
+                showPermissionDenied.value = true
             }
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_REQUEST_CAMERA) {
-            if (grantResults.isNotEmpty() && Arrays.stream(grantResults).toList().contains(PackageManager.PERMISSION_GRANTED)) {
-                permissionDenied.value = false
-                startCamera()
-            } else {
-                cancel()
-            }
-        }
+    private fun performCameraPermissionRequest() {
+        activityResultLauncher.launch(Manifest.permission.CAMERA)
     }
 
     private fun startCamera() {
         cameraProviderFuture.addListener(
             {
+                //TODO: Exception handling
                 try {
                     val cameraProvider = cameraProviderFuture.get()
                     bindCameraPreview(cameraProvider)
@@ -148,47 +189,24 @@ class QrCodeScannerActivity : AppCompatActivity() {
 
     private fun bindCameraPreview(cameraProvider: ProcessCameraProvider) {
         previewView.preferredImplementationMode = PreviewView.ImplementationMode.SURFACE_VIEW
-        val preview = Preview.Builder()
-            .build()
+        val preview = Preview.Builder().build()
         val cameraSelector = CameraSelector.Builder()
             .requireLensFacing(CameraSelector.LENS_FACING_BACK)
             .build()
         preview.setSurfaceProvider(previewView.createSurfaceProvider())
-        val imageAnalysis = ImageAnalysis.Builder()
+        imageAnalysis = ImageAnalysis.Builder()
             .setTargetResolution(Size(1280, 720))
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
             .build()
-        imageAnalysis.setAnalyzer(
-            ContextCompat.getMainExecutor(this),
-            QRCodeImageAnalyzer(object : QRCodeFoundListener {
-
-                override fun onQRCodeFound(qrCode: String?) {
-                    Logger.info { "QR-code found: $qrCode" }
-                    imageAnalysis.clearAnalyzer()
-
-                    val data = Intent()
-                    data.putExtra(QR_CODE_CONTENT_EXTRA, qrCode)
-                    setResult(RESULT_OK, data)
-                    finish()
-                }
-
-                override fun qrCodeNotFound() {
-                }
-            })
-        )
-        val camera = cameraProvider.bindToLifecycle((this as LifecycleOwner), cameraSelector, imageAnalysis, preview)
+        setImageAnalyzer()
+        cameraProvider.bindToLifecycle((this as LifecycleOwner), cameraSelector, imageAnalysis, preview)
     }
 
-    override fun onBackPressed() {
-        cancel()
+    private fun setImageAnalyzer() {
+        imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(this), imageAnalyzer)
     }
 
-    private fun cancel() {
-        setResult(RESULT_CANCELLED)
-        finish()
-    }
 }
-
 class ScanQrCodeResultContract : ActivityResultContract<Unit, QrCodeScanResult>() {
     override fun createIntent(context: Context, input: Unit) = Intent(context, QrCodeScannerActivity::class.java)
 

@@ -27,7 +27,7 @@ internal class GameDiscoveryFacadeImpl @Inject constructor(
         return advertisedGameRepository.getGame(gameCommonId)
     }
 
-    override fun getAdvertisedGame(qrCodeContent: String): GameAdvertisingInfo? {
-        return gameDiscovery.getGameAdvertisingInfoFromQrCode(qrCodeContent)
+    override fun deserializeGameAdvertisingInfo(str: String): GameAdvertisingInfo? {
+        return gameDiscovery.deserializeGameAdvertisingInfo(str)
     }
 }

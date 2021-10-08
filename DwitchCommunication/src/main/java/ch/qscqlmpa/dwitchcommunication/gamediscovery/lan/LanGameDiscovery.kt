@@ -48,11 +48,11 @@ internal class LanGameDiscovery @Inject constructor(
         }
     }
 
-    override fun getGameAdvertisingInfoFromQrCode(qrCodeContent: String): GameAdvertisingInfo? {
+    override fun deserializeGameAdvertisingInfo(str: String): GameAdvertisingInfo? {
         return try {
-            serializerFactory.unserializeGameInfo(qrCodeContent)
+            serializerFactory.unserializeGameInfo(str)
         } catch (e: SerializationException) {
-            Logger.error(e) { "QR-code content provided can't be deserialized: $qrCodeContent" }
+            Logger.error(e) { "QR-code content provided can't be deserialized: $str" }
             null
         }
     }

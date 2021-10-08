@@ -54,7 +54,7 @@ class JoinNewGameViewModel @Inject constructor(
     }
 
     fun loadGame(qrCodeContent: String) {
-        val game = gameDiscoveryFacade.getAdvertisedGame(qrCodeContent)
+        val game = gameDiscoveryFacade.deserializeGameAdvertisingInfo(qrCodeContent)
         if (game != null) {
             _game.value = game
         } else {
