@@ -1,10 +1,5 @@
 name: Instrumented tests
 
-concurrency:
-  group: ${{ github.head_ref }}
-  cancel-in-progress: true
-
-# Controls when the action will run.
 on:
   push:
     branches: [ master, develop ]
@@ -25,6 +20,7 @@ jobs:
     strategy:
       matrix:
         api-level: [ 29 ]
+
     steps:
       - name: Checkout project
         uses: actions/checkout@v2
