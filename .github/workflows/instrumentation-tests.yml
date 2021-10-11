@@ -22,6 +22,9 @@ jobs:
   test:
     runs-on: macos-latest
     timeout-minutes: 30
+    strategy:
+      matrix:
+        api-level: [ 29 ]
     steps:
       - name: Checkout project
         uses: actions/checkout@v2
@@ -31,16 +34,53 @@ jobs:
         with:
           java-version: 11
 
-      - name: Run instrumentation tests
+      - name: Gradle cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
+
+      - name: AVD cache
+        uses: actions/cache@v2
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ matrix.api-level }}
+
+
+      - name: create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
-          arch: x86
-          disable-animations: true
-          script: ./gradlew connectedCheck --stacktrace
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
 
-      - name: Upload test reports
-        uses: actions/upload-artifact@v2
+      - name: run tests
+        uses: reactivecircus/android-emulator-runner@v2
         with:
-          name: test-reports
-          path: /reports
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew connectedCheck
+
+#      - name: Run instrumentation tests
+#        uses: reactivecircus/android-emulator-runner@v2
+#        with:
+#          api-level: 29
+#          arch: x86
+#          disable-animations: true
+#          script: ./gradlew connectedCheck --stacktrace
+#
+#      - name: Upload test reports
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: test-reports
+#          path: /reports
