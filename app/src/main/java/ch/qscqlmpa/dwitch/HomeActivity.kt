@@ -6,17 +6,14 @@ import androidx.activity.compose.setContent
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.ingame.services.ServiceManager
 import ch.qscqlmpa.dwitch.ui.Dwitch
-import ch.qscqlmpa.dwitch.ui.NavigationBridge
+import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import dagger.android.AndroidInjection
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Named
 
-class HomeActivity : ComponentActivity(), HasAndroidInjector {
+class HomeActivity : ComponentActivity() {
 
     @Named("home")
     @Inject
@@ -30,11 +27,6 @@ class HomeActivity : ComponentActivity(), HasAndroidInjector {
 
     @Inject
     lateinit var navigationBridge: NavigationBridge
-
-    @Inject
-    lateinit var androidInjector: DispatchingAndroidInjector<Any>
-
-    override fun androidInjector(): AndroidInjector<Any> = androidInjector
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
