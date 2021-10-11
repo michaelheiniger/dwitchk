@@ -1,6 +1,10 @@
 name: Instrumented tests
 
-# Controls when the action will run. 
+concurrency:
+  group: ${{ github.head_ref }}
+  cancel-in-progress: true
+
+# Controls when the action will run.
 on:
   push:
     branches: [ master, develop ]
@@ -39,4 +43,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: test-reports
-          path: ${{ env.SAMPLE_PATH }}/reports
+          path: /reports
