@@ -52,7 +52,7 @@ internal class LanGameDiscovery @Inject constructor(
         return try {
             serializerFactory.unserializeGameInfo(str)
         } catch (e: SerializationException) {
-            Logger.error(e) { "QR-code content provided can't be deserialized: $str" }
+            Logger.error(e) { "String provided can't be deserialized: $str" }
             null
         }
     }
