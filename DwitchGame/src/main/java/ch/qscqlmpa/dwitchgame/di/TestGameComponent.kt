@@ -7,7 +7,6 @@ import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameGuestModule
 import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameHostModule
 import dagger.Component
 
-// TODO: Can this component be removed since there's no test-specific dependencies anymore ?
 @GameScope
 @Component(
     modules = [
