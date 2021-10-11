@@ -6,24 +6,51 @@ import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
-import ch.qscqlmpa.dwitch.ui.common.DwitchTopBar
-import ch.qscqlmpa.dwitch.ui.common.LoadingDialog
-import ch.qscqlmpa.dwitch.ui.common.NavigationIcon
-import ch.qscqlmpa.dwitch.ui.common.UiTags
+import ch.qscqlmpa.dwitch.ui.common.*
+import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
+import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
+
+@Composable
+fun JoinNewGameScreen(
+    vmFactory: ViewModelFactory,
+    gameAd: GameAdvertisingInfo
+) {
+    val viewModel = viewModel<JoinNewGameViewModel>(factory = vmFactory)
+
+    DisposableEffect(key1 = viewModel) {
+        viewModel.onStart()
+        viewModel.loadGame(gameAd)
+        onDispose { viewModel.onStop() }
+    }
+
+    Notification(notification = viewModel.notification.value)
+
+    JoinNewGameBody(
+        gameName = viewModel.gameName.value,
+        playerName = viewModel.playerName.value,
+        joinGameControlEnabled = viewModel.canJoinGame.value,
+        loading = viewModel.loading.value,
+        onPlayerNameChange = viewModel::onPlayerNameChange,
+        onJoinGameClick = { viewModel.joinGame() },
+        onBackClick = viewModel::onBackClick
+    )
+}
 
 @Preview(
     showBackground = true,
     backgroundColor = 0xFFFFFFFF
 )
 @Composable
-fun JoinNewGameBodyPreview() {
+private fun JoinNewGameBodyPreview() {
     ActivityScreenContainer {
         JoinNewGameBody(
             gameName = "Dwiiitch",
@@ -83,6 +110,22 @@ fun JoinNewGameBody(
                 enabled = joinGameControlEnabled,
                 modifier = Modifier.fillMaxWidth()
             ) { Text(stringResource(R.string.join_game)) }
+        }
+    }
+}
+
+@Composable
+private fun Notification(notification: JoinNewGameNotification) {
+    when (notification) {
+        JoinNewGameNotification.None -> {
+            // Nothing to do
+        }
+        JoinNewGameNotification.ErrorJoiningGame -> {
+            InfoDialog(
+                title = R.string.dialog_error_title,
+                text = R.string.error_joining_game_text,
+                onOkClick = {} // Nothing to do
+            )
         }
     }
 }

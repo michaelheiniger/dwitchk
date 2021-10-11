@@ -12,74 +12,24 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navOptions
 import androidx.navigation.navigation
 import ch.qscqlmpa.dwitch.ui.home.home.HomeScreen
 import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameScreen
-import ch.qscqlmpa.dwitch.ui.home.joinnewgame.gamead.JoinNewGameWithGameAdScreen
-import ch.qscqlmpa.dwitch.ui.home.joinnewgame.qrcode.JoinNewGameWithQRCodeScreen
+import ch.qscqlmpa.dwitch.ui.home.joinnewgame.JoinNewGameScreen
 import ch.qscqlmpa.dwitch.ui.ingame.LoadingSpinner
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.GameViewModel
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.guest.GameRoomGuestScreen
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.host.GameRoomHostScreen
 import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.guest.WaitingRoomGuestScreen
 import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.host.WaitingRoomHostScreen
+import ch.qscqlmpa.dwitch.ui.navigation.GameScreens
+import ch.qscqlmpa.dwitch.ui.navigation.HandleNavigation
+import ch.qscqlmpa.dwitch.ui.navigation.HomeScreens
+import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.theme.DwitchTheme
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
-import ch.qscqlmpa.dwitchmodel.game.GameCommonId
+import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import org.tinylog.kotlin.Logger
-import java.util.*
-
-sealed class Destination(
-    /**
-     * Name of the route without any parameter.
-     * Must NOT be used to actually navigate since the potential parameters aren't replaced with a concrete value.
-     */
-    open val routeName: String
-) {
-
-    /**
-     * Value used to actually navigate to the destination. May contain parameters.
-     */
-    open fun toConcreteRoute(): String = routeName
-
-    object Loading : Destination("loading")
-
-    sealed class HomeScreens(override val routeName: String) : Destination(routeName) {
-        object Home : HomeScreens("home")
-        object HostNewGame : HomeScreens("hostNewGame")
-        data class JoinNewGame(val gameCommonId: GameCommonId) : HomeScreens(routeName) {
-            companion object {
-                const val routeName = "joinNewGame/{gameCommonId}"
-            }
-
-            override fun toConcreteRoute(): String {
-                return "joinNewGame/${gameCommonId.value}"
-            }
-        }
-
-        data class JoinNewGameWithQRCode(val qrCodeContent: String) : HomeScreens(routeName) {
-            companion object {
-                const val routeName = "joinNewGameWithQrCode/{qrCodeContent}"
-            }
-
-            override fun toConcreteRoute(): String {
-                return "joinNewGameWithQrCode/$qrCodeContent"
-            }
-        }
-
-        object InGame : HomeScreens("inGame")
-    }
-
-    sealed class GameScreens(override val routeName: String) : Destination(routeName) {
-        object Loading : GameScreens("loading")
-        object GameDispatch : GameScreens("gameDispatch")
-        object WaitingRoomHost : GameScreens("waitingRoomHost")
-        object WaitingRoomGuest : GameScreens("waitingRoomGuest")
-        object GameRoomHost : GameScreens("gameRoomHost")
-        object GameRoomGuest : GameScreens("gameRoomGuest")
-    }
-}
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -90,9 +40,10 @@ fun Dwitch(
 ) {
     DwitchTheme {
         val navController = rememberNavController()
+        HandleNavigation(navigationBridge, navController)
         Scaffold { innerPadding ->
-            Navigation(navigationBridge, navController)
             DwitchNavHost(
+                navigationBridge = navigationBridge,
                 vmFactory = vmFactory,
                 getInGameVmFactory = inGameVmFactory,
                 navController = navController,
@@ -106,6 +57,7 @@ fun Dwitch(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun DwitchNavHost(
+    navigationBridge: NavigationBridge,
     vmFactory: ViewModelFactory,
     getInGameVmFactory: () -> ViewModelFactory,
     navController: NavHostController,
@@ -113,35 +65,33 @@ private fun DwitchNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Destination.HomeScreens.Home.routeName,
+        startDestination = HomeScreens.Home.routeName,
         modifier = modifier
     ) {
-        composable(Destination.HomeScreens.Home.routeName) {
+        composable(HomeScreens.Home.routeName) {
             HomeScreen(vmFactory = vmFactory)
         }
-        composable(Destination.HomeScreens.HostNewGame.routeName) {
+        composable(HomeScreens.HostNewGame.routeName) {
             HostNewGameScreen(vmFactory = vmFactory)
         }
-        composable(route = Destination.HomeScreens.JoinNewGame.routeName) { entry ->
-            val gameCommonId = GameCommonId(UUID.fromString(entry.arguments?.getString("gameCommonId")!!))
-            JoinNewGameWithGameAdScreen(
-                vmFactory = vmFactory,
-                gameCommonId = gameCommonId
-            )
-        }
-        composable(route = Destination.HomeScreens.JoinNewGameWithQRCode.routeName) { entry ->
-            val qrCodeContent = entry.arguments?.getString("qrCodeContent")!!
-            JoinNewGameWithQRCodeScreen(
-                vmFactory = vmFactory,
-                qrCodeContent = qrCodeContent
-            )
+        composable(route = HomeScreens.JoinNewGame.routeName) { entry ->
+            val gameAd = navigationBridge.getData(entry.destination.route!!) as GameAdvertisingInfo?
+            if (gameAd != null) {
+                JoinNewGameScreen(
+                    vmFactory = vmFactory,
+                    gameAd = gameAd
+                )
+            } else {
+                Logger.warn { "No game ad available in navigation bridge (process previously killed ?). Navigating back to home screen." }
+                navigationBridge.navigateBack()
+            }
         }
 
         navigation(
-            route = Destination.HomeScreens.InGame.routeName,
-            startDestination = Destination.GameScreens.GameDispatch.routeName
+            route = HomeScreens.InGame.routeName,
+            startDestination = GameScreens.GameDispatch.routeName
         ) {
-            composable(Destination.GameScreens.GameDispatch.routeName) {
+            composable(GameScreens.GameDispatch.routeName) {
                 val viewModel = viewModel<GameViewModel>(factory = getInGameVmFactory())
                 DisposableEffect(viewModel) {
                     viewModel.onStart()
@@ -150,105 +100,17 @@ private fun DwitchNavHost(
                 LoadingSpinner()
             }
 
-            composable(Destination.GameScreens.WaitingRoomHost.routeName) {
+            composable(GameScreens.WaitingRoomHost.routeName) {
                 WaitingRoomHostScreen(vmFactory = getInGameVmFactory())
             }
-            composable(Destination.GameScreens.WaitingRoomGuest.routeName) {
+            composable(GameScreens.WaitingRoomGuest.routeName) {
                 WaitingRoomGuestScreen(vmFactory = getInGameVmFactory())
             }
-            composable(Destination.GameScreens.GameRoomHost.routeName) {
+            composable(GameScreens.GameRoomHost.routeName) {
                 GameRoomHostScreen(vmFactory = getInGameVmFactory())
             }
-            composable(Destination.GameScreens.GameRoomGuest.routeName) {
+            composable(GameScreens.GameRoomGuest.routeName) {
                 GameRoomGuestScreen(vmFactory = getInGameVmFactory())
-            }
-        }
-    }
-}
-
-@Suppress("LongMethod", "ComplexMethod", "NestedBlockDepth")
-@Composable
-private fun Navigation(
-    navigationBridge: NavigationBridge,
-    navController: NavHostController
-) {
-    when (val command = navigationBridge.command.value) {
-        NavigationCommand.Identity -> {
-            // Nothing to do
-        }
-        NavigationCommand.Back -> navController.popBackStack()
-        is NavigationCommand.Navigate -> {
-            val newDest = command.destination
-            navController.currentDestination?.let { currentDest ->
-                when (currentDest.route) {
-                    Destination.HomeScreens.Home.routeName -> {
-                        when (newDest) {
-                            is Destination.HomeScreens.JoinNewGame,
-                            is Destination.HomeScreens.JoinNewGameWithQRCode,
-                            Destination.HomeScreens.HostNewGame -> navController.navigate(newDest.toConcreteRoute())
-                            Destination.HomeScreens.InGame -> {
-                                navController.navigate(
-                                    route = newDest.toConcreteRoute(),
-                                    navOptions = navOptions {
-                                        popUpTo(Destination.HomeScreens.Home.routeName) {
-                                            inclusive = true
-                                        }
-                                    }
-                                )
-                            }
-                            else -> Logger.warn { "Route $newDest cannot be reached from ${currentDest.route}" }
-                        }
-                    }
-                    Destination.HomeScreens.HostNewGame.routeName,
-                    Destination.HomeScreens.JoinNewGame.routeName,
-                    Destination.HomeScreens.JoinNewGameWithQRCode.routeName -> {
-                        when (newDest) {
-                            Destination.HomeScreens.Home -> navController.navigate(newDest.toConcreteRoute())
-                            Destination.HomeScreens.InGame -> {
-                                navController.navigate(
-                                    route = newDest.toConcreteRoute(),
-                                    navOptions = navOptions {
-                                        popUpTo(Destination.HomeScreens.Home.routeName) {
-                                            inclusive = true
-                                        }
-                                    }
-                                )
-                            }
-                            else -> Logger.warn { "Route $newDest cannot be reached from ${currentDest.route}" }
-                        }
-                    }
-                    Destination.GameScreens.GameDispatch.routeName -> {
-                        when (newDest) {
-                            Destination.GameScreens.WaitingRoomGuest,
-                            Destination.GameScreens.WaitingRoomHost,
-                            Destination.GameScreens.GameRoomGuest,
-                            Destination.GameScreens.GameRoomHost -> navController.navigate(newDest.toConcreteRoute())
-                            else -> Logger.warn { "Route $newDest cannot be reached from ${currentDest.route}" }
-                        }
-                    }
-                    Destination.GameScreens.WaitingRoomHost.routeName -> {
-                        when (newDest) {
-                            Destination.HomeScreens.Home,
-                            Destination.GameScreens.GameRoomHost -> navController.navigate(newDest.toConcreteRoute())
-                            else -> Logger.warn { "Route $newDest cannot be reached from ${currentDest.route}" }
-                        }
-                    }
-                    Destination.GameScreens.WaitingRoomGuest.routeName -> {
-                        when (newDest) {
-                            Destination.HomeScreens.Home,
-                            Destination.GameScreens.GameRoomGuest -> navController.navigate(newDest.toConcreteRoute())
-                            else -> Logger.warn { "Route $newDest cannot be reached from ${currentDest.route}" }
-                        }
-                    }
-                    Destination.GameScreens.GameRoomHost.routeName,
-                    Destination.GameScreens.GameRoomGuest.routeName -> {
-                        when (newDest) {
-                            Destination.HomeScreens.Home -> navController.navigate(newDest.toConcreteRoute())
-                            else -> Logger.warn { "Route $newDest cannot be reached from ${currentDest.route}" }
-                        }
-                    }
-                    else -> Logger.warn { "Current route cannot be handled: ${currentDest.route}" }
-                }
             }
         }
     }

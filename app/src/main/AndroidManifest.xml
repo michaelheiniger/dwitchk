@@ -17,7 +17,7 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.Dwitch">
         <activity
-            android:name=".ui.qrcode.QrCodeScannerActivity"
+            android:name=".ui.qrcodescanning.QrCodeScannerActivity"
             android:exported="true"
             android:label="@string/title_activity_qr_code_scanner"
             android:theme="@style/Theme.Dwitch.NoActionBar" />

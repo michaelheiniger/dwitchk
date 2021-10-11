@@ -5,9 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.AppEventRepository
-import ch.qscqlmpa.dwitch.ui.Destination
-import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitch.ui.navigation.HomeScreens
+import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitchgame.game.GameFacade
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import io.reactivex.rxjava3.core.Completable
@@ -75,7 +75,7 @@ class HostNewGameViewModel @Inject constructor(
             )
                 .doOnTerminate { _loading.value = true }
                 .subscribe(
-                    { navigationBridge.navigate(Destination.HomeScreens.InGame) },
+                    { navigationBridge.navigate(HomeScreens.InGame) },
                     { error -> Logger.error(error) { "Error while start hosting the game" } }
                 )
         )

@@ -178,4 +178,7 @@
     <string name="scan_qr_code_hint">Scan QR code displayed on the Host\'s screen to join the game</string>
     <string name="camera_permission_denied">Cannot scan QR code because camera permission is denied</string>
     <string name="qr_code_camera_permission_hint">Camera permission is required to scan QR code of a game</string>
+    <string name="qr_code_invalid">QR code contains no game info, try again ?</string>
+    <string name="error_starting_camera">Error while using camera</string>
+    <string name="qr_code_decoding_failed">QR code decoding failed, try again ?</string>
 </resources>

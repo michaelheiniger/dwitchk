@@ -5,9 +5,9 @@ import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.AppEventRepository
 import ch.qscqlmpa.dwitch.app.ServiceIdentifier
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.ui.Destination
-import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameViewModel
+import ch.qscqlmpa.dwitch.ui.navigation.HomeScreens
+import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitchgame.game.GameFacade
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -91,7 +91,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
         viewModel.hostGame()
 
         // Then
-        verify { mockNavigationBridge.navigate(Destination.HomeScreens.InGame) }
+        verify { mockNavigationBridge.navigate(HomeScreens.InGame) }
         verify { mockGameFacade.hostGame(gameName, playerName) }
         confirmVerified(mockGameFacade)
     }

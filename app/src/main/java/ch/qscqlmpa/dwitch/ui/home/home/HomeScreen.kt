@@ -28,8 +28,8 @@ import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.*
-import ch.qscqlmpa.dwitch.ui.qrcode.QrCodeScanResult
-import ch.qscqlmpa.dwitch.ui.qrcode.ScanQrCodeResultContract
+import ch.qscqlmpa.dwitch.ui.qrcodescanning.QrCodeScanResult
+import ch.qscqlmpa.dwitch.ui.qrcodescanning.ScanQrCodeResultContract
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
@@ -92,7 +92,7 @@ fun HomeScreen(
         onCreateNewGameClick = viewModel::createNewGame,
         onJoinGameClick = viewModel::joinGame,
         onResumableGameClick = { game -> viewModel.resumeGame(game) },
-        onQrCodeScan = { qrCodeContent -> viewModel.load(qrCodeContent) }
+        onQrCodeScan = { gameAd -> viewModel.load(gameAd) }
     )
     if (viewModel.loading.value) LoadingDialog()
 }
@@ -105,7 +105,7 @@ fun HomeBody(
     onCreateNewGameClick: () -> Unit,
     onJoinGameClick: (GameAdvertisingInfo) -> Unit,
     onResumableGameClick: (ResumableGameInfo) -> Unit,
-    onQrCodeScan: (String) -> Unit
+    onQrCodeScan: (GameAdvertisingInfo) -> Unit
 ) {
     Notification(notification = notification)
     Column(
@@ -146,11 +146,11 @@ fun HomeBody(
 }
 
 @Composable
-private fun JoinGameWithQrCode(onQrCodeScan: (String) -> Unit) {
+private fun JoinGameWithQrCode(onQrCodeScan: (GameAdvertisingInfo) -> Unit) {
     val result = remember { mutableStateOf<QrCodeScanResult>(QrCodeScanResult.NoResult) }
     val launcher = rememberLauncherForActivityResult(ScanQrCodeResultContract()) { scanResult -> result.value = scanResult }
 
-    when (val value = result.value) {
+    when (val scanResult = result.value) {
         QrCodeScanResult.NoResult -> {
         } // Nothing to do
         QrCodeScanResult.Error -> {
@@ -162,7 +162,7 @@ private fun JoinGameWithQrCode(onQrCodeScan: (String) -> Unit) {
                 }
             )
         }
-        is QrCodeScanResult.Success -> onQrCodeScan(value.qrCodeContent)
+        is QrCodeScanResult.Success<*> -> onQrCodeScan(scanResult.value as GameAdvertisingInfo)
     }
 
     OutlinedButton(

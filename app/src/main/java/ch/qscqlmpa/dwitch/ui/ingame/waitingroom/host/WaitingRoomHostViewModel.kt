@@ -4,9 +4,10 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import ch.qscqlmpa.dwitch.ui.Destination
-import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitch.ui.navigation.GameScreens
+import ch.qscqlmpa.dwitch.ui.navigation.HomeScreens
+import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommunication.gameadvertising.AdvertisingInfo
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
@@ -73,7 +74,7 @@ internal class WaitingRoomHostViewModel @Inject constructor(
                 .subscribe(
                     {
                         Logger.info { "Game launched" }
-                        navigationBridge.navigate(Destination.GameScreens.GameRoomHost)
+                        navigationBridge.navigate(GameScreens.GameRoomHost)
                     },
                     { error -> Logger.error(error) { "Error while launching game" } },
                 )
@@ -87,7 +88,7 @@ internal class WaitingRoomHostViewModel @Inject constructor(
                 .subscribe(
                     {
                         Logger.info { "Game canceled" }
-                        navigationBridge.navigate(Destination.HomeScreens.Home)
+                        navigationBridge.navigate(HomeScreens.Home)
                     },
                     { error -> Logger.error(error) { "Error while canceling game" } }
                 )

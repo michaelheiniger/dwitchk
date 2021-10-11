@@ -90,10 +90,6 @@ internal class AdvertisedGameRepository @Inject constructor(
         return advertisedGamesRelay
     }
 
-    fun getGame(gameCommonId: GameCommonId): GameAdvertisingInfo? {
-        return advertisedGames[gameCommonId]
-    }
-
     private fun resumableGames(): Observable<List<GameCommonId>> {
         return store.observeGameCommonIdOfResumableGames()
             .subscribeOn(schedulerFactory.io())

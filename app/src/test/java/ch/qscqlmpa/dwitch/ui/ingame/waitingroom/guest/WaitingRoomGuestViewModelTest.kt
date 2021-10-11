@@ -2,9 +2,11 @@ package ch.qscqlmpa.dwitch.ui.ingame.waitingroom.guest
 
 import ch.qscqlmpa.dwitch.app.StubIdlingResource
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.ui.Destination
-import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
+import ch.qscqlmpa.dwitch.ui.navigation.GameScreens
+import ch.qscqlmpa.dwitch.ui.navigation.HomeScreens
+import ch.qscqlmpa.dwitch.ui.navigation.HomeScreens.Home
+import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchgame.ingame.InGameGuestFacade
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationFacade
@@ -127,7 +129,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         viewModel.leaveGame()
 
         // Then
-        verify { mockNavigationBridge.navigate(Destination.HomeScreens.Home) }
+        verify { mockNavigationBridge.navigate(Home) }
         verify { inGameGuestFacade.leaveGame() }
     }
 
@@ -169,7 +171,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         viewModel.acknowledgeGameCanceled()
 
         // Then
-        verify { mockNavigationBridge.navigate(Destination.HomeScreens.Home) }
+        verify { mockNavigationBridge.navigate(Home) }
     }
 
     @Test
@@ -183,7 +185,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         viewModel.acknowledgeKickOffGame()
 
         // Then
-        verify { mockNavigationBridge.navigate(Destination.HomeScreens.Home) }
+        verify { mockNavigationBridge.navigate(HomeScreens.Home) }
     }
 
     @Test
@@ -196,7 +198,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         gameEventSubject.onNext(GuestGameEvent.GameLaunched)
 
         // Then
-        verify { mockNavigationBridge.navigate(Destination.GameScreens.GameRoomGuest) }
+        verify { mockNavigationBridge.navigate(GameScreens.GameRoomGuest) }
     }
 
     private fun createViewModel() {

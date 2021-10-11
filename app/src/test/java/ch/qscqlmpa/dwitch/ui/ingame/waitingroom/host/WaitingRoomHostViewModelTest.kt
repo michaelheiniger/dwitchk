@@ -2,8 +2,9 @@ package ch.qscqlmpa.dwitch.ui.ingame.waitingroom.host
 
 import ch.qscqlmpa.dwitch.app.StubIdlingResource
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.ui.Destination
-import ch.qscqlmpa.dwitch.ui.NavigationBridge
+import ch.qscqlmpa.dwitch.ui.navigation.GameScreens
+import ch.qscqlmpa.dwitch.ui.navigation.HomeScreens
+import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchgame.ingame.gameadvertising.GameAdvertisingFacade
@@ -97,7 +98,7 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
         viewModel.launchGame()
 
         // Then
-        verify { mockNavigationBridge.navigate(Destination.GameScreens.GameRoomHost) }
+        verify { mockNavigationBridge.navigate(GameScreens.GameRoomHost) }
         verify { mockWaitingRoomHostFacade.launchGame() }
     }
 
@@ -112,7 +113,7 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
         viewModel.cancelGame()
 
         // Then
-        verify { mockNavigationBridge.navigate(Destination.HomeScreens.Home) }
+        verify { mockNavigationBridge.navigate(HomeScreens.Home) }
         verify { mockWaitingRoomHostFacade.cancelGame() }
     }
 

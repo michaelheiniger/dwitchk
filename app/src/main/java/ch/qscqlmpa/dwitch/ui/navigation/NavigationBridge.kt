@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.ui
+package ch.qscqlmpa.dwitch.ui.navigation
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -16,6 +16,7 @@ sealed class NavigationCommand {
 @AppScope
 class NavigationBridge @Inject constructor() {
 
+    private val savedData = mutableMapOf<String, Any>()
     private val _command: MutableState<NavigationCommand> = mutableStateOf(NavigationCommand.Identity)
     val command: State<NavigationCommand> = _command
 
@@ -25,7 +26,25 @@ class NavigationBridge @Inject constructor() {
     }
 
     fun navigate(destination: Destination) {
+        saveDataIfNeeded(destination)
         Logger.debug { "navigate to ${destination.routeName}" }
         _command.value = NavigationCommand.Navigate(destination)
+    }
+
+    fun getData(key: String): Any? {
+        return savedData[key]
+    }
+
+    private fun saveDataIfNeeded(destination: Destination) {
+        when (destination) {
+            is HomeScreens.JoinNewGame -> saveData(destination.routeName, destination.game)
+            else -> {
+                // Nothing to do
+            }
+        }
+    }
+
+    private fun saveData(key: String, data: Any) {
+        savedData[key] = data
     }
 }

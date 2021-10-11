@@ -2,10 +2,11 @@ package ch.qscqlmpa.dwitch.ui.ingame.waitingroom.guest
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import ch.qscqlmpa.dwitch.ui.Destination
-import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
+import ch.qscqlmpa.dwitch.ui.navigation.GameScreens
+import ch.qscqlmpa.dwitch.ui.navigation.HomeScreens
+import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchgame.ingame.InGameGuestFacade
@@ -77,7 +78,7 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
     }
 
     private fun goToHomeScreen() {
-        navigationBridge.navigate(Destination.HomeScreens.Home)
+        navigationBridge.navigate(HomeScreens.Home)
     }
 
     private fun localPlayerReadyState() {
@@ -114,7 +115,7 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
                         GuestGameEvent.GameCanceled -> _notifications.value = WaitingRoomGuestNotification.NotifyGameCanceled
                         GuestGameEvent.KickedOffGame ->
                             _notifications.value = WaitingRoomGuestNotification.NotifyPlayerKickedOffGame
-                        GuestGameEvent.GameLaunched -> navigationBridge.navigate(Destination.GameScreens.GameRoomGuest)
+                        GuestGameEvent.GameLaunched -> navigationBridge.navigate(GameScreens.GameRoomGuest)
                         GuestGameEvent.GameOver -> throw IllegalStateException("Event '$event' is not supposed to occur in WaitingRoom.")
                     }
                 }

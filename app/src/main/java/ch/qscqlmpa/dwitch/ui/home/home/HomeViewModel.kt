@@ -5,10 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.AppEventRepository
 import ch.qscqlmpa.dwitch.ingame.services.ServiceManager
-import ch.qscqlmpa.dwitch.ui.Destination
-import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
+import ch.qscqlmpa.dwitch.ui.navigation.HomeScreens
+import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.game.GameFacade
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
@@ -46,12 +46,12 @@ class HomeViewModel @Inject constructor(
     }
 
     fun createNewGame() {
-        navigationBridge.navigate(Destination.HomeScreens.HostNewGame)
+        navigationBridge.navigate(HomeScreens.HostNewGame)
     }
 
     fun joinGame(game: GameAdvertisingInfo) {
         if (game.isNew) {
-            navigationBridge.navigate(Destination.HomeScreens.JoinNewGame(game.gameCommonId))
+            navigationBridge.navigate(HomeScreens.JoinNewGame(game))
         } else {
             joinExistingGame(game)
         }
@@ -74,7 +74,7 @@ class HomeViewModel @Inject constructor(
                 .subscribe(
                     {
                         Logger.info { "Game resumed successfully." }
-                        navigationBridge.navigate(Destination.HomeScreens.InGame)
+                        navigationBridge.navigate(HomeScreens.InGame)
                     },
                     { error -> Logger.error(error) { "Error while resuming game." } }
                 )
@@ -94,17 +94,12 @@ class HomeViewModel @Inject constructor(
         super.onCleared()
     }
 
-    fun load(qrCodeContent: String?) {
-        Logger.debug { "load qr code content: $qrCodeContent" }
-        if (qrCodeContent != null) {
-            val game = gameDiscoveryFacade.deserializeGameAdvertisingInfo(qrCodeContent)
-            if (game != null) {
-                if (game.isNew) {
-                    navigationBridge.navigate(Destination.HomeScreens.JoinNewGameWithQRCode(qrCodeContent))
-                } else {
-                    joinExistingGame(game)
-                }
-            }
+    fun load(gameAd: GameAdvertisingInfo) {
+        Logger.debug { "Load game ad: $gameAd" }
+        if (gameAd.isNew) {
+            navigationBridge.navigate(HomeScreens.JoinNewGame(gameAd))
+        } else {
+            joinExistingGame(gameAd)
         }
     }
 
@@ -118,7 +113,7 @@ class HomeViewModel @Inject constructor(
                 .subscribe(
                     {
                         Logger.info { "Game resumed successfully." }
-                        navigationBridge.navigate(Destination.HomeScreens.InGame)
+                        navigationBridge.navigate(HomeScreens.InGame)
                     },
                     { error ->
                         _notification.value = HomeNotification.ErrorJoiningGame
@@ -134,8 +129,8 @@ class HomeViewModel @Inject constructor(
                 // Nothing to do
             }
             GameLifecycleState.Running -> {
-                Logger.debug { "Game is running: navigate to ${Destination.HomeScreens.InGame}" }
-                navigationBridge.navigate(Destination.HomeScreens.InGame)
+                Logger.debug { "Game is running: navigate to ${HomeScreens.InGame}" }
+                navigationBridge.navigate(HomeScreens.InGame)
             }
             GameLifecycleState.Over -> serviceManager.stop()
         }

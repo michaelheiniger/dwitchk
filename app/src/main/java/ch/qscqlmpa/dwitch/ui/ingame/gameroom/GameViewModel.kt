@@ -1,8 +1,8 @@
 package ch.qscqlmpa.dwitch.ui.ingame.gameroom
 
-import ch.qscqlmpa.dwitch.ui.Destination
-import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
+import ch.qscqlmpa.dwitch.ui.navigation.GameScreens
+import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitchgame.ingame.GameFacadeToRename
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
@@ -33,12 +33,12 @@ class GameViewModel @Inject constructor(
     private fun determineDestination(currentRoom: RoomType) =
         when (currentRoom) {
             RoomType.WAITING_ROOM -> when (gameFacadeToRename.localPlayerRole) {
-                PlayerRole.GUEST -> Destination.GameScreens.WaitingRoomGuest
-                PlayerRole.HOST -> Destination.GameScreens.WaitingRoomHost
+                PlayerRole.GUEST -> GameScreens.WaitingRoomGuest
+                PlayerRole.HOST -> GameScreens.WaitingRoomHost
             }
             RoomType.GAME_ROOM -> when (gameFacadeToRename.localPlayerRole) {
-                PlayerRole.GUEST -> Destination.GameScreens.GameRoomGuest
-                PlayerRole.HOST -> Destination.GameScreens.GameRoomHost
+                PlayerRole.GUEST -> GameScreens.GameRoomGuest
+                PlayerRole.HOST -> GameScreens.GameRoomHost
             }
         }
 }
