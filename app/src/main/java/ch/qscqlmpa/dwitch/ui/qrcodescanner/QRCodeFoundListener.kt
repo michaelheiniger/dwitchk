@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.ui.qrcodescanning
+package ch.qscqlmpa.dwitch.ui.qrcodescanner
 
 interface QRCodeFoundListener<T> {
     fun onQRCodeFound(data: T)

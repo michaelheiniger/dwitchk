@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.ui.qrcodescanning
+package ch.qscqlmpa.dwitch.ui.qrcodescanner
 
 import android.graphics.ImageFormat
 import androidx.camera.core.ImageAnalysis

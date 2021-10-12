@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.home
 
 import ch.qscqlmpa.dwitch.HomeActivity
-import ch.qscqlmpa.dwitch.ui.qrcodescanning.QrCodeScannerActivity
+import ch.qscqlmpa.dwitch.ui.qrcodescanner.QrCodeScannerActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
