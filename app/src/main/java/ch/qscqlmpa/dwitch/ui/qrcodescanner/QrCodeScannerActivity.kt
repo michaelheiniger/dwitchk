@@ -73,61 +73,31 @@ class QrCodeScannerActivity : ComponentActivity() {
         previewView = binding.previewView
 
         binding.composeViewTop.setContent {
-            DwitchTheme {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Text(stringResource(R.string.scan_qr_code_hint))
-                }
-            }
+            QrCodeScannerTopScreen()
         }
 
         binding.composeViewBottom.setContent {
-            DwitchTheme {
-                if (showPermissionDenied.value) {
-                    YesNoDialog(
-                        text = R.string.camera_permission_denied,
-                        onNoClick = ::cancel,
-                        onYesClick = ::performCameraPermissionRequest
-                    )
-                }
-                if (showPermissionHint.value) {
-                    InfoDialog(
-                        title = R.string.dialog_info_title,
-                        text = R.string.qr_code_camera_permission_hint,
-                        onOkClick = ::performCameraPermissionRequest
-                    )
-                }
-                if (showQrCodeInvalid.value) {
-                    YesNoDialog(
-                        text = R.string.qr_code_invalid,
-                        onNoClick = ::cancel,
-                        onYesClick = {
-                            setImageAnalyzer()
-                            showQrCodeInvalid.value = false
-                        }
-                    )
-                }
-                if (showQrCodeDecodingFailed.value) {
-                    YesNoDialog(
-                        text = R.string.qr_code_decoding_failed,
-                        onNoClick = ::cancel,
-                        onYesClick = {
-                            setImageAnalyzer()
-                            showQrCodeDecodingFailed.value = false
-                        }
-                    )
-                }
-                if (showError.value) {
-                    InfoDialog(
-                        title = R.string.dialog_error_title,
-                        text = R.string.error_starting_camera,
-                        onOkClick = ::cancel
-                    )
-                }
-            }
+            QrCodeScannerBottomScreen(
+                showPermissionDenied = showPermissionDenied,
+                showPermissionHint = showPermissionHint,
+                showQrCodeInvalid = showQrCodeInvalid,
+                showQrCodeDecodingFailed = showQrCodeDecodingFailed,
+                showError = showError,
+                onCameraPermissionDeniedNoClick = ::cancel,
+                onCameraPermissionDeniedYesClick = ::performCameraPermissionRequest,
+                onCameraPermissionHintOkClick = ::performCameraPermissionRequest,
+                onCameraQrCodeInvalidTryAgainNoClick = ::cancel,
+                onCameraQrCodeInvalidTryAgainYesClick = {
+                    setImageAnalyzer()
+                    showQrCodeInvalid.value = false
+                },
+                onCameraQrCodeDecodingFailedTryAgainNoClick = ::cancel,
+                onCameraQrCodeDecodingFailedTryAgainYesClick = {
+                    setImageAnalyzer()
+                    showQrCodeDecodingFailed.value = false
+                },
+                onStartingCameraErrorOkClick = ::cancel
+            )
         }
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(this)
