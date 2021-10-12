@@ -28,8 +28,8 @@ import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.*
-import ch.qscqlmpa.dwitch.ui.qrcodescanning.QrCodeScanResult
-import ch.qscqlmpa.dwitch.ui.qrcodescanning.ScanQrCodeResultContract
+import ch.qscqlmpa.dwitch.ui.qrcodescanner.QrCodeScanResult
+import ch.qscqlmpa.dwitch.ui.qrcodescanner.ScanQrCodeResultContract
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId

@@ -1,4 +1,4 @@
-package ch.qscqlmpa.dwitch.ui.qrcodescanning
+package ch.qscqlmpa.dwitch.ui.qrcodescanner
 
 import android.Manifest
 import android.content.Context
@@ -14,24 +14,13 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Text
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.databinding.ActivityQrCodeScannerBinding
-import ch.qscqlmpa.dwitch.ui.common.InfoDialog
-import ch.qscqlmpa.dwitch.ui.common.YesNoDialog
-import ch.qscqlmpa.dwitch.ui.qrcodescanning.QrCodeScannerActivity.Companion.RESULT_CANCELLED
-import ch.qscqlmpa.dwitch.ui.qrcodescanning.QrCodeScannerActivity.Companion.RESULT_OK
-import ch.qscqlmpa.dwitch.ui.theme.DwitchTheme
+import ch.qscqlmpa.dwitch.ui.qrcodescanner.QrCodeScannerActivity.Companion.RESULT_CANCELLED
+import ch.qscqlmpa.dwitch.ui.qrcodescanner.QrCodeScannerActivity.Companion.RESULT_OK
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import com.google.common.util.concurrent.ListenableFuture
