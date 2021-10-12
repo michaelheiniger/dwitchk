@@ -23,7 +23,7 @@ class WLanConnectionRepository @Inject constructor(
             ?.first()
     }
 
-    fun observeConnectionState(): Observable<ConnectionState> {
+    fun observeConnectionState(): Observable<DeviceConnectionState> {
         return Observable.create { emitter ->
             val callback = object : ConnectivityManager.NetworkCallback() {
                 override fun onAvailable(network: Network) {
@@ -32,12 +32,12 @@ class WLanConnectionRepository @Inject constructor(
                     if (isLinkWifi(network)) {
                         val ipAddress = getLocalIpV4AddressIfAny(network)
                         if (ipAddress != null) {
-                            emitter.onNext(ConnectionState.OnWifi(ipAddress))
+                            emitter.onNext(DeviceConnectionState.OnWifi(ipAddress))
                         } else {
-                            emitter.onNext(ConnectionState.Other)
+                            emitter.onNext(DeviceConnectionState.Other)
                         }
                     } else {
-                        emitter.onNext(ConnectionState.Other)
+                        emitter.onNext(DeviceConnectionState.Other)
                     }
                 }
             }
@@ -47,7 +47,7 @@ class WLanConnectionRepository @Inject constructor(
     }
 }
 
-sealed class ConnectionState {
-    data class OnWifi(val ipAddress: String) : ConnectionState()
-    object Other : ConnectionState()
+sealed class DeviceConnectionState {
+    data class OnWifi(val ipAddress: String) : DeviceConnectionState()
+    object Other : DeviceConnectionState()
 }

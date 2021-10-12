@@ -25,7 +25,7 @@ class GameAdvertiserTest : BaseUnitTest() {
 
     private lateinit var gameAdvertiser: GameAdvertiser
 
-    private lateinit var wlanConnectionRepositoryRelay: BehaviorRelay<ConnectionState>
+    private lateinit var wlanConnectionRepositoryRelay: BehaviorRelay<DeviceConnectionState>
 
     private val gameCommonId = "a06ef013-5788-4fd4-adad-aa90a2da8c7c"
     private val gameInfo = GameInfo(
@@ -52,7 +52,7 @@ class GameAdvertiserTest : BaseUnitTest() {
     @Test
     fun `Advertise game immediately`() {
         // Given
-        wlanConnectionRepositoryRelay.accept(ConnectionState.OnWifi("192.168.1.2"))
+        wlanConnectionRepositoryRelay.accept(DeviceConnectionState.OnWifi("192.168.1.2"))
 
         // When
         gameAdvertiser.advertiseGame(gameInfo).test()
@@ -69,7 +69,7 @@ class GameAdvertiserTest : BaseUnitTest() {
     @Test
     fun `Advertise game every 2 seconds`() {
         // Given
-        wlanConnectionRepositoryRelay.accept(ConnectionState.OnWifi("192.168.1.2"))
+        wlanConnectionRepositoryRelay.accept(DeviceConnectionState.OnWifi("192.168.1.2"))
 
         // When
         gameAdvertiser.advertiseGame(gameInfo).test()
@@ -85,7 +85,7 @@ class GameAdvertiserTest : BaseUnitTest() {
     @Test
     fun `Advertise game until stream is disposed`() {
         // Given
-        wlanConnectionRepositoryRelay.accept(ConnectionState.OnWifi("192.168.1.2"))
+        wlanConnectionRepositoryRelay.accept(DeviceConnectionState.OnWifi("192.168.1.2"))
         val testObserver = gameAdvertiser.advertiseGame(gameInfo).test()
         timeScheduler.advanceTimeTo(4, TimeUnit.SECONDS)
         verify(exactly = 3) { mockNetwork.sendAdvertisement(any(), any()) }

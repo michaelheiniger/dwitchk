@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchcommunication.gameadvertising
 
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
-import ch.qscqlmpa.dwitchcommunication.ConnectionState
+import ch.qscqlmpa.dwitchcommunication.DeviceConnectionState
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchcommunication.GameInfo
 import ch.qscqlmpa.dwitchcommunication.WLanConnectionRepository
@@ -32,7 +32,7 @@ internal class GameAdvertiserImpl @Inject constructor(
         return wLanConnectionRepository.observeConnectionState()
             .map { state ->
                 when (state) {
-                    is ConnectionState.OnWifi -> AdvertisingInfo.Info(
+                    is DeviceConnectionState.OnWifi -> AdvertisingInfo.Info(
                         serializerFactory.serialize(
                             GameAdvertisingInfo(
                                 gameInfo,
@@ -40,7 +40,7 @@ internal class GameAdvertiserImpl @Inject constructor(
                             )
                         )
                     )
-                    ConnectionState.Other -> AdvertisingInfo.NoInfoAvailable
+                    DeviceConnectionState.Other -> AdvertisingInfo.NoInfoAvailable
                 }
             }
     }
@@ -49,8 +49,8 @@ internal class GameAdvertiserImpl @Inject constructor(
         return wLanConnectionRepository.observeConnectionState()
             .switchMapCompletable { state ->
                 when (state) {
-                    is ConnectionState.OnWifi -> advertiseGame(gameInfo, state.ipAddress)
-                    ConnectionState.Other -> Completable.complete()
+                    is DeviceConnectionState.OnWifi -> advertiseGame(gameInfo, state.ipAddress)
+                    DeviceConnectionState.Other -> Completable.complete()
                 }
             }
     }
