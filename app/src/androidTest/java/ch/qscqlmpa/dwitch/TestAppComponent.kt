@@ -8,22 +8,18 @@ import ch.qscqlmpa.dwitch.ingame.InGameGuestUiModule
 import ch.qscqlmpa.dwitch.ingame.InGameHostUiModule
 import ch.qscqlmpa.dwitch.ingame.TestInGameGuestUiComponent
 import ch.qscqlmpa.dwitch.ingame.TestInGameHostUiComponent
-import ch.qscqlmpa.dwitch.service.AndroidServiceBindingModule
-import ch.qscqlmpa.dwitch.ui.home.HomeBindingModule
+import ch.qscqlmpa.dwitch.service.AndroidServicesModule
 import ch.qscqlmpa.dwitch.ui.home.HomeViewModelBindingModule
 import ch.qscqlmpa.dwitchgame.di.GameComponent
 import dagger.Component
-import dagger.android.AndroidInjectionModule
 
 @AppScope
 @Component(
     dependencies = [GameComponent::class],
     modules = [
-        AndroidInjectionModule::class,
         ApplicationModule::class,
-        HomeBindingModule::class,
         HomeViewModelBindingModule::class,
-        AndroidServiceBindingModule::class,
+        AndroidServicesModule::class,
         SchedulersModule::class
     ]
 )

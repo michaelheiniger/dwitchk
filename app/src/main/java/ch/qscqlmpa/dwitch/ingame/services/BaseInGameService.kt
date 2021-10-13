@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitch.ingame.services
 
 import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
@@ -15,11 +16,10 @@ import ch.qscqlmpa.dwitch.common.CommonExtraConstants
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
-import dagger.android.DaggerService
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
-abstract class BaseInGameService : DaggerService() {
+abstract class BaseInGameService : Service() {
 
     @Inject
     lateinit var idlingResource: DwitchIdlingResource

@@ -16,6 +16,11 @@ class HostInGameService : BaseInGameService() {
 
     override val playerRole = PlayerRole.HOST
 
+    override fun onCreate() {
+        app.inject(this)
+        super.onCreate()
+    }
+
     override fun actionStartService(intent: Intent) {
         val gameCreatedInfo = intent.getParcelableExtra<GameCreatedInfo>(EXTRA_GAME_CREATED_INFO)!!
 

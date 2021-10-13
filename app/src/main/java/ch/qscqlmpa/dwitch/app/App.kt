@@ -1,11 +1,16 @@
 package ch.qscqlmpa.dwitch.app
 
+import android.app.Application
+import ch.qscqlmpa.dwitch.HomeActivity
 import ch.qscqlmpa.dwitch.app.notifications.NotificationChannelFactory
 import ch.qscqlmpa.dwitch.ingame.InGameGuestUiComponent
 import ch.qscqlmpa.dwitch.ingame.InGameGuestUiModule
 import ch.qscqlmpa.dwitch.ingame.InGameHostUiComponent
 import ch.qscqlmpa.dwitch.ingame.InGameHostUiModule
+import ch.qscqlmpa.dwitch.ingame.services.GuestInGameService
+import ch.qscqlmpa.dwitch.ingame.services.HostInGameService
 import ch.qscqlmpa.dwitch.ingame.services.ServiceManager
+import ch.qscqlmpa.dwitch.ui.qrcodescanner.QrCodeScannerActivity
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchcommunication.di.*
@@ -27,13 +32,11 @@ import ch.qscqlmpa.dwitchstore.StoreComponent
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreComponent
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreModule
 import ch.qscqlmpa.dwitchstore.store.StoreModule
-import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 // TODO: For first production release, disable crashlytics and add opt-in in settings. See https://firebase.google.com/docs/crashlytics/customize-crash-reports?authuser=0&platform=android
-open class App : DaggerApplication() {
+open class App : Application() {
 
     private lateinit var storeComponent: StoreComponent
     private lateinit var gameComponent: GameComponent
@@ -52,8 +55,15 @@ open class App : DaggerApplication() {
     @Inject
     lateinit var serviceManager: ServiceManager
 
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+    override fun onCreate() {
+        super.onCreate()
 
+        createDaggerComponents()
+
+        createNotificationChannels()
+    }
+
+    protected open fun createDaggerComponents() {
         communicationComponent = DaggerCommunicationComponent.factory().create(CommunicationModule(this))
 
         storeComponent = DaggerStoreComponent.factory().create(StoreModule(this))
@@ -70,13 +80,6 @@ open class App : DaggerApplication() {
             .applicationModule(ApplicationModule(this, StubIdlingResource()))
             .gameComponent(gameComponent)
             .build()
-        return appComponent
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-
-        createNotificationChannels()
     }
 
     open fun createInGameHostComponents(
@@ -155,6 +158,22 @@ open class App : DaggerApplication() {
         inGameGuestComponent = null
         inGameStoreComponent = null
         inGameViewModelFactory = null
+    }
+
+    open fun inject(activity: HomeActivity) {
+        appComponent.inject(activity)
+    }
+
+    open fun inject(activity: QrCodeScannerActivity) {
+        appComponent.inject(activity)
+    }
+
+    open fun inject(service: HostInGameService) {
+        appComponent.inject(service)
+    }
+
+    open fun inject(service: GuestInGameService) {
+        appComponent.inject(service)
     }
 
     open val gameLifecycleFacade get(): GameLifecycleFacade = gameComponent.gameLifecycleFacade

@@ -99,9 +99,7 @@ dependencies {
 
     // Dagger
     val daggerVersion = "2.38.1"
-    implementation("com.google.dagger:dagger-android:$daggerVersion")
     implementation("com.google.dagger:dagger:$daggerVersion")
-    kapt("com.google.dagger:dagger-android-processor:$daggerVersion")
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")
     kaptAndroidTest("com.google.dagger:dagger-compiler:$daggerVersion")
 

@@ -1,30 +1,31 @@
 package ch.qscqlmpa.dwitch.app
 
 import android.app.Application
+import ch.qscqlmpa.dwitch.HomeActivity
 import ch.qscqlmpa.dwitch.ingame.InGameGuestUiComponent
 import ch.qscqlmpa.dwitch.ingame.InGameGuestUiModule
 import ch.qscqlmpa.dwitch.ingame.InGameHostUiComponent
 import ch.qscqlmpa.dwitch.ingame.InGameHostUiModule
-import ch.qscqlmpa.dwitch.service.AndroidServiceBindingModule
-import ch.qscqlmpa.dwitch.ui.home.HomeBindingModule
+import ch.qscqlmpa.dwitch.ingame.services.GuestInGameService
+import ch.qscqlmpa.dwitch.ingame.services.HostInGameService
+import ch.qscqlmpa.dwitch.service.AndroidServicesModule
+import ch.qscqlmpa.dwitch.ui.home.HomeViewModelBindingModule
+import ch.qscqlmpa.dwitch.ui.qrcodescanner.QrCodeScannerActivity
 import ch.qscqlmpa.dwitchgame.di.GameComponent
 import dagger.BindsInstance
 import dagger.Component
-import dagger.android.AndroidInjectionModule
-import dagger.android.AndroidInjector
 
 @AppScope
 @Component(
     dependencies = [GameComponent::class],
     modules = [
-        AndroidInjectionModule::class,
         ApplicationModule::class,
-        HomeBindingModule::class,
-        AndroidServiceBindingModule::class,
+        HomeViewModelBindingModule::class,
+        AndroidServicesModule::class,
         SchedulersModule::class
     ]
 )
-interface AppComponent : AndroidInjector<App> {
+interface AppComponent {
 
     val appEventRepository: AppEventRepository
 
@@ -40,6 +41,11 @@ interface AppComponent : AndroidInjector<App> {
 
         fun build(): AppComponent
     }
+
+    fun inject(activity: HomeActivity)
+    fun inject(activity: QrCodeScannerActivity)
+    fun inject(service: HostInGameService)
+    fun inject(service: GuestInGameService)
 
     fun addInGameHostUiComponent(moduleHost: InGameHostUiModule): InGameHostUiComponent
     fun addInGameGuestUiComponent(moduleHost: InGameGuestUiModule): InGameGuestUiComponent
