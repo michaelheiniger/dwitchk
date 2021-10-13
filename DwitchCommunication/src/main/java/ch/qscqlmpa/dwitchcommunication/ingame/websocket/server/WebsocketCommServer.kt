@@ -48,7 +48,7 @@ internal class WebsocketCommServer @Inject constructor(
         disposableManager.disposeAndReset()
 
         // The websocket server (See class WebSocketServer) implementation doesn't provide a "stop" callback.
-        communicationEventsRelay.accept(ServerEvent.CommunicationEvent.NoLongerListeningForConnections)
+        communicationEventsRelay.accept(ServerEvent.CommunicationEvent.StoppedListeningForConnections)
     }
 
     override fun sendMessage(message: Message, recipient: Recipient) {

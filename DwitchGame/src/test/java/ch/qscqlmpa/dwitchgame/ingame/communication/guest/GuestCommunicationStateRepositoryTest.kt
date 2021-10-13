@@ -41,9 +41,9 @@ internal class GuestCommunicationStateRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `When event 'connected to server' is received, the guest is connected to the host`() {
+    fun `When event 'connected to server' is received, the guest is connected to the game`() {
         // Given
-        val connectedToHostObserver = guestCommunicationStateRepository.connectedToHost().test()
+        val connectedToHostObserver = guestCommunicationStateRepository.connectedToGame().test()
         emitDeviceIsConnectedToWlan()
         connectedToHostObserver.assertValueAt(0, false)
 
@@ -69,9 +69,9 @@ internal class GuestCommunicationStateRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `When event 'connecting to server' is received, the guest is NOT connected to the host`() {
+    fun `When event 'connecting to server' is received, the guest is NOT connected to the game`() {
         // Given
-        val connectedToHostObserver = guestCommunicationStateRepository.connectedToHost().test()
+        val connectedToHostObserver = guestCommunicationStateRepository.connectedToGame().test()
         emitDeviceIsConnectedToWlan()
         connectedToHostObserver.assertValueAt(0, false)
 
@@ -103,9 +103,9 @@ internal class GuestCommunicationStateRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `When event 'connection error' is received, the guest is NOT connected to the host`() {
+    fun `When event 'connection error' is received, the guest is NOT connected to the game`() {
         // Given
-        val connectedToHostObserver = guestCommunicationStateRepository.connectedToHost().test()
+        val connectedToHostObserver = guestCommunicationStateRepository.connectedToGame().test()
         emitDeviceIsNotConnectedToWlan()
         connectedToHostObserver.assertValueAt(0, false)
 
@@ -145,9 +145,9 @@ internal class GuestCommunicationStateRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `When event 'disconnected' is received, the guest is NOT connected to the host`() {
+    fun `When event 'disconnected' is received, the guest is NOT connected to the game`() {
         // Given
-        val connectedToHostObserver = guestCommunicationStateRepository.connectedToHost().test()
+        val connectedToHostObserver = guestCommunicationStateRepository.connectedToGame().test()
         emitDeviceIsNotConnectedToWlan()
         connectedToHostObserver.assertValueAt(0, false)
         guestCommunicationStateRepository.notifyEvent(ClientEvent.CommunicationEvent.ConnectedToServer)
@@ -167,10 +167,10 @@ internal class GuestCommunicationStateRepositoryTest : BaseUnitTest() {
     }
 
     private fun emitDeviceIsConnectedToWlan() {
-        connectionStateSubject.onNext(DeviceConnectionState.OnWifi("192.168.1.245"))
+        connectionStateSubject.onNext(DeviceConnectionState.ConnectedToWlan("192.168.1.245"))
     }
 
     private fun emitDeviceIsNotConnectedToWlan() {
-        connectionStateSubject.onNext(DeviceConnectionState.NotOnWifi)
+        connectionStateSubject.onNext(DeviceConnectionState.NotConnectedToWlan)
     }
 }

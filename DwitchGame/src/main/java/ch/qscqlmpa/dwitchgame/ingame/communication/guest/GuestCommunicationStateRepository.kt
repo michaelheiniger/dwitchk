@@ -19,7 +19,7 @@ internal class GuestCommunicationStateRepository @Inject constructor(
     private val relay =
         BehaviorRelay.createDefault<ClientEvent.CommunicationEvent>(ClientEvent.CommunicationEvent.DisconnectedFromServer)
 
-    override fun connectedToHost(): Observable<Boolean> =
+    override fun connectedToGame(): Observable<Boolean> =
         currentState().map { state ->
             when (state) {
                 GuestCommunicationState.Connected -> true
@@ -33,7 +33,7 @@ internal class GuestCommunicationStateRepository @Inject constructor(
         return Observable.combineLatest(
             relay,
             deviceConnectivityRepository.observeConnectionState()
-                .map { state -> state is DeviceConnectionState.OnWifi }
+                .map { state -> state is DeviceConnectionState.ConnectedToWlan }
         ) { commEvent, connectedToWifi ->
             when (commEvent) {
                 ClientEvent.CommunicationEvent.ConnectingToServer -> GuestCommunicationState.Connecting

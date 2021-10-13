@@ -24,7 +24,7 @@ import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationState
 private fun CommunicationHostScreenPreview() {
     ActivityScreenContainer {
         ConnectionHostScreen(
-            status = HostCommunicationState.Error,
+            state = HostCommunicationState.OfflineFailed(connectedToWlan = true),
             onReconnectClick = {},
             onAbortClick = {}
         )
@@ -48,27 +48,47 @@ private fun CommunicationGuestScreenPreview() {
 
 @Composable
 fun ConnectionHostScreen(
-    status: HostCommunicationState?,
+    state: HostCommunicationState,
     onReconnectClick: () -> Unit,
     onAbortClick: () -> Unit
 ) {
-    val connectionInfo = when (status) {
-        HostCommunicationState.Opening -> ConnectionDialogInfo(
+    val connectionInfo = when (state) {
+        HostCommunicationState.Starting -> ConnectionDialogInfo(
             message = R.string.host_connecting,
             showLoading = true,
             reconnectBtnEnabled = false
         )
-        HostCommunicationState.Closed -> ConnectionDialogInfo(
-            message = R.string.not_listening_for_guests,
-            showLoading = false,
-            reconnectBtnEnabled = true
-        )
-        HostCommunicationState.Error -> ConnectionDialogInfo(
-            message = R.string.host_connection_error,
-            showLoading = false,
-            reconnectBtnEnabled = true
-        )
-        else -> null
+        HostCommunicationState.Online -> null
+        is HostCommunicationState.OfflineDisconnected -> {
+            if (state.connectedToWlan) {
+                ConnectionDialogInfo(
+                    message = R.string.not_listening_for_guests,
+                    showLoading = false,
+                    reconnectBtnEnabled = true
+                )
+            } else {
+                ConnectionDialogInfo(
+                    message = R.string.not_connected_to_a_wlan,
+                    showLoading = false,
+                    reconnectBtnEnabled = false
+                )
+            }
+        }
+        is HostCommunicationState.OfflineFailed -> {
+            if (state.connectedToWlan) {
+                ConnectionDialogInfo(
+                    message = R.string.host_connection_error,
+                    showLoading = false,
+                    reconnectBtnEnabled = true
+                )
+            } else {
+                ConnectionDialogInfo(
+                    message = R.string.not_connected_to_a_wlan,
+                    showLoading = false,
+                    reconnectBtnEnabled = false
+                )
+            }
+        }
     }
     if (connectionInfo != null) {
         ConnectionDialog(
@@ -82,7 +102,7 @@ fun ConnectionHostScreen(
 
 @Composable
 fun ConnectionGuestScreen(
-    state: GuestCommunicationState?,
+    state: GuestCommunicationState,
     onReconnectClick: () -> Unit,
     onAbortClick: () -> Unit
 ) {
@@ -92,6 +112,7 @@ fun ConnectionGuestScreen(
             showLoading = true,
             reconnectBtnEnabled = false
         )
+        GuestCommunicationState.Connected -> null
         is GuestCommunicationState.Disconnected -> {
             if (state.connectedToWlan) {
                 ConnectionDialogInfo(
@@ -122,7 +143,6 @@ fun ConnectionGuestScreen(
                 )
             }
         }
-        else -> null
     }
     if (connectionInfo != null) {
         ConnectionDialog(

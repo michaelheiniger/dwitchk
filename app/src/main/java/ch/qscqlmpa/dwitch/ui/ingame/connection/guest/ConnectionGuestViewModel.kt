@@ -16,7 +16,7 @@ class ConnectionGuestViewModel @Inject constructor(
     private val idlingResource: DwitchIdlingResource
 ) : BaseViewModel() {
 
-    private val _communicationState = mutableStateOf<GuestCommunicationState>(GuestCommunicationState.Connecting)
+    private val _communicationState = mutableStateOf<GuestCommunicationState>(GuestCommunicationState.Connected)
     val connectionState get(): State<GuestCommunicationState> = _communicationState
 
     fun reconnect() {

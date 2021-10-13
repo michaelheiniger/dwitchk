@@ -6,6 +6,7 @@ import android.net.NetworkCapabilities.TRANSPORT_WIFI
 import android.net.NetworkRequest
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationScope
 import io.reactivex.rxjava3.core.Observable
+import org.tinylog.kotlin.Logger
 import java.net.Inet4Address
 import javax.inject.Inject
 
@@ -34,20 +35,24 @@ class DeviceConnectivityRepository @Inject constructor(
                     super.onAvailable(network)
                     val ipAddress = getLocalIpV4AddressIfAny(network)
                     if (ipAddress != null) {
-                        emitter.onNext(DeviceConnectionState.OnWifi(ipAddress))
+                        Logger.debug { "Network available: connected to WLAN." }
+                        emitter.onNext(DeviceConnectionState.ConnectedToWlan(ipAddress))
                     } else {
-                        emitter.onNext(DeviceConnectionState.NotOnWifi)
+                        Logger.debug { "Network available: not connected to WLAN." }
+                        emitter.onNext(DeviceConnectionState.NotConnectedToWlan)
                     }
                 }
 
                 override fun onLost(network: Network) {
                     super.onLost(network)
-                    emitter.onNext(DeviceConnectionState.NotOnWifi)
+                    Logger.debug { "Network lost: not connected to WLAN." }
+                    emitter.onNext(DeviceConnectionState.NotConnectedToWlan)
                 }
 
                 override fun onUnavailable() {
                     super.onUnavailable()
-                    emitter.onNext(DeviceConnectionState.NotOnWifi)
+                    Logger.debug { "No WLAN network available." }
+                    emitter.onNext(DeviceConnectionState.NotConnectedToWlan)
                 }
             }
             connectivityManager.registerNetworkCallback(wifiNetworkRequest, callback)
@@ -57,6 +62,6 @@ class DeviceConnectivityRepository @Inject constructor(
 }
 
 sealed class DeviceConnectionState {
-    data class OnWifi(val ipAddress: String) : DeviceConnectionState()
-    object NotOnWifi : DeviceConnectionState()
+    data class ConnectedToWlan(val ipAddress: String) : DeviceConnectionState()
+    object NotConnectedToWlan : DeviceConnectionState()
 }

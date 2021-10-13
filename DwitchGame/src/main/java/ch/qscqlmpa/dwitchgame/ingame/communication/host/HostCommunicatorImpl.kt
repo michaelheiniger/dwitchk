@@ -36,7 +36,7 @@ internal class HostCommunicatorImpl @Inject constructor(
     // ##### HostCommunicator #####
     override fun startServer() {
         Logger.info { "Start server" }
-        communicationStateRepository.updateState(HostCommunicationState.Opening)
+        communicationStateRepository.notifyEvent(ServerEvent.CommunicationEvent.StartingServer)
         observeCommunicationEvents()
         commServer.start("0.0.0.0", 8889)
     }
@@ -106,7 +106,7 @@ internal class HostCommunicatorImpl @Inject constructor(
         return communicationEventDispatcher.dispatch(event)
             .doFinally {
                 if (
-                    event is ServerEvent.CommunicationEvent.NoLongerListeningForConnections ||
+                    event is ServerEvent.CommunicationEvent.StoppedListeningForConnections ||
                     event is ServerEvent.CommunicationEvent.ErrorListeningForConnections
                 ) {
                     disposableManager.disposeAndReset()

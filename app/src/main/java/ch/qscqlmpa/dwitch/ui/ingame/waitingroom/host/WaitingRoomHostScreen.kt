@@ -51,7 +51,7 @@ private fun WaitingRoomHostScreenPreview() {
             ),
             gameQrCode = qrCode,
             launchGameEnabled = false,
-            connectionStatus = HostCommunicationState.Error,
+            connectionStatus = HostCommunicationState.OfflineFailed(connectedToWlan = true),
             onLaunchGameClick = {},
             onCancelGameClick = {},
             onReconnectClick = {}
@@ -109,7 +109,7 @@ fun WaitingRoomHostBody(
     players: List<PlayerWrUi>,
     gameQrCode: Bitmap?,
     launchGameEnabled: Boolean,
-    connectionStatus: HostCommunicationState?,
+    connectionStatus: HostCommunicationState,
     onLaunchGameClick: () -> Unit,
     onCancelGameClick: () -> Unit,
     onReconnectClick: () -> Unit,
@@ -158,7 +158,7 @@ fun WaitingRoomHostBody(
 
             Spacer(Modifier.height(16.dp))
             ConnectionHostScreen(
-                status = connectionStatus,
+                state = connectionStatus,
                 onReconnectClick = onReconnectClick,
                 onAbortClick = onCancelGameClick
             )

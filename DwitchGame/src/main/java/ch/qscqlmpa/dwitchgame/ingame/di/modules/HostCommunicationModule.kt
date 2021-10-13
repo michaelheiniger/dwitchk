@@ -37,7 +37,7 @@ internal abstract class HostCommunicationModule {
     @InGameScope
     @Binds
     @IntoMap
-    @HostCommunicationEventProcessorKey(ServerEvent.CommunicationEvent.NoLongerListeningForConnections::class)
+    @HostCommunicationEventProcessorKey(ServerEvent.CommunicationEvent.StoppedListeningForConnections::class)
     internal abstract fun bindHostNoLongerListeningForConnectionsEventProcessor(
         eventProcessor: HostNoLongerListeningForConnectionsEventProcessor
     ): HostCommunicationEventProcessor

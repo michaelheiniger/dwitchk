@@ -23,7 +23,7 @@ class WaitingRoomHostScreenTest : BaseUiUnitTest() {
             PlayerWrUi(11L, name = "Legolas", connected = true, ready = false, kickable = true),
             PlayerWrUi(12L, name = "Gimli", connected = false, ready = false, kickable = true)
         )
-        connectionState = HostCommunicationState.Open
+        connectionState = HostCommunicationState.Online
     }
 
     @Test

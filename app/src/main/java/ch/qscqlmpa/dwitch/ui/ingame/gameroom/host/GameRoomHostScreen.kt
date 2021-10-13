@@ -44,7 +44,7 @@ fun GameRoomHostScreenPreview() {
         GameRoomHostBody(
             toolbarTitle = "Dwiiiitch",
             screen = null,
-            connectionStatus = null,
+            connectionStatus = HostCommunicationState.Online,
             onCardClick = {},
             onPlayClick = {},
             onPassClick = {},
@@ -97,7 +97,7 @@ fun GameRoomHostScreen(vmFactory: ViewModelFactory) {
 fun GameRoomHostBody(
     toolbarTitle: String,
     screen: GameRoomScreen?,
-    connectionStatus: HostCommunicationState?,
+    connectionStatus: HostCommunicationState,
     onCardClick: (Card) -> Unit,
     onPlayClick: () -> Unit,
     onPassClick: () -> Unit,
@@ -171,7 +171,7 @@ fun GameRoomHostBody(
                 else -> LoadingSpinner()
             }
             ConnectionHostScreen(
-                status = connectionStatus,
+                state = connectionStatus,
                 onReconnectClick = onReconnectClick,
                 onAbortClick = { showEndGameConfirmationDialog.value = true }
             )
