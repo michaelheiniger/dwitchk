@@ -82,13 +82,13 @@ internal class HostCommunicatorImplTest : BaseUnitTest() {
 
             // When
             communicationEventsSubject.onNext(ServerEvent.CommunicationEvent.ListeningForConnections)
-            communicationEventsSubject.onNext(ServerEvent.CommunicationEvent.NoLongerListeningForConnections)
+            communicationEventsSubject.onNext(ServerEvent.CommunicationEvent.StoppedListeningForConnections)
 
             // Then
             val dispatchedEventCap = mutableListOf<ServerEvent.CommunicationEvent>()
             verify(exactly = 2) { mockCommunicationEventDispatcher.dispatch(capture(dispatchedEventCap)) }
             assertThat(dispatchedEventCap[0]).isEqualTo(ServerEvent.CommunicationEvent.ListeningForConnections)
-            assertThat(dispatchedEventCap[1]).isEqualTo(ServerEvent.CommunicationEvent.NoLongerListeningForConnections)
+            assertThat(dispatchedEventCap[1]).isEqualTo(ServerEvent.CommunicationEvent.StoppedListeningForConnections)
             confirmVerified(mockCommunicationEventDispatcher)
         }
 
@@ -145,7 +145,7 @@ internal class HostCommunicatorImplTest : BaseUnitTest() {
 
             // When
             hostCommunicator.stopServer()
-            communicationEventsSubject.onNext(ServerEvent.CommunicationEvent.NoLongerListeningForConnections)
+            communicationEventsSubject.onNext(ServerEvent.CommunicationEvent.StoppedListeningForConnections)
 
             // Then
             assertThat(communicationEventsSubject.hasObservers()).isFalse // Observed streams have been disposed

@@ -91,7 +91,7 @@ fun WaitingRoomGuestBody(
     players: List<PlayerWrUi>,
     ready: UiCheckboxModel,
     notification: WaitingRoomGuestNotification,
-    connectionState: GuestCommunicationState?,
+    connectionState: GuestCommunicationState,
     onReadyClick: (Boolean) -> Unit,
     onLeaveConfirmClick: () -> Unit,
     onReconnectClick: () -> Unit,

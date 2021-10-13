@@ -32,7 +32,7 @@ internal class GameAdvertiserImpl @Inject constructor(
         return deviceConnectivityRepository.observeConnectionState()
             .map { state ->
                 when (state) {
-                    is DeviceConnectionState.OnWifi -> AdvertisingInfo.Info(
+                    is DeviceConnectionState.ConnectedToWlan -> AdvertisingInfo.Info(
                         serializerFactory.serialize(
                             GameAdvertisingInfo(
                                 gameInfo,
@@ -40,7 +40,7 @@ internal class GameAdvertiserImpl @Inject constructor(
                             )
                         )
                     )
-                    DeviceConnectionState.NotOnWifi -> AdvertisingInfo.NoInfoAvailable
+                    DeviceConnectionState.NotConnectedToWlan -> AdvertisingInfo.NoInfoAvailable
                 }
             }
     }
@@ -49,8 +49,8 @@ internal class GameAdvertiserImpl @Inject constructor(
         return deviceConnectivityRepository.observeConnectionState()
             .switchMapCompletable { state ->
                 when (state) {
-                    is DeviceConnectionState.OnWifi -> advertiseGame(gameInfo, state.ipAddress)
-                    DeviceConnectionState.NotOnWifi -> Completable.complete()
+                    is DeviceConnectionState.ConnectedToWlan -> advertiseGame(gameInfo, state.ipAddress)
+                    DeviceConnectionState.NotConnectedToWlan -> Completable.complete()
                 }
             }
     }

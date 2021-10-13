@@ -2,7 +2,6 @@ package ch.qscqlmpa.dwitchgame.ingame.communication.host.eventprocessors
 
 import ch.qscqlmpa.dwitchcommunication.ingame.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.ingame.websocket.ServerEvent
-import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ingame.usecases.ResumeComputerPlayersUsecase
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
@@ -26,7 +25,7 @@ internal class HostListeningForConnectionsEventProcessor @Inject constructor(
             val hostDwitchId = store.getLocalPlayerDwitchId()
             Logger.debug { "pair host connection ID ${ConnectionStore.hostConnectionId} to its Dwitch id: $hostDwitchId" }
             connectionStore.pairConnectionWithPlayer(ConnectionStore.hostConnectionId, hostDwitchId)
-            communicationStateRepository.updateState(HostCommunicationState.Open)
+            communicationStateRepository.notifyEvent(event)
 
             if (store.gameIsNotNew()) {
                 resumeComputerPlayersUsecase.resumeComputerPlayers()

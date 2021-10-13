@@ -97,7 +97,7 @@ fun GameRoomGuestScreen(vmFactory: ViewModelFactory) {
 fun GameRoomGuestBody(
     toolbarTitle: String,
     screen: GameRoomScreen?,
-    connectionStatus: GuestCommunicationState?,
+    connectionStatus: GuestCommunicationState,
     showGameOver: Boolean,
     onCardClick: (Card) -> Unit,
     onPlayClick: () -> Unit,

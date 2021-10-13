@@ -17,11 +17,14 @@ sealed class ClientEvent {
 
 sealed class ServerEvent {
     sealed class CommunicationEvent : ServerEvent() {
+        sealed class ServerState : CommunicationEvent()
+        object StartingServer : ServerState()
+        object ListeningForConnections : ServerState()
+        data class ErrorListeningForConnections(val exception: Exception?) : ServerState()
+        object StoppedListeningForConnections : ServerState()
+
         data class ClientConnected(val connectionId: ConnectionId) : CommunicationEvent()
         data class ClientDisconnected(val connectionId: ConnectionId?) : CommunicationEvent()
-        object ListeningForConnections : CommunicationEvent()
-        data class ErrorListeningForConnections(val exception: Exception?) : CommunicationEvent()
-        object NoLongerListeningForConnections : CommunicationEvent()
     }
 
     data class EnvelopeReceived(val senderId: ConnectionId, val message: Message) : ServerEvent()
