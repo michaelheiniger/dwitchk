@@ -2,7 +2,6 @@ package ch.qscqlmpa.dwitchgame.ingame.communication.guest.eventprocessors
 
 import ch.qscqlmpa.dwitchcommunication.ingame.websocket.ClientEvent
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
-import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitchgame.ingame.communication.messagefactories.GuestMessageFactory
@@ -15,14 +14,12 @@ import javax.inject.Inject
 internal class GuestConnectedToHostEventProcessor @Inject constructor(
     private val store: InGameStore,
     private val communicator: GuestCommunicator,
-    private val commStateRepository: GuestCommunicationStateRepository,
-) : GuestCommunicationEventProcessor {
+    commStateRepository: GuestCommunicationStateRepository,
+) : BaseGuestCommunicationEventProcessor(commStateRepository) {
 
     override fun process(event: ClientEvent.CommunicationEvent): Completable {
 
-        Logger.debug { "Process ClientCommunicationEvent" }
-
-        event as ClientEvent.CommunicationEvent.ConnectedToHost
+        event as ClientEvent.CommunicationEvent.ConnectedToServer
 
         return Completable.fromAction {
             val game = store.getGame()
@@ -37,8 +34,7 @@ internal class GuestConnectedToHostEventProcessor @Inject constructor(
             }
 
             communicator.sendMessageToHost(message)
-            commStateRepository.updateState(GuestCommunicationState.Connected)
-        }
+        }.andThen(super.process(event))
     }
 
     private fun guestIsAlreadyRegisteredAtHost(localPlayer: Player): Boolean {

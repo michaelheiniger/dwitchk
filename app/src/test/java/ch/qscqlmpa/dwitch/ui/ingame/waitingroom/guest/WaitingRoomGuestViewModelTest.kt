@@ -97,7 +97,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         viewModel.onStart()
 
         // When
-        communicationStateSubject.onNext(GuestCommunicationState.Disconnected)
+        communicationStateSubject.onNext(GuestCommunicationState.Disconnected(connectedToWlan = true))
         localPlayerReadyStateSubject.onNext(true)
 
         // Then
@@ -111,7 +111,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         viewModel.onStart()
 
         // When
-        communicationStateSubject.onNext(GuestCommunicationState.Error)
+        communicationStateSubject.onNext(GuestCommunicationState.Error(connectedToWlan = true))
         localPlayerReadyStateSubject.onNext(true)
 
         // Then

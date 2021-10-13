@@ -10,7 +10,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class PlayerReadyUsecaseTest : BaseUnitTest() {
+internal class PlayerReadyUsecaseTest : BaseUnitTest() {
 
     private val mockCommunicator = mockk<GuestCommunicator>(relaxed = true)
 

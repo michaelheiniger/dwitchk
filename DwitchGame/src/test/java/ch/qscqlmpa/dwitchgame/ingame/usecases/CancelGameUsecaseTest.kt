@@ -14,7 +14,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class CancelGameUsecaseTest : BaseUnitTest() {
+internal class CancelGameUsecaseTest : BaseUnitTest() {
 
     private val mockCommunicator = mockk<HostCommunicator>(relaxed = true)
     private val mockGameLifecycleEventRepository = mockk<HostGameLifecycleEventRepository>(relaxed = true)

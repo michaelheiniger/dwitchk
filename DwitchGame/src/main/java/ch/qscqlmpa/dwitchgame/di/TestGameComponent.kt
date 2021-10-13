@@ -15,6 +15,7 @@ import dagger.Component
         GameFacadeModule::class,
         GameLifecycleModule::class,
         GameDiscoveryModule::class,
+        DeviceConnectivityModule::class,
         SchedulersModule::class,
     ]
 )
@@ -28,7 +29,8 @@ interface TestGameComponent : GameComponent {
         fun create(
             dwitchGameModule: DwitchGameModule,
             storeModule: StoreModule,
-            gameDiscoveryModule: GameDiscoveryModule
+            gameDiscoveryModule: GameDiscoveryModule,
+            deviceConnectivityModule: DeviceConnectivityModule
         ): TestGameComponent
     }
 }

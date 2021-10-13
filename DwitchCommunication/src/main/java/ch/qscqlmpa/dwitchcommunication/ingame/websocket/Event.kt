@@ -5,8 +5,9 @@ import ch.qscqlmpa.dwitchcommunication.ingame.model.Message
 
 sealed class ClientEvent {
     sealed class CommunicationEvent : ClientEvent() {
-        object ConnectedToHost : CommunicationEvent()
-        object DisconnectedFromHost : CommunicationEvent()
+        object ConnectingToServer : CommunicationEvent()
+        object ConnectedToServer : CommunicationEvent()
+        object DisconnectedFromServer : CommunicationEvent()
         data class ConnectionError(val error: String?) : CommunicationEvent()
         object Stopped : CommunicationEvent()
     }

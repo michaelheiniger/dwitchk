@@ -1,5 +1,8 @@
 package ch.qscqlmpa.dwitchgame.ingame.communication.guest
 
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectionState
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectivityRepository
+import ch.qscqlmpa.dwitchcommunication.ingame.websocket.ClientEvent
 import ch.qscqlmpa.dwitchgame.ingame.communication.CommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ingame.di.InGameScope
 import com.jakewharton.rxrelay3.BehaviorRelay
@@ -8,27 +11,43 @@ import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 @InGameScope
-internal class GuestCommunicationStateRepository @Inject constructor() : CommunicationStateRepository {
+internal class GuestCommunicationStateRepository @Inject constructor(
+    private val deviceConnectivityRepository: DeviceConnectivityRepository,
+) : CommunicationStateRepository {
 
-    override fun connected(): Observable<Boolean> =
-        relay.map { state ->
+    // Cache last event
+    private val relay =
+        BehaviorRelay.createDefault<ClientEvent.CommunicationEvent>(ClientEvent.CommunicationEvent.DisconnectedFromServer)
+
+    override fun connectedToHost(): Observable<Boolean> =
+        currentState().map { state ->
             when (state) {
                 GuestCommunicationState.Connected -> true
                 GuestCommunicationState.Connecting,
-                GuestCommunicationState.Error,
-                GuestCommunicationState.Disconnected -> false
+                is GuestCommunicationState.Error,
+                is GuestCommunicationState.Disconnected -> false
             }
         }
 
-    // Cache last event
-    private val relay = BehaviorRelay.createDefault<GuestCommunicationState>(GuestCommunicationState.Disconnected)
-
     fun currentState(): Observable<GuestCommunicationState> {
-        return relay.distinctUntilChanged()
+        return Observable.combineLatest(
+            relay,
+            deviceConnectivityRepository.observeConnectionState()
+                .map { state -> state is DeviceConnectionState.OnWifi }
+        ) { commEvent, connectedToWifi ->
+            when (commEvent) {
+                ClientEvent.CommunicationEvent.ConnectingToServer -> GuestCommunicationState.Connecting
+                ClientEvent.CommunicationEvent.ConnectedToServer -> GuestCommunicationState.Connected
+                is ClientEvent.CommunicationEvent.ConnectionError -> GuestCommunicationState.Error(connectedToWifi)
+                ClientEvent.CommunicationEvent.Stopped,
+                ClientEvent.CommunicationEvent.DisconnectedFromServer -> GuestCommunicationState.Disconnected(connectedToWifi)
+            }
+        }
+            .distinctUntilChanged()
     }
 
-    fun updateState(state: GuestCommunicationState) {
-        Logger.info { "New communication state: $state" }
-        return relay.accept(state)
+    fun notifyEvent(event: ClientEvent.CommunicationEvent) {
+        Logger.info { "Notify new communication event: $event" }
+        return relay.accept(event)
     }
 }

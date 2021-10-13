@@ -90,8 +90,8 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
                 when (connectionState) {
                     GuestCommunicationState.Connected -> UiCheckboxModel(enabled = true, checked = playerReady)
                     GuestCommunicationState.Connecting,
-                    GuestCommunicationState.Disconnected,
-                    GuestCommunicationState.Error -> UiCheckboxModel(enabled = false, checked = false)
+                    is GuestCommunicationState.Disconnected,
+                    is GuestCommunicationState.Error -> UiCheckboxModel(enabled = false, checked = false)
                 }
             }
                 .doOnError { error -> Logger.error(error) { "Error while observing local player state." } }

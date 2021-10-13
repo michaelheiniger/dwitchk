@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class HostCommunicatorImplTest : BaseUnitTest() {
+internal class HostCommunicatorImplTest : BaseUnitTest() {
 
     private val mockCommServer = mockk<CommServer>(relaxed = true)
     private val mockCommunicationEventDispatcher = mockk<HostCommunicationEventDispatcher>(relaxed = true)

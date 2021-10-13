@@ -9,6 +9,7 @@ import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchcommunication.di.*
 import ch.qscqlmpa.dwitchgame.di.DaggerTestGameComponent
 import ch.qscqlmpa.dwitchgame.di.TestGameComponent
+import ch.qscqlmpa.dwitchgame.di.modules.DeviceConnectivityModule
 import ch.qscqlmpa.dwitchgame.di.modules.DwitchGameModule
 import ch.qscqlmpa.dwitchgame.di.modules.GameDiscoveryModule
 import ch.qscqlmpa.dwitchgame.di.modules.StoreModule
@@ -48,7 +49,8 @@ class TestApp : App() {
         testGameComponent = DaggerTestGameComponent.factory().create(
             DwitchGameModule(gameIdlingResource),
             StoreModule(testStoreComponent.store),
-            GameDiscoveryModule(testCommunicationComponent.gameDiscovery)
+            GameDiscoveryModule(testCommunicationComponent.gameDiscovery),
+            DeviceConnectivityModule(testCommunicationComponent.deviceConnectivityRepository)
         )
 
         testAppComponent = DaggerTestAppComponent.builder()

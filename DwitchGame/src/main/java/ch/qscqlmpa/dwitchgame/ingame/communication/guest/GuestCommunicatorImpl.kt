@@ -25,8 +25,8 @@ internal class GuestCommunicatorImpl @Inject constructor(
     private val disposableManager = DisposableManager()
 
     override fun connect(advertisedGame: GameAdvertisingInfo) {
-        Logger.info { "Connect to host" }
-        communicationStateRepository.updateState(GuestCommunicationState.Connecting)
+        Logger.info { "Connecting to host..." }
+        communicationStateRepository.notifyEvent(ClientEvent.CommunicationEvent.ConnectingToServer)
         observeCommunicationEvents()
         commClient.start(advertisedGame.gameIpAddress, advertisedGame.gamePort)
     }
@@ -36,9 +36,9 @@ internal class GuestCommunicatorImpl @Inject constructor(
     }
 
     override fun disconnect() {
-        Logger.info { "Disconnect from host" }
+        Logger.info { "Disconnecting from host..." }
         commClient.stop()
-        // Subscribed streams are disposed when ClientCommunicationEvent.DisconnectedFromHost has been processed
+        // Subscribed streams are disposed when ClientCommunicationEvent.Stopped has been processed
     }
 
     override fun sendMessageToHost(message: Message) {
@@ -55,7 +55,7 @@ internal class GuestCommunicatorImpl @Inject constructor(
                         .doFinally {
                             if (
                                 event is ClientEvent.CommunicationEvent.Stopped ||
-                                event is ClientEvent.CommunicationEvent.DisconnectedFromHost ||
+                                event is ClientEvent.CommunicationEvent.DisconnectedFromServer ||
                                 event is ClientEvent.CommunicationEvent.ConnectionError
                             ) {
                                 disposableManager.disposeAndReset()

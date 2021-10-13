@@ -11,6 +11,7 @@ import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchcommunication.di.*
 import ch.qscqlmpa.dwitchgame.di.DaggerGameComponent
 import ch.qscqlmpa.dwitchgame.di.GameComponent
+import ch.qscqlmpa.dwitchgame.di.modules.DeviceConnectivityModule
 import ch.qscqlmpa.dwitchgame.di.modules.DwitchGameModule
 import ch.qscqlmpa.dwitchgame.di.modules.GameDiscoveryModule
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleFacade
@@ -60,7 +61,8 @@ open class App : DaggerApplication() {
         gameComponent = DaggerGameComponent.factory().create(
             DwitchGameModule(StubIdlingResource()),
             ch.qscqlmpa.dwitchgame.di.modules.StoreModule(storeComponent.store),
-            GameDiscoveryModule(communicationComponent.gameDiscovery)
+            GameDiscoveryModule(communicationComponent.gameDiscovery),
+            DeviceConnectivityModule(communicationComponent.deviceConnectivityRepository)
         )
 
         appComponent = DaggerAppComponent.builder()
