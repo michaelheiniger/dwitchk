@@ -18,13 +18,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.databinding.ActivityQrCodeScannerBinding
 import ch.qscqlmpa.dwitch.ui.qrcodescanner.QrCodeScannerActivity.Companion.RESULT_CANCELLED
 import ch.qscqlmpa.dwitch.ui.qrcodescanner.QrCodeScannerActivity.Companion.RESULT_OK
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import com.google.common.util.concurrent.ListenableFuture
-import dagger.android.AndroidInjection
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
@@ -63,7 +63,7 @@ class QrCodeScannerActivity : ComponentActivity() {
     private lateinit var imageAnalyzer: QRCodeImageAnalyzer<GameAdvertisingInfo>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
+        (application as App).inject(this)
         super.onCreate(savedInstanceState)
 
         buildImageAnalyzer()

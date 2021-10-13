@@ -1,10 +1,14 @@
 package ch.qscqlmpa.dwitch.app
 
 import ch.qscqlmpa.dwitch.DaggerTestAppComponent
+import ch.qscqlmpa.dwitch.HomeActivity
 import ch.qscqlmpa.dwitch.TestAppComponent
 import ch.qscqlmpa.dwitch.TestIdlingResource
 import ch.qscqlmpa.dwitch.ingame.InGameGuestUiModule
 import ch.qscqlmpa.dwitch.ingame.InGameHostUiModule
+import ch.qscqlmpa.dwitch.ingame.services.GuestInGameService
+import ch.qscqlmpa.dwitch.ingame.services.HostInGameService
+import ch.qscqlmpa.dwitch.ui.qrcodescanner.QrCodeScannerActivity
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchcommunication.di.*
 import ch.qscqlmpa.dwitchgame.di.DaggerTestGameComponent
@@ -21,8 +25,6 @@ import ch.qscqlmpa.dwitchstore.TestStoreComponent
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreModule
 import ch.qscqlmpa.dwitchstore.store.TestStoreModule
 import com.jakewharton.rxrelay3.BehaviorRelay
-import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
 import org.tinylog.kotlin.Logger
 
 sealed class TestAppEvent {
@@ -40,8 +42,7 @@ class TestApp : App() {
 
     private val testAppEventRelay = BehaviorRelay.create<TestAppEvent>()
 
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-
+    override fun createDaggerComponents() {
         testCommunicationComponent = DaggerTestCommunicationComponent.factory().create(CommunicationModule(this))
 
         testStoreComponent = DaggerTestStoreComponent.factory().create(TestStoreModule(this))
@@ -57,7 +58,6 @@ class TestApp : App() {
             .applicationModule(ApplicationModule(this, gameIdlingResource))
             .gameComponent(testGameComponent)
             .build()
-        return testAppComponent
     }
 
     override fun createInGameHostComponents(
@@ -132,6 +132,22 @@ class TestApp : App() {
         )
         inGameViewModelFactory = inGameGuestUiComponent!!.viewModelFactory
         testAppEventRelay.accept(TestAppEvent.GameCreated)
+    }
+
+    override fun inject(activity: HomeActivity) {
+        testAppComponent.inject(activity)
+    }
+
+    override fun inject(activity: QrCodeScannerActivity) {
+        testAppComponent.inject(activity)
+    }
+
+    override fun inject(service: HostInGameService) {
+        testAppComponent.inject(service)
+    }
+
+    override fun inject(service: GuestInGameService) {
+        testAppComponent.inject(service)
     }
 
     override val gameLifecycleFacade get(): GameLifecycleFacade = testGameComponent.gameLifecycleFacade

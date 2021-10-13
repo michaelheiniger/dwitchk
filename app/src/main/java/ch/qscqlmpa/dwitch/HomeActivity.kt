@@ -9,7 +9,6 @@ import ch.qscqlmpa.dwitch.ui.Dwitch
 import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
-import dagger.android.AndroidInjection
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -29,7 +28,7 @@ class HomeActivity : ComponentActivity() {
     lateinit var navigationBridge: NavigationBridge
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
+        (application as App).inject(this)
         super.onCreate(savedInstanceState)
         setContent {
             Dwitch(
