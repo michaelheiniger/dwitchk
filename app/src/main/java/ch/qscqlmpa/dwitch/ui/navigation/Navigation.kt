@@ -78,12 +78,10 @@ fun HandleNavigation(
 
     when (val command = navigationBridge.command.value) {
         NavigationCommand.Identity -> {
-            Logger.error { "Navigation command 'identity'" }
             // Nothing to do
         }
         NavigationCommand.Back -> navController.popBackStack()
         is NavigationCommand.Navigate -> {
-            Logger.error { "Navigate ! $command" }
             val destination = command.destination
             navController.currentDestination?.let { currentNavDestination ->
                 val route = currentNavDestination.route
