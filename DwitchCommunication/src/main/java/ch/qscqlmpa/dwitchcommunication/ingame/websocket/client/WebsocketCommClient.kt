@@ -67,12 +67,12 @@ internal class WebsocketCommClient @Inject constructor(
 
     private fun processConnectedEvent(event: ClientCommEvent.Connected): Observable<ClientEvent> {
         Logger.info { "Connected to Server ($event)" }
-        return Observable.just(ClientEvent.CommunicationEvent.ConnectedToHost)
+        return Observable.just(ClientEvent.CommunicationEvent.ConnectedToServer)
     }
 
     private fun processDisconnectedEvent(event: ClientCommEvent.Disconnected): Observable<ClientEvent> {
         Logger.info { "Disconnected from Server ($event)" }
-        return Observable.just(ClientEvent.CommunicationEvent.DisconnectedFromHost)
+        return Observable.just(ClientEvent.CommunicationEvent.DisconnectedFromServer)
     }
 
     private fun processErrorEvent(event: ClientCommEvent.Error): Observable<ClientEvent> {

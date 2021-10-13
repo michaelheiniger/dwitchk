@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class GuestCommunicatorImplTest : BaseUnitTest() {
+internal class GuestCommunicatorImplTest : BaseUnitTest() {
 
     private val mockCommClient = mockk<CommClient>(relaxed = true)
     private val mockCommunicationEventDispatcher = mockk<GuestCommunicationEventDispatcher>(relaxed = true)
@@ -85,14 +85,14 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
             guestCommunicator.connect()
 
             // When
-            communicationEventsSubject.onNext(ClientEvent.CommunicationEvent.ConnectedToHost)
-            communicationEventsSubject.onNext(ClientEvent.CommunicationEvent.DisconnectedFromHost)
+            communicationEventsSubject.onNext(ClientEvent.CommunicationEvent.ConnectedToServer)
+            communicationEventsSubject.onNext(ClientEvent.CommunicationEvent.DisconnectedFromServer)
 
             // Then
             val dispatchedEventCap = mutableListOf<ClientEvent.CommunicationEvent>()
             verify(exactly = 2) { mockCommunicationEventDispatcher.dispatch(capture(dispatchedEventCap)) }
-            assertThat(dispatchedEventCap[0]).isEqualTo(ClientEvent.CommunicationEvent.ConnectedToHost)
-            assertThat(dispatchedEventCap[1]).isEqualTo(ClientEvent.CommunicationEvent.DisconnectedFromHost)
+            assertThat(dispatchedEventCap[0]).isEqualTo(ClientEvent.CommunicationEvent.ConnectedToServer)
+            assertThat(dispatchedEventCap[1]).isEqualTo(ClientEvent.CommunicationEvent.DisconnectedFromServer)
             confirmVerified(mockCommunicationEventDispatcher)
         }
 
@@ -127,7 +127,7 @@ class GuestCommunicatorImplTest : BaseUnitTest() {
 
             // When
             guestCommunicator.disconnect()
-            communicationEventsSubject.onNext(ClientEvent.CommunicationEvent.DisconnectedFromHost)
+            communicationEventsSubject.onNext(ClientEvent.CommunicationEvent.DisconnectedFromServer)
 
             // Then
             assertThat(communicationEventsSubject.hasObservers()).isFalse // Observed streams have been disposed.

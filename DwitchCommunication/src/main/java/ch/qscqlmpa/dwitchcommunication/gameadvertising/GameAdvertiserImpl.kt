@@ -1,12 +1,12 @@
 package ch.qscqlmpa.dwitchcommunication.gameadvertising
 
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
-import ch.qscqlmpa.dwitchcommunication.DeviceConnectionState
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchcommunication.GameInfo
-import ch.qscqlmpa.dwitchcommunication.WLanConnectionRepository
 import ch.qscqlmpa.dwitchcommunication.common.ApplicationConfigRepository
 import ch.qscqlmpa.dwitchcommunication.common.SerializerFactory
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectionState
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectivityRepository
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import org.tinylog.kotlin.Logger
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 internal class GameAdvertiserImpl @Inject constructor(
     applicationConfigRepository: ApplicationConfigRepository,
-    private val wLanConnectionRepository: WLanConnectionRepository,
+    private val deviceConnectivityRepository: DeviceConnectivityRepository,
     private val network: Network,
     private val serializerFactory: SerializerFactory,
     private val schedulerFactory: SchedulerFactory
@@ -29,7 +29,7 @@ internal class GameAdvertiserImpl @Inject constructor(
     }
 
     override fun observeSerializedGameAdvertisingInfo(gameInfo: GameInfo): Observable<AdvertisingInfo> {
-        return wLanConnectionRepository.observeConnectionState()
+        return deviceConnectivityRepository.observeConnectionState()
             .map { state ->
                 when (state) {
                     is DeviceConnectionState.OnWifi -> AdvertisingInfo.Info(
@@ -40,17 +40,17 @@ internal class GameAdvertiserImpl @Inject constructor(
                             )
                         )
                     )
-                    DeviceConnectionState.Other -> AdvertisingInfo.NoInfoAvailable
+                    DeviceConnectionState.NotOnWifi -> AdvertisingInfo.NoInfoAvailable
                 }
             }
     }
 
     override fun advertiseGame(gameInfo: GameInfo): Completable {
-        return wLanConnectionRepository.observeConnectionState()
+        return deviceConnectivityRepository.observeConnectionState()
             .switchMapCompletable { state ->
                 when (state) {
                     is DeviceConnectionState.OnWifi -> advertiseGame(gameInfo, state.ipAddress)
-                    DeviceConnectionState.Other -> Completable.complete()
+                    DeviceConnectionState.NotOnWifi -> Completable.complete()
                 }
             }
     }

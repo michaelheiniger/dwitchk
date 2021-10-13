@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class ResumeComputerPlayersUsecaseTest : BaseUnitTest() {
+internal class ResumeComputerPlayersUsecaseTest : BaseUnitTest() {
 
     private val mockComputer = mockk<ComputerPlayersManager>()
 

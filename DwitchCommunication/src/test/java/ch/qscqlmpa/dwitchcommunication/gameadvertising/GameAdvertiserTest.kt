@@ -1,8 +1,13 @@
 package ch.qscqlmpa.dwitchcommunication.gameadvertising
 
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
-import ch.qscqlmpa.dwitchcommunication.*
+import ch.qscqlmpa.dwitchcommunication.BaseUnitTest
+import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
+import ch.qscqlmpa.dwitchcommunication.GameInfo
 import ch.qscqlmpa.dwitchcommunication.common.ApplicationConfigRepository
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectionState
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectivityRepository
+import ch.qscqlmpa.dwitchcommunication.testApplicationConfig
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import com.jakewharton.rxrelay3.BehaviorRelay
 import io.mockk.CapturingSlot
@@ -16,10 +21,10 @@ import org.junit.jupiter.api.Test
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class GameAdvertiserTest : BaseUnitTest() {
+internal class GameAdvertiserTest : BaseUnitTest() {
 
     private val mockApplicationConfigRepository = mockk<ApplicationConfigRepository>(relaxed = true)
-    private val mockWLanConnectionRepository = mockk<WLanConnectionRepository>(relaxed = true)
+    private val mockWLanConnectionRepository = mockk<DeviceConnectivityRepository>(relaxed = true)
     private val mockNetwork = mockk<Network>(relaxed = true)
     private lateinit var timeScheduler: TestScheduler
 

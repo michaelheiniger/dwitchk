@@ -10,7 +10,7 @@ import javax.inject.Inject
 @InGameScope
 internal class HostCommunicationStateRepository @Inject constructor() : CommunicationStateRepository {
 
-    override fun connected(): Observable<Boolean> = relay.map { state ->
+    override fun connectedToHost(): Observable<Boolean> = relay.map { state ->
         when (state) {
             HostCommunicationState.Open -> true
             HostCommunicationState.Opening,

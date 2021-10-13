@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitchcommunication.di
 
-import ch.qscqlmpa.dwitchcommunication.WLanConnectionRepository
 import ch.qscqlmpa.dwitchcommunication.common.SchedulersModule
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectivityRepository
 import ch.qscqlmpa.dwitchcommunication.gameadvertising.GameAdvertiser
 import ch.qscqlmpa.dwitchcommunication.gamediscovery.GameDiscovery
 import dagger.Component
@@ -18,7 +18,7 @@ import dagger.Component
 interface CommunicationComponent {
     val gameDiscovery: GameDiscovery
     val gameAdvertiser: GameAdvertiser
-    val wLanConnectionRepository: WLanConnectionRepository
+    val deviceConnectivityRepository: DeviceConnectivityRepository
 
     @Component.Factory
     interface Factory {

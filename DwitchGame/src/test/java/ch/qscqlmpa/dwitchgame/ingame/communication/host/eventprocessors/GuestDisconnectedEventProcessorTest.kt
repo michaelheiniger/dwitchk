@@ -16,7 +16,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
+internal class GuestDisconnectedEventProcessorTest : BaseUnitTest() {
 
     private lateinit var connectionStore: ConnectionStore
 

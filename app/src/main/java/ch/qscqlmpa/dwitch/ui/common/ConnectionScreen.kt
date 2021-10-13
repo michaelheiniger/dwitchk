@@ -39,7 +39,7 @@ private fun CommunicationHostScreenPreview() {
 private fun CommunicationGuestScreenPreview() {
     ActivityScreenContainer {
         ConnectionGuestScreen(
-            state = GuestCommunicationState.Error,
+            state = GuestCommunicationState.Error(connectedToWlan = true),
             onReconnectClick = {},
             onAbortClick = {}
         )
@@ -53,14 +53,26 @@ fun ConnectionHostScreen(
     onAbortClick: () -> Unit
 ) {
     val connectionInfo = when (status) {
-        HostCommunicationState.Opening -> ConnectionInfo(R.string.host_connecting, connecting = true)
-        HostCommunicationState.Closed -> ConnectionInfo(R.string.not_listening_for_guests, connecting = false)
-        HostCommunicationState.Error -> ConnectionInfo(R.string.host_connection_error, connecting = false)
+        HostCommunicationState.Opening -> ConnectionDialogInfo(
+            message = R.string.host_connecting,
+            showLoading = true,
+            reconnectBtnEnabled = false
+        )
+        HostCommunicationState.Closed -> ConnectionDialogInfo(
+            message = R.string.not_listening_for_guests,
+            showLoading = false,
+            reconnectBtnEnabled = true
+        )
+        HostCommunicationState.Error -> ConnectionDialogInfo(
+            message = R.string.host_connection_error,
+            showLoading = false,
+            reconnectBtnEnabled = true
+        )
         else -> null
     }
     if (connectionInfo != null) {
         ConnectionDialog(
-            connectionInfo = connectionInfo,
+            connectionDialogInfo = connectionInfo,
             abortDescription = R.string.leave_game,
             onReconnectClick = onReconnectClick,
             onAbortClick = onAbortClick
@@ -75,14 +87,46 @@ fun ConnectionGuestScreen(
     onAbortClick: () -> Unit
 ) {
     val connectionInfo = when (state) {
-        GuestCommunicationState.Connecting -> ConnectionInfo(R.string.guest_connecting, connecting = true)
-        GuestCommunicationState.Disconnected -> ConnectionInfo(R.string.disconnected_from_host, connecting = false)
-        GuestCommunicationState.Error -> ConnectionInfo(R.string.guest_connection_error, connecting = false)
+        GuestCommunicationState.Connecting -> ConnectionDialogInfo(
+            message = R.string.guest_connecting,
+            showLoading = true,
+            reconnectBtnEnabled = false
+        )
+        is GuestCommunicationState.Disconnected -> {
+            if (state.connectedToWlan) {
+                ConnectionDialogInfo(
+                    message = R.string.disconnected_from_host,
+                    showLoading = false,
+                    reconnectBtnEnabled = true
+                )
+            } else {
+                ConnectionDialogInfo(
+                    message = R.string.not_connected_to_a_wlan,
+                    showLoading = false,
+                    reconnectBtnEnabled = false // Must first connect to a WLAN
+                )
+            }
+        }
+        is GuestCommunicationState.Error -> {
+            if (state.connectedToWlan) {
+                ConnectionDialogInfo(
+                    message = R.string.guest_connection_error,
+                    showLoading = false,
+                    reconnectBtnEnabled = true
+                )
+            } else {
+                ConnectionDialogInfo(
+                    message = R.string.not_connected_to_a_wlan,
+                    showLoading = false,
+                    reconnectBtnEnabled = false // Must first connect to a WLAN
+                )
+            }
+        }
         else -> null
     }
     if (connectionInfo != null) {
         ConnectionDialog(
-            connectionInfo = connectionInfo,
+            connectionDialogInfo = connectionInfo,
             abortDescription = R.string.leave_game,
             onReconnectClick = onReconnectClick,
             onAbortClick = onAbortClick
@@ -100,11 +144,12 @@ private fun Status(statusResource: Int) {
 
 @Composable
 private fun ReconnectionControls(
-    connecting: Boolean = false,
+    showLoading: Boolean,
+    reconnectBtnEnabled: Boolean,
     onReconnectClick: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        if (connecting) {
+        if (showLoading) {
             CircularProgressIndicator(
                 color = MaterialTheme.colors.secondary,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -112,7 +157,7 @@ private fun ReconnectionControls(
             Spacer(Modifier.height(16.dp))
         }
         Button(
-            enabled = !connecting,
+            enabled = reconnectBtnEnabled,
             onClick = onReconnectClick,
             modifier = Modifier
                 .fillMaxWidth()
@@ -123,9 +168,29 @@ private fun ReconnectionControls(
     }
 }
 
+@Preview(
+    showBackground = true,
+    backgroundColor = 0xFFFFFFFF
+)
+@Composable
+private fun ConnectionDialogPreview() {
+    ActivityScreenContainer {
+        ConnectionDialog(
+            connectionDialogInfo = ConnectionDialogInfo(
+                message = R.string.guest_connection_error,
+                showLoading = true,
+                reconnectBtnEnabled = true
+            ),
+            abortDescription = R.string.leave_game,
+            onReconnectClick = {},
+            onAbortClick = {}
+        )
+    }
+}
+
 @Composable
 private fun ConnectionDialog(
-    connectionInfo: ConnectionInfo,
+    connectionDialogInfo: ConnectionDialogInfo,
     abortDescription: Int,
     onReconnectClick: () -> Unit,
     onAbortClick: () -> Unit
@@ -145,10 +210,11 @@ private fun ConnectionDialog(
                         .padding(horizontal = 16.dp, vertical = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Status(connectionInfo.connectionStatus)
+                    Status(connectionDialogInfo.message)
                     Spacer(Modifier.height(16.dp))
                     ReconnectionControls(
-                        connecting = connectionInfo.connecting,
+                        showLoading = connectionDialogInfo.showLoading,
+                        reconnectBtnEnabled = connectionDialogInfo.reconnectBtnEnabled,
                         onReconnectClick = onReconnectClick
                     )
                     Spacer(Modifier.height(8.dp))
@@ -164,4 +230,8 @@ private fun ConnectionDialog(
     )
 }
 
-private data class ConnectionInfo(val connectionStatus: Int, val connecting: Boolean)
+private data class ConnectionDialogInfo(
+    val message: Int,
+    val showLoading: Boolean,
+    val reconnectBtnEnabled: Boolean
+)

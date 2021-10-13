@@ -15,7 +15,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class HostMessageFactoryTest : BaseUnitTest() {
+internal class HostMessageFactoryTest : BaseUnitTest() {
 
     private lateinit var hostMessageFactory: HostMessageFactory
 
