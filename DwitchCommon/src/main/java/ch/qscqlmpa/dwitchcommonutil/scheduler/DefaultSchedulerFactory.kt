@@ -2,8 +2,9 @@ package ch.qscqlmpa.dwitchcommonutil.scheduler
 
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class DefaultSchedulerFactory : SchedulerFactory {
+class DefaultSchedulerFactory @Inject constructor() : SchedulerFactory {
 
     override fun io(): Scheduler {
         return Schedulers.io()

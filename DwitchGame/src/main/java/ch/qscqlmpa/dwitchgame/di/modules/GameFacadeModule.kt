@@ -8,7 +8,7 @@ import dagger.Module
 
 @Suppress("unused")
 @Module
-abstract class GameFacadeModule {
+internal abstract class GameFacadeModule {
 
     @GameScope
     @Binds

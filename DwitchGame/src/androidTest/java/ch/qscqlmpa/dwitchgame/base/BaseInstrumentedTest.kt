@@ -8,7 +8,7 @@ import ch.qscqlmpa.dwitchstore.DaggerTestStoreComponent
 import ch.qscqlmpa.dwitchstore.TestStoreComponent
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreModule
-import ch.qscqlmpa.dwitchstore.store.TestStoreModule
+import ch.qscqlmpa.dwitchstore.store.TestRoomModule
 import org.junit.After
 import org.junit.Before
 import org.junit.runner.RunWith
@@ -30,7 +30,7 @@ abstract class BaseInstrumentedTest {
 
     @Before
     fun setupStore() {
-        storeComponent = DaggerTestStoreComponent.factory().create(TestStoreModule(context))
+        storeComponent = DaggerTestStoreComponent.factory().create(TestRoomModule(context))
         val insertGameResult =
             storeComponent.store.insertGameForGuest(gameName, GameCommonId(UUID.randomUUID()), localPlayerName)
         val inGameStoreComponent = storeComponent.addInGameStoreComponent(

@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.app
 
-import ch.qscqlmpa.dwitch.DaggerTestAppComponent
 import ch.qscqlmpa.dwitch.HomeActivity
 import ch.qscqlmpa.dwitch.TestAppComponent
 import ch.qscqlmpa.dwitch.TestIdlingResource
@@ -13,17 +12,12 @@ import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchcommunication.di.*
 import ch.qscqlmpa.dwitchgame.di.DaggerTestGameComponent
 import ch.qscqlmpa.dwitchgame.di.TestGameComponent
-import ch.qscqlmpa.dwitchgame.di.modules.DeviceConnectivityModule
-import ch.qscqlmpa.dwitchgame.di.modules.DwitchGameModule
-import ch.qscqlmpa.dwitchgame.di.modules.GameDiscoveryModule
-import ch.qscqlmpa.dwitchgame.di.modules.StoreModule
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleFacade
 import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameGuestModule
 import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameHostModule
 import ch.qscqlmpa.dwitchstore.DaggerTestStoreComponent
 import ch.qscqlmpa.dwitchstore.TestStoreComponent
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreModule
-import ch.qscqlmpa.dwitchstore.store.TestStoreModule
 import com.jakewharton.rxrelay3.BehaviorRelay
 import org.tinylog.kotlin.Logger
 
@@ -43,21 +37,22 @@ class TestApp : App() {
     private val testAppEventRelay = BehaviorRelay.create<TestAppEvent>()
 
     override fun createDaggerComponents() {
-        testCommunicationComponent = DaggerTestCommunicationComponent.factory().create(CommunicationModule(this))
+        testCommunicationComponent = DaggerTestCommunicationComponent.factory().create(this)
 
-        testStoreComponent = DaggerTestStoreComponent.factory().create(TestStoreModule(this))
+        testStoreComponent = DaggerTestStoreComponent.factory().create(this)
 
         testGameComponent = DaggerTestGameComponent.factory().create(
-            DwitchGameModule(gameIdlingResource),
-            StoreModule(testStoreComponent.store),
-            GameDiscoveryModule(testCommunicationComponent.gameDiscovery),
-            DeviceConnectivityModule(testCommunicationComponent.deviceConnectivityRepository)
+            gameIdlingResource,
+            testStoreComponent.store,
+            testCommunicationComponent.gameDiscovery,
+            testCommunicationComponent.deviceConnectivityRepository
         )
 
-        testAppComponent = DaggerTestAppComponent.builder()
-            .applicationModule(ApplicationModule(this, gameIdlingResource))
-            .gameComponent(testGameComponent)
-            .build()
+        testAppComponent = DaggerTestAppComponentcreate(
+            this,
+            gameIdlingResource,
+            testGameComponent
+        )
     }
 
     override fun createInGameHostComponents(

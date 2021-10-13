@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.app
 
-import android.app.Application
+import android.content.Context
 import ch.qscqlmpa.dwitch.HomeActivity
 import ch.qscqlmpa.dwitch.ingame.InGameGuestUiComponent
 import ch.qscqlmpa.dwitch.ingame.InGameGuestUiModule
@@ -11,6 +11,7 @@ import ch.qscqlmpa.dwitch.ingame.services.HostInGameService
 import ch.qscqlmpa.dwitch.service.AndroidServicesModule
 import ch.qscqlmpa.dwitch.ui.home.HomeViewModelBindingModule
 import ch.qscqlmpa.dwitch.ui.qrcodescanner.QrCodeScannerActivity
+import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchgame.di.GameComponent
 import dagger.BindsInstance
 import dagger.Component
@@ -29,17 +30,13 @@ interface AppComponent {
 
     val appEventRepository: AppEventRepository
 
-    @Component.Builder
-    interface Builder {
-
-        @BindsInstance
-        fun application(application: Application): Builder
-
-        fun applicationModule(applicationModule: ApplicationModule): Builder
-
-        fun gameComponent(gameComponent: GameComponent): Builder
-
-        fun build(): AppComponent
+    @Component.Factory
+    interface Factory {
+        fun create(
+            @BindsInstance context: Context,
+            @BindsInstance idlingResource: DwitchIdlingResource,
+            gameComponent: GameComponent
+        ): AppComponent
     }
 
     fun inject(activity: HomeActivity)
