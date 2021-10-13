@@ -9,19 +9,13 @@ import dagger.Provides
 
 @Suppress("unused")
 @Module
-class TestStoreModule(private val context: Context) {
+internal object TestRoomModule {
 
     @StoreScope
     @Provides
-    internal fun provideDatabase(): AppRoomDatabase {
+    internal fun provideDatabase(context: Context): AppRoomDatabase {
         return Room.inMemoryDatabaseBuilder(context, AppRoomDatabase::class.java)
             .fallbackToDestructiveMigration()
             .build()
-    }
-
-    @StoreScope
-    @Provides
-    internal fun provideStore(appRoomDatabase: AppRoomDatabase): Store {
-        return StoreImpl(appRoomDatabase)
     }
 }

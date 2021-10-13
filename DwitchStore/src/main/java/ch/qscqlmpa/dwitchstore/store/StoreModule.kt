@@ -1,27 +1,14 @@
 package ch.qscqlmpa.dwitchstore.store
 
-import android.content.Context
-import androidx.room.Room
 import ch.qscqlmpa.dwitchstore.StoreScope
-import ch.qscqlmpa.dwitchstore.dao.AppRoomDatabase
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 
 @Suppress("unused")
 @Module
-class StoreModule(private val context: Context) {
+internal abstract class StoreModule {
 
     @StoreScope
-    @Provides
-    internal fun provideDatabase(): AppRoomDatabase {
-        return Room.databaseBuilder(context, AppRoomDatabase::class.java, "app_database")
-            .fallbackToDestructiveMigration()
-            .build()
-    }
-
-    @StoreScope
-    @Provides
-    internal fun provideStore(appRoomDatabase: AppRoomDatabase): Store {
-        return StoreImpl(appRoomDatabase)
-    }
+    @Binds
+    internal abstract fun provideStore(store: StoreImpl): Store
 }

@@ -16,9 +16,6 @@ import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchcommunication.di.*
 import ch.qscqlmpa.dwitchgame.di.DaggerGameComponent
 import ch.qscqlmpa.dwitchgame.di.GameComponent
-import ch.qscqlmpa.dwitchgame.di.modules.DeviceConnectivityModule
-import ch.qscqlmpa.dwitchgame.di.modules.DwitchGameModule
-import ch.qscqlmpa.dwitchgame.di.modules.GameDiscoveryModule
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleFacade
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationFacade
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationFacade
@@ -31,7 +28,6 @@ import ch.qscqlmpa.dwitchstore.DaggerStoreComponent
 import ch.qscqlmpa.dwitchstore.StoreComponent
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreComponent
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreModule
-import ch.qscqlmpa.dwitchstore.store.StoreModule
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
@@ -64,22 +60,22 @@ open class App : Application() {
     }
 
     protected open fun createDaggerComponents() {
-        communicationComponent = DaggerCommunicationComponent.factory().create(CommunicationModule(this))
+        communicationComponent = DaggerCommunicationComponent.factory().create(this)
 
-        storeComponent = DaggerStoreComponent.factory().create(StoreModule(this))
+        storeComponent = DaggerStoreComponent.factory().create(this)
 
         gameComponent = DaggerGameComponent.factory().create(
-            DwitchGameModule(StubIdlingResource()),
-            ch.qscqlmpa.dwitchgame.di.modules.StoreModule(storeComponent.store),
-            GameDiscoveryModule(communicationComponent.gameDiscovery),
-            DeviceConnectivityModule(communicationComponent.deviceConnectivityRepository)
+            StubIdlingResource(),
+            storeComponent.store,
+            communicationComponent.gameDiscovery,
+            communicationComponent.deviceConnectivityRepository
         )
 
-        appComponent = DaggerAppComponent.builder()
-            .application(this)
-            .applicationModule(ApplicationModule(this, StubIdlingResource()))
-            .gameComponent(gameComponent)
-            .build()
+        appComponent = DaggerAppComponent.factory().create(
+            this,
+            StubIdlingResource(),
+            gameComponent
+        )
     }
 
     open fun createInGameHostComponents(
