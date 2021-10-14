@@ -22,7 +22,7 @@
             android:label="@string/title_activity_qr_code_scanner"
             android:theme="@style/Theme.Dwitch.NoActionBar" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:label="@string/title_activity_home"
             android:theme="@style/Theme.Dwitch.NoActionBar">

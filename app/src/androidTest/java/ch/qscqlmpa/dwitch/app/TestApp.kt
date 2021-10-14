@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.app
 
-import ch.qscqlmpa.dwitch.HomeActivity
+import ch.qscqlmpa.dwitch.MainActivity
 import ch.qscqlmpa.dwitch.TestAppComponent
 import ch.qscqlmpa.dwitch.TestIdlingResource
 import ch.qscqlmpa.dwitch.ingame.InGameGuestUiModule
@@ -129,7 +129,7 @@ class TestApp : App() {
         testAppEventRelay.accept(TestAppEvent.GameCreated)
     }
 
-    override fun inject(activity: HomeActivity) {
+    override fun inject(activity: MainActivity) {
         testAppComponent.inject(activity)
     }
 

@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.app
 
 import android.content.Context
-import ch.qscqlmpa.dwitch.HomeActivity
+import ch.qscqlmpa.dwitch.MainActivity
 import ch.qscqlmpa.dwitch.ingame.InGameGuestUiComponent
 import ch.qscqlmpa.dwitch.ingame.InGameGuestUiModule
 import ch.qscqlmpa.dwitch.ingame.InGameHostUiComponent
@@ -39,7 +39,7 @@ interface AppComponent {
         ): AppComponent
     }
 
-    fun inject(activity: HomeActivity)
+    fun inject(activity: MainActivity)
     fun inject(activity: QrCodeScannerActivity)
     fun inject(service: HostInGameService)
     fun inject(service: GuestInGameService)

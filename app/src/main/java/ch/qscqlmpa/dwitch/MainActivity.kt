@@ -12,7 +12,7 @@ import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import javax.inject.Inject
 import javax.inject.Named
 
-class HomeActivity : ComponentActivity() {
+class MainActivity : ComponentActivity() {
 
     @Named("home")
     @Inject

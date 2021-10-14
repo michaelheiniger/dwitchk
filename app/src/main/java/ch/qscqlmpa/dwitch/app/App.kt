@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.app
 
 import android.app.Application
-import ch.qscqlmpa.dwitch.HomeActivity
+import ch.qscqlmpa.dwitch.MainActivity
 import ch.qscqlmpa.dwitch.app.notifications.NotificationChannelFactory
 import ch.qscqlmpa.dwitch.ingame.InGameGuestUiComponent
 import ch.qscqlmpa.dwitch.ingame.InGameGuestUiModule
@@ -156,7 +156,7 @@ open class App : Application() {
         inGameViewModelFactory = null
     }
 
-    open fun inject(activity: HomeActivity) {
+    open fun inject(activity: MainActivity) {
         appComponent.inject(activity)
     }
 
