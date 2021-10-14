@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitch.ui.home.joinnewgame
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.app.StubIdlingResource
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.ui.navigation.HomeScreens
+import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
 import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.game.GameFacade
@@ -86,7 +86,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
         viewModel.joinGame()
 
         // Then
-        verify { mockNavigationBridge.navigate(HomeScreens.InGame) }
+        verify { mockNavigationBridge.navigate(HomeDestination.InGame) }
         verify { mockGameFacade.joinGame(advertisedGame, playerName) }
     }
 

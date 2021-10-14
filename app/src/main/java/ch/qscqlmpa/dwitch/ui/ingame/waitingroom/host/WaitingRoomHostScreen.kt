@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.ingame.waitingroom.host
 
 import android.graphics.Bitmap
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -78,6 +79,8 @@ fun WaitingRoomHostScreen(vmFactory: ViewModelFactory) {
 
     val showConfirmationDialog = remember { mutableStateOf(false) }
 
+    BackHandler(onBack = { showConfirmationDialog.value = true })
+
     WaitingRoomHostBody(
         toolbarTitle = viewModel.toolbarTitle.value,
         showAddComputerPlayer = viewModel.canComputerPlayersBeAdded.value,
@@ -86,19 +89,11 @@ fun WaitingRoomHostScreen(vmFactory: ViewModelFactory) {
         launchGameEnabled = hostViewModel.canGameBeLaunched.value,
         connectionStatus = connectionViewModel.connectionStatus.value,
         onLaunchGameClick = hostViewModel::launchGame,
-        onCancelGameClick = { showConfirmationDialog.value = true },
+        onCancelGameClick = hostViewModel::cancelGame,
         onReconnectClick = connectionViewModel::reconnect,
         onAddComputerPlayer = hostViewModel::addComputerPlayer,
         onKickPlayer = hostViewModel::kickPlayer
     )
-    if (showConfirmationDialog.value) {
-        ConfirmationDialog(
-            title = R.string.dialog_info_title,
-            text = R.string.host_cancel_game_confirmation,
-            onConfirmClick = { hostViewModel.cancelGame() },
-            onCancelClick = { showConfirmationDialog.value = false }
-        )
-    }
     if (hostViewModel.loading.value) LoadingDialog()
 }
 
@@ -116,6 +111,9 @@ fun WaitingRoomHostBody(
     onAddComputerPlayer: () -> Unit = {},
     onKickPlayer: (PlayerWrUi) -> Unit = {}
 ) {
+    val showCancelGameConfirmationDialog = remember { mutableStateOf(false) }
+    BackHandler(onBack = { showCancelGameConfirmationDialog.value = true })
+
     Column(
         Modifier
             .fillMaxWidth()
@@ -123,7 +121,11 @@ fun WaitingRoomHostBody(
     ) {
         DwitchTopBar(
             title = toolbarTitle,
-            navigationIcon = NavigationIcon(R.drawable.ic_baseline_exit_to_app_24, R.string.cancel_game, onCancelGameClick),
+            navigationIcon = NavigationIcon(
+                icon = R.drawable.ic_baseline_exit_to_app_24,
+                contentDescription = R.string.cancel_game,
+                onClick = { showCancelGameConfirmationDialog.value = true }
+            ),
             actions = emptyList(),
             onActionClick = {}
         )
@@ -163,6 +165,14 @@ fun WaitingRoomHostBody(
                 onAbortClick = onCancelGameClick
             )
         }
+    }
+    if (showCancelGameConfirmationDialog.value) {
+        ConfirmationDialog(
+            title = R.string.dialog_info_title,
+            text = R.string.host_cancel_game_confirmation,
+            onConfirmClick = onCancelGameClick,
+            onCancelClick = { showCancelGameConfirmationDialog.value = false }
+        )
     }
 }
 

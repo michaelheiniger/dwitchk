@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.home.joinnewgame
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -32,9 +33,8 @@ fun JoinNewGameScreen(
         onDispose { viewModel.onStop() }
     }
 
-    Notification(notification = viewModel.notification.value)
-
     JoinNewGameBody(
+        notification = viewModel.notification.value,
         gameName = viewModel.gameName.value,
         playerName = viewModel.playerName.value,
         joinGameControlEnabled = viewModel.canJoinGame.value,
@@ -53,6 +53,7 @@ fun JoinNewGameScreen(
 private fun JoinNewGameBodyPreview() {
     ActivityScreenContainer {
         JoinNewGameBody(
+            notification = JoinNewGameNotification.None,
             gameName = "Dwiiitch",
             playerName = "Aragorn",
             joinGameControlEnabled = false,
@@ -66,6 +67,7 @@ private fun JoinNewGameBodyPreview() {
 
 @Composable
 fun JoinNewGameBody(
+    notification: JoinNewGameNotification,
     gameName: String,
     playerName: String,
     joinGameControlEnabled: Boolean,
@@ -74,6 +76,8 @@ fun JoinNewGameBody(
     onJoinGameClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
+    BackHandler(onBack = onBackClick)
+    Notification(notification = notification)
     if (loading) LoadingDialog()
     Column(
         Modifier

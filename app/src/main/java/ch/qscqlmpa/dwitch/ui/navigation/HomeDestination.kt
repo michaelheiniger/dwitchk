@@ -2,8 +2,8 @@ package ch.qscqlmpa.dwitch.ui.navigation
 
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 
-sealed class HomeScreens(override val routeName: String) : Destination(routeName) {
-    object Home : HomeScreens("home") {
+sealed class HomeDestination(override val routeName: String) : Destination(routeName) {
+    object Home : HomeDestination("home") {
         override fun navigateTo(
             navigate: (nav: NavigationData) -> Unit,
             destination: Destination
@@ -24,7 +24,7 @@ sealed class HomeScreens(override val routeName: String) : Destination(routeName
         }
     }
 
-    object HostNewGame : HomeScreens("hostNewGame") {
+    object HostNewGame : HomeDestination("hostNewGame") {
         override fun navigateTo(
             navigate: (nav: NavigationData) -> Unit,
             destination: Destination
@@ -44,7 +44,7 @@ sealed class HomeScreens(override val routeName: String) : Destination(routeName
         }
     }
 
-    data class JoinNewGame(val game: GameAdvertisingInfo) : HomeScreens(routeName) {
+    data class JoinNewGame(val game: GameAdvertisingInfo) : HomeDestination(routeName) {
         companion object {
             const val routeName = "joinNewGame"
         }
@@ -68,5 +68,5 @@ sealed class HomeScreens(override val routeName: String) : Destination(routeName
         }
     }
 
-    object InGame : HomeScreens("inGame")
+    object InGame : HomeDestination("inGame")
 }

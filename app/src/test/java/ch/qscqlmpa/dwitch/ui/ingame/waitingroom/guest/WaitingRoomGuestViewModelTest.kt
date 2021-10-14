@@ -3,9 +3,9 @@ package ch.qscqlmpa.dwitch.ui.ingame.waitingroom.guest
 import ch.qscqlmpa.dwitch.app.StubIdlingResource
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
-import ch.qscqlmpa.dwitch.ui.navigation.GameScreens
-import ch.qscqlmpa.dwitch.ui.navigation.HomeScreens
-import ch.qscqlmpa.dwitch.ui.navigation.HomeScreens.Home
+import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
+import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination.Home
+import ch.qscqlmpa.dwitch.ui.navigation.InGameDestination
 import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchgame.ingame.InGameGuestFacade
@@ -185,7 +185,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         viewModel.acknowledgeKickOffGame()
 
         // Then
-        verify { mockNavigationBridge.navigate(HomeScreens.Home) }
+        verify { mockNavigationBridge.navigate(HomeDestination.Home) }
     }
 
     @Test
@@ -198,7 +198,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         gameEventSubject.onNext(GuestGameEvent.GameLaunched)
 
         // Then
-        verify { mockNavigationBridge.navigate(GameScreens.GameRoomGuest) }
+        verify { mockNavigationBridge.navigate(InGameDestination.GameRoomGuest) }
     }
 
     private fun createViewModel() {

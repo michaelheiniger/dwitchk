@@ -5,7 +5,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitch.ui.navigation.HomeScreens
+import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
 import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
@@ -61,7 +61,7 @@ class JoinNewGameViewModel @Inject constructor(
                 .observeOn(uiScheduler)
                 .doOnTerminate { _loading.value = false }
                 .subscribe(
-                    { navigationBridge.navigate(HomeScreens.InGame) },
+                    { navigationBridge.navigate(HomeDestination.InGame) },
                     { error ->
                         _notification.value = JoinNewGameNotification.ErrorJoiningGame
                         Logger.error(error) { "Error while joining the game" }

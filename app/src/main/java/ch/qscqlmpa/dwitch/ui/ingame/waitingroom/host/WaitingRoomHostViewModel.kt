@@ -5,8 +5,8 @@ import android.graphics.Color
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitch.ui.navigation.GameScreens
-import ch.qscqlmpa.dwitch.ui.navigation.HomeScreens
+import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
+import ch.qscqlmpa.dwitch.ui.navigation.InGameDestination
 import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommunication.gameadvertising.AdvertisingInfo
@@ -39,6 +39,7 @@ internal class WaitingRoomHostViewModel @Inject constructor(
     val gameQrCode get(): State<Bitmap?> = _gameQrCode
 
     init {
+        Logger.debug { "Create WaitingRoomHostViewModel: $this" }
         gameConnectionInfoQrCode()
     }
 
@@ -74,7 +75,7 @@ internal class WaitingRoomHostViewModel @Inject constructor(
                 .subscribe(
                     {
                         Logger.info { "Game launched" }
-                        navigationBridge.navigate(GameScreens.GameRoomHost)
+                        navigationBridge.navigate(InGameDestination.GameRoomHost)
                     },
                     { error -> Logger.error(error) { "Error while launching game" } },
                 )
@@ -88,7 +89,7 @@ internal class WaitingRoomHostViewModel @Inject constructor(
                 .subscribe(
                     {
                         Logger.info { "Game canceled" }
-                        navigationBridge.navigate(HomeScreens.Home)
+                        navigationBridge.navigate(HomeDestination.Home)
                     },
                     { error -> Logger.error(error) { "Error while canceling game" } }
                 )

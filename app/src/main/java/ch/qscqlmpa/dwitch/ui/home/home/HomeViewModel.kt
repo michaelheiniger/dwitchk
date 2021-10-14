@@ -7,7 +7,7 @@ import ch.qscqlmpa.dwitch.app.AppEventRepository
 import ch.qscqlmpa.dwitch.ingame.services.ServiceManager
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
-import ch.qscqlmpa.dwitch.ui.navigation.HomeScreens
+import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
 import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.game.GameFacade
@@ -46,12 +46,12 @@ class HomeViewModel @Inject constructor(
     }
 
     fun createNewGame() {
-        navigationBridge.navigate(HomeScreens.HostNewGame)
+        navigationBridge.navigate(HomeDestination.HostNewGame)
     }
 
     fun joinGame(game: GameAdvertisingInfo) {
         if (game.isNew) {
-            navigationBridge.navigate(HomeScreens.JoinNewGame(game))
+            navigationBridge.navigate(HomeDestination.JoinNewGame(game))
         } else {
             joinExistingGame(game)
         }
@@ -74,7 +74,7 @@ class HomeViewModel @Inject constructor(
                 .subscribe(
                     {
                         Logger.info { "Game resumed successfully." }
-                        navigationBridge.navigate(HomeScreens.InGame)
+                        navigationBridge.navigate(HomeDestination.InGame)
                     },
                     { error -> Logger.error(error) { "Error while resuming game." } }
                 )
@@ -97,7 +97,7 @@ class HomeViewModel @Inject constructor(
     fun load(gameAd: GameAdvertisingInfo) {
         Logger.debug { "Load game ad: $gameAd" }
         if (gameAd.isNew) {
-            navigationBridge.navigate(HomeScreens.JoinNewGame(gameAd))
+            navigationBridge.navigate(HomeDestination.JoinNewGame(gameAd))
         } else {
             joinExistingGame(gameAd)
         }
@@ -113,7 +113,7 @@ class HomeViewModel @Inject constructor(
                 .subscribe(
                     {
                         Logger.info { "Game resumed successfully." }
-                        navigationBridge.navigate(HomeScreens.InGame)
+                        navigationBridge.navigate(HomeDestination.InGame)
                     },
                     { error ->
                         _notification.value = HomeNotification.ErrorJoiningGame
@@ -129,8 +129,8 @@ class HomeViewModel @Inject constructor(
                 // Nothing to do
             }
             GameLifecycleState.Running -> {
-                Logger.debug { "Game is running: navigate to ${HomeScreens.InGame}" }
-                navigationBridge.navigate(HomeScreens.InGame)
+                Logger.debug { "Game is running: navigate to ${HomeDestination.InGame}" }
+                navigationBridge.navigate(HomeDestination.InGame)
             }
             GameLifecycleState.Over -> serviceManager.stop()
         }

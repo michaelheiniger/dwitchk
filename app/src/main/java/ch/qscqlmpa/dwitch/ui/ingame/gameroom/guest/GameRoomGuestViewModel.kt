@@ -3,7 +3,7 @@ package ch.qscqlmpa.dwitch.ui.ingame.gameroom.guest
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitch.ui.navigation.HomeScreens
+import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
 import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
@@ -50,7 +50,7 @@ internal class GameRoomGuestViewModel @Inject constructor(
     }
 
     private fun goToHomeScreen() {
-        navigationBridge.navigate(HomeScreens.Home)
+        navigationBridge.navigate(HomeDestination.Home)
     }
 
     private fun observeGameEvent() {

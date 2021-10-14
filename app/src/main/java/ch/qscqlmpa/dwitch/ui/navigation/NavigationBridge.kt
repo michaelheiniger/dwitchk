@@ -37,7 +37,7 @@ class NavigationBridge @Inject constructor() {
 
     private fun saveDataIfNeeded(destination: Destination) {
         when (destination) {
-            is HomeScreens.JoinNewGame -> saveData(destination.routeName, destination.game)
+            is HomeDestination.JoinNewGame -> saveData(destination.routeName, destination.game)
             else -> {
                 // Nothing to do
             }

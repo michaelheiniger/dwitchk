@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.ingame.waitingroom.guest
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -98,7 +99,8 @@ fun WaitingRoomGuestBody(
     onGameCanceledAcknowledge: () -> Unit,
     onKickOffGameAcknowledge: () -> Unit
 ) {
-    val showConfirmationDialog = remember { mutableStateOf(false) }
+    val showLeaveGameConfirmationDialog = remember { mutableStateOf(false) }
+    BackHandler(onBack = { showLeaveGameConfirmationDialog.value = true })
 
     Column(
         Modifier
@@ -110,7 +112,7 @@ fun WaitingRoomGuestBody(
             navigationIcon = NavigationIcon(
                 icon = R.drawable.ic_baseline_exit_to_app_24,
                 contentDescription = R.string.leave_game,
-                onClick = { showConfirmationDialog.value = true }
+                onClick = { showLeaveGameConfirmationDialog.value = true }
             ),
             actions = emptyList(),
             onActionClick = {}
@@ -149,16 +151,16 @@ fun WaitingRoomGuestBody(
             ConnectionGuestScreen(
                 state = connectionState,
                 onReconnectClick = onReconnectClick,
-                onAbortClick = { showConfirmationDialog.value = true }
+                onAbortClick = { showLeaveGameConfirmationDialog.value = true }
             )
         }
     }
-    if (showConfirmationDialog.value) {
+    if (showLeaveGameConfirmationDialog.value) {
         ConfirmationDialog(
             title = R.string.dialog_info_title,
             text = R.string.guest_leaves_game_confirmation,
             onConfirmClick = onLeaveConfirmClick,
-            onCancelClick = { showConfirmationDialog.value = false }
+            onCancelClick = { showLeaveGameConfirmationDialog.value = false }
         )
     }
 }

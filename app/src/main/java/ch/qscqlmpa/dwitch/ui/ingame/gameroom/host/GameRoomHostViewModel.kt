@@ -1,7 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.ingame.gameroom.host
 
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitch.ui.navigation.HomeScreens
+import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
 import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchgame.ingame.InGameHostFacade
@@ -37,7 +37,7 @@ internal class GameRoomHostViewModel @Inject constructor(
                 .subscribe(
                     {
                         Logger.debug { "Game ended successfully." }
-                        navigationBridge.navigate(HomeScreens.Home)
+                        navigationBridge.navigate(HomeDestination.Home)
                     },
                     { error -> Logger.error(error) { "Error while ending game." } }
                 )
