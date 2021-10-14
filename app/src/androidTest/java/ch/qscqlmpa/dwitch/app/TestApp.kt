@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.app
 
+import ch.qscqlmpa.dwitch.DaggerTestAppComponent
 import ch.qscqlmpa.dwitch.MainActivity
 import ch.qscqlmpa.dwitch.TestAppComponent
 import ch.qscqlmpa.dwitch.TestIdlingResource
@@ -48,7 +49,7 @@ class TestApp : App() {
             testCommunicationComponent.deviceConnectivityRepository
         )
 
-        testAppComponent = DaggerTestAppComponentcreate(
+        testAppComponent = DaggerTestAppComponent.factory().create(
             this,
             gameIdlingResource,
             testGameComponent
