@@ -7,7 +7,7 @@ import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import ch.qscqlmpa.dwitch.BuildConfig
-import ch.qscqlmpa.dwitch.HomeActivity
+import ch.qscqlmpa.dwitch.MainActivity
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.app.AppEventRepository
@@ -87,7 +87,7 @@ abstract class BaseInGameService : Service() {
     }
 
     private fun buildNotificationIntent(): Intent {
-        val notificationIntent = Intent(this, HomeActivity::class.java)
+        val notificationIntent = Intent(this, MainActivity::class.java)
         notificationIntent.putExtra(CommonExtraConstants.EXTRA_PLAYER_ROLE, playerRole.name)
         notificationIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         return notificationIntent

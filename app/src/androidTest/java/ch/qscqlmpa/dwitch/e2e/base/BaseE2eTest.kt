@@ -7,7 +7,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import ch.qscqlmpa.dwitch.HomeActivity
+import ch.qscqlmpa.dwitch.MainActivity
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.TestApp
@@ -47,7 +47,7 @@ import java.util.concurrent.TimeUnit
 abstract class BaseE2eTest {
 
     @get:Rule
-    val testRule = createAndroidComposeRule<HomeActivity>()
+    val testRule = createAndroidComposeRule<MainActivity>()
 
     @get:Rule
     val animationsRule = DisableAnimationsRule()
