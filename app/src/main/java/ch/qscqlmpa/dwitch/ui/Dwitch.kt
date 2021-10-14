@@ -22,9 +22,9 @@ import ch.qscqlmpa.dwitch.ui.ingame.gameroom.guest.GameRoomGuestScreen
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.host.GameRoomHostScreen
 import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.guest.WaitingRoomGuestScreen
 import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.host.WaitingRoomHostScreen
-import ch.qscqlmpa.dwitch.ui.navigation.GameScreens
 import ch.qscqlmpa.dwitch.ui.navigation.HandleNavigation
-import ch.qscqlmpa.dwitch.ui.navigation.HomeScreens
+import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
+import ch.qscqlmpa.dwitch.ui.navigation.InGameDestination
 import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.theme.DwitchTheme
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
@@ -65,16 +65,16 @@ private fun DwitchNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = HomeScreens.Home.routeName,
+        startDestination = HomeDestination.Home.routeName,
         modifier = modifier
     ) {
-        composable(HomeScreens.Home.routeName) {
+        composable(HomeDestination.Home.routeName) {
             HomeScreen(vmFactory = vmFactory)
         }
-        composable(HomeScreens.HostNewGame.routeName) {
+        composable(HomeDestination.HostNewGame.routeName) {
             HostNewGameScreen(vmFactory = vmFactory)
         }
-        composable(route = HomeScreens.JoinNewGame.routeName) { entry ->
+        composable(route = HomeDestination.JoinNewGame.routeName) { entry ->
             val gameAd = navigationBridge.getData(entry.destination.route!!) as GameAdvertisingInfo?
             if (gameAd != null) {
                 JoinNewGameScreen(
@@ -88,10 +88,10 @@ private fun DwitchNavHost(
         }
 
         navigation(
-            route = HomeScreens.InGame.routeName,
-            startDestination = GameScreens.GameDispatch.routeName
+            route = HomeDestination.InGame.routeName,
+            startDestination = InGameDestination.InGameDispatch.routeName
         ) {
-            composable(GameScreens.GameDispatch.routeName) {
+            composable(InGameDestination.InGameDispatch.routeName) {
                 val viewModel = viewModel<GameViewModel>(factory = getInGameVmFactory())
                 DisposableEffect(viewModel) {
                     viewModel.onStart()
@@ -100,16 +100,16 @@ private fun DwitchNavHost(
                 LoadingSpinner()
             }
 
-            composable(GameScreens.WaitingRoomHost.routeName) {
+            composable(InGameDestination.WaitingRoomHost.routeName) {
                 WaitingRoomHostScreen(vmFactory = getInGameVmFactory())
             }
-            composable(GameScreens.WaitingRoomGuest.routeName) {
+            composable(InGameDestination.WaitingRoomGuest.routeName) {
                 WaitingRoomGuestScreen(vmFactory = getInGameVmFactory())
             }
-            composable(GameScreens.GameRoomHost.routeName) {
+            composable(InGameDestination.GameRoomHost.routeName) {
                 GameRoomHostScreen(vmFactory = getInGameVmFactory())
             }
-            composable(GameScreens.GameRoomGuest.routeName) {
+            composable(InGameDestination.GameRoomGuest.routeName) {
                 GameRoomGuestScreen(vmFactory = getInGameVmFactory())
             }
         }

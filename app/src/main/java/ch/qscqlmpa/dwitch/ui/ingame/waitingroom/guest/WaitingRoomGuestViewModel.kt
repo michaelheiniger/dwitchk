@@ -4,8 +4,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
-import ch.qscqlmpa.dwitch.ui.navigation.GameScreens
-import ch.qscqlmpa.dwitch.ui.navigation.HomeScreens
+import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
+import ch.qscqlmpa.dwitch.ui.navigation.InGameDestination
 import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
@@ -78,7 +78,7 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
     }
 
     private fun goToHomeScreen() {
-        navigationBridge.navigate(HomeScreens.Home)
+        navigationBridge.navigate(HomeDestination.Home)
     }
 
     private fun localPlayerReadyState() {
@@ -115,7 +115,7 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
                         GuestGameEvent.GameCanceled -> _notifications.value = WaitingRoomGuestNotification.NotifyGameCanceled
                         GuestGameEvent.KickedOffGame ->
                             _notifications.value = WaitingRoomGuestNotification.NotifyPlayerKickedOffGame
-                        GuestGameEvent.GameLaunched -> navigationBridge.navigate(GameScreens.GameRoomGuest)
+                        GuestGameEvent.GameLaunched -> navigationBridge.navigate(InGameDestination.GameRoomGuest)
                         GuestGameEvent.GameOver -> throw IllegalStateException("Event '$event' is not supposed to occur in WaitingRoom.")
                     }
                 }

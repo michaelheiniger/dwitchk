@@ -61,17 +61,17 @@ fun HandleNavigation(
 
     fun getCurrentDestination(route: String): Destination {
         return when (route) {
-            HomeScreens.Home.routeName -> HomeScreens.Home
-            HomeScreens.HostNewGame.routeName -> HomeScreens.HostNewGame
-            HomeScreens.JoinNewGame.routeName -> {
+            HomeDestination.Home.routeName -> HomeDestination.Home
+            HomeDestination.HostNewGame.routeName -> HomeDestination.HostNewGame
+            HomeDestination.JoinNewGame.routeName -> {
                 val gameAd = navigationBridge.getData(route) as GameAdvertisingInfo
-                HomeScreens.JoinNewGame(gameAd)
+                HomeDestination.JoinNewGame(gameAd)
             }
-            GameScreens.GameDispatch.routeName -> GameScreens.GameDispatch
-            GameScreens.WaitingRoomHost.routeName -> GameScreens.WaitingRoomHost
-            GameScreens.WaitingRoomGuest.routeName -> GameScreens.WaitingRoomGuest
-            GameScreens.GameRoomHost.routeName -> GameScreens.GameRoomHost
-            GameScreens.GameRoomGuest.routeName -> GameScreens.GameRoomGuest
+            InGameDestination.InGameDispatch.routeName -> InGameDestination.InGameDispatch
+            InGameDestination.WaitingRoomHost.routeName -> InGameDestination.WaitingRoomHost
+            InGameDestination.WaitingRoomGuest.routeName -> InGameDestination.WaitingRoomGuest
+            InGameDestination.GameRoomHost.routeName -> InGameDestination.GameRoomHost
+            InGameDestination.GameRoomGuest.routeName -> InGameDestination.GameRoomGuest
             else -> throw IllegalArgumentException("Current route cannot be handled: $route")
         }
     }

@@ -5,7 +5,7 @@ import ch.qscqlmpa.dwitch.ingame.services.ServiceManager
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
 import ch.qscqlmpa.dwitch.ui.home.home.HomeViewModel
-import ch.qscqlmpa.dwitch.ui.navigation.HomeScreens
+import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
 import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.game.GameFacade
@@ -153,7 +153,7 @@ class HomeViewModelTest : BaseViewModelUnitTest() {
         viewModel.onStart()
 
         // Then
-        verify { mockNavigationBridge.navigate(HomeScreens.InGame) }
+        verify { mockNavigationBridge.navigate(HomeDestination.InGame) }
     }
 
     @Test

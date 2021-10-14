@@ -1,9 +1,9 @@
 package ch.qscqlmpa.dwitch.ui.navigation
 
-sealed class GameScreens(override val routeName: String) : Destination(routeName) {
-    object Loading : GameScreens("loading")
+sealed class InGameDestination(override val routeName: String) : Destination(routeName) {
+    object Loading : InGameDestination("loading")
 
-    object GameDispatch : GameScreens("gameDispatch") {
+    object InGameDispatch : InGameDestination("gameDispatch") {
         override fun navigateTo(navigate: (nav: NavigationData) -> Unit, destination: Destination) {
             when (destination) {
                 WaitingRoomGuest,
@@ -15,39 +15,39 @@ sealed class GameScreens(override val routeName: String) : Destination(routeName
         }
     }
 
-    object WaitingRoomHost : GameScreens("waitingRoomHost") {
+    object WaitingRoomHost : InGameDestination("waitingRoomHost") {
         override fun navigateTo(navigate: (nav: NavigationData) -> Unit, destination: Destination) {
             when (destination) {
-                HomeScreens.Home,
+                HomeDestination.Home,
                 GameRoomHost -> navigate(NavigationData(destination))
                 else -> super.navigateTo(navigate, destination)
             }
         }
     }
 
-    object WaitingRoomGuest : GameScreens("waitingRoomGuest") {
+    object WaitingRoomGuest : InGameDestination("waitingRoomGuest") {
         override fun navigateTo(navigate: (nav: NavigationData) -> Unit, destination: Destination) {
             when (destination) {
-                HomeScreens.Home,
+                HomeDestination.Home,
                 GameRoomGuest -> navigate(NavigationData(destination))
                 else -> super.navigateTo(navigate, destination)
             }
         }
     }
 
-    object GameRoomHost : GameScreens("gameRoomHost") {
+    object GameRoomHost : InGameDestination("gameRoomHost") {
         override fun navigateTo(navigate: (nav: NavigationData) -> Unit, destination: Destination) {
             when (destination) {
-                HomeScreens.Home -> navigate(NavigationData(destination))
+                HomeDestination.Home -> navigate(NavigationData(destination))
                 else -> super.navigateTo(navigate, destination)
             }
         }
     }
 
-    object GameRoomGuest : GameScreens("gameRoomGuest") {
+    object GameRoomGuest : InGameDestination("gameRoomGuest") {
         override fun navigateTo(navigate: (nav: NavigationData) -> Unit, destination: Destination) {
             when (destination) {
-                HomeScreens.Home -> navigate(NavigationData(destination))
+                HomeDestination.Home -> navigate(NavigationData(destination))
                 else -> super.navigateTo(navigate, destination)
             }
         }

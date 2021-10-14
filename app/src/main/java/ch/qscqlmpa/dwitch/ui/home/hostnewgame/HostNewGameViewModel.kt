@@ -6,7 +6,7 @@ import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.AppEventRepository
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
-import ch.qscqlmpa.dwitch.ui.navigation.HomeScreens
+import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
 import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
 import ch.qscqlmpa.dwitchgame.game.GameFacade
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
@@ -75,7 +75,7 @@ class HostNewGameViewModel @Inject constructor(
             )
                 .doOnTerminate { _loading.value = true }
                 .subscribe(
-                    { navigationBridge.navigate(HomeScreens.InGame) },
+                    { navigationBridge.navigate(HomeDestination.InGame) },
                     { error -> Logger.error(error) { "Error while start hosting the game" } }
                 )
         )

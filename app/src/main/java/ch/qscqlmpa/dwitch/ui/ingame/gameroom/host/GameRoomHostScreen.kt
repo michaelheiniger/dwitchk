@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.ingame.gameroom.host
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -108,7 +109,9 @@ fun GameRoomHostBody(
     onReconnectClick: () -> Unit
 ) {
     val gameRules = remember { mutableStateOf(false) }
+
     val showEndGameConfirmationDialog = remember { mutableStateOf(false) }
+    BackHandler(onBack = { showEndGameConfirmationDialog.value = true })
 
     Column(
         Modifier

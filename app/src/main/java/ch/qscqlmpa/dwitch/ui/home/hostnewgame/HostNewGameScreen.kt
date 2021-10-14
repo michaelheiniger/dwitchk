@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.home.hostnewgame
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -63,6 +64,7 @@ fun HostNewGameBody(
     onCreateGameClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
+    BackHandler(onBack = onBackClick)
     Column(
         Modifier
             .fillMaxWidth()
