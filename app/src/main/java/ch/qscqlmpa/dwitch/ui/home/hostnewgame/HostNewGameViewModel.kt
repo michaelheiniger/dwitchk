@@ -8,6 +8,7 @@ import ch.qscqlmpa.dwitch.app.AppEventRepository
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
 import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
+import ch.qscqlmpa.dwitch.ui.navigation.NavigationData
 import ch.qscqlmpa.dwitchgame.game.GameFacade
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import io.reactivex.rxjava3.core.Completable

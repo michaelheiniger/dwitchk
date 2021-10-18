@@ -37,13 +37,14 @@ class JoinNewGameScreenTest : BaseUiUnitTest() {
     private fun launchTest() {
         launchTestWithContent {
             JoinNewGameBody(
+                notification = JoinNewGameNotification.None,
                 gameName = "Dwiiitch",
                 playerName = playerName,
                 joinGameControlEnabled = joinGameControlEnabled,
                 loading = false,
                 onPlayerNameChange = {},
                 onJoinGameClick = {},
-                onBackClick = {}
+                onBackClick = {},
             )
         }
     }

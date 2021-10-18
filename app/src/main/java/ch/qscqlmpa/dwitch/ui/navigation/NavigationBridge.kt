@@ -3,15 +3,12 @@ package ch.qscqlmpa.dwitch.ui.navigation
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.navigation.NavOptions
+import androidx.navigation.Navigator
+import androidx.navigation.navOptions
 import ch.qscqlmpa.dwitch.app.AppScope
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
-
-sealed class NavigationCommand {
-    object Identity : NavigationCommand()
-    object Back : NavigationCommand()
-    data class Navigate(val destination: Destination) : NavigationCommand()
-}
 
 @AppScope
 class NavigationBridge @Inject constructor() {
@@ -21,14 +18,18 @@ class NavigationBridge @Inject constructor() {
     val command: State<NavigationCommand> = _command
 
     fun navigateBack() {
-        Logger.debug { "navigate back" }
+        Logger.debug { "Order navigation back" }
         _command.value = NavigationCommand.Back
     }
 
     fun navigate(destination: Destination) {
-        saveDataIfNeeded(destination)
-        Logger.debug { "navigate to ${destination.routeName}" }
-        _command.value = NavigationCommand.Navigate(destination)
+        navigate(NavigationData(destination))
+    }
+
+    fun navigate(navData: NavigationData) {
+        saveDataIfNeeded(navData.destination)
+        Logger.debug { "Order navigation to ${navData.destination.routeName}" }
+        _command.value = NavigationCommand.Navigate(navData)
     }
 
     fun getData(key: String): Any? {
@@ -36,15 +37,29 @@ class NavigationBridge @Inject constructor() {
     }
 
     private fun saveDataIfNeeded(destination: Destination) {
-        when (destination) {
-            is HomeDestination.JoinNewGame -> saveData(destination.routeName, destination.game)
-            else -> {
-                // Nothing to do
-            }
-        }
+        destination.dataToSave().forEach { (param, data) -> savedData[param] = data }
     }
+}
 
-    private fun saveData(key: String, data: Any) {
-        savedData[key] = data
+sealed class NavigationCommand {
+    object Identity : NavigationCommand()
+    object Back : NavigationCommand()
+    data class Navigate(val navData: NavigationData) : NavigationCommand()
+}
+
+data class NavigationData(
+    val destination: Destination,
+    val navOptions: NavOptions?,
+    val navigatorExtras: Navigator.Extras?
+) {
+    constructor(destination: Destination) : this(destination, null, null)
+    constructor(destination: Destination, navOptions: NavOptions) : this(destination, navOptions, null)
+}
+
+fun navOptionsPopUpToInclusive(routeName: String): NavOptions {
+    return navOptions {
+        popUpTo(routeName) {
+            inclusive = true
+        }
     }
 }
