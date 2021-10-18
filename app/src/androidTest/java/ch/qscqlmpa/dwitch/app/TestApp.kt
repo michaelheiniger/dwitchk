@@ -1,5 +1,7 @@
 package ch.qscqlmpa.dwitch.app
 
+import android.content.Context
+import android.net.ConnectivityManager
 import ch.qscqlmpa.dwitch.DaggerTestAppComponent
 import ch.qscqlmpa.dwitch.MainActivity
 import ch.qscqlmpa.dwitch.TestAppComponent
@@ -38,7 +40,8 @@ class TestApp : App() {
     private val testAppEventRelay = BehaviorRelay.create<TestAppEvent>()
 
     override fun createDaggerComponents() {
-        testCommunicationComponent = DaggerTestCommunicationComponent.factory().create(this)
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        testCommunicationComponent = DaggerTestCommunicationComponent.factory().create(connectivityManager)
 
         testStoreComponent = DaggerTestStoreComponent.factory().create(this)
 

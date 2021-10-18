@@ -13,6 +13,8 @@ import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.TestApp
 import ch.qscqlmpa.dwitch.e2e.DisableAnimationsRule
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectionState
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.TestDeviceConnectivityRepository
 import ch.qscqlmpa.dwitchcommunication.di.TestCommunicationComponent
 import ch.qscqlmpa.dwitchcommunication.di.TestInGameGuestCommunicationComponent
 import ch.qscqlmpa.dwitchcommunication.di.TestInGameHostCommunicationComponent
@@ -68,7 +70,8 @@ abstract class BaseE2eTest {
     private lateinit var communicationHostComponent: TestInGameHostCommunicationComponent
     private lateinit var communicationGuestComponent: TestInGameGuestCommunicationComponent
 
-    protected lateinit var networkAdapter: TestNetworkAdapter
+    private lateinit var deviceConnectivityRepository: TestDeviceConnectivityRepository
+    private lateinit var networkAdapter: TestNetworkAdapter
 
     private lateinit var store: Store
     protected lateinit var inGameStore: InGameStore
@@ -93,6 +96,7 @@ abstract class BaseE2eTest {
         storeComponent = app.testStoreComponent
         gameComponent = app.testGameComponent
         store = storeComponent.store
+        deviceConnectivityRepository = communicationComponent.deviceConnectivityRepository as TestDeviceConnectivityRepository
         networkAdapter = communicationComponent.networkListener as TestNetworkAdapter
     }
 
@@ -104,6 +108,10 @@ abstract class BaseE2eTest {
     protected fun assertCurrentScreenIsHomeSreen() {
         testRule.onNodeWithText(getString(R.string.advertised_games)).assertExists()
         testRule.onNodeWithText(getString(R.string.create_new_game)).assertExists()
+    }
+
+    protected fun setCurrentDeviceConnectionState(state: DeviceConnectionState) {
+        deviceConnectivityRepository.publishNewState(state)
     }
 
     protected fun advertiseGame(

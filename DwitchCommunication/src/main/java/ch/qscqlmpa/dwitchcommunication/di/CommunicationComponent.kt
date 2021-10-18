@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchcommunication.di
 
-import android.content.Context
+import android.net.ConnectivityManager
 import ch.qscqlmpa.dwitchcommunication.common.SchedulersModule
 import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectivityRepository
 import ch.qscqlmpa.dwitchcommunication.gameadvertising.GameAdvertiser
@@ -25,6 +25,6 @@ interface CommunicationComponent {
 
     @Component.Factory
     interface Factory {
-        fun create(@BindsInstance context: Context): CommunicationComponent
+        fun create(@BindsInstance manager: ConnectivityManager): CommunicationComponent
     }
 }

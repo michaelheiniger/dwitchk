@@ -1,6 +1,8 @@
 package ch.qscqlmpa.dwitch.app
 
 import android.app.Application
+import android.content.Context
+import android.net.ConnectivityManager
 import ch.qscqlmpa.dwitch.MainActivity
 import ch.qscqlmpa.dwitch.app.notifications.NotificationChannelFactory
 import ch.qscqlmpa.dwitch.ingame.InGameGuestUiComponent
@@ -60,7 +62,8 @@ open class App : Application() {
     }
 
     protected open fun createDaggerComponents() {
-        communicationComponent = DaggerCommunicationComponent.factory().create(this)
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        communicationComponent = DaggerCommunicationComponent.factory().create(connectivityManager)
 
         storeComponent = DaggerStoreComponent.factory().create(this)
 

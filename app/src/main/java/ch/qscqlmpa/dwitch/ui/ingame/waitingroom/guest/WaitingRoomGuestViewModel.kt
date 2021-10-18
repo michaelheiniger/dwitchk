@@ -7,9 +7,7 @@ import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
 import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
 import ch.qscqlmpa.dwitch.ui.navigation.InGameDestination
 import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
-import ch.qscqlmpa.dwitch.ui.navigation.NavigationData
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
-import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchgame.ingame.InGameGuestFacade
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationFacade
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
@@ -25,7 +23,6 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
     private val waitingRoomGuestFacade: WaitingRoomGuestFacade,
     private val guestCommunicationFacade: GuestCommunicationFacade,
     private val inGameGuestFacade: InGameGuestFacade,
-    private val gameDiscoveryFacade: GameDiscoveryFacade,
     private val navigationBridge: NavigationBridge,
     private val uiScheduler: Scheduler,
     private val idlingResource: DwitchIdlingResource

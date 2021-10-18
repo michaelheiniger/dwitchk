@@ -8,6 +8,7 @@ import ch.qscqlmpa.dwitch.PlayerGuestTest
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
 import ch.qscqlmpa.dwitch.ui.common.UiTags
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectionState
 import ch.qscqlmpa.dwitchcommunication.ingame.model.Message
 import ch.qscqlmpa.dwitchcommunication.ingame.websocket.client.test.OnStartEvent
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
@@ -41,6 +42,7 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
     }
 
     private fun goToWaitingRoom(vararg players: PlayerWr) {
+        setCurrentDeviceConnectionState(DeviceConnectionState.ConnectedToWlan("192.168.1.3"))
         advertiseGameToJoin()
 
         testRule.onNodeWithText(gameName, substring = true).performClick()
