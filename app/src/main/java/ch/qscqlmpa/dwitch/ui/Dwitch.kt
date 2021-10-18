@@ -22,10 +22,10 @@ import ch.qscqlmpa.dwitch.ui.ingame.gameroom.guest.GameRoomGuestScreen
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.host.GameRoomHostScreen
 import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.guest.WaitingRoomGuestScreen
 import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.host.WaitingRoomHostScreen
-import ch.qscqlmpa.dwitch.ui.navigation.HandleNavigation
 import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
 import ch.qscqlmpa.dwitch.ui.navigation.InGameDestination
 import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
+import ch.qscqlmpa.dwitch.ui.navigation.NavigationCommand
 import ch.qscqlmpa.dwitch.ui.theme.DwitchTheme
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
@@ -40,13 +40,12 @@ fun Dwitch(
 ) {
     DwitchTheme {
         val navController = rememberNavController()
-        HandleNavigation(navigationBridge, navController)
         Scaffold { innerPadding ->
             DwitchNavHost(
                 navigationBridge = navigationBridge,
+                navController = navController,
                 vmFactory = vmFactory,
                 getInGameVmFactory = inGameVmFactory,
-                navController = navController,
                 modifier = Modifier.padding(innerPadding)
             )
         }
@@ -63,6 +62,7 @@ private fun DwitchNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
+    handleNavigation(navigationBridge.command.value, navController)
     NavHost(
         navController = navController,
         startDestination = HomeDestination.Home.routeName,
@@ -74,8 +74,8 @@ private fun DwitchNavHost(
         composable(HomeDestination.HostNewGame.routeName) {
             HostNewGameScreen(vmFactory = vmFactory)
         }
-        composable(route = HomeDestination.JoinNewGame.routeName) { entry ->
-            val gameAd = navigationBridge.getData(entry.destination.route!!) as GameAdvertisingInfo?
+        composable(route = HomeDestination.JoinNewGame.routeName) {
+            val gameAd = navigationBridge.getData(HomeDestination.JoinNewGame.gameParamName) as GameAdvertisingInfo?
             if (gameAd != null) {
                 JoinNewGameScreen(
                     vmFactory = vmFactory,
@@ -112,6 +112,26 @@ private fun DwitchNavHost(
             composable(InGameDestination.GameRoomGuest.routeName) {
                 GameRoomGuestScreen(vmFactory = getInGameVmFactory())
             }
+        }
+    }
+}
+
+private fun handleNavigation(
+    command: NavigationCommand,
+    navController: NavHostController
+) {
+    Logger.debug { "NavCommand received: $command" }
+    when (command) {
+        NavigationCommand.Identity -> {
+            // Nothing to do
+        }
+        NavigationCommand.Back -> navController.popBackStack()
+        is NavigationCommand.Navigate -> {
+            navController.navigate(
+                route = command.navData.destination.routeName,
+                navOptions = command.navData.navOptions,
+                navigatorExtras = command.navData.navigatorExtras
+            )
         }
     }
 }

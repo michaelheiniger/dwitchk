@@ -4,6 +4,7 @@ import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
 import io.reactivex.rxjava3.core.Observable
 
+//TODO: rename class
 interface GameFacadeToRename {
     val localPlayerRole: PlayerRole
     fun observeCurrentRoom(): Observable<RoomType>

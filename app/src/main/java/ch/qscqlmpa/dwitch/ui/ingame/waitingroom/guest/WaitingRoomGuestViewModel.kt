@@ -7,6 +7,7 @@ import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
 import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
 import ch.qscqlmpa.dwitch.ui.navigation.InGameDestination
 import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
+import ch.qscqlmpa.dwitch.ui.navigation.NavigationData
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchgame.ingame.InGameGuestFacade
@@ -72,7 +73,6 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
 
     override fun onStart() {
         super.onStart()
-        gameDiscoveryFacade.startListeningForAdvertisedGames()
         localPlayerReadyState()
         observeGameEvents()
     }

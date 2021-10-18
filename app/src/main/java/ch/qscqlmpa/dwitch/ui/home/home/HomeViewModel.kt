@@ -9,6 +9,8 @@ import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
 import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
 import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
+import ch.qscqlmpa.dwitch.ui.navigation.NavigationData
+import ch.qscqlmpa.dwitch.ui.navigation.navOptionsPopUpToInclusive
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.game.GameFacade
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
@@ -74,7 +76,7 @@ class HomeViewModel @Inject constructor(
                 .subscribe(
                     {
                         Logger.info { "Game resumed successfully." }
-                        navigationBridge.navigate(HomeDestination.InGame)
+                        navigateToInGame()
                     },
                     { error -> Logger.error(error) { "Error while resuming game." } }
                 )
@@ -113,7 +115,7 @@ class HomeViewModel @Inject constructor(
                 .subscribe(
                     {
                         Logger.info { "Game resumed successfully." }
-                        navigationBridge.navigate(HomeDestination.InGame)
+                        navigateToInGame()
                     },
                     { error ->
                         _notification.value = HomeNotification.ErrorJoiningGame
@@ -130,10 +132,19 @@ class HomeViewModel @Inject constructor(
             }
             GameLifecycleState.Running -> {
                 Logger.debug { "Game is running: navigate to ${HomeDestination.InGame}" }
-                navigationBridge.navigate(HomeDestination.InGame)
+                navigateToInGame()
             }
             GameLifecycleState.Over -> serviceManager.stop()
         }
+    }
+
+    private fun navigateToInGame() {
+        navigationBridge.navigate(
+            NavigationData(
+                HomeDestination.InGame,
+                navOptionsPopUpToInclusive(HomeDestination.Home.routeName)
+            )
+        )
     }
 
     private fun observeAdvertisedGames() {
