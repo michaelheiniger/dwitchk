@@ -1,17 +1,15 @@
 package ch.qscqlmpa.dwitchcommunication.di
 
-import android.content.Context
-import android.net.ConnectivityManager
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectivityRepository
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.ProdDeviceConnectivityRepository
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 
 @Suppress("unused")
 @Module
-object CommunicationModule {
+abstract class CommunicationModule {
 
     @CommunicationScope
-    @Provides
-    fun provideConnectivityManager(context: Context): ConnectivityManager {
-        return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    }
+    @Binds
+    internal abstract fun provideDeviceCommunicationRepository(repository: ProdDeviceConnectivityRepository): DeviceConnectivityRepository
 }

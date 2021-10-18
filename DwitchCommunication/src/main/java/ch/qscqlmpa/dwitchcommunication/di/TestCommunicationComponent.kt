@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitchcommunication.di
 
-import android.content.Context
+import android.net.ConnectivityManager
 import ch.qscqlmpa.dwitchcommunication.common.SchedulersModule
 import ch.qscqlmpa.dwitchcommunication.gamediscovery.lan.network.NetworkAdapter
 import dagger.BindsInstance
@@ -9,7 +9,7 @@ import dagger.Component
 @CommunicationScope
 @Component(
     modules = [
-        CommunicationModule::class,
+        TestCommunicationModule::class,
         GameAdvertisingModule::class,
         TestGameDiscoveryModule::class,
         UtilsModule::class,
@@ -21,6 +21,6 @@ interface TestCommunicationComponent : CommunicationComponent {
 
     @Component.Factory
     interface Factory {
-        fun create(@BindsInstance context: Context): TestCommunicationComponent
+        fun create(@BindsInstance manager: ConnectivityManager): TestCommunicationComponent
     }
 }
