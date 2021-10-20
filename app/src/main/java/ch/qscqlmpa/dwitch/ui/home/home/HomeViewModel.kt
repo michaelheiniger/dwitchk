@@ -7,10 +7,7 @@ import ch.qscqlmpa.dwitch.app.AppEventRepository
 import ch.qscqlmpa.dwitch.ingame.services.ServiceManager
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
-import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
-import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
-import ch.qscqlmpa.dwitch.ui.navigation.NavigationData
-import ch.qscqlmpa.dwitch.ui.navigation.navOptionsPopUpToInclusive
+import ch.qscqlmpa.dwitch.ui.navigation.*
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.game.GameFacade
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
@@ -29,7 +26,7 @@ class HomeViewModel @Inject constructor(
     private val gameDiscoveryFacade: GameDiscoveryFacade,
     private val gameLifecycleFacade: GameLifecycleFacade,
     private val gameFacade: GameFacade,
-    private val navigationBridge: NavigationBridge,
+    private val screenNavigator: ScreenNavigator,
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
@@ -48,12 +45,12 @@ class HomeViewModel @Inject constructor(
     }
 
     fun createNewGame() {
-        navigationBridge.navigate(HomeDestination.HostNewGame)
+        screenNavigator.navigate(HomeDestination.HostNewGame)
     }
 
     fun joinGame(game: GameAdvertisingInfo) {
         if (game.isNew) {
-            navigationBridge.navigate(HomeDestination.JoinNewGame(game))
+            screenNavigator.navigate(HomeDestination.JoinNewGame(game))
         } else {
             joinExistingGame(game)
         }
@@ -76,7 +73,10 @@ class HomeViewModel @Inject constructor(
                 .subscribe(
                     {
                         Logger.info { "Game resumed successfully." }
-                        navigateToInGame()
+                        screenNavigator.navigate(
+                            destination = InGameHostDestination.WaitingRoom,
+                            navOptions = navOptionsPopUpToInclusive(HomeDestination.Home)
+                        )
                     },
                     { error -> Logger.error(error) { "Error while resuming game." } }
                 )
@@ -99,7 +99,7 @@ class HomeViewModel @Inject constructor(
     fun load(gameAd: GameAdvertisingInfo) {
         Logger.debug { "Load game ad: $gameAd" }
         if (gameAd.isNew) {
-            navigationBridge.navigate(HomeDestination.JoinNewGame(gameAd))
+            screenNavigator.navigate(HomeDestination.JoinNewGame(gameAd))
         } else {
             joinExistingGame(gameAd)
         }
@@ -115,7 +115,10 @@ class HomeViewModel @Inject constructor(
                 .subscribe(
                     {
                         Logger.info { "Game resumed successfully." }
-                        navigateToInGame()
+                        screenNavigator.navigate(
+                            destination = InGameGuestDestination.WaitingRoom,
+                            navOptions = navOptionsPopUpToInclusive(HomeDestination.Home)
+                        )
                     },
                     { error ->
                         _notification.value = HomeNotification.ErrorJoiningGame
@@ -130,20 +133,19 @@ class HomeViewModel @Inject constructor(
             GameLifecycleState.NotStarted -> {
                 // Nothing to do
             }
-            GameLifecycleState.Running -> {
-                Logger.debug { "Game is running: navigate to ${HomeDestination.InGame}" }
-                navigateToInGame()
-            }
+            GameLifecycleState.RunningWaitingRoomGuest -> navigateToInGame(InGameGuestDestination.WaitingRoom)
+            GameLifecycleState.RunningWaitingRoomHost -> navigateToInGame(InGameHostDestination.WaitingRoom)
+            GameLifecycleState.RunningGameRoomGuest -> navigateToInGame(InGameGuestDestination.GameRoom)
+            GameLifecycleState.RunningGameRoomHost -> navigateToInGame(InGameHostDestination.GameRoom)
             GameLifecycleState.Over -> serviceManager.stop()
         }
     }
 
-    private fun navigateToInGame() {
-        navigationBridge.navigate(
-            NavigationData(
-                HomeDestination.InGame,
-                navOptionsPopUpToInclusive(HomeDestination.Home.routeName)
-            )
+    private fun navigateToInGame(destination: Destination) {
+        Logger.debug { "Game is running: navigate to $destination" }
+        screenNavigator.navigate(
+            destination = destination,
+            navOptions = navOptionsPopUpToInclusive(HomeDestination.Home)
         )
     }
 

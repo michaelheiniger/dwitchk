@@ -23,14 +23,12 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.*
 import ch.qscqlmpa.dwitch.ui.qrcodescanner.QrCodeScanResult
 import ch.qscqlmpa.dwitch.ui.qrcodescanner.ScanQrCodeResultContract
-import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
@@ -76,25 +74,22 @@ fun HomeScreenPreview() {
 }
 
 @Composable
-fun HomeScreen(
-    vmFactory: ViewModelFactory
-) {
-    val viewModel = viewModel<HomeViewModel>(factory = vmFactory)
-    DisposableEffect(viewModel) {
-        viewModel.onStart()
-        onDispose { viewModel.onStop() }
+fun HomeScreen(homeViewModel: HomeViewModel) {
+    DisposableEffect(homeViewModel) {
+        homeViewModel.onStart()
+        onDispose { homeViewModel.onStop() }
     }
 
     HomeBody(
-        notification = viewModel.notification.value,
-        advertisedGames = viewModel.advertisedGames.value,
-        resumableGames = viewModel.resumableGames.value,
-        onCreateNewGameClick = viewModel::createNewGame,
-        onJoinGameClick = viewModel::joinGame,
-        onResumableGameClick = { game -> viewModel.resumeGame(game) },
-        onQrCodeScan = { gameAd -> viewModel.load(gameAd) }
+        notification = homeViewModel.notification.value,
+        advertisedGames = homeViewModel.advertisedGames.value,
+        resumableGames = homeViewModel.resumableGames.value,
+        onCreateNewGameClick = homeViewModel::createNewGame,
+        onJoinGameClick = homeViewModel::joinGame,
+        onResumableGameClick = { game -> homeViewModel.resumeGame(game) },
+        onQrCodeScan = { gameAd -> homeViewModel.load(gameAd) }
     )
-    if (viewModel.loading.value) LoadingDialog()
+    if (homeViewModel.loading.value) LoadingDialog()
 }
 
 @Composable

@@ -4,8 +4,8 @@ plugins {
     kotlin("kapt")
     id("kotlin-parcelize")
     id("kotlin-android")
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
+//    id("com.google.gms.google-services")
+//    id("com.google.firebase.crashlytics")
 }
 
 val composeVersion = "1.0.3"
@@ -82,17 +82,22 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlinVersion}")
 
     // Android
-    implementation("androidx.appcompat:appcompat:1.3.1")
+    implementation("androidx.appcompat:appcompat:1.4.0-beta01")
     implementation("com.google.android.material:material:1.4.0")
+    implementation("androidx.core:core-ktx:1.6.0")
 
     // ####### Jetpack Compose #######
     implementation("androidx.compose.ui:ui:$composeVersion")
-    implementation("androidx.compose.ui:ui-tooling:$composeVersion") // Required despite what's dependency-analysis (README) is saying
+
+    // Required despite what's dependency-analysis (README) is saying
+    implementation("androidx.compose.ui:ui-tooling:$composeVersion")
+
     implementation("androidx.activity:activity-compose:$composeVersion")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
-    implementation("androidx.navigation:navigation-compose:2.4.0-alpha06")
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha10")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0-rc01")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.1")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
     androidTestImplementation("androidx.compose.ui:ui-test:$composeVersion")
@@ -142,9 +147,9 @@ dependencies {
     // Robolectric (for unit tests that log stuff)
     testImplementation("org.robolectric:robolectric:4.5.1") // v4.6.1 produces weird error
 
-    implementation(platform("com.google.firebase:firebase-bom:28.4.1"))
-    implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation("com.google.firebase:firebase-crashlytics-ktx")
+//    implementation(platform("com.google.firebase:firebase-bom:28.4.1"))
+//    implementation("com.google.firebase:firebase-analytics-ktx")
+//    implementation("com.google.firebase:firebase-crashlytics-ktx")
 
     // QR code
     val cameraxVersion = "1.0.0-beta07"

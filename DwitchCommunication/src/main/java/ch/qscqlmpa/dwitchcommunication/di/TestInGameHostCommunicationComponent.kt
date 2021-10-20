@@ -1,7 +1,9 @@
 package ch.qscqlmpa.dwitchcommunication.di
 
+import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommunication.ingame.InGameSerializerFactory
 import ch.qscqlmpa.dwitchcommunication.ingame.websocket.server.test.ServerTestStub
+import dagger.BindsInstance
 import dagger.Component
 
 @InGameCommunicationScope
@@ -18,6 +20,6 @@ interface TestInGameHostCommunicationComponent : InGameHostCommunicationComponen
 
     @Component.Factory
     interface Factory {
-        fun create(module: CommunicationHostModule): TestInGameHostCommunicationComponent
+        fun create(@BindsInstance idlingResource: DwitchIdlingResource): TestInGameHostCommunicationComponent
     }
 }

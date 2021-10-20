@@ -28,14 +28,26 @@ sealed class HomeDestination(override val routeName: String) : Destination(route
         }
     }
 
-    object InGame : HomeDestination("inGame")
+    object InGameGuest : HomeDestination("inGameGuest")
+    object InGameHost : HomeDestination("inGameHost")
 }
 
-sealed class InGameDestination(override val routeName: String) : Destination(routeName) {
-    object Loading : InGameDestination("loading")
-    object InGameDispatch : InGameDestination("gameDispatch")
-    object WaitingRoomHost : InGameDestination("waitingRoomHost")
-    object WaitingRoomGuest : InGameDestination("waitingRoomGuest")
-    object GameRoomHost : InGameDestination("gameRoomHost")
-    object GameRoomGuest : InGameDestination("gameRoomGuest")
+sealed class InGameGuestDestination(name: String) : Destination("${prefix}$name") {
+    companion object {
+        private const val prefix = "inGameGuest"
+    }
+
+    object Home : InGameGuestDestination("Loading")
+    object WaitingRoom : InGameGuestDestination("WaitingRoom")
+    object GameRoom : InGameGuestDestination("GameRoom")
+}
+
+sealed class InGameHostDestination(name: String) : Destination("${prefix}$name") {
+    companion object {
+        private const val prefix = "inGameHost"
+    }
+
+    object Home : InGameHostDestination("Loading")
+    object WaitingRoom : InGameHostDestination("WaitingRoom")
+    object GameRoom : InGameHostDestination("GameRoom")
 }

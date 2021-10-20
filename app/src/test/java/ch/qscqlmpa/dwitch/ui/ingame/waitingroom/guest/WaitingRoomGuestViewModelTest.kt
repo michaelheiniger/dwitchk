@@ -3,12 +3,9 @@ package ch.qscqlmpa.dwitch.ui.ingame.waitingroom.guest
 import ch.qscqlmpa.dwitch.app.StubIdlingResource
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
-import ch.qscqlmpa.dwitch.ui.navigation.Destination
 import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination.Home
-import ch.qscqlmpa.dwitch.ui.navigation.InGameDestination
-import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
-import ch.qscqlmpa.dwitch.ui.navigation.NavigationData
-import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
+import ch.qscqlmpa.dwitch.ui.navigation.InGameGuestDestination
+import ch.qscqlmpa.dwitch.ui.navigation.ScreenNavigator
 import ch.qscqlmpa.dwitchgame.ingame.InGameGuestFacade
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationFacade
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
@@ -28,8 +25,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
     private val mockWaitingRoomGuestFacade = mockk<WaitingRoomGuestFacade>(relaxed = true)
     private val communicationFacade = mockk<GuestCommunicationFacade>(relaxed = true)
     private val inGameGuestFacade = mockk<InGameGuestFacade>(relaxed = true)
-    private val gameDiscoveryFacade = mockk<GameDiscoveryFacade>(relaxed = true)
-    private val mockNavigationBridge = mockk<NavigationBridge>(relaxed = true)
+    private val mockNavigationBridge = mockk<ScreenNavigator>(relaxed = true)
 
     private lateinit var viewModel: WaitingRoomGuestViewModel
 
@@ -124,14 +120,13 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         // Given
         createViewModel()
         viewModel.onStart()
-        verify(exactly = 0) { mockNavigationBridge.navigate(any<Destination>()) }
-        verify(exactly = 0) { mockNavigationBridge.navigate(any<NavigationData>()) }
+        verify(exactly = 0) { mockNavigationBridge.navigate(any(), any()) }
 
         // When
         viewModel.leaveGame()
 
         // Then
-        verify { mockNavigationBridge.navigate(Home) }
+        verify { mockNavigationBridge.navigate(Home, any()) }
         verify { inGameGuestFacade.leaveGame() }
     }
 
@@ -166,15 +161,14 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         // Given
         createViewModel()
         viewModel.onStart()
-        verify(exactly = 0) { mockNavigationBridge.navigate(any<Destination>()) }
-        verify(exactly = 0) { mockNavigationBridge.navigate(any<NavigationData>()) }
+        verify(exactly = 0) { mockNavigationBridge.navigate(any()) }
 
         // When
         gameEventSubject.onNext(GuestGameEvent.GameCanceled)
         viewModel.acknowledgeGameCanceled()
 
         // Then
-        verify { mockNavigationBridge.navigate(Home) }
+        verify { mockNavigationBridge.navigate(Home, any()) }
     }
 
     @Test
@@ -188,7 +182,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         viewModel.acknowledgeKickOffGame()
 
         // Then
-        verify { mockNavigationBridge.navigate(Home) }
+        verify { mockNavigationBridge.navigate(Home, any()) }
     }
 
     @Test
@@ -201,7 +195,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         gameEventSubject.onNext(GuestGameEvent.GameLaunched)
 
         // Then
-        verify { mockNavigationBridge.navigate(InGameDestination.GameRoomGuest) }
+        verify { mockNavigationBridge.navigate(InGameGuestDestination.GameRoom, any()) }
     }
 
     private fun createViewModel() {

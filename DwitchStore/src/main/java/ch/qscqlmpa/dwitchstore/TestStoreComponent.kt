@@ -22,4 +22,8 @@ abstract class TestStoreComponent : StoreComponent {
     interface Factory {
         fun create(@BindsInstance context: Context): TestStoreComponent
     }
+
+    fun clearStore() {
+        db.clearAllTables()
+    }
 }

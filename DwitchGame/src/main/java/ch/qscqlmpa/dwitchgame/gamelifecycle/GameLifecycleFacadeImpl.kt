@@ -27,8 +27,8 @@ internal class GameLifecycleFacadeImpl @Inject constructor(
 
     override fun cleanUpGameResources(): Completable {
         return Completable.fromAction {
-            store.deleteGamesMarkedForDeletion()
             gameStateRepository.reset()
+            store.deleteGamesMarkedForDeletion()
         }
             .subscribeOn(schedulerFactory.io())
     }

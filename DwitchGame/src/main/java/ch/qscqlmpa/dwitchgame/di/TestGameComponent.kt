@@ -1,19 +1,20 @@
 package ch.qscqlmpa.dwitchgame.di
 
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
-import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectivityRepository
-import ch.qscqlmpa.dwitchcommunication.gamediscovery.GameDiscovery
+import ch.qscqlmpa.dwitchcommunication.di.CommunicationComponent
 import ch.qscqlmpa.dwitchgame.di.modules.*
 import ch.qscqlmpa.dwitchgame.ingame.di.TestInGameGuestComponent
 import ch.qscqlmpa.dwitchgame.ingame.di.TestInGameHostComponent
-import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameGuestModule
-import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameHostModule
-import ch.qscqlmpa.dwitchstore.store.Store
+import ch.qscqlmpa.dwitchstore.StoreComponent
 import dagger.BindsInstance
 import dagger.Component
 
 @GameScope
 @Component(
+    dependencies = [
+        CommunicationComponent::class,
+        StoreComponent::class
+    ],
     modules = [
         UtilsModule::class,
         GameFacadeModule::class,
@@ -24,16 +25,15 @@ import dagger.Component
 )
 interface TestGameComponent : GameComponent {
 
-    fun addTestInGameHostComponent(module: InGameHostModule): TestInGameHostComponent
-    fun addTestInGameGuestComponent(module: InGameGuestModule): TestInGameGuestComponent
+    fun getTestInGameHostComponentFactory(): TestInGameHostComponent.Factory
+    fun getTestInGameGuestComponentFactory(): TestInGameGuestComponent.Factory
 
     @Component.Factory
     interface Factory {
         fun create(
             @BindsInstance idlingResource: DwitchIdlingResource,
-            @BindsInstance store: Store,
-            @BindsInstance gameDiscovery: GameDiscovery,
-            @BindsInstance deviceConnectivityRepository: DeviceConnectivityRepository
+            communicationComponent: CommunicationComponent,
+            storeComponent: StoreComponent
         ): TestGameComponent
     }
 }

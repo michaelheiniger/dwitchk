@@ -5,8 +5,9 @@ import ch.qscqlmpa.dwitch.ingame.services.ServiceManager
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
 import ch.qscqlmpa.dwitch.ui.home.home.HomeViewModel
-import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
-import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
+import ch.qscqlmpa.dwitch.ui.navigation.InGameGuestDestination
+import ch.qscqlmpa.dwitch.ui.navigation.InGameHostDestination
+import ch.qscqlmpa.dwitch.ui.navigation.ScreenNavigator
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.game.GameFacade
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
@@ -33,7 +34,7 @@ class HomeViewModelTest : BaseViewModelUnitTest() {
     private val mockGameDiscoveryFacade = mockk<GameDiscoveryFacade>(relaxed = true)
     private val mockGameLifecycleFacade = mockk<GameLifecycleFacade>(relaxed = true)
     private val mockGameFacade = mockk<GameFacade>(relaxed = true)
-    private val mockNavigationBridge = mockk<NavigationBridge>(relaxed = true)
+    private val mockNavigationBridge = mockk<ScreenNavigator>(relaxed = true)
 
     private lateinit var viewModel: HomeViewModel
 
@@ -145,15 +146,51 @@ class HomeViewModelTest : BaseViewModelUnitTest() {
     }
 
     @Test
-    fun `should navigate to InGame destination when a game is running`() {
+    fun `should navigate to WaitingRoom as Guest when a game is running`() {
         // Given
-        every { mockGameLifecycleFacade.currentLifecycleState } returns GameLifecycleState.Running
+        every { mockGameLifecycleFacade.currentLifecycleState } returns GameLifecycleState.RunningWaitingRoomGuest
 
         // When
         viewModel.onStart()
 
         // Then
-        verify { mockNavigationBridge.navigate(HomeDestination.InGame) }
+        verify { mockNavigationBridge.navigate(InGameGuestDestination.WaitingRoom, any()) }
+    }
+
+    @Test
+    fun `should navigate to WaitingRoom as Host when a game is running`() {
+        // Given
+        every { mockGameLifecycleFacade.currentLifecycleState } returns GameLifecycleState.RunningWaitingRoomHost
+
+        // When
+        viewModel.onStart()
+
+        // Then
+        verify { mockNavigationBridge.navigate(InGameHostDestination.WaitingRoom, any()) }
+    }
+
+    @Test
+    fun `should navigate to GameRoom as Guest when a game is running`() {
+        // Given
+        every { mockGameLifecycleFacade.currentLifecycleState } returns GameLifecycleState.RunningGameRoomGuest
+
+        // When
+        viewModel.onStart()
+
+        // Then
+        verify { mockNavigationBridge.navigate(InGameGuestDestination.GameRoom, any()) }
+    }
+
+    @Test
+    fun `should navigate to GameRoom as Host when a game is running`() {
+        // Given
+        every { mockGameLifecycleFacade.currentLifecycleState } returns GameLifecycleState.RunningGameRoomHost
+
+        // When
+        viewModel.onStart()
+
+        // Then
+        verify { mockNavigationBridge.navigate(InGameHostDestination.GameRoom, any()) }
     }
 
     @Test

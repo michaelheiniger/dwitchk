@@ -13,11 +13,13 @@ import ch.qscqlmpa.dwitchstore.model.Player
 import ch.qscqlmpa.dwitchstore.util.SerializerFactory
 import com.jakewharton.rxrelay3.BehaviorRelay
 import io.reactivex.rxjava3.core.Observable
+import javax.inject.Inject
+import javax.inject.Named
 
-internal class InGameStoreImpl constructor(
+internal class InGameStoreImpl @Inject constructor(
     database: AppRoomDatabase,
-    private val gameLocalId: Long,
-    private val localPlayerLocalId: Long,
+    @Named(InstanceQualifiers.GAME_LOCAL_ID) private val gameLocalId: Long,
+    @Named(InstanceQualifiers.LOCAL_PLAYER_LOCAL_ID) private val localPlayerLocalId: Long,
     private val serializerFactory: SerializerFactory
 ) : InGameStore {
 

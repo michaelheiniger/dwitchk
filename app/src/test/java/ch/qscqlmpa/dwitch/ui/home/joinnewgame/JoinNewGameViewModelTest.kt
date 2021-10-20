@@ -3,8 +3,8 @@ package ch.qscqlmpa.dwitch.ui.home.joinnewgame
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.app.StubIdlingResource
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
-import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
+import ch.qscqlmpa.dwitch.ui.navigation.InGameGuestDestination
+import ch.qscqlmpa.dwitch.ui.navigation.ScreenNavigator
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.game.GameFacade
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
@@ -23,7 +23,7 @@ import java.util.*
 class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
 
     private val mockGameFacade = mockk<GameFacade>(relaxed = true)
-    private val mockNavigationBridge = mockk<NavigationBridge>(relaxed = true)
+    private val mockScreenNavigator = mockk<ScreenNavigator>(relaxed = true)
 
     private lateinit var viewModel: JoinNewGameViewModel
 
@@ -34,7 +34,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
     fun setup() {
         viewModel = JoinNewGameViewModel(
             mockGameFacade,
-            mockNavigationBridge,
+            mockScreenNavigator,
             Schedulers.trampoline(),
             StubIdlingResource()
         )
@@ -75,7 +75,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
     }
 
     @Test
-    fun `Navigate to InGame when game is successfully joined`() {
+    fun `Navigate to WaitingRoom when game is successfully joined`() {
         // Given
         val playerName = "Arthur"
         viewModel.loadGame(advertisedGame)
@@ -86,7 +86,7 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
         viewModel.joinGame()
 
         // Then
-        verify { mockNavigationBridge.navigate(HomeDestination.InGame) }
+        verify { mockScreenNavigator.navigate(InGameGuestDestination.WaitingRoom, any()) }
         verify { mockGameFacade.joinGame(advertisedGame, playerName) }
     }
 
@@ -108,6 +108,6 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
         }
 
         // Then
-        verify(exactly = 0) { mockNavigationBridge.navigate(any()) }
+        verify(exactly = 0) { mockScreenNavigator.navigate(any()) }
     }
 }

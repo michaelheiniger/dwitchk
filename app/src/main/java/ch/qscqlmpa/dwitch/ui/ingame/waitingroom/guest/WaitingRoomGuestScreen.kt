@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.ui.ingame.waitingroom.guest
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,7 +16,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.*
@@ -25,7 +23,6 @@ import ch.qscqlmpa.dwitch.ui.ingame.connection.guest.ConnectionGuestViewModel
 import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.WaitingRoomPlayersScreen
 import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.WaitingRoomViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
-import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.PlayerWrUi
 
@@ -56,25 +53,25 @@ private fun WaitingRoomGuestScreenPlayerConnectedPreview() {
 }
 
 @Composable
-fun WaitingRoomGuestScreen(vmFactory: ViewModelFactory) {
-    val viewModel = viewModel<WaitingRoomViewModel>(factory = vmFactory)
-    val guestViewModel = viewModel<WaitingRoomGuestViewModel>(factory = vmFactory)
-    val connectionViewModel = viewModel<ConnectionGuestViewModel>(factory = vmFactory)
-
-    DisposableEffect(viewModel, guestViewModel, connectionViewModel) {
-        viewModel.onStart()
+fun WaitingRoomGuestScreen(
+    waitingRoomViewModel: WaitingRoomViewModel,
+    guestViewModel: WaitingRoomGuestViewModel,
+    connectionViewModel: ConnectionGuestViewModel
+) {
+    DisposableEffect(waitingRoomViewModel, guestViewModel, connectionViewModel) {
+        waitingRoomViewModel.onStart()
         guestViewModel.onStart()
         connectionViewModel.onStart()
         onDispose {
-            viewModel.onStop()
+            waitingRoomViewModel.onStop()
             guestViewModel.onStop()
             connectionViewModel.onStop()
         }
     }
 
     WaitingRoomGuestBody(
-        toolbarTitle = viewModel.toolbarTitle.value,
-        players = viewModel.players.value,
+        toolbarTitle = waitingRoomViewModel.toolbarTitle.value,
+        players = waitingRoomViewModel.players.value,
         ready = guestViewModel.ready.value,
         notification = guestViewModel.notifications.value,
         connectionState = connectionViewModel.connectionState.value,
@@ -100,8 +97,6 @@ fun WaitingRoomGuestBody(
     onKickOffGameAcknowledge: () -> Unit
 ) {
     val showLeaveGameConfirmationDialog = remember { mutableStateOf(false) }
-    BackHandler(onBack = { showLeaveGameConfirmationDialog.value = true })
-
     Column(
         Modifier
             .fillMaxWidth()

@@ -6,8 +6,8 @@ import ch.qscqlmpa.dwitch.app.AppEventRepository
 import ch.qscqlmpa.dwitch.app.ServiceIdentifier
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.home.hostnewgame.HostNewGameViewModel
-import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
-import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
+import ch.qscqlmpa.dwitch.ui.navigation.InGameHostDestination
+import ch.qscqlmpa.dwitch.ui.navigation.ScreenNavigator
 import ch.qscqlmpa.dwitchgame.game.GameFacade
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -26,7 +26,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
 
     private val mockAppEventRepository = mockk<AppEventRepository>(relaxed = true)
     private val mockGameFacade = mockk<GameFacade>(relaxed = true)
-    private val mockNavigationBridge = mockk<NavigationBridge>(relaxed = true)
+    private val mockScreenNavigator = mockk<ScreenNavigator>(relaxed = true)
 
     private lateinit var viewModel: HostNewGameViewModel
 
@@ -36,7 +36,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
             mockAppEventRepository,
             mockGameFacade,
             mockk(relaxed = true),
-            mockNavigationBridge,
+            mockScreenNavigator,
             Schedulers.trampoline()
         )
         every { mockGameFacade.hostGame(any(), any()) } returns Completable.complete()
@@ -91,7 +91,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
         viewModel.hostGame()
 
         // Then
-        verify { mockNavigationBridge.navigate(HomeDestination.InGame) }
+        verify { mockScreenNavigator.navigate(InGameHostDestination.WaitingRoom, any()) }
         verify { mockGameFacade.hostGame(gameName, playerName) }
         confirmVerified(mockGameFacade)
     }
@@ -113,7 +113,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
         }
 
         // Then
-        verify(exactly = 0) { mockNavigationBridge.navigate(any()) }
+        verify(exactly = 0) { mockScreenNavigator.navigate(any(), any()) }
         confirmVerified(mockGameFacade)
     }
 
@@ -134,7 +134,7 @@ class HostNewGameViewModelTest : BaseViewModelUnitTest() {
         }
 
         // Then
-        verify(exactly = 0) { mockNavigationBridge.navigate(any()) }
+        verify(exactly = 0) { mockScreenNavigator.navigate(any(), any()) }
         confirmVerified(mockGameFacade)
     }
 }

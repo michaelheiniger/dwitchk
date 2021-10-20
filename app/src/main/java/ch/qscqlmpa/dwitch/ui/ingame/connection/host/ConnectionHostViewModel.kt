@@ -33,11 +33,13 @@ class ConnectionHostViewModel @Inject constructor(
         this.disposableManager.add(
             communicationFacade.currentCommunicationState()
                 .observeOn(uiScheduler)
-                .doOnError { error -> Logger.error(error) { "Error while observing communication state." } }
-                .subscribe { state ->
-                    _connectionStatus.value = state
-                    idlingResource.decrement("Communication state updated ($state)")
-                }
+                .subscribe(
+                    { state ->
+                        _connectionStatus.value = state
+                        idlingResource.decrement("Communication state updated ($state)")
+                    },
+                    { error -> Logger.error(error) { "Error while observing communication state." } }
+                )
         )
     }
 }

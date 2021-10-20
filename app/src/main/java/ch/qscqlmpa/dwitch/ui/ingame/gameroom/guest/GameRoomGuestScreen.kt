@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.ui.ingame.gameroom.guest
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -14,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.*
@@ -27,7 +25,6 @@ import ch.qscqlmpa.dwitch.ui.ingame.gameroom.cardexchange.CardExchangeOnGoing
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.cardexchange.CardExchangeScreen
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.endofround.EndOfRoundScreen
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.playerdashboard.GameRoomViewModel
-import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
 
@@ -60,11 +57,11 @@ fun GameRoomGuestScreenPreview() {
 @ExperimentalFoundationApi
 @ExperimentalAnimationApi
 @Composable
-fun GameRoomGuestScreen(vmFactory: ViewModelFactory) {
-    val playerViewModel = viewModel<GameRoomViewModel>(factory = vmFactory)
-    val guestViewModel = viewModel<GameRoomGuestViewModel>(factory = vmFactory)
-    val connectionViewModel = viewModel<ConnectionGuestViewModel>(factory = vmFactory)
-
+fun GameRoomGuestScreen(
+    playerViewModel: GameRoomViewModel,
+    guestViewModel: GameRoomGuestViewModel,
+    connectionViewModel: ConnectionGuestViewModel
+) {
     DisposableEffect(playerViewModel, guestViewModel, connectionViewModel) {
         playerViewModel.onStart()
         guestViewModel.onStart()
@@ -111,7 +108,6 @@ fun GameRoomGuestBody(
 ) {
     val gameRules = remember { mutableStateOf(false) }
     val showLeaveGameConfirmationDialog = remember { mutableStateOf(false) }
-    BackHandler(onBack = { showLeaveGameConfirmationDialog.value = true })
 
     Column(
         Modifier

@@ -19,7 +19,7 @@ import java.util.*
 
 abstract class BaseGuestTest : BaseOnGoingGameTest() {
 
-    protected val gameCommonId = GameCommonId(UUID.randomUUID())
+    private val gameCommonId = GameCommonId(UUID.randomUUID())
 
     protected fun goToWaitingRoomWithHostAndLocalGuest(localGuestConnected: Boolean = true) {
         goToWaitingRoom(
@@ -50,13 +50,14 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
         testRule.onNodeWithText(getString(R.string.join_game)).performClick()
 
         testRule.waitForIdle() // Can't hook in-game dependencies before components are created
-        hookOngoingGameDependenciesForGuest()
+        hookInGameDependenciesForGuest()
 
         connectClientToServer(OnStartEvent.Success)
         waitForNextMessageSentByLocalGuest() as Message.JoinGameMessage
 
         hostSendsJoinGameAck()
         hostSendsPlayersState(*players)
+        incrementGameIdlingResource("Navigate to in-game") // See [WaitingRoomGuestViewModel] init() for decrement.
 
         // Assert that the guest is indeed in the WaitingRoom
         testRule.assertTextIsDisplayedOnce(getString(R.string.players_in_waitingroom))
@@ -69,26 +70,10 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
         clientTestStub.connectClientToServer(onStartEvent)
     }
 
-    protected fun advertiseGameToJoin() {
-        advertiseGame(
-            isNew = true,
-            gameName = gameName,
-            gameCommonId = gameCommonId,
-            gamePort = 8890,
-            gameIpAddress = "192.168.1.1",
-            senderPort = 2454
-        )
-    }
-
     protected fun waitForNextMessageSentByLocalGuest(): Message {
         Logger.debug { "Waiting for next message sent by local guest..." }
         val messageSerialized = clientTestStub.blockUntilMessageSentIsAvailable()
         return commSerializerFactory.unserializeMessage(messageSerialized)
-    }
-
-    protected fun hostSendsJoinGameAck() {
-        val message = Message.JoinGameAckMessage(gameCommonId, PlayerGuestTest.LocalGuest.info.dwitchId)
-        clientTestStub.serverSendsMessageToClient(message)
     }
 
     protected fun hostSendsRejoinGameAck_waitingRoom() {
@@ -99,6 +84,22 @@ abstract class BaseGuestTest : BaseOnGoingGameTest() {
     protected fun localPlayerToggleReadyCheckbox() {
         testRule.onNodeWithTag(UiTags.localPlayerReadyControl).performClick()
         waitForNextMessageSentByLocalGuest() as Message.PlayerReadyMessage
+    }
+
+    private fun advertiseGameToJoin() {
+        advertiseGame(
+            isNew = true,
+            gameName = gameName,
+            gameCommonId = gameCommonId,
+            gamePort = 8890,
+            gameIpAddress = "192.168.1.1",
+            senderPort = 2454
+        )
+    }
+
+    private fun hostSendsJoinGameAck() {
+        val message = Message.JoinGameAckMessage(gameCommonId, PlayerGuestTest.LocalGuest.info.dwitchId)
+        clientTestStub.serverSendsMessageToClient(message)
     }
 
     private fun hostSendsPlayersState(vararg players: PlayerWr) {
