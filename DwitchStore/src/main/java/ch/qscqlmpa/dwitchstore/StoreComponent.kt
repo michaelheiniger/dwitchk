@@ -2,7 +2,6 @@ package ch.qscqlmpa.dwitchstore
 
 import android.content.Context
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreComponent
-import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreModule
 import ch.qscqlmpa.dwitchstore.store.RoomModule
 import ch.qscqlmpa.dwitchstore.store.Store
 import ch.qscqlmpa.dwitchstore.store.StoreModule
@@ -20,7 +19,7 @@ interface StoreComponent {
 
     val store: Store
 
-    fun addInGameStoreComponent(module: InGameStoreModule): InGameStoreComponent
+    fun getInGameStoreComponentFactory(): InGameStoreComponent.Factory
 
     @Component.Factory
     interface Factory {

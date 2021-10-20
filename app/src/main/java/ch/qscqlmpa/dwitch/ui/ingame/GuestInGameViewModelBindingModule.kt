@@ -2,7 +2,6 @@ package ch.qscqlmpa.dwitch.ui.ingame
 
 import androidx.lifecycle.ViewModel
 import ch.qscqlmpa.dwitch.ui.ingame.connection.guest.ConnectionGuestViewModel
-import ch.qscqlmpa.dwitch.ui.ingame.gameroom.GameViewModel
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.guest.GameRoomGuestViewModel
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.playerdashboard.GameRoomViewModel
 import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.WaitingRoomViewModel
@@ -16,7 +15,7 @@ import javax.inject.Named
 
 @Suppress("unused")
 @Module
-abstract class GuestGameViewModelBindingModule {
+abstract class GuestInGameViewModelBindingModule {
 
     @Named("game")
     @Binds
@@ -31,11 +30,6 @@ abstract class GuestGameViewModelBindingModule {
     @IntoMap
     @ViewModelKey(WaitingRoomGuestViewModel::class)
     internal abstract fun bindWaitingRoomGuestViewModel(viewModel: WaitingRoomGuestViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(GameViewModel::class)
-    abstract fun bindGameViewModel(viewModel: GameViewModel): ViewModel
 
     @Binds
     @IntoMap

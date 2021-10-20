@@ -1,59 +1,36 @@
 package ch.qscqlmpa.dwitchcommunication.di
 
-import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommunication.ingame.CommServer
-import ch.qscqlmpa.dwitchcommunication.ingame.InGameSerializerFactory
 import ch.qscqlmpa.dwitchcommunication.ingame.connectionstore.ConnectionStore
 import ch.qscqlmpa.dwitchcommunication.ingame.connectionstore.ConnectionStoreImpl
 import ch.qscqlmpa.dwitchcommunication.ingame.connectionstore.ConnectionStoreInternal
 import ch.qscqlmpa.dwitchcommunication.ingame.websocket.server.WebsocketCommServer
-import ch.qscqlmpa.dwitchcommunication.ingame.websocket.server.WebsocketServerFactory
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import kotlinx.serialization.json.Json
 
 @Suppress("unused")
 @Module
-class CommunicationHostModule(
-    private val idlingResource: DwitchIdlingResource
-) {
-    @InGameCommunicationScope
-    @Provides
-    internal fun provideCommServer(
-        websocketServerFactory: WebsocketServerFactory,
-        serializerFactory: InGameSerializerFactory,
-        connectionStore: ConnectionStoreInternal
-    ): CommServer {
-        return WebsocketCommServer(websocketServerFactory, serializerFactory, connectionStore)
-    }
+abstract class CommunicationHostModule {
 
     @InGameCommunicationScope
-    @Provides
-    fun provideJsonSerializer(): Json {
-        return Json.Default
-    }
+    @Binds
+    internal abstract fun provideCommServer(server: WebsocketCommServer): CommServer
 
     @InGameCommunicationScope
-    @Provides
-    internal fun provideConnectionStoreImpl(): ConnectionStoreImpl {
-        return ConnectionStoreImpl()
-    }
+    @Binds
+    internal abstract fun provideConnectionStoreInternal(connectionStore: ConnectionStoreImpl): ConnectionStoreInternal
 
     @InGameCommunicationScope
-    @Provides
-    internal fun provideConnectionStoreInternal(connectionStore: ConnectionStoreImpl): ConnectionStoreInternal {
-        return connectionStore
-    }
+    @Binds
+    internal abstract fun provideConnectionStore(connectionStore: ConnectionStoreImpl): ConnectionStore
 
-    @InGameCommunicationScope
-    @Provides
-    internal fun provideConnectionStore(connectionStore: ConnectionStoreImpl): ConnectionStore {
-        return connectionStore
-    }
-
-    @InGameCommunicationScope
-    @Provides
-    fun providesIdlingResource(): DwitchIdlingResource {
-        return idlingResource
+    companion object {
+        @InGameCommunicationScope
+        @Provides
+        fun provideJsonSerializer(): Json {
+            return Json.Default
+        }
     }
 }

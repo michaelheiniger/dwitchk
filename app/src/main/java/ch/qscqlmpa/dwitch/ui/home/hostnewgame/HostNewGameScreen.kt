@@ -13,14 +13,12 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.DwitchTopBar
 import ch.qscqlmpa.dwitch.ui.common.LoadingDialog
 import ch.qscqlmpa.dwitch.ui.common.NavigationIcon
 import ch.qscqlmpa.dwitch.ui.common.UiTags
-import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 
 @Preview(
     showBackground = true,
@@ -34,24 +32,23 @@ fun HostNewGameScreenPreview() {
 }
 
 @Composable
-fun HostNewGameScreen(vmFactory: ViewModelFactory) {
-    val viewModel = viewModel<HostNewGameViewModel>(factory = vmFactory)
+fun HostNewGameScreen(hostNewGameViewModel: HostNewGameViewModel) {
 
-    DisposableEffect(key1 = viewModel) {
-        viewModel.onStart()
-        onDispose { viewModel.onStop() }
+    DisposableEffect(key1 = hostNewGameViewModel) {
+        hostNewGameViewModel.onStart()
+        onDispose { hostNewGameViewModel.onStop() }
     }
 
     HostNewGameBody(
-        playerName = viewModel.playerName.value,
-        gameName = viewModel.gameName.value,
-        hostGameControlEnabled = viewModel.canGameBeCreated.value,
-        onPlayerNameChange = viewModel::onPlayerNameChange,
-        onGameNameChange = viewModel::onGameNameChange,
-        onCreateGameClick = viewModel::hostGame,
-        onBackClick = viewModel::onBackClick
+        playerName = hostNewGameViewModel.playerName.value,
+        gameName = hostNewGameViewModel.gameName.value,
+        hostGameControlEnabled = hostNewGameViewModel.canGameBeCreated.value,
+        onPlayerNameChange = hostNewGameViewModel::onPlayerNameChange,
+        onGameNameChange = hostNewGameViewModel::onGameNameChange,
+        onCreateGameClick = hostNewGameViewModel::hostGame,
+        onBackClick = hostNewGameViewModel::onBackClick
     )
-    if (viewModel.loading.value) LoadingDialog()
+    if (hostNewGameViewModel.loading.value) LoadingDialog()
 }
 
 @Composable

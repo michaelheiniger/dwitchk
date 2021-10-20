@@ -92,8 +92,8 @@ abstract class BaseE2eTest {
         gameIdlingResource = IdlingResourceAdapter(app.gameIdlingResource)
         testRule.registerIdlingResource(gameIdlingResource)
 
-        communicationComponent = app.testCommunicationComponent
-        storeComponent = app.testStoreComponent
+        communicationComponent = app.communicationComponent as TestCommunicationComponent
+        storeComponent = app.storeComponent as TestStoreComponent
         gameComponent = app.testGameComponent
         store = storeComponent.store
         deviceConnectivityRepository = communicationComponent.deviceConnectivityRepository as TestDeviceConnectivityRepository
@@ -164,8 +164,8 @@ abstract class BaseE2eTest {
         app.appEventRepository.observeEvents().filter { event -> event is AppEvent.ServiceStarted }.blockingFirst()
     }
 
-    protected fun hookOngoingGameDependenciesForHost() {
-        hookOngoingGameDependenciesCommon()
+    protected fun hookInGameDependenciesForHost() {
+        hookInGameDependenciesCommon()
         communicationHostComponent = app.inGameHostCommunicationComponent as TestInGameHostCommunicationComponent
         inGameHostComponent = app.inGameHostComponent as TestInGameHostComponent
         inGameComponent = inGameHostComponent
@@ -173,8 +173,8 @@ abstract class BaseE2eTest {
         serverTestStub = communicationHostComponent.serverTestStub
     }
 
-    protected fun hookOngoingGameDependenciesForGuest() {
-        hookOngoingGameDependenciesCommon()
+    protected fun hookInGameDependenciesForGuest() {
+        hookInGameDependenciesCommon()
         communicationGuestComponent = app.inGameGuestCommunicationComponent as TestInGameGuestCommunicationComponent
         inGameGuestComponent = app.inGameGuestComponent as TestInGameGuestComponent
         inGameComponent = inGameGuestComponent
@@ -182,7 +182,7 @@ abstract class BaseE2eTest {
         clientTestStub = communicationGuestComponent.clientTestStub.get()
     }
 
-    private fun hookOngoingGameDependenciesCommon() {
+    private fun hookInGameDependenciesCommon() {
         inGameStore = app.inGameStoreComponent!!.inGameStore
     }
 }

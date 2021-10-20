@@ -5,8 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
 import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
-import ch.qscqlmpa.dwitch.ui.navigation.InGameDestination
-import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
+import ch.qscqlmpa.dwitch.ui.navigation.InGameGuestDestination
+import ch.qscqlmpa.dwitch.ui.navigation.ScreenNavigator
+import ch.qscqlmpa.dwitch.ui.navigation.navOptionsPopUpToInclusive
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchgame.ingame.InGameGuestFacade
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationFacade
@@ -19,11 +20,11 @@ import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
 @Suppress("LongParameterList")
-internal class WaitingRoomGuestViewModel @Inject constructor(
+class WaitingRoomGuestViewModel @Inject constructor(
     private val waitingRoomGuestFacade: WaitingRoomGuestFacade,
     private val guestCommunicationFacade: GuestCommunicationFacade,
     private val inGameGuestFacade: InGameGuestFacade,
-    private val navigationBridge: NavigationBridge,
+    private val screenNavigator: ScreenNavigator,
     private val uiScheduler: Scheduler,
     private val idlingResource: DwitchIdlingResource
 ) : BaseViewModel() {
@@ -33,6 +34,10 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
 
     val notifications get(): State<WaitingRoomGuestNotification> = _notifications
     val ready get(): State<UiCheckboxModel> = _ready
+
+    init {
+        idlingResource.decrement("Navigated to in-game")
+    }
 
     fun updateReadyState(ready: Boolean) {
         idlingResource.increment("Click on ready")
@@ -75,7 +80,10 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
     }
 
     private fun goToHomeScreen() {
-        navigationBridge.navigate(HomeDestination.Home)
+        screenNavigator.navigate(
+            destination = HomeDestination.Home,
+            navOptions = navOptionsPopUpToInclusive(InGameGuestDestination.WaitingRoom)
+        )
     }
 
     private fun localPlayerReadyState() {
@@ -91,9 +99,11 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
                     is GuestCommunicationState.Error -> UiCheckboxModel(enabled = false, checked = false)
                 }
             }
-                .doOnError { error -> Logger.error(error) { "Error while observing local player state." } }
                 .observeOn(uiScheduler)
-                .subscribe { value -> _ready.value = value }
+                .subscribe(
+                    { value -> _ready.value = value },
+                    { error -> Logger.error(error) { "Error while observing local player state." } }
+                )
         )
     }
 
@@ -106,16 +116,21 @@ internal class WaitingRoomGuestViewModel @Inject constructor(
         disposableManager.add(
             inGameGuestFacade.observeGameEvents()
                 .observeOn(uiScheduler)
-                .doOnError { error -> Logger.error(error) { "Error while observing game events." } }
-                .subscribe { event ->
-                    when (event) {
-                        GuestGameEvent.GameCanceled -> _notifications.value = WaitingRoomGuestNotification.NotifyGameCanceled
-                        GuestGameEvent.KickedOffGame ->
-                            _notifications.value = WaitingRoomGuestNotification.NotifyPlayerKickedOffGame
-                        GuestGameEvent.GameLaunched -> navigationBridge.navigate(InGameDestination.GameRoomGuest)
-                        GuestGameEvent.GameOver -> throw IllegalStateException("Event '$event' is not supposed to occur in WaitingRoom.")
-                    }
-                }
+                .subscribe(
+                    { event ->
+                        when (event) {
+                            GuestGameEvent.GameCanceled -> _notifications.value = WaitingRoomGuestNotification.NotifyGameCanceled
+                            GuestGameEvent.KickedOffGame ->
+                                _notifications.value = WaitingRoomGuestNotification.NotifyPlayerKickedOffGame
+                            GuestGameEvent.GameLaunched -> screenNavigator.navigate(
+                                destination = InGameGuestDestination.GameRoom,
+                                navOptions = navOptionsPopUpToInclusive(InGameGuestDestination.WaitingRoom)
+                            )
+                            GuestGameEvent.GameOver -> throw IllegalStateException("Event '$event' is not supposed to occur in WaitingRoom.")
+                        }
+                    },
+                    { error -> Logger.error(error) { "Error while observing game events." } }
+                )
         )
     }
 }

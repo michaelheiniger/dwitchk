@@ -6,8 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
-import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
-import ch.qscqlmpa.dwitch.ui.navigation.NavigationData
+import ch.qscqlmpa.dwitch.ui.navigation.InGameGuestDestination
+import ch.qscqlmpa.dwitch.ui.navigation.ScreenNavigator
+import ch.qscqlmpa.dwitch.ui.navigation.navOptionsPopUpToInclusive
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.game.GameFacade
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 class JoinNewGameViewModel @Inject constructor(
     private val gameFacade: GameFacade,
-    private val navigationBridge: NavigationBridge,
+    private val screenNavigator: ScreenNavigator,
     private val uiScheduler: Scheduler,
     private val idlingResource: DwitchIdlingResource
 ) : BaseViewModel() {
@@ -62,7 +63,12 @@ class JoinNewGameViewModel @Inject constructor(
                 .observeOn(uiScheduler)
                 .doOnTerminate { _loading.value = false }
                 .subscribe(
-                    { navigationBridge.navigate(HomeDestination.InGame) },
+                    {
+                        screenNavigator.navigate(
+                            destination = InGameGuestDestination.WaitingRoom,
+                            navOptions = navOptionsPopUpToInclusive(HomeDestination.Home)
+                        )
+                    },
                     { error ->
                         _notification.value = JoinNewGameNotification.ErrorJoiningGame
                         Logger.error(error) { "Error while joining the game" }
@@ -77,7 +83,7 @@ class JoinNewGameViewModel @Inject constructor(
     }
 
     fun onBackClick() {
-        navigationBridge.navigateBack()
+        screenNavigator.navigateBack()
     }
 }
 

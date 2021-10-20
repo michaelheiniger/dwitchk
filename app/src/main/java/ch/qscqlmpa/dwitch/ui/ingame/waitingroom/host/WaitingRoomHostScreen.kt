@@ -1,7 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.ingame.waitingroom.host
 
 import android.graphics.Bitmap
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -19,14 +18,12 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.*
 import ch.qscqlmpa.dwitch.ui.ingame.connection.host.ConnectionHostViewModel
 import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.WaitingRoomPlayersScreen
 import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.WaitingRoomViewModel
-import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.PlayerWrUi
 import com.google.zxing.BarcodeFormat
@@ -61,30 +58,26 @@ private fun WaitingRoomHostScreenPreview() {
 }
 
 @Composable
-fun WaitingRoomHostScreen(vmFactory: ViewModelFactory) {
-    val viewModel = viewModel<WaitingRoomViewModel>(factory = vmFactory)
-    val hostViewModel = viewModel<WaitingRoomHostViewModel>(factory = vmFactory)
-    val connectionViewModel = viewModel<ConnectionHostViewModel>(factory = vmFactory)
-
-    DisposableEffect(viewModel, hostViewModel, connectionViewModel) {
-        viewModel.onStart()
+fun WaitingRoomHostScreen(
+    waitingRoomViewModel: WaitingRoomViewModel,
+    hostViewModel: WaitingRoomHostViewModel,
+    connectionViewModel: ConnectionHostViewModel
+) {
+    DisposableEffect(waitingRoomViewModel, hostViewModel, connectionViewModel) {
+        waitingRoomViewModel.onStart()
         hostViewModel.onStart()
         connectionViewModel.onStart()
         onDispose {
-            viewModel.onStop()
+            waitingRoomViewModel.onStop()
             hostViewModel.onStop()
             connectionViewModel.onStop()
         }
     }
 
-    val showConfirmationDialog = remember { mutableStateOf(false) }
-
-    BackHandler(onBack = { showConfirmationDialog.value = true })
-
     WaitingRoomHostBody(
-        toolbarTitle = viewModel.toolbarTitle.value,
-        showAddComputerPlayer = viewModel.canComputerPlayersBeAdded.value,
-        players = viewModel.players.value,
+        toolbarTitle = waitingRoomViewModel.toolbarTitle.value,
+        showAddComputerPlayer = waitingRoomViewModel.canComputerPlayersBeAdded.value,
+        players = waitingRoomViewModel.players.value,
         gameQrCode = hostViewModel.gameQrCode.value,
         launchGameEnabled = hostViewModel.canGameBeLaunched.value,
         connectionStatus = connectionViewModel.connectionStatus.value,
@@ -112,7 +105,6 @@ fun WaitingRoomHostBody(
     onKickPlayer: (PlayerWrUi) -> Unit = {}
 ) {
     val showCancelGameConfirmationDialog = remember { mutableStateOf(false) }
-    BackHandler(onBack = { showCancelGameConfirmationDialog.value = true })
 
     Column(
         Modifier

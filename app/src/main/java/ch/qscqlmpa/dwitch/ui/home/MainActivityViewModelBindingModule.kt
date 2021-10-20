@@ -13,7 +13,7 @@ import javax.inject.Named
 
 @Suppress("unused")
 @Module
-abstract class HomeViewModelBindingModule {
+abstract class MainActivityViewModelBindingModule {
 
     @Named("home")
     @Binds

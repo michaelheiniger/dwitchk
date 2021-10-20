@@ -2,11 +2,10 @@ package ch.qscqlmpa.dwitchgame.gamelifecycle
 
 import android.os.Parcelable
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
+import ch.qscqlmpa.dwitchgame.common.EventRepository
 import ch.qscqlmpa.dwitchgame.di.GameScope
 import ch.qscqlmpa.dwitchstore.InsertGameResult
 import ch.qscqlmpa.dwitchstore.model.Game
-import com.jakewharton.rxrelay3.PublishRelay
-import io.reactivex.rxjava3.core.Observable
 import kotlinx.parcelize.Parcelize
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
@@ -23,8 +22,8 @@ internal class GameStateRepository @Inject constructor(
         hostGameLifecycleEventRepository.observeEvents().subscribe(
             { event ->
                 _lifecycleState = when (event) {
-                    is HostGameLifecycleEvent.GameSetup,
-                    HostGameLifecycleEvent.MovedToGameRoom -> GameLifecycleState.Running
+                    is HostGameLifecycleEvent.GameSetup -> GameLifecycleState.RunningWaitingRoomHost
+                    HostGameLifecycleEvent.MovedToGameRoom -> GameLifecycleState.RunningGameRoomHost
                     HostGameLifecycleEvent.GameOver -> GameLifecycleState.Over
                 }
             },
@@ -35,8 +34,8 @@ internal class GameStateRepository @Inject constructor(
                 _lifecycleState = when (event) {
                     is GuestGameLifecycleEvent.GameSetup,
                     GuestGameLifecycleEvent.GameJoined,
-                    GuestGameLifecycleEvent.GameRejoined,
-                    GuestGameLifecycleEvent.MovedToGameRoom -> GameLifecycleState.Running
+                    GuestGameLifecycleEvent.GameRejoined -> GameLifecycleState.RunningWaitingRoomGuest
+                    GuestGameLifecycleEvent.MovedToGameRoom -> GameLifecycleState.RunningGameRoomGuest
                     GuestGameLifecycleEvent.GameOver -> GameLifecycleState.Over
                 }
             },
@@ -55,23 +54,12 @@ internal class HostGameLifecycleEventRepository @Inject constructor() : EventRep
 @GameScope
 internal class GuestGameLifecycleEventRepository @Inject constructor() : EventRepository<GuestGameLifecycleEvent>()
 
-internal abstract class EventRepository<T> {
-    private val eventRelay = PublishRelay.create<T>()
-
-    fun observeEvents(): Observable<T> {
-        Logger.debug { "Observing events..." }
-        return eventRelay
-    }
-
-    fun notify(event: T) {
-        Logger.debug { "Notify of event: $event" }
-        eventRelay.accept(event)
-    }
-}
-
 sealed class GameLifecycleState {
     object NotStarted : GameLifecycleState()
-    object Running : GameLifecycleState()
+    object RunningWaitingRoomGuest : GameLifecycleState()
+    object RunningGameRoomGuest : GameLifecycleState()
+    object RunningWaitingRoomHost : GameLifecycleState()
+    object RunningGameRoomHost : GameLifecycleState()
     object Over : GameLifecycleState()
 }
 

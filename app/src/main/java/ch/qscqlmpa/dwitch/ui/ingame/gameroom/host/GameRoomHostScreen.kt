@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.ui.ingame.gameroom.host
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -16,7 +15,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.common.*
 import ch.qscqlmpa.dwitch.ui.ingame.GameRulesDialog
@@ -29,7 +27,6 @@ import ch.qscqlmpa.dwitch.ui.ingame.gameroom.endofround.EndOfRoundScreen
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.guest.GameRoomScreen
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.playerdashboard.GameRoomViewModel
 import ch.qscqlmpa.dwitch.ui.theme.DwitchTheme
-import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationState
 
@@ -61,11 +58,11 @@ fun GameRoomHostScreenPreview() {
 @ExperimentalFoundationApi
 @ExperimentalAnimationApi
 @Composable
-fun GameRoomHostScreen(vmFactory: ViewModelFactory) {
-    val playerViewModel = viewModel<GameRoomViewModel>(factory = vmFactory)
-    val hostViewModel = viewModel<GameRoomHostViewModel>(factory = vmFactory)
-    val connectionViewModel = viewModel<ConnectionHostViewModel>(factory = vmFactory)
-
+fun GameRoomHostScreen(
+    playerViewModel: GameRoomViewModel,
+    hostViewModel: GameRoomHostViewModel,
+    connectionViewModel: ConnectionHostViewModel
+) {
     DisposableEffect(playerViewModel, hostViewModel, connectionViewModel) {
         playerViewModel.onStart()
         hostViewModel.onStart()
@@ -109,10 +106,7 @@ fun GameRoomHostBody(
     onReconnectClick: () -> Unit
 ) {
     val gameRules = remember { mutableStateOf(false) }
-
     val showEndGameConfirmationDialog = remember { mutableStateOf(false) }
-    BackHandler(onBack = { showEndGameConfirmationDialog.value = true })
-
     Column(
         Modifier
             .fillMaxWidth()

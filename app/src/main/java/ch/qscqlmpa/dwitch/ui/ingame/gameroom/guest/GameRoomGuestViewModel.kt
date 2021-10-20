@@ -4,8 +4,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
-import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
-import ch.qscqlmpa.dwitch.ui.navigation.NavigationData
+import ch.qscqlmpa.dwitch.ui.navigation.InGameGuestDestination
+import ch.qscqlmpa.dwitch.ui.navigation.ScreenNavigator
+import ch.qscqlmpa.dwitch.ui.navigation.navOptionsPopUpToInclusive
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchgame.ingame.InGameGuestFacade
@@ -14,10 +15,10 @@ import io.reactivex.rxjava3.core.Scheduler
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
-internal class GameRoomGuestViewModel @Inject constructor(
+class GameRoomGuestViewModel @Inject constructor(
     private val inGameGuestFacade: InGameGuestFacade,
     private val gameDiscoveryFacade: GameDiscoveryFacade,
-    private val navigationBridge: NavigationBridge,
+    private val screenNavigator: ScreenNavigator,
     private val uiScheduler: Scheduler,
     private val idlingResource: DwitchIdlingResource
 ) : BaseViewModel() {
@@ -51,7 +52,10 @@ internal class GameRoomGuestViewModel @Inject constructor(
     }
 
     private fun goToHomeScreen() {
-        navigationBridge.navigate(HomeDestination.Home)
+        screenNavigator.navigate(
+            destination = HomeDestination.Home,
+            navOptions = navOptionsPopUpToInclusive(InGameGuestDestination.GameRoom)
+        )
     }
 
     private fun observeGameEvent() {

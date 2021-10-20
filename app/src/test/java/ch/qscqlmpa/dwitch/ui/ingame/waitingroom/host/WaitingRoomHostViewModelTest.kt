@@ -3,8 +3,8 @@ package ch.qscqlmpa.dwitch.ui.ingame.waitingroom.host
 import ch.qscqlmpa.dwitch.app.StubIdlingResource
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
 import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
-import ch.qscqlmpa.dwitch.ui.navigation.InGameDestination
-import ch.qscqlmpa.dwitch.ui.navigation.NavigationBridge
+import ch.qscqlmpa.dwitch.ui.navigation.InGameHostDestination
+import ch.qscqlmpa.dwitch.ui.navigation.ScreenNavigator
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchgame.ingame.gameadvertising.GameAdvertisingFacade
@@ -25,7 +25,7 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
     private val mockWaitingRoomHostFacade = mockk<WaitingRoomHostFacade>(relaxed = true)
     private val mockGameAdvertisingFacade = mockk<GameAdvertisingFacade>(relaxed = true)
     private val mockGameDiscoveryFacade = mockk<GameDiscoveryFacade>(relaxed = true)
-    private val mockNavigationBridge = mockk<NavigationBridge>(relaxed = true)
+    private val mockScreenNavigator = mockk<ScreenNavigator>(relaxed = true)
 
     private lateinit var viewModel: WaitingRoomHostViewModel
 
@@ -98,7 +98,7 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
         viewModel.launchGame()
 
         // Then
-        verify { mockNavigationBridge.navigate(InGameDestination.GameRoomHost) }
+        verify { mockScreenNavigator.navigate(InGameHostDestination.GameRoom, any()) }
         verify { mockWaitingRoomHostFacade.launchGame() }
     }
 
@@ -113,7 +113,7 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
         viewModel.cancelGame()
 
         // Then
-        verify { mockNavigationBridge.navigate(HomeDestination.Home) }
+        verify { mockScreenNavigator.navigate(HomeDestination.Home, any()) }
         verify { mockWaitingRoomHostFacade.cancelGame() }
     }
 
@@ -125,7 +125,7 @@ class WaitingRoomHostViewModelTest : BaseViewModelUnitTest() {
             mockWaitingRoomHostFacade,
             mockGameDiscoveryFacade,
             mockGameAdvertisingFacade,
-            mockNavigationBridge,
+            mockScreenNavigator,
             Schedulers.trampoline(),
             StubIdlingResource()
         )

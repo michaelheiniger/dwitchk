@@ -1,7 +1,9 @@
 package ch.qscqlmpa.dwitchcommunication.di
 
+import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchcommunication.ingame.CommServer
 import ch.qscqlmpa.dwitchcommunication.ingame.connectionstore.ConnectionStore
+import dagger.BindsInstance
 import dagger.Component
 
 @InGameCommunicationScope
@@ -17,6 +19,6 @@ interface InGameHostCommunicationComponent {
 
     @Component.Factory
     interface Factory {
-        fun create(module: CommunicationHostModule): InGameHostCommunicationComponent
+        fun create(@BindsInstance idlingResource: DwitchIdlingResource): InGameHostCommunicationComponent
     }
 }

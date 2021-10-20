@@ -13,35 +13,31 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
 import ch.qscqlmpa.dwitch.ui.common.*
-import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 
 @Composable
 fun JoinNewGameScreen(
-    vmFactory: ViewModelFactory,
+    joinNewGameViewModel: JoinNewGameViewModel,
     gameAd: GameAdvertisingInfo
 ) {
-    val viewModel = viewModel<JoinNewGameViewModel>(factory = vmFactory)
-
-    DisposableEffect(key1 = viewModel) {
-        viewModel.onStart()
-        viewModel.loadGame(gameAd)
-        onDispose { viewModel.onStop() }
+    DisposableEffect(key1 = joinNewGameViewModel) {
+        joinNewGameViewModel.onStart()
+        joinNewGameViewModel.loadGame(gameAd)
+        onDispose { joinNewGameViewModel.onStop() }
     }
 
     JoinNewGameBody(
-        notification = viewModel.notification.value,
-        gameName = viewModel.gameName.value,
-        playerName = viewModel.playerName.value,
-        joinGameControlEnabled = viewModel.canJoinGame.value,
-        loading = viewModel.loading.value,
-        onPlayerNameChange = viewModel::onPlayerNameChange,
-        onJoinGameClick = { viewModel.joinGame() },
-        onBackClick = viewModel::onBackClick
+        notification = joinNewGameViewModel.notification.value,
+        gameName = joinNewGameViewModel.gameName.value,
+        playerName = joinNewGameViewModel.playerName.value,
+        joinGameControlEnabled = joinNewGameViewModel.canJoinGame.value,
+        loading = joinNewGameViewModel.loading.value,
+        onPlayerNameChange = joinNewGameViewModel::onPlayerNameChange,
+        onJoinGameClick = { joinNewGameViewModel.joinGame() },
+        onBackClick = joinNewGameViewModel::onBackClick
     )
 }
 

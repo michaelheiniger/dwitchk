@@ -1,27 +1,22 @@
 package ch.qscqlmpa.dwitchstore.ingamestore
 
-import ch.qscqlmpa.dwitchstore.dao.AppRoomDatabase
-import ch.qscqlmpa.dwitchstore.util.SerializerFactory
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import kotlinx.serialization.json.Json
 
 @Suppress("unused")
 @Module
-class InGameStoreModule(
-    private val gameLocalId: Long,
-    private val localPlayerLocalId: Long
-) {
-
+abstract class InGameStoreModule {
     @InGameStoreScope
-    @Provides
-    internal fun provideJson(): Json {
-        return Json.Default
-    }
+    @Binds
+    internal abstract fun provideInGameStore(store: InGameStoreImpl): InGameStore
 
-    @InGameStoreScope
-    @Provides
-    internal fun provideInGameStore(database: AppRoomDatabase, serializerFactory: SerializerFactory): InGameStore {
-        return InGameStoreImpl(database, gameLocalId, localPlayerLocalId, serializerFactory)
+    companion object {
+        @InGameStoreScope
+        @Provides
+        internal fun provideJson(): Json {
+            return Json.Default
+        }
     }
 }
