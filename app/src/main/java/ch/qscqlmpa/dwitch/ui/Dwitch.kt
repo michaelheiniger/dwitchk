@@ -2,11 +2,9 @@ package ch.qscqlmpa.dwitch.ui
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
@@ -59,16 +57,16 @@ fun Dwitch(
         componentFactory = { createMainActivityComponent(navController) }
     )
 
-    DwitchTheme {
-        Scaffold { innerPadding ->
-            DwitchNavHost(
-                mainActivityComponent = mainActivityComponent,
-                createInGameHostUiComponent = createInGameHostUiComponent,
-                createInGameGuestUiComponent = createInGameGuestUiComponent,
-                navHostController = navController,
-                modifier = Modifier.padding(innerPadding)
-            )
-        }
+    val darkThemeEnabled = remember { mutableStateOf(false) }
+
+    DwitchTheme(darkTheme = darkThemeEnabled.value) {
+        DwitchNavHost(
+            mainActivityComponent = mainActivityComponent,
+            createInGameHostUiComponent = createInGameHostUiComponent,
+            createInGameGuestUiComponent = createInGameGuestUiComponent,
+            navHostController = navController,
+            toggleDarkTheme = { darkThemeEnabled.value = !darkThemeEnabled.value }
+        )
     }
 }
 
@@ -80,25 +78,27 @@ private fun DwitchNavHost(
     createInGameHostUiComponent: (MainActivityComponent) -> InGameHostUiComponent,
     createInGameGuestUiComponent: (MainActivityComponent) -> InGameGuestUiComponent,
     navHostController: NavHostController,
-    modifier: Modifier = Modifier
+    toggleDarkTheme: () -> Unit
 ) {
     val mainVmFactory = mainActivityComponent.mainViewModelFactory
     val screenNavigator = mainActivityComponent.screenNavigator
     NavHost(
         navController = navHostController,
         startDestination = HomeDestination.Home.routeName,
-        modifier = modifier
     ) {
         // Main graph destinations
         composable(HomeDestination.Home.routeName) {
             val homeViewModel = viewModel<HomeViewModel>(factory = mainVmFactory)
-            HomeScreen(homeViewModel)
+            HomeScreen(
+                homeViewModel = homeViewModel,
+                toggleDarkTheme = toggleDarkTheme
+            )
         }
         composable(HomeDestination.HostNewGame.routeName) {
             val hostNewGameViewModel = viewModel<HostNewGameViewModel>(factory = mainVmFactory)
             HostNewGameScreen(hostNewGameViewModel)
         }
-        composable(route = HomeDestination.JoinNewGame.routeName) {
+        composable(HomeDestination.JoinNewGame.routeName) {
             val joinNewGameViewModel = viewModel<JoinNewGameViewModel>(factory = mainVmFactory)
             val gameAd = screenNavigator.getData(HomeDestination.JoinNewGame.gameParamName) as GameAdvertisingInfo?
             if (gameAd != null) {

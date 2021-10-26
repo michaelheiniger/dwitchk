@@ -6,6 +6,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
@@ -108,29 +109,24 @@ fun GameRoomGuestBody(
 ) {
     val gameRules = remember { mutableStateOf(false) }
     val showLeaveGameConfirmationDialog = remember { mutableStateOf(false) }
-
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .animateContentSize()
-    ) {
-        DwitchTopBar(
-            title = toolbarTitle,
-            navigationIcon = NavigationIcon(
-                icon = R.drawable.ic_baseline_exit_to_app_24,
-                contentDescription = R.string.leave_game,
-                onClick = { showLeaveGameConfirmationDialog.value = true }
-            ),
-            actions = listOf(GameRules),
-            onActionClick = { action ->
-                when (action) {
-                    GameRules -> gameRules.value = true
+    Scaffold(
+        topBar = {
+            DwitchTopBar(
+                title = toolbarTitle,
+                navigationIcon = NavigationIcon(
+                    icon = R.drawable.ic_baseline_exit_to_app_24,
+                    contentDescription = R.string.leave_game,
+                    onClick = { showLeaveGameConfirmationDialog.value = true }
+                ),
+                actions = listOf(GameRules),
+                onActionClick = { action ->
+                    when (action) {
+                        GameRules -> gameRules.value = true
+                    }
                 }
-            }
-        )
-
-        if (gameRules.value) GameRulesDialog(onOkClick = { gameRules.value = false })
-
+            )
+        }
+    ) {
         Column(
             Modifier
                 .fillMaxWidth()
@@ -159,24 +155,26 @@ fun GameRoomGuestBody(
                 else -> LoadingSpinner()
             }
         }
-    }
 
-    when {
-        leavingGame -> LoadingDialog(R.string.leaving_game)
-        gameOver -> GameOverDialog(onGameOverAcknowledge = onGameOverAcknowledge)
-        else -> CommunicationGuest(
-            state = connectionStatus,
-            onReconnectClick = onReconnectClick,
-            onAbortClick = { showLeaveGameConfirmationDialog.value = true }
-        )
-    }
+        if (gameRules.value) GameRulesDialog(onOkClick = { gameRules.value = false })
 
-    if (showLeaveGameConfirmationDialog.value) {
-        ConfirmationDialog(
-            title = R.string.dialog_info_title,
-            text = R.string.guest_leaves_game_confirmation,
-            onConfirmClick = onLeaveGameConfirmClick,
-            onClosing = { showLeaveGameConfirmationDialog.value = false }
-        )
+        when {
+            leavingGame -> LoadingDialog(R.string.leaving_game)
+            gameOver -> GameOverDialog(onGameOverAcknowledge = onGameOverAcknowledge)
+            else -> CommunicationGuest(
+                state = connectionStatus,
+                onReconnectClick = onReconnectClick,
+                onAbortClick = { showLeaveGameConfirmationDialog.value = true }
+            )
+        }
+
+        if (showLeaveGameConfirmationDialog.value) {
+            ConfirmationDialog(
+                title = R.string.dialog_info_title,
+                text = R.string.guest_leaves_game_confirmation,
+                onConfirmClick = onLeaveGameConfirmClick,
+                onClosing = { showLeaveGameConfirmationDialog.value = false }
+            )
+        }
     }
 }

@@ -77,7 +77,7 @@ abstract class BaseInGameService : Service() {
             .setContentTitle(getText(R.string.notification_title))
             .setContentText(getText(notificationMessage))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setColor(getColor(R.color.black))
+            .setColor(getColor(R.color.primaryColor))
 
         if (BuildConfig.DEBUG) {
             notificationBuilder.addAction(addKillServiceButtonToNotif())

@@ -5,6 +5,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -70,23 +71,18 @@ fun JoinNewGameBody(
     onBackClick: () -> Unit
 ) {
     BackHandler(onBack = onBackClick)
-    Notification(notification = notification)
-    if (loading) LoadingDialog()
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .animateContentSize()
+    Scaffold(
+        topBar = {
+            DwitchTopBar(
+                title = gameName,
+                navigationIcon = NavigationIcon(
+                    icon = R.drawable.ic_baseline_arrow_back_24,
+                    contentDescription = R.string.back,
+                    onClick = onBackClick
+                )
+            )
+        }
     ) {
-        DwitchTopBar(
-            title = gameName,
-            navigationIcon = NavigationIcon(
-                icon = R.drawable.ic_baseline_arrow_back_24,
-                contentDescription = R.string.back,
-                onClick = onBackClick
-            ),
-            actions = emptyList(),
-            onActionClick = {}
-        )
         Column(
             Modifier
                 .fillMaxWidth()
@@ -108,6 +104,8 @@ fun JoinNewGameBody(
                 modifier = Modifier.fillMaxWidth()
             ) { Text(stringResource(R.string.join_game)) }
         }
+        Notification(notification = notification)
+        if (loading) LoadingDialog()
     }
 }
 

@@ -35,6 +35,12 @@ object GameRules : MenuAction(
     tag = UiTags.gameRulesInfo
 )
 
+object ToggleDarkTheme : MenuAction(
+    icon = R.drawable.ic_baseline_dark_mode_24,
+    contentDescription = R.string.toggle_dark_theme_cs,
+    tag = UiTags.toggleDarkTheme
+)
+
 @Preview
 @Composable
 fun Preview() {
@@ -47,8 +53,29 @@ fun Preview() {
 }
 
 @Composable
-fun DwitchTopBar(@StringRes title: Int) {
-    DwitchTopBar(title = stringResource(title), navigationIcon = null, emptyList(), onActionClick = {})
+fun DwitchTopBar(
+    @StringRes title: Int,
+    navigationIcon: NavigationIcon? = null
+) {
+    DwitchTopBar(
+        title = stringResource(title),
+        navigationIcon = navigationIcon,
+        actions = emptyList(),
+        onActionClick = {}
+    )
+}
+
+@Composable
+fun DwitchTopBar(
+    title: String,
+    navigationIcon: NavigationIcon? = null
+) {
+    DwitchTopBar(
+        title = title,
+        navigationIcon = navigationIcon,
+        actions = emptyList(),
+        onActionClick = {}
+    )
 }
 
 @Composable
@@ -56,7 +83,7 @@ fun <T : MenuAction> DwitchTopBar(
     @StringRes title: Int,
     navigationIcon: NavigationIcon?,
     actions: List<T> = emptyList(),
-    onActionClick: (T) -> Unit
+    onActionClick: (T) -> Unit = {}
 ) {
     DwitchTopBar(
         title = stringResource(title),
@@ -71,7 +98,7 @@ fun <T : MenuAction> DwitchTopBar(
     title: String,
     navigationIcon: NavigationIcon?,
     actions: List<T> = emptyList(),
-    onActionClick: (T) -> Unit
+    onActionClick: (T) -> Unit = {}
 ) {
     val titleCd = stringResource(R.string.current_screen_name_cd, title)
     if (navigationIcon != null) {
@@ -103,7 +130,22 @@ fun <T : MenuAction> DwitchTopBar(
             }
         )
     } else {
-        TopAppBar(title = { TopAppBarTitle(title, titleCd) })
+        TopAppBar(
+            title = { TopAppBarTitle(title, titleCd) },
+            actions = {
+                actions.forEach { action ->
+                    IconButton(
+                        onClick = { onActionClick(action) },
+                        modifier = Modifier.testTag(action.tag)
+                    ) {
+                        Icon(
+                            painter = painterResource(action.icon),
+                            contentDescription = stringResource(action.contentDescription)
+                        )
+                    }
+                }
+            }
+        )
     }
 }
 

@@ -5,6 +5,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -35,7 +36,7 @@ import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationState
 @Preview
 @Composable
 fun GameRoomHostBodyPreview() {
-    DwitchTheme(false) {
+    DwitchTheme() {
         GameRoomHostBody(
             toolbarTitle = "Dwiiiitch",
             screen = null,
@@ -107,28 +108,20 @@ fun GameRoomHostBody(
 ) {
     val gameRules = remember { mutableStateOf(false) }
     val showEndGameConfirmationDialog = remember { mutableStateOf(false) }
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .animateContentSize()
+    Scaffold(
+        topBar = {
+            DwitchTopBar(
+                title = toolbarTitle,
+                navigationIcon = NavigationIcon(
+                    icon = R.drawable.ic_baseline_exit_to_app_24,
+                    contentDescription = R.string.end_game,
+                    onClick = { showEndGameConfirmationDialog.value = true }
+                ),
+                actions = listOf(GameRules),
+                onActionClick = { gameRules.value = true }
+            )
+        }
     ) {
-        DwitchTopBar(
-            title = toolbarTitle,
-            navigationIcon = NavigationIcon(
-                icon = R.drawable.ic_baseline_exit_to_app_24,
-                contentDescription = R.string.end_game,
-                onClick = { showEndGameConfirmationDialog.value = true }
-            ),
-            actions = listOf(GameRules),
-            onActionClick = { action ->
-                when (action) {
-                    GameRules -> gameRules.value = true
-                }
-            }
-        )
-
-        if (gameRules.value) GameRulesDialog(onOkClick = { gameRules.value = false })
-
         Column(
             Modifier
                 .fillMaxWidth()
@@ -167,24 +160,24 @@ fun GameRoomHostBody(
                 is GameRoomScreen.CardExchangeOnGoing -> CardExchangeOnGoing()
                 else -> LoadingSpinner()
             }
-        }
+            if (gameRules.value) GameRulesDialog(onOkClick = { gameRules.value = false })
+            when {
+                endingGame -> LoadingDialog(R.string.ending_game)
+                else -> CommunicationHost(
+                    state = connectionStatus,
+                    onReconnectClick = onReconnectClick,
+                    onAbortClick = { showEndGameConfirmationDialog.value = true }
+                )
+            }
 
-        when {
-            endingGame -> LoadingDialog(R.string.ending_game)
-            else -> CommunicationHost(
-                state = connectionStatus,
-                onReconnectClick = onReconnectClick,
-                onAbortClick = { showEndGameConfirmationDialog.value = true }
-            )
-        }
-
-        if (showEndGameConfirmationDialog.value) {
-            ConfirmationDialog(
-                title = R.string.dialog_info_title,
-                text = R.string.host_ends_game_confirmation,
-                onConfirmClick = onEndGameConfirmClick,
-                onClosing = { showEndGameConfirmationDialog.value = false }
-            )
+            if (showEndGameConfirmationDialog.value) {
+                ConfirmationDialog(
+                    title = R.string.dialog_info_title,
+                    text = R.string.host_ends_game_confirmation,
+                    onConfirmClick = onEndGameConfirmClick,
+                    onClosing = { showEndGameConfirmationDialog.value = false }
+                )
+            }
         }
     }
 }

@@ -183,5 +183,6 @@
     <string name="launching_game">Launching game …</string>
     <string name="leaving_game">Leaving game…</string>
     <string name="canceling_game">Canceling game…</string>
-    <string name="ending_game">Ending game...</string>
+    <string name="ending_game">Ending game…</string>
+    <string name="toggle_dark_theme_cs">Toggle Dark theme</string>
 </resources>

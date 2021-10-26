@@ -85,6 +85,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.4.0-beta01")
     implementation("com.google.android.material:material:1.4.0")
     implementation("androidx.core:core-ktx:1.6.0")
+    implementation("androidx.datastore:datastore:1.0.0")
 
     // ####### Jetpack Compose #######
     implementation("androidx.compose.ui:ui:$composeVersion")

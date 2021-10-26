@@ -5,6 +5,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -107,21 +108,18 @@ fun WaitingRoomHostBody(
     onKickPlayer: (PlayerWrUi) -> Unit = {}
 ) {
     val showCancelGameConfirmationDialog = remember { mutableStateOf(false) }
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .animateContentSize()
+    Scaffold(
+        topBar = {
+            DwitchTopBar(
+                title = toolbarTitle,
+                navigationIcon = NavigationIcon(
+                    icon = R.drawable.ic_baseline_exit_to_app_24,
+                    contentDescription = R.string.cancel_game,
+                    onClick = { showCancelGameConfirmationDialog.value = true }
+                )
+            )
+        }
     ) {
-        DwitchTopBar(
-            title = toolbarTitle,
-            navigationIcon = NavigationIcon(
-                icon = R.drawable.ic_baseline_exit_to_app_24,
-                contentDescription = R.string.cancel_game,
-                onClick = { showCancelGameConfirmationDialog.value = true }
-            ),
-            actions = emptyList(),
-            onActionClick = {}
-        )
         Column(
             Modifier
                 .fillMaxWidth()
@@ -141,23 +139,23 @@ fun WaitingRoomHostBody(
             )
             GameQrCode(gameQrCode)
         }
-    }
-    when {
-        launchingGame -> LoadingDialog(R.string.launching_game)
-        cancelingGame -> LoadingDialog(R.string.canceling_game)
-        showCancelGameConfirmationDialog.value -> {
-            ConfirmationDialog(
-                title = R.string.dialog_info_title,
-                text = R.string.host_cancel_game_confirmation,
-                onConfirmClick = onCancelGameClick,
-                onClosing = { showCancelGameConfirmationDialog.value = false }
+        when {
+            launchingGame -> LoadingDialog(R.string.launching_game)
+            cancelingGame -> LoadingDialog(R.string.canceling_game)
+            showCancelGameConfirmationDialog.value -> {
+                ConfirmationDialog(
+                    title = R.string.dialog_info_title,
+                    text = R.string.host_cancel_game_confirmation,
+                    onConfirmClick = onCancelGameClick,
+                    onClosing = { showCancelGameConfirmationDialog.value = false }
+                )
+            }
+            else -> CommunicationHost(
+                state = connectionStatus,
+                onReconnectClick = onReconnectClick,
+                onAbortClick = onCancelGameClick
             )
         }
-        else -> CommunicationHost(
-            state = connectionStatus,
-            onReconnectClick = onReconnectClick,
-            onAbortClick = onCancelGameClick
-        )
     }
 }
 

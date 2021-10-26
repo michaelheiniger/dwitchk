@@ -3,6 +3,7 @@ package ch.qscqlmpa.dwitch.ui.ingame.waitingroom.guest
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -97,21 +98,18 @@ fun WaitingRoomGuestBody(
     onKickOffGameAcknowledge: () -> Unit
 ) {
     val showLeaveGameConfirmationDialog = remember { mutableStateOf(false) }
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .animateContentSize()
+    Scaffold(
+        topBar = {
+            DwitchTopBar(
+                title = toolbarTitle,
+                navigationIcon = NavigationIcon(
+                    icon = R.drawable.ic_baseline_exit_to_app_24,
+                    contentDescription = R.string.leave_game,
+                    onClick = { showLeaveGameConfirmationDialog.value = true }
+                )
+            )
+        }
     ) {
-        DwitchTopBar(
-            title = toolbarTitle,
-            navigationIcon = NavigationIcon(
-                icon = R.drawable.ic_baseline_exit_to_app_24,
-                contentDescription = R.string.leave_game,
-                onClick = { showLeaveGameConfirmationDialog.value = true }
-            ),
-            actions = emptyList(),
-            onActionClick = {}
-        )
         Column(
             Modifier
                 .fillMaxWidth()
