@@ -35,10 +35,7 @@ object GameRules : MenuAction(
     tag = UiTags.gameRulesInfo
 )
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
 fun Preview() {
     DwitchTopBar(

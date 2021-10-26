@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ResourceMapper
-import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
+import ch.qscqlmpa.dwitch.ui.base.PreviewContainer
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitch.ui.common.WaitingDialog
 import ch.qscqlmpa.dwitch.ui.ingame.PlayerHand
@@ -40,12 +40,9 @@ import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchgame.ingame.gameroom.PlayerInfo
 
 @ExperimentalAnimationApi
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
-private fun DashboardScreenPreview() {
+private fun DashboardPreview() {
     val donePlayer = PlayerInfo(
         name = "Aragorn",
         rank = DwitchRank.VicePresident,
@@ -118,8 +115,8 @@ private fun DashboardScreenPreview() {
         waitingForPlayerReconnection = false
     )
 
-    ActivityScreenContainer {
-        DashboardScreen(
+    PreviewContainer {
+        Dashboard(
             dashboardInfo = dashboardInfo,
             onCardClick = {},
             onPlayClick = {},
@@ -131,7 +128,7 @@ private fun DashboardScreenPreview() {
 
 @ExperimentalAnimationApi
 @Composable
-fun DashboardScreen(
+fun Dashboard(
     dashboardInfo: DashboardInfo,
     onCardClick: (Card) -> Unit,
     onPlayClick: () -> Unit,

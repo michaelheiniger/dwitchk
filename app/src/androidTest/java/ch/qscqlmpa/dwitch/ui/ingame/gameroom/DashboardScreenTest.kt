@@ -208,7 +208,7 @@ class DashboardScreenTest : BaseUiUnitTest() {
 
     private fun launchTest() {
         launchTestWithContent {
-            DashboardScreen(
+            Dashboard(
                 dashboardInfo,
                 onCardClick = { anyCardClicked = true },
                 onPlayClick = { playClicked = true },

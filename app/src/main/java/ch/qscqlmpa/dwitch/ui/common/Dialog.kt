@@ -15,16 +15,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
+import ch.qscqlmpa.dwitch.ui.base.PreviewContainer
 
 @Suppress("UnusedPrivateMember")
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
 private fun InfoDialogPreview() {
-    ActivityScreenContainer {
+    PreviewContainer {
         InfoDialog(
             title = R.string.dialog_info_title,
             text = R.string.game_canceled_by_host,
@@ -113,13 +110,10 @@ fun ConfirmationDialog(
     }
 }
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
 private fun LoadingDialogPreview() {
-    ActivityScreenContainer {
+    PreviewContainer {
         LoadingDialog()
     }
 }
@@ -152,13 +146,10 @@ fun LoadingDialog(text: Int = R.string.loading) {
     )
 }
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
 private fun WaitingDialogPreview() {
-    ActivityScreenContainer {
+    PreviewContainer {
         WaitingDialog()
     }
 }

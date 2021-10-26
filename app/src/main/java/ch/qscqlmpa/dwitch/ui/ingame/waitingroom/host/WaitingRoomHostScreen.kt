@@ -19,26 +19,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
+import ch.qscqlmpa.dwitch.ui.base.PreviewContainer
 import ch.qscqlmpa.dwitch.ui.common.*
 import ch.qscqlmpa.dwitch.ui.ingame.connection.host.ConnectionHostViewModel
-import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.WaitingRoomPlayersScreen
+import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.WaitingRoomPlayers
 import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.WaitingRoomViewModel
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.PlayerWrUi
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
-private fun WaitingRoomHostScreenPreview() {
+private fun WaitingRoomHostBodyPreview() {
 
     val qrCode = buildSampleQrCode()
 
-    ActivityScreenContainer {
+    PreviewContainer {
         WaitingRoomHostBody(
             toolbarTitle = "Dwiiitch",
             showAddComputerPlayer = true,
@@ -60,7 +57,7 @@ private fun WaitingRoomHostScreenPreview() {
 }
 
 @Composable
-fun WaitingRoomHostScreen(
+fun WaitingRoomHostBody(
     waitingRoomViewModel: WaitingRoomViewModel,
     hostViewModel: WaitingRoomHostViewModel,
     connectionViewModel: ConnectionHostViewModel
@@ -131,14 +128,14 @@ fun WaitingRoomHostBody(
                 .animateContentSize()
                 .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
-            WaitingRoomPlayersScreen(
+            WaitingRoomPlayers(
                 players = players,
                 showAddComputerPlayer = showAddComputerPlayer,
                 onAddComputerPlayer = onAddComputerPlayer,
                 onKickPlayer = onKickPlayer
             )
             Spacer(Modifier.height(16.dp))
-            HostControlScreen(
+            HostControls(
                 launchGameEnabled = launchGameEnabled,
                 onLaunchGameClick = onLaunchGameClick
             )
@@ -156,7 +153,7 @@ fun WaitingRoomHostBody(
                 onClosing = { showCancelGameConfirmationDialog.value = false }
             )
         }
-        else -> ConnectionHostScreen(
+        else -> CommunicationHost(
             state = connectionStatus,
             onReconnectClick = onReconnectClick,
             onAbortClick = onCancelGameClick
@@ -165,7 +162,7 @@ fun WaitingRoomHostBody(
 }
 
 @Composable
-private fun HostControlScreen(
+private fun HostControls(
     launchGameEnabled: Boolean,
     onLaunchGameClick: () -> Unit
 ) {

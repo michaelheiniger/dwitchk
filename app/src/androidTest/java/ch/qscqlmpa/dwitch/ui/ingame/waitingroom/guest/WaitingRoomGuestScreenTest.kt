@@ -75,6 +75,7 @@ class WaitingRoomGuestScreenTest : BaseUiUnitTest() {
                 ready = ready,
                 notification = WaitingRoomGuestNotification.None,
                 connectionState = GuestCommunicationState.Connected,
+                leavingGame = false,
                 onReadyClick = {},
                 onLeaveConfirmClick = {},
                 onReconnectClick = {},

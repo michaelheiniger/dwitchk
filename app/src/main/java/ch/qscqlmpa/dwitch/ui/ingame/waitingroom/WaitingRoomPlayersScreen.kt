@@ -15,18 +15,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
+import ch.qscqlmpa.dwitch.ui.base.PreviewContainer
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.PlayerWrUi
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
-private fun WaitingRoomPlayersScreenPreview() {
-    ActivityScreenContainer {
-        WaitingRoomPlayersScreen(
+private fun WaitingRoomPlayersPreview() {
+    PreviewContainer {
+        WaitingRoomPlayers(
             showAddComputerPlayer = true,
             players = listOf(
                 PlayerWrUi(
@@ -49,7 +46,7 @@ private fun WaitingRoomPlayersScreenPreview() {
 }
 
 @Composable
-fun WaitingRoomPlayersScreen(
+fun WaitingRoomPlayers(
     showAddComputerPlayer: Boolean,
     players: List<PlayerWrUi>,
     onAddComputerPlayer: () -> Unit = {},

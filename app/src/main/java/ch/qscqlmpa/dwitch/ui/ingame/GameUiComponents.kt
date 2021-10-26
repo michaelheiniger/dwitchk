@@ -25,7 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ResourceMapper
-import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
+import ch.qscqlmpa.dwitch.ui.base.PreviewContainer
 import ch.qscqlmpa.dwitch.ui.common.InfoDialog
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.CardInfo
@@ -71,14 +71,14 @@ fun PlayerHand(
     }
 }
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
 private fun CardItemDisplayPreview() {
-    ActivityScreenContainer {
-        CardItemDisplay(cardItem = CardInfo(Card.Hearts10, selectable = true, selected = true), onCardClick = {})
+    PreviewContainer {
+        CardItemDisplay(
+            cardItem = CardInfo(Card.Hearts10, selectable = true, selected = true),
+            onCardClick = {}
+        )
     }
 }
 

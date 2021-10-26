@@ -18,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
+import ch.qscqlmpa.dwitch.ui.base.PreviewContainer
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitch.ui.ingame.LoadingSpinner
 import ch.qscqlmpa.dwitch.ui.ingame.PlayerHand
@@ -26,12 +26,9 @@ import ch.qscqlmpa.dwitch.ui.ingame.gameroom.CardInfo
 import ch.qscqlmpa.dwitchengine.model.card.Card
 
 @ExperimentalFoundationApi
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
-private fun CardExchangeScreenPreview() {
+private fun CardExchangePreview() {
     val cardsInHand = listOf(
         CardInfo(Card.Clubs2, selectable = true, selected = false),
         CardInfo(Card.HeartsAce, selectable = true, selected = true),
@@ -43,8 +40,8 @@ private fun CardExchangeScreenPreview() {
         CardInfo(Card.Clubs3, selectable = false, selected = false)
     )
 
-    ActivityScreenContainer {
-        CardExchangeScreen(
+    PreviewContainer {
+        CardExchange(
             numCardsToChoose = NumCardsToExchange.Two,
             cardsInHand = cardsInHand,
             canSubmitCardsForExchange = true,
@@ -56,7 +53,7 @@ private fun CardExchangeScreenPreview() {
 
 @ExperimentalFoundationApi
 @Composable
-fun CardExchangeScreen(
+fun CardExchange(
     numCardsToChoose: NumCardsToExchange,
     cardsInHand: List<CardInfo>,
     canSubmitCardsForExchange: Boolean,

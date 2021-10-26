@@ -16,8 +16,7 @@ class MainActivity : ComponentActivity() {
             Dwitch(
                 createMainActivityComponent = { navController -> app.createMainActivityComponent(navController) },
                 createInGameHostUiComponent = { mainActivityComponent -> app.createInGameHostUiComponent(mainActivityComponent) },
-                createInGameGuestUiComponent = { mainActivityComponent -> app.createInGameGuestUiComponent(mainActivityComponent) },
-                finish = { finish() }
+                createInGameGuestUiComponent = { mainActivityComponent -> app.createInGameGuestUiComponent(mainActivityComponent) }
             )
         }
     }
