@@ -43,6 +43,7 @@ fun GameRoomHostScreenPreview() {
             toolbarTitle = "Dwiiiitch",
             screen = null,
             connectionStatus = HostCommunicationState.Online,
+            endingGame = false,
             onCardClick = {},
             onPlayClick = {},
             onPassClick = {},
@@ -77,6 +78,7 @@ fun GameRoomHostScreen(
     GameRoomHostBody(
         toolbarTitle = playerViewModel.toolbarTitle.value,
         screen = playerViewModel.screen.value,
+        endingGame = hostViewModel.endingGame.value,
         onCardClick = playerViewModel::onCardToPlayClick,
         onPlayClick = playerViewModel::onPlayClick,
         onPassClick = playerViewModel::onPassTurnClick,
@@ -96,6 +98,7 @@ fun GameRoomHostBody(
     toolbarTitle: String,
     screen: GameRoomScreen?,
     connectionStatus: HostCommunicationState,
+    endingGame: Boolean,
     onCardClick: (Card) -> Unit,
     onPlayClick: () -> Unit,
     onPassClick: () -> Unit,
@@ -167,7 +170,11 @@ fun GameRoomHostBody(
                 is GameRoomScreen.CardExchangeOnGoing -> CardExchangeOnGoing()
                 else -> LoadingSpinner()
             }
-            ConnectionHostScreen(
+        }
+
+        when {
+            endingGame -> LoadingDialog(R.string.ending_game)
+            else -> ConnectionHostScreen(
                 state = connectionStatus,
                 onReconnectClick = onReconnectClick,
                 onAbortClick = { showEndGameConfirmationDialog.value = true }
@@ -179,7 +186,7 @@ fun GameRoomHostBody(
                 title = R.string.dialog_info_title,
                 text = R.string.host_ends_game_confirmation,
                 onConfirmClick = onEndGameConfirmClick,
-                onCancelClick = { showEndGameConfirmationDialog.value = false }
+                onClosing = { showEndGameConfirmationDialog.value = false }
             )
         }
     }

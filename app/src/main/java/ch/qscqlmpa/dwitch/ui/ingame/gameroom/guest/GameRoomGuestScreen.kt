@@ -41,7 +41,8 @@ fun GameRoomGuestScreenPreview() {
             toolbarTitle = "Dwiitch",
             screen = GameRoomScreen.CardExchangeOnGoing,
             connectionStatus = GuestCommunicationState.Connected,
-            showGameOver = false,
+            gameOver = false,
+            leavingGame = false,
             onCardClick = {},
             onPlayClick = {},
             onPassClick = {},
@@ -77,7 +78,8 @@ fun GameRoomGuestScreen(
         toolbarTitle = playerViewModel.toolbarTitle.value,
         screen = playerViewModel.screen.value,
         connectionStatus = connectionViewModel.connectionState.value,
-        showGameOver = guestViewModel.gameOver.value,
+        gameOver = guestViewModel.gameOver.value,
+        leavingGame = guestViewModel.leavingGame.value,
         onCardClick = playerViewModel::onCardToPlayClick,
         onPlayClick = playerViewModel::onPlayClick,
         onPassClick = playerViewModel::onPassTurnClick,
@@ -96,7 +98,8 @@ fun GameRoomGuestBody(
     toolbarTitle: String,
     screen: GameRoomScreen?,
     connectionStatus: GuestCommunicationState,
-    showGameOver: Boolean,
+    gameOver: Boolean,
+    leavingGame: Boolean,
     onCardClick: (Card) -> Unit,
     onPlayClick: () -> Unit,
     onPassClick: () -> Unit,
@@ -161,10 +164,10 @@ fun GameRoomGuestBody(
         }
     }
 
-    if (showGameOver) {
-        GameOverDialog(onGameOverAcknowledge = onGameOverAcknowledge)
-    } else {
-        ConnectionGuestScreen(
+    when {
+        leavingGame -> LoadingDialog(R.string.leaving_game)
+        gameOver -> GameOverDialog(onGameOverAcknowledge = onGameOverAcknowledge)
+        else -> ConnectionGuestScreen(
             state = connectionStatus,
             onReconnectClick = onReconnectClick,
             onAbortClick = { showLeaveGameConfirmationDialog.value = true }
@@ -176,7 +179,7 @@ fun GameRoomGuestBody(
             title = R.string.dialog_info_title,
             text = R.string.guest_leaves_game_confirmation,
             onConfirmClick = onLeaveGameConfirmClick,
-            onCancelClick = { showLeaveGameConfirmationDialog.value = false }
+            onClosing = { showLeaveGameConfirmationDialog.value = false }
         )
     }
 }

@@ -50,6 +50,8 @@ private fun WaitingRoomHostScreenPreview() {
             gameQrCode = qrCode,
             launchGameEnabled = false,
             connectionStatus = HostCommunicationState.OfflineFailed(connectedToWlan = true),
+            launchingGame = false,
+            cancelingGame = false,
             onLaunchGameClick = {},
             onCancelGameClick = {},
             onReconnectClick = {}
@@ -81,13 +83,14 @@ fun WaitingRoomHostScreen(
         gameQrCode = hostViewModel.gameQrCode.value,
         launchGameEnabled = hostViewModel.canGameBeLaunched.value,
         connectionStatus = connectionViewModel.connectionStatus.value,
+        launchingGame = hostViewModel.launchingGame.value,
+        cancelingGame = hostViewModel.cancelingGame.value,
         onLaunchGameClick = hostViewModel::launchGame,
         onCancelGameClick = hostViewModel::cancelGame,
         onReconnectClick = connectionViewModel::reconnect,
         onAddComputerPlayer = hostViewModel::addComputerPlayer,
         onKickPlayer = hostViewModel::kickPlayer
     )
-    if (hostViewModel.loading.value) LoadingDialog()
 }
 
 @Composable
@@ -98,6 +101,8 @@ fun WaitingRoomHostBody(
     gameQrCode: Bitmap?,
     launchGameEnabled: Boolean,
     connectionStatus: HostCommunicationState,
+    launchingGame: Boolean,
+    cancelingGame: Boolean,
     onLaunchGameClick: () -> Unit,
     onCancelGameClick: () -> Unit,
     onReconnectClick: () -> Unit,
@@ -105,7 +110,6 @@ fun WaitingRoomHostBody(
     onKickPlayer: (PlayerWrUi) -> Unit = {}
 ) {
     val showCancelGameConfirmationDialog = remember { mutableStateOf(false) }
-
     Column(
         Modifier
             .fillMaxWidth()
@@ -138,32 +142,24 @@ fun WaitingRoomHostBody(
                 launchGameEnabled = launchGameEnabled,
                 onLaunchGameClick = onLaunchGameClick
             )
-            if (gameQrCode != null) {
-                Text(
-                    text = stringResource(R.string.game_ad_qr_code_hint),
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
-                Image(
-                    bitmap = gameQrCode.asImageBitmap(),
-                    contentDescription = "Game advertisement QR Code",
-                    modifier = Modifier.align(Alignment.CenterHorizontally).size(100.dp)
-                )
-            }
-
-            Spacer(Modifier.height(16.dp))
-            ConnectionHostScreen(
-                state = connectionStatus,
-                onReconnectClick = onReconnectClick,
-                onAbortClick = onCancelGameClick
-            )
+            GameQrCode(gameQrCode)
         }
     }
-    if (showCancelGameConfirmationDialog.value) {
-        ConfirmationDialog(
-            title = R.string.dialog_info_title,
-            text = R.string.host_cancel_game_confirmation,
-            onConfirmClick = onCancelGameClick,
-            onCancelClick = { showCancelGameConfirmationDialog.value = false }
+    when {
+        launchingGame -> LoadingDialog(R.string.launching_game)
+        cancelingGame -> LoadingDialog(R.string.canceling_game)
+        showCancelGameConfirmationDialog.value -> {
+            ConfirmationDialog(
+                title = R.string.dialog_info_title,
+                text = R.string.host_cancel_game_confirmation,
+                onConfirmClick = onCancelGameClick,
+                onClosing = { showCancelGameConfirmationDialog.value = false }
+            )
+        }
+        else -> ConnectionHostScreen(
+            state = connectionStatus,
+            onReconnectClick = onReconnectClick,
+            onAbortClick = onCancelGameClick
         )
     }
 }
@@ -182,6 +178,23 @@ private fun HostControlScreen(
                 .testTag(UiTags.launchGameControl)
         ) {
             Text(stringResource(R.string.launch_game), color = Color.White)
+        }
+    }
+}
+
+@Composable
+private fun GameQrCode(gameQrCode: Bitmap?) {
+    if (gameQrCode != null) {
+        Column(Modifier.fillMaxWidth()) {
+            Text(
+                text = stringResource(R.string.game_ad_qr_code_hint),
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+            Image(
+                bitmap = gameQrCode.asImageBitmap(),
+                contentDescription = "Game advertisement QR Code",
+                modifier = Modifier.align(Alignment.CenterHorizontally).size(100.dp)
+            )
         }
     }
 }
