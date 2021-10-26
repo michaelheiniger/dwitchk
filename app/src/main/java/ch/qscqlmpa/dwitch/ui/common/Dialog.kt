@@ -69,21 +69,26 @@ fun ConfirmationDialog(
     title: Int,
     text: Int,
     onConfirmClick: () -> Unit,
-    onCancelClick: () -> Unit = {}
+    onCancelClick: () -> Unit = {},
+    onClosing: () -> Unit = {}
 ) {
 
     val openDialog = remember { mutableStateOf(true) }
 
     if (openDialog.value) {
         AlertDialog(
-            onDismissRequest = onCancelClick,
+            onDismissRequest = {
+                onCancelClick()
+                onClosing()
+            },
             title = { Text(text = stringResource(title), color = Color.Black) },
             text = { Text(text = stringResource(text), color = Color.Black) },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onConfirmClick()
                         openDialog.value = false
+                        onConfirmClick()
+                        onClosing()
                     },
                     modifier = Modifier.testTag(UiTags.confirmBtn)
                 ) {
@@ -93,8 +98,9 @@ fun ConfirmationDialog(
             dismissButton = {
                 TextButton(
                     onClick = {
-                        onCancelClick()
                         openDialog.value = false
+                        onCancelClick()
+                        onClosing()
                     },
                     modifier = Modifier.testTag(UiTags.cancelBtn)
                 ) {
@@ -119,7 +125,7 @@ private fun LoadingDialogPreview() {
 }
 
 @Composable
-fun LoadingDialog() {
+fun LoadingDialog(text: Int = R.string.loading) {
     Dialog(
         onDismissRequest = {},
         properties = DialogProperties(),
@@ -135,7 +141,7 @@ fun LoadingDialog() {
                         .padding(horizontal = 16.dp, vertical = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(stringResource(id = R.string.loading))
+                    Text(stringResource(id = text))
                     CircularProgressIndicator(
                         color = MaterialTheme.colors.secondary,
                         modifier = Modifier.align(Alignment.CenterHorizontally)

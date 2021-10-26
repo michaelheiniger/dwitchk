@@ -43,6 +43,7 @@ private fun WaitingRoomGuestScreenPlayerConnectedPreview() {
             ready = UiCheckboxModel(enabled = false, checked = false),
             notification = WaitingRoomGuestNotification.None,
             connectionState = GuestCommunicationState.Connected,
+            leavingGame = false,
             onReadyClick = {},
             onLeaveConfirmClick = {},
             onReconnectClick = {},
@@ -75,6 +76,7 @@ fun WaitingRoomGuestScreen(
         ready = guestViewModel.ready.value,
         notification = guestViewModel.notifications.value,
         connectionState = connectionViewModel.connectionState.value,
+        leavingGame = guestViewModel.leavingGame.value,
         onReadyClick = guestViewModel::updateReadyState,
         onLeaveConfirmClick = guestViewModel::leaveGame,
         onReconnectClick = connectionViewModel::reconnect,
@@ -90,6 +92,7 @@ fun WaitingRoomGuestBody(
     ready: UiCheckboxModel,
     notification: WaitingRoomGuestNotification,
     connectionState: GuestCommunicationState,
+    leavingGame: Boolean,
     onReadyClick: (Boolean) -> Unit,
     onLeaveConfirmClick: () -> Unit,
     onReconnectClick: () -> Unit,
@@ -118,7 +121,7 @@ fun WaitingRoomGuestBody(
                 .animateContentSize()
                 .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
-            WaitingRoomPlayersScreen(players = players, showAddComputerPlayer = false, onAddComputerPlayer = {})
+            WaitingRoomPlayersScreen(players = players, showAddComputerPlayer = false)
             Spacer(Modifier.height(16.dp))
             GuestControlScreen(
                 ready = ready,
@@ -150,12 +153,13 @@ fun WaitingRoomGuestBody(
             )
         }
     }
+    if (leavingGame) LoadingDialog(R.string.leaving_game)
     if (showLeaveGameConfirmationDialog.value) {
         ConfirmationDialog(
             title = R.string.dialog_info_title,
             text = R.string.guest_leaves_game_confirmation,
             onConfirmClick = onLeaveConfirmClick,
-            onCancelClick = { showLeaveGameConfirmationDialog.value = false }
+            onClosing = { showLeaveGameConfirmationDialog.value = false }
         )
     }
 }

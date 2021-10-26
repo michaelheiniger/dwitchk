@@ -180,4 +180,8 @@
     <string name="error_starting_camera">Erreur lors du démarrage de l\'appareil photo</string>
     <string name="qr_code_decoding_failed">Le décodage du QR code a échoué, réessayer ?</string>
     <string name="not_connected_to_a_wlan">You\'re not on a WLAN !</string>
+    <string name="launching_game">Launching game …</string>
+    <string name="leaving_game">Leaving game…</string>
+    <string name="canceling_game">Canceling game…</string>
+    <string name="ending_game">Ending game...</string>
 </resources>

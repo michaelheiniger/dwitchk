@@ -31,11 +31,13 @@ class WaitingRoomHostViewModel @Inject constructor(
     private val idlingResource: DwitchIdlingResource
 ) : BaseViewModel() {
 
-    private val _loading = mutableStateOf(false)
+    private val _launchingGame = mutableStateOf(false)
+    private val _cancelingGame = mutableStateOf(false)
     private val _canGameBeLaunched = mutableStateOf(false)
     private val _gameQrCode = mutableStateOf<Bitmap?>(null)
 
-    val loading get(): State<Boolean> = _loading
+    val launchingGame get(): State<Boolean> = _launchingGame
+    val cancelingGame get(): State<Boolean> = _cancelingGame
     val canGameBeLaunched get(): State<Boolean> = _canGameBeLaunched
     val gameQrCode get(): State<Bitmap?> = _gameQrCode
 
@@ -68,11 +70,11 @@ class WaitingRoomHostViewModel @Inject constructor(
     }
 
     fun launchGame() {
-        _loading.value = true
+        _launchingGame.value = true
         disposableManager.add(
             waitingRoomHostFacade.launchGame()
                 .observeOn(uiScheduler)
-                .doOnTerminate { _loading.value = false }
+                .doOnTerminate { _launchingGame.value = false }
                 .subscribe(
                     {
                         Logger.info { "Game launched" }
@@ -87,6 +89,7 @@ class WaitingRoomHostViewModel @Inject constructor(
     }
 
     fun cancelGame() {
+        _cancelingGame.value = true
         disposableManager.add(
             waitingRoomHostFacade.cancelGame()
                 .observeOn(uiScheduler)
@@ -98,7 +101,10 @@ class WaitingRoomHostViewModel @Inject constructor(
                             navOptions = navOptionsPopUpToInclusive(InGameHostDestination.WaitingRoom)
                         )
                     },
-                    { error -> Logger.error(error) { "Error while canceling game" } }
+                    { error ->
+                        Logger.error(error) { "Error while canceling game" }
+                        _cancelingGame.value = false
+                    }
                 )
         )
     }

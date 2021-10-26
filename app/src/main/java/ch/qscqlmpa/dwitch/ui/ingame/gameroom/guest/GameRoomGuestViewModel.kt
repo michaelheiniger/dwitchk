@@ -23,8 +23,11 @@ class GameRoomGuestViewModel @Inject constructor(
     private val idlingResource: DwitchIdlingResource
 ) : BaseViewModel() {
 
+    private val _leavingGame = mutableStateOf(false)
     private val _gameOver = mutableStateOf(false)
+
     val gameOver get(): State<Boolean> = _gameOver
+    val leavingGame get(): State<Boolean> = _leavingGame
 
     fun acknowledgeGameOver() {
         _gameOver.value = false
@@ -32,6 +35,7 @@ class GameRoomGuestViewModel @Inject constructor(
     }
 
     fun leaveGame() {
+        _leavingGame.value = true
         disposableManager.add(
             inGameGuestFacade.leaveGame()
                 .observeOn(uiScheduler)
@@ -40,7 +44,10 @@ class GameRoomGuestViewModel @Inject constructor(
                         Logger.info { "Left game successfully" }
                         goToHomeScreen()
                     },
-                    { error -> Logger.error(error) { "Error while leaving the game." } }
+                    { error ->
+                        Logger.error(error) { "Error while leaving the game." }
+                        _leavingGame.value = false
+                    }
                 )
         )
     }

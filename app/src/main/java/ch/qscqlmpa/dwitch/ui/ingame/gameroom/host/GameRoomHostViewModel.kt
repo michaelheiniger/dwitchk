@@ -1,5 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.ingame.gameroom.host
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
 import ch.qscqlmpa.dwitch.ui.navigation.InGameHostDestination
@@ -21,6 +23,9 @@ class GameRoomHostViewModel @Inject constructor(
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
 
+    private val _endingGame = mutableStateOf(false)
+    val endingGame get(): State<Boolean> = _endingGame
+
     fun startNewRound() {
         disposableManager.add(
             dashboardFacade.performAction(GameAction.StartNewRound)
@@ -33,6 +38,7 @@ class GameRoomHostViewModel @Inject constructor(
     }
 
     fun endGame() {
+        _endingGame.value = true
         disposableManager.add(
             facadeIn.endGame()
                 .observeOn(uiScheduler)
@@ -44,7 +50,10 @@ class GameRoomHostViewModel @Inject constructor(
                             navOptions = navOptionsPopUpToInclusive(InGameHostDestination.GameRoom)
                         )
                     },
-                    { error -> Logger.error(error) { "Error while ending game." } }
+                    { error ->
+                        Logger.error(error) { "Error while ending game." }
+                        _endingGame.value = false
+                    }
                 )
         )
     }
