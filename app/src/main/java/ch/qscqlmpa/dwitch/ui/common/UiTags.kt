@@ -29,4 +29,5 @@ object UiTags {
     const val waitingDialogAbortBtn = "waitingDialogAbortBtn"
     const val dialogNoBtn = "dialogNoBtn"
     const val dialogYesBtn = "dialogYesBtn"
+    const val toggleDarkTheme = "toggleDarkTheme"
 }

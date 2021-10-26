@@ -6,10 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
@@ -62,7 +59,9 @@ fun HomeBodyPreview() {
             notification = HomeNotification.None,
             advertisedGames = advertisedGame,
             resumableGames = resumableGameResponse,
+            loading = false,
             onCreateNewGameClick = {},
+            toggleDarkTheme = {},
             onJoinGameClick = {},
             onResumableGameClick = {},
             onQrCodeScan = {}
@@ -71,7 +70,10 @@ fun HomeBodyPreview() {
 }
 
 @Composable
-fun HomeScreen(homeViewModel: HomeViewModel) {
+fun HomeScreen(
+    homeViewModel: HomeViewModel,
+    toggleDarkTheme: () -> Unit
+) {
     DisposableEffect(homeViewModel) {
         homeViewModel.onStart()
         onDispose { homeViewModel.onStop() }
@@ -81,12 +83,13 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
         notification = homeViewModel.notification.value,
         advertisedGames = homeViewModel.advertisedGames.value,
         resumableGames = homeViewModel.resumableGames.value,
+        loading = homeViewModel.loading.value,
+        toggleDarkTheme = toggleDarkTheme,
         onCreateNewGameClick = homeViewModel::createNewGame,
         onJoinGameClick = homeViewModel::joinGame,
         onResumableGameClick = { game -> homeViewModel.resumeGame(game) },
         onQrCodeScan = { gameAd -> homeViewModel.load(gameAd) }
     )
-    if (homeViewModel.loading.value) LoadingDialog()
 }
 
 @Composable
@@ -94,24 +97,28 @@ fun HomeBody(
     notification: HomeNotification,
     advertisedGames: LoadedData<List<GameAdvertisingInfo>>,
     resumableGames: LoadedData<List<ResumableGameInfo>>,
+    loading: Boolean,
+    toggleDarkTheme: () -> Unit,
     onCreateNewGameClick: () -> Unit,
     onJoinGameClick: (GameAdvertisingInfo) -> Unit,
     onResumableGameClick: (ResumableGameInfo) -> Unit,
     onQrCodeScan: (GameAdvertisingInfo) -> Unit
 ) {
-    Notification(notification = notification)
-    Column(
-        Modifier
-            .fillMaxSize()
-            .animateContentSize()
+    Scaffold(
+        topBar = {
+            DwitchTopBar(
+                title = R.string.app_name,
+                navigationIcon = null,
+                actions = listOf(ToggleDarkTheme),
+                onActionClick = { toggleDarkTheme() }
+            )
+        }
     ) {
-        DwitchTopBar(title = R.string.app_name)
         Column(
             Modifier
                 .fillMaxSize()
                 .animateContentSize()
                 .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
-
         ) {
             Column(
                 Modifier
@@ -134,6 +141,8 @@ fun HomeBody(
                 ResumableGamesContainer(resumableGames, onResumableGameClick)
             }
         }
+        Notification(notification)
+        if (loading) LoadingDialog()
     }
 }
 
