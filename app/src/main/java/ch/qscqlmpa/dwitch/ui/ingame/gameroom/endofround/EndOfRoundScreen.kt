@@ -14,15 +14,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ResourceMapper
-import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
+import ch.qscqlmpa.dwitch.ui.base.PreviewContainer
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchgame.ingame.gameroom.EndOfRoundInfo
 import ch.qscqlmpa.dwitchgame.ingame.gameroom.PlayerEndOfRoundInfo
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
 private fun EndOfRoundInfoDialogPreview() {
     val endOfRoundInfo = EndOfRoundInfo(
@@ -36,13 +33,13 @@ private fun EndOfRoundInfoDialogPreview() {
         canStartNewRound = true,
         canEndGame = true
     )
-    ActivityScreenContainer {
-        EndOfRoundScreen(endOfRoundInfo)
+    PreviewContainer {
+        EndOfRound(endOfRoundInfo)
     }
 }
 
 @Composable
-fun EndOfRoundScreen(endOfRoundInfo: EndOfRoundInfo) {
+fun EndOfRound(endOfRoundInfo: EndOfRoundInfo) {
     Column(
         Modifier
             .fillMaxWidth()

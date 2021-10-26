@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.ui
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.padding
@@ -34,9 +33,9 @@ import ch.qscqlmpa.dwitch.ui.ingame.gameroom.host.GameRoomHostScreen
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.host.GameRoomHostViewModel
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.playerdashboard.GameRoomViewModel
 import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.WaitingRoomViewModel
-import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.guest.WaitingRoomGuestScreen
+import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.guest.WaitingRoomGuestBody
 import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.guest.WaitingRoomGuestViewModel
-import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.host.WaitingRoomHostScreen
+import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.host.WaitingRoomHostBody
 import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.host.WaitingRoomHostViewModel
 import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination
 import ch.qscqlmpa.dwitch.ui.navigation.InGameGuestDestination
@@ -51,25 +50,23 @@ import org.tinylog.Logger
 fun Dwitch(
     createMainActivityComponent: (NavHostController) -> MainActivityComponent,
     createInGameHostUiComponent: (MainActivityComponent) -> InGameHostUiComponent,
-    createInGameGuestUiComponent: (MainActivityComponent) -> InGameGuestUiComponent,
-    finish: () -> Unit
+    createInGameGuestUiComponent: (MainActivityComponent) -> InGameGuestUiComponent
 ) {
+    val navController = rememberNavController()
+
+    // Tied to activity's lifecycle. Defines @ActivityScope Dagger scope
+    val mainActivityComponent = daggerUiScopedComponent(
+        componentFactory = { createMainActivityComponent(navController) }
+    )
+
     DwitchTheme {
-        val navController = rememberNavController()
-
-        // Tied to activity's lifecycle. Defines @ActivityScope Dagger scope
-        val mainActivityComponent = daggerUiScopedComponent(
-            componentFactory = { createMainActivityComponent(navController) }
-        )
-
         Scaffold { innerPadding ->
             DwitchNavHost(
                 mainActivityComponent = mainActivityComponent,
                 createInGameHostUiComponent = createInGameHostUiComponent,
                 createInGameGuestUiComponent = createInGameGuestUiComponent,
                 navHostController = navController,
-                modifier = Modifier.padding(innerPadding),
-                finish = finish
+                modifier = Modifier.padding(innerPadding)
             )
         }
     }
@@ -83,12 +80,10 @@ private fun DwitchNavHost(
     createInGameHostUiComponent: (MainActivityComponent) -> InGameHostUiComponent,
     createInGameGuestUiComponent: (MainActivityComponent) -> InGameGuestUiComponent,
     navHostController: NavHostController,
-    modifier: Modifier = Modifier,
-    finish: () -> Unit
+    modifier: Modifier = Modifier
 ) {
     val mainVmFactory = mainActivityComponent.mainViewModelFactory
     val screenNavigator = mainActivityComponent.screenNavigator
-    BackHandler { finish() }
     NavHost(
         navController = navHostController,
         startDestination = HomeDestination.Home.routeName,
@@ -108,7 +103,7 @@ private fun DwitchNavHost(
             val gameAd = screenNavigator.getData(HomeDestination.JoinNewGame.gameParamName) as GameAdvertisingInfo?
             if (gameAd != null) {
                 JoinNewGameScreen(
-                    joinNewGameViewModel,
+                    joinNewGameViewModel = joinNewGameViewModel,
                     gameAd = gameAd
                 )
             } else {
@@ -131,7 +126,7 @@ private fun DwitchNavHost(
                 val waitingRoomViewModel = viewModel<WaitingRoomViewModel>(factory = vmFactory)
                 val guestViewModel = viewModel<WaitingRoomGuestViewModel>(factory = vmFactory)
                 val connectionViewModel = viewModel<ConnectionGuestViewModel>(factory = vmFactory)
-                WaitingRoomGuestScreen(
+                WaitingRoomGuestBody(
                     waitingRoomViewModel,
                     guestViewModel,
                     connectionViewModel
@@ -150,6 +145,7 @@ private fun DwitchNavHost(
                 )
             }
         }
+
         // In-game host graph destinations
         navigation(
             route = HomeDestination.InGameHost.routeName,
@@ -164,7 +160,7 @@ private fun DwitchNavHost(
                 val waitingRoomViewModel = viewModel<WaitingRoomViewModel>(factory = vmFactory)
                 val hostViewModel = viewModel<WaitingRoomHostViewModel>(factory = vmFactory)
                 val connectionViewModel = viewModel<ConnectionHostViewModel>(factory = vmFactory)
-                WaitingRoomHostScreen(
+                WaitingRoomHostBody(
                     waitingRoomViewModel,
                     hostViewModel,
                     connectionViewModel

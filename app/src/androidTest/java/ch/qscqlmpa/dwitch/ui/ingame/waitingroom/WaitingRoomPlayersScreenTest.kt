@@ -72,7 +72,7 @@ class WaitingRoomPlayersScreenTest : BaseUiUnitTest() {
 
     private fun launchTest() {
         launchTestWithContent {
-            WaitingRoomPlayersScreen(
+            WaitingRoomPlayers(
                 players = listOf(aragorn, legolas, gimli, galadriel, theoden),
                 showAddComputerPlayer = showAddComputerPlayer,
                 onAddComputerPlayer = {},

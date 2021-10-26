@@ -54,7 +54,7 @@ class ConnectionGuestScreenTest : BaseUiUnitTest() {
 
     private fun launchTest() {
         launchTestWithContent {
-            ConnectionGuestScreen(state, onReconnectClick = {}, onAbortClick = {})
+            CommunicationGuest(state, onReconnectClick = {}, onAbortClick = {})
         }
     }
 }

@@ -20,10 +20,10 @@ import ch.qscqlmpa.dwitch.ui.common.*
 import ch.qscqlmpa.dwitch.ui.ingame.GameRulesDialog
 import ch.qscqlmpa.dwitch.ui.ingame.LoadingSpinner
 import ch.qscqlmpa.dwitch.ui.ingame.connection.host.ConnectionHostViewModel
-import ch.qscqlmpa.dwitch.ui.ingame.gameroom.DashboardScreen
+import ch.qscqlmpa.dwitch.ui.ingame.gameroom.Dashboard
+import ch.qscqlmpa.dwitch.ui.ingame.gameroom.cardexchange.CardExchange
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.cardexchange.CardExchangeOnGoing
-import ch.qscqlmpa.dwitch.ui.ingame.gameroom.cardexchange.CardExchangeScreen
-import ch.qscqlmpa.dwitch.ui.ingame.gameroom.endofround.EndOfRoundScreen
+import ch.qscqlmpa.dwitch.ui.ingame.gameroom.endofround.EndOfRound
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.guest.GameRoomScreen
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.playerdashboard.GameRoomViewModel
 import ch.qscqlmpa.dwitch.ui.theme.DwitchTheme
@@ -32,12 +32,9 @@ import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationState
 
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
-fun GameRoomHostScreenPreview() {
+fun GameRoomHostBodyPreview() {
     DwitchTheme(false) {
         GameRoomHostBody(
             toolbarTitle = "Dwiiiitch",
@@ -140,7 +137,7 @@ fun GameRoomHostBody(
         ) {
             when (screen) {
                 is GameRoomScreen.Dashboard -> {
-                    DashboardScreen(
+                    Dashboard(
                         dashboardInfo = screen.dashboardInfo,
                         onCardClick = onCardClick,
                         onPlayClick = onPlayClick,
@@ -149,7 +146,7 @@ fun GameRoomHostBody(
                     )
                 }
                 is GameRoomScreen.EndOfRound -> {
-                    EndOfRoundScreen(screen.endOfRoundInfo)
+                    EndOfRound(screen.endOfRoundInfo)
                     Spacer(Modifier.height(16.dp))
                     Button(
                         onClick = onStartNewRoundClick,
@@ -159,7 +156,7 @@ fun GameRoomHostBody(
                     ) { Text(stringResource(R.string.start_new_round)) }
                 }
                 is GameRoomScreen.CardExchange -> {
-                    CardExchangeScreen(
+                    CardExchange(
                         numCardsToChoose = screen.cardExchangeState.numCardsToChoose,
                         cardsInHand = screen.cardExchangeState.cardsInHand,
                         canSubmitCardsForExchange = screen.cardExchangeState.canPerformExchange,
@@ -174,7 +171,7 @@ fun GameRoomHostBody(
 
         when {
             endingGame -> LoadingDialog(R.string.ending_game)
-            else -> ConnectionHostScreen(
+            else -> CommunicationHost(
                 state = connectionStatus,
                 onReconnectClick = onReconnectClick,
                 onAbortClick = { showEndGameConfirmationDialog.value = true }

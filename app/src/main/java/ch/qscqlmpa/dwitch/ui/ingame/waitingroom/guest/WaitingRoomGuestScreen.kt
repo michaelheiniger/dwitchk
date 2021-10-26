@@ -17,22 +17,19 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
+import ch.qscqlmpa.dwitch.ui.base.PreviewContainer
 import ch.qscqlmpa.dwitch.ui.common.*
 import ch.qscqlmpa.dwitch.ui.ingame.connection.guest.ConnectionGuestViewModel
-import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.WaitingRoomPlayersScreen
+import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.WaitingRoomPlayers
 import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.WaitingRoomViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.PlayerWrUi
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
-private fun WaitingRoomGuestScreenPlayerConnectedPreview() {
-    ActivityScreenContainer {
+private fun WaitingRoomGuestBodyPlayerConnectedPreview() {
+    PreviewContainer {
         WaitingRoomGuestBody(
             toolbarTitle = "Dwiiitch",
             players = listOf(
@@ -54,7 +51,7 @@ private fun WaitingRoomGuestScreenPlayerConnectedPreview() {
 }
 
 @Composable
-fun WaitingRoomGuestScreen(
+fun WaitingRoomGuestBody(
     waitingRoomViewModel: WaitingRoomViewModel,
     guestViewModel: WaitingRoomGuestViewModel,
     connectionViewModel: ConnectionGuestViewModel
@@ -121,9 +118,9 @@ fun WaitingRoomGuestBody(
                 .animateContentSize()
                 .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
-            WaitingRoomPlayersScreen(players = players, showAddComputerPlayer = false)
+            WaitingRoomPlayers(players = players, showAddComputerPlayer = false)
             Spacer(Modifier.height(16.dp))
-            GuestControlScreen(
+            GuestControls(
                 ready = ready,
                 onReadyClick = onReadyClick
             )
@@ -146,7 +143,7 @@ fun WaitingRoomGuestBody(
             )
         }
         WaitingRoomGuestNotification.None -> {
-            ConnectionGuestScreen(
+            CommunicationGuest(
                 state = connectionState,
                 onReconnectClick = onReconnectClick,
                 onAbortClick = { showLeaveGameConfirmationDialog.value = true }
@@ -165,7 +162,7 @@ fun WaitingRoomGuestBody(
 }
 
 @Composable
-private fun GuestControlScreen(
+private fun GuestControls(
     ready: UiCheckboxModel,
     onReadyClick: (Boolean) -> Unit
 ) {

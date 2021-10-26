@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
+import ch.qscqlmpa.dwitch.ui.base.PreviewContainer
 import ch.qscqlmpa.dwitch.ui.common.*
 import ch.qscqlmpa.dwitch.ui.qrcodescanner.QrCodeScanResult
 import ch.qscqlmpa.dwitch.ui.qrcodescanner.ScanQrCodeResultContract
@@ -35,12 +35,9 @@ import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import org.joda.time.DateTime
 import java.util.*
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
-fun HomeScreenPreview() {
+fun HomeBodyPreview() {
     val advertisedGame = LoadedData.Success(
         listOf(
             GameAdvertisingInfo(false, "Game 1", GameCommonId(UUID.randomUUID()), "192.168.1.1", 8889),
@@ -60,7 +57,7 @@ fun HomeScreenPreview() {
             )
         )
     )
-    ActivityScreenContainer {
+    PreviewContainer {
         HomeBody(
             notification = HomeNotification.None,
             advertisedGames = advertisedGame,

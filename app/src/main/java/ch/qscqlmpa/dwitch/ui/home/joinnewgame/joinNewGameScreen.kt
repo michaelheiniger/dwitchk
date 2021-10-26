@@ -14,7 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
+import ch.qscqlmpa.dwitch.ui.base.PreviewContainer
 import ch.qscqlmpa.dwitch.ui.common.*
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 
@@ -41,13 +41,10 @@ fun JoinNewGameScreen(
     )
 }
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
 private fun JoinNewGameBodyPreview() {
-    ActivityScreenContainer {
+    PreviewContainer {
         JoinNewGameBody(
             notification = JoinNewGameNotification.None,
             gameName = "Dwiiitch",

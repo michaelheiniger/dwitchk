@@ -61,6 +61,8 @@ class WaitingRoomHostScreenTest : BaseUiUnitTest() {
                 gameQrCode = gameQrCode,
                 launchGameEnabled,
                 connectionState,
+                cancelingGame = false,
+                launchingGame = false,
                 onAddComputerPlayer = {},
                 onLaunchGameClick = {},
                 onCancelGameClick = {},

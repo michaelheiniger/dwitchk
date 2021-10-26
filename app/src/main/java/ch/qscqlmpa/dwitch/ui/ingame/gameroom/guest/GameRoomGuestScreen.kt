@@ -14,29 +14,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
+import ch.qscqlmpa.dwitch.ui.base.PreviewContainer
 import ch.qscqlmpa.dwitch.ui.common.*
 import ch.qscqlmpa.dwitch.ui.ingame.GameOverDialog
 import ch.qscqlmpa.dwitch.ui.ingame.GameRulesDialog
 import ch.qscqlmpa.dwitch.ui.ingame.LoadingSpinner
 import ch.qscqlmpa.dwitch.ui.ingame.connection.guest.ConnectionGuestViewModel
-import ch.qscqlmpa.dwitch.ui.ingame.gameroom.DashboardScreen
+import ch.qscqlmpa.dwitch.ui.ingame.gameroom.Dashboard
+import ch.qscqlmpa.dwitch.ui.ingame.gameroom.cardexchange.CardExchange
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.cardexchange.CardExchangeOnGoing
-import ch.qscqlmpa.dwitch.ui.ingame.gameroom.cardexchange.CardExchangeScreen
-import ch.qscqlmpa.dwitch.ui.ingame.gameroom.endofround.EndOfRoundScreen
+import ch.qscqlmpa.dwitch.ui.ingame.gameroom.endofround.EndOfRound
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.playerdashboard.GameRoomViewModel
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
 
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
-fun GameRoomGuestScreenPreview() {
-    ActivityScreenContainer {
+fun GameRoomGuestBodyPreview() {
+    PreviewContainer {
         GameRoomGuestBody(
             toolbarTitle = "Dwiitch",
             screen = GameRoomScreen.CardExchangeOnGoing,
@@ -141,16 +138,16 @@ fun GameRoomGuestBody(
                 .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
             when (screen) {
-                is GameRoomScreen.Dashboard -> DashboardScreen(
+                is GameRoomScreen.Dashboard -> Dashboard(
                     dashboardInfo = screen.dashboardInfo,
                     onCardClick = onCardClick,
                     onPlayClick = onPlayClick,
                     onPassClick = onPassClick,
                     onEndOrLeaveGameClick = { showLeaveGameConfirmationDialog.value = true }
                 )
-                is GameRoomScreen.EndOfRound -> EndOfRoundScreen(screen.endOfRoundInfo)
+                is GameRoomScreen.EndOfRound -> EndOfRound(screen.endOfRoundInfo)
                 is GameRoomScreen.CardExchange -> {
-                    CardExchangeScreen(
+                    CardExchange(
                         numCardsToChoose = screen.cardExchangeState.numCardsToChoose,
                         cardsInHand = screen.cardExchangeState.cardsInHand,
                         canSubmitCardsForExchange = screen.cardExchangeState.canPerformExchange,
@@ -167,7 +164,7 @@ fun GameRoomGuestBody(
     when {
         leavingGame -> LoadingDialog(R.string.leaving_game)
         gameOver -> GameOverDialog(onGameOverAcknowledge = onGameOverAcknowledge)
-        else -> ConnectionGuestScreen(
+        else -> CommunicationGuest(
             state = connectionStatus,
             onReconnectClick = onReconnectClick,
             onAbortClick = { showLeaveGameConfirmationDialog.value = true }
