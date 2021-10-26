@@ -1,14 +1,22 @@
 package ch.qscqlmpa.dwitch.ui.ingame.waitingroom
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,6 +53,7 @@ private fun WaitingRoomPlayersPreview() {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WaitingRoomPlayers(
     showAddComputerPlayer: Boolean,
@@ -76,14 +85,52 @@ fun WaitingRoomPlayers(
         Spacer(Modifier.height(8.dp))
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(players, key = { p -> p.id }) { player ->
-                Column(
-                    Modifier
-                        .fillMaxWidth()
-                        .testTag(player.name)
-                        .semantics(mergeDescendants = true, properties = {}),
-                ) {
-                    PlayerDetailsRow1(player, onKickPlayer = onKickPlayer)
-                    PlayerDetailsRow2(player)
+                if (player.kickable) {
+                    val dismissState = rememberDismissState()
+                    if (dismissState.isDismissed(DismissDirection.EndToStart)) {
+                        onKickPlayer(player)
+                    }
+                    SwipeToDismiss(
+                        state = dismissState,
+                        modifier = Modifier,
+                        directions = setOf(DismissDirection.EndToStart),
+                        dismissThresholds = { FractionalThreshold(0.5f) },
+                        background = {
+                            dismissState.dismissDirection ?: return@SwipeToDismiss
+                            val color by animateColorAsState(
+                                when (dismissState.targetValue) {
+                                    DismissValue.Default -> Color.LightGray
+                                    DismissValue.DismissedToEnd -> Color.Green
+                                    DismissValue.DismissedToStart -> Color.Red
+                                }
+                            )
+                            val scale by animateFloatAsState(
+                                if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
+                            )
+
+                            Box(
+                                Modifier.fillMaxSize().background(color).padding(horizontal = 20.dp),
+                                contentAlignment = Alignment.CenterEnd
+                            ) {
+                                Icon(
+                                    Icons.Default.Delete,
+                                    contentDescription = stringResource(R.string.kick_player),
+                                    modifier = Modifier.scale(scale)
+                                )
+                            }
+                        },
+                        dismissContent = {
+                            Card(
+                                elevation = animateDpAsState(if (dismissState.dismissDirection != null) 4.dp else 0.dp).value
+                            ) {
+                                PlayerListItem(player = player)
+                            }
+                        }
+                    )
+                } else {
+                    Card(elevation = 0.dp) {
+                        PlayerListItem(player = player)
+                    }
                 }
             }
         }
@@ -91,10 +138,21 @@ fun WaitingRoomPlayers(
 }
 
 @Composable
-private fun PlayerDetailsRow1(
-    player: PlayerWrUi,
-    onKickPlayer: (PlayerWrUi) -> Unit
-) {
+private fun PlayerListItem(player: PlayerWrUi) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 10.dp, vertical = 2.dp)
+            .testTag(player.name)
+            .semantics(mergeDescendants = true, properties = {}),
+    ) {
+        PlayerDetailsRow1(player)
+        PlayerDetailsRow2(player)
+    }
+}
+
+@Composable
+private fun PlayerDetailsRow1(player: PlayerWrUi) {
     Row(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -106,20 +164,6 @@ private fun PlayerDetailsRow1(
                 .weight(1f)
                 .wrapContentWidth(Alignment.Start)
         )
-        if (player.kickable) {
-            IconButton(
-                onClick = { onKickPlayer(player) },
-                modifier = Modifier
-                    .testTag("${UiTags.kickPlayer}-${player.name}")
-                    .weight(1f)
-                    .wrapContentWidth(Alignment.End)
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_baseline_clear_24),
-                    contentDescription = stringResource(R.string.kick_player, player.name)
-                )
-            }
-        }
     }
 }
 
