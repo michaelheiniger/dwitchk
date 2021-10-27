@@ -62,6 +62,46 @@ fun InfoDialog(
 }
 
 @Composable
+fun InfoDialog(
+    text: Int,
+    content: @Composable () -> Unit,
+    closeLabel: Int = R.string.close,
+    onCloseClick: () -> Unit = {}
+) {
+    Dialog(
+        onDismissRequest = onCloseClick,
+        properties = DialogProperties(),
+        content = {
+            Surface(
+                shape = MaterialTheme.shapes.medium,
+                color = MaterialTheme.colors.surface,
+                contentColor = contentColorFor(MaterialTheme.colors.surface)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = stringResource(text), color = MaterialTheme.colors.primary)
+                    Spacer(Modifier.height(8.dp))
+                    content()
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedButton(
+                        onClick = onCloseClick,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .testTag(UiTags.waitingDialogAbortBtn)
+                    ) {
+                        Text(stringResource(closeLabel))
+                    }
+                }
+            }
+        }
+    )
+}
+
+@Composable
 fun ConfirmationDialog(
     title: Int,
     text: Int,

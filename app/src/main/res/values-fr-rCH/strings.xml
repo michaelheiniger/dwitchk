@@ -169,7 +169,7 @@
     <string name="waiting_for_disconnected_player">En attente de reconnection d\'un joueur</string>
     <string name="dialog_error_title">Erreur</string>
     <string name="error_joining_game_text">Erreur lors de la tentative de rejoindre la partie</string>
-    <string name="game_ad_qr_code_hint">Les invités peuvent lire ce QR code pour rejoindre la partie</string>
+    <string name="game_ad_qr_code_hint">QR code de la partie</string>
     <string name="title_activity_qr_code_scanner">QrCodeScannerActivity</string>
     <string name="join_game_with_qr_code">Rejoindre une partie en lisant le QR code</string>
     <string name="error_scanning_qr_code">Erreur lors de la lecture du QR code</string>
@@ -184,5 +184,7 @@
     <string name="leaving_game">Leaving game…</string>
     <string name="canceling_game">Canceling game…</string>
     <string name="ending_game">Ending game…</string>
-    <string name="toggle_dark_theme_cs">Toggle Dark theme</string>
+    <string name="toggle_dark_theme_cs">Basculer sur le dark theme</string>
+    <string name="close">Close</string>
+    <string name="game_ad_qr_code_cd">QR code de la partie</string>
 </resources>
