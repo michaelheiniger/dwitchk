@@ -1,10 +1,12 @@
 package ch.qscqlmpa.dwitch.ui.ingame.waitingroom
 
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.filterToOne
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.onChildren
+import androidx.compose.ui.test.onNodeWithTag
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
 import ch.qscqlmpa.dwitch.base.BaseUiUnitTest
-import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.PlayerWrUi
 import org.junit.Test
 
@@ -20,8 +22,6 @@ class WaitingRoomPlayersScreenTest : BaseUiUnitTest() {
     private val theoden =
         PlayerWrUi(14L, name = "Theoden", connected = true, ready = true, kickable = true)
 
-    private var showAddComputerPlayer = true
-
     @Test
     fun playersAreDisplayed() {
         launchTest()
@@ -33,26 +33,6 @@ class WaitingRoomPlayersScreenTest : BaseUiUnitTest() {
         assertPlayer(gimli)
         assertPlayer(galadriel)
         assertPlayer(theoden)
-    }
-
-    @Test
-    fun addComputerPlayerIsDisplayed() {
-        showAddComputerPlayer = true
-
-        launchTest()
-
-        composeTestRule.onNodeWithTag(UiTags.addComputerPlayer)
-            .assertIsEnabled()
-            .assertIsDisplayed()
-    }
-
-    @Test
-    fun addComputerPlayerIsNotDisplayed() {
-        showAddComputerPlayer = false
-
-        launchTest()
-
-        composeTestRule.onNodeWithTag(UiTags.addComputerPlayer).assertDoesNotExist()
     }
 
     private fun assertPlayer(player: PlayerWrUi) {
@@ -73,9 +53,7 @@ class WaitingRoomPlayersScreenTest : BaseUiUnitTest() {
     private fun launchTest() {
         launchTestWithContent {
             WaitingRoomPlayers(
-                players = listOf(aragorn, legolas, gimli, galadriel, theoden),
-                showAddComputerPlayer = showAddComputerPlayer,
-                onAddComputerPlayer = {},
+                players = listOf(aragorn, legolas, gimli, galadriel, theoden)
             )
         }
     }

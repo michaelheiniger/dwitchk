@@ -67,6 +67,13 @@ class WaitingRoomGuestScreenTest : BaseUiUnitTest() {
             .assertIsDisplayed()
     }
 
+    @Test
+    fun addComputerPlayerIsNotDisplayed() {
+        launchTest()
+
+        composeTestRule.onNodeWithTag(UiTags.addComputerPlayer).assertDoesNotExist()
+    }
+
     private fun launchTest() {
         launchTestWithContent {
             WaitingRoomGuestBody(
