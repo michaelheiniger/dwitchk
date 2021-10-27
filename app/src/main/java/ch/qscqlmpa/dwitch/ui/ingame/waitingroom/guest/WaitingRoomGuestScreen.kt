@@ -116,7 +116,7 @@ fun WaitingRoomGuestBody(
                 .animateContentSize()
                 .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
-            WaitingRoomPlayers(players = players, showAddComputerPlayer = false)
+            WaitingRoomPlayers(players = players)
             Spacer(Modifier.height(16.dp))
             GuestControls(
                 ready = ready,

@@ -13,6 +13,7 @@ class WaitingRoomHostScreenTest : BaseUiUnitTest() {
 
     private lateinit var players: List<PlayerWrUi>
     private var launchGameEnabled = false
+    private var showAddComputerPlayer = true
     private lateinit var connectionState: HostCommunicationState
     private val gameQrCode = buildSampleQrCode()
 
@@ -28,10 +29,13 @@ class WaitingRoomHostScreenTest : BaseUiUnitTest() {
 
     @Test
     fun launchGameControlIsEnabled() {
+        // Given
         launchGameEnabled = true
 
+        // When
         launchTest()
 
+        // Then
         composeTestRule.onNodeWithText(getString(R.string.launch_game))
             .assertIsEnabled()
             .assertIsDisplayed()
@@ -41,10 +45,13 @@ class WaitingRoomHostScreenTest : BaseUiUnitTest() {
 
     @Test
     fun launchGameControlIsDisabled() {
+        // Given
         launchGameEnabled = false
 
+        // When
         launchTest()
 
+        // Then
         composeTestRule.onNodeWithText(getString(R.string.launch_game))
             .assertIsNotEnabled()
             .assertIsDisplayed()
@@ -52,11 +59,37 @@ class WaitingRoomHostScreenTest : BaseUiUnitTest() {
         composeTestRule.onNodeWithTag(UiTags.toolbarNavigationIcon).assertIsDisplayed()
     }
 
+    @Test
+    fun addComputerPlayerIsDisplayed() {
+        // Given
+        showAddComputerPlayer = true
+
+        // When
+        launchTest()
+
+        // Then
+        composeTestRule.onNodeWithTag(UiTags.addComputerPlayer)
+            .assertIsEnabled()
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun addComputerPlayerIsNotDisplayed() {
+        // Given
+        showAddComputerPlayer = false
+
+        // When
+        launchTest()
+
+        // Then
+        composeTestRule.onNodeWithTag(UiTags.addComputerPlayer).assertDoesNotExist()
+    }
+
     private fun launchTest() {
         launchTestWithContent {
             WaitingRoomHostBody(
                 toolbarTitle = "Dwiitch",
-                showAddComputerPlayer = true,
+                showAddComputerPlayer = showAddComputerPlayer,
                 players,
                 gameQrCode = gameQrCode,
                 launchGameEnabled,

@@ -32,7 +32,6 @@ import ch.qscqlmpa.dwitchgame.ingame.waitingroom.PlayerWrUi
 private fun WaitingRoomPlayersPreview() {
     PreviewContainer {
         WaitingRoomPlayers(
-            showAddComputerPlayer = true,
             players = listOf(
                 PlayerWrUi(
                     id = 1L,
@@ -56,32 +55,15 @@ private fun WaitingRoomPlayersPreview() {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WaitingRoomPlayers(
-    showAddComputerPlayer: Boolean,
     players: List<PlayerWrUi>,
-    onAddComputerPlayer: () -> Unit = {},
     onKickPlayer: (PlayerWrUi) -> Unit = {}
 ) {
     Column(Modifier.fillMaxWidth()) {
-        Row(Modifier.fillMaxWidth()) {
-            Text(
-                stringResource(R.string.players_in_waitingroom),
-                fontSize = 32.sp,
-                color = MaterialTheme.colors.primary,
-                modifier = Modifier
-                    .weight(1f)
-                    .wrapContentWidth(Alignment.Start)
-            )
-            if (showAddComputerPlayer) {
-                TextButton(
-                    onClick = onAddComputerPlayer,
-                    modifier = Modifier
-                        .weight(1f)
-                        .wrapContentWidth(Alignment.End)
-                        .testTag(UiTags.addComputerPlayer)
-                ) { Text(stringResource(R.string.add_computer_player)) }
-                Spacer(Modifier.height(8.dp))
-            }
-        }
+        Text(
+            stringResource(R.string.players_in_waitingroom),
+            fontSize = 32.sp,
+            color = MaterialTheme.colors.primary,
+        )
         Spacer(Modifier.height(8.dp))
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(players, key = { p -> p.id }) { player ->
@@ -92,7 +74,7 @@ fun WaitingRoomPlayers(
                     }
                     SwipeToDismiss(
                         state = dismissState,
-                        modifier = Modifier,
+                        modifier = Modifier.testTag("${UiTags.kickPlayer}-${player.name}"),
                         directions = setOf(DismissDirection.EndToStart),
                         dismissThresholds = { FractionalThreshold(0.5f) },
                         background = {
@@ -108,12 +90,20 @@ fun WaitingRoomPlayers(
                                 if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
                             )
 
-                            Box(
-                                Modifier.fillMaxSize().background(color).padding(horizontal = 20.dp),
-                                contentAlignment = Alignment.CenterEnd
+                            Row(
+                                horizontalArrangement = Arrangement.End,
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxSize().background(color).padding(horizontal = 20.dp)
                             ) {
+                                Text(
+                                    text = stringResource(R.string.kick_player, player.name),
+                                    color = Color.White,
+                                    fontSize = 20.sp,
+                                    modifier = Modifier.scale(scale)
+                                )
                                 Icon(
-                                    Icons.Default.Delete,
+                                    imageVector = Icons.Default.Delete,
+                                    tint = Color.White,
                                     contentDescription = stringResource(R.string.kick_player),
                                     modifier = Modifier.scale(scale)
                                 )
@@ -121,7 +111,8 @@ fun WaitingRoomPlayers(
                         },
                         dismissContent = {
                             Card(
-                                elevation = animateDpAsState(if (dismissState.dismissDirection != null) 4.dp else 0.dp).value
+                                elevation = animateDpAsState(if (dismissState.dismissDirection != null) 4.dp else 0.dp).value,
+//                                modifier = Modifier.testTag("${UiTags.kickPlayer}-${player.name}")
                             ) {
                                 PlayerListItem(player = player)
                             }

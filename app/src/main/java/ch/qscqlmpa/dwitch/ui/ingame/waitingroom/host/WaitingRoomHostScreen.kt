@@ -4,9 +4,7 @@ import android.graphics.Bitmap
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
@@ -118,6 +116,20 @@ fun WaitingRoomHostBody(
                     onClick = { showCancelGameConfirmationDialog.value = true }
                 )
             )
+        },
+        floatingActionButton = {
+            if (showAddComputerPlayer) {
+                FloatingActionButton(
+                    backgroundColor = MaterialTheme.colors.primary,
+                    modifier = Modifier.testTag(UiTags.addComputerPlayer),
+                    onClick = onAddComputerPlayer
+                ) {
+                    Text(
+                        text = stringResource(R.string.add_computer_player),
+                        modifier = Modifier.padding(horizontal = 20.dp)
+                    )
+                }
+            }
         }
     ) {
         Column(
@@ -126,18 +138,20 @@ fun WaitingRoomHostBody(
                 .animateContentSize()
                 .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
-            WaitingRoomPlayers(
-                players = players,
-                showAddComputerPlayer = showAddComputerPlayer,
-                onAddComputerPlayer = onAddComputerPlayer,
-                onKickPlayer = onKickPlayer
-            )
+            Column(Modifier.fillMaxWidth().weight(1f).wrapContentHeight(Alignment.Top)) {
+                WaitingRoomPlayers(
+                    players = players,
+                    onKickPlayer = onKickPlayer
+                )
+            }
             Spacer(Modifier.height(16.dp))
-            HostControls(
-                launchGameEnabled = launchGameEnabled,
-                onLaunchGameClick = onLaunchGameClick
-            )
-            GameQrCode(gameQrCode)
+            Column(Modifier.fillMaxWidth().weight(1f).wrapContentHeight(Alignment.Top)) {
+                HostControls(
+                    launchGameEnabled = launchGameEnabled,
+                    onLaunchGameClick = onLaunchGameClick,
+                )
+                GameQrCode(gameQrCode)
+            }
         }
         when {
             launchingGame -> LoadingDialog(R.string.launching_game)
@@ -188,7 +202,7 @@ private fun GameQrCode(gameQrCode: Bitmap?) {
             Image(
                 bitmap = gameQrCode.asImageBitmap(),
                 contentDescription = "Game advertisement QR Code",
-                modifier = Modifier.align(Alignment.CenterHorizontally).size(100.dp)
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }
     }
@@ -198,11 +212,9 @@ fun buildSampleQrCode(): Bitmap? {
     val content = "https://www.github.com/michaelheiniger/dwitchk"
     val writer = QRCodeWriter()
     val bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512)
-    val width = bitMatrix.width
-    val height = bitMatrix.height
-    val qrCode = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
-    for (x in 0 until width) {
-        for (y in 0 until height) {
+    val qrCode = Bitmap.createBitmap(bitMatrix.width, bitMatrix.height, Bitmap.Config.RGB_565)
+    for (x in 0 until bitMatrix.width) {
+        for (y in 0 until bitMatrix.height) {
             qrCode.setPixel(x, y, if (bitMatrix.get(x, y)) android.graphics.Color.BLACK else android.graphics.Color.WHITE)
         }
     }
