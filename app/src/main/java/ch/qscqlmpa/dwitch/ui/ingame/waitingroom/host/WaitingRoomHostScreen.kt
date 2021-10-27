@@ -5,7 +5,9 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
@@ -117,20 +119,6 @@ fun WaitingRoomHostBody(
                     onClick = { showCancelGameConfirmationDialog.value = true }
                 )
             )
-        },
-        floatingActionButton = {
-            if (showAddComputerPlayer) {
-                FloatingActionButton(
-                    backgroundColor = MaterialTheme.colors.primary,
-                    modifier = Modifier.testTag(UiTags.addComputerPlayer),
-                    onClick = onAddComputerPlayer
-                ) {
-                    Text(
-                        text = stringResource(R.string.add_computer_player),
-                        modifier = Modifier.padding(horizontal = 20.dp)
-                    )
-                }
-            }
         }
     ) {
         Column(
@@ -142,6 +130,8 @@ fun WaitingRoomHostBody(
             Column(Modifier.fillMaxWidth().weight(1f).wrapContentHeight(Alignment.Top)) {
                 WaitingRoomPlayers(
                     players = players,
+                    showAddComputerPlayer = showAddComputerPlayer,
+                    onAddComputerPlayer = onAddComputerPlayer,
                     onKickPlayer = onKickPlayer
                 )
             }

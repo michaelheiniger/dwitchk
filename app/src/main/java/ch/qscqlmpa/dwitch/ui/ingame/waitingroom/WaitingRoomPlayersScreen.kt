@@ -47,7 +47,10 @@ private fun WaitingRoomPlayersPreview() {
                     ready = false,
                     kickable = false
                 )
-            )
+            ),
+            showAddComputerPlayer = true,
+            onAddComputerPlayer = {},
+            onKickPlayer = {}
         )
     }
 }
@@ -56,6 +59,8 @@ private fun WaitingRoomPlayersPreview() {
 @Composable
 fun WaitingRoomPlayers(
     players: List<PlayerWrUi>,
+    showAddComputerPlayer: Boolean = false,
+    onAddComputerPlayer: () -> Unit = {},
     onKickPlayer: (PlayerWrUi) -> Unit = {}
 ) {
     Column(Modifier.fillMaxWidth()) {
@@ -112,7 +117,6 @@ fun WaitingRoomPlayers(
                         dismissContent = {
                             Card(
                                 elevation = animateDpAsState(if (dismissState.dismissDirection != null) 4.dp else 0.dp).value,
-//                                modifier = Modifier.testTag("${UiTags.kickPlayer}-${player.name}")
                             ) {
                                 PlayerListItem(player = player)
                             }
@@ -121,6 +125,24 @@ fun WaitingRoomPlayers(
                 } else {
                     Card(elevation = 0.dp) {
                         PlayerListItem(player = player)
+                    }
+                }
+            }
+            if (showAddComputerPlayer) {
+                item {
+                    Card(elevation = 0.dp) {
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            TextButton(
+                                onClick = onAddComputerPlayer,
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.add_computer_player),
+                                    fontSize = 20.sp,
+                                    modifier = Modifier.testTag(UiTags.addComputerPlayer)
+                                )
+                            }
+                        }
                     }
                 }
             }
