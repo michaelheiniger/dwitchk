@@ -3,6 +3,7 @@ package ch.qscqlmpa.dwitch.ui.ingame.waitingroom.host
 import android.graphics.Bitmap
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -193,16 +194,34 @@ private fun HostControls(
 
 @Composable
 private fun GameQrCode(gameQrCode: Bitmap?) {
+    val showQrCodeInModal = remember { mutableStateOf(false) }
     if (gameQrCode != null) {
         Column(Modifier.fillMaxWidth()) {
+            Spacer(Modifier.height(16.dp))
             Text(
                 text = stringResource(R.string.game_ad_qr_code_hint),
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Image(
                 bitmap = gameQrCode.asImageBitmap(),
-                contentDescription = "Game advertisement QR Code",
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                contentDescription = stringResource(R.string.game_ad_qr_code_cd),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
+                    .clickable { showQrCodeInModal.value = true }
+            )
+        }
+        if (showQrCodeInModal.value) {
+            InfoDialog(
+                text = R.string.game_ad_qr_code_hint,
+                content = {
+                    Image(
+                        bitmap = gameQrCode.asImageBitmap(),
+                        contentDescription = "Game advertisement QR Code",
+                        modifier = Modifier.size(300.dp)
+                    )
+                },
+                onCloseClick = { showQrCodeInModal.value = false }
             )
         }
     }
