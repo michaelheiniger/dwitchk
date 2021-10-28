@@ -73,8 +73,7 @@ fun WaitingRoomPlayers(
             fontSize = 32.sp,
             color = MaterialTheme.colors.primary,
         )
-        Spacer(Modifier.height(8.dp))
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             items(players, key = { p -> p.id }) { player ->
                 if (player.kickable) {
                     val dismissState = rememberDismissState()

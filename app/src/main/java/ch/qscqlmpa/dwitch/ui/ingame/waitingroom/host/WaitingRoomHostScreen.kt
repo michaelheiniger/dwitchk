@@ -125,7 +125,7 @@ fun WaitingRoomHostBody(
             Modifier
                 .fillMaxWidth()
                 .animateContentSize()
-                .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
+                .padding(8.dp)
         ) {
             Column(Modifier.fillMaxWidth().weight(1f).wrapContentHeight(Alignment.Top)) {
                 WaitingRoomPlayers(
