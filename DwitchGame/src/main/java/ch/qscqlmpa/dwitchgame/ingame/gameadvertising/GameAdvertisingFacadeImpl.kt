@@ -22,6 +22,7 @@ internal class GameAdvertisingFacadeImpl @Inject constructor(
         return fetchGameInfo()
             .subscribeOn(schedulerFactory.io())
             .flatMapObservable(gameAdvertiser::observeSerializedGameAdvertisingInfo)
+            .distinctUntilChanged()
     }
 
     override fun advertiseGame(): Completable {

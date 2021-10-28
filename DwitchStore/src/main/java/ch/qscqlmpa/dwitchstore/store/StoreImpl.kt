@@ -23,11 +23,11 @@ internal class StoreImpl @Inject constructor(private val appRoomDatabase: AppRoo
     }
 
     override fun observeGameCommonIdOfResumableGames(): Observable<List<GameCommonId>> {
-        return appRoomDatabase.gameDao().getGameCommonIdOfResumableGames()
+        return appRoomDatabase.gameDao().getGameCommonIdOfResumableGames().distinctUntilChanged()
     }
 
     override fun getResumableGamesInfo(): Observable<List<ResumableGameInfo>> {
-        return appRoomDatabase.gameDao().getResumableGamesInfo()
+        return appRoomDatabase.gameDao().getResumableGamesInfo().distinctUntilChanged()
     }
 
     override fun getGame(gameId: Long): Game {

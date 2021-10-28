@@ -21,6 +21,7 @@ internal class WaitingRoomPlayerRepository @Inject constructor(
             communicationStateRepository.connectedToGame(),
             Observable.fromCallable { store.gameIsNew() }
         ) { players, localPlayerConnected, gameIsNew -> players.map { p -> toPlayerWrUi(p, localPlayerConnected, gameIsNew) } }
+            .distinctUntilChanged()
     }
 
     fun observeLocalPlayer(): Observable<PlayerWrUi> {
@@ -34,6 +35,7 @@ internal class WaitingRoomPlayerRepository @Inject constructor(
                 kickable = false
             )
         }
+            .distinctUntilChanged()
     }
 
     private fun toPlayerWrUi(player: Player, localPlayerConnected: Boolean, gameIsNew: Boolean): PlayerWrUi {
