@@ -1,6 +1,8 @@
 package ch.qscqlmpa.dwitch.ui.ingame.waitingroom
 
-import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.*
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -188,6 +190,7 @@ private fun PlayerDetailsRow1(player: PlayerWrUi) {
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun PlayerDetailsRow2(player: PlayerWrUi) {
     Row(modifier = Modifier.fillMaxWidth()) {
@@ -197,8 +200,7 @@ private fun PlayerDetailsRow2(player: PlayerWrUi) {
                 .weight(1f)
                 .wrapContentWidth(Alignment.Start)
         ) {
-            val readyLabel = if (player.ready) R.string.ready else R.string.not_ready
-            Text(stringResource(readyLabel))
+            ReadyState(player.ready)
         }
 
         val connectionLabel = when (player.connected) {
@@ -211,5 +213,50 @@ private fun PlayerDetailsRow2(player: PlayerWrUi) {
                 .weight(1f)
                 .wrapContentWidth(Alignment.End)
         )
+    }
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+private fun ReadyState(ready: Boolean) {
+    val durationMillis = 300
+    AnimatedContent(
+        targetState = ready,
+        transitionSpec = {
+            if (targetState) {
+                slideInVertically(
+                    initialOffsetY = { height -> height },
+                    animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing)
+                ) + fadeIn(
+                    animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing)
+                ) with slideOutVertically(
+                    targetOffsetY = { height -> -height },
+                    animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing)
+                ) + fadeOut(animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing))
+            } else {
+                slideInVertically(
+                    initialOffsetY = { height -> -height },
+                    animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing)
+                ) + fadeIn(
+                    animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing)
+                ) with slideOutVertically(
+                    targetOffsetY = { height -> height },
+                    animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing)
+                ) + fadeOut(animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing))
+            }.using(SizeTransform(clip = false))
+        }
+    ) { targetState ->
+        val readyLabel = if (targetState) R.string.ready else R.string.not_ready
+        val readyIcon = if (targetState) R.drawable.ic_baseline_check_circle_outline_24 else R.drawable.ic_baseline_clear_24
+        val iconTint = if (targetState) Color(0xFF1CE91C) else Color(0xFFFF0000)
+        Row {
+            Icon(
+                painter = painterResource(readyIcon),
+                contentDescription = null,
+                tint = iconTint
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(stringResource(readyLabel))
+        }
     }
 }
