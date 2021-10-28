@@ -203,16 +203,14 @@ private fun PlayerDetailsRow2(player: PlayerWrUi) {
             ReadyState(player.ready)
         }
 
-        val connectionLabel = when (player.connected) {
-            true -> R.string.player_connected
-            false -> R.string.player_disconnected
-        }
-        Text(
-            stringResource(connectionLabel),
+        Row(
             modifier = Modifier
+                .fillMaxWidth()
                 .weight(1f)
                 .wrapContentWidth(Alignment.End)
-        )
+        ) {
+            ConnectionState(player.connected)
+        }
     }
 }
 
@@ -246,17 +244,62 @@ private fun ReadyState(ready: Boolean) {
             }.using(SizeTransform(clip = false))
         }
     ) { targetState ->
-        val readyLabel = if (targetState) R.string.ready else R.string.not_ready
-        val readyIcon = if (targetState) R.drawable.ic_baseline_check_circle_outline_24 else R.drawable.ic_baseline_clear_24
+        val label = if (targetState) R.string.ready else R.string.not_ready
+        val icon = if (targetState) R.drawable.ic_baseline_check_circle_outline_24 else R.drawable.ic_baseline_clear_24
         val iconTint = if (targetState) Color(0xFF1CE91C) else Color(0xFFFF0000)
         Row {
             Icon(
-                painter = painterResource(readyIcon),
+                painter = painterResource(icon),
                 contentDescription = null,
                 tint = iconTint
             )
             Spacer(Modifier.width(8.dp))
-            Text(stringResource(readyLabel))
+            Text(stringResource(label))
+        }
+    }
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+private fun ConnectionState(connected: Boolean) {
+    val durationMillis = 300
+    AnimatedContent(
+        targetState = connected,
+        transitionSpec = {
+            if (targetState) {
+                slideInVertically(
+                    initialOffsetY = { height -> height },
+                    animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing)
+                ) + fadeIn(
+                    animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing)
+                ) with slideOutVertically(
+                    targetOffsetY = { height -> -height },
+                    animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing)
+                ) + fadeOut(animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing))
+            } else {
+                slideInVertically(
+                    initialOffsetY = { height -> -height },
+                    animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing)
+                ) + fadeIn(
+                    animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing)
+                ) with slideOutVertically(
+                    targetOffsetY = { height -> height },
+                    animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing)
+                ) + fadeOut(animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing))
+            }.using(SizeTransform(clip = false))
+        }
+    ) { targetState ->
+        val label = if (targetState) R.string.player_connected else R.string.player_disconnected
+        val icon = if (targetState) R.drawable.ic_baseline_check_circle_outline_24 else R.drawable.ic_baseline_clear_24
+        val iconTint = if (targetState) Color(0xFF1CE91C) else Color(0xFFFF0000)
+        Row {
+            Icon(
+                painter = painterResource(icon),
+                contentDescription = null,
+                tint = iconTint
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(stringResource(label))
         }
     }
 }
