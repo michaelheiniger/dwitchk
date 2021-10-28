@@ -1,16 +1,18 @@
 package ch.qscqlmpa.dwitch.ui
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import ch.qscqlmpa.dwitch.MainActivityComponent
 import ch.qscqlmpa.dwitch.daggerUiScopedComponent
@@ -41,6 +43,9 @@ import ch.qscqlmpa.dwitch.ui.navigation.InGameHostDestination
 import ch.qscqlmpa.dwitch.ui.theme.DwitchTheme
 import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import org.tinylog.Logger
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -50,7 +55,7 @@ fun Dwitch(
     createInGameHostUiComponent: (MainActivityComponent) -> InGameHostUiComponent,
     createInGameGuestUiComponent: (MainActivityComponent) -> InGameGuestUiComponent
 ) {
-    val navController = rememberNavController()
+    val navController = rememberAnimatedNavController()
 
     // Tied to activity's lifecycle. Defines @ActivityScope Dagger scope
     val mainActivityComponent = daggerUiScopedComponent(
@@ -82,23 +87,35 @@ private fun DwitchNavHost(
 ) {
     val mainVmFactory = mainActivityComponent.mainViewModelFactory
     val screenNavigator = mainActivityComponent.screenNavigator
-    NavHost(
+    AnimatedNavHost(
         navController = navHostController,
         startDestination = HomeDestination.Home.routeName,
     ) {
         // Main graph destinations
-        composable(HomeDestination.Home.routeName) {
+        composable(
+            route = HomeDestination.Home.routeName,
+            enterTransition = { initial, _ -> enterTransition() },
+            exitTransition = { _, target -> exitTransition() }
+        ) {
             val homeViewModel = viewModel<HomeViewModel>(factory = mainVmFactory)
             HomeScreen(
                 homeViewModel = homeViewModel,
                 toggleDarkTheme = toggleDarkTheme
             )
         }
-        composable(HomeDestination.HostNewGame.routeName) {
+        composable(
+            route = HomeDestination.HostNewGame.routeName,
+            enterTransition = { initial, _ -> enterTransition() },
+            exitTransition = { _, target -> exitTransition() }
+        ) {
             val hostNewGameViewModel = viewModel<HostNewGameViewModel>(factory = mainVmFactory)
             HostNewGameScreen(hostNewGameViewModel)
         }
-        composable(HomeDestination.JoinNewGame.routeName) {
+        composable(
+            route = HomeDestination.JoinNewGame.routeName,
+            enterTransition = { initial, _ -> enterTransition() },
+            exitTransition = { _, target -> exitTransition() }
+        ) {
             val joinNewGameViewModel = viewModel<JoinNewGameViewModel>(factory = mainVmFactory)
             val gameAd = screenNavigator.getData(HomeDestination.JoinNewGame.gameParamName) as GameAdvertisingInfo?
             if (gameAd != null) {
@@ -117,10 +134,18 @@ private fun DwitchNavHost(
             route = HomeDestination.InGameGuest.routeName,
             startDestination = InGameGuestDestination.Home.routeName
         ) {
-            composable(InGameGuestDestination.Home.routeName) {
+            composable(
+                route = InGameGuestDestination.Home.routeName,
+                enterTransition = { initial, _ -> enterTransition() },
+                exitTransition = { _, target -> exitTransition() }
+            ) {
                 LoadingSpinner()
             }
-            composable(InGameGuestDestination.WaitingRoom.routeName) { entry ->
+            composable(
+                route = InGameGuestDestination.WaitingRoom.routeName,
+                enterTransition = { initial, _ -> enterTransition() },
+                exitTransition = { _, target -> exitTransition() }
+            ) { entry ->
                 val vmFactory =
                     getInGameGuestUiVmFactory(entry, navHostController, mainActivityComponent, createInGameGuestUiComponent)
                 val waitingRoomViewModel = viewModel<WaitingRoomViewModel>(factory = vmFactory)
@@ -132,7 +157,11 @@ private fun DwitchNavHost(
                     connectionViewModel
                 )
             }
-            composable(InGameGuestDestination.GameRoom.routeName) { entry ->
+            composable(
+                route = InGameGuestDestination.GameRoom.routeName,
+                enterTransition = { initial, _ -> enterTransition() },
+                exitTransition = { _, target -> exitTransition() }
+            ) { entry ->
                 val vmFactory =
                     getInGameGuestUiVmFactory(entry, navHostController, mainActivityComponent, createInGameGuestUiComponent)
                 val playerViewModel = viewModel<GameRoomViewModel>(factory = vmFactory)
@@ -151,10 +180,18 @@ private fun DwitchNavHost(
             route = HomeDestination.InGameHost.routeName,
             startDestination = InGameHostDestination.Home.routeName
         ) {
-            composable(InGameHostDestination.Home.routeName) {
+            composable(
+                route = InGameHostDestination.Home.routeName,
+                enterTransition = { initial, _ -> enterTransition() },
+                exitTransition = { _, target -> exitTransition() }
+            ) {
                 LoadingSpinner()
             }
-            composable(InGameHostDestination.WaitingRoom.routeName) { entry ->
+            composable(
+                route = InGameHostDestination.WaitingRoom.routeName,
+                enterTransition = { initial, _ -> enterTransition() },
+                exitTransition = { _, target -> exitTransition() }
+            ) { entry ->
                 val vmFactory =
                     getInGameHostUiVmFactory(entry, navHostController, mainActivityComponent, createInGameHostUiComponent)
                 val waitingRoomViewModel = viewModel<WaitingRoomViewModel>(factory = vmFactory)
@@ -166,7 +203,11 @@ private fun DwitchNavHost(
                     connectionViewModel
                 )
             }
-            composable(InGameHostDestination.GameRoom.routeName) { entry ->
+            composable(
+                route = InGameHostDestination.GameRoom.routeName,
+                enterTransition = { initial, _ -> enterTransition() },
+                exitTransition = { _, target -> exitTransition() }
+            ) { entry ->
                 val vmFactory =
                     getInGameHostUiVmFactory(entry, navHostController, mainActivityComponent, createInGameHostUiComponent)
                 val playerViewModel = viewModel<GameRoomViewModel>(factory = vmFactory)
@@ -227,3 +268,18 @@ private fun getInGameGuestUiVmFactory(
     // Factory of actual UI ViewModels
     return inGameUiComponent.viewModelFactory
 }
+
+//    val animationSpec = spring<IntOffset>(dampingRatio = Spring.DampingRatioMediumBouncy)
+val animationSpec = tween<IntOffset>(durationMillis = 1000, easing = CubicBezierEasing(0.08f, 0.93f, 0.68f, 1.27f))
+
+@OptIn(ExperimentalAnimationApi::class)
+private fun enterTransition() = slideInHorizontally(
+    initialOffsetX = { width -> width },
+    animationSpec = animationSpec
+)
+
+@OptIn(ExperimentalAnimationApi::class)
+private fun exitTransition() = slideOutHorizontally(
+    targetOffsetX = { width -> width },
+    animationSpec = animationSpec
+)
