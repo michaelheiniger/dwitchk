@@ -14,6 +14,7 @@ import com.jakewharton.rxrelay3.PublishRelay
 import io.reactivex.rxjava3.core.Observable
 import org.java_websocket.WebSocket
 import org.tinylog.kotlin.Logger
+import java.net.InetSocketAddress
 import javax.inject.Inject
 
 internal class WebsocketCommServer @Inject constructor(
@@ -189,10 +190,12 @@ internal class WebsocketCommServer @Inject constructor(
     }
 
     private fun buildAddressFromConnection(conn: WebSocket): Address? {
-        if (conn.remoteSocketAddress != null) {
+        // Don't simplify by merging with the if, it could produce an NPE (because conn.remoteSocketAddress is mutable ?).
+        val remoteAddress: InetSocketAddress? = conn.remoteSocketAddress
+        if (remoteAddress != null) {
             return Address(
-                conn.remoteSocketAddress.address.hostAddress ?: "",
-                conn.remoteSocketAddress.port
+                ipAddress = remoteAddress.address?.hostAddress ?: "",
+                port = remoteAddress.port
             )
         }
         return null
