@@ -245,7 +245,7 @@ private fun ReadyState(ready: Boolean) {
     ) { targetState ->
         val label = if (targetState) R.string.ready else R.string.not_ready
         val icon = if (targetState) R.drawable.ic_baseline_check_circle_outline_24 else R.drawable.ic_baseline_clear_24
-        val iconTint = if (targetState) Color(0xFF1CE91C) else Color(0xFFFF0000)
+        val iconTint = if (targetState) MaterialTheme.colors.primary else MaterialTheme.colors.error
         Row {
             Icon(
                 painter = painterResource(icon),
@@ -290,7 +290,7 @@ private fun ConnectionState(connected: Boolean) {
     ) { targetState ->
         val label = if (targetState) R.string.player_connected else R.string.player_disconnected
         val icon = if (targetState) R.drawable.ic_baseline_check_circle_outline_24 else R.drawable.ic_baseline_clear_24
-        val iconTint = if (targetState) Color(0xFF1CE91C) else Color(0xFFFF0000)
+        val iconTint = if (targetState) MaterialTheme.colors.primary else MaterialTheme.colors.error
         Row {
             Icon(
                 painter = painterResource(icon),
