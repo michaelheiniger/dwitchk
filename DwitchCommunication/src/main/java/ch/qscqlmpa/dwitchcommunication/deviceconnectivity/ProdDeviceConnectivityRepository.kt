@@ -25,7 +25,6 @@ internal class ProdDeviceConnectivityRepository @Inject constructor(
 
     override fun observeConnectionState(): Observable<DeviceConnectionState> {
         return Observable.create { emitter ->
-
             val callback = object : ConnectivityManager.NetworkCallback() {
                 override fun onAvailable(network: Network) {
                     super.onAvailable(network)
@@ -36,13 +35,8 @@ internal class ProdDeviceConnectivityRepository @Inject constructor(
                             Logger.debug { "Network available: connected to WLAN with IPv4: $ipAddress." }
                             emitter.onNext(DeviceConnectionState.ConnectedToWlan(ipAddress))
                         } else {
-                            Logger.debug {
-                                "Network available: device has no IPv4 address: ${
-                                connectivityManager.getLinkProperties(
-                                    network
-                                )?.linkAddresses
-                                }."
-                            }
+                            val addresses = connectivityManager.getLinkProperties(network)?.linkAddresses
+                            Logger.debug { "Network available: device has no IPv4 address: $addresses." }
                             emitter.onNext(DeviceConnectionState.NotConnectedToWlan)
                         }
                     } else {
