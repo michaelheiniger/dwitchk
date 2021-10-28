@@ -100,6 +100,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0-rc01")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.1")
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.20.0")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
     androidTestImplementation("androidx.compose.ui:ui-test:$composeVersion")
 
