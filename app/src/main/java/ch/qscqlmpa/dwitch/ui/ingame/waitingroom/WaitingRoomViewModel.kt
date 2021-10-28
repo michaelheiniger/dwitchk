@@ -50,12 +50,12 @@ class WaitingRoomViewModel @Inject constructor(
         disposableManager.add(
             facade.observePlayers()
                 .distinctUntilChanged()
+                .doOnError { error -> Logger.error(error) { "Error while observing connected players." } }
+                .retry()
                 .doOnNext { players -> idlingResource.decrement("State of WR players is updated ($players)") }
                 .observeOn(uiScheduler)
-                .subscribe(
-                    { players -> _players.value = players },
-                    { error -> Logger.error(error) { "Error while observing connected players." } }
-                )
+                .subscribe { players -> _players.value = players }
+
         )
     }
 }
