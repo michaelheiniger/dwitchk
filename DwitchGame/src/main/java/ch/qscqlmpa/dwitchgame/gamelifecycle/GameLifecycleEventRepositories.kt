@@ -4,6 +4,7 @@ import android.os.Parcelable
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.common.EventRepository
 import ch.qscqlmpa.dwitchgame.di.GameScope
+import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchstore.InsertGameResult
 import ch.qscqlmpa.dwitchstore.model.Game
 import kotlinx.parcelize.Parcelize
@@ -34,9 +35,14 @@ internal class GameStateRepository @Inject constructor(
                 _lifecycleState = when (event) {
                     is GuestGameLifecycleEvent.GameSetup,
                     GuestGameLifecycleEvent.GameJoined,
-                    GuestGameLifecycleEvent.GameRejoined -> GameLifecycleState.RunningWaitingRoomGuest
                     GuestGameLifecycleEvent.MovedToGameRoom -> GameLifecycleState.RunningGameRoomGuest
                     GuestGameLifecycleEvent.GameOver -> GameLifecycleState.Over
+
+                    // Order of GuestGameLifecycleEvent.GameRejoined in the when() somehow matters
+                    is GuestGameLifecycleEvent.GameRejoined -> when (event.currenRoom) {
+                        RoomType.WAITING_ROOM -> GameLifecycleState.RunningWaitingRoomGuest
+                        RoomType.GAME_ROOM -> GameLifecycleState.RunningGameRoomGuest
+                    }
                 }
             },
             { error -> Logger.error(error) { "Error while observing host game lifecycle events" } }
@@ -72,7 +78,7 @@ sealed class HostGameLifecycleEvent {
 sealed class GuestGameLifecycleEvent {
     data class GameSetup(val gameInfo: GameJoinedInfo) : GuestGameLifecycleEvent()
     object GameJoined : GuestGameLifecycleEvent()
-    object GameRejoined : GuestGameLifecycleEvent()
+    data class GameRejoined(val currenRoom: RoomType) : GuestGameLifecycleEvent()
     object MovedToGameRoom : GuestGameLifecycleEvent()
     object GameOver : GuestGameLifecycleEvent()
 }

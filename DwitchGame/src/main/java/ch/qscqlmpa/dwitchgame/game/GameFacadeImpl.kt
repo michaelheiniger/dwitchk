@@ -6,10 +6,12 @@ import ch.qscqlmpa.dwitchgame.game.usecases.HostNewGameUsecase
 import ch.qscqlmpa.dwitchgame.game.usecases.JoinNewGameUsecase
 import ch.qscqlmpa.dwitchgame.game.usecases.JoinResumedGameUsecase
 import ch.qscqlmpa.dwitchgame.game.usecases.ResumeGameUsecase
+import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import ch.qscqlmpa.dwitchstore.store.Store
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 internal class GameFacadeImpl @Inject constructor(
@@ -41,7 +43,7 @@ internal class GameFacadeImpl @Inject constructor(
             .subscribeOn(schedulerFactory.io())
     }
 
-    override fun joinResumedGame(advertisedGame: GameAdvertisingInfo): Completable {
+    override fun joinResumedGame(advertisedGame: GameAdvertisingInfo): Single<RoomType> {
         return joinResumedGameUsecase.joinResumedGame(advertisedGame)
             .subscribeOn(schedulerFactory.io())
     }

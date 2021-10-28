@@ -19,7 +19,7 @@ internal class RejoinGameAckMessageProcessor @Inject constructor(
 
         return Completable.fromAction {
             store.updateCurrentRoom(msg.currentRoom)
-            guestGameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GameRejoined)
+            guestGameLifecycleEventRepository.notify(GuestGameLifecycleEvent.GameRejoined(msg.currentRoom))
         }
     }
 }
