@@ -48,7 +48,7 @@ internal class GameRepository @Inject constructor(
         return GameInfoFactory.createGameDashboardInfo(
             gameInfo = dwitchFactory.createDwitchEngine(gameState).getGameInfo(),
             localPlayerId = localPlayer.dwitchId,
-            playersConnected = players.map { p -> p.dwitchId to p.connected }.toMap()
+            playersConnected = players.associate { p -> p.dwitchId to p.connected }
         )
     }
 

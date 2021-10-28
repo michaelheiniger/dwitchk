@@ -28,7 +28,7 @@ internal class DwitchGameInfoFactory(val gameState: DwitchGameState) {
     }
 
     private fun playerInfos(): Map<DwitchPlayerId, DwitchPlayerInfo> {
-        return gameState.players.entries.map { entry -> entry.key to playerInfo(entry.value) }.toMap()
+        return gameState.players.entries.associate { entry -> entry.key to playerInfo(entry.value) }
     }
 
     private fun playerInfo(player: DwitchPlayer): DwitchPlayerInfo {
