@@ -148,22 +148,22 @@ fun HomeBody(
 
 @Composable
 private fun JoinGameWithQrCode(onQrCodeScan: (GameAdvertisingInfo) -> Unit) {
-    val result = remember { mutableStateOf<QrCodeScanResult>(QrCodeScanResult.NoResult) }
-    val launcher = rememberLauncherForActivityResult(ScanQrCodeResultContract()) { scanResult -> result.value = scanResult }
-
-    when (val scanResult = result.value) {
-        QrCodeScanResult.NoResult -> {
-        } // Nothing to do
-        QrCodeScanResult.Error -> {
-            InfoDialog(
-                title = R.string.dialog_error_title,
-                text = R.string.error_scanning_qr_code,
-                onOkClick = {
-                    result.value = QrCodeScanResult.NoResult
-                }
-            )
+    val showErrorDialog = remember { mutableStateOf(false) }
+    val launcher = rememberLauncherForActivityResult(ScanQrCodeResultContract()) { scanResult ->
+        when (scanResult) {
+            QrCodeScanResult.NoResult -> {
+            } // Nothing to do
+            QrCodeScanResult.Error -> showErrorDialog.value = true
+            is QrCodeScanResult.Success<*> -> onQrCodeScan(scanResult.value as GameAdvertisingInfo)
         }
-        is QrCodeScanResult.Success<*> -> onQrCodeScan(scanResult.value as GameAdvertisingInfo)
+    }
+
+    if (showErrorDialog.value) {
+        InfoDialog(
+            title = R.string.dialog_error_title,
+            text = R.string.error_scanning_qr_code,
+            onOkClick = { showErrorDialog.value = false }
+        )
     }
 
     OutlinedButton(
