@@ -32,7 +32,6 @@ class HostInGameService : BaseInGameService() {
         )
         app.hostCommunicationFacade!!.startServer()
         advertiseGame()
-        advertiseGame()
 
         Logger.info { "Service started" }
         notifyServiceStarted()
@@ -40,6 +39,10 @@ class HostInGameService : BaseInGameService() {
 
     override fun actionChangeRoomToGameRoom() {
         Logger.info { "Go to game room" }
+        gameAdvertisingDisposable.disposeAndReset()
+        // Now that the game has started, it is advertised as an existing game.
+        // This is needed for players to rejoin the game.
+        advertiseGame()
         showNotification(RoomType.GAME_ROOM)
     }
 

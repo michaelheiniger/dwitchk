@@ -13,6 +13,7 @@ import ch.qscqlmpa.dwitchgame.game.GameFacade
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleFacade
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleState
+import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Scheduler
@@ -113,10 +114,15 @@ class HomeViewModel @Inject constructor(
                 .observeOn(uiScheduler)
                 .doOnTerminate { _loading.value = false }
                 .subscribe(
-                    {
+                    { currentRoom ->
+                        @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
+                        val destination = when (currentRoom) {
+                            RoomType.WAITING_ROOM -> InGameGuestDestination.WaitingRoom
+                            RoomType.GAME_ROOM -> InGameGuestDestination.GameRoom
+                        }
                         Logger.info { "Game resumed successfully." }
                         screenNavigator.navigate(
-                            destination = InGameGuestDestination.WaitingRoom,
+                            destination = destination,
                             navOptions = navOptionsPopUpToInclusive(HomeDestination.Home)
                         )
                     },
