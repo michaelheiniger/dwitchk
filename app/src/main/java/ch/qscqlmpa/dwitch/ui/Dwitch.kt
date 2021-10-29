@@ -6,7 +6,10 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.IntOffset
@@ -46,6 +49,7 @@ import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import org.tinylog.Logger
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -58,13 +62,13 @@ fun Dwitch(
     val navController = rememberAnimatedNavController()
 
     // Tied to activity's lifecycle. Defines @ActivityScope Dagger scope
-    val mainActivityComponent = daggerUiScopedComponent(
-        componentFactory = { createMainActivityComponent(navController) }
-    )
+    val mainActivityComponent = daggerUiScopedComponent(componentFactory = { createMainActivityComponent(navController) })
 
     val darkThemeEnabled = remember { mutableStateOf(false) }
 
     DwitchTheme(darkTheme = darkThemeEnabled.value) {
+        SetupSystemBars()
+
         DwitchNavHost(
             mainActivityComponent = mainActivityComponent,
             createInGameHostUiComponent = createInGameHostUiComponent,
@@ -220,6 +224,20 @@ private fun DwitchNavHost(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun SetupSystemBars() {
+    val systemUiController = rememberSystemUiController()
+    val useDarkIcons = MaterialTheme.colors.isLight
+    val sytemBarsColor = MaterialTheme.colors.primarySurface
+
+    SideEffect {
+        systemUiController.setSystemBarsColor(
+            color = sytemBarsColor,
+            darkIcons = useDarkIcons
+        )
     }
 }
 
