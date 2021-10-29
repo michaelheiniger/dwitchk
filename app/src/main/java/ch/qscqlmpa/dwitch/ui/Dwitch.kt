@@ -98,8 +98,8 @@ private fun DwitchNavHost(
         // Main graph destinations
         composable(
             route = HomeDestination.Home.routeName,
-            enterTransition = { initial, _ -> enterTransition() },
-            exitTransition = { _, target -> exitTransition() }
+            enterTransition = { _, _ -> enterTransition() },
+            exitTransition = { _, _ -> exitTransition() }
         ) {
             val homeViewModel = viewModel<HomeViewModel>(factory = mainVmFactory)
             HomeScreen(
@@ -109,16 +109,16 @@ private fun DwitchNavHost(
         }
         composable(
             route = HomeDestination.HostNewGame.routeName,
-            enterTransition = { initial, _ -> enterTransition() },
-            exitTransition = { _, target -> exitTransition() }
+            enterTransition = { _, _ -> enterTransition() },
+            exitTransition = { _, _ -> exitTransition() }
         ) {
             val hostNewGameViewModel = viewModel<HostNewGameViewModel>(factory = mainVmFactory)
             HostNewGameScreen(hostNewGameViewModel)
         }
         composable(
             route = HomeDestination.JoinNewGame.routeName,
-            enterTransition = { initial, _ -> enterTransition() },
-            exitTransition = { _, target -> exitTransition() }
+            enterTransition = { _, _ -> enterTransition() },
+            exitTransition = { _, _ -> exitTransition() }
         ) {
             val joinNewGameViewModel = viewModel<JoinNewGameViewModel>(factory = mainVmFactory)
             val gameAd = screenNavigator.getData(HomeDestination.JoinNewGame.gameParamName) as GameAdvertisingInfo?
@@ -140,15 +140,15 @@ private fun DwitchNavHost(
         ) {
             composable(
                 route = InGameGuestDestination.Home.routeName,
-                enterTransition = { initial, _ -> enterTransition() },
-                exitTransition = { _, target -> exitTransition() }
+                enterTransition = { _, _ -> enterTransition() },
+                exitTransition = { _, _ -> exitTransition() }
             ) {
                 LoadingSpinner()
             }
             composable(
                 route = InGameGuestDestination.WaitingRoom.routeName,
-                enterTransition = { initial, _ -> enterTransition() },
-                exitTransition = { _, target -> exitTransition() }
+                enterTransition = { _, _ -> enterTransition() },
+                exitTransition = { _, _ -> exitTransition() }
             ) { entry ->
                 val vmFactory =
                     getInGameGuestUiVmFactory(entry, navHostController, mainActivityComponent, createInGameGuestUiComponent)
@@ -163,8 +163,8 @@ private fun DwitchNavHost(
             }
             composable(
                 route = InGameGuestDestination.GameRoom.routeName,
-                enterTransition = { initial, _ -> enterTransition() },
-                exitTransition = { _, target -> exitTransition() }
+                enterTransition = { _, _ -> enterTransition() },
+                exitTransition = { _, _ -> exitTransition() }
             ) { entry ->
                 val vmFactory =
                     getInGameGuestUiVmFactory(entry, navHostController, mainActivityComponent, createInGameGuestUiComponent)
@@ -186,15 +186,15 @@ private fun DwitchNavHost(
         ) {
             composable(
                 route = InGameHostDestination.Home.routeName,
-                enterTransition = { initial, _ -> enterTransition() },
-                exitTransition = { _, target -> exitTransition() }
+                enterTransition = { _, _ -> enterTransition() },
+                exitTransition = { _, _ -> exitTransition() }
             ) {
                 LoadingSpinner()
             }
             composable(
                 route = InGameHostDestination.WaitingRoom.routeName,
-                enterTransition = { initial, _ -> enterTransition() },
-                exitTransition = { _, target -> exitTransition() }
+                enterTransition = { _, _ -> enterTransition() },
+                exitTransition = { _, _ -> exitTransition() }
             ) { entry ->
                 val vmFactory =
                     getInGameHostUiVmFactory(entry, navHostController, mainActivityComponent, createInGameHostUiComponent)
@@ -209,8 +209,8 @@ private fun DwitchNavHost(
             }
             composable(
                 route = InGameHostDestination.GameRoom.routeName,
-                enterTransition = { initial, _ -> enterTransition() },
-                exitTransition = { _, target -> exitTransition() }
+                enterTransition = { _, _ -> enterTransition() },
+                exitTransition = { _, _ -> exitTransition() }
             ) { entry ->
                 val vmFactory =
                     getInGameHostUiVmFactory(entry, navHostController, mainActivityComponent, createInGameHostUiComponent)
