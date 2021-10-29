@@ -8,6 +8,7 @@ import ch.qscqlmpa.dwitchgame.gamelifecycle.GameJoinedInfo
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GuestGameLifecycleEvent
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GuestGameLifecycleEventRepository
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
+import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchstore.InsertGameResult
 import io.mockk.every
 import io.mockk.mockk
@@ -66,7 +67,7 @@ internal class JoinNewGameUsecaseTest : BaseUnitTest() {
         val testObserver = newGameUsecase.joinGame(advertisedGame, playerName).test().assertNotComplete()
 
         // When
-        gameLifecycleEventSubject.onNext(GuestGameLifecycleEvent.GameRejoined)
+        gameLifecycleEventSubject.onNext(GuestGameLifecycleEvent.GameRejoined(RoomType.WAITING_ROOM))
 
         // Then
         testObserver.assertComplete()
