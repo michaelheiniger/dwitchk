@@ -55,14 +55,18 @@ import org.tinylog.Logger
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Dwitch(
-    createMainActivityComponent: (NavHostController) -> MainActivityComponent,
+    createMainActivityComponent: () -> MainActivityComponent,
     createInGameHostUiComponent: (MainActivityComponent) -> InGameHostUiComponent,
     createInGameGuestUiComponent: (MainActivityComponent) -> InGameGuestUiComponent
 ) {
     val navController = rememberAnimatedNavController()
 
     // Tied to activity's lifecycle. Defines @ActivityScope Dagger scope
-    val mainActivityComponent = daggerUiScopedComponent(componentFactory = { createMainActivityComponent(navController) })
+    val mainActivityComponent = daggerUiScopedComponent(componentFactory = { createMainActivityComponent() })
+
+    // Lifecycle of NavController is lifecycle of Dwitch Composable (a new one is recreated after a config. change)
+    // which is shorter than the lifecycle of the MainActivityComponent (Activity's lifecycle, surviving config. changes)
+    mainActivityComponent.screenNavigator.setNavHostController(navController)
 
     val darkThemeEnabled = remember { mutableStateOf(false) }
 

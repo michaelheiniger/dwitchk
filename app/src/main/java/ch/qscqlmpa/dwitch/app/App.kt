@@ -3,7 +3,6 @@ package ch.qscqlmpa.dwitch.app
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
-import androidx.navigation.NavHostController
 import ch.qscqlmpa.dwitch.MainActivityComponent
 import ch.qscqlmpa.dwitch.app.notifications.NotificationChannelFactory
 import ch.qscqlmpa.dwitch.ingame.InGameGuestUiComponent
@@ -108,9 +107,9 @@ open class App : Application() {
         return storeComponent.getInGameStoreComponentFactory().create(gameLocalId, localPlayerLocalId)
     }
 
-    fun createMainActivityComponent(navController: NavHostController): MainActivityComponent {
+    fun createMainActivityComponent(): MainActivityComponent {
         Logger.debug { "createMainActivityComponent" }
-        return appComponent.mainActivityComponentFactory().create(navController)
+        return appComponent.mainActivityComponentFactory().create()
     }
 
     fun createInGameHostUiComponent(component: MainActivityComponent): InGameHostUiComponent {

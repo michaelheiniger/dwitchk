@@ -7,12 +7,25 @@ import ch.qscqlmpa.dwitch.ActivityScope
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
+/**
+ * Navigate between screens.
+ * Activity-scoped: includes all Composables to enable providing data as argument of a destination.
+ */
 @ActivityScope
 class ScreenNavigator @Inject constructor(
-    private val navHostController: NavHostController
 ) {
+    private lateinit var navHostController: NavHostController
 
     private val savedData = mutableMapOf<String, Any>()
+
+    /**
+     * Provide the current navHostController. The lifecycle of the controller is shorter than of Activity (e.g. config change).
+     * Hence, the new instance must be provided before navigating.
+     * TODO: Find better solution.
+     */
+    fun setNavHostController(navHostController: NavHostController) {
+        this.navHostController = navHostController
+    }
 
     fun navigateBack() {
         Logger.debug { "Order navigation back" }
