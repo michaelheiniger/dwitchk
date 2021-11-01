@@ -14,7 +14,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Dwitch(
-                createMainActivityComponent = { navController -> app.createMainActivityComponent(navController) },
+                createMainActivityComponent = { app.createMainActivityComponent() },
                 createInGameHostUiComponent = { mainActivityComponent -> app.createInGameHostUiComponent(mainActivityComponent) },
                 createInGameGuestUiComponent = { mainActivityComponent -> app.createInGameGuestUiComponent(mainActivityComponent) }
             )
