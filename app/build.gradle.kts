@@ -8,7 +8,7 @@ plugins {
 //    id("com.google.firebase.crashlytics")
 }
 
-val composeVersion = "1.0.3"
+val composeVersion = "1.0.4"
 
 android {
     compileSdk = Versions.compileSdkVersion
