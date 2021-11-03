@@ -187,4 +187,5 @@
     <string name="toggle_dark_theme_cs">Basculer sur le dark theme</string>
     <string name="close">Close</string>
     <string name="game_ad_qr_code_cd">QR code de la partie</string>
+    <string name="delete_existing_game">Delete game</string>
 </resources>

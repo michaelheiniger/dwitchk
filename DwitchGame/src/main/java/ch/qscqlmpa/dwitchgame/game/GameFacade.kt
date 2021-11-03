@@ -29,6 +29,11 @@ interface GameFacade {
     fun resumeGame(gameId: Long): Completable
 
     /**
+     * Delete an existing game (see [resumableGames]).
+     */
+    fun deleteExistingGame(gameLocalId: Long): Completable
+
+    /**
      * Join a new game (see [hostGame]) hosted by another player. The local player joins as a guest.
      * @param advertisedGame info of the game to join
      * @param playerName name of the local player

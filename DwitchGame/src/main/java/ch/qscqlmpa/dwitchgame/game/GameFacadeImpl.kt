@@ -38,6 +38,11 @@ internal class GameFacadeImpl @Inject constructor(
             .subscribeOn(schedulerFactory.io())
     }
 
+    override fun deleteExistingGame(gameLocalId: Long): Completable {
+        return Completable.fromAction { store.deleteGame(gameLocalId) }
+            .subscribeOn(schedulerFactory.io())
+    }
+
     override fun joinGame(advertisedGame: GameAdvertisingInfo, playerName: String): Completable {
         return joinNewGameUsecase.joinGame(advertisedGame, playerName)
             .subscribeOn(schedulerFactory.io())

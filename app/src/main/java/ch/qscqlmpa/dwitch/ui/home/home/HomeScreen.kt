@@ -1,17 +1,22 @@
 package ch.qscqlmpa.dwitch.ui.home.home
 
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -32,6 +37,7 @@ import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import org.joda.time.DateTime
 import java.util.*
 
+@ExperimentalMaterialApi
 @Preview
 @Composable
 fun HomeBodyPreview() {
@@ -50,7 +56,7 @@ fun HomeBodyPreview() {
                 2,
                 DateTime.parse("2021-01-01T01:18+02:00"),
                 "GoT",
-                listOf("Ned Stark", "Arya Stark", "Sandor Clegane")
+                listOf("Ned Stark", "Arya Stark", "Sandor Clegane", "Davos Seaworth", "Barristan Selmy")
             )
         )
     )
@@ -64,11 +70,13 @@ fun HomeBodyPreview() {
             toggleDarkTheme = {},
             onJoinGameClick = {},
             onResumableGameClick = {},
+            onDeleteExistingGame = {},
             onQrCodeScan = {}
         )
     }
 }
 
+@ExperimentalMaterialApi
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel,
@@ -88,10 +96,12 @@ fun HomeScreen(
         onCreateNewGameClick = homeViewModel::createNewGame,
         onJoinGameClick = homeViewModel::joinGame,
         onResumableGameClick = { game -> homeViewModel.resumeGame(game) },
+        onDeleteExistingGame = { game -> homeViewModel.deleteExistingGame(game) },
         onQrCodeScan = { gameAd -> homeViewModel.load(gameAd) }
     )
 }
 
+@ExperimentalMaterialApi
 @Composable
 fun HomeBody(
     notification: HomeNotification,
@@ -102,6 +112,7 @@ fun HomeBody(
     onCreateNewGameClick: () -> Unit,
     onJoinGameClick: (GameAdvertisingInfo) -> Unit,
     onResumableGameClick: (ResumableGameInfo) -> Unit,
+    onDeleteExistingGame: (ResumableGameInfo) -> Unit,
     onQrCodeScan: (GameAdvertisingInfo) -> Unit
 ) {
     Scaffold(
@@ -138,7 +149,7 @@ fun HomeBody(
                     .fillMaxSize()
                     .weight(1f)
             ) {
-                ResumableGamesContainer(resumableGames, onResumableGameClick)
+                ResumableGamesContainer(resumableGames, onResumableGameClick, onDeleteExistingGame)
             }
         }
         Notification(notification)
@@ -240,10 +251,12 @@ private fun ListeningForAdvertisedGames() {
     Text(stringResource(R.string.no_game_discovered))
 }
 
+@ExperimentalMaterialApi
 @Composable
 fun ResumableGamesContainer(
     resumableGames: LoadedData<List<ResumableGameInfo>>,
-    onResumableGameClick: (ResumableGameInfo) -> Unit
+    onResumableGameClick: (ResumableGameInfo) -> Unit,
+    onDeleteExistingGame: (ResumableGameInfo) -> Unit
 ) {
     Column(
         Modifier
@@ -251,7 +264,7 @@ fun ResumableGamesContainer(
             .animateContentSize()
     ) {
         when (resumableGames) {
-            is LoadedData.Success -> ResumableGames(resumableGames.data, onResumableGameClick)
+            is LoadedData.Success -> ResumableGames(resumableGames.data, onResumableGameClick, onDeleteExistingGame)
             is LoadedData.Failed -> {
                 ResumableGameTitle()
                 Text(stringResource(R.string.loading_resumable_games_failed), color = Color.Red)
@@ -275,20 +288,80 @@ private fun ResumableGameTitle() {
     )
 }
 
+@ExperimentalMaterialApi
 @Composable
 private fun ResumableGames(
     resumableGames: List<ResumableGameInfo>,
-    onResumableGameClick: (ResumableGameInfo) -> Unit
+    onResumableGameClick: (ResumableGameInfo) -> Unit,
+    onDeleteExistingGame: (ResumableGameInfo) -> Unit
 ) {
     if (resumableGames.isNotEmpty()) {
         ResumableGameTitle()
         LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             items(resumableGames) { game ->
-                Text(
-                    text = "${game.name} (${game.creationDate.toStringEuFormat()} - ${game.playersName.joinToString(", ")})",
-                    Modifier
-                        .clickable { onResumableGameClick(game) }
-                        .fillMaxWidth()
+                val dismissState = rememberDismissState()
+                if (dismissState.isDismissed(DismissDirection.EndToStart)) {
+                    onDeleteExistingGame(game)
+                }
+                SwipeToDismiss(
+                    state = dismissState,
+                    modifier = Modifier.testTag("${UiTags.deleteExistingGame}-${game.name}"),
+                    directions = setOf(DismissDirection.EndToStart),
+                    dismissThresholds = { FractionalThreshold(0.5f) },
+                    background = {
+                        dismissState.dismissDirection ?: return@SwipeToDismiss
+                        val color by animateColorAsState(
+                            when (dismissState.targetValue) {
+                                DismissValue.Default -> Color.LightGray
+                                DismissValue.DismissedToEnd -> Color.Green
+                                DismissValue.DismissedToStart -> Color.Red
+                            }
+                        )
+                        val scale by animateFloatAsState(
+                            if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
+                        )
+
+                        Row(
+                            horizontalArrangement = Arrangement.End,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(color)
+                                .padding(horizontal = 20.dp)
+                        ) {
+                            Text(
+                                text = stringResource(R.string.delete_existing_game, game.name),
+                                color = Color.White,
+                                fontSize = 20.sp,
+                                modifier = Modifier.scale(scale)
+                            )
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                tint = Color.White,
+                                contentDescription = stringResource(R.string.delete_existing_game),
+                                modifier = Modifier.scale(scale)
+                            )
+                        }
+                    },
+                    dismissContent = {
+                        Card(
+                            elevation = animateDpAsState(if (dismissState.dismissDirection != null) 4.dp else 0.dp).value,
+                            modifier = Modifier.clickable { onResumableGameClick(game) }
+                        ) {
+                            ListItem(
+                                overlineText = {
+                                    Text(text = game.creationDate.toStringEuFormat())
+                                },
+                                text = {
+                                    Text(text = game.name)
+                                },
+                                secondaryText = {
+                                    Text(text = game.playersName.joinToString(", "))
+                                },
+                                singleLineSecondaryText = false
+                            )
+                        }
+                    }
                 )
             }
         }

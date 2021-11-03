@@ -6,6 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
@@ -52,6 +53,7 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import org.tinylog.Logger
 
+@ExperimentalMaterialApi
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Dwitch(
@@ -83,6 +85,7 @@ fun Dwitch(
     }
 }
 
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
