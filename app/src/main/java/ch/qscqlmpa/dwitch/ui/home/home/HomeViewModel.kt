@@ -84,6 +84,16 @@ class HomeViewModel @Inject constructor(
         )
     }
 
+    fun deleteExistingGame(resumableGameInfo: ResumableGameInfo) {
+        disposableManager.add(
+            gameFacade.deleteExistingGame(resumableGameInfo.id)
+                .subscribe(
+                    { Logger.info { "Existing game deleted successfully." } },
+                    { error -> Logger.error(error) { "Error while deleting existing game." } }
+                )
+        )
+    }
+
     override fun onStart() {
         super.onStart()
         gameDiscoveryFacade.startListeningForAdvertisedGames()

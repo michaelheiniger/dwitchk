@@ -7,6 +7,7 @@ object UiTags {
     const val joinGameQrCode = "joinGameQrCode"
     const val createGame = "createGame"
     const val kickPlayer = "kickPlayer"
+    const val deleteExistingGame = "deleteExistingGame"
     const val localPlayerReadyControl = "localPlayerReadyControl"
     const val localPlayerReadyText = "localPlayerReadyText"
     const val playerName = "playerName"
