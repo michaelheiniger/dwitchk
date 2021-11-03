@@ -3,7 +3,7 @@ object Versions {
     const val appVersionCode = 4
     const val appVersionName = "1.0.2-beta"
 
-    const val kotlinVersion = "1.5.30"
+    const val kotlinVersion = "1.5.31"
 
     const val ktlintGradlePluginVersion = "10.1.0"
     const val detektVersion = "1.18.1"
