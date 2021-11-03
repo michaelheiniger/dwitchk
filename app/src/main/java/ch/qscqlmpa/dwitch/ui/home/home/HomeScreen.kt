@@ -129,7 +129,7 @@ fun HomeBody(
                 Spacer(Modifier.height(16.dp))
                 Column(Modifier.fillMaxSize()) {
                     JoinGameWithQrCode(onQrCodeScan = onQrCodeScan)
-                    Spacer(Modifier.height(16.dp))
+                    Spacer(Modifier.height(8.dp))
                     GameCreation(onCreateNewGameClick = onCreateNewGameClick)
                 }
             }
