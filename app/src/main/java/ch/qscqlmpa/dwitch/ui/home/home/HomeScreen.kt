@@ -25,7 +25,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.base.PreviewContainer
 import ch.qscqlmpa.dwitch.ui.common.*
@@ -195,6 +194,7 @@ private fun GameCreation(onCreateNewGameClick: () -> Unit) {
     ) { Text(stringResource(R.string.create_new_game)) }
 }
 
+@ExperimentalMaterialApi
 @Composable
 private fun AdvertisedGameContainer(
     advertisedGames: LoadedData<List<GameAdvertisingInfo>>,
@@ -214,41 +214,47 @@ private fun AdvertisedGameContainer(
                 .testTag(UiTags.advertisedGames)
         )
         when (advertisedGames) {
-            LoadedData.Loading -> ListeningForAdvertisedGames()
+            LoadedData.Loading -> NoGameDiscoveredYet()
             is LoadedData.Success -> AdvertisedGames(advertisedGames.data, onJoinGameClick)
             is LoadedData.Failed -> Text(stringResource(R.string.listening_advertised_games_failed), color = Color.Red)
         }
     }
 }
 
+@ExperimentalMaterialApi
 @Composable
 private fun AdvertisedGames(
     advertisedGames: List<GameAdvertisingInfo>,
     onJoinGameClick: (GameAdvertisingInfo) -> Unit
 ) {
-    LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+    LazyColumn(verticalArrangement = Arrangement.spacedBy(0.dp)) {
 
         if (advertisedGames.isEmpty()) {
-            item { ListeningForAdvertisedGames() }
+            item {
+                ListItem(text = { NoGameDiscoveredYet() })
+            }
         }
 
         items(advertisedGames) { game ->
-            val text = if (BuildConfig.DEBUG) "${game.gameName} (${game.gameIpAddress})" else game.gameName
             val contentDescription = stringResource(R.string.join_specific_game_cd, game.gameName)
-            Text(
-                text = text,
+            Card(
+                elevation = animateDpAsState(0.dp).value,
                 modifier = Modifier
                     .clickable { onJoinGameClick(game) }
                     .semantics { this.contentDescription = contentDescription }
-                    .fillMaxWidth()
-            )
+            ) {
+                ListItem(
+                    text = { Text(text = game.gameName) },
+                    secondaryText = { Text(text = game.gameIpAddress) }
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun ListeningForAdvertisedGames() {
-    Text(stringResource(R.string.no_game_discovered))
+private fun NoGameDiscoveredYet() {
+    Text(stringResource(R.string.no_game_discovered_yet))
 }
 
 @ExperimentalMaterialApi
@@ -297,7 +303,7 @@ private fun ResumableGames(
 ) {
     if (resumableGames.isNotEmpty()) {
         ResumableGameTitle()
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(0.dp)) {
             items(resumableGames) { game ->
                 val dismissState = rememberDismissState()
                 if (dismissState.isDismissed(DismissDirection.EndToStart)) {

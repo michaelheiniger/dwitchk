@@ -59,7 +59,7 @@
     <string name="cancel_game">Annuler partie</string>
     <string name="launch_game">Go go !</string>
     <string name="host_game">Allons y, fidèles compagnons de la Comté !</string>
-    <string name="no_game_discovered">Aucune partie trouvée</string>
+    <string name="no_game_discovered_yet">Aucune partie trouvée pour le moment</string>
     <string name="loading_resumable_games">Chargement des parties à reprendre</string>
     <string name="no_resumable_games">Aucune partie à reprendre</string>
     <string name="guest_connecting">Connection…</string>
