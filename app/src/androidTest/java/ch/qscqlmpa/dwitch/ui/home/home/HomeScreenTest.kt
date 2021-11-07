@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.ui.home.home
 
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.test.onNodeWithTag
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertTextIsDisplayed
@@ -16,7 +15,6 @@ import org.junit.Before
 import org.junit.Test
 import java.util.*
 
-@ExperimentalMaterialApi
 class HomeScreenTest : BaseUiUnitTest() {
 
     private lateinit var notification: HomeNotification

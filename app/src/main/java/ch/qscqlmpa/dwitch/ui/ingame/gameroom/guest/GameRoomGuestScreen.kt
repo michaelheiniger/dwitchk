@@ -1,8 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.ingame.gameroom.guest
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,8 +27,6 @@ import ch.qscqlmpa.dwitch.ui.ingame.gameroom.playerdashboard.GameRoomViewModel
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
 
-@ExperimentalAnimationApi
-@ExperimentalFoundationApi
 @Preview
 @Composable
 fun GameRoomGuestBodyPreview() {
@@ -53,8 +49,6 @@ fun GameRoomGuestBodyPreview() {
     }
 }
 
-@ExperimentalFoundationApi
-@ExperimentalAnimationApi
 @Composable
 fun GameRoomGuestScreen(
     playerViewModel: GameRoomViewModel,
@@ -89,8 +83,6 @@ fun GameRoomGuestScreen(
     )
 }
 
-@ExperimentalAnimationApi
-@ExperimentalFoundationApi
 @Composable
 fun GameRoomGuestBody(
     toolbarTitle: String,
