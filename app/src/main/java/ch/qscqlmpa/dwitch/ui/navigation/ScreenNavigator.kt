@@ -1,6 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.navigation
 
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.navOptions
 import ch.qscqlmpa.dwitch.ActivityScope
@@ -14,7 +14,7 @@ import javax.inject.Inject
 @ActivityScope
 class ScreenNavigator @Inject constructor(
 ) {
-    private lateinit var navHostController: NavHostController
+    private var navController: NavController? = null
 
     private val savedData = mutableMapOf<String, Any>()
 
@@ -23,13 +23,17 @@ class ScreenNavigator @Inject constructor(
      * Hence, the new instance must be provided before navigating.
      * TODO: Find better solution.
      */
-    fun setNavHostController(navHostController: NavHostController) {
-        this.navHostController = navHostController
+    fun setNavController(navController: NavController) {
+        this.navController = navController
+    }
+
+    fun clearNavController() {
+        this.navController = null
     }
 
     fun navigateBack() {
         Logger.debug { "Order navigation back" }
-        navHostController.popBackStack()
+        navController!!.popBackStack()
     }
 
     fun navigate(
@@ -38,7 +42,7 @@ class ScreenNavigator @Inject constructor(
     ) {
         saveDataIfNeeded(destination)
         Logger.debug { "Order navigation to ${destination.routeName}" }
-        navHostController.navigate(
+        navController!!.navigate(
             route = destination.routeName,
             navOptions = navOptions
         )
