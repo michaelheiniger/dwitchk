@@ -1,7 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.ingame.gameroom.cardexchange
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,7 +24,6 @@ import ch.qscqlmpa.dwitch.ui.ingame.PlayerHand
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.CardInfo
 import ch.qscqlmpa.dwitchengine.model.card.Card
 
-@ExperimentalFoundationApi
 @Preview
 @Composable
 private fun CardExchangePreview() {
@@ -51,7 +49,6 @@ private fun CardExchangePreview() {
     }
 }
 
-@ExperimentalFoundationApi
 @Composable
 fun CardExchange(
     numCardsToChoose: NumCardsToExchange,

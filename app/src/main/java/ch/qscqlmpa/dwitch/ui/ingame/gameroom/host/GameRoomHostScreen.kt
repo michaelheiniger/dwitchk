@@ -1,8 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.ingame.gameroom.host
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
@@ -31,8 +29,6 @@ import ch.qscqlmpa.dwitch.ui.theme.DwitchTheme
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationState
 
-@ExperimentalAnimationApi
-@ExperimentalFoundationApi
 @Preview
 @Composable
 fun GameRoomHostBodyPreview() {
@@ -54,8 +50,6 @@ fun GameRoomHostBodyPreview() {
     }
 }
 
-@ExperimentalFoundationApi
-@ExperimentalAnimationApi
 @Composable
 fun GameRoomHostScreen(
     playerViewModel: GameRoomViewModel,
@@ -89,8 +83,6 @@ fun GameRoomHostScreen(
     )
 }
 
-@ExperimentalAnimationApi
-@ExperimentalFoundationApi
 @Composable
 fun GameRoomHostBody(
     toolbarTitle: String,

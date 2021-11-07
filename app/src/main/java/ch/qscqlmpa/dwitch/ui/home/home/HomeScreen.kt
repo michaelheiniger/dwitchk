@@ -36,7 +36,6 @@ import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import org.joda.time.DateTime
 import java.util.*
 
-@ExperimentalMaterialApi
 @Preview
 @Composable
 fun HomeBodyPreview() {
@@ -75,7 +74,6 @@ fun HomeBodyPreview() {
     }
 }
 
-@ExperimentalMaterialApi
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel,
@@ -100,7 +98,6 @@ fun HomeScreen(
     )
 }
 
-@ExperimentalMaterialApi
 @Composable
 fun HomeBody(
     notification: HomeNotification,
@@ -194,7 +191,6 @@ private fun GameCreation(onCreateNewGameClick: () -> Unit) {
     ) { Text(stringResource(R.string.create_new_game)) }
 }
 
-@ExperimentalMaterialApi
 @Composable
 private fun AdvertisedGameContainer(
     advertisedGames: LoadedData<List<GameAdvertisingInfo>>,
@@ -221,7 +217,6 @@ private fun AdvertisedGameContainer(
     }
 }
 
-@ExperimentalMaterialApi
 @Composable
 private fun AdvertisedGames(
     advertisedGames: List<GameAdvertisingInfo>,
@@ -257,7 +252,6 @@ private fun NoGameDiscoveredYet() {
     Text(stringResource(R.string.no_game_discovered_yet))
 }
 
-@ExperimentalMaterialApi
 @Composable
 fun ResumableGamesContainer(
     resumableGames: LoadedData<List<ResumableGameInfo>>,
@@ -294,7 +288,6 @@ private fun ResumableGameTitle() {
     )
 }
 
-@ExperimentalMaterialApi
 @Composable
 private fun ResumableGames(
     resumableGames: List<ResumableGameInfo>,

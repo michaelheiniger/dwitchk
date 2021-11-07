@@ -1,6 +1,9 @@
 package ch.qscqlmpa.dwitch.ui.ingame.gameroom
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -39,7 +42,6 @@ import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchgame.ingame.gameroom.PlayerInfo
 
-@ExperimentalAnimationApi
 @Preview
 @Composable
 private fun DashboardPreview() {
@@ -126,7 +128,6 @@ private fun DashboardPreview() {
     }
 }
 
-@ExperimentalAnimationApi
 @Composable
 fun Dashboard(
     dashboardInfo: DashboardInfo,
@@ -158,7 +159,6 @@ fun Dashboard(
     }
 }
 
-@ExperimentalAnimationApi
 @Composable
 private fun Controls(
     dashboardInfo: DashboardInfo,

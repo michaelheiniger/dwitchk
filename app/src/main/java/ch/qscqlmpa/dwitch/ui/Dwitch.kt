@@ -1,12 +1,9 @@
 package ch.qscqlmpa.dwitch.ui
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.primarySurface
 import androidx.compose.runtime.*
@@ -50,8 +47,6 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import org.tinylog.Logger
 
-@ExperimentalMaterialApi
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Dwitch(
     createMainActivityComponent: () -> MainActivityComponent,
@@ -87,9 +82,6 @@ fun Dwitch(
     }
 }
 
-@ExperimentalMaterialApi
-@ExperimentalAnimationApi
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun DwitchNavHost(
     mainActivityComponent: MainActivityComponent,
@@ -296,16 +288,13 @@ private fun getInGameGuestUiVmFactory(
     return inGameUiComponent.viewModelFactory
 }
 
-//    val animationSpec = spring<IntOffset>(dampingRatio = Spring.DampingRatioMediumBouncy)
 val animationSpec = tween<IntOffset>(durationMillis = 1000, easing = CubicBezierEasing(0.08f, 0.93f, 0.68f, 1.27f))
 
-@OptIn(ExperimentalAnimationApi::class)
 private fun enterTransition() = slideInHorizontally(
     initialOffsetX = { width -> width },
     animationSpec = animationSpec
 )
 
-@OptIn(ExperimentalAnimationApi::class)
 private fun exitTransition() = slideOutHorizontally(
     targetOffsetX = { width -> width },
     animationSpec = animationSpec

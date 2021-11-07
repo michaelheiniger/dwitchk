@@ -59,7 +59,6 @@ private fun WaitingRoomPlayersPreview() {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WaitingRoomPlayers(
     players: List<PlayerWrUi>,
@@ -189,7 +188,6 @@ private fun PlayerDetailsRow1(player: PlayerWrUi) {
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun PlayerDetailsRow2(player: PlayerWrUi) {
     Row(modifier = Modifier.fillMaxWidth()) {
@@ -213,7 +211,6 @@ private fun PlayerDetailsRow2(player: PlayerWrUi) {
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun ReadyState(ready: Boolean) {
     val durationMillis = 300
@@ -258,7 +255,6 @@ private fun ReadyState(ready: Boolean) {
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun ConnectionState(connected: Boolean) {
     val durationMillis = 300
