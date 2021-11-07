@@ -9,10 +9,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.primarySurface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
@@ -68,7 +65,12 @@ fun Dwitch(
 
     // Lifecycle of NavController is lifecycle of Dwitch Composable (a new one is recreated after a config. change)
     // which is shorter than the lifecycle of the MainActivityComponent (Activity's lifecycle, surviving config. changes)
-    mainActivityComponent.screenNavigator.setNavHostController(navController)
+    DisposableEffect("composable lifecycle") {
+        mainActivityComponent.screenNavigator.setNavController(navController)
+        onDispose {
+            mainActivityComponent.screenNavigator.clearNavController()
+        }
+    }
 
     val darkThemeEnabled = remember { mutableStateOf(false) }
 
