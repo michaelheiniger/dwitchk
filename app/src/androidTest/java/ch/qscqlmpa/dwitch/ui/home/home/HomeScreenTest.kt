@@ -1,5 +1,6 @@
 package ch.qscqlmpa.dwitch.ui.home.home
 
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.test.onNodeWithTag
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertTextIsDisplayed
@@ -15,6 +16,7 @@ import org.junit.Before
 import org.junit.Test
 import java.util.*
 
+@ExperimentalMaterialApi
 class HomeScreenTest : BaseUiUnitTest() {
 
     private lateinit var notification: HomeNotification
@@ -53,7 +55,7 @@ class HomeScreenTest : BaseUiUnitTest() {
         launchTest()
 
         composeTestRule.assertTextIsDisplayed(UiTags.advertisedGames)
-        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.no_game_discovered))
+        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.no_game_discovered_yet))
     }
 
     @Test
@@ -63,7 +65,7 @@ class HomeScreenTest : BaseUiUnitTest() {
         launchTest()
 
         composeTestRule.assertTextIsDisplayed(UiTags.advertisedGames)
-        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.no_game_discovered))
+        composeTestRule.assertTextIsDisplayedOnce(getString(R.string.no_game_discovered_yet))
     }
 
     @Test
@@ -136,14 +138,15 @@ class HomeScreenTest : BaseUiUnitTest() {
     private fun launchTest() {
         launchTestWithContent {
             HomeBody(
-                notification,
-                advertisedGames,
-                resumableGames,
+                notification = notification,
+                advertisedGames = advertisedGames,
+                resumableGames = resumableGames,
                 loading = false,
                 toggleDarkTheme = {},
                 onCreateNewGameClick = {},
                 onJoinGameClick = {},
                 onResumableGameClick = {},
+                onDeleteExistingGame = {},
                 onQrCodeScan = {}
             )
         }
