@@ -1,8 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.home.home
 
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.*
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -10,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -63,6 +63,8 @@ fun HomeBodyPreview() {
             notification = HomeNotification.None,
             advertisedGames = advertisedGame,
             resumableGames = resumableGameResponse,
+            connectedToWlan = true,
+            controlsEnabled = true,
             loading = false,
             onCreateNewGameClick = {},
             toggleDarkTheme = {},
@@ -88,6 +90,8 @@ fun HomeScreen(
         notification = homeViewModel.notification.value,
         advertisedGames = homeViewModel.advertisedGames.value,
         resumableGames = homeViewModel.resumableGames.value,
+        connectedToWlan = homeViewModel.connectedToWlan.value,
+        controlsEnabled = homeViewModel.controlsEnabled.value,
         loading = homeViewModel.loading.value,
         toggleDarkTheme = toggleDarkTheme,
         onCreateNewGameClick = homeViewModel::createNewGame,
@@ -98,11 +102,14 @@ fun HomeScreen(
     )
 }
 
+@SuppressWarnings("LongParameterList")
 @Composable
 fun HomeBody(
     notification: HomeNotification,
     advertisedGames: LoadedData<List<GameAdvertisingInfo>>,
     resumableGames: LoadedData<List<ResumableGameInfo>>,
+    connectedToWlan: Boolean,
+    controlsEnabled: Boolean,
     loading: Boolean,
     toggleDarkTheme: () -> Unit,
     onCreateNewGameClick: () -> Unit,
@@ -127,17 +134,22 @@ fun HomeBody(
                 .animateContentSize()
                 .padding(8.dp)
         ) {
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .weight(1f)
+            AnimatedVisibility(
+                visible = !connectedToWlan,
+                enter = slideInVertically(),
+                exit = slideOutVertically()
             ) {
-                AdvertisedGameContainer(advertisedGames, onJoinGameClick)
-                Spacer(Modifier.height(16.dp))
-                Column(Modifier.fillMaxSize()) {
-                    JoinGameWithQrCode(onQrCodeScan = onQrCodeScan)
-                    Spacer(Modifier.height(8.dp))
-                    GameCreation(onCreateNewGameClick = onCreateNewGameClick)
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.Red, RoundedCornerShape(10, 10, 10, 10))
+                        .padding(8.dp),
+                    backgroundColor = Color.Red
+                ) {
+                    Text(
+                        text = stringResource(R.string.wlan_connection_required),
+                        color = Color.White
+                    )
                 }
             }
             Column(
@@ -145,7 +157,25 @@ fun HomeBody(
                     .fillMaxSize()
                     .weight(1f)
             ) {
-                ResumableGamesContainer(resumableGames, onResumableGameClick, onDeleteExistingGame)
+                AdvertisedGameContainer(advertisedGames, onJoinGameClick)
+                Spacer(Modifier.height(8.dp))
+                Column(Modifier.fillMaxSize()) {
+                    JoinGameWithQrCode(onQrCodeScan = onQrCodeScan, enabled = controlsEnabled)
+                    Spacer(Modifier.height(8.dp))
+                    GameCreation(onCreateNewGameClick = onCreateNewGameClick, enabled = controlsEnabled)
+                }
+            }
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .weight(1f)
+            ) {
+                ResumableGamesContainer(
+                    enabled = controlsEnabled,
+                    resumableGames = resumableGames,
+                    onResumableGameClick = onResumableGameClick,
+                    onDeleteExistingGame = onDeleteExistingGame
+                )
             }
         }
         Notification(notification)
@@ -154,7 +184,7 @@ fun HomeBody(
 }
 
 @Composable
-private fun JoinGameWithQrCode(onQrCodeScan: (GameAdvertisingInfo) -> Unit) {
+private fun JoinGameWithQrCode(enabled: Boolean, onQrCodeScan: (GameAdvertisingInfo) -> Unit) {
     val showErrorDialog = remember { mutableStateOf(false) }
     val launcher = rememberLauncherForActivityResult(ScanQrCodeResultContract()) { scanResult ->
         when (scanResult) {
@@ -174,6 +204,7 @@ private fun JoinGameWithQrCode(onQrCodeScan: (GameAdvertisingInfo) -> Unit) {
     }
 
     OutlinedButton(
+        enabled = enabled,
         onClick = { launcher.launch(Unit) },
         modifier = Modifier
             .fillMaxWidth()
@@ -182,8 +213,9 @@ private fun JoinGameWithQrCode(onQrCodeScan: (GameAdvertisingInfo) -> Unit) {
 }
 
 @Composable
-private fun GameCreation(onCreateNewGameClick: () -> Unit) {
+private fun GameCreation(enabled: Boolean, onCreateNewGameClick: () -> Unit) {
     Button(
+        enabled = enabled,
         onClick = onCreateNewGameClick,
         modifier = Modifier
             .fillMaxWidth()
@@ -254,6 +286,7 @@ private fun NoGameDiscoveredYet() {
 
 @Composable
 fun ResumableGamesContainer(
+    enabled: Boolean,
     resumableGames: LoadedData<List<ResumableGameInfo>>,
     onResumableGameClick: (ResumableGameInfo) -> Unit,
     onDeleteExistingGame: (ResumableGameInfo) -> Unit
@@ -264,7 +297,7 @@ fun ResumableGamesContainer(
             .animateContentSize()
     ) {
         when (resumableGames) {
-            is LoadedData.Success -> ResumableGames(resumableGames.data, onResumableGameClick, onDeleteExistingGame)
+            is LoadedData.Success -> ResumableGames(enabled, resumableGames.data, onResumableGameClick, onDeleteExistingGame)
             is LoadedData.Failed -> {
                 ResumableGameTitle()
                 Text(stringResource(R.string.loading_resumable_games_failed), color = Color.Red)
@@ -290,6 +323,7 @@ private fun ResumableGameTitle() {
 
 @Composable
 private fun ResumableGames(
+    enabled: Boolean,
     resumableGames: List<ResumableGameInfo>,
     onResumableGameClick: (ResumableGameInfo) -> Unit,
     onDeleteExistingGame: (ResumableGameInfo) -> Unit
@@ -345,18 +379,19 @@ private fun ResumableGames(
                     dismissContent = {
                         Card(
                             elevation = animateDpAsState(if (dismissState.dismissDirection != null) 4.dp else 0.dp).value,
-                            modifier = Modifier.clickable { onResumableGameClick(game) }
+                            modifier = Modifier.clickable(
+                                enabled = enabled,
+                                onClickLabel = stringResource(
+                                    R.string.resume_game_cd,
+                                    game.name,
+                                    game.playersName.joinToString(", ")
+                                )
+                            ) { onResumableGameClick(game) }
                         ) {
                             ListItem(
-                                overlineText = {
-                                    Text(text = game.creationDate.toStringEuFormat())
-                                },
-                                text = {
-                                    Text(text = game.name)
-                                },
-                                secondaryText = {
-                                    Text(text = game.playersName.joinToString(", "))
-                                },
+                                overlineText = { Text(text = game.creationDate.toStringEuFormat()) },
+                                text = { Text(text = game.name) },
+                                secondaryText = { Text(text = game.playersName.joinToString(", ")) },
                                 singleLineSecondaryText = false
                             )
                         }

@@ -9,6 +9,8 @@ import ch.qscqlmpa.dwitch.ui.base.BaseViewModel
 import ch.qscqlmpa.dwitch.ui.common.LoadedData
 import ch.qscqlmpa.dwitch.ui.navigation.*
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectionState
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectivityRepository
 import ch.qscqlmpa.dwitchgame.game.GameFacade
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleFacade
@@ -27,6 +29,7 @@ class HomeViewModel @Inject constructor(
     private val gameDiscoveryFacade: GameDiscoveryFacade,
     private val gameLifecycleFacade: GameLifecycleFacade,
     private val gameFacade: GameFacade,
+    private val deviceConnectivityRepository: DeviceConnectivityRepository,
     private val screenNavigator: ScreenNavigator,
     private val uiScheduler: Scheduler
 ) : BaseViewModel() {
@@ -36,10 +39,17 @@ class HomeViewModel @Inject constructor(
     private val _resumableGames = mutableStateOf<LoadedData<List<ResumableGameInfo>>>(LoadedData.Loading)
     private val _notification = mutableStateOf<HomeNotification>(HomeNotification.None)
 
+    // Don't want to show the banner before the actual value is observed
+    // but disable the controls in the mean time
+    private val _connectedToWlan = mutableStateOf(true)
+    private val _controlsEnabled = mutableStateOf(false)
+
     val loading get(): State<Boolean> = _loading
     val advertisedGames get(): State<LoadedData<List<GameAdvertisingInfo>>> = _advertisedGames
     val resumableGames get(): State<LoadedData<List<ResumableGameInfo>>> = _resumableGames
     val notification: State<HomeNotification> = _notification
+    val connectedToWlan: State<Boolean> = _connectedToWlan
+    val controlsEnabled: State<Boolean> = _controlsEnabled
 
     init {
         Logger.debug { "Viewmodel lifecycle event: create HomeScreenViewModel ($this)" }
@@ -97,6 +107,7 @@ class HomeViewModel @Inject constructor(
     override fun onStart() {
         super.onStart()
         gameDiscoveryFacade.startListeningForAdvertisedGames()
+        observeConnectionState()
         observeAdvertisedGames()
         observeResumableGames()
         reactToGameState()
@@ -162,6 +173,21 @@ class HomeViewModel @Inject constructor(
         screenNavigator.navigate(
             destination = destination,
             navOptions = navOptionsPopUpToInclusive(HomeDestination.Home)
+        )
+    }
+
+    private fun observeConnectionState() {
+        disposableManager.add(
+            deviceConnectivityRepository.observeConnectionState()
+                .observeOn(uiScheduler)
+                .retry()
+                .subscribe(
+                    { state ->
+                        _controlsEnabled.value = state is DeviceConnectionState.ConnectedToWlan
+                        _connectedToWlan.value = state is DeviceConnectionState.ConnectedToWlan
+                    },
+                    { error -> Logger.error(error) { "Error while observing the connection state of the device" } }
+                )
         )
     }
 

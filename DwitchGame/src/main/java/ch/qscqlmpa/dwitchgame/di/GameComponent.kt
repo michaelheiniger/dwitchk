@@ -1,6 +1,7 @@
 package ch.qscqlmpa.dwitchgame.di
 
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectivityRepository
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationComponent
 import ch.qscqlmpa.dwitchgame.di.modules.*
 import ch.qscqlmpa.dwitchgame.game.GameFacade
@@ -27,6 +28,7 @@ import dagger.Component
     ]
 )
 interface GameComponent {
+    val deviceConnectivityRepository: DeviceConnectivityRepository
     val gameLifecycleFacade: GameLifecycleFacade
     val gameFacade: GameFacade
     val gameDiscoveryFacade: GameDiscoveryFacade
