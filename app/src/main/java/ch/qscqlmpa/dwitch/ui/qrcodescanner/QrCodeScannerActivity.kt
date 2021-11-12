@@ -195,10 +195,10 @@ class QrCodeScannerActivity : ComponentActivity() {
 class ScanQrCodeResultContract : ActivityResultContract<Unit, QrCodeScanResult>() {
     override fun createIntent(context: Context, input: Unit) = Intent(context, QrCodeScannerActivity::class.java)
 
-    override fun parseResult(resultCode: Int, result: Intent?): QrCodeScanResult {
+    override fun parseResult(resultCode: Int, intent: Intent?): QrCodeScanResult {
         return when (resultCode) {
             RESULT_OK -> {
-                val qrCodeContent = result?.getParcelableExtra<GameAdvertisingInfo>(QrCodeScannerActivity.QR_CODE_CONTENT_EXTRA)
+                val qrCodeContent = intent?.getParcelableExtra<GameAdvertisingInfo>(QrCodeScannerActivity.QR_CODE_CONTENT_EXTRA)
                 if (qrCodeContent != null) QrCodeScanResult.Success(qrCodeContent) else QrCodeScanResult.Error
             }
             RESULT_CANCELLED -> QrCodeScanResult.NoResult
