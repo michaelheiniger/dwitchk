@@ -40,7 +40,4 @@ interface AppComponent {
     fun inject(activity: QrCodeScannerActivity)
     fun inject(service: HostInGameService)
     fun inject(service: GuestInGameService)
-
-//    fun getInGameHostUiComponentFactory(): InGameHostUiComponent.Factory
-//    fun getInGameGuestUiComponentFactory(): InGameGuestUiComponent.Factory
 }
