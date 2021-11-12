@@ -24,7 +24,7 @@ internal class ProdDeviceConnectivityRepository @Inject constructor(
     }
 
     override fun observeConnectionState(): Observable<DeviceConnectionState> {
-        return Observable.create { emitter ->
+        return Observable.create<DeviceConnectionState> { emitter ->
             val callback = object : ConnectivityManager.NetworkCallback() {
                 override fun onAvailable(network: Network) {
                     super.onAvailable(network)
@@ -59,6 +59,6 @@ internal class ProdDeviceConnectivityRepository @Inject constructor(
             }
             connectivityManager.registerDefaultNetworkCallback(callback)
             emitter.setCancellable { connectivityManager.unregisterNetworkCallback(callback) }
-        }
+        }.startWithItem(DeviceConnectionState.NotConnectedToWlan)
     }
 }
