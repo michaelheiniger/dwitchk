@@ -9,6 +9,7 @@ import ch.qscqlmpa.dwitch.ui.navigation.InGameGuestDestination
 import ch.qscqlmpa.dwitch.ui.navigation.InGameHostDestination
 import ch.qscqlmpa.dwitch.ui.navigation.ScreenNavigator
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectivityRepository
 import ch.qscqlmpa.dwitchgame.game.GameFacade
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleFacade
@@ -34,6 +35,7 @@ class HomeViewModelTest : BaseViewModelUnitTest() {
     private val mockGameDiscoveryFacade = mockk<GameDiscoveryFacade>(relaxed = true)
     private val mockGameLifecycleFacade = mockk<GameLifecycleFacade>(relaxed = true)
     private val mockGameFacade = mockk<GameFacade>(relaxed = true)
+    private val mockDeviceConnectivityRepository = mockk<DeviceConnectivityRepository>(relaxed = true)
     private val mockNavigationBridge = mockk<ScreenNavigator>(relaxed = true)
 
     private lateinit var viewModel: HomeViewModel
@@ -49,6 +51,7 @@ class HomeViewModelTest : BaseViewModelUnitTest() {
             mockGameDiscoveryFacade,
             mockGameLifecycleFacade,
             mockGameFacade,
+            mockDeviceConnectivityRepository,
             mockNavigationBridge,
             Schedulers.trampoline()
         )
