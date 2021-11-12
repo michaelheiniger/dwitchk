@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.navigation
 import ch.qscqlmpa.dwitch.MainActivityComponent
@@ -134,96 +135,115 @@ private fun DwitchNavHost(
             }
         }
 
-        // In-game guest graph destinations
-        navigation(
-            route = HomeDestination.InGameGuest.routeName,
-            startDestination = InGameGuestDestination.Home.routeName
-        ) {
-            composable(
-                route = InGameGuestDestination.Home.routeName,
-                enterTransition = { _, _ -> enterTransition() },
-                exitTransition = { _, _ -> exitTransition() }
-            ) {
-                LoadingSpinner()
-            }
-            composable(
-                route = InGameGuestDestination.WaitingRoom.routeName,
-                enterTransition = { _, _ -> enterTransition() },
-                exitTransition = { _, _ -> exitTransition() }
-            ) { entry ->
-                val vmFactory =
-                    getInGameGuestUiVmFactory(entry, navHostController, mainActivityComponent, createInGameGuestUiComponent)
-                val waitingRoomViewModel = viewModel<WaitingRoomViewModel>(factory = vmFactory)
-                val guestViewModel = viewModel<WaitingRoomGuestViewModel>(factory = vmFactory)
-                val connectionViewModel = viewModel<ConnectionGuestViewModel>(factory = vmFactory)
-                WaitingRoomGuestBody(
-                    waitingRoomViewModel,
-                    guestViewModel,
-                    connectionViewModel
-                )
-            }
-            composable(
-                route = InGameGuestDestination.GameRoom.routeName,
-                enterTransition = { _, _ -> enterTransition() },
-                exitTransition = { _, _ -> exitTransition() }
-            ) { entry ->
-                val vmFactory =
-                    getInGameGuestUiVmFactory(entry, navHostController, mainActivityComponent, createInGameGuestUiComponent)
-                val playerViewModel = viewModel<GameRoomViewModel>(factory = vmFactory)
-                val guestViewModel = viewModel<GameRoomGuestViewModel>(factory = vmFactory)
-                val connectionViewModel = viewModel<ConnectionGuestViewModel>(factory = vmFactory)
-                GameRoomGuestScreen(
-                    playerViewModel,
-                    guestViewModel,
-                    connectionViewModel
-                )
-            }
-        }
+        inGameGuestNavigationGraph(navHostController, mainActivityComponent, createInGameGuestUiComponent)
+        inGameHostNavigationGraph(navHostController, mainActivityComponent, createInGameHostUiComponent)
+    }
+}
 
-        // In-game host graph destinations
-        navigation(
-            route = HomeDestination.InGameHost.routeName,
-            startDestination = InGameHostDestination.Home.routeName
+/**
+ * In-game guest graph destinations
+ */
+private fun NavGraphBuilder.inGameGuestNavigationGraph(
+    navHostController: NavHostController,
+    mainActivityComponent: MainActivityComponent,
+    createInGameGuestUiComponent: (MainActivityComponent) -> InGameGuestUiComponent
+) {
+    navigation(
+        route = HomeDestination.InGameGuest.routeName,
+        startDestination = InGameGuestDestination.Home.routeName
+    ) {
+        composable(
+            route = InGameGuestDestination.Home.routeName,
+            enterTransition = { _, _ -> enterTransition() },
+            exitTransition = { _, _ -> exitTransition() }
         ) {
-            composable(
-                route = InGameHostDestination.Home.routeName,
-                enterTransition = { _, _ -> enterTransition() },
-                exitTransition = { _, _ -> exitTransition() }
-            ) {
-                LoadingSpinner()
-            }
-            composable(
-                route = InGameHostDestination.WaitingRoom.routeName,
-                enterTransition = { _, _ -> enterTransition() },
-                exitTransition = { _, _ -> exitTransition() }
-            ) { entry ->
-                val vmFactory =
-                    getInGameHostUiVmFactory(entry, navHostController, mainActivityComponent, createInGameHostUiComponent)
-                val waitingRoomViewModel = viewModel<WaitingRoomViewModel>(factory = vmFactory)
-                val hostViewModel = viewModel<WaitingRoomHostViewModel>(factory = vmFactory)
-                val connectionViewModel = viewModel<ConnectionHostViewModel>(factory = vmFactory)
-                WaitingRoomHostBody(
-                    waitingRoomViewModel,
-                    hostViewModel,
-                    connectionViewModel
-                )
-            }
-            composable(
-                route = InGameHostDestination.GameRoom.routeName,
-                enterTransition = { _, _ -> enterTransition() },
-                exitTransition = { _, _ -> exitTransition() }
-            ) { entry ->
-                val vmFactory =
-                    getInGameHostUiVmFactory(entry, navHostController, mainActivityComponent, createInGameHostUiComponent)
-                val playerViewModel = viewModel<GameRoomViewModel>(factory = vmFactory)
-                val hostViewModel = viewModel<GameRoomHostViewModel>(factory = vmFactory)
-                val connectionViewModel = viewModel<ConnectionHostViewModel>(factory = vmFactory)
-                GameRoomHostScreen(
-                    playerViewModel,
-                    hostViewModel,
-                    connectionViewModel
-                )
-            }
+            LoadingSpinner()
+        }
+        composable(
+            route = InGameGuestDestination.WaitingRoom.routeName,
+            enterTransition = { _, _ -> enterTransition() },
+            exitTransition = { _, _ -> exitTransition() }
+        ) { entry ->
+            val vmFactory =
+                getInGameGuestUiVmFactory(entry, navHostController, mainActivityComponent, createInGameGuestUiComponent)
+            val waitingRoomViewModel = viewModel<WaitingRoomViewModel>(factory = vmFactory)
+            val guestViewModel = viewModel<WaitingRoomGuestViewModel>(factory = vmFactory)
+            val connectionViewModel = viewModel<ConnectionGuestViewModel>(factory = vmFactory)
+            WaitingRoomGuestBody(
+                waitingRoomViewModel,
+                guestViewModel,
+                connectionViewModel
+            )
+        }
+        composable(
+            route = InGameGuestDestination.GameRoom.routeName,
+            enterTransition = { _, _ -> enterTransition() },
+            exitTransition = { _, _ -> exitTransition() }
+        ) { entry ->
+            val vmFactory =
+                getInGameGuestUiVmFactory(entry, navHostController, mainActivityComponent, createInGameGuestUiComponent)
+            val playerViewModel = viewModel<GameRoomViewModel>(factory = vmFactory)
+            val guestViewModel = viewModel<GameRoomGuestViewModel>(factory = vmFactory)
+            val connectionViewModel = viewModel<ConnectionGuestViewModel>(factory = vmFactory)
+            GameRoomGuestScreen(
+                playerViewModel,
+                guestViewModel,
+                connectionViewModel
+            )
+        }
+    }
+}
+
+/**
+ * In-game host graph destinations
+ */
+private fun NavGraphBuilder.inGameHostNavigationGraph(
+    navHostController: NavHostController,
+    mainActivityComponent: MainActivityComponent,
+    createInGameHostUiComponent: (MainActivityComponent) -> InGameHostUiComponent
+) {
+    navigation(
+        route = HomeDestination.InGameHost.routeName,
+        startDestination = InGameHostDestination.Home.routeName
+    ) {
+        composable(
+            route = InGameHostDestination.Home.routeName,
+            enterTransition = { _, _ -> enterTransition() },
+            exitTransition = { _, _ -> exitTransition() }
+        ) {
+            LoadingSpinner()
+        }
+        composable(
+            route = InGameHostDestination.WaitingRoom.routeName,
+            enterTransition = { _, _ -> enterTransition() },
+            exitTransition = { _, _ -> exitTransition() }
+        ) { entry ->
+            val vmFactory =
+                getInGameHostUiVmFactory(entry, navHostController, mainActivityComponent, createInGameHostUiComponent)
+            val waitingRoomViewModel = viewModel<WaitingRoomViewModel>(factory = vmFactory)
+            val hostViewModel = viewModel<WaitingRoomHostViewModel>(factory = vmFactory)
+            val connectionViewModel = viewModel<ConnectionHostViewModel>(factory = vmFactory)
+            WaitingRoomHostBody(
+                waitingRoomViewModel,
+                hostViewModel,
+                connectionViewModel
+            )
+        }
+        composable(
+            route = InGameHostDestination.GameRoom.routeName,
+            enterTransition = { _, _ -> enterTransition() },
+            exitTransition = { _, _ -> exitTransition() }
+        ) { entry ->
+            val vmFactory =
+                getInGameHostUiVmFactory(entry, navHostController, mainActivityComponent, createInGameHostUiComponent)
+            val playerViewModel = viewModel<GameRoomViewModel>(factory = vmFactory)
+            val hostViewModel = viewModel<GameRoomHostViewModel>(factory = vmFactory)
+            val connectionViewModel = viewModel<ConnectionHostViewModel>(factory = vmFactory)
+            GameRoomHostScreen(
+                playerViewModel,
+                hostViewModel,
+                connectionViewModel
+            )
         }
     }
 }

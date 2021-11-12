@@ -12,8 +12,7 @@ import javax.inject.Inject
  * Activity-scoped: includes all Composables to enable providing data as argument of a destination.
  */
 @ActivityScope
-class ScreenNavigator @Inject constructor(
-) {
+class ScreenNavigator @Inject constructor() {
     private var navController: NavController? = null
 
     private val savedData = mutableMapOf<String, Any>()
