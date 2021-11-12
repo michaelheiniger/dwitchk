@@ -134,34 +134,15 @@ fun HomeBody(
                 .animateContentSize()
                 .padding(8.dp)
         ) {
-            AnimatedVisibility(
-                visible = !connectedToWlan,
-                enter = slideInVertically(),
-                exit = slideOutVertically()
-            ) {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.Red, RoundedCornerShape(10, 10, 10, 10))
-                        .padding(8.dp),
-                    backgroundColor = Color.Red
-                ) {
-                    Text(
-                        text = stringResource(R.string.wlan_connection_required),
-                        color = Color.White
-                    )
-                }
-            }
+            WlanConnectionRequiredBanner(connectedToWlan = connectedToWlan)
             Column(
                 Modifier
                     .fillMaxSize()
                     .weight(1f)
             ) {
                 AdvertisedGameContainer(advertisedGames, onJoinGameClick)
-                Spacer(Modifier.height(8.dp))
                 Column(Modifier.fillMaxSize()) {
                     JoinGameWithQrCode(onQrCodeScan = onQrCodeScan, enabled = controlsEnabled)
-                    Spacer(Modifier.height(8.dp))
                     GameCreation(onCreateNewGameClick = onCreateNewGameClick, enabled = controlsEnabled)
                 }
             }
@@ -180,6 +161,28 @@ fun HomeBody(
         }
         Notification(notification)
         if (loading) LoadingDialog()
+    }
+}
+
+@Composable
+private fun WlanConnectionRequiredBanner(connectedToWlan: Boolean) {
+    AnimatedVisibility(
+        visible = !connectedToWlan,
+        enter = slideInVertically(),
+        exit = slideOutVertically()
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.Red, RoundedCornerShape(10, 10, 10, 10))
+                .padding(8.dp),
+            backgroundColor = Color.Red
+        ) {
+            Text(
+                text = stringResource(R.string.wlan_connection_required),
+                color = Color.White
+            )
+        }
     }
 }
 
@@ -321,6 +324,7 @@ private fun ResumableGameTitle() {
     )
 }
 
+@SuppressWarnings("LongMethod")
 @Composable
 private fun ResumableGames(
     enabled: Boolean,
