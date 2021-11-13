@@ -25,7 +25,8 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/title_activity_home"
-            android:theme="@style/Theme.Dwitch">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Dwitch"> <!--TODO: Add support for landscape -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
