@@ -103,12 +103,12 @@ class GameRoomViewModel @Inject constructor(
                 // (e.g. selected cards that haven't been submitted yet)
                 .distinctUntilChanged()
                 .map { state ->
-                    when (state) {
-                        is DwitchState.RoundIsBeginning -> screenBuilder = DashboardScreenBuilder(state.info)
-                        is DwitchState.RoundIsOngoing -> screenBuilder = DashboardScreenBuilder(state.info)
-                        is DwitchState.CardExchange -> screenBuilder = CardExchangeScreenBuilder(state.info)
-                        DwitchState.CardExchangeOnGoing -> screenBuilder = CardExchangeOnGoingScreenBuilder()
-                        is DwitchState.EndOfRound -> screenBuilder = EndOfRoundManagerScreenBuilder(state.info)
+                    screenBuilder = when (state) {
+                        is DwitchState.RoundIsBeginning -> DashboardScreenBuilder(state.info)
+                        is DwitchState.RoundIsOngoing -> DashboardScreenBuilder(state.info)
+                        is DwitchState.CardExchange -> CardExchangeScreenBuilder(state.info)
+                        DwitchState.CardExchangeOnGoing -> CardExchangeOnGoingScreenBuilder()
+                        is DwitchState.EndOfRound -> EndOfRoundManagerScreenBuilder(state.info)
                     }
                     screenBuilder.screen
                 }
