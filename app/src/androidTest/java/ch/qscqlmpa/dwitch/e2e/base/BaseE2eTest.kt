@@ -98,6 +98,7 @@ abstract class BaseE2eTest {
         store = storeComponent.store
         deviceConnectivityRepository = communicationComponent.deviceConnectivityRepository as TestDeviceConnectivityRepository
         networkAdapter = communicationComponent.networkListener as TestNetworkAdapter
+        setCurrentDeviceConnectionState(DeviceConnectionState.ConnectedToWlan("192.168.1.2"))
     }
 
     @After
@@ -110,10 +111,11 @@ abstract class BaseE2eTest {
         testRule.onNodeWithText(getString(R.string.create_new_game)).assertExists()
     }
 
-    protected fun setCurrentDeviceConnectionState(state: DeviceConnectionState) {
+    private fun setCurrentDeviceConnectionState(state: DeviceConnectionState) {
         deviceConnectivityRepository.publishNewState(state)
     }
 
+    @SuppressWarnings("LongParameterList")
     protected fun advertiseGame(
         isNew: Boolean,
         gameName: String,

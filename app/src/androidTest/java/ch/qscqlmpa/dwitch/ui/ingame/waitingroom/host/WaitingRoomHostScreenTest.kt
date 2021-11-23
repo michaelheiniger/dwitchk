@@ -69,6 +69,7 @@ class WaitingRoomHostScreenTest : BaseUiUnitTest() {
 
         // Then
         composeTestRule.onNodeWithTag(UiTags.addComputerPlayer)
+            .assertExists()
             .assertIsEnabled()
             .assertIsDisplayed()
     }
@@ -90,10 +91,10 @@ class WaitingRoomHostScreenTest : BaseUiUnitTest() {
             WaitingRoomHostBody(
                 toolbarTitle = "Dwiitch",
                 showAddComputerPlayer = showAddComputerPlayer,
-                players,
+                players = players,
                 gameQrCode = gameQrCode,
-                launchGameEnabled,
-                connectionState,
+                launchGameEnabled = launchGameEnabled,
+                connectionStatus = connectionState,
                 cancelingGame = false,
                 launchingGame = false,
                 onAddComputerPlayer = {},

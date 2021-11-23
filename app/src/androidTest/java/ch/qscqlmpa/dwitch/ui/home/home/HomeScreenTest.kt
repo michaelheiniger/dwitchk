@@ -139,6 +139,8 @@ class HomeScreenTest : BaseUiUnitTest() {
                 notification = notification,
                 advertisedGames = advertisedGames,
                 resumableGames = resumableGames,
+                connectedToWlan = true,
+                controlsEnabled = true,
                 loading = false,
                 toggleDarkTheme = {},
                 onCreateNewGameClick = {},
