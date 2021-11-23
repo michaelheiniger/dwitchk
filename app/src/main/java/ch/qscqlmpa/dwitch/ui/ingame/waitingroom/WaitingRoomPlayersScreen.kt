@@ -132,7 +132,7 @@ fun WaitingRoomPlayers(
             }
             if (showAddComputerPlayer) {
                 item {
-                    Card(elevation = 0.dp) {
+                    Card(elevation = 0.dp, modifier = Modifier.testTag(UiTags.addComputerPlayer)) {
                         Column(modifier = Modifier.fillMaxWidth()) {
                             TextButton(
                                 onClick = onAddComputerPlayer,
@@ -143,11 +143,9 @@ fun WaitingRoomPlayers(
                                     contentDescription = null
                                 )
                                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-
                                 Text(
                                     text = stringResource(R.string.add_computer_player),
-                                    fontSize = 20.sp,
-                                    modifier = Modifier.testTag(UiTags.addComputerPlayer)
+                                    fontSize = 20.sp
                                 )
                             }
                         }

@@ -8,7 +8,6 @@ import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
 import ch.qscqlmpa.dwitch.e2e.utils.WaitingRoomUtil.assertPlayerInWr
 import ch.qscqlmpa.dwitch.ui.common.UiTags
-import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectionState
 import ch.qscqlmpa.dwitchcommunication.ingame.model.Message
 import ch.qscqlmpa.dwitchcommunication.ingame.websocket.server.test.PlayerHostTest
 import ch.qscqlmpa.dwitchgame.ingame.communication.messagefactories.GuestMessageFactory
@@ -24,7 +23,6 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
     private lateinit var guest3: Player
 
     protected open fun goToWaitingRoom() {
-        setCurrentDeviceConnectionState(DeviceConnectionState.ConnectedToWlan("192.168.1.2"))
         testRule.onNodeWithTag(UiTags.createGame).performClick()
 
         testRule.onNodeWithTag(UiTags.playerName).performTextReplacement(hostName)
