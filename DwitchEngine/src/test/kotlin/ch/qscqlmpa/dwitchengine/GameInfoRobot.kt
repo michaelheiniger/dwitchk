@@ -1,8 +1,8 @@
 package ch.qscqlmpa.dwitchengine
 
 import ch.qscqlmpa.dwitchengine.model.card.CardName
-import ch.qscqlmpa.dwitchengine.model.game.DwitchGameEvent
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
+import ch.qscqlmpa.dwitchengine.model.game.DwitchPlayerAction
 import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.info.DwitchGameInfo
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
@@ -10,8 +10,8 @@ import org.assertj.core.api.Assertions.assertThat
 
 class GameInfoRobot(private val info: DwitchGameInfo) {
 
-    fun assertGameEvent(dwitchGameEvent: DwitchGameEvent?): GameInfoRobot {
-        assertThat(info.dwitchGameEvent).isEqualTo(dwitchGameEvent)
+    fun assertLastPlayerAction(action: DwitchPlayerAction?): GameInfoRobot {
+        assertThat(info.lastPlayerAction).isEqualTo(action)
         return this
     }
 

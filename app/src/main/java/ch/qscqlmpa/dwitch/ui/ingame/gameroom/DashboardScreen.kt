@@ -113,6 +113,7 @@ private fun DashboardPreview() {
     val dashboardInfo = DashboardInfo(
         playersInfo = players,
         localPlayerInfo = localPlayerDashboard,
+        lastPlayerAction = null,
         lastCardPlayed = PlayedCards(listOf(Card.Clubs8, Card.Spades8)),
         waitingForPlayerReconnection = false
     )

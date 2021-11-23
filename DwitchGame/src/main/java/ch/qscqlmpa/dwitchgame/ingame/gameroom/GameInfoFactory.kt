@@ -1,8 +1,10 @@
 package ch.qscqlmpa.dwitchgame.ingame.gameroom
 
+import ch.qscqlmpa.dwitchengine.model.game.DwitchPlayerAction
 import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.info.DwitchCardInfo
 import ch.qscqlmpa.dwitchengine.model.info.DwitchGameInfo
+import ch.qscqlmpa.dwitchengine.model.info.DwitchPlayerInfo
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
@@ -32,6 +34,7 @@ object GameInfoFactory {
                 adjustCardItemSelectability(localPlayerInfo.cardsInHand, dashboardEnabled, localPlayerIsCurrentPlayer),
                 canPass = localPlayerIsCurrentPlayer && dashboardEnabled
             ),
+            lastPlayerAction = mapDwitchPlayerActionToPlayerAction(gameInfo.lastPlayerAction, gameInfo.playerInfos),
             lastCardPlayed = gameInfo.lastCardPlayed,
             waitingForPlayerReconnection = playerIsDisconnected(playersConnected, gameInfo.currentPlayerId) &&
                 gameInfo.currentPlayerId != localPlayerId &&
@@ -51,22 +54,18 @@ object GameInfoFactory {
     private fun playerIsConnected(
         playersConnectionState: Map<DwitchPlayerId, Boolean>,
         playerId: DwitchPlayerId
-    ) =
-        playersConnectionState.getValue(playerId)
+    ) = playersConnectionState.getValue(playerId)
 
     private fun playerIsDisconnected(
         playersConnectionState: Map<DwitchPlayerId, Boolean>,
         playerId: DwitchPlayerId
-    ) =
-        !playerIsConnected(playersConnectionState, playerId)
+    ) = !playerIsConnected(playersConnectionState, playerId)
 
     private fun adjustCardItemSelectability(
         cardItems: List<DwitchCardInfo>,
         dashboardEnabled: Boolean,
         localPlayerIsCurrentPlayer: Boolean
-    ): List<DwitchCardInfo> {
-        return cardItems.map { c -> c.copy(selectable = dashboardEnabled && localPlayerIsCurrentPlayer && c.selectable) }
-    }
+    ) = cardItems.map { c -> c.copy(selectable = dashboardEnabled && localPlayerIsCurrentPlayer && c.selectable) }
 }
 
 data class GameDashboardInfo(
@@ -79,6 +78,11 @@ data class GameDashboardInfo(
     val localPlayerDashboard: LocalPlayerDashboard,
 
     /**
+     * Last action performed by a player in the current round.
+     */
+    val lastPlayerAction: PlayerAction?,
+
+    /**
      * Last card(s) played sitting on the table.
      */
     val lastCardPlayed: PlayedCards?,
@@ -88,6 +92,36 @@ data class GameDashboardInfo(
      */
     val waitingForPlayerReconnection: Boolean
 )
+
+private fun mapDwitchPlayerActionToPlayerAction(
+    dwitchPlayerAction: DwitchPlayerAction?,
+    playerInfos: Map<DwitchPlayerId, DwitchPlayerInfo>
+): PlayerAction? {
+    if (dwitchPlayerAction == null) return null
+    val actionPlayerInfo = playerInfos.getValue(dwitchPlayerAction.playerId)
+    return when (dwitchPlayerAction) {
+        is DwitchPlayerAction.PlayCards -> PlayerAction.PlayCards(
+            playerName = actionPlayerInfo.name,
+            playedCards = dwitchPlayerAction.playedCards,
+            dwitchedPlayedName = playerInfos[dwitchPlayerAction.dwitchedPlayedId]?.name
+        )
+        is DwitchPlayerAction.PassTurn -> PlayerAction.PassTurn(actionPlayerInfo.name)
+    }
+}
+
+sealed class PlayerAction {
+    abstract val playerName: String
+
+    data class PlayCards(
+        override val playerName: String,
+        val playedCards: PlayedCards,
+        val dwitchedPlayedName: String? = null
+    ) : PlayerAction()
+
+    data class PassTurn(
+        override val playerName: String,
+    ) : PlayerAction()
+}
 
 data class PlayerInfo(
     val name: String,

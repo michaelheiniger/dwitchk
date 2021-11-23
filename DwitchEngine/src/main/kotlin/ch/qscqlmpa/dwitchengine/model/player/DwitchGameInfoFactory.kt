@@ -22,7 +22,7 @@ internal class DwitchGameInfoFactory(val gameState: DwitchGameState) {
             gameState.joker,
             gameState.lastCardsPlayed(),
             gameState.cardsOnTable,
-            gameState.dwitchGameEvent,
+            gameState.lastPlayerAction,
             roundIsOver()
         )
     }

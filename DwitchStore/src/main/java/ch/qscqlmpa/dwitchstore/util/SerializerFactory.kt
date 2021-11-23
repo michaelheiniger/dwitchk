@@ -4,9 +4,9 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardId
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.card.CardSuit
-import ch.qscqlmpa.dwitchengine.model.game.DwitchGameEvent
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.game.DwitchPlayerAction
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayer
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
@@ -53,8 +53,8 @@ class SerializerFactory @Inject constructor(private val json: Json) {
         return json.encodeToString(DwitchPlayer.serializer(), player)
     }
 
-    fun serialize(dwitchGameEvent: DwitchGameEvent): String {
-        return json.encodeToString(DwitchGameEvent.serializer(), dwitchGameEvent)
+    fun serialize(dwitchPlayerAction: DwitchPlayerAction): String {
+        return json.encodeToString(DwitchPlayerAction.serializer(), dwitchPlayerAction)
     }
 
     fun serialize(dwitchPlayerId: DwitchPlayerId): String {
@@ -91,8 +91,8 @@ class SerializerFactory @Inject constructor(private val json: Json) {
         return json.decodeFromString(DwitchPlayer.serializer(), player)
     }
 
-    fun unserializeGameEvent(gameEvent: String): DwitchGameEvent {
-        return json.decodeFromString(DwitchGameEvent.serializer(), gameEvent)
+    fun unserializeDwitchPlayerAction(gameEvent: String): DwitchPlayerAction {
+        return json.decodeFromString(DwitchPlayerAction.serializer(), gameEvent)
     }
 
     fun unserializePlayerDwitchId(playerDwitchId: String): DwitchPlayerId {

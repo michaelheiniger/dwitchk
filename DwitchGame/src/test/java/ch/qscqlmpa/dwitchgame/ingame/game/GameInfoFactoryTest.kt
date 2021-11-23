@@ -294,7 +294,7 @@ internal class GameInfoFactoryTest : BaseUnitTest() {
             joker = CardName.Two,
             lastCardPlayed = PlayedCards(Card.Clubs5),
             cardsOnTable = emptyList(),
-            dwitchGameEvent = null,
+            lastPlayerAction = null,
             newRoundCanBeStarted = newRoundCanBeStarted
         )
     }

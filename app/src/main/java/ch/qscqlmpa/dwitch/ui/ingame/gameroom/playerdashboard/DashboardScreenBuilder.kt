@@ -31,6 +31,7 @@ class DashboardScreenBuilder constructor(
                 canPlay = playCardEngine.cardSelectionIsValid(),
                 canPass = gameDashboardInfo.localPlayerDashboard.canPass
             ),
+            lastPlayerAction = gameDashboardInfo.lastPlayerAction,
             lastCardPlayed = gameDashboardInfo.lastCardPlayed,
             waitingForPlayerReconnection = gameDashboardInfo.waitingForPlayerReconnection
         )

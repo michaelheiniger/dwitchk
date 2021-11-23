@@ -11,6 +11,7 @@ import ch.qscqlmpa.dwitchengine.model.player.SpecialRuleBreaker
 internal abstract class GameUpdaterBase(currentGameState: DwitchGameState) {
 
     protected val gameStateMutable = GameStateMutable.fromGameState(currentGameState)
+    protected val currentPlayerId = currentGameState.currentPlayerId
 
     fun undwitchAllPlayers(): GameUpdaterBase {
         gameStateMutable.undwitchAllPlayers()
@@ -18,7 +19,7 @@ internal abstract class GameUpdaterBase(currentGameState: DwitchGameState) {
     }
 
     fun resetGameEvent() {
-        gameStateMutable.dwitchGameEvent = null
+        gameStateMutable.lastPlayerAction = null
     }
 
     fun setGamePhase(phase: DwitchGamePhase) {
@@ -53,7 +54,7 @@ internal abstract class GameUpdaterBase(currentGameState: DwitchGameState) {
         return this
     }
 
-    fun buildUpdatedGameState(): DwitchGameState {
+    open fun buildUpdatedGameState(): DwitchGameState {
         return gameStateMutable.toGameState()
     }
 

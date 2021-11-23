@@ -50,6 +50,7 @@ class DashboardScreenTest : BaseUiUnitTest() {
                 canPass = false,
                 canPlay = true
             ),
+            lastPlayerAction = null,
             lastCardPlayed = PlayedCards(Card.Hearts8),
             waitingForPlayerReconnection = false
         )

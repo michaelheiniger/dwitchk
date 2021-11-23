@@ -20,7 +20,7 @@ data class DwitchGameState(
     val playersDoneForRound: List<DwitchPlayerId>,
     val playersWhoBrokeASpecialRule: List<SpecialRuleBreaker>,
     val joker: CardName,
-    val dwitchGameEvent: DwitchGameEvent?,
+    val lastPlayerAction: DwitchPlayerAction?,
     val cardsOnTable: List<PlayedCards>,
     val cardsInDeck: Set<Card>,
     val cardsInGraveyard: List<PlayedCards>

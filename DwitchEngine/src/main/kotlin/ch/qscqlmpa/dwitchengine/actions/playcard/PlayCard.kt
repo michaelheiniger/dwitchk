@@ -40,7 +40,7 @@ internal class PlayCard(
                 newCurrentPlayer.id == playCardState.currentPlayerId() ||
                 (playCardState.currentPlayerIsDone() && playCardState.exactlyOneOtherPlayerCanPlay())
             ) {
-                gameUpdater.clearTable(cardsPlayed)
+                gameUpdater.clearTable()
                 gameUpdater.setPlayersWhoPassedTheirTurnedToWaiting()
             }
 
