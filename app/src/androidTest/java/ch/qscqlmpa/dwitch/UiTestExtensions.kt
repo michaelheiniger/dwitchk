@@ -13,12 +13,19 @@ fun ComposeContentTestRule.assertTextIsDisplayedOnce(
     return sni
 }
 
+/**
+ * @param uiTag test tag that must be placed on Text() Composable
+ */
 fun ComposeContentTestRule.assertTextIsDisplayed(
     uiTag: String,
     vararg containedStrings: String
 ): SemanticsNodeInteraction {
     val sni = onNodeWithTag(uiTag).assertExists()
-    containedStrings.forEach { str -> sni.assertTextContains(value = str, substring = true, ignoreCase = true) }
+    containedStrings.forEach { str ->
+        sni
+            .assertTextContains(value = str, substring = true, ignoreCase = true)
+            .assertIsDisplayed()
+    }
     return sni
 }
 

@@ -1,6 +1,8 @@
 package ch.qscqlmpa.dwitch.ui.home.home
 
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.assertTextIsDisplayed
 import ch.qscqlmpa.dwitch.assertTextIsDisplayedOnce
@@ -17,6 +19,7 @@ import java.util.*
 
 class HomeScreenTest : BaseUiUnitTest() {
 
+    private var connectedToWlan: Boolean = true
     private lateinit var notification: HomeNotification
     private lateinit var advertisedGames: LoadedData<List<GameAdvertisingInfo>>
     private lateinit var resumableGames: LoadedData<List<ResumableGameInfo>>
@@ -30,6 +33,7 @@ class HomeScreenTest : BaseUiUnitTest() {
 
     @Test
     fun advertisedGamesAreSuccesfullyDisplayed() {
+        // Given
         advertisedGames = LoadedData.Success(
             listOf(
                 GameAdvertisingInfo(false, "Game 1", GameCommonId(UUID.randomUUID()), "192.168.1.1", 8889),
@@ -38,8 +42,10 @@ class HomeScreenTest : BaseUiUnitTest() {
             )
         )
 
+        // When
         launchTest()
 
+        // Then
         composeTestRule.assertTextIsDisplayed(UiTags.advertisedGames)
         composeTestRule.assertTextIsDisplayedOnce("Game 1")
         composeTestRule.assertTextIsDisplayedOnce("Game 2")
@@ -48,36 +54,46 @@ class HomeScreenTest : BaseUiUnitTest() {
 
     @Test
     fun advertisedGamesAreLoading() {
+        // Given
         advertisedGames = LoadedData.Loading
 
+        // When
         launchTest()
 
+        // Then
         composeTestRule.assertTextIsDisplayed(UiTags.advertisedGames)
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.no_game_discovered_yet))
     }
 
     @Test
     fun noAdvertisedGames() {
+        // Given
         advertisedGames = LoadedData.Success(emptyList())
 
+        // When
         launchTest()
 
+        // Then
         composeTestRule.assertTextIsDisplayed(UiTags.advertisedGames)
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.no_game_discovered_yet))
     }
 
     @Test
     fun errorLoadingAdvertisedGames() {
+        // Given
         advertisedGames = LoadedData.Failed
 
+        // When
         launchTest()
 
+        // Then
         composeTestRule.assertTextIsDisplayed(UiTags.advertisedGames)
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.listening_advertised_games_failed))
     }
 
     @Test
     fun resumableGamesAreSuccesfullyDisplayed() {
+        // Given
         resumableGames = LoadedData.Success(
             listOf(
                 ResumableGameInfo(
@@ -95,8 +111,10 @@ class HomeScreenTest : BaseUiUnitTest() {
             )
         )
 
+        // When
         launchTest()
 
+        // Then
         composeTestRule.assertTextIsDisplayed(UiTags.resumableGames)
         composeTestRule.assertTextIsDisplayedOnce("LOTR", "Aragorn", "Legolas", "Gimli")
         composeTestRule.assertTextIsDisplayedOnce("GoT", "Ned Stark", "Arya Stark", "Sandor Clegane")
@@ -104,19 +122,25 @@ class HomeScreenTest : BaseUiUnitTest() {
 
     @Test
     fun noResumableGames() {
+        // Given
         resumableGames = LoadedData.Success(emptyList())
 
+        // When
         launchTest()
 
+        // Then
         composeTestRule.onNodeWithTag(UiTags.resumableGames).assertDoesNotExist()
     }
 
     @Test
     fun errorLoadingResumableGames() {
+        // Given
         resumableGames = LoadedData.Failed
 
+        // When
         launchTest()
 
+        // Then
         composeTestRule.assertTextIsDisplayed(UiTags.resumableGames)
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.loading_resumable_games_failed))
     }
@@ -124,13 +148,38 @@ class HomeScreenTest : BaseUiUnitTest() {
     @Test
     fun errorJoiningGame() {
         // Given
+        notification = HomeNotification.ErrorJoiningGame
 
         // When
-        notification = HomeNotification.ErrorJoiningGame
         launchTest()
 
         // Then
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.error_joining_game_text))
+    }
+
+    @Test
+    fun bannerIsNotDisplayedWhenConnectedToWlan() {
+        // Given
+        connectedToWlan = true
+
+        // When
+        launchTest()
+
+        // Then
+        composeTestRule.onNodeWithTag(UiTags.bannerNotConnectedToWlan).assertDoesNotExist()
+    }
+
+    @Test
+    fun bannerIsDisplayedWhenNotConnectedToWlan() {
+        // Given
+        connectedToWlan = false
+
+        // When
+        launchTest()
+
+        // Then
+        composeTestRule.onNodeWithTag(UiTags.bannerNotConnectedToWlan).assertExists().assertIsDisplayed()
+        composeTestRule.onNodeWithText(getString(R.string.wlan_connection_required)).assertExists().assertIsDisplayed()
     }
 
     private fun launchTest() {
@@ -139,7 +188,7 @@ class HomeScreenTest : BaseUiUnitTest() {
                 notification = notification,
                 advertisedGames = advertisedGames,
                 resumableGames = resumableGames,
-                connectedToWlan = true,
+                connectedToWlan = connectedToWlan,
                 controlsEnabled = true,
                 loading = false,
                 toggleDarkTheme = {},

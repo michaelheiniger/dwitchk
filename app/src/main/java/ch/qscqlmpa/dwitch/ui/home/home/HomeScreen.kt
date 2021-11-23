@@ -173,6 +173,7 @@ private fun WlanConnectionRequiredBanner(connectedToWlan: Boolean) {
     ) {
         Card(
             modifier = Modifier
+                .testTag(UiTags.bannerNotConnectedToWlan)
                 .fillMaxWidth()
                 .background(Color.Red, RoundedCornerShape(10, 10, 10, 10))
                 .padding(8.dp),
