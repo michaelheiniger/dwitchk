@@ -8,7 +8,7 @@ plugins {
 //    id("com.google.firebase.crashlytics")
 }
 
-val composeVersion = "1.0.4"
+val composeVersion = "1.0.5"
 
 android {
     compileSdk = Versions.compileSdkVersion
@@ -82,7 +82,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlinVersion}")
 
     // Android
-    implementation("androidx.appcompat:appcompat:1.4.0-rc01")
+    implementation("androidx.appcompat:appcompat:1.4.0")
     implementation("com.google.android.material:material:1.4.0")
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.datastore:datastore:1.0.0")
@@ -96,7 +96,7 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.4.0")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
-    implementation("androidx.navigation:navigation-compose:2.4.0-beta01")
+    implementation("androidx.navigation:navigation-compose:2.4.0-beta02")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
     implementation("com.google.accompanist:accompanist-navigation-animation:0.21.0-beta")
