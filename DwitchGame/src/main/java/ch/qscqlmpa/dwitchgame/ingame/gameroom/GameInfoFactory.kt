@@ -94,18 +94,19 @@ data class GameDashboardInfo(
 )
 
 private fun mapDwitchPlayerActionToPlayerAction(
-    dwitchPlayerAction: DwitchPlayerAction?,
+    action: DwitchPlayerAction?,
     playerInfos: Map<DwitchPlayerId, DwitchPlayerInfo>
 ): PlayerAction? {
-    if (dwitchPlayerAction == null) return null
-    val actionPlayerInfo = playerInfos.getValue(dwitchPlayerAction.playerId)
-    return when (dwitchPlayerAction) {
+    if (action == null) return null
+    val actionPlayerInfo = playerInfos.getValue(action.playerId)
+    return when (action) {
         is DwitchPlayerAction.PlayCards -> PlayerAction.PlayCards(
             playerName = actionPlayerInfo.name,
-            playedCards = dwitchPlayerAction.playedCards,
-            dwitchedPlayedName = playerInfos[dwitchPlayerAction.dwitchedPlayedId]?.name
+            playedCards = action.playedCards,
+            clearsTable = action.clearsTable,
+            dwitchedPlayedName = playerInfos[action.dwitchedPlayedId]?.name
         )
-        is DwitchPlayerAction.PassTurn -> PlayerAction.PassTurn(actionPlayerInfo.name)
+        is DwitchPlayerAction.PassTurn -> PlayerAction.PassTurn(actionPlayerInfo.name, action.clearsTable)
     }
 }
 
@@ -115,11 +116,13 @@ sealed class PlayerAction {
     data class PlayCards(
         override val playerName: String,
         val playedCards: PlayedCards,
+        val clearsTable: Boolean,
         val dwitchedPlayedName: String? = null
     ) : PlayerAction()
 
     data class PassTurn(
         override val playerName: String,
+        val clearsTable: Boolean,
     ) : PlayerAction()
 }
 

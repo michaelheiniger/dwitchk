@@ -11,11 +11,13 @@ sealed class DwitchPlayerAction {
     data class PlayCards(
         override val playerId: DwitchPlayerId,
         val playedCards: PlayedCards,
+        val clearsTable: Boolean,
         val dwitchedPlayedId: DwitchPlayerId? = null
     ) : DwitchPlayerAction()
 
     @Serializable
     data class PassTurn(
-        override val playerId: DwitchPlayerId
+        override val playerId: DwitchPlayerId,
+        val clearsTable: Boolean
     ) : DwitchPlayerAction()
 }

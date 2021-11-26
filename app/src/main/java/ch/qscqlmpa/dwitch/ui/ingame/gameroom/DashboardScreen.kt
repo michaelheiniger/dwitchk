@@ -1,9 +1,7 @@
 package ch.qscqlmpa.dwitch.ui.ingame.gameroom
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.expandIn
-import androidx.compose.animation.shrinkOut
+import androidx.compose.animation.*
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,6 +13,8 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,6 +40,7 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
+import ch.qscqlmpa.dwitchgame.ingame.gameroom.PlayerAction
 import ch.qscqlmpa.dwitchgame.ingame.gameroom.PlayerInfo
 
 @Preview
@@ -113,8 +114,12 @@ private fun DashboardPreview() {
     val dashboardInfo = DashboardInfo(
         playersInfo = players,
         localPlayerInfo = localPlayerDashboard,
-        lastPlayerAction = null,
-        lastCardPlayed = PlayedCards(listOf(Card.Clubs8, Card.Spades8)),
+        lastPlayerAction = PlayerAction.PlayCards(
+            playerName = "Aragorn",
+            playedCards = PlayedCards(listOf(Card.Clubs8, Card.Spades8)),
+            clearsTable = false
+        ),
+        lastCardOnTable = PlayedCards(listOf(Card.Clubs8, Card.Spades8)),
         waitingForPlayerReconnection = false
     )
 
@@ -137,18 +142,23 @@ fun Dashboard(
     onPassClick: () -> Unit,
     onEndOrLeaveGameClick: () -> Unit
 ) {
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .animateContentSize()
-    ) {
-        PlayersInfo(dashboardInfo.playersInfo)
-        Spacer(Modifier.height(16.dp))
-        Table(dashboardInfo.lastCardPlayed)
-        Spacer(Modifier.height(16.dp))
-        Controls(dashboardInfo, onPassClick = onPassClick, onPlayClick = onPlayClick)
-        Spacer(Modifier.height(16.dp))
-        PlayerHand(dashboardInfo.localPlayerInfo.cardsInHand, onCardClick = onCardClick)
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .animateContentSize()
+        ) {
+            PlayersInfo(dashboardInfo.playersInfo)
+            Spacer(Modifier.height(16.dp))
+            Table(dashboardInfo.lastCardOnTable, dashboardInfo.lastPlayerAction)
+            Spacer(Modifier.height(16.dp))
+            Controls(dashboardInfo, onPassClick = onPassClick, onPlayClick = onPlayClick)
+            Spacer(Modifier.height(16.dp))
+            PlayerHand(dashboardInfo.localPlayerInfo.cardsInHand, onCardClick = onCardClick)
+        }
+        Column(Modifier.align(Alignment.Center)) {
+            ShowLastPlayerAction(dashboardInfo.lastPlayerAction)
+        }
     }
 
     if (dashboardInfo.waitingForPlayerReconnection) {
@@ -157,6 +167,74 @@ fun Dashboard(
             abortLabel = R.string.leave_game,
             onAbortClick = onEndOrLeaveGameClick
         )
+    }
+}
+
+@Composable
+private fun ShowLastPlayerAction(lastAction: PlayerAction?) {
+//    Surface(
+//        modifier = Modifier.fillMaxSize(),
+//        border = BorderStroke(5.dp, Color.Red)
+//    ) {
+    Text("Salut")
+//    }
+
+    val cards = remember { mutableStateOf(listOf(Card.Clubs8, Card.Hearts8)) }
+    val visibleState = remember { mutableStateOf(MutableTransitionState(false)) }
+    visibleState.value.targetState = true
+
+//    LaunchedEffect(visibleState.value) {
+//        if (visibleState.value.isIdle) {
+//            visibleState.value.targetState = false
+//        }
+//        snapshotFlow {
+//            visibleState
+//            visibleState.value.isIdle
+//            emptyList()
+//            model.items.firstOrNull { it.visible.isIdle && !it.visible.targetState }
+//        }.collect { value -> value. }
+//            if (it != null) {
+//                visibleState.value.targetState = false
+//                model.pruneItems()
+//            }
+//        }
+//    }
+
+    AnimatedVisibility(
+        visibleState = visibleState.value,
+        enter = expandIn(tween(durationMillis = 10000))
+    ) {
+        LazyRow(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(UiTags.lastCardPlayed)
+                .semantics(mergeDescendants = true) {}
+        ) {
+            items(cards.value) { card ->
+                Image(
+                    painter = painterResource(ResourceMapper.getImageResource(card)),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .fillMaxWidth(0.25f) // Max 4 cards can be played at once (1/4 == 0.25)
+                        .testTag(card.toString())
+                )
+            }
+        }
+    }
+
+    when (lastAction) {
+        is PlayerAction.PassTurn -> {
+            // TODO
+        }
+        is PlayerAction.PlayCards -> {
+            if (lastAction.dwitchedPlayedName != null) {
+                // TODO
+            }
+        }
+        null -> {
+            // Nothing to do
+        }
     }
 }
 
@@ -221,15 +299,99 @@ private fun PlayersInfo(playersInfo: List<PlayerInfo>) {
     }
 }
 
-@Composable
-private fun Table(lastCardPlayed: PlayedCards?) {
-    val cards = lastCardPlayed?.cards ?: listOf(Card.Blank)
-    val cardOnTableCd = if (lastCardPlayed != null) {
-        val lastCardPlayedRes = stringResource(ResourceMapper.getContentDescriptionResource(lastCardPlayed.name))
-        stringResource(R.string.last_card_played_cd, lastCardPlayed.multiplicity, lastCardPlayedRes)
-    } else {
-        stringResource(R.string.table_is_empty_cd)
+private sealed class TableState {
+    abstract fun cards(): List<Card>
+
+    @Composable
+    abstract fun contentDescription(): String
+
+    object Empty : TableState() {
+        override fun cards() = listOf(Card.Blank)
+
+        @Composable
+        override fun contentDescription(): String {
+            return stringResource(R.string.table_is_empty_cd)
+        }
     }
+
+    data class Cards(val playedCards: PlayedCards) : TableState() {
+        override fun cards() = playedCards.cards
+
+        @Composable
+        override fun contentDescription(): String {
+            val lastCardPlayedRes = stringResource(ResourceMapper.getContentDescriptionResource(playedCards.name))
+            return stringResource(R.string.last_card_played_cd, playedCards.multiplicity, lastCardPlayedRes)
+        }
+    }
+}
+
+@Composable
+private fun Table(lastCardPlayed: PlayedCards?, lastAction: PlayerAction?) {
+
+//    if (lastAction != null && lastAction is PlayerAction.PlayCards && lastAction.clearsTable) {
+//        // TODO: Show table with cards from lastAction.cards and then clear table (need callback when AnimatedContent animation ends ?)
+//    } else {
+//        // TODO: Do as currently
+//    }
+
+    val tableState = if (lastCardPlayed != null) TableState.Cards(lastCardPlayed) else TableState.Empty
+    val durationMillis = 500
+    AnimatedContent(
+        targetState = tableState,
+        transitionSpec = {
+            when (initialState) {
+                TableState.Empty -> {
+                    when (targetState) {
+                        TableState.Empty -> {
+                            EnterTransition.None with ExitTransition.None
+                        }
+                        is TableState.Cards -> {
+                            slideInHorizontally(
+                                initialOffsetX = { width -> width },
+                                animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing)
+                            ) + fadeIn(
+                                animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing)
+                            ) with fadeOut(
+                                animationSpec = TweenSpec(
+                                    durationMillis = durationMillis,
+                                    easing = FastOutLinearInEasing
+                                )
+                            )
+                        }
+                    }
+                }
+                is TableState.Cards -> {
+                    when (targetState) {
+                        TableState.Empty -> {
+                            fadeIn(
+                                animationSpec = TweenSpec(durationMillis = durationMillis, easing = FastOutLinearInEasing)
+                            ) with slideOutHorizontally(
+                                targetOffsetX = { width -> -width },
+                                animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing)
+                            ) + fadeOut(animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing))
+                        }
+                        is TableState.Cards -> {
+                            slideInHorizontally(
+                                initialOffsetX = { width -> width },
+                                animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing)
+                            ) + fadeIn(
+                                animationSpec = TweenSpec(durationMillis = durationMillis, easing = LinearEasing)
+                            ) with fadeOut(
+                                animationSpec = TweenSpec(
+                                    durationMillis = durationMillis,
+                                    easing = FastOutLinearInEasing
+                                )
+                            )
+                        }
+                    }
+                }
+            }.using(SizeTransform(clip = false))
+        }
+    ) { targetState -> TableContent(targetState) }
+}
+
+@Composable
+private fun TableContent(tableState: TableState) {
     LazyRow(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
@@ -237,10 +399,10 @@ private fun Table(lastCardPlayed: PlayedCards?) {
             .testTag(UiTags.lastCardPlayed)
             .semantics(mergeDescendants = true) {}
     ) {
-        items(cards) { card ->
+        items(tableState.cards()) { card ->
             Image(
                 painter = painterResource(ResourceMapper.getImageResource(card)),
-                contentDescription = cardOnTableCd,
+                contentDescription = tableState.contentDescription(),
                 modifier = Modifier
                     .fillMaxWidth(0.25f) // Max 4 cards can be played at once (1/4 == 0.25)
                     .testTag(card.toString())

@@ -126,7 +126,7 @@ class StartNewRoundTest : EngineTestBase() {
         initialGameState = gameStateBuilder
             .addPlayerToGame(p1, DwitchPlayerStatus.Done, DwitchRank.Asshole, emptyList())
             .addPlayerToGame(p2, DwitchPlayerStatus.Done, DwitchRank.President, emptyList())
-            .setLastPlayerAction(DwitchPlayerAction.PassTurn(p1Id))
+            .setLastPlayerAction(DwitchPlayerAction.PassTurn(playerId = p1Id, clearsTable = false))
             .setCardsdOnTable(PlayedCards(Card.Hearts5), PlayedCards(Card.Diamonds7), PlayedCards(Card.Hearts2))
             .setJoker(CardName.Ace)
             .build()

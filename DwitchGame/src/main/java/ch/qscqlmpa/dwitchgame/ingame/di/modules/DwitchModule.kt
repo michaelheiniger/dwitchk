@@ -4,6 +4,7 @@ import ch.qscqlmpa.dwitchengine.DwitchFactory
 import ch.qscqlmpa.dwitchengine.ProdDwitchFactory
 import ch.qscqlmpa.dwitchengine.carddealer.CardDealerFactory
 import ch.qscqlmpa.dwitchengine.carddealer.random.RandomCardDealerFactory
+import ch.qscqlmpa.dwitchengine.computerplayer.ComputerReflexionTime
 import ch.qscqlmpa.dwitchengine.initialgamesetup.InitialGameSetupFactory
 import ch.qscqlmpa.dwitchengine.initialgamesetup.random.RandomInitialGameSetupFactory
 import ch.qscqlmpa.dwitchgame.ingame.di.InGameScope
@@ -38,7 +39,7 @@ abstract class DwitchModule {
         @InGameScope
         @Provides
         internal fun provideDwitchFactory(): DwitchFactory {
-            return ProdDwitchFactory()
+            return ProdDwitchFactory(ComputerReflexionTime.ONE)
         }
     }
 }

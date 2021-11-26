@@ -51,7 +51,7 @@ class DashboardScreenTest : BaseUiUnitTest() {
                 canPlay = true
             ),
             lastPlayerAction = null,
-            lastCardPlayed = PlayedCards(Card.Hearts8),
+            lastCardOnTable = PlayedCards(Card.Hearts8),
             waitingForPlayerReconnection = false
         )
         anyCardClicked = false

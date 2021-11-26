@@ -37,7 +37,7 @@ class PassTurnTest : EngineTestBase() {
             GameStateRobot(gameStateUpdated)
                 .assertCurrentPlayerId(p3Id)
                 .assertTableIsEmpty()
-                .assertLastPlayerAction(DwitchPlayerAction.PassTurn(playerId = p1Id))
+                .assertLastPlayerAction(DwitchPlayerAction.PassTurn(playerId = p1Id, clearsTable = true))
 
             PlayerRobot(gameStateUpdated, p1Id)
                 .assertPlayerState(DwitchPlayerStatus.Waiting)
@@ -69,7 +69,7 @@ class PassTurnTest : EngineTestBase() {
             GameStateRobot(gameStateUpdated)
                 .assertCurrentPlayerId(p2Id)
                 .assertTableIsEmpty()
-                .assertLastPlayerAction(DwitchPlayerAction.PassTurn(playerId = p1Id))
+                .assertLastPlayerAction(DwitchPlayerAction.PassTurn(playerId = p1Id, clearsTable = true))
 
             PlayerRobot(gameStateUpdated, p1Id)
                 .assertPlayerState(DwitchPlayerStatus.Waiting)
@@ -94,7 +94,7 @@ class PassTurnTest : EngineTestBase() {
             GameStateRobot(gameStateUpdated)
                 .assertCurrentPlayerId(p3Id)
                 .assertTableContains(PlayedCards(Card.Clubs7))
-                .assertLastPlayerAction(DwitchPlayerAction.PassTurn(playerId = p1Id))
+                .assertLastPlayerAction(DwitchPlayerAction.PassTurn(playerId = p1Id, clearsTable = false))
 
             PlayerRobot(gameStateUpdated, p1Id)
                 .assertPlayerState(DwitchPlayerStatus.TurnPassed)

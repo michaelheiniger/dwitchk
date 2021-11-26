@@ -32,7 +32,7 @@ class DashboardScreenBuilder constructor(
                 canPass = gameDashboardInfo.localPlayerDashboard.canPass
             ),
             lastPlayerAction = gameDashboardInfo.lastPlayerAction,
-            lastCardPlayed = gameDashboardInfo.lastCardPlayed,
+            lastCardOnTable = gameDashboardInfo.lastCardPlayed,
             waitingForPlayerReconnection = gameDashboardInfo.waitingForPlayerReconnection
         )
     }

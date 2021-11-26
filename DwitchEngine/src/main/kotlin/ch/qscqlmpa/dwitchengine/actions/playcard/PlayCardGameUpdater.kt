@@ -11,9 +11,11 @@ internal class PlayCardGameUpdater(
 ) : GameUpdaterBase(currentGameState) {
 
     private lateinit var playedCards: PlayedCards
+    private var clearsTable: Boolean = false
     private var dwitchedPlayerId: DwitchPlayerId? = null
 
     fun clearTable() {
+        clearsTable = true
         gameStateMutable.moveCardsFromTableToGraveyard()
     }
 
@@ -32,6 +34,7 @@ internal class PlayCardGameUpdater(
         gameStateMutable.lastPlayerAction = DwitchPlayerAction.PlayCards(
             playerId = currentPlayerId,
             playedCards = playedCards,
+            clearsTable = clearsTable,
             dwitchedPlayedId = dwitchedPlayerId
         )
         return super.buildUpdatedGameState()

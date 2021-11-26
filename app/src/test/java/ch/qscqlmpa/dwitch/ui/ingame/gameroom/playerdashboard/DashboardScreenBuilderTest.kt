@@ -40,6 +40,7 @@ internal class DashboardScreenBuilderTest {
             playerName = "Haldir",
             playedCards = PlayedCards(Card.Clubs4)
         ),
+        lastPlayerAction = null,
         lastCardPlayed = PlayedCards(Card.Clubs4),
         waitingForPlayerReconnection = false
     )
@@ -55,7 +56,7 @@ internal class DashboardScreenBuilderTest {
         // Then the screen is properly built
         val dashboardInfo = dashboardScreenBuilder.screen.dashboardInfo
         assertThat(dashboardInfo.lastPlayerAction).isEqualTo(gameDashboardInfo.lastPlayerAction)
-        assertThat(dashboardInfo.lastCardPlayed).isEqualTo(gameDashboardInfo.lastCardPlayed)
+        assertThat(dashboardInfo.lastCardOnTable).isEqualTo(gameDashboardInfo.lastCardPlayed)
         assertThat(dashboardInfo.waitingForPlayerReconnection).isEqualTo(gameDashboardInfo.waitingForPlayerReconnection)
         assertThat(dashboardInfo.localPlayerInfo.canPlay).isFalse
         assertThat(dashboardInfo.localPlayerInfo.canPass).isTrue

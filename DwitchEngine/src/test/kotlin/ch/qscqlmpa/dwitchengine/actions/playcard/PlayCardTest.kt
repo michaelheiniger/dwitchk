@@ -68,7 +68,8 @@ class PlayCardTest : EngineTestBase() {
                 .assertLastPlayerAction(
                     DwitchPlayerAction.PlayCards(
                         playerId = p1Id,
-                        playedCards = PlayedCards(cardPlayed)
+                        playedCards = PlayedCards(cardPlayed),
+                        clearsTable = false
                     )
                 )
 
@@ -98,7 +99,8 @@ class PlayCardTest : EngineTestBase() {
                 DwitchPlayerAction.PlayCards(
                     playerId = p1Id,
                     playedCards = PlayedCards(cardPlayed),
-                    dwitchedPlayedId = p2Id
+                    dwitchedPlayedId = p2Id,
+                    clearsTable = false
                 )
             )
 
@@ -132,7 +134,8 @@ class PlayCardTest : EngineTestBase() {
                     DwitchPlayerAction.PlayCards(
                         playerId = p1Id,
                         playedCards = PlayedCards(cardPlayed),
-                        dwitchedPlayedId = p3Id
+                        dwitchedPlayedId = p3Id,
+                        clearsTable = true // No other play is waiting
                     )
                 )
 
@@ -163,7 +166,8 @@ class PlayCardTest : EngineTestBase() {
                     DwitchPlayerAction.PlayCards(
                         playerId = p1Id,
                         playedCards = PlayedCards(cardPlayed),
-                        dwitchedPlayedId = p3Id
+                        dwitchedPlayedId = p3Id,
+                        clearsTable = false
                     )
                 )
 
@@ -194,7 +198,8 @@ class PlayCardTest : EngineTestBase() {
                     DwitchPlayerAction.PlayCards(
                         playerId = p1Id,
                         playedCards = PlayedCards(cardPlayed),
-                        dwitchedPlayedId = null
+                        dwitchedPlayedId = null,
+                        clearsTable = false
                     )
                 )
 
@@ -222,7 +227,8 @@ class PlayCardTest : EngineTestBase() {
                 .assertLastPlayerAction(
                     DwitchPlayerAction.PlayCards(
                         playerId = p1Id,
-                        playedCards = PlayedCards(cardPlayed)
+                        playedCards = PlayedCards(cardPlayed),
+                        clearsTable = true // Playing a joker always clears the table
                     )
                 )
 
@@ -304,7 +310,8 @@ class PlayCardTest : EngineTestBase() {
                     DwitchPlayerAction.PlayCards(
                         playerId = p1Id,
                         playedCards = PlayedCards(cardPlayed),
-                        dwitchedPlayedId = p3Id
+                        dwitchedPlayedId = p3Id,
+                        clearsTable = true // No other player is waiting
                     )
                 )
                 .assertRoundIsNotOver()
