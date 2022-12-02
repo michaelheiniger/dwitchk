@@ -5,9 +5,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -59,7 +59,7 @@ fun PlayerHand(
     onCardClick: (Card) -> Unit
 ) {
     LazyVerticalGrid(
-        cells = GridCells.Fixed(4),
+        columns = GridCells.Fixed(4),
         modifier = Modifier
             .fillMaxWidth()
             .animateContentSize()

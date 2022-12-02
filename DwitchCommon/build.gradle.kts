@@ -7,12 +7,11 @@ plugins {
 dependencies {
 
     // Dagger
-    val daggerVersion = "2.38.1"
-    implementation("com.google.dagger:dagger:$daggerVersion")
-    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
+    implementation("com.google.dagger:dagger:2.44.2")
+    kapt("com.google.dagger:dagger-compiler:2.44.2")
 
     // RxJava
-    api("io.reactivex.rxjava3:rxjava:3.0.6")
+    api("io.reactivex.rxjava3:rxjava:3.1.5")
 
     // Joda time
     api("joda-time:joda-time:2.10.10")

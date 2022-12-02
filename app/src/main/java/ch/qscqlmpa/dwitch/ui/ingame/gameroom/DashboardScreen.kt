@@ -1,9 +1,5 @@
 package ch.qscqlmpa.dwitch.ui.ingame.gameroom
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.expandIn
-import androidx.compose.animation.shrinkOut
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
@@ -160,9 +156,10 @@ fun Dashboard(
             Spacer(Modifier.height(16.dp))
             PlayerHand(dashboardInfo.localPlayerInfo.cardsInHand, onCardClick = onCardClick)
         }
-        Column(Modifier.align(Alignment.Center)) {
-            ShowLastPlayerAction(dashboardInfo.lastPlayerAction)
-        }
+        //FIXME
+//        Column(Modifier.align(Alignment.Center)) {
+//            ShowLastPlayerAction(dashboardInfo.lastPlayerAction)
+//        }
     }
 
     if (dashboardInfo.waitingForPlayerReconnection) {

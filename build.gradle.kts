@@ -11,7 +11,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.0.3")
+        classpath("com.android.tools.build:gradle:7.3.1")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlinVersion}")
         classpath("org.jetbrains.kotlin:kotlin-serialization:${Versions.kotlinVersion}")
         classpath("de.mannodermaus.gradle.plugins:android-junit5:1.7.1.1")
@@ -35,16 +35,15 @@ allprojects {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
         kotlinOptions {
             freeCompilerArgs = listOf(
-                "-Xuse-experimental=kotlin.ExperimentalUnsignedTypes",
-                "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
-                "-Xuse-experimental=kotlinx.coroutines.InternalCoroutinesApi",
-                "-Xuse-experimental=androidx.compose.animation.ExperimentalAnimationApi",
-                "-Xuse-experimental=androidx.compose.ExperimentalComposeApi",
-                "-Xuse-experimental=androidx.compose.foundation.ExperimentalFoundationApi",
-                "-Xuse-experimental=androidx.compose.material.ExperimentalMaterialApi",
-                "-Xuse-experimental=androidx.compose.runtime.ExperimentalComposeApi",
-                "-Xuse-experimental=androidx.compose.ui.ExperimentalComposeUiApi",
-                "-Xuse-experimental=coil.annotation.ExperimentalCoilApi"
+                "-opt-in=kotlin.RequiresOptIn",
+                "-opt-in=kotlin.ExperimentalUnsignedTypes",
+                "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                "-opt-in=kotlinx.coroutines.InternalCoroutinesApi",
+                "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
+                "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+                "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
+                "-opt-in=androidx.compose.runtime.ExperimentalComposeApi",
+                "-opt-in=androidx.compose.ui.ExperimentalComposeUiApi",
             )
         }
     }

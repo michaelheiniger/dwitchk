@@ -7,8 +7,7 @@ plugins {
 dependencies {
 
     // Logging
-    implementation("org.tinylog:tinylog-api-kotlin:2.2.1")
-    implementation("org.tinylog:tinylog-impl:2.2.1")
+    implementation("org.tinylog:tinylog-api-kotlin:2.4.1")
 
     // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc")
@@ -19,7 +18,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
 
     // AssertJ
-    testImplementation("org.assertj:assertj-core:3.20.2")
+    testImplementation("org.assertj:assertj-core:3.21.0")
 }
 
 java {
