@@ -10,7 +10,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.rxjava3.core.Observable
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 internal class GameLaunchableUsecaseTest : BaseUnitTest() {
@@ -24,46 +23,42 @@ internal class GameLaunchableUsecaseTest : BaseUnitTest() {
         gameLaunchableUsecase = GameLaunchableUsecase(mockPlayerWrRepository)
     }
 
-    @Nested
-    inner class ObserveDwitchGameEvent {
+    @Test
+    fun `Send GameIsReadyToBeLaunched when all players are ready`() {
+        val players = listOf(TestEntityFactory.createPlayerWrUi1(), TestEntityFactory.createPlayerWrUi2())
+        setupPlayerWrListMock(players)
 
-        @Test
-        fun `Send GameIsReadyToBeLaunched when all players are ready`() {
-            val players = listOf(TestEntityFactory.createPlayerWrUi1(), TestEntityFactory.createPlayerWrUi2())
-            setupPlayerWrListMock(players)
+        gameLaunchableUsecase.gameCanBeLaunched().test().assertValue(GameLaunchableEvent.GameIsReadyToBeLaunched)
 
-            gameLaunchableUsecase.gameCanBeLaunched().test().assertValue(GameLaunchableEvent.GameIsReadyToBeLaunched)
+        verifyMock()
+    }
 
-            verifyMock()
-        }
+    @Test
+    fun `Send NotAllPlayersAreReady when not all players are ready`() {
+        val players = listOf(TestEntityFactory.createPlayerWrUi1(), TestEntityFactory.createPlayerWrUi2().copy(ready = false))
+        setupPlayerWrListMock(players)
 
-        @Test
-        fun `Send NotAllPlayersAreReady when not all players are ready`() {
-            val players = listOf(TestEntityFactory.createPlayerWrUi1(), TestEntityFactory.createPlayerWrUi2().copy(ready = false))
-            setupPlayerWrListMock(players)
+        gameLaunchableUsecase.gameCanBeLaunched().test().assertValue(GameLaunchableEvent.NotAllPlayersAreReady)
 
-            gameLaunchableUsecase.gameCanBeLaunched().test().assertValue(GameLaunchableEvent.NotAllPlayersAreReady)
+        verifyMock()
+    }
 
-            verifyMock()
-        }
+    @Test
+    fun `Send NotEnoughPlayers when not enough players in game`() {
+        val players = listOf(TestEntityFactory.createPlayerWrUi1())
+        setupPlayerWrListMock(players)
 
-        @Test
-        fun `Send NotEnoughPlayers when not enough players in game`() {
-            val players = listOf(TestEntityFactory.createPlayerWrUi1())
-            setupPlayerWrListMock(players)
+        gameLaunchableUsecase.gameCanBeLaunched().test().assertValue(GameLaunchableEvent.NotEnoughPlayers)
 
-            gameLaunchableUsecase.gameCanBeLaunched().test().assertValue(GameLaunchableEvent.NotEnoughPlayers)
+        verifyMock()
+    }
 
-            verifyMock()
-        }
+    private fun verifyMock() {
+        verify { mockPlayerWrRepository.observePlayers() }
+        confirmVerified(mockPlayerWrRepository)
+    }
 
-        private fun verifyMock() {
-            verify { mockPlayerWrRepository.observePlayers() }
-            confirmVerified(mockPlayerWrRepository)
-        }
-
-        private fun setupPlayerWrListMock(listToReturn: List<PlayerWrUi>) {
-            every { mockPlayerWrRepository.observePlayers() } returns Observable.just(listToReturn)
-        }
+    private fun setupPlayerWrListMock(listToReturn: List<PlayerWrUi>) {
+        every { mockPlayerWrRepository.observePlayers() } returns Observable.just(listToReturn)
     }
 }
