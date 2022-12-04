@@ -38,9 +38,10 @@ internal class DashboardScreenBuilderTest {
         ),
         lastPlayerAction = PlayerAction.PlayCards(
             playerName = "Haldir",
-            playedCards = PlayedCards(Card.Clubs4)
+            playedCards = PlayedCards(Card.Clubs4),
+            clearsTable = false,
+            dwitchedPlayedName = null
         ),
-        lastPlayerAction = null,
         lastCardPlayed = PlayedCards(Card.Clubs4),
         waitingForPlayerReconnection = false
     )

@@ -120,14 +120,18 @@ fun WaitingRoomHostBody(
                 )
             )
         }
-    ) {
+    ) { innerPadding ->
         Column(
             Modifier
                 .fillMaxWidth()
                 .animateContentSize()
-                .padding(8.dp)
+                .padding(innerPadding)
         ) {
-            Column(Modifier.fillMaxWidth().weight(1f).wrapContentHeight(Alignment.Top)) {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .wrapContentHeight(Alignment.Top)) {
                 WaitingRoomPlayers(
                     players = players,
                     showAddComputerPlayer = showAddComputerPlayer,
@@ -136,7 +140,11 @@ fun WaitingRoomHostBody(
                 )
             }
             Spacer(Modifier.height(16.dp))
-            Column(Modifier.fillMaxWidth().weight(1f).wrapContentHeight(Alignment.Top)) {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .wrapContentHeight(Alignment.Top)) {
                 HostControls(
                     launchGameEnabled = launchGameEnabled,
                     onLaunchGameClick = onLaunchGameClick,

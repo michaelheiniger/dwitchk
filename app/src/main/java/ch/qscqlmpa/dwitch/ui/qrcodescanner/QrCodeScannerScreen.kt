@@ -23,7 +23,9 @@ fun QrCodeScannerTopScreen() {
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(innerPadding).fillMaxSize()
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
             ) {
                 Text(stringResource(R.string.scan_qr_code_hint))
             }
@@ -48,42 +50,40 @@ fun QrCodeScannerBottomScreen(
     onStartingCameraErrorOkClick: () -> Unit
 ) {
     DwitchTheme {
-        Scaffold {
-            if (showPermissionDenied.value) {
-                YesNoDialog(
-                    text = R.string.camera_permission_denied,
-                    onNoClick = onCameraPermissionDeniedNoClick,
-                    onYesClick = onCameraPermissionDeniedYesClick
-                )
-            }
-            if (showPermissionHint.value) {
-                InfoDialog(
-                    title = R.string.dialog_info_title,
-                    text = R.string.qr_code_camera_permission_hint,
-                    onOkClick = onCameraPermissionHintOkClick
-                )
-            }
-            if (showQrCodeInvalid.value) {
-                YesNoDialog(
-                    text = R.string.qr_code_invalid,
-                    onNoClick = onCameraQrCodeInvalidTryAgainNoClick,
-                    onYesClick = onCameraQrCodeInvalidTryAgainYesClick
-                )
-            }
-            if (showQrCodeDecodingFailed.value) {
-                YesNoDialog(
-                    text = R.string.qr_code_decoding_failed,
-                    onNoClick = onCameraQrCodeDecodingFailedTryAgainNoClick,
-                    onYesClick = onCameraQrCodeDecodingFailedTryAgainYesClick
-                )
-            }
-            if (showError.value) {
-                InfoDialog(
-                    title = R.string.dialog_error_title,
-                    text = R.string.error_starting_camera,
-                    onOkClick = onStartingCameraErrorOkClick
-                )
-            }
+        if (showPermissionDenied.value) {
+            YesNoDialog(
+                text = R.string.camera_permission_denied,
+                onNoClick = onCameraPermissionDeniedNoClick,
+                onYesClick = onCameraPermissionDeniedYesClick
+            )
+        }
+        if (showPermissionHint.value) {
+            InfoDialog(
+                title = R.string.dialog_info_title,
+                text = R.string.qr_code_camera_permission_hint,
+                onOkClick = onCameraPermissionHintOkClick
+            )
+        }
+        if (showQrCodeInvalid.value) {
+            YesNoDialog(
+                text = R.string.qr_code_invalid,
+                onNoClick = onCameraQrCodeInvalidTryAgainNoClick,
+                onYesClick = onCameraQrCodeInvalidTryAgainYesClick
+            )
+        }
+        if (showQrCodeDecodingFailed.value) {
+            YesNoDialog(
+                text = R.string.qr_code_decoding_failed,
+                onNoClick = onCameraQrCodeDecodingFailedTryAgainNoClick,
+                onYesClick = onCameraQrCodeDecodingFailedTryAgainYesClick
+            )
+        }
+        if (showError.value) {
+            InfoDialog(
+                title = R.string.dialog_error_title,
+                text = R.string.error_starting_camera,
+                onOkClick = onStartingCameraErrorOkClick
+            )
         }
     }
 }

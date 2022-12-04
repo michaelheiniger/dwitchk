@@ -109,12 +109,12 @@ fun WaitingRoomGuestBody(
                 )
             )
         }
-    ) {
+    ) { innerPadding ->
         Column(
             Modifier
                 .fillMaxWidth()
                 .animateContentSize()
-                .padding(8.dp)
+                .padding(innerPadding)
         ) {
             WaitingRoomPlayers(players = players)
             Spacer(Modifier.height(16.dp))

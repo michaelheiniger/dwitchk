@@ -273,7 +273,7 @@ private fun getInGameHostUiVmFactory(
     createInGameHostUiComponent: (MainActivityComponent) -> InGameHostUiComponent
 ): ViewModelFactory {
     val parentId = currentNavBackStackEntry.destination.parent!!.id
-    val inGameNavGraphBackStackEntry = remember { navHostController.getBackStackEntry(parentId) }
+    val inGameNavGraphBackStackEntry = remember(currentNavBackStackEntry) { navHostController.getBackStackEntry(parentId) }
 
     // Dagger component scoped to in-game navigation sub-graph's lifecycle. Defines @InGameUIScope Dagger scope.
     val inGameUiComponent = daggerUiScopedComponent(
@@ -296,7 +296,7 @@ private fun getInGameGuestUiVmFactory(
     createInGameGuestUiComponent: (MainActivityComponent) -> InGameGuestUiComponent
 ): ViewModelFactory {
     val parentId = currentNavBackStackEntry.destination.parent!!.id
-    val inGameNavGraphBackStackEntry = remember { navHostController.getBackStackEntry(parentId) }
+    val inGameNavGraphBackStackEntry = remember(currentNavBackStackEntry) { navHostController.getBackStackEntry(parentId) }
 
     // Dagger component scoped to in-game navigation sub-graph's lifecycle. Defines @InGameUIScope Dagger scope.
     val inGameUiComponent = daggerUiScopedComponent(

@@ -82,12 +82,12 @@ fun JoinNewGameBody(
                 )
             )
         }
-    ) {
+    ) { innerPadding ->
         Column(
             Modifier
                 .fillMaxWidth()
                 .animateContentSize()
-                .padding(8.dp)
+                .padding(innerPadding)
         ) {
             OutlinedTextField(
                 value = playerName,

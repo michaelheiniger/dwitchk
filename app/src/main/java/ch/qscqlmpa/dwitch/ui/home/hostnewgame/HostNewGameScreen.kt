@@ -76,12 +76,13 @@ fun HostNewGameBody(
                 )
             )
         }
-    ) {
+    ) { innerPadding ->
         BackHandler(onBack = onBackClick)
         Column(
             Modifier
                 .fillMaxWidth()
                 .animateContentSize()
+                .padding(innerPadding)
         ) {
             Column(
                 Modifier

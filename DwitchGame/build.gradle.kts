@@ -38,7 +38,7 @@ android {
 
     sourceSets {
         getByName("main").java.srcDirs("src/main/java")
-//        getByName("test").java.srcDirs("src/test/java", "src/testShared")
+        getByName("test").java.srcDirs("src/test/java", "src/testShared")
 //        getByName("androidTest").java.srcDirs("src/androidTest/java", "src/testShared")
     }
 }

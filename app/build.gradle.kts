@@ -69,6 +69,22 @@ android {
     }
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions {
+        freeCompilerArgs = listOf(
+            "-opt-in=kotlin.RequiresOptIn",
+            "-opt-in=kotlin.ExperimentalUnsignedTypes",
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-opt-in=kotlinx.coroutines.InternalCoroutinesApi",
+            "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
+            "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+            "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
+            "-opt-in=androidx.compose.runtime.ExperimentalComposeApi",
+            "-opt-in=androidx.compose.ui.ExperimentalComposeUiApi",
+        )
+    }
+}
+
 dependencies {
     // Other modules
     implementation(project(path = ":DwitchCommon"))
@@ -146,7 +162,7 @@ dependencies {
     androidTestImplementation("org.assertj:assertj-core:3.21.0")
 
     // Robolectric (for unit tests that log stuff)
-    testImplementation("org.robolectric:robolectric:4.5.1") // v4.6.1 produces weird error
+    testImplementation("org.robolectric:robolectric:4.9") // v4.6.1 produces weird error
 
 //    implementation(platform("com.google.firebase:firebase-bom:28.4.1"))
 //    implementation("com.google.firebase:firebase-analytics-ktx")

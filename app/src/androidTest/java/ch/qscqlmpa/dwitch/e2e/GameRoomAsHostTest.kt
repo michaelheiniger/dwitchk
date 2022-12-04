@@ -23,6 +23,7 @@ import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitchcommunication.ingame.model.Message
 import ch.qscqlmpa.dwitchcommunication.ingame.websocket.server.test.PlayerHostTest
 import ch.qscqlmpa.dwitchengine.ProdDwitchFactory
+import ch.qscqlmpa.dwitchengine.computerplayer.ComputerReflexionTime
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
@@ -171,7 +172,8 @@ class GameRoomAsHostTest : BaseHostTest() {
     private fun otherPlayerPlaysCard(guest: PlayerHostTest, card: Card) {
         incrementGameIdlingResource("Guest plays card ($guest, $card)")
         val currentGameState = inGameStore.getGameState()
-        val newGameState = ProdDwitchFactory().createDwitchEngine(currentGameState).playCards(PlayedCards(card))
+        val newGameState =
+            ProdDwitchFactory(ComputerReflexionTime.ZERO).createDwitchEngine(currentGameState).playCards(PlayedCards(card))
         serverTestStub.clientSendsMessageToServer(guest, MessageFactory.createGameStateUpdatedMessage(newGameState))
         assertGameStateUpdatedMessageSent() // Broadcasted by host to other players
     }

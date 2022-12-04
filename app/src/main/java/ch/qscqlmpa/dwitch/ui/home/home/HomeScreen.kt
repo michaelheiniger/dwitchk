@@ -127,12 +127,12 @@ fun HomeBody(
                 onActionClick = { toggleDarkTheme() }
             )
         }
-    ) {
+    ) { innerPadding ->
         Column(
             Modifier
                 .fillMaxSize()
                 .animateContentSize()
-                .padding(8.dp)
+                .padding(innerPadding)
         ) {
             WlanConnectionRequiredBanner(connectedToWlan = connectedToWlan)
             Column(

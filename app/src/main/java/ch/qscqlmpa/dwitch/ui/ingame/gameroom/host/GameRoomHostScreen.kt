@@ -113,12 +113,12 @@ fun GameRoomHostBody(
                 onActionClick = { gameRules.value = true }
             )
         }
-    ) {
+    ) { innerPadding ->
         Column(
             Modifier
                 .fillMaxWidth()
                 .animateContentSize()
-                .padding(8.dp)
+                .padding(innerPadding)
         ) {
             when (screen) {
                 is GameRoomScreen.Dashboard -> {

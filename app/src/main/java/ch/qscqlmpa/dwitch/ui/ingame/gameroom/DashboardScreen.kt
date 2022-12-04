@@ -150,13 +150,15 @@ fun Dashboard(
         ) {
             PlayersInfo(dashboardInfo.playersInfo)
             Spacer(Modifier.height(16.dp))
+            Text(text = "Previous move")
+            Spacer(Modifier.height(16.dp))
             Table(dashboardInfo.lastCardOnTable, dashboardInfo.lastPlayerAction)
             Spacer(Modifier.height(16.dp))
             Controls(dashboardInfo, onPassClick = onPassClick, onPlayClick = onPlayClick)
             Spacer(Modifier.height(16.dp))
             PlayerHand(dashboardInfo.localPlayerInfo.cardsInHand, onCardClick = onCardClick)
         }
-        //FIXME
+        // FIXME
 //        Column(Modifier.align(Alignment.Center)) {
 //            ShowLastPlayerAction(dashboardInfo.lastPlayerAction)
 //        }
