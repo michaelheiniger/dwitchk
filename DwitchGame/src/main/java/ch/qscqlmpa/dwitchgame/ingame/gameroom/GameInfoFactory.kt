@@ -17,28 +17,20 @@ object GameInfoFactory {
         playersConnected: Map<DwitchPlayerId, Boolean>
     ): GameDashboardInfo {
         val localPlayerInfo = gameInfo.playerInfos.getValue(localPlayerId)
-        val localPlayerIsConnected = playerIsConnected(playersConnected, localPlayerId)
-        val dashboardEnabled = localPlayerIsConnected
+        val localPlayerIsConnected = playersConnected.getValue(localPlayerId)
+        val currentPlayerIsDisconnected = !playersConnected.getValue(gameInfo.currentPlayerId)
         val localPlayerIsCurrentPlayer = gameInfo.currentPlayerId == localPlayerId
+        val dashboardEnabled = localPlayerIsConnected && localPlayerIsCurrentPlayer
+
         return GameDashboardInfo(
-            gameInfo.playerInfos.values.map { p ->
-                PlayerInfo(
-                    p.name,
-                    p.rank,
-                    p.status,
-                    p.dwitched,
-                    localPlayer = p.id == localPlayerId
-                )
-            },
-            LocalPlayerDashboard(
-                adjustCardItemSelectability(localPlayerInfo.cardsInHand, dashboardEnabled, localPlayerIsCurrentPlayer),
-                canPass = localPlayerIsCurrentPlayer && dashboardEnabled
+            playersInfo = gameInfo.playerInfos.values.map { p -> PlayerInfo(p, localPlayerId) },
+            localPlayerDashboard = LocalPlayerDashboard(
+                cardsInHand = localPlayerInfo.cardsInHand.map { c -> c.copy(selectable = dashboardEnabled && c.selectable) },
+                canPass = dashboardEnabled
             ),
             lastPlayerAction = mapDwitchPlayerActionToPlayerAction(gameInfo.lastPlayerAction, gameInfo.playerInfos),
             lastCardPlayed = gameInfo.lastCardPlayed,
-            waitingForPlayerReconnection = playerIsDisconnected(playersConnected, gameInfo.currentPlayerId) &&
-                gameInfo.currentPlayerId != localPlayerId &&
-                localPlayerIsConnected
+            waitingForPlayerReconnection = currentPlayerIsDisconnected && localPlayerIsConnected && !localPlayerIsCurrentPlayer
         )
     }
 
@@ -50,22 +42,6 @@ object GameInfoFactory {
             playersInfo = gameInfo.playerInfos.values.map { p -> PlayerEndOfRoundInfo(p.name, p.rank) }
         )
     }
-
-    private fun playerIsConnected(
-        playersConnectionState: Map<DwitchPlayerId, Boolean>,
-        playerId: DwitchPlayerId
-    ) = playersConnectionState.getValue(playerId)
-
-    private fun playerIsDisconnected(
-        playersConnectionState: Map<DwitchPlayerId, Boolean>,
-        playerId: DwitchPlayerId
-    ) = !playerIsConnected(playersConnectionState, playerId)
-
-    private fun adjustCardItemSelectability(
-        cardItems: List<DwitchCardInfo>,
-        dashboardEnabled: Boolean,
-        localPlayerIsCurrentPlayer: Boolean
-    ) = cardItems.map { c -> c.copy(selectable = dashboardEnabled && localPlayerIsCurrentPlayer && c.selectable) }
 }
 
 data class GameDashboardInfo(
@@ -132,7 +108,15 @@ data class PlayerInfo(
     val status: DwitchPlayerStatus,
     val dwitched: Boolean,
     val localPlayer: Boolean
-)
+) {
+    constructor(player: DwitchPlayerInfo, localPlayerId: DwitchPlayerId) : this(
+        name = player.name,
+        rank = player.rank,
+        status = player.status,
+        dwitched = player.dwitched,
+        localPlayer = player.id == localPlayerId
+    )
+}
 
 data class LocalPlayerDashboard(
     val cardsInHand: List<DwitchCardInfo>,
