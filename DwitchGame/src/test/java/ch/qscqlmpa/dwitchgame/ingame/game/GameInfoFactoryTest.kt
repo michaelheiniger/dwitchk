@@ -110,7 +110,10 @@ internal class GameInfoFactoryTest : BaseUnitTest() {
             // local player is connected
             playersConnected[localPlayerId] = true
 
+            // When
             val gameDashboardInfo = GameInfoFactory.createGameDashboardInfo(gameInfo, localPlayerId, playersConnected)
+
+            // Then
             assertThat(gameDashboardInfo.waitingForPlayerReconnection).isTrue
         }
 
@@ -131,7 +134,10 @@ internal class GameInfoFactoryTest : BaseUnitTest() {
             // local player is disconnected
             playersConnected[localPlayerId] = false
 
+            // When
             val gameDashboardInfo = GameInfoFactory.createGameDashboardInfo(gameInfo, localPlayerId, playersConnected)
+
+            // Then
             assertThat(gameDashboardInfo.waitingForPlayerReconnection).isFalse
         }
 
@@ -146,8 +152,12 @@ internal class GameInfoFactoryTest : BaseUnitTest() {
             // current/local player is disconnected
             playersConnected[localPlayerId] = false
 
+            // When
             val gameDashboardInfo = GameInfoFactory.createGameDashboardInfo(gameInfo, localPlayerId, playersConnected)
+
+            // Then
             assertThat(gameDashboardInfo.waitingForPlayerReconnection).isFalse
+
         }
 
         @Test
@@ -294,7 +304,7 @@ internal class GameInfoFactoryTest : BaseUnitTest() {
             joker = CardName.Two,
             lastCardPlayed = PlayedCards(Card.Clubs5),
             cardsOnTable = emptyList(),
-            dwitchGameEvent = null,
+            lastPlayerAction = null,
             newRoundCanBeStarted = newRoundCanBeStarted
         )
     }

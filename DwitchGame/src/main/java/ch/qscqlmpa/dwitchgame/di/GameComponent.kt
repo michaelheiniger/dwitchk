@@ -1,20 +1,26 @@
 package ch.qscqlmpa.dwitchgame.di
 
+import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectivityRepository
+import ch.qscqlmpa.dwitchcommunication.di.CommunicationComponent
 import ch.qscqlmpa.dwitchgame.di.modules.*
 import ch.qscqlmpa.dwitchgame.game.GameFacade
 import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleFacade
 import ch.qscqlmpa.dwitchgame.ingame.di.InGameGuestComponent
 import ch.qscqlmpa.dwitchgame.ingame.di.InGameHostComponent
-import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameGuestModule
-import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameHostModule
+import ch.qscqlmpa.dwitchstore.StoreComponent
+import dagger.BindsInstance
 import dagger.Component
 
 @GameScope
 @Component(
+    dependencies = [
+        CommunicationComponent::class,
+        StoreComponent::class
+    ],
     modules = [
-        DwitchGameModule::class,
-        StoreModule::class,
+        UtilsModule::class,
         GameFacadeModule::class,
         GameLifecycleModule::class,
         GameDiscoveryModule::class,
@@ -22,19 +28,20 @@ import dagger.Component
     ]
 )
 interface GameComponent {
+    val deviceConnectivityRepository: DeviceConnectivityRepository
     val gameLifecycleFacade: GameLifecycleFacade
     val gameFacade: GameFacade
     val gameDiscoveryFacade: GameDiscoveryFacade
 
-    fun addInGameHostComponent(module: InGameHostModule): InGameHostComponent
-    fun addInGameGuestComponent(module: InGameGuestModule): InGameGuestComponent
+    fun getInGameHostComponentFactory(): InGameHostComponent.Factory
+    fun getInGameGuestComponentFactory(): InGameGuestComponent.Factory
 
     @Component.Factory
     interface Factory {
         fun create(
-            dwitchGameModule: DwitchGameModule,
-            storeModule: StoreModule,
-            gameDiscoveryModule: GameDiscoveryModule
+            @BindsInstance idlingResource: DwitchIdlingResource,
+            communicationComponent: CommunicationComponent,
+            storeComponent: StoreComponent
         ): GameComponent
     }
 }

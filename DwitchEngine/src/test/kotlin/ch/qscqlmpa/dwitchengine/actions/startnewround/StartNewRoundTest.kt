@@ -9,8 +9,8 @@ import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealer
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.card.CardUtil
-import ch.qscqlmpa.dwitchengine.model.game.DwitchGameEvent
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
+import ch.qscqlmpa.dwitchengine.model.game.DwitchPlayerAction
 import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
@@ -126,8 +126,7 @@ class StartNewRoundTest : EngineTestBase() {
         initialGameState = gameStateBuilder
             .addPlayerToGame(p1, DwitchPlayerStatus.Done, DwitchRank.Asshole, emptyList())
             .addPlayerToGame(p2, DwitchPlayerStatus.Done, DwitchRank.President, emptyList())
-            // These two statements are mutually exclusive but the goal is to check the reset of their values.
-            .setGameEvent(DwitchGameEvent.TableHasBeenCleared(PlayedCards(Card.Hearts2)))
+            .setLastPlayerAction(DwitchPlayerAction.PassTurn(playerId = p1Id, clearsTable = false))
             .setCardsdOnTable(PlayedCards(Card.Hearts5), PlayedCards(Card.Diamonds7), PlayedCards(Card.Hearts2))
             .setJoker(CardName.Ace)
             .build()
@@ -146,7 +145,7 @@ class StartNewRoundTest : EngineTestBase() {
             .assertNumCardsInGraveyard(0)
             .assertPlayersDoneForRoundIsEmpty()
             .assertJoker(CardName.Two)
-            .assertGameEvent(null)
+            .assertLastPlayerAction(null)
     }
 
     private fun setupCardDealer(cardsForPlayer: Map<DwitchPlayerId, Set<Card>>) {

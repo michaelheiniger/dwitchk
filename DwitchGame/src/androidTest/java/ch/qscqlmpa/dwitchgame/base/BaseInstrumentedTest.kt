@@ -7,8 +7,6 @@ import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import ch.qscqlmpa.dwitchstore.DaggerTestStoreComponent
 import ch.qscqlmpa.dwitchstore.TestStoreComponent
 import ch.qscqlmpa.dwitchstore.ingamestore.InGameStore
-import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreModule
-import ch.qscqlmpa.dwitchstore.store.TestStoreModule
 import org.junit.After
 import org.junit.Before
 import org.junit.runner.RunWith
@@ -30,17 +28,16 @@ abstract class BaseInstrumentedTest {
 
     @Before
     fun setupStore() {
-        storeComponent = DaggerTestStoreComponent.factory().create(TestStoreModule(context))
-        val insertGameResult =
-            storeComponent.store.insertGameForGuest(gameName, GameCommonId(UUID.randomUUID()), localPlayerName)
-        val inGameStoreComponent = storeComponent.addInGameStoreComponent(
-            InGameStoreModule(insertGameResult.gameLocalId, insertGameResult.localPlayerLocalId)
-        )
+        storeComponent = DaggerTestStoreComponent.factory().create(context)
+        val insertGameResult = storeComponent.store
+            .insertGameForGuest(gameName, GameCommonId(UUID.randomUUID()), localPlayerName)
+        val inGameStoreComponent = storeComponent.getInGameStoreComponentFactory()
+            .create(insertGameResult.gameLocalId, insertGameResult.localPlayerLocalId)
         inGameStore = inGameStoreComponent.inGameStore
     }
 
     @After
     fun tearDownStore() {
-//        storeComponent.clearStore()
+        storeComponent.clearStore()
     }
 }

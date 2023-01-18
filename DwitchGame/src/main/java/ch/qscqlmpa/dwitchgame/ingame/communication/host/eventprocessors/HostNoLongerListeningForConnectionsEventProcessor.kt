@@ -1,7 +1,6 @@
 package ch.qscqlmpa.dwitchgame.ingame.communication.host.eventprocessors
 
 import ch.qscqlmpa.dwitchcommunication.ingame.websocket.ServerEvent
-import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationStateRepository
 import io.reactivex.rxjava3.core.Completable
 import org.tinylog.kotlin.Logger
@@ -13,11 +12,11 @@ internal class HostNoLongerListeningForConnectionsEventProcessor @Inject constru
 
     override fun process(event: ServerEvent.CommunicationEvent): Completable {
 
-        event as ServerEvent.CommunicationEvent.NoLongerListeningForConnections
+        event as ServerEvent.CommunicationEvent.StoppedListeningForConnections
 
         return Completable.fromAction {
             Logger.info { "No longer Listening for connections." }
-            communicationStateRepository.updateState(HostCommunicationState.Closed)
+            communicationStateRepository.notifyEvent(event)
         }
     }
 }

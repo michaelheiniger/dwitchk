@@ -5,7 +5,6 @@ import ch.qscqlmpa.dwitchcommunication.ingame.websocket.ClientEvent
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
 import ch.qscqlmpa.dwitchgame.TestEntityFactory
-import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicator
 import ch.qscqlmpa.dwitchstore.model.Game
@@ -14,16 +13,14 @@ import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
+internal class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
 
     private val mockCommunicator = mockk<GuestCommunicator>(relaxed = true)
-
-    private lateinit var commStateRepository: GuestCommunicationStateRepository
+    private val mockCommStateRepository = mockk<GuestCommunicationStateRepository>(relaxed = true)
 
     private lateinit var processorGuest: GuestConnectedToHostEventProcessor
 
@@ -32,44 +29,43 @@ class GuestConnectedToHostEventProcessorTest : BaseUnitTest() {
 
     @BeforeEach
     fun setup() {
-        commStateRepository = GuestCommunicationStateRepository()
         processorGuest = GuestConnectedToHostEventProcessor(
             mockInGameStore,
             mockCommunicator,
-            commStateRepository
+            mockCommStateRepository
         )
     }
 
     @Test
     @DisplayName("Send JoinGameMessage because registration with host has not been done yet (in-game ID is 0)")
     fun `Send JoinGameMessage`() {
+        // Given
         setupTest(DwitchPlayerId(0))
+        val eventToProcess = ClientEvent.CommunicationEvent.ConnectedToServer
 
-        launchTest()
+        // When
+        processorGuest.process(eventToProcess).test().assertComplete()
 
+        // Then
         verify { mockCommunicator.sendMessageToHost(Message.JoinGameMessage(localPlayer.name)) }
         confirmVerified(mockCommunicator)
-        assertCommunicationStateIsNowConnected()
+        verify { mockCommStateRepository.notifyEvent(eventToProcess) }
     }
 
     @Test
     @DisplayName("Send RejoinGameMessage because registration with host has already been done (in-game ID is not 0)")
     fun `Send RejoinGameMessage`() {
+        // Given
         setupTest(DwitchPlayerId(23))
+        val eventToProcess = ClientEvent.CommunicationEvent.ConnectedToServer
 
-        launchTest()
+        // When
+        processorGuest.process(eventToProcess).test().assertComplete()
 
+        // Then
         verify { mockCommunicator.sendMessageToHost(Message.RejoinGameMessage(game.gameCommonId, localPlayer.dwitchId)) }
         confirmVerified(mockCommunicator)
-        assertCommunicationStateIsNowConnected()
-    }
-
-    private fun launchTest() {
-        processorGuest.process(ClientEvent.CommunicationEvent.ConnectedToHost).test().assertComplete()
-    }
-
-    private fun assertCommunicationStateIsNowConnected() {
-        assertThat(commStateRepository.currentState().blockingFirst()).isEqualTo(GuestCommunicationState.Connected)
+        verify { mockCommStateRepository.notifyEvent(eventToProcess) }
     }
 
     private fun setupTest(localPlayerDwitchId: DwitchPlayerId) {

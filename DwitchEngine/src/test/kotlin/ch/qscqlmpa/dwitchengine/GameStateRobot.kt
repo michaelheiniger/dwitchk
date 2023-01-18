@@ -1,9 +1,9 @@
 package ch.qscqlmpa.dwitchengine
 
 import ch.qscqlmpa.dwitchengine.model.card.CardName
-import ch.qscqlmpa.dwitchengine.model.game.DwitchGameEvent
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.game.DwitchPlayerAction
 import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchengine.model.player.SpecialRuleBreaker
@@ -96,8 +96,8 @@ class GameStateRobot(private val gameState: DwitchGameState) {
         return this
     }
 
-    fun assertGameEvent(dwitchGameEvent: DwitchGameEvent?): GameStateRobot {
-        assertThat(gameState.dwitchGameEvent).isEqualTo(dwitchGameEvent)
+    fun assertLastPlayerAction(action: DwitchPlayerAction?): GameStateRobot {
+        assertThat(gameState.lastPlayerAction).isEqualTo(action)
         return this
     }
 

@@ -11,7 +11,7 @@ internal class PlayCard(
 ) {
 
     private val localPlayerId = playCardState.currentPlayerId()
-    private val cardPlayed = playCardState.cardsPlayed()
+    private val cardsPlayed = playCardState.cardsPlayed()
 
     fun getUpdatedGameState(): DwitchGameState {
         playCardState.checkState()
@@ -20,7 +20,7 @@ internal class PlayCard(
         gameUpdater.undwitchAllPlayers()
         gameUpdater.resetGameEvent()
 
-        gameUpdater.takeCardsFromHandAndPutOnTable(localPlayerId, cardPlayed)
+        gameUpdater.takeCardsFromHandAndPutOnTable(localPlayerId, cardsPlayed)
         if (playCardState.isLastCardPlayedTheFirstJokerPlayedOfTheRound()) {
             gameUpdater.playerPlayedOnTheFirstJokerPlayedOfTheRound(localPlayerId)
         }
@@ -40,7 +40,7 @@ internal class PlayCard(
                 newCurrentPlayer.id == playCardState.currentPlayerId() ||
                 (playCardState.currentPlayerIsDone() && playCardState.exactlyOneOtherPlayerCanPlay())
             ) {
-                gameUpdater.clearTable(cardPlayed)
+                gameUpdater.clearTable()
                 gameUpdater.setPlayersWhoPassedTheirTurnedToWaiting()
             }
 

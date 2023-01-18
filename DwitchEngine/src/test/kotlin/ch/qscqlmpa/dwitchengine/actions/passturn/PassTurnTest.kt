@@ -6,6 +6,7 @@ import ch.qscqlmpa.dwitchengine.GameStateRobot
 import ch.qscqlmpa.dwitchengine.PlayerRobot
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
+import ch.qscqlmpa.dwitchengine.model.game.DwitchPlayerAction
 import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
@@ -36,6 +37,7 @@ class PassTurnTest : EngineTestBase() {
             GameStateRobot(gameStateUpdated)
                 .assertCurrentPlayerId(p3Id)
                 .assertTableIsEmpty()
+                .assertLastPlayerAction(DwitchPlayerAction.PassTurn(playerId = p1Id, clearsTable = true))
 
             PlayerRobot(gameStateUpdated, p1Id)
                 .assertPlayerState(DwitchPlayerStatus.Waiting)
@@ -67,6 +69,7 @@ class PassTurnTest : EngineTestBase() {
             GameStateRobot(gameStateUpdated)
                 .assertCurrentPlayerId(p2Id)
                 .assertTableIsEmpty()
+                .assertLastPlayerAction(DwitchPlayerAction.PassTurn(playerId = p1Id, clearsTable = true))
 
             PlayerRobot(gameStateUpdated, p1Id)
                 .assertPlayerState(DwitchPlayerStatus.Waiting)
@@ -91,6 +94,7 @@ class PassTurnTest : EngineTestBase() {
             GameStateRobot(gameStateUpdated)
                 .assertCurrentPlayerId(p3Id)
                 .assertTableContains(PlayedCards(Card.Clubs7))
+                .assertLastPlayerAction(DwitchPlayerAction.PassTurn(playerId = p1Id, clearsTable = false))
 
             PlayerRobot(gameStateUpdated, p1Id)
                 .assertPlayerState(DwitchPlayerStatus.TurnPassed)

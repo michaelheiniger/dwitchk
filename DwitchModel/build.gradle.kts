@@ -6,13 +6,13 @@ plugins {
 }
 
 dependencies {
-    implementation(project(path = ":DwitchEngine"))
+    api(project(path = ":DwitchEngine"))
 
     // Serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc")
 
     // Joda time
-    implementation("joda-time:joda-time:2.10.10")
+    api("joda-time:joda-time:2.10.10")
 }
 
 java {

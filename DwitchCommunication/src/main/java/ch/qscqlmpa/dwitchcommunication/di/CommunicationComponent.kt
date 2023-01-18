@@ -1,9 +1,11 @@
 package ch.qscqlmpa.dwitchcommunication.di
 
-import ch.qscqlmpa.dwitchcommunication.WLanConnectionRepository
+import android.net.ConnectivityManager
 import ch.qscqlmpa.dwitchcommunication.common.SchedulersModule
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectivityRepository
 import ch.qscqlmpa.dwitchcommunication.gameadvertising.GameAdvertiser
 import ch.qscqlmpa.dwitchcommunication.gamediscovery.GameDiscovery
+import dagger.BindsInstance
 import dagger.Component
 
 @CommunicationScope
@@ -12,16 +14,17 @@ import dagger.Component
         CommunicationModule::class,
         GameAdvertisingModule::class,
         GameDiscoveryModule::class,
+        UtilsModule::class,
         SchedulersModule::class,
     ]
 )
 interface CommunicationComponent {
     val gameDiscovery: GameDiscovery
     val gameAdvertiser: GameAdvertiser
-    val wLanConnectionRepository: WLanConnectionRepository
+    val deviceConnectivityRepository: DeviceConnectivityRepository
 
     @Component.Factory
     interface Factory {
-        fun create(communicationModule: CommunicationModule): CommunicationComponent
+        fun create(@BindsInstance manager: ConnectivityManager): CommunicationComponent
     }
 }

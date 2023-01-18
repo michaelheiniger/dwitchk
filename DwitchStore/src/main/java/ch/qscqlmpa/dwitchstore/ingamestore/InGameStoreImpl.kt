@@ -13,11 +13,14 @@ import ch.qscqlmpa.dwitchstore.model.Player
 import ch.qscqlmpa.dwitchstore.util.SerializerFactory
 import com.jakewharton.rxrelay3.BehaviorRelay
 import io.reactivex.rxjava3.core.Observable
+import java.util.concurrent.atomic.AtomicReference
+import javax.inject.Inject
+import javax.inject.Named
 
-internal class InGameStoreImpl constructor(
+internal class InGameStoreImpl @Inject constructor(
     database: AppRoomDatabase,
-    private val gameLocalId: Long,
-    private val localPlayerLocalId: Long,
+    @Named(InstanceQualifiers.GAME_LOCAL_ID) private val gameLocalId: Long,
+    @Named(InstanceQualifiers.LOCAL_PLAYER_LOCAL_ID) private val localPlayerLocalId: Long,
     private val serializerFactory: SerializerFactory
 ) : InGameStore {
 
@@ -28,7 +31,9 @@ internal class InGameStoreImpl constructor(
     private val _gameName: String by lazy { gameDao.getGameName(gameLocalId) }
     private val _localDwitchPlayerId: DwitchPlayerId by lazy { playerDao.getPlayerDwitchId(localPlayerLocalId) }
     private val _localPlayerRole: PlayerRole by lazy { playerDao.getPlayerRole(localPlayerLocalId) }
-    private val _currentRoom: BehaviorRelay<RoomType> = BehaviorRelay.createDefault(RoomType.WAITING_ROOM)
+
+    private val _currentRoom = AtomicReference(RoomType.WAITING_ROOM)
+    private val _currentRoomRelay: BehaviorRelay<RoomType> = BehaviorRelay.createDefault(RoomType.WAITING_ROOM)
 
     // Game
     override fun getGame(): Game {
@@ -44,11 +49,11 @@ internal class InGameStoreImpl constructor(
     }
 
     override fun getCurrentRoom(): RoomType {
-        return _currentRoom.value
+        return _currentRoom.get()
     }
 
     override fun observeCurrentRoom(): Observable<RoomType> {
-        return _currentRoom
+        return _currentRoomRelay
     }
 
     override fun getGameState(): DwitchGameState {
@@ -71,7 +76,7 @@ internal class InGameStoreImpl constructor(
     }
 
     override fun getGameCommonIdAndCurrentRoom(): GameCommonIdAndCurrentRoom {
-        return GameCommonIdAndCurrentRoom(gameDao.getGameCommonId(gameLocalId), _currentRoom.value)
+        return GameCommonIdAndCurrentRoom(gameDao.getGameCommonId(gameLocalId), _currentRoom.get())
     }
 
     override fun getPlayerLocalId(dwitchId: DwitchPlayerId): Long? {
@@ -91,7 +96,7 @@ internal class InGameStoreImpl constructor(
     }
 
     override fun updateCurrentRoom(room: RoomType) {
-        _currentRoom.accept(room)
+        _currentRoomRelay.accept(_currentRoom.updateAndGet { room })
     }
 
     override fun updateGameState(gameState: DwitchGameState) {

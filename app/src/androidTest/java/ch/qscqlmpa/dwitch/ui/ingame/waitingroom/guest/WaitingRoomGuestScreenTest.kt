@@ -67,6 +67,13 @@ class WaitingRoomGuestScreenTest : BaseUiUnitTest() {
             .assertIsDisplayed()
     }
 
+    @Test
+    fun addComputerPlayerIsNotDisplayed() {
+        launchTest()
+
+        composeTestRule.onNodeWithTag(UiTags.addComputerPlayer).assertDoesNotExist()
+    }
+
     private fun launchTest() {
         launchTestWithContent {
             WaitingRoomGuestBody(
@@ -75,6 +82,7 @@ class WaitingRoomGuestScreenTest : BaseUiUnitTest() {
                 ready = ready,
                 notification = WaitingRoomGuestNotification.None,
                 connectionState = GuestCommunicationState.Connected,
+                leavingGame = false,
                 onReadyClick = {},
                 onLeaveConfirmClick = {},
                 onReconnectClick = {},

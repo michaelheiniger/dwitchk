@@ -15,18 +15,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
+import ch.qscqlmpa.dwitch.ui.base.PreviewContainer
 
 @Suppress("UnusedPrivateMember")
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
 private fun InfoDialogPreview() {
-    ActivityScreenContainer {
+    PreviewContainer {
         InfoDialog(
-            title = R.string.info_dialog_title,
+            title = R.string.dialog_info_title,
             text = R.string.game_canceled_by_host,
             onOkClick = {}
         )
@@ -65,25 +62,70 @@ fun InfoDialog(
 }
 
 @Composable
+fun InfoDialog(
+    text: Int,
+    content: @Composable () -> Unit,
+    closeLabel: Int = R.string.close,
+    onCloseClick: () -> Unit = {}
+) {
+    Dialog(
+        onDismissRequest = onCloseClick,
+        properties = DialogProperties(),
+        content = {
+            Surface(
+                shape = MaterialTheme.shapes.medium,
+                color = MaterialTheme.colors.surface,
+                contentColor = contentColorFor(MaterialTheme.colors.surface)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = stringResource(text), color = MaterialTheme.colors.primary)
+                    Spacer(Modifier.height(8.dp))
+                    content()
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedButton(
+                        onClick = onCloseClick,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .testTag(UiTags.waitingDialogAbortBtn)
+                    ) {
+                        Text(stringResource(closeLabel))
+                    }
+                }
+            }
+        }
+    )
+}
+
+@Composable
 fun ConfirmationDialog(
     title: Int,
     text: Int,
     onConfirmClick: () -> Unit,
-    onCancelClick: () -> Unit = {}
+    onCancelClick: () -> Unit = {},
+    onClosing: () -> Unit = {}
 ) {
 
     val openDialog = remember { mutableStateOf(true) }
 
     if (openDialog.value) {
         AlertDialog(
-            onDismissRequest = onCancelClick,
+            onDismissRequest = {
+                onCancelClick()
+                onClosing()
+            },
             title = { Text(text = stringResource(title), color = Color.Black) },
             text = { Text(text = stringResource(text), color = Color.Black) },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onConfirmClick()
                         openDialog.value = false
+                        onConfirmClick()
+                        onClosing()
                     },
                     modifier = Modifier.testTag(UiTags.confirmBtn)
                 ) {
@@ -93,8 +135,9 @@ fun ConfirmationDialog(
             dismissButton = {
                 TextButton(
                     onClick = {
-                        onCancelClick()
                         openDialog.value = false
+                        onCancelClick()
+                        onClosing()
                     },
                     modifier = Modifier.testTag(UiTags.cancelBtn)
                 ) {
@@ -107,19 +150,16 @@ fun ConfirmationDialog(
     }
 }
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
 private fun LoadingDialogPreview() {
-    ActivityScreenContainer {
+    PreviewContainer {
         LoadingDialog()
     }
 }
 
 @Composable
-fun LoadingDialog() {
+fun LoadingDialog(text: Int = R.string.loading) {
     Dialog(
         onDismissRequest = {},
         properties = DialogProperties(),
@@ -135,7 +175,7 @@ fun LoadingDialog() {
                         .padding(horizontal = 16.dp, vertical = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(stringResource(id = R.string.loading))
+                    Text(stringResource(id = text))
                     CircularProgressIndicator(
                         color = MaterialTheme.colors.secondary,
                         modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -146,13 +186,10 @@ fun LoadingDialog() {
     )
 }
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
 private fun WaitingDialogPreview() {
-    ActivityScreenContainer {
+    PreviewContainer {
         WaitingDialog()
     }
 }

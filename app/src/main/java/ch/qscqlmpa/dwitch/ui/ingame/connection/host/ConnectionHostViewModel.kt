@@ -16,7 +16,7 @@ class ConnectionHostViewModel @Inject constructor(
     private val idlingResource: DwitchIdlingResource
 ) : BaseViewModel() {
 
-    private val _connectionStatus = mutableStateOf<HostCommunicationState>(HostCommunicationState.Closed)
+    private val _connectionStatus = mutableStateOf<HostCommunicationState>(HostCommunicationState.Online)
     val connectionStatus get(): State<HostCommunicationState> = _connectionStatus
 
     fun reconnect() {
@@ -33,11 +33,13 @@ class ConnectionHostViewModel @Inject constructor(
         this.disposableManager.add(
             communicationFacade.currentCommunicationState()
                 .observeOn(uiScheduler)
-                .doOnError { error -> Logger.error(error) { "Error while observing communication state." } }
-                .subscribe { state ->
-                    _connectionStatus.value = state
-                    idlingResource.decrement("Communication state updated ($state)")
-                }
+                .subscribe(
+                    { state ->
+                        _connectionStatus.value = state
+                        idlingResource.decrement("Communication state updated ($state)")
+                    },
+                    { error -> Logger.error(error) { "Error while observing communication state." } }
+                )
         )
     }
 }

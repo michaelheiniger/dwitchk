@@ -59,12 +59,12 @@
     <string name="cancel_game">Annuler partie</string>
     <string name="launch_game">Go go !</string>
     <string name="host_game">Allons y, fidèles compagnons de la Comté !</string>
-    <string name="no_game_discovered">Aucune partie trouvée</string>
+    <string name="no_game_discovered_yet">Aucune partie trouvée pour le moment</string>
     <string name="loading_resumable_games">Chargement des parties à reprendre</string>
     <string name="no_resumable_games">Aucune partie à reprendre</string>
     <string name="guest_connecting">Connection…</string>
     <string name="host_connecting">Connection…</string>
-    <string name="info_dialog_title">Info</string>
+    <string name="dialog_info_title">Info</string>
     <string name="end_of_round_screen_title">Round terminé !</string>
     <string name="player_status_done">Terminé</string>
     <string name="player_status_playing">Joueur actuel</string>
@@ -167,9 +167,27 @@
     </string>
     <string name="title_activity_home">Accueil</string>
     <string name="waiting_for_disconnected_player">En attente de reconnection d\'un joueur</string>
-    <string name="game_not_found_title">Erreur</string>
-    <string name="game_not_found_text">Partie plus disponnible</string>
     <string name="dialog_error_title">Erreur</string>
     <string name="error_joining_game_text">Erreur lors de la tentative de rejoindre la partie</string>
-    <string name="game_ad_qr_code_hint">Scan to join this game</string>
+    <string name="game_ad_qr_code_hint">QR code de la partie</string>
+    <string name="title_activity_qr_code_scanner">QrCodeScannerActivity</string>
+    <string name="join_game_with_qr_code">Rejoindre une partie en lisant le QR code</string>
+    <string name="error_scanning_qr_code">Erreur lors de la lecture du QR code</string>
+    <string name="scan_qr_code_hint">Lit le QR code affiché sur l\'écran de l\'hôte pour rejoindre la partie</string>
+    <string name="camera_permission_denied">Impossible de scanner un QR code sans la permission d\'utiliser l\'appareil photo</string>
+    <string name="qr_code_camera_permission_hint">La permission d\'utiliser l\'appareil photo est requise pour scanner un QR code</string>
+    <string name="qr_code_invalid">Le QR code ne contient pas pas de données de jeu, réessayer ?</string>
+    <string name="error_starting_camera">Erreur lors du démarrage de l\'appareil photo</string>
+    <string name="qr_code_decoding_failed">Le décodage du QR code a échoué, réessayer ?</string>
+    <string name="not_connected_to_a_wlan">You\'re not on a WLAN !</string>
+    <string name="launching_game">Launching game …</string>
+    <string name="leaving_game">Leaving game…</string>
+    <string name="canceling_game">Canceling game…</string>
+    <string name="ending_game">Ending game…</string>
+    <string name="toggle_dark_theme_cs">Basculer sur le dark theme</string>
+    <string name="close">Close</string>
+    <string name="game_ad_qr_code_cd">QR code de la partie</string>
+    <string name="delete_existing_game">Delete game</string>
+    <string name="resume_game_cd">Resume game %1$s with players %2$s</string>
+    <string name="wlan_connection_required">"You must be connected to a WLAN to play the game."</string>
 </resources>

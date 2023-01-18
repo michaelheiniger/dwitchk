@@ -4,8 +4,11 @@ object UiTags {
 
     const val advertisedGames = "advertisedGames"
     const val resumableGames = "resumableGames"
+    const val joinGameQrCode = "joinGameQrCode"
     const val createGame = "createGame"
     const val kickPlayer = "kickPlayer"
+    const val bannerNotConnectedToWlan = "bannerNotConnectedToWlan"
+    const val deleteExistingGame = "deleteExistingGame"
     const val localPlayerReadyControl = "localPlayerReadyControl"
     const val localPlayerReadyText = "localPlayerReadyText"
     const val playerName = "playerName"
@@ -26,4 +29,7 @@ object UiTags {
     const val gameRoomPlayersInfo = "gameRoomPlayersInfo"
     const val gameRulesInfo = "gameRulesInfo"
     const val waitingDialogAbortBtn = "waitingDialogAbortBtn"
+    const val dialogNoBtn = "dialogNoBtn"
+    const val dialogYesBtn = "dialogYesBtn"
+    const val toggleDarkTheme = "toggleDarkTheme"
 }

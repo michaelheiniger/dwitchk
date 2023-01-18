@@ -37,7 +37,7 @@ internal object GameBootstrap {
 
         return DwitchGameState(
             DwitchGamePhase.RoundIsBeginning,
-            players.map { p -> p.id to p }.toMap(),
+            players.associateBy { p -> p.id },
             PlayingOrder.getPlayingOrder(players),
             currentPlayer.id,
             activePlayers,

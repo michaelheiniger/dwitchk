@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="Blue500">#FF2196F3</color>
-    <color name="BlueLight">#FF6EC6FF</color>
-    <color name="BlueDark">#FF0069c0</color>
-    <color name="Amber500">#FFFFC107</color>
-    <color name="AmberDark">#FFC79100</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="primaryColor">#2196f3</color>
+    <color name="primaryLightColor">#6ec6ff</color>
+    <color name="primaryDarkColor">#0069c0</color>
+    <color name="secondaryColor">#ffca28</color>
+    <color name="secondaryLightColor">#fffd61</color>
+    <color name="secondaryDarkColor">#c79a00</color>
+    <color name="primaryTextColor">#FFFFFF</color>
+    <color name="secondaryTextColor">#FFFFFF</color>
 </resources>

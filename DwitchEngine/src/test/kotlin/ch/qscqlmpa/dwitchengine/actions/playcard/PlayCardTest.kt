@@ -5,8 +5,8 @@ import ch.qscqlmpa.dwitchengine.EngineTestBase
 import ch.qscqlmpa.dwitchengine.GameStateRobot
 import ch.qscqlmpa.dwitchengine.PlayerRobot
 import ch.qscqlmpa.dwitchengine.model.card.Card
-import ch.qscqlmpa.dwitchengine.model.game.DwitchGameEvent
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
+import ch.qscqlmpa.dwitchengine.model.game.DwitchPlayerAction
 import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
@@ -65,6 +65,13 @@ class PlayCardTest : EngineTestBase() {
             GameStateRobot(gameStateUpdated)
                 .assertNumCardsOnTable(2)
                 .assertCardsOnTableContains(PlayedCards(Card.Clubs3), PlayedCards(cardPlayed)) // Card has been added to table
+                .assertLastPlayerAction(
+                    DwitchPlayerAction.PlayCards(
+                        playerId = p1Id,
+                        playedCards = PlayedCards(cardPlayed),
+                        clearsTable = false
+                    )
+                )
 
             PlayerRobot(gameStateUpdated, p1Id)
                 .assertNumCardsInHand(1)
@@ -87,6 +94,15 @@ class PlayCardTest : EngineTestBase() {
             assertThat(initialGameState.lastCardsPlayed()!!.value).isEqualTo(cardPlayed.value())
 
             launchPlayCardTest(cardPlayed)
+
+            GameStateRobot(gameStateUpdated).assertLastPlayerAction(
+                DwitchPlayerAction.PlayCards(
+                    playerId = p1Id,
+                    playedCards = PlayedCards(cardPlayed),
+                    dwitchedPlayedId = p2Id,
+                    clearsTable = false
+                )
+            )
 
             PlayerRobot(gameStateUpdated, p1Id).assertPlayerState(DwitchPlayerStatus.Waiting)
 
@@ -112,7 +128,16 @@ class PlayCardTest : EngineTestBase() {
 
             launchPlayCardTest(cardPlayed)
 
-            GameStateRobot(gameStateUpdated).assertTableIsEmpty()
+            GameStateRobot(gameStateUpdated)
+                .assertTableIsEmpty()
+                .assertLastPlayerAction(
+                    DwitchPlayerAction.PlayCards(
+                        playerId = p1Id,
+                        playedCards = PlayedCards(cardPlayed),
+                        dwitchedPlayedId = p3Id,
+                        clearsTable = true // No other play is waiting
+                    )
+                )
 
             PlayerRobot(gameStateUpdated, p1Id).assertPlayerState(DwitchPlayerStatus.Playing)
             PlayerRobot(gameStateUpdated, p2Id).assertPlayerState(DwitchPlayerStatus.Waiting)
@@ -135,7 +160,16 @@ class PlayCardTest : EngineTestBase() {
 
             launchPlayCardTest(cardPlayed)
 
-            GameStateRobot(gameStateUpdated).assertTableContains(PlayedCards(cardPlayed))
+            GameStateRobot(gameStateUpdated)
+                .assertTableContains(PlayedCards(cardPlayed))
+                .assertLastPlayerAction(
+                    DwitchPlayerAction.PlayCards(
+                        playerId = p1Id,
+                        playedCards = PlayedCards(cardPlayed),
+                        dwitchedPlayedId = p3Id,
+                        clearsTable = false
+                    )
+                )
 
             PlayerRobot(gameStateUpdated, p1Id).assertPlayerState(DwitchPlayerStatus.Waiting)
             PlayerRobot(gameStateUpdated, p2Id).assertPlayerState(DwitchPlayerStatus.TurnPassed)
@@ -158,7 +192,16 @@ class PlayCardTest : EngineTestBase() {
 
             launchPlayCardTest(cardPlayed)
 
-            GameStateRobot(gameStateUpdated).assertTableContains(PlayedCards(cardPlayed))
+            GameStateRobot(gameStateUpdated)
+                .assertTableContains(PlayedCards(cardPlayed))
+                .assertLastPlayerAction(
+                    DwitchPlayerAction.PlayCards(
+                        playerId = p1Id,
+                        playedCards = PlayedCards(cardPlayed),
+                        dwitchedPlayedId = null,
+                        clearsTable = false
+                    )
+                )
 
             PlayerRobot(gameStateUpdated, p1Id).assertPlayerState(DwitchPlayerStatus.Waiting)
             PlayerRobot(gameStateUpdated, p2Id).assertPlayerState(DwitchPlayerStatus.TurnPassed)
@@ -179,7 +222,15 @@ class PlayCardTest : EngineTestBase() {
 
             launchPlayCardTest(cardPlayed)
 
-            GameStateRobot(gameStateUpdated).assertTableIsEmpty()
+            GameStateRobot(gameStateUpdated)
+                .assertTableIsEmpty()
+                .assertLastPlayerAction(
+                    DwitchPlayerAction.PlayCards(
+                        playerId = p1Id,
+                        playedCards = PlayedCards(cardPlayed),
+                        clearsTable = true // Playing a joker always clears the table
+                    )
+                )
 
             PlayerRobot(gameStateUpdated, p1Id).assertPlayerState(DwitchPlayerStatus.Playing)
             PlayerRobot(gameStateUpdated, p2Id).assertPlayerState(DwitchPlayerStatus.Waiting)
@@ -255,7 +306,14 @@ class PlayCardTest : EngineTestBase() {
                 .assertPlayerIsDoneForRound(p1Id)
                 .assertPlayerHasNotFinishedWithJoker(p1Id)
                 .assertTableIsEmpty()
-                .assertGameEvent(DwitchGameEvent.TableHasBeenCleared(PlayedCards(cardPlayed)))
+                .assertLastPlayerAction(
+                    DwitchPlayerAction.PlayCards(
+                        playerId = p1Id,
+                        playedCards = PlayedCards(cardPlayed),
+                        dwitchedPlayedId = p3Id,
+                        clearsTable = true // No other player is waiting
+                    )
+                )
                 .assertRoundIsNotOver()
 
             PlayerRobot(gameStateUpdated, p1Id).assertPlayerState(DwitchPlayerStatus.Done)
@@ -342,7 +400,7 @@ class PlayCardTest : EngineTestBase() {
         }
 
         @Test
-        fun `Player pawdadwda`() {
+        fun `Player plays its last card and is done, only one player waiting, other passed`() {
             val cardPlayed = Card.Clubs6
             initialGameState = gameStateBuilder
                 .addPlayerToGame(p1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(cardPlayed))
@@ -365,7 +423,7 @@ class PlayCardTest : EngineTestBase() {
         }
 
         @Test
-        fun `Player plays its last card blalbla`() {
+        fun `Player plays its last card (???)`() {
             val cardPlayed = Card.ClubsQueen
             initialGameState = gameStateBuilder
                 .addPlayerToGame(p1, DwitchPlayerStatus.Playing, DwitchRank.Asshole, listOf(cardPlayed))

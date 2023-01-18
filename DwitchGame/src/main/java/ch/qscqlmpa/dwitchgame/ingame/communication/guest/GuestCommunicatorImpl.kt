@@ -8,14 +8,14 @@ import ch.qscqlmpa.dwitchcommunication.ingame.model.Message
 import ch.qscqlmpa.dwitchcommunication.ingame.websocket.ClientEvent
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.eventprocessors.GuestCommunicationEventDispatcher
 import ch.qscqlmpa.dwitchgame.ingame.di.InGameScope
-import ch.qscqlmpa.dwitchgame.ingame.di.OnGoingGameQualifiers
+import ch.qscqlmpa.dwitchgame.ingame.di.InstanceQualifiers
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 import javax.inject.Named
 
 @InGameScope
 internal class GuestCommunicatorImpl @Inject constructor(
-    @Named(OnGoingGameQualifiers.ADVERTISED_GAME) private val initialAdvertisedGame: GameAdvertisingInfo,
+    @Named(InstanceQualifiers.ADVERTISED_GAME) private val initialAdvertisedGame: GameAdvertisingInfo,
     private val commClient: CommClient,
     private val communicationEventDispatcher: GuestCommunicationEventDispatcher,
     private val communicationStateRepository: GuestCommunicationStateRepository,
@@ -25,8 +25,8 @@ internal class GuestCommunicatorImpl @Inject constructor(
     private val disposableManager = DisposableManager()
 
     override fun connect(advertisedGame: GameAdvertisingInfo) {
-        Logger.info { "Connect to host" }
-        communicationStateRepository.updateState(GuestCommunicationState.Connecting)
+        Logger.info { "Connecting to host..." }
+        communicationStateRepository.notifyEvent(ClientEvent.CommunicationEvent.ConnectingToServer)
         observeCommunicationEvents()
         commClient.start(advertisedGame.gameIpAddress, advertisedGame.gamePort)
     }
@@ -36,9 +36,9 @@ internal class GuestCommunicatorImpl @Inject constructor(
     }
 
     override fun disconnect() {
-        Logger.info { "Disconnect from host" }
+        Logger.info { "Disconnecting from host..." }
         commClient.stop()
-        // Subscribed streams are disposed when ClientCommunicationEvent.DisconnectedFromHost has been processed
+        // Subscribed streams are disposed when ClientCommunicationEvent.Stopped has been processed
     }
 
     override fun sendMessageToHost(message: Message) {
@@ -55,7 +55,7 @@ internal class GuestCommunicatorImpl @Inject constructor(
                         .doFinally {
                             if (
                                 event is ClientEvent.CommunicationEvent.Stopped ||
-                                event is ClientEvent.CommunicationEvent.DisconnectedFromHost ||
+                                event is ClientEvent.CommunicationEvent.DisconnectedFromServer ||
                                 event is ClientEvent.CommunicationEvent.ConnectionError
                             ) {
                                 disposableManager.disposeAndReset()

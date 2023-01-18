@@ -13,7 +13,7 @@ class ConnectionGuestScreenTest : BaseUiUnitTest() {
 
     @Test
     fun stateIsDisconnected() {
-        state = GuestCommunicationState.Disconnected
+        state = GuestCommunicationState.Disconnected(connectedToWlan = true)
         launchTest()
 
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.disconnected_from_host))
@@ -43,7 +43,7 @@ class ConnectionGuestScreenTest : BaseUiUnitTest() {
 
     @Test
     fun stateIsError() {
-        state = GuestCommunicationState.Error
+        state = GuestCommunicationState.Error(connectedToWlan = true)
         launchTest()
 
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.guest_connection_error))
@@ -54,7 +54,7 @@ class ConnectionGuestScreenTest : BaseUiUnitTest() {
 
     private fun launchTest() {
         launchTestWithContent {
-            ConnectionGuestScreen(state, onReconnectClick = {}, onAbortClick = {})
+            CommunicationGuest(state, onReconnectClick = {}, onAbortClick = {})
         }
     }
 }

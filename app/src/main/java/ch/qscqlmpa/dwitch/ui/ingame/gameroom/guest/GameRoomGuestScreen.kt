@@ -1,49 +1,41 @@
 package ch.qscqlmpa.dwitch.ui.ingame.gameroom.guest
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
+import ch.qscqlmpa.dwitch.ui.base.PreviewContainer
 import ch.qscqlmpa.dwitch.ui.common.*
 import ch.qscqlmpa.dwitch.ui.ingame.GameOverDialog
 import ch.qscqlmpa.dwitch.ui.ingame.GameRulesDialog
 import ch.qscqlmpa.dwitch.ui.ingame.LoadingSpinner
 import ch.qscqlmpa.dwitch.ui.ingame.connection.guest.ConnectionGuestViewModel
-import ch.qscqlmpa.dwitch.ui.ingame.gameroom.DashboardScreen
+import ch.qscqlmpa.dwitch.ui.ingame.gameroom.Dashboard
+import ch.qscqlmpa.dwitch.ui.ingame.gameroom.cardexchange.CardExchange
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.cardexchange.CardExchangeOnGoing
-import ch.qscqlmpa.dwitch.ui.ingame.gameroom.cardexchange.CardExchangeScreen
-import ch.qscqlmpa.dwitch.ui.ingame.gameroom.endofround.EndOfRoundScreen
+import ch.qscqlmpa.dwitch.ui.ingame.gameroom.endofround.EndOfRound
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.playerdashboard.GameRoomViewModel
-import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
 
-@ExperimentalAnimationApi
-@ExperimentalFoundationApi
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
-fun GameRoomHostScreenPreview() {
-    ActivityScreenContainer {
+fun GameRoomGuestBodyPreview() {
+    PreviewContainer {
         GameRoomGuestBody(
             toolbarTitle = "Dwiitch",
             screen = GameRoomScreen.CardExchangeOnGoing,
             connectionStatus = GuestCommunicationState.Connected,
-            showGameOver = false,
+            gameOver = false,
+            leavingGame = false,
             onCardClick = {},
             onPlayClick = {},
             onPassClick = {},
@@ -56,14 +48,12 @@ fun GameRoomHostScreenPreview() {
     }
 }
 
-@ExperimentalFoundationApi
-@ExperimentalAnimationApi
 @Composable
-fun GameRoomGuestScreen(vmFactory: ViewModelFactory) {
-    val playerViewModel = viewModel<GameRoomViewModel>(factory = vmFactory)
-    val guestViewModel = viewModel<GameRoomGuestViewModel>(factory = vmFactory)
-    val connectionViewModel = viewModel<ConnectionGuestViewModel>(factory = vmFactory)
-
+fun GameRoomGuestScreen(
+    playerViewModel: GameRoomViewModel,
+    guestViewModel: GameRoomGuestViewModel,
+    connectionViewModel: ConnectionGuestViewModel
+) {
     DisposableEffect(playerViewModel, guestViewModel, connectionViewModel) {
         playerViewModel.onStart()
         guestViewModel.onStart()
@@ -79,7 +69,8 @@ fun GameRoomGuestScreen(vmFactory: ViewModelFactory) {
         toolbarTitle = playerViewModel.toolbarTitle.value,
         screen = playerViewModel.screen.value,
         connectionStatus = connectionViewModel.connectionState.value,
-        showGameOver = guestViewModel.gameOver.value,
+        gameOver = guestViewModel.gameOver.value,
+        leavingGame = guestViewModel.leavingGame.value,
         onCardClick = playerViewModel::onCardToPlayClick,
         onPlayClick = playerViewModel::onPlayClick,
         onPassClick = playerViewModel::onPassTurnClick,
@@ -91,14 +82,13 @@ fun GameRoomGuestScreen(vmFactory: ViewModelFactory) {
     )
 }
 
-@ExperimentalAnimationApi
-@ExperimentalFoundationApi
 @Composable
 fun GameRoomGuestBody(
     toolbarTitle: String,
     screen: GameRoomScreen?,
-    connectionStatus: GuestCommunicationState?,
-    showGameOver: Boolean,
+    connectionStatus: GuestCommunicationState,
+    gameOver: Boolean,
+    leavingGame: Boolean,
     onCardClick: (Card) -> Unit,
     onPlayClick: () -> Unit,
     onPassClick: () -> Unit,
@@ -110,46 +100,41 @@ fun GameRoomGuestBody(
 ) {
     val gameRules = remember { mutableStateOf(false) }
     val showLeaveGameConfirmationDialog = remember { mutableStateOf(false) }
-
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .animateContentSize()
-    ) {
-        DwitchTopBar(
-            title = toolbarTitle,
-            navigationIcon = NavigationIcon(
-                icon = R.drawable.ic_baseline_exit_to_app_24,
-                contentDescription = R.string.leave_game,
-                onClick = { showLeaveGameConfirmationDialog.value = true }
-            ),
-            actions = emptyList(),
-            onActionClick = { action ->
-                when (action) {
-                    GameRules -> gameRules.value = true
+    Scaffold(
+        topBar = {
+            DwitchTopBar(
+                title = toolbarTitle,
+                navigationIcon = NavigationIcon(
+                    icon = R.drawable.ic_baseline_exit_to_app_24,
+                    contentDescription = R.string.leave_game,
+                    onClick = { showLeaveGameConfirmationDialog.value = true }
+                ),
+                actions = listOf(GameRules),
+                onActionClick = { action ->
+                    when (action) {
+                        GameRules -> gameRules.value = true
+                    }
                 }
-            }
-        )
-
-        if (gameRules.value) GameRulesDialog(onOkClick = { gameRules.value = false })
-
+            )
+        }
+    ) { innerPadding ->
         Column(
             Modifier
                 .fillMaxWidth()
                 .animateContentSize()
-                .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
+                .padding(innerPadding)
         ) {
             when (screen) {
-                is GameRoomScreen.Dashboard -> DashboardScreen(
+                is GameRoomScreen.Dashboard -> Dashboard(
                     dashboardInfo = screen.dashboardInfo,
                     onCardClick = onCardClick,
                     onPlayClick = onPlayClick,
                     onPassClick = onPassClick,
                     onEndOrLeaveGameClick = { showLeaveGameConfirmationDialog.value = true }
                 )
-                is GameRoomScreen.EndOfRound -> EndOfRoundScreen(screen.endOfRoundInfo)
+                is GameRoomScreen.EndOfRound -> EndOfRound(screen.endOfRoundInfo)
                 is GameRoomScreen.CardExchange -> {
-                    CardExchangeScreen(
+                    CardExchange(
                         numCardsToChoose = screen.cardExchangeState.numCardsToChoose,
                         cardsInHand = screen.cardExchangeState.cardsInHand,
                         canSubmitCardsForExchange = screen.cardExchangeState.canPerformExchange,
@@ -158,27 +143,29 @@ fun GameRoomGuestBody(
                     )
                 }
                 is GameRoomScreen.CardExchangeOnGoing -> CardExchangeOnGoing()
-                null -> LoadingSpinner()
+                else -> LoadingSpinner()
             }
         }
-    }
 
-    if (showGameOver) {
-        GameOverDialog(onGameOverAcknowledge = onGameOverAcknowledge)
-    } else {
-        ConnectionGuestScreen(
-            state = connectionStatus,
-            onReconnectClick = onReconnectClick,
-            onAbortClick = { showLeaveGameConfirmationDialog.value = true }
-        )
-    }
+        if (gameRules.value) GameRulesDialog(onOkClick = { gameRules.value = false })
 
-    if (showLeaveGameConfirmationDialog.value) {
-        ConfirmationDialog(
-            title = R.string.info_dialog_title,
-            text = R.string.guest_leaves_game_confirmation,
-            onConfirmClick = onLeaveGameConfirmClick,
-            onCancelClick = { showLeaveGameConfirmationDialog.value = false }
-        )
+        when {
+            leavingGame -> LoadingDialog(R.string.leaving_game)
+            gameOver -> GameOverDialog(onGameOverAcknowledge = onGameOverAcknowledge)
+            else -> CommunicationGuest(
+                state = connectionStatus,
+                onReconnectClick = onReconnectClick,
+                onAbortClick = { showLeaveGameConfirmationDialog.value = true }
+            )
+        }
+
+        if (showLeaveGameConfirmationDialog.value) {
+            ConfirmationDialog(
+                title = R.string.dialog_info_title,
+                text = R.string.guest_leaves_game_confirmation,
+                onConfirmClick = onLeaveGameConfirmClick,
+                onClosing = { showLeaveGameConfirmationDialog.value = false }
+            )
+        }
     }
 }

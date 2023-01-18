@@ -13,7 +13,9 @@ class WaitingRoomHostScreenTest : BaseUiUnitTest() {
 
     private lateinit var players: List<PlayerWrUi>
     private var launchGameEnabled = false
+    private var showAddComputerPlayer = true
     private lateinit var connectionState: HostCommunicationState
+    private val gameQrCode = buildSampleQrCode()
 
     @Before
     fun setup() {
@@ -22,15 +24,18 @@ class WaitingRoomHostScreenTest : BaseUiUnitTest() {
             PlayerWrUi(11L, name = "Legolas", connected = true, ready = false, kickable = true),
             PlayerWrUi(12L, name = "Gimli", connected = false, ready = false, kickable = true)
         )
-        connectionState = HostCommunicationState.Open
+        connectionState = HostCommunicationState.Online
     }
 
     @Test
     fun launchGameControlIsEnabled() {
+        // Given
         launchGameEnabled = true
 
+        // When
         launchTest()
 
+        // Then
         composeTestRule.onNodeWithText(getString(R.string.launch_game))
             .assertIsEnabled()
             .assertIsDisplayed()
@@ -40,10 +45,13 @@ class WaitingRoomHostScreenTest : BaseUiUnitTest() {
 
     @Test
     fun launchGameControlIsDisabled() {
+        // Given
         launchGameEnabled = false
 
+        // When
         launchTest()
 
+        // Then
         composeTestRule.onNodeWithText(getString(R.string.launch_game))
             .assertIsNotEnabled()
             .assertIsDisplayed()
@@ -51,14 +59,44 @@ class WaitingRoomHostScreenTest : BaseUiUnitTest() {
         composeTestRule.onNodeWithTag(UiTags.toolbarNavigationIcon).assertIsDisplayed()
     }
 
+    @Test
+    fun addComputerPlayerIsDisplayed() {
+        // Given
+        showAddComputerPlayer = true
+
+        // When
+        launchTest()
+
+        // Then
+        composeTestRule.onNodeWithTag(UiTags.addComputerPlayer)
+            .assertExists()
+            .assertIsEnabled()
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun addComputerPlayerIsNotDisplayed() {
+        // Given
+        showAddComputerPlayer = false
+
+        // When
+        launchTest()
+
+        // Then
+        composeTestRule.onNodeWithTag(UiTags.addComputerPlayer).assertDoesNotExist()
+    }
+
     private fun launchTest() {
         launchTestWithContent {
             WaitingRoomHostBody(
                 toolbarTitle = "Dwiitch",
-                showAddComputerPlayer = true,
-                players,
-                launchGameEnabled,
-                connectionState,
+                showAddComputerPlayer = showAddComputerPlayer,
+                players = players,
+                gameQrCode = gameQrCode,
+                launchGameEnabled = launchGameEnabled,
+                connectionStatus = connectionState,
+                cancelingGame = false,
+                launchingGame = false,
                 onAddComputerPlayer = {},
                 onLaunchGameClick = {},
                 onCancelGameClick = {},

@@ -8,6 +8,7 @@ import ch.qscqlmpa.dwitchcommunication.gamediscovery.lan.network.NetworkAdapter
 import ch.qscqlmpa.dwitchcommunication.gamediscovery.lan.network.Packet
 import ch.qscqlmpa.dwitchcommunication.gamediscovery.lan.network.udp.SocketClosedException
 import io.reactivex.rxjava3.core.Observable
+import kotlinx.serialization.SerializationException
 import org.joda.time.LocalDateTime
 import org.tinylog.kotlin.Logger
 import java.net.SocketException
@@ -44,6 +45,15 @@ internal class LanGameDiscovery @Inject constructor(
                     isListening = false
                 }
             }
+        }
+    }
+
+    override fun deserializeGameAdvertisingInfo(str: String): GameAdvertisingInfo? {
+        return try {
+            serializerFactory.unserializeGameInfo(str)
+        } catch (e: SerializationException) {
+            Logger.error(e) { "String provided can't be deserialized: $str" }
+            null
         }
     }
 

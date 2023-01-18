@@ -36,10 +36,6 @@ data class GameAdvertisingInfo(
      */
     @Serializable(with = LocalDateTimeSerializer::class) val discoveryTime: LocalDateTime = LocalDateTime.now()
 ) : Parcelable {
-    fun discoveryTimeAsString(): String {
-        return discoveryTime.toString("dd.MM.yyyy HH:mm:ss")
-    }
-
     constructor(gameInfo: GameInfo, ipAddress: String) : this(
         isNew = gameInfo.isNew,
         gameName = gameInfo.gameName,

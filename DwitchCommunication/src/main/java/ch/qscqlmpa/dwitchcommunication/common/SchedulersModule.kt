@@ -3,16 +3,14 @@ package ch.qscqlmpa.dwitchcommunication.common
 import ch.qscqlmpa.dwitchcommonutil.scheduler.DefaultSchedulerFactory
 import ch.qscqlmpa.dwitchcommonutil.scheduler.SchedulerFactory
 import ch.qscqlmpa.dwitchcommunication.di.CommunicationScope
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 
 @Suppress("unused")
 @Module
-internal class SchedulersModule {
+internal abstract class SchedulersModule {
 
     @CommunicationScope
-    @Provides
-    fun provideSchedulerFactory(): SchedulerFactory {
-        return DefaultSchedulerFactory()
-    }
+    @Binds
+    abstract fun provideSchedulerFactory(schedulerFactory: DefaultSchedulerFactory): SchedulerFactory
 }

@@ -80,7 +80,10 @@ class WaitingRoomAsHostTest : BaseHostTest() {
         testRule.assertPlayerInWr(PlayerHostTest.Guest1.name)
         testRule.assertPlayerInWr(PlayerHostTest.Guest2.name)
 
-        testRule.onNodeWithTag("${UiTags.kickPlayer}-${PlayerHostTest.Guest1.name}").performClick()
+        testRule.onNodeWithTag("${UiTags.kickPlayer}-${PlayerHostTest.Guest1.name}")
+            .performTouchInput { swipeLeft() }
+            .assertDoesNotExist() // Required to somehow complete the swipe...
+
         waitForNextNMessageSentByHost(2) // KickPlayerMessage and WaitingRoomStateUpdatedMessage
 
         testRule.assertPlayerInWr(hostName, ready = true)

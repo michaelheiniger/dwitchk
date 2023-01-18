@@ -1,14 +1,13 @@
 package ch.qscqlmpa.dwitch.ui.ingame
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -25,7 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.ui.ResourceMapper
-import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
+import ch.qscqlmpa.dwitch.ui.base.PreviewContainer
 import ch.qscqlmpa.dwitch.ui.common.InfoDialog
 import ch.qscqlmpa.dwitch.ui.common.UiTags
 import ch.qscqlmpa.dwitch.ui.ingame.gameroom.CardInfo
@@ -34,7 +33,7 @@ import ch.qscqlmpa.dwitchengine.model.card.Card
 @Composable
 fun GameOverDialog(onGameOverAcknowledge: () -> Unit) {
     InfoDialog(
-        title = R.string.info_dialog_title,
+        title = R.string.dialog_info_title,
         text = R.string.game_over,
         onOkClick = onGameOverAcknowledge
     )
@@ -54,14 +53,13 @@ fun LoadingSpinner() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PlayerHand(
     cardsInHand: List<CardInfo>,
     onCardClick: (Card) -> Unit
 ) {
     LazyVerticalGrid(
-        cells = GridCells.Fixed(4),
+        columns = GridCells.Fixed(4),
         modifier = Modifier
             .fillMaxWidth()
             .animateContentSize()
@@ -71,14 +69,14 @@ fun PlayerHand(
     }
 }
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
 private fun CardItemDisplayPreview() {
-    ActivityScreenContainer {
-        CardItemDisplay(cardItem = CardInfo(Card.Hearts10, selectable = true, selected = true), onCardClick = {})
+    PreviewContainer {
+        CardItemDisplay(
+            cardItem = CardInfo(Card.Hearts10, selectable = true, selected = true),
+            onCardClick = {}
+        )
     }
 }
 

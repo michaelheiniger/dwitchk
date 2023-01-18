@@ -104,7 +104,8 @@ internal class ComputerPlayerEngineTest : EngineTestBase() {
 
     private fun launchTest(): List<ComputerPlayerActionResult> {
         val gameState = gameStateBuilder.build()
-        computerPlayerEngine = ComputerPlayerEngineImpl(DwitchEngineImpl(gameState), computerPlayersId)
+        computerPlayerEngine =
+            ComputerPlayerEngineImpl(DwitchEngineImpl(gameState), computerPlayersId, ComputerReflexionTime.ZERO)
         return computerPlayerEngine.handleComputerPlayerAction()
     }
 }

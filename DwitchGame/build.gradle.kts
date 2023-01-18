@@ -22,7 +22,10 @@ android {
     buildTypes {
         named("release") {
             isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -36,28 +39,26 @@ android {
     sourceSets {
         getByName("main").java.srcDirs("src/main/java")
         getByName("test").java.srcDirs("src/test/java", "src/testShared")
-        getByName("androidTest").java.srcDirs("src/androidTest/java", "src/testShared")
+//        getByName("androidTest").java.srcDirs("src/androidTest/java", "src/testShared")
     }
 }
 
 dependencies {
-    implementation(project(path = ":DwitchEngine"))
-    implementation(project(path = ":DwitchModel"))
-    implementation(project(path = ":DwitchStore"))
-    implementation(project(path = ":DwitchCommunication"))
-    implementation(project(path = ":DwitchCommon"))
+    api(project(path = ":DwitchEngine"))
+    api(project(path = ":DwitchModel"))
+    api(project(path = ":DwitchStore"))
+    api(project(path = ":DwitchCommunication"))
+    api(project(path = ":DwitchCommon"))
 
     // Dagger
-    val daggerVersion = "2.38.1"
-    implementation("com.google.dagger:dagger:$daggerVersion")
-    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
-    kaptAndroidTest("com.google.dagger:dagger-compiler:$daggerVersion")
+    api("com.google.dagger:dagger:2.44.2")
+    kapt("com.google.dagger:dagger-compiler:2.44.2")
+    kaptAndroidTest("com.google.dagger:dagger-compiler:2.44.2")
 
     // Logging
-    implementation("org.tinylog:tinylog-api-kotlin:2.4.0-M1")
+    implementation("org.tinylog:tinylog-api-kotlin:2.4.1")
 
     // RxJava
-    implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
     implementation("com.jakewharton.rxrelay3:rxrelay:3.0.1")
 
     // Joda time
@@ -71,29 +72,25 @@ dependencies {
     implementation("com.sksamuel.hoplite:hoplite-yaml:1.4.7")
 
     // JUnit5
-    val jUnit5Version = "5.7.1"
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$jUnit5Version")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jUnit5Version")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:$jUnit5Version")
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:$jUnit5Version")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.8.2")
 
     // MockK
-    val mockkVersion = "1.12.0"
-    androidTestImplementation("io.mockk:mockk-android:$mockkVersion")
-    testImplementation("io.mockk:mockk:$mockkVersion")
+    androidTestImplementation("io.mockk:mockk-android:1.12.0")
+    testImplementation("io.mockk:mockk:1.12.1")
 
     // AssertJ
-    val assertJVersion = "3.20.2"
-    testImplementation("org.assertj:assertj-core:$assertJVersion")
-    androidTestImplementation("org.assertj:assertj-core:$assertJVersion")
+    testImplementation("org.assertj:assertj-core:3.21.0")
+    androidTestImplementation("org.assertj:assertj-core:3.21.0")
 
     // AndroidJUnitRunner and JUnit Rules
-    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.3")
-    androidTestImplementation("androidx.test:core-ktx:1.4.0")
-    androidTestImplementation("androidx.test:core:1.4.0")
-    androidTestImplementation("androidx.test:rules:1.4.0")
-    androidTestImplementation("androidx.test:runner:1.4.0")
-    androidTestUtil("androidx.test:orchestrator:1.4.0")
+    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.4")
+    androidTestImplementation("androidx.test:core-ktx:1.5.0")
+    androidTestImplementation("androidx.test:core:1.5.0")
+    androidTestImplementation("androidx.test:rules:1.5.0")
+    androidTestImplementation("androidx.test:runner:1.5.1")
+    androidTestUtil("androidx.test:orchestrator:1.4.2")
     testImplementation("android.arch.core:core-testing:1.1.1")
 }
 

@@ -7,12 +7,14 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import ch.qscqlmpa.dwitch.HomeActivity
+import ch.qscqlmpa.dwitch.MainActivity
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.AppEvent
 import ch.qscqlmpa.dwitch.app.TestApp
 import ch.qscqlmpa.dwitch.e2e.DisableAnimationsRule
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectionState
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.TestDeviceConnectivityRepository
 import ch.qscqlmpa.dwitchcommunication.di.TestCommunicationComponent
 import ch.qscqlmpa.dwitchcommunication.di.TestInGameGuestCommunicationComponent
 import ch.qscqlmpa.dwitchcommunication.di.TestInGameHostCommunicationComponent
@@ -47,7 +49,7 @@ import java.util.concurrent.TimeUnit
 abstract class BaseE2eTest {
 
     @get:Rule
-    val testRule = createAndroidComposeRule<HomeActivity>()
+    val testRule = createAndroidComposeRule<MainActivity>()
 
     @get:Rule
     val animationsRule = DisableAnimationsRule()
@@ -68,7 +70,8 @@ abstract class BaseE2eTest {
     private lateinit var communicationHostComponent: TestInGameHostCommunicationComponent
     private lateinit var communicationGuestComponent: TestInGameGuestCommunicationComponent
 
-    protected lateinit var networkAdapter: TestNetworkAdapter
+    private lateinit var deviceConnectivityRepository: TestDeviceConnectivityRepository
+    private lateinit var networkAdapter: TestNetworkAdapter
 
     private lateinit var store: Store
     protected lateinit var inGameStore: InGameStore
@@ -89,11 +92,13 @@ abstract class BaseE2eTest {
         gameIdlingResource = IdlingResourceAdapter(app.gameIdlingResource)
         testRule.registerIdlingResource(gameIdlingResource)
 
-        communicationComponent = app.testCommunicationComponent
-        storeComponent = app.testStoreComponent
+        communicationComponent = app.communicationComponent as TestCommunicationComponent
+        storeComponent = app.storeComponent as TestStoreComponent
         gameComponent = app.testGameComponent
         store = storeComponent.store
+        deviceConnectivityRepository = communicationComponent.deviceConnectivityRepository as TestDeviceConnectivityRepository
         networkAdapter = communicationComponent.networkListener as TestNetworkAdapter
+        setCurrentDeviceConnectionState(DeviceConnectionState.ConnectedToWlan("192.168.1.2"))
     }
 
     @After
@@ -106,6 +111,11 @@ abstract class BaseE2eTest {
         testRule.onNodeWithText(getString(R.string.create_new_game)).assertExists()
     }
 
+    private fun setCurrentDeviceConnectionState(state: DeviceConnectionState) {
+        deviceConnectivityRepository.publishNewState(state)
+    }
+
+    @SuppressWarnings("LongParameterList")
     protected fun advertiseGame(
         isNew: Boolean,
         gameName: String,
@@ -156,8 +166,8 @@ abstract class BaseE2eTest {
         app.appEventRepository.observeEvents().filter { event -> event is AppEvent.ServiceStarted }.blockingFirst()
     }
 
-    protected fun hookOngoingGameDependenciesForHost() {
-        hookOngoingGameDependenciesCommon()
+    protected fun hookInGameDependenciesForHost() {
+        hookInGameDependenciesCommon()
         communicationHostComponent = app.inGameHostCommunicationComponent as TestInGameHostCommunicationComponent
         inGameHostComponent = app.inGameHostComponent as TestInGameHostComponent
         inGameComponent = inGameHostComponent
@@ -165,8 +175,8 @@ abstract class BaseE2eTest {
         serverTestStub = communicationHostComponent.serverTestStub
     }
 
-    protected fun hookOngoingGameDependenciesForGuest() {
-        hookOngoingGameDependenciesCommon()
+    protected fun hookInGameDependenciesForGuest() {
+        hookInGameDependenciesCommon()
         communicationGuestComponent = app.inGameGuestCommunicationComponent as TestInGameGuestCommunicationComponent
         inGameGuestComponent = app.inGameGuestComponent as TestInGameGuestComponent
         inGameComponent = inGameGuestComponent
@@ -174,7 +184,7 @@ abstract class BaseE2eTest {
         clientTestStub = communicationGuestComponent.clientTestStub.get()
     }
 
-    private fun hookOngoingGameDependenciesCommon() {
+    private fun hookInGameDependenciesCommon() {
         inGameStore = app.inGameStoreComponent!!.inGameStore
     }
 }

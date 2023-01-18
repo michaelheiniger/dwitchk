@@ -16,6 +16,11 @@ class HostInGameService : BaseInGameService() {
 
     override val playerRole = PlayerRole.HOST
 
+    override fun onCreate() {
+        app.inject(this)
+        super.onCreate()
+    }
+
     override fun actionStartService(intent: Intent) {
         val gameCreatedInfo = intent.getParcelableExtra<GameCreatedInfo>(EXTRA_GAME_CREATED_INFO)!!
 
@@ -25,8 +30,7 @@ class HostInGameService : BaseInGameService() {
             gameCreatedInfo.gameLocalId,
             gameCreatedInfo.localPlayerLocalId
         )
-        app.hostCommunicationFacade.startServer()
-        advertiseGame()
+        app.hostCommunicationFacade!!.startServer()
         advertiseGame()
 
         Logger.info { "Service started" }
@@ -35,11 +39,15 @@ class HostInGameService : BaseInGameService() {
 
     override fun actionChangeRoomToGameRoom() {
         Logger.info { "Go to game room" }
+        gameAdvertisingDisposable.disposeAndReset()
+        // Now that the game has started, it is advertised as an existing game.
+        // This is needed for players to rejoin the game.
+        advertiseGame()
         showNotification(RoomType.GAME_ROOM)
     }
 
     override fun cleanUp() {
-        app.hostCommunicationFacade.stopServer()
+        app.hostCommunicationFacade?.stopServer()
         app.destroyInGameComponents()
         gameAdvertisingDisposable.dispose()
         app.gameLifecycleFacade.cleanUpGameResources().blockingSubscribe()

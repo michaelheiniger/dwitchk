@@ -3,8 +3,10 @@ package ch.qscqlmpa.dwitch.ui.ingame.waitingroom.host
 import android.graphics.Bitmap
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -18,29 +20,24 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
+import ch.qscqlmpa.dwitch.ui.base.PreviewContainer
 import ch.qscqlmpa.dwitch.ui.common.*
 import ch.qscqlmpa.dwitch.ui.ingame.connection.host.ConnectionHostViewModel
-import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.WaitingRoomPlayersScreen
+import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.WaitingRoomPlayers
 import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.WaitingRoomViewModel
-import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.PlayerWrUi
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
-private fun WaitingRoomHostScreenPreview() {
+private fun WaitingRoomHostBodyPreview() {
 
     val qrCode = buildSampleQrCode()
 
-    ActivityScreenContainer {
+    PreviewContainer {
         WaitingRoomHostBody(
             toolbarTitle = "Dwiiitch",
             showAddComputerPlayer = true,
@@ -51,7 +48,9 @@ private fun WaitingRoomHostScreenPreview() {
             ),
             gameQrCode = qrCode,
             launchGameEnabled = false,
-            connectionStatus = HostCommunicationState.Error,
+            connectionStatus = HostCommunicationState.OfflineFailed(connectedToWlan = true),
+            launchingGame = false,
+            cancelingGame = false,
             onLaunchGameClick = {},
             onCancelGameClick = {},
             onReconnectClick = {}
@@ -60,46 +59,37 @@ private fun WaitingRoomHostScreenPreview() {
 }
 
 @Composable
-fun WaitingRoomHostScreen(vmFactory: ViewModelFactory) {
-    val viewModel = viewModel<WaitingRoomViewModel>(factory = vmFactory)
-    val hostViewModel = viewModel<WaitingRoomHostViewModel>(factory = vmFactory)
-    val connectionViewModel = viewModel<ConnectionHostViewModel>(factory = vmFactory)
-
-    DisposableEffect(viewModel, hostViewModel, connectionViewModel) {
-        viewModel.onStart()
+fun WaitingRoomHostBody(
+    waitingRoomViewModel: WaitingRoomViewModel,
+    hostViewModel: WaitingRoomHostViewModel,
+    connectionViewModel: ConnectionHostViewModel
+) {
+    DisposableEffect(waitingRoomViewModel, hostViewModel, connectionViewModel) {
+        waitingRoomViewModel.onStart()
         hostViewModel.onStart()
         connectionViewModel.onStart()
         onDispose {
-            viewModel.onStop()
+            waitingRoomViewModel.onStop()
             hostViewModel.onStop()
             connectionViewModel.onStop()
         }
     }
 
-    val showConfirmationDialog = remember { mutableStateOf(false) }
-
     WaitingRoomHostBody(
-        toolbarTitle = viewModel.toolbarTitle.value,
-        showAddComputerPlayer = viewModel.canComputerPlayersBeAdded.value,
-        players = viewModel.players.value,
+        toolbarTitle = waitingRoomViewModel.toolbarTitle.value,
+        showAddComputerPlayer = waitingRoomViewModel.canComputerPlayersBeAdded.value,
+        players = waitingRoomViewModel.players.value,
         gameQrCode = hostViewModel.gameQrCode.value,
         launchGameEnabled = hostViewModel.canGameBeLaunched.value,
         connectionStatus = connectionViewModel.connectionStatus.value,
+        launchingGame = hostViewModel.launchingGame.value,
+        cancelingGame = hostViewModel.cancelingGame.value,
         onLaunchGameClick = hostViewModel::launchGame,
-        onCancelGameClick = { showConfirmationDialog.value = true },
+        onCancelGameClick = hostViewModel::cancelGame,
         onReconnectClick = connectionViewModel::reconnect,
         onAddComputerPlayer = hostViewModel::addComputerPlayer,
         onKickPlayer = hostViewModel::kickPlayer
     )
-    if (showConfirmationDialog.value) {
-        ConfirmationDialog(
-            title = R.string.info_dialog_title,
-            text = R.string.host_cancel_game_confirmation,
-            onConfirmClick = { hostViewModel.cancelGame() },
-            onCancelClick = { showConfirmationDialog.value = false }
-        )
-    }
-    if (hostViewModel.loading.value) LoadingDialog()
 }
 
 @Composable
@@ -109,56 +99,72 @@ fun WaitingRoomHostBody(
     players: List<PlayerWrUi>,
     gameQrCode: Bitmap?,
     launchGameEnabled: Boolean,
-    connectionStatus: HostCommunicationState?,
+    connectionStatus: HostCommunicationState,
+    launchingGame: Boolean,
+    cancelingGame: Boolean,
     onLaunchGameClick: () -> Unit,
     onCancelGameClick: () -> Unit,
     onReconnectClick: () -> Unit,
     onAddComputerPlayer: () -> Unit = {},
     onKickPlayer: (PlayerWrUi) -> Unit = {}
 ) {
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .animateContentSize()
-    ) {
-        DwitchTopBar(
-            title = toolbarTitle,
-            navigationIcon = NavigationIcon(R.drawable.ic_baseline_exit_to_app_24, R.string.cancel_game, onCancelGameClick),
-            actions = emptyList(),
-            onActionClick = {}
-        )
+    val showCancelGameConfirmationDialog = remember { mutableStateOf(false) }
+    Scaffold(
+        topBar = {
+            DwitchTopBar(
+                title = toolbarTitle,
+                navigationIcon = NavigationIcon(
+                    icon = R.drawable.ic_baseline_exit_to_app_24,
+                    contentDescription = R.string.cancel_game,
+                    onClick = { showCancelGameConfirmationDialog.value = true }
+                )
+            )
+        }
+    ) { innerPadding ->
         Column(
             Modifier
                 .fillMaxWidth()
                 .animateContentSize()
-                .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
+                .padding(innerPadding)
         ) {
-            WaitingRoomPlayersScreen(
-                players = players,
-                showAddComputerPlayer = showAddComputerPlayer,
-                onAddComputerPlayer = onAddComputerPlayer,
-                onKickPlayer = onKickPlayer
-            )
-            Spacer(Modifier.height(16.dp))
-            HostControlScreen(
-                launchGameEnabled = launchGameEnabled,
-                onLaunchGameClick = onLaunchGameClick
-            )
-            if (gameQrCode != null) {
-                Text(
-                    text = stringResource(R.string.game_ad_qr_code_hint),
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
-                Image(
-                    bitmap = gameQrCode.asImageBitmap(),
-                    contentDescription = "Game advertisement QR Code",
-                    modifier = Modifier.align(Alignment.CenterHorizontally).size(100.dp)
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .wrapContentHeight(Alignment.Top)) {
+                WaitingRoomPlayers(
+                    players = players,
+                    showAddComputerPlayer = showAddComputerPlayer,
+                    onAddComputerPlayer = onAddComputerPlayer,
+                    onKickPlayer = onKickPlayer
                 )
             }
-
             Spacer(Modifier.height(16.dp))
-            ConnectionHostScreen(
-                status = connectionStatus,
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .wrapContentHeight(Alignment.Top)) {
+                HostControls(
+                    launchGameEnabled = launchGameEnabled,
+                    onLaunchGameClick = onLaunchGameClick,
+                )
+                GameQrCode(gameQrCode)
+            }
+        }
+        when {
+            launchingGame -> LoadingDialog(R.string.launching_game)
+            cancelingGame -> LoadingDialog(R.string.canceling_game)
+            showCancelGameConfirmationDialog.value -> {
+                ConfirmationDialog(
+                    title = R.string.dialog_info_title,
+                    text = R.string.host_cancel_game_confirmation,
+                    onConfirmClick = onCancelGameClick,
+                    onClosing = { showCancelGameConfirmationDialog.value = false }
+                )
+            }
+            else -> CommunicationHost(
+                state = connectionStatus,
                 onReconnectClick = onReconnectClick,
                 onAbortClick = onCancelGameClick
             )
@@ -167,7 +173,7 @@ fun WaitingRoomHostBody(
 }
 
 @Composable
-private fun HostControlScreen(
+private fun HostControls(
     launchGameEnabled: Boolean,
     onLaunchGameClick: () -> Unit
 ) {
@@ -184,15 +190,48 @@ private fun HostControlScreen(
     }
 }
 
-private fun buildSampleQrCode(): Bitmap? {
+@Composable
+private fun GameQrCode(gameQrCode: Bitmap?) {
+    val showQrCodeInModal = remember { mutableStateOf(false) }
+    if (gameQrCode != null) {
+        Column(Modifier.fillMaxWidth()) {
+            Spacer(Modifier.height(16.dp))
+            Text(
+                text = stringResource(R.string.game_ad_qr_code_hint),
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+            Image(
+                bitmap = gameQrCode.asImageBitmap(),
+                contentDescription = stringResource(R.string.game_ad_qr_code_cd),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
+                    .clickable { showQrCodeInModal.value = true }
+            )
+        }
+        if (showQrCodeInModal.value) {
+            InfoDialog(
+                text = R.string.game_ad_qr_code_hint,
+                content = {
+                    Image(
+                        bitmap = gameQrCode.asImageBitmap(),
+                        contentDescription = "Game advertisement QR Code",
+                        modifier = Modifier.size(300.dp)
+                    )
+                },
+                onCloseClick = { showQrCodeInModal.value = false }
+            )
+        }
+    }
+}
+
+fun buildSampleQrCode(): Bitmap? {
     val content = "https://www.github.com/michaelheiniger/dwitchk"
     val writer = QRCodeWriter()
     val bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512)
-    val width = bitMatrix.width
-    val height = bitMatrix.height
-    val qrCode = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
-    for (x in 0 until width) {
-        for (y in 0 until height) {
+    val qrCode = Bitmap.createBitmap(bitMatrix.width, bitMatrix.height, Bitmap.Config.RGB_565)
+    for (x in 0 until bitMatrix.width) {
+        for (y in 0 until bitMatrix.height) {
             qrCode.setPixel(x, y, if (bitMatrix.get(x, y)) android.graphics.Color.BLACK else android.graphics.Color.WHITE)
         }
     }

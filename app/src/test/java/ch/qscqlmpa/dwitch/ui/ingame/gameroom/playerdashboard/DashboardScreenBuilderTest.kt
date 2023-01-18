@@ -9,6 +9,7 @@ import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerStatus
 import ch.qscqlmpa.dwitchengine.model.player.DwitchRank
 import ch.qscqlmpa.dwitchgame.ingame.gameroom.GameDashboardInfo
 import ch.qscqlmpa.dwitchgame.ingame.gameroom.LocalPlayerDashboard
+import ch.qscqlmpa.dwitchgame.ingame.gameroom.PlayerAction
 import ch.qscqlmpa.dwitchgame.ingame.gameroom.PlayerInfo
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -35,6 +36,12 @@ internal class DashboardScreenBuilderTest {
             ),
             canPass = true
         ),
+        lastPlayerAction = PlayerAction.PlayCards(
+            playerName = "Haldir",
+            playedCards = PlayedCards(Card.Clubs4),
+            clearsTable = false,
+            dwitchedPlayedName = null
+        ),
         lastCardPlayed = PlayedCards(Card.Clubs4),
         waitingForPlayerReconnection = false
     )
@@ -49,8 +56,9 @@ internal class DashboardScreenBuilderTest {
         // Given initial game dashboard info
         // Then the screen is properly built
         val dashboardInfo = dashboardScreenBuilder.screen.dashboardInfo
-        assertThat(dashboardInfo.lastCardPlayed).isEqualTo(PlayedCards(Card.Clubs4))
-        assertThat(dashboardInfo.waitingForPlayerReconnection).isFalse
+        assertThat(dashboardInfo.lastPlayerAction).isEqualTo(gameDashboardInfo.lastPlayerAction)
+        assertThat(dashboardInfo.lastCardOnTable).isEqualTo(gameDashboardInfo.lastCardPlayed)
+        assertThat(dashboardInfo.waitingForPlayerReconnection).isEqualTo(gameDashboardInfo.waitingForPlayerReconnection)
         assertThat(dashboardInfo.localPlayerInfo.canPlay).isFalse
         assertThat(dashboardInfo.localPlayerInfo.canPass).isTrue
         assertThat(dashboardInfo.localPlayerInfo.cardsInHand).containsExactlyInAnyOrder(

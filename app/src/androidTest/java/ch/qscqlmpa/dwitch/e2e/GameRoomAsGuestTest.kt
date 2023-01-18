@@ -25,6 +25,7 @@ import ch.qscqlmpa.dwitchengine.DwitchEngine.Companion.createNewGame
 import ch.qscqlmpa.dwitchengine.ProdDwitchFactory
 import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealer
 import ch.qscqlmpa.dwitchengine.carddealer.deterministic.DeterministicCardDealerFactory
+import ch.qscqlmpa.dwitchengine.computerplayer.ComputerReflexionTime
 import ch.qscqlmpa.dwitchengine.initialgamesetup.deterministic.DeterministicInitialGameSetup
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
@@ -164,7 +165,7 @@ class GameRoomAsGuestTest : BaseGuestTest() {
     private fun hostPlaysCard(card: Card) {
         incrementGameIdlingResource("Host plays a card")
         val currentGameState = inGameStore.getGameState()
-        val newGameState = ProdDwitchFactory().createDwitchEngine(currentGameState).playCards(PlayedCards(card))
+        val newGameState = createDwitchEngine(currentGameState).playCards(PlayedCards(card))
         clientTestStub.serverSendsMessageToClient(MessageFactory.createGameStateUpdatedMessage(newGameState))
     }
 
@@ -201,12 +202,15 @@ class GameRoomAsGuestTest : BaseGuestTest() {
                 )
             )
         )
-        val newRoundGameState = ProdDwitchFactory().createDwitchEngine(gameState).startNewRound(cardDealerFactory)
+        val newRoundGameState = createDwitchEngine(gameState).startNewRound(cardDealerFactory)
         val message = MessageFactory.createGameStateUpdatedMessage(newRoundGameState)
         clientTestStub.serverSendsMessageToClient(message)
 
         return newRoundGameState
     }
+
+    private fun createDwitchEngine(gameState: DwitchGameState) =
+        ProdDwitchFactory(ComputerReflexionTime.ZERO).createDwitchEngine(gameState)
 
     private fun hostSendsHostAndLocalGuestState() {
         val message = Message.WaitingRoomStateUpdateMessage(

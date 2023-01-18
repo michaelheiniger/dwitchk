@@ -1,27 +1,17 @@
 package ch.qscqlmpa.dwitch.app
 
-import ch.qscqlmpa.dwitch.DaggerTestAppComponent
-import ch.qscqlmpa.dwitch.TestAppComponent
+import android.content.Context
+import android.net.ConnectivityManager
 import ch.qscqlmpa.dwitch.TestIdlingResource
-import ch.qscqlmpa.dwitch.ingame.InGameGuestUiModule
-import ch.qscqlmpa.dwitch.ingame.InGameHostUiModule
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
-import ch.qscqlmpa.dwitchcommunication.di.*
+import ch.qscqlmpa.dwitchcommunication.di.DaggerTestCommunicationComponent
+import ch.qscqlmpa.dwitchcommunication.di.DaggerTestInGameGuestCommunicationComponent
+import ch.qscqlmpa.dwitchcommunication.di.DaggerTestInGameHostCommunicationComponent
 import ch.qscqlmpa.dwitchgame.di.DaggerTestGameComponent
 import ch.qscqlmpa.dwitchgame.di.TestGameComponent
-import ch.qscqlmpa.dwitchgame.di.modules.DwitchGameModule
-import ch.qscqlmpa.dwitchgame.di.modules.GameDiscoveryModule
-import ch.qscqlmpa.dwitchgame.di.modules.StoreModule
 import ch.qscqlmpa.dwitchgame.gamelifecycle.GameLifecycleFacade
-import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameGuestModule
-import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameHostModule
 import ch.qscqlmpa.dwitchstore.DaggerTestStoreComponent
-import ch.qscqlmpa.dwitchstore.TestStoreComponent
-import ch.qscqlmpa.dwitchstore.ingamestore.InGameStoreModule
-import ch.qscqlmpa.dwitchstore.store.TestStoreModule
 import com.jakewharton.rxrelay3.BehaviorRelay
-import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
 import org.tinylog.kotlin.Logger
 
 sealed class TestAppEvent {
@@ -30,67 +20,46 @@ sealed class TestAppEvent {
 
 class TestApp : App() {
 
-    lateinit var testStoreComponent: TestStoreComponent
-    lateinit var testCommunicationComponent: TestCommunicationComponent
     lateinit var testGameComponent: TestGameComponent
-    lateinit var testAppComponent: TestAppComponent
 
     val gameIdlingResource = TestIdlingResource("gameIdlingResource")
 
     private val testAppEventRelay = BehaviorRelay.create<TestAppEvent>()
 
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+    override fun createDaggerComponents() {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        communicationComponent = DaggerTestCommunicationComponent.factory().create(connectivityManager)
 
-        testCommunicationComponent = DaggerTestCommunicationComponent.factory().create(CommunicationModule(this))
-
-        testStoreComponent = DaggerTestStoreComponent.factory().create(TestStoreModule(this))
+        storeComponent = DaggerTestStoreComponent.factory().create(this)
 
         testGameComponent = DaggerTestGameComponent.factory().create(
-            DwitchGameModule(gameIdlingResource),
-            StoreModule(testStoreComponent.store),
-            GameDiscoveryModule(testCommunicationComponent.gameDiscovery)
+            gameIdlingResource,
+            communicationComponent,
+            storeComponent
         )
 
-        testAppComponent = DaggerTestAppComponent.builder()
-            .applicationModule(ApplicationModule(this, gameIdlingResource))
-            .gameComponent(testGameComponent)
-            .build()
-        return testAppComponent
+        appComponent = DaggerAppComponent.factory().create(
+            this,
+            gameIdlingResource,
+            testGameComponent
+        )
     }
 
     override fun createInGameHostComponents(
         gameLocalId: Long,
         localPlayerLocalId: Long
     ) {
-        Logger.debug { "startOngoingGame()" }
-        inGameStoreComponent = testStoreComponent.addInGameStoreComponent(
-            InGameStoreModule(gameLocalId, localPlayerLocalId)
+        Logger.debug { "createInGameHostComponents()" }
+        inGameStoreComponent = createInGameStoreComponent(gameLocalId, localPlayerLocalId)
+
+        inGameHostCommunicationComponent = DaggerTestInGameHostCommunicationComponent.factory().create(gameIdlingResource)
+
+        inGameHostComponent = testGameComponent.getTestInGameHostComponentFactory().create(
+            inGameStoreComponent!!.inGameStore,
+            inGameHostCommunicationComponent!!.commServer,
+            inGameHostCommunicationComponent!!.connectionStore,
         )
 
-        inGameHostCommunicationComponent = DaggerTestInGameHostCommunicationComponent.factory()
-            .create(CommunicationHostModule(gameIdlingResource))
-
-        inGameHostComponent = testGameComponent.addTestInGameHostComponent(
-            InGameHostModule(
-                gameLocalId,
-                localPlayerLocalId,
-                testCommunicationComponent.gameAdvertiser,
-                inGameStoreComponent!!.inGameStore,
-                inGameHostCommunicationComponent!!.commServer,
-                inGameHostCommunicationComponent!!.connectionStore,
-            )
-        )
-        inGameHostUiComponent = testAppComponent.addInGameHostUiComponent(
-            InGameHostUiModule(
-                inGameHostComponent!!.gameFacadeToRename,
-                inGameHostComponent!!.hostCommunicationFacade,
-                inGameHostComponent!!.waitingRoomFacade,
-                inGameHostComponent!!.waitingRoomHostFacade,
-                inGameHostComponent!!.inGameHostFacade,
-                inGameHostComponent!!.playerFacade
-            )
-        )
-        inGameViewModelFactory = inGameHostUiComponent!!.viewModelFactory
         testAppEventRelay.accept(TestAppEvent.GameCreated)
     }
 
@@ -99,39 +68,22 @@ class TestApp : App() {
         localPlayerLocalId: Long,
         advertisedGame: GameAdvertisingInfo
     ) {
-        Logger.debug { "startOngoingGame()" }
-        inGameStoreComponent = testStoreComponent.addInGameStoreComponent(
-            InGameStoreModule(gameLocalId, localPlayerLocalId)
+        Logger.debug { "createInGameGuestComponents()" }
+        inGameStoreComponent = createInGameStoreComponent(gameLocalId, localPlayerLocalId)
+
+        inGameGuestCommunicationComponent = DaggerTestInGameGuestCommunicationComponent.factory().create(gameIdlingResource)
+
+        inGameGuestComponent = testGameComponent.getTestInGameGuestComponentFactory().create(
+            advertisedGame,
+            inGameStoreComponent!!.inGameStore,
+            inGameGuestCommunicationComponent!!.commClient,
+            inGameGuestCommunicationComponent!!.connectionStore
         )
 
-        inGameGuestCommunicationComponent = DaggerTestInGameGuestCommunicationComponent.factory()
-            .create(CommunicationGuestModule(gameIdlingResource))
-
-        inGameGuestComponent = testGameComponent.addTestInGameGuestComponent(
-            InGameGuestModule(
-                gameLocalId,
-                localPlayerLocalId,
-                advertisedGame,
-                inGameStoreComponent!!.inGameStore,
-                inGameGuestCommunicationComponent!!.commClient,
-                inGameGuestCommunicationComponent!!.connectionStore
-            )
-        )
-        inGameGuestUiComponent = testAppComponent.addInGameGuestUiComponent(
-            InGameGuestUiModule(
-                inGameGuestComponent!!.gameFacadeToRename,
-                inGameGuestComponent!!.guestCommunicationFacade,
-                inGameGuestComponent!!.waitingRoomFacade,
-                inGameGuestComponent!!.waitingRoomGuestFacade,
-                inGameGuestComponent!!.inGameGuestFacade,
-                inGameGuestComponent!!.playerFacade
-            )
-        )
-        inGameViewModelFactory = inGameGuestUiComponent!!.viewModelFactory
         testAppEventRelay.accept(TestAppEvent.GameCreated)
     }
 
     override val gameLifecycleFacade get(): GameLifecycleFacade = testGameComponent.gameLifecycleFacade
 
-    val appEventRepository get(): AppEventRepository = testAppComponent.appEventRepository
+    val appEventRepository get(): AppEventRepository = appComponent.appEventRepository
 }

@@ -5,7 +5,6 @@ import ch.qscqlmpa.dwitchcommunication.ingame.connectionstore.ConnectionStoreFac
 import ch.qscqlmpa.dwitchcommunication.ingame.websocket.ServerEvent
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import ch.qscqlmpa.dwitchgame.BaseUnitTest
-import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.communication.host.HostCommunicationStateRepository
 import ch.qscqlmpa.dwitchgame.ingame.usecases.ResumeComputerPlayersUsecase
 import io.mockk.confirmVerified
@@ -55,7 +54,7 @@ internal class HostListeningForConnectionsEventProcessorTest : BaseUnitTest() {
         launchTest()
 
         // Then
-        verify { mockCommunicationStateRepository.updateState(HostCommunicationState.Open) }
+        verify { mockCommunicationStateRepository.notifyEvent(ServerEvent.CommunicationEvent.ListeningForConnections) }
         confirmVerified(mockCommunicationStateRepository)
     }
 

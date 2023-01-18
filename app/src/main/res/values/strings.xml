@@ -41,7 +41,7 @@
     <string name="resumable_games">Resumable games</string>
     <string name="loading_resumable_games_failed">Having troubles while fetching existing games, yo !</string>
     <string name="advertised_games">Games</string>
-    <string name="no_game_discovered">No game discovered</string>
+    <string name="no_game_discovered_yet">No game discovered yet</string>
     <string name="resume_game">Resume game</string>
     <string name="neutral_long">Neutral</string>
     <string name="back_to_home_screen">Back to the tavern</string>
@@ -76,7 +76,7 @@
     <string name="launch_game">Go go !</string>
     <string name="loading_resumable_games">Loading resumable games</string>
     <string name="no_resumable_games">No game to resume</string>
-    <string name="info_dialog_title">Info</string>
+    <string name="dialog_info_title">Info</string>
     <string name="end_of_round_screen_title">Round is over !</string>
     <string name="player_status_done">Done</string>
     <string name="player_status_playing">Playing</string>
@@ -179,9 +179,27 @@
     </string>
     <string name="title_activity_home">Home</string>
     <string name="waiting_for_disconnected_player">Waiting for player to reconnect</string>
-    <string name="game_not_found_title">Error</string>
-    <string name="game_not_found_text">Game no longer available</string>
     <string name="dialog_error_title">Error</string>
     <string name="error_joining_game_text">Error joining game</string>
-    <string name="game_ad_qr_code_hint">Scan to join this game</string>
+    <string name="game_ad_qr_code_hint">Game advertisement QR code</string>
+    <string name="title_activity_qr_code_scanner">QrCodeScannerActivity</string>
+    <string name="join_game_with_qr_code">Join game with QR code</string>
+    <string name="error_scanning_qr_code">Error scanning QR code</string>
+    <string name="scan_qr_code_hint">Scan QR code displayed on the Host\'s screen to join the game</string>
+    <string name="camera_permission_denied">Cannot scan QR code because camera permission is denied: do you want to grant the permision ?</string>
+    <string name="qr_code_camera_permission_hint">Camera permission is required to scan QR code of a game</string>
+    <string name="qr_code_invalid">QR code contains no game info, mate, try again ?</string>
+    <string name="error_starting_camera">Error while booting up the camera</string>
+    <string name="qr_code_decoding_failed">QR code decoding failed, bro, try again ?</string>
+    <string name="not_connected_to_a_wlan">You\'re not on a WLAN, dude!</string>
+    <string name="launching_game">Launching game …</string>
+    <string name="leaving_game">Leaving game…</string>
+    <string name="canceling_game">Canceling game…</string>
+    <string name="ending_game">Ending game…</string>
+    <string name="toggle_dark_theme_cs">Toggle dark theme</string>
+    <string name="close">Close</string>
+    <string name="game_ad_qr_code_cd">Game advertisement QR code</string>
+    <string name="delete_existing_game">Delete game</string>
+    <string name="resume_game_cd">Resume game %1$s with players %2$s</string>
+    <string name="wlan_connection_required">"You must be connected to a WLAN to play the game."</string>
 </resources>

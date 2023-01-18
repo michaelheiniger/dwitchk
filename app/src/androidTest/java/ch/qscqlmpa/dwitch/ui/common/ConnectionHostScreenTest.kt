@@ -16,7 +16,7 @@ class ConnectionHostScreenTest : BaseUiUnitTest() {
 
     @Test
     fun stateIsDisconnected() {
-        state = HostCommunicationState.Closed
+        state = HostCommunicationState.OfflineDisconnected(connectedToWlan = true)
         launchTest()
 
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.not_listening_for_guests))
@@ -27,7 +27,7 @@ class ConnectionHostScreenTest : BaseUiUnitTest() {
 
     @Test
     fun stateIsOpening() {
-        state = HostCommunicationState.Opening
+        state = HostCommunicationState.Starting
         launchTest()
 
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.host_connecting))
@@ -38,7 +38,7 @@ class ConnectionHostScreenTest : BaseUiUnitTest() {
 
     @Test
     fun stateIsOpen() {
-        state = HostCommunicationState.Open
+        state = HostCommunicationState.Online
         launchTest()
 
         composeTestRule.onNodeWithText(getString(R.string.reconnect)).assertDoesNotExist()
@@ -46,7 +46,7 @@ class ConnectionHostScreenTest : BaseUiUnitTest() {
 
     @Test
     fun stateIsError() {
-        state = HostCommunicationState.Error
+        state = HostCommunicationState.OfflineFailed(connectedToWlan = true)
         launchTest()
 
         composeTestRule.assertTextIsDisplayedOnce(getString(R.string.host_connection_error))
@@ -57,7 +57,7 @@ class ConnectionHostScreenTest : BaseUiUnitTest() {
 
     private fun launchTest() {
         launchTestWithContent {
-            ConnectionHostScreen(state, onReconnectClick = {}, onAbortClick = {})
+            CommunicationHost(state, onReconnectClick = {}, onAbortClick = {})
         }
     }
 }

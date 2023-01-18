@@ -38,20 +38,18 @@ android {
 }
 
 dependencies {
-    implementation(project(path = ":DwitchCommon"))
-    implementation(project(path = ":DwitchEngine"))
-    implementation(project(path = ":DwitchModel"))
+    api(project(path = ":DwitchCommon"))
+    api(project(path = ":DwitchEngine"))
+    api(project(path = ":DwitchModel"))
 
     // Logging
-    implementation("org.tinylog:tinylog-api-kotlin:2.4.0-M1")
+    implementation("org.tinylog:tinylog-api-kotlin:2.4.1")
 
     // Dagger
-    val daggerVersion = "2.38.1"
-    implementation("com.google.dagger:dagger:$daggerVersion")
-    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
+    api("com.google.dagger:dagger:2.44.2")
+    kapt("com.google.dagger:dagger-compiler:2.44.2")
 
     // RxJava
-    implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
     implementation("com.jakewharton.rxrelay3:rxrelay:3.0.1")
 
     // Serialization
@@ -65,21 +63,18 @@ dependencies {
     implementation("com.sksamuel.hoplite:hoplite-yaml:1.4.7")
 
     // Joda time
-    implementation("joda-time:joda-time:2.10.10")
+    api("joda-time:joda-time:2.10.10")
 
     // JUnit5
-    val junitVersion = "5.7.1"
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 
     // AssertJ
-    testImplementation("org.assertj:assertj-core:3.20.2")
+    testImplementation("org.assertj:assertj-core:3.21.0")
 
     // MockK
-    val mockkVersion = "1.12.0"
-    androidTestImplementation("io.mockk:mockk-android:$mockkVersion")
-    testImplementation("io.mockk:mockk:$mockkVersion")
+    androidTestImplementation("io.mockk:mockk-android:1.12.0")
+    testImplementation("io.mockk:mockk:1.12.1")
 }
 
 java {

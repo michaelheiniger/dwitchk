@@ -44,6 +44,7 @@ class HostNewGameScreenTest : BaseUiUnitTest() {
                 playerName = playerName,
                 gameName = gameName,
                 hostGameControlEnabled = hostGameControlEnabled,
+                loading = false,
                 onPlayerNameChange = {},
                 onGameNameChange = {},
                 onCreateGameClick = {},

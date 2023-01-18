@@ -19,8 +19,8 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
 
     protected lateinit var host: Player
     protected lateinit var guest1: Player
-    protected lateinit var guest2: Player
-    protected lateinit var guest3: Player
+    private lateinit var guest2: Player
+    private lateinit var guest3: Player
 
     protected open fun goToWaitingRoom() {
         testRule.onNodeWithTag(UiTags.createGame).performClick()
@@ -31,7 +31,7 @@ abstract class BaseHostTest : BaseOnGoingGameTest() {
         testRule.onNodeWithText(getString(R.string.host_game)).performClick()
 
         testRule.waitForIdle() // Can't hook on-going game dependencies before component is created
-        hookOngoingGameDependenciesForHost()
+        hookInGameDependenciesForHost()
 
         // Assert that the host is indeed in the WaitingRoom
         testRule.assertTextIsDisplayedOnce(getString(R.string.players_in_waitingroom))

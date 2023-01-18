@@ -4,11 +4,11 @@ plugins {
     kotlin("kapt")
     id("kotlin-parcelize")
     id("kotlin-android")
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
+//    id("com.google.gms.google-services")
+//    id("com.google.firebase.crashlytics")
 }
 
-val composeVersion = "1.0.0"
+val composeVersion = "1.3.1"
 
 android {
     compileSdk = Versions.compileSdkVersion
@@ -24,14 +24,18 @@ android {
     }
 
     buildFeatures {
-        compose = true // Enables Jetpack Compose for this module
+        compose = true
+        viewBinding = true
     }
 
     buildTypes {
         named("release") {
             isMinifyEnabled = true // Enables code shrinking, obfuscation, and optimization
 
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
@@ -46,8 +50,8 @@ android {
 
     sourceSets {
         getByName("main").java.srcDirs("src/main/java")
-        getByName("test").java.srcDirs("src/test/java", "src/testShared")
-        getByName("androidTest").java.srcDirs("src/androidTest/java", "src/testShared")
+//        getByName("test").java.srcDirs("src/test/java", "src/testShared")
+//        getByName("androidTest").java.srcDirs("src/androidTest/java", "src/testShared")
     }
 
     kotlinOptions {
@@ -65,6 +69,22 @@ android {
     }
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions {
+        freeCompilerArgs = listOf(
+            "-opt-in=kotlin.RequiresOptIn",
+            "-opt-in=kotlin.ExperimentalUnsignedTypes",
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-opt-in=kotlinx.coroutines.InternalCoroutinesApi",
+            "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
+            "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+            "-opt-in=androidx.compose.material.ExperimentalMaterialApi",
+            "-opt-in=androidx.compose.runtime.ExperimentalComposeApi",
+            "-opt-in=androidx.compose.ui.ExperimentalComposeUiApi",
+        )
+    }
+}
+
 dependencies {
     // Other modules
     implementation(project(path = ":DwitchCommon"))
@@ -78,39 +98,40 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlinVersion}")
 
     // Android
-    implementation("androidx.appcompat:appcompat:1.3.1")
-    implementation("com.google.android.material:material:1.4.0")
+    implementation("androidx.appcompat:appcompat:1.5.1")
+    implementation("com.google.android.material:material:1.7.0")
+    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.datastore:datastore:1.0.0")
 
     // ####### Jetpack Compose #######
     implementation("androidx.compose.ui:ui:$composeVersion")
+
+    // Required despite what dependency-analysis (see README) is saying
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
+
+    implementation("androidx.activity:activity-compose:1.6.1")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
-    implementation("androidx.compose.material:material-icons-core:$composeVersion")
-    implementation("androidx.compose.material:material-icons-extended:$composeVersion")
-    implementation("androidx.navigation:navigation-compose:2.4.0-alpha06")
-    implementation("androidx.activity:activity-compose:1.3.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07")
+    implementation("androidx.navigation:navigation-compose:2.6.0-alpha04")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.21.0-beta")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.21.0-beta")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
     androidTestImplementation("androidx.compose.ui:ui-test:$composeVersion")
 
     // Dagger
-    val daggerVersion = "2.38.1"
-    implementation("com.google.dagger:dagger-android-support:$daggerVersion")
-    implementation("com.google.dagger:dagger-android:$daggerVersion")
-    implementation("com.google.dagger:dagger:$daggerVersion")
-    kapt("com.google.dagger:dagger-android-processor:$daggerVersion")
-    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
-    kaptAndroidTest("com.google.dagger:dagger-compiler:$daggerVersion")
+    implementation("com.google.dagger:dagger:2.44.2")
+    kapt("com.google.dagger:dagger-compiler:2.44.2")
+    kaptAndroidTest("com.google.dagger:dagger-compiler:2.44.2")
 
     // Logging
-    implementation("org.tinylog:tinylog-api-kotlin:2.2.1")
-    implementation("org.tinylog:tinylog-impl:2.2.1")
+    implementation("org.tinylog:tinylog-api-kotlin:2.4.1")
+    implementation("org.tinylog:tinylog-impl:2.4.1")
 
     // RxJava
     implementation("com.jakewharton.rxrelay3:rxrelay:3.0.1")
     implementation("io.reactivex.rxjava3:rxandroid:3.0.0")
-    implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
 
     // Joda time
     implementation("joda-time:joda-time:2.10.10")
@@ -119,34 +140,38 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
 
     // Android testing stuff
-    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.3")
-    androidTestImplementation("androidx.test:core-ktx:1.4.0")
-    androidTestImplementation("androidx.test:core:1.4.0")
-    androidTestImplementation("androidx.test:rules:1.4.0")
-    androidTestImplementation("androidx.test:runner:1.4.0")
+    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.4")
+    androidTestImplementation("androidx.test:core-ktx:1.5.0")
+    androidTestImplementation("androidx.test:core:1.5.0")
+    androidTestImplementation("androidx.test:rules:1.5.0")
+    androidTestImplementation("androidx.test:runner:1.5.1")
     androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
-    androidTestUtil("androidx.test:orchestrator:1.4.0")
+    androidTestUtil("androidx.test:orchestrator:1.4.2")
 
     // Espresso (needed for CounterIdlingResource)
-    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.4.0")
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.0")
 
     // Required to use androidx.arch.core.executor.testing.InstantTaskExecutorRule in ViewModel unit tests
     testImplementation("android.arch.core:core-testing:1.1.1")
 
     // MockK
-    testImplementation("io.mockk:mockk:1.12.0")
+    testImplementation("io.mockk:mockk:1.12.1")
 
     // AssertJ
-    testImplementation("org.assertj:assertj-core:3.20.2")
-    androidTestImplementation("org.assertj:assertj-core:3.20.2")
+    testImplementation("org.assertj:assertj-core:3.21.0")
+    androidTestImplementation("org.assertj:assertj-core:3.21.0")
 
     // Robolectric (for unit tests that log stuff)
-    testImplementation("org.robolectric:robolectric:4.5.1") // v4.6.1 produces weird error
+    testImplementation("org.robolectric:robolectric:4.9") // v4.6.1 produces weird error
 
-    implementation(platform("com.google.firebase:firebase-bom:28.4.1"))
-    implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation("com.google.firebase:firebase-crashlytics-ktx")
+//    implementation(platform("com.google.firebase:firebase-bom:28.4.1"))
+//    implementation("com.google.firebase:firebase-analytics-ktx")
+//    implementation("com.google.firebase:firebase-crashlytics-ktx")
 
     // QR code
-    implementation("com.google.zxing:core:3.4.0")
+    val cameraxVersion = "1.0.0-beta07"
+    implementation("androidx.camera:camera-camera2:$cameraxVersion") // Required despite what's dependency-analysis (README) is saying
+    implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
+    implementation("androidx.camera:camera-view:1.0.0-alpha14")
+    implementation("com.google.zxing:core:3.4.1")
 }

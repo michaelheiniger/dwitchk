@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-class WaitingRoomPlayerRepositoryTest : BaseUnitTest() {
+internal class WaitingRoomPlayerRepositoryTest : BaseUnitTest() {
 
     private val communicationStateRepository = mockk<CommunicationStateRepository>(relaxed = true)
 
@@ -37,7 +37,7 @@ class WaitingRoomPlayerRepositoryTest : BaseUnitTest() {
         fun setup() {
             every { mockInGameStore.observePlayersInWaitingRoom() } returns Observable.just(listOf(host, guest1, guest2))
             every { mockInGameStore.gameIsNew() } returns true
-            every { communicationStateRepository.connected() } returns Observable.just(true)
+            every { communicationStateRepository.connectedToGame() } returns Observable.just(true)
         }
 
         @Test
@@ -138,7 +138,7 @@ class WaitingRoomPlayerRepositoryTest : BaseUnitTest() {
         @Test
         fun `when local player is disconnected, then all players are seen as disconnected - guest`() {
             createRepository(PlayerRole.GUEST)
-            every { communicationStateRepository.connected() } returns Observable.just(false)
+            every { communicationStateRepository.connectedToGame() } returns Observable.just(false)
 
             val values = repository.observePlayers().test().values()
 
@@ -155,7 +155,7 @@ class WaitingRoomPlayerRepositoryTest : BaseUnitTest() {
         @Test
         fun `when local player is disconnected, then all players are seen as disconnected - host`() {
             createRepository(PlayerRole.HOST)
-            every { communicationStateRepository.connected() } returns Observable.just(false)
+            every { communicationStateRepository.connectedToGame() } returns Observable.just(false)
 
             val values = repository.observePlayers().test().values()
 

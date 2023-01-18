@@ -1,18 +1,22 @@
 package ch.qscqlmpa.dwitchgame.di
 
+import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
+import ch.qscqlmpa.dwitchcommunication.di.CommunicationComponent
 import ch.qscqlmpa.dwitchgame.di.modules.*
 import ch.qscqlmpa.dwitchgame.ingame.di.TestInGameGuestComponent
 import ch.qscqlmpa.dwitchgame.ingame.di.TestInGameHostComponent
-import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameGuestModule
-import ch.qscqlmpa.dwitchgame.ingame.di.modules.InGameHostModule
+import ch.qscqlmpa.dwitchstore.StoreComponent
+import dagger.BindsInstance
 import dagger.Component
 
-// TODO: Can this component be removed since there's no test-specific dependencies anymore ?
 @GameScope
 @Component(
+    dependencies = [
+        CommunicationComponent::class,
+        StoreComponent::class
+    ],
     modules = [
-        DwitchGameModule::class,
-        StoreModule::class,
+        UtilsModule::class,
         GameFacadeModule::class,
         GameLifecycleModule::class,
         GameDiscoveryModule::class,
@@ -21,15 +25,15 @@ import dagger.Component
 )
 interface TestGameComponent : GameComponent {
 
-    fun addTestInGameHostComponent(module: InGameHostModule): TestInGameHostComponent
-    fun addTestInGameGuestComponent(module: InGameGuestModule): TestInGameGuestComponent
+    fun getTestInGameHostComponentFactory(): TestInGameHostComponent.Factory
+    fun getTestInGameGuestComponentFactory(): TestInGameGuestComponent.Factory
 
     @Component.Factory
     interface Factory {
         fun create(
-            dwitchGameModule: DwitchGameModule,
-            storeModule: StoreModule,
-            gameDiscoveryModule: GameDiscoveryModule
+            @BindsInstance idlingResource: DwitchIdlingResource,
+            communicationComponent: CommunicationComponent,
+            storeComponent: StoreComponent
         ): TestGameComponent
     }
 }

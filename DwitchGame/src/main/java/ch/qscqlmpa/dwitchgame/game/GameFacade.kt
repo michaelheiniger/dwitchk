@@ -1,9 +1,11 @@
 package ch.qscqlmpa.dwitchgame.game
 
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
+import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchstore.model.ResumableGameInfo
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 
 interface GameFacade {
 
@@ -27,6 +29,11 @@ interface GameFacade {
     fun resumeGame(gameId: Long): Completable
 
     /**
+     * Delete an existing game (see [resumableGames]).
+     */
+    fun deleteExistingGame(gameLocalId: Long): Completable
+
+    /**
      * Join a new game (see [hostGame]) hosted by another player. The local player joins as a guest.
      * @param advertisedGame info of the game to join
      * @param playerName name of the local player
@@ -36,6 +43,7 @@ interface GameFacade {
     /**
      * Join an existing game (see [resumeGame]) hosted by another player. The local player joins as a guest.
      * @param advertisedGame info of the game to join
+     * @return the current room (to know where to navigate)
      */
-    fun joinResumedGame(advertisedGame: GameAdvertisingInfo): Completable
+    fun joinResumedGame(advertisedGame: GameAdvertisingInfo): Single<RoomType>
 }

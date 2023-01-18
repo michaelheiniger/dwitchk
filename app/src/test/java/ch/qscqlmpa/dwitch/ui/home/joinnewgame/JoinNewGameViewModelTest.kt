@@ -3,11 +3,10 @@ package ch.qscqlmpa.dwitch.ui.home.joinnewgame
 import ch.qscqlmpa.dwitch.BuildConfig
 import ch.qscqlmpa.dwitch.app.StubIdlingResource
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.ui.Destination
-import ch.qscqlmpa.dwitch.ui.NavigationBridge
+import ch.qscqlmpa.dwitch.ui.navigation.InGameGuestDestination
+import ch.qscqlmpa.dwitch.ui.navigation.ScreenNavigator
 import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
 import ch.qscqlmpa.dwitchgame.game.GameFacade
-import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import io.mockk.every
 import io.mockk.mockk
@@ -24,8 +23,7 @@ import java.util.*
 class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
 
     private val mockGameFacade = mockk<GameFacade>(relaxed = true)
-    private val mockGameDiscoveryFacade = mockk<GameDiscoveryFacade>(relaxed = true)
-    private val mockNavigationBridge = mockk<NavigationBridge>(relaxed = true)
+    private val mockScreenNavigator = mockk<ScreenNavigator>(relaxed = true)
 
     private lateinit var viewModel: JoinNewGameViewModel
 
@@ -36,19 +34,18 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
     fun setup() {
         viewModel = JoinNewGameViewModel(
             mockGameFacade,
-            mockGameDiscoveryFacade,
-            mockNavigationBridge,
+            mockScreenNavigator,
             Schedulers.trampoline(),
             StubIdlingResource()
         )
         every { mockGameFacade.joinGame(any(), any()) } returns Completable.complete()
-        every { mockGameDiscoveryFacade.getAdvertisedGame(gameCommonId) } returns advertisedGame
     }
 
     @Test
-    fun `The game cannot be joined initially`() {
+    fun `The game cannot be joined initially -`() {
         Assume.assumeFalse("We are in debug variant", BuildConfig.DEBUG)
-        viewModel.loadGame(gameCommonId)
+        // TODO: call viewModel.start() ? --> do in all VM tests
+        viewModel.loadGame(advertisedGame)
 
         // Given initial state, then the game cannot be joined
         assertThat(viewModel.canJoinGame.value).isEqualTo(false)
@@ -78,10 +75,10 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
     }
 
     @Test
-    fun `Navigate to InGame when game is successfully joined`() {
+    fun `Navigate to WaitingRoom when game is successfully joined`() {
         // Given
         val playerName = "Arthur"
-        viewModel.loadGame(gameCommonId)
+        viewModel.loadGame(advertisedGame)
         viewModel.onPlayerNameChange(playerName)
         every { mockGameFacade.joinGame(any(), any()) } returns Completable.complete()
 
@@ -89,46 +86,15 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
         viewModel.joinGame()
 
         // Then
-        verify { mockNavigationBridge.navigate(Destination.HomeScreens.InGame) }
+        verify { mockScreenNavigator.navigate(InGameGuestDestination.WaitingRoom, any()) }
         verify { mockGameFacade.joinGame(advertisedGame, playerName) }
-    }
-
-    @Test
-    fun `Display notification when game cannot be found (eg advertising has stopped) `() {
-        // Given
-        viewModel.onPlayerNameChange("Arthur")
-        every { mockGameDiscoveryFacade.getAdvertisedGame(gameCommonId) } returns null
-
-        // When
-        viewModel.loadGame(gameCommonId)
-
-        // Then
-        assertThat(viewModel.notification.value).isEqualTo(JoinNewGameNotification.GameNotFound)
-        verify { mockGameDiscoveryFacade.getAdvertisedGame(any()) }
-    }
-
-    @Test
-    fun `Navigate to the HomeScreen when game not found notification is acknowledged`() {
-        // Given
-        val playerName = "Arthur"
-        viewModel.loadGame(gameCommonId)
-        viewModel.onPlayerNameChange(playerName)
-        every { mockGameDiscoveryFacade.getAdvertisedGame(gameCommonId) } returns null
-        viewModel.joinGame()
-
-        // When
-        viewModel.onGameNotFoundAcknowledge()
-
-        // Then
-        verify { mockNavigationBridge.navigate(Destination.HomeScreens.Home) }
-        verify { mockGameDiscoveryFacade.getAdvertisedGame(any()) }
     }
 
     @Suppress("SwallowedException")
     @Test
     fun `An error is thrown if the player name is not set when joining the game`() {
         // Given
-        viewModel.loadGame(gameCommonId)
+        viewModel.loadGame(advertisedGame)
         viewModel.onPlayerNameChange("")
         every { mockGameFacade.joinGame(any(), any()) } returns Completable.complete()
 
@@ -142,7 +108,6 @@ class JoinNewGameViewModelTest : BaseViewModelUnitTest() {
         }
 
         // Then
-        verify(exactly = 0) { mockNavigationBridge.navigate(any()) }
-        verify { mockGameDiscoveryFacade.getAdvertisedGame(any()) }
+        verify(exactly = 0) { mockScreenNavigator.navigate(any()) }
     }
 }

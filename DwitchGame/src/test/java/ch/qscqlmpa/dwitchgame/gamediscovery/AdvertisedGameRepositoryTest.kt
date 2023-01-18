@@ -11,7 +11,6 @@ import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.rxjava3.schedulers.TestScheduler
 import io.reactivex.rxjava3.subjects.PublishSubject
-import org.assertj.core.api.Assertions.assertThat
 import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
 import org.junit.jupiter.api.BeforeEach
@@ -85,27 +84,6 @@ internal class AdvertisedGameRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `advertised games can be queried by their IP address`() {
-        // Given
-        repository.startListeningForAdvertisedGames()
-
-        setCurrentTime(10, 0, 1)
-        timeScheduler.advanceTimeTo(0, TimeUnit.SECONDS)
-
-        assertThat(repository.getGame(advertisedNewGame1.gameCommonId)).isNull()
-        assertThat(repository.getGame(advertisedExistingGame1.gameCommonId)).isNull()
-
-        // When
-        resumableGamesSubject.onNext(listOf(advertisedExistingGame1.gameCommonId))
-        gameDiscoveredSubject.onNext(advertisedNewGame1)
-        gameDiscoveredSubject.onNext(advertisedExistingGame1)
-
-        // Then
-        assertThat(repository.getGame(advertisedNewGame1.gameCommonId)).isNotNull
-        assertThat(repository.getGame(advertisedExistingGame1.gameCommonId)).isNotNull
-    }
-
-    @Test
     fun `start listening for advertised games fills the repository with discovered _new_ games`() {
         // Given
 
@@ -166,8 +144,6 @@ internal class AdvertisedGameRepositoryTest : BaseUnitTest() {
         testObserver.assertValueAt(0, emptyList())
         testObserver.assertValueAt(1, listOf(advertisedNewGame1))
         testObserver.assertValueAt(2, listOf(advertisedNewGame1, advertisedExistingGame1))
-        assertThat(repository.getGame(advertisedNewGame1.gameCommonId)).isEqualTo(advertisedNewGame1)
-        assertThat(repository.getGame(advertisedExistingGame1.gameCommonId)).isEqualTo(advertisedExistingGame1)
 
         // When stop listening (and time hasn't changed)
         repository.stopListeningForAdvertisedGames()
@@ -175,8 +151,6 @@ internal class AdvertisedGameRepositoryTest : BaseUnitTest() {
         // Then
         testObserver.assertValueAt(3, emptyList())
         testObserver.assertValueCount(4)
-        assertThat(repository.getGame(advertisedNewGame1.gameCommonId)).isNull()
-        assertThat(repository.getGame(advertisedExistingGame1.gameCommonId)).isNull()
     }
 
     @Test

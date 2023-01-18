@@ -13,6 +13,11 @@ class GuestInGameService : BaseInGameService() {
 
     override val playerRole = PlayerRole.GUEST
 
+    override fun onCreate() {
+        app.inject(this)
+        super.onCreate()
+    }
+
     override fun actionStartService(intent: Intent) {
 
         val gameJoinedInfo = intent.getParcelableExtra<GameJoinedInfo>(EXTRA_GAME_JOINED_INFO)!!
@@ -25,7 +30,7 @@ class GuestInGameService : BaseInGameService() {
             gameJoinedInfo.advertisedGame
         )
         idlingResource.decrement("Dagger InGame component created")
-        app.guestCommunicationFacade.connect()
+        app.guestCommunicationFacade!!.connect()
         Logger.info { "Service started" }
         notifyServiceStarted()
     }
@@ -36,7 +41,7 @@ class GuestInGameService : BaseInGameService() {
     }
 
     override fun cleanUp() {
-        app.guestCommunicationFacade.disconnect()
+        app.guestCommunicationFacade?.disconnect()
         app.destroyInGameComponents()
         app.gameLifecycleFacade.cleanUpGameResources().blockingSubscribe()
     }

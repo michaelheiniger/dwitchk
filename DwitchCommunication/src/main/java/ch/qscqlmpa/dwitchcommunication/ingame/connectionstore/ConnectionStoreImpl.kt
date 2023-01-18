@@ -1,10 +1,13 @@
 package ch.qscqlmpa.dwitchcommunication.ingame.connectionstore
 
+import ch.qscqlmpa.dwitchcommunication.di.InGameCommunicationScope
 import ch.qscqlmpa.dwitchcommunication.ingame.Address
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 import java.util.concurrent.atomic.AtomicLong
+import javax.inject.Inject
 
-internal class ConnectionStoreImpl : ConnectionStore, ConnectionStoreInternal {
+@InGameCommunicationScope
+internal class ConnectionStoreImpl @Inject constructor() : ConnectionStore, ConnectionStoreInternal {
 
     private val nextLocalConnectionId = AtomicLong(ConnectionStore.computerConnectionIdRange.last + 1L)
 

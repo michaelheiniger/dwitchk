@@ -1,46 +1,43 @@
 package ch.qscqlmpa.dwitch.app
 
-import android.app.Application
-import ch.qscqlmpa.dwitch.ingame.InGameGuestUiComponent
-import ch.qscqlmpa.dwitch.ingame.InGameGuestUiModule
-import ch.qscqlmpa.dwitch.ingame.InGameHostUiComponent
-import ch.qscqlmpa.dwitch.ingame.InGameHostUiModule
-import ch.qscqlmpa.dwitch.service.AndroidServiceBindingModule
-import ch.qscqlmpa.dwitch.ui.home.HomeBindingModule
+import android.content.Context
+import ch.qscqlmpa.dwitch.MainActivityComponent
+import ch.qscqlmpa.dwitch.ingame.services.GuestInGameService
+import ch.qscqlmpa.dwitch.ingame.services.HostInGameService
+import ch.qscqlmpa.dwitch.service.AndroidServicesModule
+import ch.qscqlmpa.dwitch.ui.qrcodescanner.QrCodeScannerActivity
+import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchgame.di.GameComponent
 import dagger.BindsInstance
 import dagger.Component
-import dagger.android.AndroidInjectionModule
-import dagger.android.AndroidInjector
+import io.reactivex.rxjava3.core.Scheduler
 
 @AppScope
 @Component(
     dependencies = [GameComponent::class],
     modules = [
-        AndroidInjectionModule::class,
         ApplicationModule::class,
-        HomeBindingModule::class,
-        AndroidServiceBindingModule::class,
-        SchedulersModule::class
+        SubcomponentsModule::class,
+        AndroidServicesModule::class
     ]
 )
-interface AppComponent : AndroidInjector<App> {
+interface AppComponent {
 
     val appEventRepository: AppEventRepository
+    val uiScheduler: Scheduler
 
-    @Component.Builder
-    interface Builder {
-
-        @BindsInstance
-        fun application(application: Application): Builder
-
-        fun applicationModule(applicationModule: ApplicationModule): Builder
-
-        fun gameComponent(gameComponent: GameComponent): Builder
-
-        fun build(): AppComponent
+    @Component.Factory
+    interface Factory {
+        fun create(
+            @BindsInstance context: Context,
+            @BindsInstance idlingResource: DwitchIdlingResource,
+            gameComponent: GameComponent
+        ): AppComponent
     }
 
-    fun addInGameHostUiComponent(moduleHost: InGameHostUiModule): InGameHostUiComponent
-    fun addInGameGuestUiComponent(moduleHost: InGameGuestUiModule): InGameGuestUiComponent
+    fun mainActivityComponentFactory(): MainActivityComponent.Factory
+
+    fun inject(activity: QrCodeScannerActivity)
+    fun inject(service: HostInGameService)
+    fun inject(service: GuestInGameService)
 }

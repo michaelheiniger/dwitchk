@@ -51,7 +51,7 @@ internal class DwitchGameInfoFactoryTest {
             playersDoneForRound = mutableListOf(),
             playersWhoBrokeASpecialRule = mutableListOf(),
             joker = CardName.Two,
-            dwitchGameEvent = null,
+            lastPlayerAction = null,
             cardsOnTable = mutableListOf(),
             cardsInDeck = mutableSetOf(),
             cardsInGraveyard = mutableListOf(),

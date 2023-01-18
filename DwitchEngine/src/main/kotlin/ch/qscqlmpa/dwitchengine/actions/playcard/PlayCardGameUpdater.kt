@@ -1,8 +1,8 @@
 package ch.qscqlmpa.dwitchengine.actions.playcard
 
 import ch.qscqlmpa.dwitchengine.actions.GameUpdaterBase
-import ch.qscqlmpa.dwitchengine.model.game.DwitchGameEvent
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.game.DwitchPlayerAction
 import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.player.DwitchPlayerId
 
@@ -10,17 +10,33 @@ internal class PlayCardGameUpdater(
     currentGameState: DwitchGameState
 ) : GameUpdaterBase(currentGameState) {
 
-    fun clearTable(cardPlayed: PlayedCards) {
+    private lateinit var playedCards: PlayedCards
+    private var clearsTable: Boolean = false
+    private var dwitchedPlayerId: DwitchPlayerId? = null
+
+    fun clearTable() {
+        clearsTable = true
         gameStateMutable.moveCardsFromTableToGraveyard()
-        gameStateMutable.dwitchGameEvent = DwitchGameEvent.TableHasBeenCleared(cardPlayed)
     }
 
-    fun takeCardsFromHandAndPutOnTable(playerId: DwitchPlayerId, cardsPlayed: PlayedCards) {
-        gameStateMutable.removeCardsFromHand(playerId, cardsPlayed)
-        gameStateMutable.addCardsToTable(cardsPlayed)
+    fun takeCardsFromHandAndPutOnTable(playerId: DwitchPlayerId, playedCards: PlayedCards) {
+        gameStateMutable.removeCardsFromHand(playerId, playedCards)
+        gameStateMutable.addCardsToTable(playedCards)
+        this.playedCards = playedCards
     }
 
     fun dwitchPlayer(playerId: DwitchPlayerId) {
         gameStateMutable.dwitchPlayer(playerId)
+        dwitchedPlayerId = playerId
+    }
+
+    override fun buildUpdatedGameState(): DwitchGameState {
+        gameStateMutable.lastPlayerAction = DwitchPlayerAction.PlayCards(
+            playerId = currentPlayerId,
+            playedCards = playedCards,
+            clearsTable = clearsTable,
+            dwitchedPlayedId = dwitchedPlayerId
+        )
+        return super.buildUpdatedGameState()
     }
 }

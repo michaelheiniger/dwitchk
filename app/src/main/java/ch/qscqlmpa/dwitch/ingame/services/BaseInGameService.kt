@@ -1,12 +1,13 @@
 package ch.qscqlmpa.dwitch.ingame.services
 
 import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import ch.qscqlmpa.dwitch.BuildConfig
-import ch.qscqlmpa.dwitch.HomeActivity
+import ch.qscqlmpa.dwitch.MainActivity
 import ch.qscqlmpa.dwitch.R
 import ch.qscqlmpa.dwitch.app.App
 import ch.qscqlmpa.dwitch.app.AppEventRepository
@@ -15,11 +16,10 @@ import ch.qscqlmpa.dwitch.common.CommonExtraConstants
 import ch.qscqlmpa.dwitchcommonutil.DwitchIdlingResource
 import ch.qscqlmpa.dwitchmodel.game.RoomType
 import ch.qscqlmpa.dwitchmodel.player.PlayerRole
-import dagger.android.DaggerService
 import org.tinylog.kotlin.Logger
 import javax.inject.Inject
 
-abstract class BaseInGameService : DaggerService() {
+abstract class BaseInGameService : Service() {
 
     @Inject
     lateinit var idlingResource: DwitchIdlingResource
@@ -77,7 +77,7 @@ abstract class BaseInGameService : DaggerService() {
             .setContentTitle(getText(R.string.notification_title))
             .setContentText(getText(notificationMessage))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setColor(getColor(R.color.black))
+            .setColor(getColor(R.color.primaryColor))
 
         if (BuildConfig.DEBUG) {
             notificationBuilder.addAction(addKillServiceButtonToNotif())
@@ -87,7 +87,7 @@ abstract class BaseInGameService : DaggerService() {
     }
 
     private fun buildNotificationIntent(): Intent {
-        val notificationIntent = Intent(this, HomeActivity::class.java)
+        val notificationIntent = Intent(this, MainActivity::class.java)
         notificationIntent.putExtra(CommonExtraConstants.EXTRA_PLAYER_ROLE, playerRole.name)
         notificationIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
         return notificationIntent

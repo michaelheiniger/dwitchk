@@ -3,9 +3,9 @@ package ch.qscqlmpa.dwitchengine
 import ch.qscqlmpa.dwitchengine.model.card.Card
 import ch.qscqlmpa.dwitchengine.model.card.CardName
 import ch.qscqlmpa.dwitchengine.model.card.CardUtil
-import ch.qscqlmpa.dwitchengine.model.game.DwitchGameEvent
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGamePhase
 import ch.qscqlmpa.dwitchengine.model.game.DwitchGameState
+import ch.qscqlmpa.dwitchengine.model.game.DwitchPlayerAction
 import ch.qscqlmpa.dwitchengine.model.game.PlayedCards
 import ch.qscqlmpa.dwitchengine.model.player.*
 
@@ -16,7 +16,7 @@ class EngineTestGameStateBuilder {
     private var cardsOnTable: List<PlayedCards> = emptyList()
     private var cardsInGraveyard: List<PlayedCards> = emptyList()
 
-    private var dwitchGameEvent: DwitchGameEvent? = null
+    private var lastPlayerAction: DwitchPlayerAction? = null
     private var joker: CardName = CardName.Two
     private lateinit var gamePhase: DwitchGamePhase
     private lateinit var currentPlayer: DwitchPlayerId
@@ -45,7 +45,7 @@ class EngineTestGameStateBuilder {
             playersDoneForRound,
             emptyList(),
             joker,
-            dwitchGameEvent,
+            lastPlayerAction,
             cardsOnTable,
             CardUtil.getAllCardsExcept(cardsTakenFromDeck).toSet(),
             cardsInGraveyard
@@ -57,8 +57,8 @@ class EngineTestGameStateBuilder {
         return this
     }
 
-    fun setGameEvent(dwitchGameEvent: DwitchGameEvent): EngineTestGameStateBuilder {
-        this.dwitchGameEvent = dwitchGameEvent
+    fun setLastPlayerAction(action: DwitchPlayerAction): EngineTestGameStateBuilder {
+        this.lastPlayerAction = action
         return this
     }
 

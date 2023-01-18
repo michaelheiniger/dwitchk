@@ -28,7 +28,7 @@ internal abstract class GuestCommunicationModule {
     @InGameScope
     @Binds
     @IntoMap
-    @GuestCommunicationEventProcessorKey(ClientEvent.CommunicationEvent.ConnectedToHost::class)
+    @GuestCommunicationEventProcessorKey(ClientEvent.CommunicationEvent.ConnectedToServer::class)
     internal abstract fun bindConnectedToHostEventProcessor(
         eventProcessorGuest: GuestConnectedToHostEventProcessor
     ): GuestCommunicationEventProcessor
@@ -36,7 +36,7 @@ internal abstract class GuestCommunicationModule {
     @InGameScope
     @Binds
     @IntoMap
-    @GuestCommunicationEventProcessorKey(ClientEvent.CommunicationEvent.DisconnectedFromHost::class)
+    @GuestCommunicationEventProcessorKey(ClientEvent.CommunicationEvent.DisconnectedFromServer::class)
     internal abstract fun bindDisconnectedFromHostEventProcessor(
         eventProcessorGuest: GuestDisconnectedFromHostEventProcessor
     ): GuestCommunicationEventProcessor

@@ -6,8 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PlayedCards(val cards: List<Card>) {
-    @Suppress("SpreadOperator")
-    constructor(vararg cards: Card) : this(listOf(*cards))
+    constructor(vararg cards: Card) : this(cards.toList())
 
     val name: CardName
     val value: Int

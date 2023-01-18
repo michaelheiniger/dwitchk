@@ -1,8 +1,13 @@
 package ch.qscqlmpa.dwitchcommunication.gameadvertising
 
 import ch.qscqlmpa.dwitchcommonutil.scheduler.TestSchedulerFactory
-import ch.qscqlmpa.dwitchcommunication.*
+import ch.qscqlmpa.dwitchcommunication.BaseUnitTest
+import ch.qscqlmpa.dwitchcommunication.GameAdvertisingInfo
+import ch.qscqlmpa.dwitchcommunication.GameInfo
 import ch.qscqlmpa.dwitchcommunication.common.ApplicationConfigRepository
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectionState
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectivityRepository
+import ch.qscqlmpa.dwitchcommunication.testApplicationConfig
 import ch.qscqlmpa.dwitchmodel.game.GameCommonId
 import com.jakewharton.rxrelay3.BehaviorRelay
 import io.mockk.CapturingSlot
@@ -16,16 +21,16 @@ import org.junit.jupiter.api.Test
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class GameAdvertiserTest : BaseUnitTest() {
+internal class GameAdvertiserTest : BaseUnitTest() {
 
     private val mockApplicationConfigRepository = mockk<ApplicationConfigRepository>(relaxed = true)
-    private val mockWLanConnectionRepository = mockk<WLanConnectionRepository>(relaxed = true)
+    private val mockWLanConnectionRepository = mockk<DeviceConnectivityRepository>(relaxed = true)
     private val mockNetwork = mockk<Network>(relaxed = true)
     private lateinit var timeScheduler: TestScheduler
 
     private lateinit var gameAdvertiser: GameAdvertiser
 
-    private lateinit var wlanConnectionRepositoryRelay: BehaviorRelay<ConnectionState>
+    private lateinit var wlanConnectionRepositoryRelay: BehaviorRelay<DeviceConnectionState>
 
     private val gameCommonId = "a06ef013-5788-4fd4-adad-aa90a2da8c7c"
     private val gameInfo = GameInfo(
@@ -52,7 +57,7 @@ class GameAdvertiserTest : BaseUnitTest() {
     @Test
     fun `Advertise game immediately`() {
         // Given
-        wlanConnectionRepositoryRelay.accept(ConnectionState.OnWifi("192.168.1.2"))
+        wlanConnectionRepositoryRelay.accept(DeviceConnectionState.ConnectedToWlan("192.168.1.2"))
 
         // When
         gameAdvertiser.advertiseGame(gameInfo).test()
@@ -69,7 +74,7 @@ class GameAdvertiserTest : BaseUnitTest() {
     @Test
     fun `Advertise game every 2 seconds`() {
         // Given
-        wlanConnectionRepositoryRelay.accept(ConnectionState.OnWifi("192.168.1.2"))
+        wlanConnectionRepositoryRelay.accept(DeviceConnectionState.ConnectedToWlan("192.168.1.2"))
 
         // When
         gameAdvertiser.advertiseGame(gameInfo).test()
@@ -85,7 +90,7 @@ class GameAdvertiserTest : BaseUnitTest() {
     @Test
     fun `Advertise game until stream is disposed`() {
         // Given
-        wlanConnectionRepositoryRelay.accept(ConnectionState.OnWifi("192.168.1.2"))
+        wlanConnectionRepositoryRelay.accept(DeviceConnectionState.ConnectedToWlan("192.168.1.2"))
         val testObserver = gameAdvertiser.advertiseGame(gameInfo).test()
         timeScheduler.advanceTimeTo(4, TimeUnit.SECONDS)
         verify(exactly = 3) { mockNetwork.sendAdvertisement(any(), any()) }

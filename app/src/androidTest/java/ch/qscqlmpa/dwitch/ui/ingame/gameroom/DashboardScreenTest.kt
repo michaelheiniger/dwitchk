@@ -1,6 +1,5 @@
 package ch.qscqlmpa.dwitch.ui.ingame.gameroom
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
@@ -17,7 +16,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 
-@ExperimentalAnimationApi
 class DashboardScreenTest : BaseUiUnitTest() {
 
     private lateinit var dashboardInfo: DashboardInfo
@@ -52,7 +50,8 @@ class DashboardScreenTest : BaseUiUnitTest() {
                 canPass = false,
                 canPlay = true
             ),
-            lastCardPlayed = PlayedCards(Card.Hearts8),
+            lastPlayerAction = null,
+            lastCardOnTable = PlayedCards(Card.Hearts8),
             waitingForPlayerReconnection = false
         )
         anyCardClicked = false
@@ -208,7 +207,7 @@ class DashboardScreenTest : BaseUiUnitTest() {
 
     private fun launchTest() {
         launchTestWithContent {
-            DashboardScreen(
+            Dashboard(
                 dashboardInfo,
                 onCardClick = { anyCardClicked = true },
                 onPlayClick = { playClicked = true },

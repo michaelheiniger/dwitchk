@@ -10,7 +10,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-abstract class BaseUnitTest {
+internal abstract class BaseUnitTest {
 
     protected val mockStore = mockk<Store>(relaxed = true)
 

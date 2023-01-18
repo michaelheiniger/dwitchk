@@ -25,7 +25,7 @@ internal class UdpNetworkAdapter @Inject constructor() : NetworkAdapter {
 
         try {
             receiveSocket.receive(receivePacket) // Blocking call
-            Logger.debug { "Packet received: ${receivePacket.data}" }
+            Logger.trace { "Packet received: ${receivePacket.data}" }
         } catch (e: SocketException) {
             throw SocketClosedException()
         }

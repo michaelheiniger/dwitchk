@@ -2,10 +2,10 @@ package ch.qscqlmpa.dwitch.ui.ingame.waitingroom.guest
 
 import ch.qscqlmpa.dwitch.app.StubIdlingResource
 import ch.qscqlmpa.dwitch.ui.BaseViewModelUnitTest
-import ch.qscqlmpa.dwitch.ui.Destination
-import ch.qscqlmpa.dwitch.ui.NavigationBridge
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
-import ch.qscqlmpa.dwitchgame.gamediscovery.GameDiscoveryFacade
+import ch.qscqlmpa.dwitch.ui.navigation.HomeDestination.Home
+import ch.qscqlmpa.dwitch.ui.navigation.InGameGuestDestination
+import ch.qscqlmpa.dwitch.ui.navigation.ScreenNavigator
 import ch.qscqlmpa.dwitchgame.ingame.InGameGuestFacade
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationFacade
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
@@ -25,8 +25,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
     private val mockWaitingRoomGuestFacade = mockk<WaitingRoomGuestFacade>(relaxed = true)
     private val communicationFacade = mockk<GuestCommunicationFacade>(relaxed = true)
     private val inGameGuestFacade = mockk<InGameGuestFacade>(relaxed = true)
-    private val gameDiscoveryFacade = mockk<GameDiscoveryFacade>(relaxed = true)
-    private val mockNavigationBridge = mockk<NavigationBridge>(relaxed = true)
+    private val mockNavigationBridge = mockk<ScreenNavigator>(relaxed = true)
 
     private lateinit var viewModel: WaitingRoomGuestViewModel
 
@@ -95,7 +94,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         viewModel.onStart()
 
         // When
-        communicationStateSubject.onNext(GuestCommunicationState.Disconnected)
+        communicationStateSubject.onNext(GuestCommunicationState.Disconnected(connectedToWlan = true))
         localPlayerReadyStateSubject.onNext(true)
 
         // Then
@@ -109,7 +108,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         viewModel.onStart()
 
         // When
-        communicationStateSubject.onNext(GuestCommunicationState.Error)
+        communicationStateSubject.onNext(GuestCommunicationState.Error(connectedToWlan = true))
         localPlayerReadyStateSubject.onNext(true)
 
         // Then
@@ -121,13 +120,13 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         // Given
         createViewModel()
         viewModel.onStart()
-        verify(exactly = 0) { mockNavigationBridge.navigate(any()) }
+        verify(exactly = 0) { mockNavigationBridge.navigate(any(), any()) }
 
         // When
         viewModel.leaveGame()
 
         // Then
-        verify { mockNavigationBridge.navigate(Destination.HomeScreens.Home) }
+        verify { mockNavigationBridge.navigate(Home, any()) }
         verify { inGameGuestFacade.leaveGame() }
     }
 
@@ -169,7 +168,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         viewModel.acknowledgeGameCanceled()
 
         // Then
-        verify { mockNavigationBridge.navigate(Destination.HomeScreens.Home) }
+        verify { mockNavigationBridge.navigate(Home, any()) }
     }
 
     @Test
@@ -183,7 +182,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         viewModel.acknowledgeKickOffGame()
 
         // Then
-        verify { mockNavigationBridge.navigate(Destination.HomeScreens.Home) }
+        verify { mockNavigationBridge.navigate(Home, any()) }
     }
 
     @Test
@@ -196,7 +195,7 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
         gameEventSubject.onNext(GuestGameEvent.GameLaunched)
 
         // Then
-        verify { mockNavigationBridge.navigate(Destination.GameScreens.GameRoomGuest) }
+        verify { mockNavigationBridge.navigate(InGameGuestDestination.GameRoom, any()) }
     }
 
     private fun createViewModel() {
@@ -204,7 +203,6 @@ class WaitingRoomGuestViewModelTest : BaseViewModelUnitTest() {
             mockWaitingRoomGuestFacade,
             communicationFacade,
             inGameGuestFacade,
-            gameDiscoveryFacade,
             mockNavigationBridge,
             Schedulers.trampoline(),
             StubIdlingResource()

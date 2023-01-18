@@ -1,24 +1,15 @@
 package ch.qscqlmpa.dwitchcommunication.di
 
-import android.content.Context
-import android.net.ConnectivityManager
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.DeviceConnectivityRepository
+import ch.qscqlmpa.dwitchcommunication.deviceconnectivity.ProdDeviceConnectivityRepository
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
-import kotlinx.serialization.json.Json
 
 @Suppress("unused")
 @Module
-class CommunicationModule(private val context: Context) {
+abstract class CommunicationModule {
 
     @CommunicationScope
-    @Provides
-    fun provideConnectionManager(): ConnectivityManager {
-        return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    }
-
-    @CommunicationScope
-    @Provides
-    fun provideJsonSerializer(): Json {
-        return Json.Default
-    }
+    @Binds
+    internal abstract fun provideDeviceCommunicationRepository(repository: ProdDeviceConnectivityRepository): DeviceConnectivityRepository
 }

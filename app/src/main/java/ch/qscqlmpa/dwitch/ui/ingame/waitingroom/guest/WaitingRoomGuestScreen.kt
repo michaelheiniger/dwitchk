@@ -3,6 +3,7 @@ package ch.qscqlmpa.dwitch.ui.ingame.waitingroom.guest
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -16,25 +17,20 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.qscqlmpa.dwitch.R
-import ch.qscqlmpa.dwitch.ui.base.ActivityScreenContainer
+import ch.qscqlmpa.dwitch.ui.base.PreviewContainer
 import ch.qscqlmpa.dwitch.ui.common.*
 import ch.qscqlmpa.dwitch.ui.ingame.connection.guest.ConnectionGuestViewModel
-import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.WaitingRoomPlayersScreen
+import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.WaitingRoomPlayers
 import ch.qscqlmpa.dwitch.ui.ingame.waitingroom.WaitingRoomViewModel
 import ch.qscqlmpa.dwitch.ui.model.UiCheckboxModel
-import ch.qscqlmpa.dwitch.ui.viewmodel.ViewModelFactory
 import ch.qscqlmpa.dwitchgame.ingame.communication.guest.GuestCommunicationState
 import ch.qscqlmpa.dwitchgame.ingame.waitingroom.PlayerWrUi
 
-@Preview(
-    showBackground = true,
-    backgroundColor = 0xFFFFFFFF
-)
+@Preview
 @Composable
-private fun WaitingRoomGuestScreenPlayerConnectedPreview() {
-    ActivityScreenContainer {
+private fun WaitingRoomGuestBodyPlayerConnectedPreview() {
+    PreviewContainer {
         WaitingRoomGuestBody(
             toolbarTitle = "Dwiiitch",
             players = listOf(
@@ -45,6 +41,7 @@ private fun WaitingRoomGuestScreenPlayerConnectedPreview() {
             ready = UiCheckboxModel(enabled = false, checked = false),
             notification = WaitingRoomGuestNotification.None,
             connectionState = GuestCommunicationState.Connected,
+            leavingGame = false,
             onReadyClick = {},
             onLeaveConfirmClick = {},
             onReconnectClick = {},
@@ -55,28 +52,29 @@ private fun WaitingRoomGuestScreenPlayerConnectedPreview() {
 }
 
 @Composable
-fun WaitingRoomGuestScreen(vmFactory: ViewModelFactory) {
-    val viewModel = viewModel<WaitingRoomViewModel>(factory = vmFactory)
-    val guestViewModel = viewModel<WaitingRoomGuestViewModel>(factory = vmFactory)
-    val connectionViewModel = viewModel<ConnectionGuestViewModel>(factory = vmFactory)
-
-    DisposableEffect(viewModel, guestViewModel, connectionViewModel) {
-        viewModel.onStart()
+fun WaitingRoomGuestBody(
+    waitingRoomViewModel: WaitingRoomViewModel,
+    guestViewModel: WaitingRoomGuestViewModel,
+    connectionViewModel: ConnectionGuestViewModel
+) {
+    DisposableEffect(waitingRoomViewModel, guestViewModel, connectionViewModel) {
+        waitingRoomViewModel.onStart()
         guestViewModel.onStart()
         connectionViewModel.onStart()
         onDispose {
-            viewModel.onStop()
+            waitingRoomViewModel.onStop()
             guestViewModel.onStop()
             connectionViewModel.onStop()
         }
     }
 
     WaitingRoomGuestBody(
-        toolbarTitle = viewModel.toolbarTitle.value,
-        players = viewModel.players.value,
+        toolbarTitle = waitingRoomViewModel.toolbarTitle.value,
+        players = waitingRoomViewModel.players.value,
         ready = guestViewModel.ready.value,
         notification = guestViewModel.notifications.value,
         connectionState = connectionViewModel.connectionState.value,
+        leavingGame = guestViewModel.leavingGame.value,
         onReadyClick = guestViewModel::updateReadyState,
         onLeaveConfirmClick = guestViewModel::leaveGame,
         onReconnectClick = connectionViewModel::reconnect,
@@ -91,39 +89,36 @@ fun WaitingRoomGuestBody(
     players: List<PlayerWrUi>,
     ready: UiCheckboxModel,
     notification: WaitingRoomGuestNotification,
-    connectionState: GuestCommunicationState?,
+    connectionState: GuestCommunicationState,
+    leavingGame: Boolean,
     onReadyClick: (Boolean) -> Unit,
     onLeaveConfirmClick: () -> Unit,
     onReconnectClick: () -> Unit,
     onGameCanceledAcknowledge: () -> Unit,
     onKickOffGameAcknowledge: () -> Unit
 ) {
-    val showConfirmationDialog = remember { mutableStateOf(false) }
-
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .animateContentSize()
-    ) {
-        DwitchTopBar(
-            title = toolbarTitle,
-            navigationIcon = NavigationIcon(
-                icon = R.drawable.ic_baseline_exit_to_app_24,
-                contentDescription = R.string.leave_game,
-                onClick = { showConfirmationDialog.value = true }
-            ),
-            actions = emptyList(),
-            onActionClick = {}
-        )
+    val showLeaveGameConfirmationDialog = remember { mutableStateOf(false) }
+    Scaffold(
+        topBar = {
+            DwitchTopBar(
+                title = toolbarTitle,
+                navigationIcon = NavigationIcon(
+                    icon = R.drawable.ic_baseline_exit_to_app_24,
+                    contentDescription = R.string.leave_game,
+                    onClick = { showLeaveGameConfirmationDialog.value = true }
+                )
+            )
+        }
+    ) { innerPadding ->
         Column(
             Modifier
                 .fillMaxWidth()
                 .animateContentSize()
-                .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
+                .padding(innerPadding)
         ) {
-            WaitingRoomPlayersScreen(players = players, showAddComputerPlayer = false, onAddComputerPlayer = {})
+            WaitingRoomPlayers(players = players)
             Spacer(Modifier.height(16.dp))
-            GuestControlScreen(
+            GuestControls(
                 ready = ready,
                 onReadyClick = onReadyClick
             )
@@ -133,38 +128,39 @@ fun WaitingRoomGuestBody(
     when (notification) {
         WaitingRoomGuestNotification.NotifyGameCanceled -> {
             InfoDialog(
-                title = R.string.info_dialog_title,
+                title = R.string.dialog_info_title,
                 text = R.string.game_canceled_by_host,
                 onOkClick = onGameCanceledAcknowledge
             )
         }
         WaitingRoomGuestNotification.NotifyPlayerKickedOffGame -> {
             InfoDialog(
-                title = R.string.info_dialog_title,
+                title = R.string.dialog_info_title,
                 text = R.string.you_have_been_kick,
                 onOkClick = onKickOffGameAcknowledge
             )
         }
         WaitingRoomGuestNotification.None -> {
-            ConnectionGuestScreen(
+            CommunicationGuest(
                 state = connectionState,
                 onReconnectClick = onReconnectClick,
-                onAbortClick = { showConfirmationDialog.value = true }
+                onAbortClick = { showLeaveGameConfirmationDialog.value = true }
             )
         }
     }
-    if (showConfirmationDialog.value) {
+    if (leavingGame) LoadingDialog(R.string.leaving_game)
+    if (showLeaveGameConfirmationDialog.value) {
         ConfirmationDialog(
-            title = R.string.info_dialog_title,
+            title = R.string.dialog_info_title,
             text = R.string.guest_leaves_game_confirmation,
             onConfirmClick = onLeaveConfirmClick,
-            onCancelClick = { showConfirmationDialog.value = false }
+            onClosing = { showLeaveGameConfirmationDialog.value = false }
         )
     }
 }
 
 @Composable
-private fun GuestControlScreen(
+private fun GuestControls(
     ready: UiCheckboxModel,
     onReadyClick: (Boolean) -> Unit
 ) {
