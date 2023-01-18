@@ -1,4 +1,4 @@
-api-version: reviewpad.com/v3.x
+api-version: reviewpad.com/v3.21.0
 
 labels:
     small:
